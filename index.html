@@ -1,0 +1,3724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Provenance</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #FAF8F5;
+  --bg-warm: #F5F2EE;
+  --bg-elevated: #FFFFFF;
+  --card-bg: #FFFFFF;
+  --text: #1C1917;
+  --text-mid: #44403C;
+  --text-light: #78716C;
+  --text-muted: #A8A29E;
+  --accent: #8B2C1A;
+  --accent-hover: #6D2215;
+  --accent-light: #FEF2F0;
+  --accent-glow: rgba(139,44,26,0.10);
+  --accent-subtle: rgba(139,44,26,0.05);
+  --secondary: #2D5A3D;
+  --secondary-light: #EEF5F0;
+  --border: #E7E5E4;
+  --border-light: #F5F5F4;
+  --border-warm: #D6D3D1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow-xs: 0 1px 2px rgba(28,25,23,0.03);
+  --shadow-sm: 0 1px 3px rgba(28,25,23,0.05), 0 1px 2px rgba(28,25,23,0.04);
+  --shadow-md: 0 4px 12px rgba(28,25,23,0.07), 0 2px 4px rgba(28,25,23,0.04);
+  --shadow-lg: 0 12px 40px rgba(28,25,23,0.10), 0 4px 12px rgba(28,25,23,0.06);
+  --shadow-xl: 0 24px 64px rgba(28,25,23,0.14), 0 8px 24px rgba(28,25,23,0.08);
+  --shadow-card: 0 1px 3px rgba(28,25,23,0.04), 0 4px 12px rgba(28,25,23,0.06);
+  --shadow-card-hover: 0 12px 40px rgba(28,25,23,0.12), 0 4px 12px rgba(28,25,23,0.06);
+  --transition: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header */
+header {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border-bottom: 1px solid rgba(231,229,228,0.6);
+  padding: 1.1rem 2.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.85rem;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+header h1 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.035em;
+}
+
+header h1 span { color: var(--accent); }
+
+.header-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0.72rem 1.15rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.88rem;
+  outline: none;
+  transition: all var(--transition);
+  background: var(--bg-warm);
+  color: var(--text);
+  box-shadow: var(--shadow-xs);
+}
+
+.search-bar input::placeholder { color: var(--text-muted); font-weight: 400; }
+.search-bar input:focus {
+  border-color: var(--accent);
+  background: #fff;
+  box-shadow: 0 0 0 4px var(--accent-glow), var(--shadow-sm);
+}
+
+.result-count {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Hero section */
+.hero {
+  background: linear-gradient(145deg, #1C1917 0%, #292524 40%, #1C1917 100%);
+  padding: 4rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(139,44,26,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(45,90,61,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='rgba(255,255,255,0.02)' stroke-width='1'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  margin-bottom: 1.1rem;
+}
+
+.hero-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, #E8A090, #D4816E);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.7;
+  max-width: 420px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.hero-featured {
+  display: flex;
+  gap: 0.85rem;
+  flex-shrink: 0;
+}
+
+.hero-card {
+  width: 145px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  position: relative;
+}
+
+.hero-card:nth-child(2) { transform: translateY(-14px); }
+.hero-card:hover { transform: translateY(-8px) scale(1.04); box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
+.hero-card:nth-child(2):hover { transform: translateY(-22px) scale(1.04); box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
+
+.hero-card img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-card .hero-card-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2.5rem 0.65rem 0.55rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.1rem 2.5rem;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.filter-bar label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.tag-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0.5rem 2.2rem 0.5rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23A8A29E'/%3E%3C/svg%3E") no-repeat right 0.8rem center;
+  font-size: 0.82rem;
+  font-family: inherit;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+  min-width: 200px;
+  max-width: 300px;
+  box-shadow: var(--shadow-xs);
+}
+.tag-select:hover { border-color: var(--border-warm); }
+.tag-select:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-glow); }
+.tag-select.has-filter { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+/* Section title */
+.section-label {
+  padding: 0 2.5rem;
+  max-width: 1440px;
+  margin: 0.5rem auto 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1.6rem;
+  padding: 1.1rem 2.5rem 3.5rem;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--border);
+}
+
+.card-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  background: linear-gradient(135deg, #F5F2EE 0%, #EBE7E2 100%);
+  display: block;
+  transition: transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover .card-img { transform: scale(1.05); }
+
+.card-body { padding: 1.1rem 1.25rem 1.25rem; }
+.card-body h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.card-meta {
+  font-size: 0.72rem;
+  color: var(--text-light);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.55rem;
+}
+
+.card-tags span {
+  font-size: 0.6rem;
+  font-weight: 600;
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 0.18rem 0.55rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Detail overlay */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(28,25,23,0.55);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  z-index: 200;
+  overflow-y: auto;
+  padding: 2rem;
+  animation: overlayIn 300ms ease-out;
+}
+
+@keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+.overlay.open { display: flex; justify-content: center; }
+
+.detail {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  max-width: 800px;
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-xl);
+  animation: modalIn 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.detail-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(28,25,23,0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.detail-close:hover { background: rgba(28,25,23,0.7); transform: scale(1.05); }
+
+.detail-img {
+  width: 100%;
+  max-height: 440px;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, #F5F2EE 0%, #EBE7E2 100%);
+}
+
+.detail-content { padding: 2.25rem 2.5rem 2.75rem; }
+.detail-content h2 {
+  font-size: 1.65rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.detail-meta {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  margin-bottom: 1.3rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  font-weight: 500;
+}
+
+.detail-preamble {
+  font-style: italic;
+  color: var(--text-mid);
+  margin-bottom: 1.75rem;
+  border-left: 3px solid var(--accent);
+  padding-left: 1.2rem;
+  line-height: 1.75;
+  font-size: 0.95rem;
+}
+
+.detail-section h3 {
+  font-size: 0.72rem;
+  color: var(--accent);
+  margin: 1.75rem 0 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.detail-section .group-label {
+  font-weight: 700;
+  margin-top: 1.1rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.88rem;
+  color: var(--text-mid);
+}
+
+.detail-section ul { padding-left: 1.4rem; }
+.detail-section li {
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-mid);
+}
+
+.detail-section ol { padding-left: 1.6rem; }
+.detail-section ol li {
+  margin-bottom: 0.8rem;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+  padding-left: 0.3rem;
+}
+.detail-section ol li::marker { color: var(--accent); font-weight: 700; }
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.detail-tags span {
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 0.22rem 0.65rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Scale bar */
+.scale-bar {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.scale-btn {
+  padding: 0.38rem 0.9rem;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: 0.01em;
+}
+
+.scale-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.scale-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 10px rgba(139,44,26,0.28); }
+
+/* Measurement toggle */
+.measure-toggle {
+  display: inline-flex;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color var(--transition-fast);
+  box-shadow: var(--shadow-xs);
+}
+
+.measure-toggle:hover { border-color: var(--border-warm); }
+
+.measure-toggle span {
+  padding: 0.32rem 0.7rem;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.measure-toggle span.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.measure-toggle .divider {
+  width: 1px;
+  background: var(--border);
+  padding: 0;
+}
+
+/* PDF Import modal */
+.pdf-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(28,25,23,0.55);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  z-index: 300;
+  overflow-y: auto;
+  padding: 2rem;
+  animation: overlayIn 300ms ease-out;
+}
+
+.pdf-overlay.open { display: flex; justify-content: center; align-items: flex-start; }
+
+.pdf-modal {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  max-width: 900px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: var(--shadow-xl);
+  animation: modalIn 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pdf-modal h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.pdf-page-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.pdf-page-thumb {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid var(--border);
+  aspect-ratio: 3/4;
+  transition: border-color var(--transition-fast);
+}
+
+.pdf-page-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pdf-page-thumb .page-num {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.pdf-page-thumb .page-status {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 3px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pdf-page-thumb.recipe { border-color: var(--secondary); }
+.pdf-page-thumb.recipe .page-status { background: var(--secondary); color: #fff; }
+.pdf-page-thumb.skipped .page-status { background: rgba(0,0,0,0.5); color: #fff; }
+.pdf-page-thumb.pending { opacity: 0.5; }
+.pdf-page-thumb.deselected { opacity: 0.35; }
+.pdf-page-thumb.deselected .page-status { background: rgba(0,0,0,0.35); color: #fff; }
+
+.pdf-page-thumb .page-check {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: #fff;
+  transition: all var(--transition-fast);
+  z-index: 2;
+}
+
+.pdf-page-thumb .page-check:hover { background: rgba(0,0,0,0.5); border-color: #fff; }
+.pdf-page-thumb .page-check.checked { background: var(--accent); border-color: var(--accent); }
+
+.pdf-select-section {
+  display: none;
+  margin-bottom: 1.2rem;
+}
+
+.pdf-select-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+
+.pdf-range-input {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.5rem 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-family: inherit;
+  outline: none;
+  background: var(--bg-warm);
+  transition: all var(--transition-fast);
+}
+
+.pdf-range-input:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px var(--accent-glow); }
+.pdf-range-input::placeholder { color: var(--text-muted); }
+
+.pdf-select-btns {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pdf-select-btns button {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-mid);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.pdf-select-btns button:hover { border-color: var(--accent); color: var(--accent); }
+
+.pdf-select-count {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.pdf-recipe-group {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.pdf-recipe-group:hover { border-color: var(--accent); box-shadow: 0 2px 8px var(--accent-glow); }
+
+.pdf-recipe-group .group-thumbs {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.pdf-recipe-group .group-thumbs img {
+  width: 50px;
+  height: 67px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.pdf-recipe-group .group-info {
+  flex: 1;
+}
+
+.pdf-recipe-group .group-info h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.1rem;
+  color: var(--text);
+}
+
+.pdf-recipe-group .group-info small {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.pdf-recipe-group .group-remove {
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.pdf-recipe-group .group-remove:hover { color: #c0392b; background: #fdf0ef; }
+
+.pdf-progress {
+  margin-bottom: 1.2rem;
+}
+
+.pdf-progress-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.pdf-progress-bar {
+  width: 100%;
+  height: 5px;
+  background: var(--border-light);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.pdf-progress-bar .fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #b8432a);
+  border-radius: 3px;
+  transition: width 300ms ease;
+}
+
+.pdf-review-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  margin-bottom: 0.8rem;
+  transition: border-color var(--transition-fast);
+}
+
+.pdf-review-item:hover { border-color: var(--accent); }
+
+.pdf-review-item h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.pdf-review-item label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.2rem;
+  margin-top: 0.6rem;
+}
+
+.pdf-review-item input[type="text"],
+.pdf-review-item textarea {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  transition: all var(--transition-fast);
+  background: var(--bg-warm);
+}
+
+.pdf-review-item input[type="text"]:focus,
+.pdf-review-item textarea:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px var(--accent-glow); }
+
+.pdf-review-item textarea { min-height: 60px; resize: vertical; }
+
+.pdf-section-title {
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin: 1.2rem 0 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pdf-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+
+.pdf-actions button {
+  padding: 0.65rem 1.3rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  background: #fff;
+  color: var(--text-mid);
+}
+
+.pdf-actions button:hover { border-color: var(--text-light); }
+
+.pdf-actions .primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(139,44,26,0.2);
+}
+
+.pdf-actions .primary:hover { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(139,44,26,0.3); }
+.pdf-actions .primary:disabled { background: var(--border); border-color: var(--border); cursor: not-allowed; box-shadow: none; color: var(--text-muted); }
+
+/* Header buttons */
+.scan-btn {
+  padding: 0.6rem 1.15rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition);
+  box-shadow: 0 2px 8px rgba(139,44,26,0.18);
+  letter-spacing: 0.01em;
+}
+
+.scan-btn:hover { background: var(--accent-hover); box-shadow: 0 6px 16px rgba(139,44,26,0.28); transform: translateY(-1px); }
+.scan-btn:active { transform: translateY(0); box-shadow: 0 2px 6px rgba(139,44,26,0.2); }
+.scan-btn.btn-secondary { background: var(--secondary); box-shadow: 0 2px 8px rgba(45,90,61,0.18); }
+.scan-btn.btn-secondary:hover { background: #234a31; box-shadow: 0 6px 16px rgba(45,90,61,0.28); }
+
+/* Edit mode */
+.detail-edit-btn {
+  position: absolute;
+  top: 1rem;
+  right: 4rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(28,25,23,0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+.detail-edit-btn:hover { background: rgba(28,25,23,0.7); transform: scale(1.05); }
+
+.edit-form { padding: 2.25rem 2.5rem 2.75rem; }
+.edit-form h2 { margin: 0 0 1.5rem; font-size: 1.1rem; color: var(--text); }
+
+.edit-row { margin-bottom: 1rem; }
+.edit-row-inline { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+.edit-row-inline .edit-row { flex: 1; margin-bottom: 0; }
+
+.edit-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 0.35rem;
+}
+
+.edit-input, .edit-textarea {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  background: var(--bg-warm);
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+}
+.edit-input:focus, .edit-textarea:focus {
+  border-color: var(--accent);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.edit-textarea { resize: vertical; min-height: 3rem; }
+
+.edit-section { margin-bottom: 1.25rem; }
+.edit-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.ing-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+.ing-row .edit-input { padding: 0.4rem 0.55rem; font-size: 0.82rem; }
+.ing-count { width: 60px; flex-shrink: 0; }
+.ing-unit { width: 70px; flex-shrink: 0; }
+.ing-name { flex: 2; }
+.ing-info { flex: 1; }
+.ing-group { width: 100px; flex-shrink: 0; }
+
+.step-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin-bottom: 0.4rem;
+}
+.step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.4rem;
+}
+.step-row .edit-textarea { flex: 1; min-height: 2.5rem; font-size: 0.85rem; }
+
+.edit-add-btn {
+  padding: 0.3rem 0.75rem;
+  border: 1.5px dashed var(--accent);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.edit-add-btn:hover { background: var(--accent-light); }
+
+.edit-remove-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: #fee;
+  color: #c33;
+  font-size: 0.85rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+.edit-remove-btn:hover { background: #fcc; }
+
+.edit-hero-area {
+  position: relative;
+  width: 100%;
+  max-height: 300px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #F5F2EE 0%, #EBE7E2 100%);
+}
+.edit-hero-area img { width: 100%; max-height: 300px; object-fit: cover; display: block; }
+.edit-hero-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  cursor: pointer;
+}
+.edit-hero-area:hover .edit-hero-overlay { opacity: 1; }
+.edit-hero-overlay span {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.edit-hero-input { display: none; }
+
+.edit-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.edit-save-btn {
+  padding: 0.65rem 1.5rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(139,44,26,0.2);
+  transition: all var(--transition-fast);
+}
+.edit-save-btn:hover { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(139,44,26,0.3); }
+.edit-save-btn:disabled { background: var(--border); cursor: not-allowed; box-shadow: none; }
+
+.edit-cancel-btn {
+  padding: 0.65rem 1.2rem;
+  background: #fff;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.edit-cancel-btn:hover { border-color: var(--text-mid); }
+
+.edit-delete-btn {
+  padding: 0.65rem 1.2rem;
+  background: #fff;
+  color: #c33;
+  border: 1.5px solid #e88;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all var(--transition-fast);
+}
+.edit-delete-btn:hover { background: #fee; border-color: #c33; }
+
+.delete-confirm-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  background: #fee;
+  border: 1px solid #e88;
+  border-radius: var(--radius-sm);
+}
+.delete-confirm-bar span { font-size: 0.85rem; color: #900; font-weight: 600; flex: 1; }
+.delete-confirm-yes {
+  padding: 0.4rem 1rem;
+  background: #c33;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.delete-confirm-yes:hover { background: #a22; }
+.delete-confirm-no {
+  padding: 0.4rem 0.8rem;
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* Scan modal */
+.scan-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(28,25,23,0.55);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  z-index: 300;
+  overflow-y: auto;
+  padding: 2rem;
+  animation: overlayIn 300ms ease-out;
+}
+
+.scan-overlay.open { display: flex; justify-content: center; align-items: flex-start; }
+
+.scan-modal {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  max-width: 700px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: var(--shadow-xl);
+  animation: modalIn 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scan-modal h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.scan-modal .close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  color: var(--text-light);
+}
+
+.scan-modal .close-btn:hover { background: var(--bg-warm); border-color: var(--text-light); color: var(--text); }
+
+.scan-upload {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.scan-upload:hover, .scan-upload.drag-over { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.scan-upload input { display: none; }
+
+.scan-upload img {
+  max-width: 100%;
+  max-height: 300px;
+  margin-top: 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.scan-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.scan-actions button {
+  padding: 0.65rem 1.3rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  background: #fff;
+  color: var(--text-mid);
+}
+
+.scan-actions .primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(139,44,26,0.2);
+}
+
+.scan-actions .primary:hover { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(139,44,26,0.3); }
+.scan-actions .primary:disabled { background: var(--border); border-color: var(--border); cursor: not-allowed; box-shadow: none; color: var(--text-muted); }
+
+.scan-spinner {
+  display: none;
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.scan-spinner.active { display: block; }
+
+.scan-spinner .spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border-light);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.scan-error {
+  color: #8b2020;
+  background: #fdf0ef;
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #f5d5d2;
+  margin-bottom: 1rem;
+  display: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.scan-error.active { display: block; }
+
+/* Scan preview form */
+.scan-preview { display: none; }
+.scan-preview.active { display: block; }
+
+.scan-preview label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.25rem;
+  margin-top: 0.9rem;
+}
+
+.scan-preview input[type="text"],
+.scan-preview textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  transition: all var(--transition-fast);
+  background: var(--bg-warm);
+  color: var(--text);
+}
+
+.scan-preview input[type="text"]:focus,
+.scan-preview textarea:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px var(--accent-glow); }
+
+.scan-preview textarea { min-height: 80px; resize: vertical; }
+.scan-preview .ing-textarea { min-height: 120px; }
+.scan-preview .steps-textarea { min-height: 150px; }
+
+/* Scan thumbnails strip */
+.scan-thumbs {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+
+.scan-thumb {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  transition: border-color var(--transition-fast);
+}
+
+.scan-thumb:hover { border-color: var(--accent); }
+
+.scan-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scan-thumb .page-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scan-thumb-actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 0;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.scan-thumb:hover .scan-thumb-actions { opacity: 1; }
+
+.scan-thumb-actions button {
+  flex: 1;
+  border: none;
+  padding: 0.25rem 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.scan-thumb-actions .edit-btn {
+  background: rgba(0,0,0,0.65);
+}
+
+.scan-thumb-actions .remove-btn {
+  background: rgba(139,32,32,0.85);
+}
+
+.scan-add-more {
+  padding: 0.45rem 0.9rem;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-bottom: 0.8rem;
+  transition: all var(--transition-fast);
+}
+
+.scan-add-more:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* Scan editor overlay */
+.scan-editor {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  z-index: 10;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  flex-direction: column;
+}
+
+.scan-editor.open { display: flex; }
+
+.scan-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.scan-editor-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.scan-editor-canvas-wrap {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-warm);
+  border-radius: var(--radius-sm);
+  position: relative;
+  min-height: 0;
+}
+
+.scan-editor-canvas-wrap canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.scan-editor-tools {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.scan-editor-tools button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  color: var(--text-mid);
+}
+
+.scan-editor-tools button:hover { border-color: var(--accent); color: var(--accent); }
+.scan-editor-tools button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.scan-editor-tools .slider-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.scan-editor-tools .slider-group input[type="range"] {
+  width: 80px;
+  accent-color: var(--accent);
+}
+
+.scan-editor-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.scan-editor-actions button {
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-mid);
+  background: #fff;
+}
+
+.scan-editor-actions button:hover { border-color: var(--text-light); }
+
+.scan-editor-actions .primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.scan-editor-actions .primary:hover { background: var(--accent-hover); }
+
+/* Hero image picker in preview */
+.hero-picker {
+  margin-top: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.hero-picker-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+
+.hero-picker-strip {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.hero-option {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 3px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.hero-option:hover { border-color: var(--accent); }
+.hero-option.selected { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+.hero-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-option .hero-check {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--accent);
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 0.6rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-option.selected .hero-check { display: flex; }
+
+.hero-upload-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  border: 2px dashed var(--border);
+  background: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  gap: 0.2rem;
+  transition: all var(--transition-fast);
+}
+
+.hero-upload-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+.hero-upload-btn .hero-upload-icon {
+  font-size: 1.2rem;
+}
+
+/* Crop overlay on canvas */
+.crop-overlay {
+  position: absolute;
+  border: 2px dashed var(--accent);
+  background: rgba(139,44,26,0.08);
+  pointer-events: none;
+}
+
+/* No image placeholder */
+.no-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #F5F2EE 0%, #EBE7E2 100%);
+}
+
+.card-img.no-img { aspect-ratio: 4/3; }
+.detail-img.no-img { height: 200px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero-featured { display: none; }
+  .hero { padding: 3rem 1.5rem; }
+  .hero-title { font-size: 2.1rem; }
+}
+
+@media (max-width: 600px) {
+  header { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .filter-bar { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .grid { padding: 0.75rem 1.25rem 2rem; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+  .overlay, .scan-overlay, .pdf-overlay { padding: 0.75rem; }
+  .detail-content { padding: 1.5rem 1.25rem; }
+  .scan-modal, .pdf-modal { padding: 1.5rem; margin: 1rem auto; }
+  .search-bar { flex-wrap: wrap; }
+  .scan-btn { padding: 0.55rem 0.9rem; font-size: 0.8rem; }
+  .hero { padding: 2.5rem 1.25rem; }
+  .hero-title { font-size: 1.7rem; }
+  .hero-sub { font-size: 0.85rem; }
+  .header-row { flex-wrap: wrap; gap: 0.5rem; }
+  .tag-select { min-width: 160px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <h1><span>Prov</span>enance</h1>
+    <nav class="header-actions">
+      <button class="scan-btn" onclick="openScanModal()">Scan Recipe</button>
+      <button class="scan-btn btn-secondary" onclick="openPdfImportModal()">Import PDF</button>
+    </nav>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search recipes, ingredients, tags...">
+    <span class="result-count" id="count"></span>
+    <div class="measure-toggle" id="measureToggle" onclick="toggleMeasurement()">
+      <span id="mToggleM" class="active">M</span>
+      <span class="divider"></span>
+      <span id="mToggleI">I</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Your culinary archive</p>
+      <h2 class="hero-title">Cook something<br><em>extraordinary</em> tonight.</h2>
+      <p class="hero-sub">Browse your personal archive &mdash; every recipe scanned, saved, and ready to cook.</p>
+    </div>
+    <div class="hero-featured" id="heroFeatured"></div>
+  </div>
+</section>
+
+<div class="filter-bar" id="tagBar">
+  <label for="tagSelect">Filter</label>
+  <select class="tag-select" id="tagSelect" onchange="onTagSelectChange(this)">
+    <option value="">All Recipes</option>
+  </select>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="overlay" id="overlay">
+  <div class="detail" id="detail"></div>
+</div>
+
+<!-- Scan Recipe Modal -->
+<div class="scan-overlay" id="scanOverlay">
+  <div class="scan-modal">
+    <button class="close-btn" onclick="closeScanModal()">&times;</button>
+    <h2>Scan Recipe from Photo</h2>
+
+    <div class="scan-upload" id="scanUploadArea" onclick="document.getElementById('scanFileInput').click()">
+      <div id="scanUploadText">Click or tap to upload cookbook photos<br><small>Up to 5 photos &mdash; use camera on mobile</small></div>
+      <input type="file" id="scanFileInput" accept="image/*" multiple capture="environment">
+    </div>
+
+    <div class="scan-thumbs" id="scanThumbs"></div>
+    <button class="scan-add-more" id="scanAddMore" style="display:none" onclick="document.getElementById('scanFileInput').click()">+ Add more photos</button>
+
+    <div class="scan-error" id="scanError"></div>
+
+    <div class="scan-actions" id="scanActions">
+      <button class="primary" id="scanBtn" onclick="doScan()" disabled>Scan with AI</button>
+    </div>
+
+    <!-- Image editor panel -->
+    <div class="scan-editor" id="scanEditor">
+      <div class="scan-editor-header">
+        <h3>Edit Photo</h3>
+      </div>
+      <div class="scan-editor-canvas-wrap" id="editorCanvasWrap">
+        <canvas id="editorCanvas"></canvas>
+        <div class="crop-overlay" id="cropOverlay" style="display:none"></div>
+      </div>
+      <div class="scan-editor-tools">
+        <button onclick="editorRotate(-90)" title="Rotate left">&#x21BA; Left</button>
+        <button onclick="editorRotate(90)" title="Rotate right">&#x21BB; Right</button>
+        <button id="cropToggleBtn" onclick="editorToggleCrop()">Crop</button>
+        <button id="cropApplyBtn" style="display:none" onclick="editorApplyCrop()">Apply Crop</button>
+        <div class="slider-group">
+          <label>Brightness</label>
+          <input type="range" id="editorBrightness" min="50" max="200" value="100" oninput="editorRedraw()">
+        </div>
+        <div class="slider-group">
+          <label>Contrast</label>
+          <input type="range" id="editorContrast" min="50" max="200" value="100" oninput="editorRedraw()">
+        </div>
+      </div>
+      <div class="scan-editor-actions">
+        <button class="primary" onclick="editorDone()">Done</button>
+        <button onclick="editorCancel()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="scan-spinner" id="scanSpinner">
+      <div class="spinner"></div>
+      Extracting recipe with AI...
+    </div>
+
+    <div class="scan-preview" id="scanPreview">
+      <div class="hero-picker" id="heroPicker">
+        <div class="hero-picker-label">Hero Image (shown in recipe grid)</div>
+        <div class="hero-picker-strip" id="heroPickerStrip"></div>
+        <input type="file" id="heroFileInput" accept="image/*" style="display:none">
+      </div>
+
+      <label>Title</label>
+      <input type="text" id="scanTitle">
+
+      <label>Preamble</label>
+      <textarea id="scanPreamble"></textarea>
+
+      <label>Tags (comma-separated)</label>
+      <input type="text" id="scanTags">
+
+      <label>Active Time</label>
+      <input type="text" id="scanTimeActive">
+
+      <label>Total Time</label>
+      <input type="text" id="scanTimeTotal">
+
+      <label>Servings</label>
+      <input type="text" id="scanServings" placeholder="e.g. 4">
+
+      <label>Ingredients (one per line: count unit name - info)</label>
+      <textarea class="ing-textarea" id="scanIngredients"></textarea>
+
+      <label>Steps (one per line)</label>
+      <textarea class="steps-textarea" id="scanSteps"></textarea>
+
+      <div class="scan-actions" style="margin-top:1rem">
+        <button class="primary" onclick="saveScannedRecipe()">Save Recipe</button>
+        <button onclick="closeScanModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PDF Import Modal -->
+<div class="pdf-overlay" id="pdfOverlay">
+  <div class="pdf-modal">
+    <button class="close-btn" onclick="closePdfImportModal()" style="position:absolute;top:1rem;right:1rem;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 150ms;color:var(--text-light)">&times;</button>
+    <h2>Import PDF Cookbook</h2>
+
+    <!-- Step 1: Upload -->
+    <div id="pdfUploadSection">
+      <div class="scan-upload" id="pdfUploadArea" onclick="document.getElementById('pdfFileInput').click()">
+        <div>Click or drag a PDF cookbook here<br><small>Pages will be rendered in your browser</small></div>
+        <input type="file" id="pdfFileInput" accept=".pdf" style="display:none">
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="pdf-progress" id="pdfProgress" style="display:none">
+      <div class="pdf-progress-label" id="pdfProgressLabel">Rendering pages...</div>
+      <div class="pdf-progress-bar"><div class="fill" id="pdfProgressFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Page grid -->
+    <div class="pdf-page-grid" id="pdfPageGrid"></div>
+
+    <!-- Page selection -->
+    <div class="pdf-select-section" id="pdfSelectSection">
+      <div class="pdf-section-title">Select Pages to Classify</div>
+      <div class="pdf-select-header">
+        <input class="pdf-range-input" type="text" id="pdfRangeInput" placeholder="Page range, e.g. 1-50 or 10-25, 40-60" oninput="applyRangeInput()">
+        <div class="pdf-select-btns">
+          <button onclick="pdfSelectAll()">All</button>
+          <button onclick="pdfSelectNone()">None</button>
+        </div>
+        <span class="pdf-select-count" id="pdfSelectCount"></span>
+      </div>
+      <div class="pdf-actions">
+        <button class="primary" id="pdfClassifyBtn" onclick="startClassification()">Classify Selected Pages</button>
+        <button onclick="closePdfImportModal()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Classification results -->
+    <div id="pdfClassifySection" style="display:none">
+      <div class="pdf-section-title">Identified Recipes</div>
+      <div id="pdfRecipeGroups"></div>
+      <div class="pdf-actions">
+        <button class="primary" id="pdfExtractBtn" onclick="extractAllRecipes()">Extract All Recipes</button>
+        <button onclick="closePdfImportModal()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Review list -->
+    <div id="pdfReviewSection" style="display:none">
+      <div class="pdf-section-title">Review Extracted Recipes</div>
+      <div id="pdfReviewList"></div>
+      <div class="pdf-actions">
+        <button class="primary" id="pdfSaveAllBtn" onclick="bulkSaveRecipes()">Save All Recipes</button>
+        <button onclick="closePdfImportModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let recipes = [];
+let activeTag = null;
+
+async function init() {
+  const res = await fetch('/recipes.json');
+  const all = await res.json();
+  // English only (filter out Russian duplicates)
+  recipes = all.filter(r => r.lang !== 'ru');
+
+  buildTagBar();
+  buildHeroFeatured();
+  initMeasureToggle();
+  render();
+
+  document.getElementById('search').addEventListener('input', render);
+  document.getElementById('overlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeDetail();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDetail();
+  });
+}
+
+function buildTagBar() {
+  const tagCounts = {};
+  recipes.forEach(r => (r.tags || []).forEach(t => {
+    tagCounts[t] = (tagCounts[t] || 0) + 1;
+  }));
+  const sorted = Object.entries(tagCounts).sort((a, b) => a[0].localeCompare(b[0]));
+
+  const sel = document.getElementById('tagSelect');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">All Recipes</option>';
+  sorted.forEach(([tag, count]) => {
+    const opt = document.createElement('option');
+    opt.value = tag;
+    opt.textContent = `${tag} (${count})`;
+    sel.appendChild(opt);
+  });
+  sel.value = prev;
+  sel.classList.toggle('has-filter', !!sel.value);
+}
+
+function onTagSelectChange(sel) {
+  activeTag = sel.value || null;
+  sel.classList.toggle('has-filter', !!sel.value);
+  render();
+}
+
+function buildHeroFeatured() {
+  const container = document.getElementById('heroFeatured');
+  // Pick 3 random recipes with images
+  const withImages = recipes.filter(r => r.hasImage);
+  const shuffled = withImages.sort(() => Math.random() - 0.5).slice(0, 3);
+  container.innerHTML = '';
+  shuffled.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'hero-card';
+    card.addEventListener('click', () => showDetail(r));
+    card.innerHTML = `
+      <img src="/images/${r.uuid}/main.jpg" alt="" loading="lazy">
+      <div class="hero-card-title">${esc(r.title)}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const filtered = recipes.filter(r => {
+    if (activeTag && !(r.tags || []).includes(activeTag)) return false;
+    if (!q) return true;
+    const haystack = [
+      r.title,
+      r.preamble,
+      ...(r.tags || []),
+      ...(r.ingredients || []).map(i => i.name),
+      (r.source || {}).name || ''
+    ].join(' ').toLowerCase();
+    return q.split(/\s+/).every(word => haystack.includes(word));
+  });
+
+  document.getElementById('count').textContent = `${filtered.length} recipes`;
+
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  filtered.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.addEventListener('click', () => showDetail(r));
+
+    const imgHtml = r.hasImage
+      ? `<img class="card-img" src="/images/${r.uuid}/miniature.jpg" alt="" loading="lazy">`
+      : `<div class="card-img no-img">&#127858;</div>`;
+
+    const source = r.source?.name || '';
+    const time = r.time?.total || r.time?.active || '';
+    const meta = [source, time].filter(Boolean).join(' &middot; ');
+
+    const tags = (r.tags || []).slice(0, 3).map(t =>
+      `<span>${esc(t)}</span>`
+    ).join('');
+
+    card.innerHTML = `
+      ${imgHtml}
+      <div class="card-body">
+        <h3>${esc(r.title)}</h3>
+        ${meta ? `<div class="card-meta">${meta}</div>` : ''}
+        ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// === Measurement Toggle ===
+let measurePref = localStorage.getItem('measurePref') || 'metric'; // 'metric' or 'imperial'
+
+function initMeasureToggle() {
+  updateToggleUI();
+}
+
+function updateToggleUI() {
+  document.getElementById('mToggleM').classList.toggle('active', measurePref === 'metric');
+  document.getElementById('mToggleI').classList.toggle('active', measurePref === 'imperial');
+}
+
+function toggleMeasurement() {
+  measurePref = measurePref === 'metric' ? 'imperial' : 'metric';
+  localStorage.setItem('measurePref', measurePref);
+  updateToggleUI();
+  // Re-render detail if open
+  if (currentDetailRecipe) renderDetail(currentDetailRecipe, currentScale);
+}
+
+// Unit classification
+const METRIC_UNITS = new Set(['g', 'gr', 'gm', 'gram', 'grams', 'kg', 'kilo', 'kilos', 'ml', 'milliliter', 'milliliters', 'l', 'liter', 'liters', 'litre', 'litres', 'cm', 'mm']);
+const IMPERIAL_UNITS = new Set(['oz', 'ounce', 'ounces', 'lbs', 'lb', 'pound', 'pounds', 'cups', 'cup', 'tsp', 'tbsp', 'fl oz', 'quart', 'quarts', 'pint', 'pints', 'gallon', 'gallons', 'teaspoon', 'teaspoons', 'tablespoon', 'tablespoons']);
+
+// Normalize unit aliases to canonical form for conversion lookup
+function normalizeUnit(u) {
+  const map = { 'gr': 'g', 'gm': 'g', 'gram': 'g', 'grams': 'g', 'kilo': 'kg', 'kilos': 'kg',
+    'milliliter': 'ml', 'milliliters': 'ml', 'liter': 'l', 'liters': 'l', 'litre': 'l', 'litres': 'l',
+    'ounce': 'oz', 'ounces': 'oz', 'pound': 'lbs', 'pounds': 'lbs', 'lb': 'lbs',
+    'cup': 'cups', 'teaspoon': 'tsp', 'teaspoons': 'tsp', 'tablespoon': 'tbsp', 'tablespoons': 'tbsp' };
+  return map[u] || u;
+}
+
+function isMetricUnit(u) { return METRIC_UNITS.has((u || '').toLowerCase()); }
+function isImperialUnit(u) { return IMPERIAL_UNITS.has((u || '').toLowerCase()); }
+
+// Conversion tables: metric → imperial
+const M_TO_I = {
+  'g': { unit: 'oz', factor: 1 / 28.3495 },
+  'kg': { unit: 'lbs', factor: 2.20462 },
+  'ml': { unit: 'fl oz', factor: 1 / 29.5735 },
+  'l': { unit: 'cups', factor: 4.22675 },
+};
+
+// Conversion tables: imperial → metric
+const I_TO_M = {
+  'oz': { unit: 'g', factor: 28.3495 },
+  'lbs': { unit: 'kg', factor: 0.453592 },
+  'lb': { unit: 'kg', factor: 0.453592 },
+  'cups': { unit: 'ml', factor: 236.588 },
+  'cup': { unit: 'ml', factor: 236.588 },
+  'tsp': { unit: 'ml', factor: 4.92892 },
+  'tbsp': { unit: 'ml', factor: 14.7868 },
+  'teaspoon': { unit: 'ml', factor: 4.92892 },
+  'tablespoon': { unit: 'ml', factor: 14.7868 },
+  'fl oz': { unit: 'ml', factor: 29.5735 },
+  'quart': { unit: 'ml', factor: 946.353 },
+  'quarts': { unit: 'ml', factor: 946.353 },
+  'pint': { unit: 'ml', factor: 473.176 },
+  'pints': { unit: 'ml', factor: 473.176 },
+  'gallon': { unit: 'L', factor: 3.78541 },
+  'gallons': { unit: 'L', factor: 3.78541 },
+};
+
+// Get the display count and unit for an ingredient based on measurement preference
+function getIngredientDisplay(ing, scale) {
+  const wantMetric = measurePref === 'metric';
+
+  // 1. Check if the recipe has explicit dual measurements
+  if (wantMetric && ing.count_metric && ing.unit_metric) {
+    const num = parseCount(ing.count_metric);
+    return { count: num != null ? formatCount(num * scale) : ing.count_metric, unit: ing.unit_metric };
+  }
+  if (!wantMetric && ing.count_imperial && ing.unit_imperial) {
+    const num = parseCount(ing.count_imperial);
+    return { count: num != null ? formatCount(num * scale) : ing.count_imperial, unit: ing.unit_imperial };
+  }
+
+  // 2. Get the primary count/unit
+  const origCount = getIngredientCount(ing);
+  const origUnit = ing['unit-text'] || ing.unit || '';
+
+  // 3. If no unit or not a convertible unit, just return scaled original
+  if (!origUnit || origUnit === '') {
+    return { count: origCount != null ? formatCount(origCount * scale) : '', unit: origUnit };
+  }
+
+  const unitLower = origUnit.toLowerCase();
+  const unitNorm = normalizeUnit(unitLower);
+
+  // 4. If the unit already matches the desired system, return scaled original
+  if (wantMetric && isMetricUnit(unitLower)) {
+    return { count: origCount != null ? formatCount(origCount * scale) : '', unit: origUnit };
+  }
+  if (!wantMetric && isImperialUnit(unitLower)) {
+    return { count: origCount != null ? formatCount(origCount * scale) : '', unit: origUnit };
+  }
+
+  // 5. Try to convert
+  if (origCount != null) {
+    const convTable = wantMetric ? I_TO_M : M_TO_I;
+    const conv = convTable[unitNorm];
+    if (conv) {
+      const converted = origCount * scale * conv.factor;
+      // Round nicely based on target unit
+      let displayCount;
+      if (conv.unit === 'g' || conv.unit === 'ml') {
+        displayCount = String(Math.round(converted));
+      } else if (conv.unit === 'kg' || conv.unit === 'L') {
+        displayCount = String(Math.round(converted * 100) / 100);
+      } else if (conv.unit === 'oz') {
+        displayCount = String(Math.round(converted * 2) / 2);
+      } else if (conv.unit === 'lbs') {
+        displayCount = formatCount(Math.round(converted * 4) / 4);
+      } else if (conv.unit === 'cups' || conv.unit === 'fl oz') {
+        displayCount = formatCount(Math.round(converted * 4) / 4);
+      } else {
+        displayCount = formatCount(converted);
+      }
+      return { count: displayCount, unit: conv.unit };
+    }
+  }
+
+  // 6. No conversion available — return scaled original as-is
+  return { count: origCount != null ? formatCount(origCount * scale) : '', unit: origUnit };
+}
+
+// === Recipe Scaling ===
+let currentScale = 1;
+let currentDetailRecipe = null;
+
+function parseCount(str) {
+  if (!str) return null;
+  str = String(str).trim();
+  if (!str) return null;
+  // Mixed number: "2 1/2"
+  const mixed = str.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+  if (mixed) return parseInt(mixed[1]) + parseInt(mixed[2]) / parseInt(mixed[3]);
+  // Fraction: "1/2"
+  const frac = str.match(/^(\d+)\/(\d+)$/);
+  if (frac) return parseInt(frac[1]) / parseInt(frac[2]);
+  // Decimal or integer
+  const num = parseFloat(str);
+  return isNaN(num) ? null : num;
+}
+
+function getIngredientCount(ing) {
+  if (ing.count) return parseCount(ing.count);
+  if (ing.fcountu && ing.fcountd) return parseInt(ing.fcountu) / parseInt(ing.fcountd);
+  return null;
+}
+
+function formatCount(num) {
+  if (num == null) return '';
+  // Common fractions for readability
+  const fractions = [
+    [0.25, '1/4'], [1/3, '1/3'], [0.5, '1/2'], [2/3, '2/3'], [0.75, '3/4'],
+  ];
+  const whole = Math.floor(num);
+  const remainder = num - whole;
+  if (remainder < 0.01) return String(whole);
+  for (const [val, str] of fractions) {
+    if (Math.abs(remainder - val) < 0.01) {
+      return whole > 0 ? `${whole} ${str}` : str;
+    }
+  }
+  // Round to 2 decimals, strip trailing zeros
+  const rounded = Math.round(num * 100) / 100;
+  return String(rounded);
+}
+
+function showDetail(r) {
+  currentDetailRecipe = r;
+  currentScale = 1;
+  renderDetail(r, 1);
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function setScale(s) {
+  currentScale = s;
+  if (currentDetailRecipe) renderDetail(currentDetailRecipe, s);
+}
+
+function renderDetail(r, scale) {
+  const d = document.getElementById('detail');
+
+  const imgHtml = r.hasImage
+    ? `<img class="detail-img" src="/images/${r.uuid}/main.jpg" alt="">`
+    : `<div class="detail-img no-img">&#127858;</div>`;
+
+  const meta = [];
+  if (r.time?.active) meta.push(`Active: ${esc(r.time.active)}`);
+  if (r.time?.total) meta.push(`Total: ${esc(r.time.total)}`);
+  if (r.servings?.length) {
+    const s = r.servings[0];
+    const origCount = parseCount(s.count);
+    const scaledCount = origCount != null ? formatCount(origCount * scale) : (s.count || '');
+    meta.push(`Serves ${scaledCount}${s.unit ? ' ' + s.unit : ''}`);
+  }
+  if (r.source?.name) {
+    const src = r.source.address
+      ? `<a href="${r.source.address.startsWith('http') ? '' : 'https://'}${esc(r.source.address)}" target="_blank" rel="noopener">${esc(r.source.name)}</a>`
+      : esc(r.source.name);
+    meta.push(`Source: ${src}`);
+  }
+
+  // Scale bar
+  const scales = [0.5, 1, 2, 4];
+  const scaleLabels = ['½x', '1x', '2x', '4x'];
+  const scaleBar = '<div class="scale-bar">' + scales.map((s, i) =>
+    `<button class="scale-btn${s === scale ? ' active' : ''}" onclick="setScale(${s})">${scaleLabels[i]}</button>`
+  ).join('') + '</div>';
+
+  // Build ingredients HTML with groups
+  let ingHtml = '';
+  let currentGroup = null;
+  (r.ingredients || []).forEach(ing => {
+    if (ing.group && ing.group !== currentGroup) {
+      currentGroup = ing.group;
+      ingHtml += `<div class="group-label">${esc(ing.group)}</div>`;
+    }
+    const display = getIngredientDisplay(ing, scale);
+    let text = '';
+    if (display.count) text += display.count + ' ';
+    if (display.unit) text += display.unit + ' ';
+    text += ing.name;
+    if (ing.info) text += ` (${ing.info})`;
+    ingHtml += `<li>${esc(text)}</li>`;
+  });
+
+  const stepsHtml = (r.steps || []).map(s => `<li>${esc(s)}</li>`).join('');
+
+  const tags = (r.tags || []).map(t => `<span>${esc(t)}</span>`).join('');
+
+  d.innerHTML = `
+    <button class="detail-close" onclick="closeDetail()">&times;</button>
+    <button class="detail-edit-btn" onclick="enterEditMode()">&#9998;</button>
+    ${imgHtml}
+    <div class="detail-content">
+      <h2>${esc(r.title)}</h2>
+      <div class="detail-meta">${meta.join('<span style="color:#ccc">|</span>')}</div>
+      ${r.preamble ? `<div class="detail-preamble">${esc(r.preamble)}</div>` : ''}
+      ${scaleBar}
+      <div class="detail-section">
+        <h3>Ingredients</h3>
+        <ul>${ingHtml}</ul>
+      </div>
+      <div class="detail-section">
+        <h3>Method</h3>
+        <ol>${stepsHtml}</ol>
+      </div>
+      ${tags ? `<div class="detail-tags">${tags}</div>` : ''}
+    </div>
+  `;
+}
+
+function closeDetail() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  currentScale = 1;
+  currentDetailRecipe = null;
+  editHeroB64 = null;
+}
+
+// === Recipe Edit Mode ===
+let editHeroB64 = null;
+
+function enterEditMode() {
+  const r = currentDetailRecipe;
+  if (!r) return;
+  editHeroB64 = null;
+
+  const d = document.getElementById('detail');
+  const imgSrc = r.hasImage ? `/images/${r.uuid}/main.jpg?t=${Date.now()}` : '';
+
+  let ingRowsHtml = '';
+  (r.ingredients || []).forEach(ing => {
+    ingRowsHtml += buildIngredientRowHtml(ing);
+  });
+  if (!ingRowsHtml) ingRowsHtml = buildIngredientRowHtml({});
+
+  let stepRowsHtml = '';
+  (r.steps || []).forEach((s, i) => {
+    stepRowsHtml += buildStepRowHtml(s, i + 1);
+  });
+  if (!stepRowsHtml) stepRowsHtml = buildStepRowHtml('', 1);
+
+  const servCount = r.servings?.[0]?.count || '';
+  const servUnit = r.servings?.[0]?.unit || '';
+
+  d.innerHTML = `
+    <div class="edit-hero-area" onclick="document.getElementById('editHeroInput').click()">
+      ${imgSrc ? `<img id="editHeroPreview" src="${imgSrc}" alt="">` : `<div id="editHeroPreview" style="height:120px;display:flex;align-items:center;justify-content:center;font-size:3rem">&#127858;</div>`}
+      <div class="edit-hero-overlay"><span>Change Image</span></div>
+      <input type="file" id="editHeroInput" class="edit-hero-input" accept="image/*" onchange="handleEditHeroUpload(event)">
+    </div>
+    <div class="edit-form">
+      <div class="edit-row">
+        <label class="edit-label">Title</label>
+        <input class="edit-input" id="editTitle" type="text" value="${esc(r.title || '')}">
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Description</label>
+        <textarea class="edit-textarea" id="editPreamble" rows="2">${esc(r.preamble || '')}</textarea>
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Tags (comma-separated)</label>
+        <input class="edit-input" id="editTags" type="text" value="${esc((r.tags || []).join(', '))}">
+      </div>
+      <div class="edit-row-inline">
+        <div class="edit-row">
+          <label class="edit-label">Active Time</label>
+          <input class="edit-input" id="editTimeActive" type="text" value="${esc(r.time?.active || '')}" placeholder="e.g. 20 mins">
+        </div>
+        <div class="edit-row">
+          <label class="edit-label">Total Time</label>
+          <input class="edit-input" id="editTimeTotal" type="text" value="${esc(r.time?.total || '')}" placeholder="e.g. 1 hour">
+        </div>
+      </div>
+      <div class="edit-row-inline">
+        <div class="edit-row">
+          <label class="edit-label">Servings</label>
+          <input class="edit-input" id="editServingsCount" type="text" value="${esc(servCount)}" placeholder="e.g. 4">
+        </div>
+        <div class="edit-row">
+          <label class="edit-label">Servings Unit</label>
+          <input class="edit-input" id="editServingsUnit" type="text" value="${esc(servUnit)}" placeholder="e.g. serve">
+        </div>
+      </div>
+      <div class="edit-row-inline">
+        <div class="edit-row">
+          <label class="edit-label">Source Name</label>
+          <input class="edit-input" id="editSourceName" type="text" value="${esc(r.source?.name || '')}">
+        </div>
+        <div class="edit-row">
+          <label class="edit-label">Source URL</label>
+          <input class="edit-input" id="editSourceUrl" type="text" value="${esc(r.source?.address || '')}" placeholder="https://...">
+        </div>
+      </div>
+
+      <div class="edit-section">
+        <div class="edit-section-header">
+          <label class="edit-label" style="margin-bottom:0">Ingredients</label>
+          <button class="edit-add-btn" onclick="addIngredientRow()">+ Add</button>
+        </div>
+        <div id="editIngredientsList">${ingRowsHtml}</div>
+      </div>
+
+      <div class="edit-section">
+        <div class="edit-section-header">
+          <label class="edit-label" style="margin-bottom:0">Steps</label>
+          <button class="edit-add-btn" onclick="addStepRow()">+ Add</button>
+        </div>
+        <div id="editStepsList">${stepRowsHtml}</div>
+      </div>
+
+      <div class="edit-actions">
+        <button class="edit-save-btn" id="editSaveBtn" onclick="saveRecipeEdits()">Save Changes</button>
+        <button class="edit-cancel-btn" onclick="renderDetail(currentDetailRecipe, currentScale)">Cancel</button>
+        <button class="edit-delete-btn" onclick="showDeleteConfirm()">Delete</button>
+      </div>
+      <div id="deleteConfirmArea"></div>
+    </div>
+  `;
+}
+
+function buildIngredientRowHtml(ing) {
+  return `<div class="ing-row">
+    <input class="edit-input ing-count" type="text" value="${esc(ing?.count || '')}" placeholder="Qty">
+    <input class="edit-input ing-unit" type="text" value="${esc(ing?.unit || '')}" placeholder="Unit">
+    <input class="edit-input ing-name" type="text" value="${esc(ing?.name || '')}" placeholder="Ingredient name">
+    <input class="edit-input ing-info" type="text" value="${esc(ing?.info || '')}" placeholder="Notes">
+    <input class="edit-input ing-group" type="text" value="${esc(ing?.group || '')}" placeholder="Group">
+    <button class="edit-remove-btn" onclick="removeEditRow(this)">&times;</button>
+  </div>`;
+}
+
+function buildStepRowHtml(text, num) {
+  return `<div class="step-row">
+    <span class="step-num">${num}</span>
+    <textarea class="edit-textarea" rows="2">${esc(text || '')}</textarea>
+    <button class="edit-remove-btn" onclick="removeEditRow(this); renumberSteps()">&times;</button>
+  </div>`;
+}
+
+function addIngredientRow(ing) {
+  const list = document.getElementById('editIngredientsList');
+  if (!list) return;
+  list.insertAdjacentHTML('beforeend', buildIngredientRowHtml(ing || {}));
+}
+
+function addStepRow(text) {
+  const list = document.getElementById('editStepsList');
+  if (!list) return;
+  const num = list.querySelectorAll('.step-row').length + 1;
+  list.insertAdjacentHTML('beforeend', buildStepRowHtml(text || '', num));
+}
+
+function removeEditRow(btn) {
+  btn.closest('.ing-row, .step-row').remove();
+}
+
+function renumberSteps() {
+  const list = document.getElementById('editStepsList');
+  if (!list) return;
+  list.querySelectorAll('.step-num').forEach((el, i) => { el.textContent = i + 1; });
+}
+
+function handleEditHeroUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    editHeroB64 = e.target.result.split(',')[1];
+    const preview = document.getElementById('editHeroPreview');
+    if (preview.tagName === 'IMG') {
+      preview.src = e.target.result;
+    } else {
+      preview.outerHTML = `<img id="editHeroPreview" src="${e.target.result}" alt="">`;
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveRecipeEdits() {
+  const r = currentDetailRecipe;
+  if (!r) return;
+
+  const btn = document.getElementById('editSaveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  // Collect ingredients
+  const ingredients = [];
+  document.querySelectorAll('#editIngredientsList .ing-row').forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const name = inputs[2].value.trim();
+    if (!name) return;
+    ingredients.push({
+      count: inputs[0].value.trim(),
+      unit: inputs[1].value.trim(),
+      name: name,
+      info: inputs[3].value.trim(),
+      group: inputs[4].value.trim(),
+    });
+  });
+
+  // Collect steps
+  const steps = [];
+  document.querySelectorAll('#editStepsList .step-row textarea').forEach(ta => {
+    const text = ta.value.trim();
+    if (text) steps.push(text);
+  });
+
+  // Collect servings
+  const servCount = document.getElementById('editServingsCount').value.trim();
+  const servUnit = document.getElementById('editServingsUnit').value.trim();
+  const servings = servCount ? [{ count: servCount, unit: servUnit }] : [];
+
+  const update = {
+    title: document.getElementById('editTitle').value.trim() || 'Untitled',
+    preamble: document.getElementById('editPreamble').value.trim(),
+    tags: document.getElementById('editTags').value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean),
+    time: {
+      active: document.getElementById('editTimeActive').value.trim(),
+      total: document.getElementById('editTimeTotal').value.trim(),
+    },
+    servings,
+    ingredients,
+    steps,
+    source: {
+      name: document.getElementById('editSourceName').value.trim(),
+      address: document.getElementById('editSourceUrl').value.trim(),
+    },
+  };
+
+  if (editHeroB64) {
+    update._hero_b64 = editHeroB64;
+  }
+
+  try {
+    const res = await fetch(`/api/recipes/${r.uuid}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(update),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Save failed');
+
+    // Update in-memory data
+    const idx = recipes.findIndex(x => x.uuid === r.uuid);
+    if (idx !== -1) recipes[idx] = { ...recipes[idx], ...data };
+    currentDetailRecipe = recipes[idx] || data;
+
+    editHeroB64 = null;
+    renderDetail(currentDetailRecipe, currentScale);
+    render();
+    buildTagBar();
+  } catch (err) {
+    alert('Error saving: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Save Changes';
+  }
+}
+
+function showDeleteConfirm() {
+  const area = document.getElementById('deleteConfirmArea');
+  if (!area) return;
+  area.innerHTML = `
+    <div class="delete-confirm-bar">
+      <span>Delete this recipe permanently?</span>
+      <button class="delete-confirm-yes" onclick="confirmDeleteRecipe()">Delete</button>
+      <button class="delete-confirm-no" onclick="this.closest('.delete-confirm-bar').remove()">Cancel</button>
+    </div>
+  `;
+}
+
+async function confirmDeleteRecipe() {
+  const r = currentDetailRecipe;
+  if (!r) return;
+  try {
+    const res = await fetch(`/api/recipes/${r.uuid}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Delete failed');
+
+    recipes = recipes.filter(x => x.uuid !== r.uuid);
+    closeDetail();
+    render();
+    buildTagBar();
+  } catch (err) {
+    alert('Error deleting: ' + err.message);
+  }
+}
+
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// === Scan Recipe Feature ===
+let scannedRecipe = null;
+let scanImages = []; // Array of {file, editedDataUrl}
+const MAX_SCAN_IMAGES = 5;
+
+function openScanModal() {
+  document.getElementById('scanOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  resetScanModal();
+}
+
+function closeScanModal() {
+  document.getElementById('scanOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function resetScanModal() {
+  scannedRecipe = null;
+  scanImages = [];
+  document.getElementById('scanUploadText').style.display = '';
+  document.getElementById('scanBtn').disabled = true;
+  document.getElementById('scanBtn').textContent = 'Scan with AI';
+  document.getElementById('scanSpinner').classList.remove('active');
+  document.getElementById('scanPreview').classList.remove('active');
+  document.getElementById('scanError').classList.remove('active');
+  document.getElementById('scanActions').style.display = '';
+  document.getElementById('scanFileInput').value = '';
+  document.getElementById('scanThumbs').innerHTML = '';
+  document.getElementById('scanAddMore').style.display = 'none';
+  document.getElementById('scanEditor').classList.remove('open');
+  heroSelection = { type: 'scanned', index: 0, customDataUrl: null };
+  document.getElementById('heroPickerStrip').innerHTML = '';
+}
+
+function updateScanThumbs() {
+  const strip = document.getElementById('scanThumbs');
+  strip.innerHTML = '';
+  scanImages.forEach((entry, idx) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'scan-thumb';
+
+    const img = document.createElement('img');
+    img.src = entry.editedDataUrl || URL.createObjectURL(entry.file);
+    thumb.appendChild(img);
+
+    const badge = document.createElement('div');
+    badge.className = 'page-badge';
+    badge.textContent = idx + 1;
+    thumb.appendChild(badge);
+
+    const actions = document.createElement('div');
+    actions.className = 'scan-thumb-actions';
+    const editBtn = document.createElement('button');
+    editBtn.className = 'edit-btn';
+    editBtn.textContent = 'Edit';
+    editBtn.onclick = (e) => { e.stopPropagation(); openEditor(idx); };
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.textContent = 'Remove';
+    removeBtn.onclick = (e) => { e.stopPropagation(); removeScanImage(idx); };
+    actions.appendChild(editBtn);
+    actions.appendChild(removeBtn);
+    thumb.appendChild(actions);
+
+    strip.appendChild(thumb);
+  });
+
+  const hasImages = scanImages.length > 0;
+  document.getElementById('scanUploadText').style.display = hasImages ? 'none' : '';
+  document.getElementById('scanUploadArea').style.display = hasImages ? 'none' : '';
+  document.getElementById('scanAddMore').style.display = hasImages && scanImages.length < MAX_SCAN_IMAGES ? '' : 'none';
+  document.getElementById('scanBtn').disabled = !hasImages;
+  const count = scanImages.length;
+  document.getElementById('scanBtn').textContent = count > 0
+    ? `Scan ${count} photo${count > 1 ? 's' : ''} with AI`
+    : 'Scan with AI';
+}
+
+function removeScanImage(idx) {
+  scanImages.splice(idx, 1);
+  if (scanImages.length === 0) {
+    document.getElementById('scanUploadArea').style.display = '';
+  }
+  updateScanThumbs();
+}
+
+document.getElementById('scanFileInput').addEventListener('change', function(e) {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+  const remaining = MAX_SCAN_IMAGES - scanImages.length;
+  const toAdd = files.slice(0, remaining);
+  toAdd.forEach(file => {
+    scanImages.push({ file, editedDataUrl: null });
+  });
+  updateScanThumbs();
+  // Reset file input so same files can be re-selected
+  e.target.value = '';
+});
+
+document.getElementById('scanOverlay').addEventListener('click', function(e) {
+  if (e.target === e.currentTarget) closeScanModal();
+});
+
+// Drag and drop support
+(function() {
+  const area = document.getElementById('scanUploadArea');
+
+  area.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    area.classList.add('drag-over');
+  });
+
+  area.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    area.classList.remove('drag-over');
+  });
+
+  area.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    area.classList.remove('drag-over');
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    if (!files.length) return;
+    const remaining = MAX_SCAN_IMAGES - scanImages.length;
+    files.slice(0, remaining).forEach(file => {
+      scanImages.push({ file, editedDataUrl: null });
+    });
+    updateScanThumbs();
+  });
+
+  // Also allow dropping on the whole modal when thumbs are showing
+  const modal = document.querySelector('.scan-modal');
+  modal.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (scanImages.length > 0 && scanImages.length < MAX_SCAN_IMAGES) {
+      area.classList.add('drag-over');
+      area.style.display = '';
+    }
+  });
+
+  modal.addEventListener('dragleave', (e) => {
+    if (!modal.contains(e.relatedTarget)) {
+      area.classList.remove('drag-over');
+      if (scanImages.length > 0) area.style.display = 'none';
+    }
+  });
+
+  modal.addEventListener('drop', (e) => {
+    // Only handle if not caught by the upload area itself
+    if (e.target === area || area.contains(e.target)) return;
+    e.preventDefault();
+    area.classList.remove('drag-over');
+    if (scanImages.length > 0) area.style.display = 'none';
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    if (!files.length) return;
+    const remaining = MAX_SCAN_IMAGES - scanImages.length;
+    files.slice(0, remaining).forEach(file => {
+      scanImages.push({ file, editedDataUrl: null });
+    });
+    updateScanThumbs();
+  });
+})();
+
+async function doScan() {
+  if (scanImages.length === 0) return;
+
+  document.getElementById('scanBtn').disabled = true;
+  document.getElementById('scanSpinner').classList.add('active');
+  document.getElementById('scanError').classList.remove('active');
+  document.getElementById('scanPreview').classList.remove('active');
+
+  const formData = new FormData();
+  for (let i = 0; i < scanImages.length; i++) {
+    const entry = scanImages[i];
+    if (entry.editedDataUrl) {
+      // Convert data URL to blob
+      const resp = await fetch(entry.editedDataUrl);
+      const blob = await resp.blob();
+      formData.append(`image_${i}`, blob, `image_${i}.jpg`);
+    } else {
+      formData.append(`image_${i}`, entry.file);
+    }
+  }
+
+  try {
+    const res = await fetch('/api/scan', { method: 'POST', body: formData });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Scan failed');
+    }
+
+    scannedRecipe = data;
+    populatePreview(data);
+    document.getElementById('scanPreview').classList.add('active');
+    document.getElementById('scanActions').style.display = 'none';
+  } catch (err) {
+    const errorEl = document.getElementById('scanError');
+    errorEl.textContent = err.message;
+    errorEl.classList.add('active');
+    document.getElementById('scanBtn').disabled = false;
+  } finally {
+    document.getElementById('scanSpinner').classList.remove('active');
+  }
+}
+
+// === Image Editor ===
+let editorImageIdx = -1;
+let editorImg = null; // HTMLImageElement with original pixels
+let editorRotation = 0; // degrees (0, 90, 180, 270)
+let editorCropMode = false;
+let editorCropRect = null; // {x, y, w, h} in canvas coords
+let editorCropStart = null; // drag start
+let editorCroppedImg = null; // if crop was applied, new base image
+
+function openEditor(idx) {
+  editorImageIdx = idx;
+  editorRotation = 0;
+  editorCropMode = false;
+  editorCropRect = null;
+  editorCroppedImg = null;
+  document.getElementById('editorBrightness').value = 100;
+  document.getElementById('editorContrast').value = 100;
+  document.getElementById('cropToggleBtn').classList.remove('active');
+  document.getElementById('cropApplyBtn').style.display = 'none';
+  document.getElementById('cropOverlay').style.display = 'none';
+
+  const entry = scanImages[idx];
+  const src = entry.editedDataUrl || URL.createObjectURL(entry.file);
+
+  editorImg = new Image();
+  editorImg.onload = () => {
+    editorRedraw();
+    document.getElementById('scanEditor').classList.add('open');
+  };
+  editorImg.src = src;
+}
+
+function editorGetSourceImage() {
+  return editorCroppedImg || editorImg;
+}
+
+function editorRedraw() {
+  const canvas = document.getElementById('editorCanvas');
+  const ctx = canvas.getContext('2d');
+  const img = editorGetSourceImage();
+  if (!img) return;
+
+  const brightness = document.getElementById('editorBrightness').value;
+  const contrast = document.getElementById('editorContrast').value;
+
+  const isRotated = editorRotation % 180 !== 0;
+  const w = isRotated ? img.naturalHeight : img.naturalWidth;
+  const h = isRotated ? img.naturalWidth : img.naturalHeight;
+
+  // Limit canvas size for performance
+  const maxDim = 800;
+  const scale = Math.min(1, maxDim / Math.max(w, h));
+  canvas.width = Math.round(w * scale);
+  canvas.height = Math.round(h * scale);
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+  ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
+  ctx.translate(canvas.width / 2, canvas.height / 2);
+  ctx.rotate((editorRotation * Math.PI) / 180);
+  const drawW = img.naturalWidth * scale;
+  const drawH = img.naturalHeight * scale;
+  ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+  ctx.restore();
+
+  // Hide crop overlay when redrawing
+  document.getElementById('cropOverlay').style.display = 'none';
+  editorCropRect = null;
+}
+
+function editorRotate(deg) {
+  editorRotation = (editorRotation + deg + 360) % 360;
+  editorRedraw();
+}
+
+function editorToggleCrop() {
+  editorCropMode = !editorCropMode;
+  document.getElementById('cropToggleBtn').classList.toggle('active', editorCropMode);
+  document.getElementById('cropApplyBtn').style.display = editorCropMode ? '' : 'none';
+  if (!editorCropMode) {
+    document.getElementById('cropOverlay').style.display = 'none';
+    editorCropRect = null;
+  }
+}
+
+// Crop drag handling on the canvas wrapper
+(function() {
+  const wrap = document.getElementById('editorCanvasWrap');
+  const overlay = document.getElementById('cropOverlay');
+  let dragging = false;
+
+  function getCanvasOffset() {
+    const canvas = document.getElementById('editorCanvas');
+    const canvasRect = canvas.getBoundingClientRect();
+    return canvasRect;
+  }
+
+  wrap.addEventListener('mousedown', (e) => {
+    if (!editorCropMode) return;
+    const rect = getCanvasOffset();
+    editorCropStart = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    editorCropRect = { x: editorCropStart.x, y: editorCropStart.y, w: 0, h: 0 };
+    dragging = true;
+    overlay.style.display = 'block';
+    e.preventDefault();
+  });
+
+  wrap.addEventListener('mousemove', (e) => {
+    if (!dragging || !editorCropMode) return;
+    const rect = getCanvasOffset();
+    const canvas = document.getElementById('editorCanvas');
+    const cx = Math.max(0, Math.min(e.clientX - rect.left, canvas.width));
+    const cy = Math.max(0, Math.min(e.clientY - rect.top, canvas.height));
+
+    const x = Math.min(editorCropStart.x, cx);
+    const y = Math.min(editorCropStart.y, cy);
+    const w = Math.abs(cx - editorCropStart.x);
+    const h = Math.abs(cy - editorCropStart.y);
+    editorCropRect = { x, y, w, h };
+
+    // Position the overlay relative to the canvas within the wrapper
+    const wrapRect = wrap.getBoundingClientRect();
+    const offsetX = rect.left - wrapRect.left;
+    const offsetY = rect.top - wrapRect.top;
+    overlay.style.left = (x + offsetX) + 'px';
+    overlay.style.top = (y + offsetY) + 'px';
+    overlay.style.width = w + 'px';
+    overlay.style.height = h + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    dragging = false;
+  });
+
+  // Touch support
+  wrap.addEventListener('touchstart', (e) => {
+    if (!editorCropMode || e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const rect = getCanvasOffset();
+    editorCropStart = { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
+    editorCropRect = { x: editorCropStart.x, y: editorCropStart.y, w: 0, h: 0 };
+    dragging = true;
+    overlay.style.display = 'block';
+    e.preventDefault();
+  }, { passive: false });
+
+  wrap.addEventListener('touchmove', (e) => {
+    if (!dragging || !editorCropMode || e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const rect = getCanvasOffset();
+    const canvas = document.getElementById('editorCanvas');
+    const cx = Math.max(0, Math.min(touch.clientX - rect.left, canvas.width));
+    const cy = Math.max(0, Math.min(touch.clientY - rect.top, canvas.height));
+
+    const x = Math.min(editorCropStart.x, cx);
+    const y = Math.min(editorCropStart.y, cy);
+    const w = Math.abs(cx - editorCropStart.x);
+    const h = Math.abs(cy - editorCropStart.y);
+    editorCropRect = { x, y, w, h };
+
+    const wrapRect = wrap.getBoundingClientRect();
+    const offsetX = rect.left - wrapRect.left;
+    const offsetY = rect.top - wrapRect.top;
+    overlay.style.left = (x + offsetX) + 'px';
+    overlay.style.top = (y + offsetY) + 'px';
+    overlay.style.width = w + 'px';
+    overlay.style.height = h + 'px';
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('touchend', () => { dragging = false; });
+})();
+
+function editorApplyCrop() {
+  if (!editorCropRect || editorCropRect.w < 5 || editorCropRect.h < 5) return;
+
+  const canvas = document.getElementById('editorCanvas');
+  const { x, y, w, h } = editorCropRect;
+
+  // Extract the cropped region from the current canvas
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = w;
+  tempCanvas.height = h;
+  const tCtx = tempCanvas.getContext('2d');
+  tCtx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
+
+  // Replace the source image with the cropped result
+  const croppedImg = new Image();
+  croppedImg.onload = () => {
+    editorCroppedImg = croppedImg;
+    editorRotation = 0;
+    editorCropMode = false;
+    document.getElementById('cropToggleBtn').classList.remove('active');
+    document.getElementById('cropApplyBtn').style.display = 'none';
+    document.getElementById('cropOverlay').style.display = 'none';
+    editorRedraw();
+  };
+  croppedImg.src = tempCanvas.toDataURL('image/jpeg', 0.92);
+}
+
+function editorDone() {
+  const canvas = document.getElementById('editorCanvas');
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+  scanImages[editorImageIdx].editedDataUrl = dataUrl;
+  document.getElementById('scanEditor').classList.remove('open');
+  updateScanThumbs();
+}
+
+function editorCancel() {
+  document.getElementById('scanEditor').classList.remove('open');
+}
+
+// === Hero Image Picker ===
+let heroSelection = { type: 'scanned', index: 0, customDataUrl: null }; // type: 'scanned' | 'custom'
+
+function buildHeroPicker() {
+  const strip = document.getElementById('heroPickerStrip');
+  strip.innerHTML = '';
+
+  // Add scanned image options
+  scanImages.forEach((entry, idx) => {
+    const opt = document.createElement('div');
+    opt.className = 'hero-option' + (heroSelection.type === 'scanned' && heroSelection.index === idx ? ' selected' : '');
+    opt.onclick = () => {
+      heroSelection = { type: 'scanned', index: idx, customDataUrl: null };
+      buildHeroPicker();
+    };
+
+    const img = document.createElement('img');
+    img.src = entry.editedDataUrl || URL.createObjectURL(entry.file);
+    opt.appendChild(img);
+
+    const check = document.createElement('div');
+    check.className = 'hero-check';
+    check.innerHTML = '&#10003;';
+    opt.appendChild(check);
+
+    strip.appendChild(opt);
+  });
+
+  // Show custom hero if one was uploaded
+  if (heroSelection.type === 'custom' && heroSelection.customDataUrl) {
+    const opt = document.createElement('div');
+    opt.className = 'hero-option selected';
+    opt.onclick = () => { buildHeroPicker(); };
+
+    const img = document.createElement('img');
+    img.src = heroSelection.customDataUrl;
+    opt.appendChild(img);
+
+    const check = document.createElement('div');
+    check.className = 'hero-check';
+    check.innerHTML = '&#10003;';
+    opt.appendChild(check);
+
+    strip.appendChild(opt);
+  }
+
+  // Upload dish photo button
+  const uploadBtn = document.createElement('button');
+  uploadBtn.className = 'hero-upload-btn';
+  uploadBtn.innerHTML = '<span class="hero-upload-icon">&#128247;</span>Dish photo';
+  uploadBtn.onclick = () => document.getElementById('heroFileInput').click();
+  strip.appendChild(uploadBtn);
+}
+
+document.getElementById('heroFileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    heroSelection = { type: 'custom', index: -1, customDataUrl: ev.target.result };
+    buildHeroPicker();
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+});
+
+function populatePreview(recipe) {
+  document.getElementById('scanTitle').value = recipe.title || '';
+  document.getElementById('scanPreamble').value = recipe.preamble || '';
+  document.getElementById('scanTags').value = (recipe.tags || []).join(', ');
+  document.getElementById('scanTimeActive').value = (recipe.time || {}).active || '';
+  document.getElementById('scanTimeTotal').value = (recipe.time || {}).total || '';
+
+  const servings = recipe.servings && recipe.servings[0] ? recipe.servings[0].count || '' : '';
+  document.getElementById('scanServings').value = servings;
+
+  // Format ingredients as editable text
+  const ingLines = (recipe.ingredients || []).map(ing => {
+    let line = '';
+    if (ing.count) line += ing.count + ' ';
+    if (ing.unit) line += ing.unit + ' ';
+    line += ing.name;
+    if (ing.info) line += ' - ' + ing.info;
+    if (ing.group) line += ' [' + ing.group + ']';
+    return line;
+  });
+  document.getElementById('scanIngredients').value = ingLines.join('\n');
+
+  document.getElementById('scanSteps').value = (recipe.steps || []).join('\n');
+
+  // Reset hero selection and build picker
+  heroSelection = { type: 'scanned', index: 0, customDataUrl: null };
+  buildHeroPicker();
+}
+
+function parseIngredientLine(line) {
+  line = line.trim();
+  if (!line) return null;
+
+  let group = '';
+  const groupMatch = line.match(/\[(.+?)\]\s*$/);
+  if (groupMatch) {
+    group = groupMatch[1];
+    line = line.substring(0, groupMatch.index).trim();
+  }
+
+  let info = '';
+  const infoMatch = line.match(/\s-\s(.+)$/);
+  if (infoMatch) {
+    info = infoMatch[1];
+    line = line.substring(0, infoMatch.index).trim();
+  }
+
+  // Try to parse: count unit name
+  const parts = line.match(/^(\d+[\d\/\s]*(?:\/\d+)?)\s+(tsp|tbsp|cup|cups|g|kg|ml|L|oz|lb|lbs|teaspoon|tablespoon|bunch|cloves?|pieces?|pinch|handful)\s+(.+)$/i);
+  if (parts) {
+    return { name: parts[3], unit: parts[2], count: parts[1].trim(), info, group };
+  }
+
+  // Try: count name (no unit)
+  const numMatch = line.match(/^(\d+[\d\/\s]*(?:\/\d+)?)\s+(.+)$/);
+  if (numMatch) {
+    return { name: numMatch[2], unit: '', count: numMatch[1].trim(), info, group };
+  }
+
+  return { name: line, unit: '', count: '', info, group };
+}
+
+async function saveScannedRecipe() {
+  const recipe = {
+    title: document.getElementById('scanTitle').value.trim(),
+    preamble: document.getElementById('scanPreamble').value.trim(),
+    tags: document.getElementById('scanTags').value.split(',').map(t => t.trim()).filter(Boolean),
+    time: {
+      active: document.getElementById('scanTimeActive').value.trim(),
+      total: document.getElementById('scanTimeTotal').value.trim(),
+    },
+    servings: [],
+    ingredients: [],
+    steps: [],
+    _images_b64: scannedRecipe ? scannedRecipe._images_b64 : [],
+    _images_media_types: scannedRecipe ? scannedRecipe._images_media_types : [],
+    _hero_index: heroSelection.type === 'scanned' ? heroSelection.index : -1,
+    _hero_custom_b64: null,
+  };
+
+  const servingsVal = document.getElementById('scanServings').value.trim();
+  if (servingsVal) {
+    recipe.servings = [{ count: servingsVal, unit: 'serve' }];
+  }
+
+  recipe.ingredients = document.getElementById('scanIngredients').value
+    .split('\n')
+    .map(parseIngredientLine)
+    .filter(Boolean);
+
+  recipe.steps = document.getElementById('scanSteps').value
+    .split('\n')
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  // If custom hero photo was uploaded, extract its base64
+  if (heroSelection.type === 'custom' && heroSelection.customDataUrl) {
+    // dataURL format: data:image/jpeg;base64,XXXXX
+    const parts = heroSelection.customDataUrl.split(',');
+    recipe._hero_custom_b64 = parts[1] || null;
+  }
+
+  try {
+    const res = await fetch('/api/recipes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(recipe),
+    });
+    const saved = await res.json();
+    if (!res.ok) throw new Error(saved.error || 'Save failed');
+
+    // Add to local list and re-render
+    recipes.push(saved);
+    buildTagBar();
+    render();
+    closeScanModal();
+  } catch (err) {
+    const errorEl = document.getElementById('scanError');
+    errorEl.textContent = err.message;
+    errorEl.classList.add('active');
+  }
+}
+
+// === PDF Cookbook Import ===
+let pdfPages = []; // Array of {dataUrl, base64, mediaType}
+let pdfSelectedPages = new Set(); // indices of selected pages
+let pdfClassification = null; // {recipes: [...], skipped_pages: [...]}
+let pdfExtracted = []; // Array of extracted recipe objects
+let pdfJsLoaded = false;
+
+function openPdfImportModal() {
+  document.getElementById('pdfOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  resetPdfModal();
+}
+
+function closePdfImportModal() {
+  document.getElementById('pdfOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function resetPdfModal() {
+  pdfPages = [];
+  pdfSelectedPages = new Set();
+  pdfClassification = null;
+  pdfExtracted = [];
+  document.getElementById('pdfUploadSection').style.display = '';
+  document.getElementById('pdfProgress').style.display = 'none';
+  document.getElementById('pdfPageGrid').innerHTML = '';
+  document.getElementById('pdfSelectSection').style.display = 'none';
+  document.getElementById('pdfRangeInput').value = '';
+  document.getElementById('pdfClassifySection').style.display = 'none';
+  document.getElementById('pdfRecipeGroups').innerHTML = '';
+  document.getElementById('pdfReviewSection').style.display = 'none';
+  document.getElementById('pdfReviewList').innerHTML = '';
+}
+
+function setPdfProgress(label, pct) {
+  document.getElementById('pdfProgress').style.display = '';
+  document.getElementById('pdfProgressLabel').textContent = label;
+  document.getElementById('pdfProgressFill').style.width = pct + '%';
+}
+
+async function loadPdfJs() {
+  if (pdfJsLoaded) return;
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+    script.type = 'module';
+    // pdf.js v4 is ESM, so we use a different approach
+    script.onload = () => { pdfJsLoaded = true; resolve(); };
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+// Load PDF.js as global script (non-module for compatibility)
+async function ensurePdfJs() {
+  if (window.pdfjsLib) return;
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      resolve();
+    };
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+document.getElementById('pdfFileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+  handlePdfFile(file);
+});
+
+// Drag and drop for PDF
+(function() {
+  const area = document.getElementById('pdfUploadArea');
+  area.addEventListener('dragover', (e) => { e.preventDefault(); area.classList.add('drag-over'); });
+  area.addEventListener('dragleave', (e) => { e.preventDefault(); area.classList.remove('drag-over'); });
+  area.addEventListener('drop', (e) => {
+    e.preventDefault();
+    area.classList.remove('drag-over');
+    const file = Array.from(e.dataTransfer.files).find(f => f.type === 'application/pdf' || f.name.endsWith('.pdf'));
+    if (file) handlePdfFile(file);
+  });
+})();
+
+document.getElementById('pdfOverlay').addEventListener('click', function(e) {
+  if (e.target === e.currentTarget) closePdfImportModal();
+});
+
+async function handlePdfFile(file) {
+  document.getElementById('pdfUploadSection').style.display = 'none';
+  setPdfProgress('Loading PDF.js library...', 0);
+
+  try {
+    await ensurePdfJs();
+  } catch {
+    setPdfProgress('Failed to load PDF.js. Check your internet connection.', 0);
+    return;
+  }
+
+  setPdfProgress('Opening PDF...', 5);
+
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const numPages = pdf.numPages;
+
+  setPdfProgress(`Rendering pages... 0/${numPages}`, 5);
+
+  const grid = document.getElementById('pdfPageGrid');
+  grid.innerHTML = '';
+  pdfPages = [];
+
+  for (let i = 1; i <= numPages; i++) {
+    const page = await pdf.getPage(i);
+    const scale = 1.5;
+    const viewport = page.getViewport({ scale });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    const base64 = dataUrl.split(',')[1];
+    pdfPages.push({ dataUrl, base64, mediaType: 'image/jpeg' });
+
+    // Add thumbnail to grid with checkbox
+    const pageIdx = i - 1;
+    pdfSelectedPages.add(pageIdx);
+    const thumb = document.createElement('div');
+    thumb.className = 'pdf-page-thumb';
+    thumb.innerHTML = `<img src="${dataUrl}"><span class="page-num">${i}</span><div class="page-check checked" data-page="${pageIdx}" onclick="togglePdfPage(event, ${pageIdx})">&#10003;</div><div class="page-status">selected</div>`;
+    thumb.style.cursor = 'pointer';
+    thumb.addEventListener('click', (e) => { if (!e.target.closest('.page-check')) togglePdfPage(e, pageIdx); });
+    grid.appendChild(thumb);
+
+    const pct = 5 + Math.round((i / numPages) * 55);
+    setPdfProgress(`Rendering pages... ${i}/${numPages}`, pct);
+
+    // Yield to keep UI responsive
+    await new Promise(r => setTimeout(r, 0));
+  }
+
+  setPdfProgress('Pages rendered. Select pages to classify.', 100);
+  document.getElementById('pdfSelectSection').style.display = '';
+  updatePdfSelectCount();
+}
+
+// === Page Selection Helpers ===
+
+function togglePdfPage(e, pageIdx) {
+  e.stopPropagation();
+  if (pdfSelectedPages.has(pageIdx)) {
+    pdfSelectedPages.delete(pageIdx);
+  } else {
+    pdfSelectedPages.add(pageIdx);
+  }
+  updatePdfThumbStates();
+  updatePdfSelectCount();
+  // Sync range input to reflect current selection
+  document.getElementById('pdfRangeInput').value = buildRangeString();
+}
+
+function updatePdfThumbStates() {
+  const thumbs = document.getElementById('pdfPageGrid').children;
+  for (let i = 0; i < thumbs.length; i++) {
+    const thumb = thumbs[i];
+    const check = thumb.querySelector('.page-check');
+    const status = thumb.querySelector('.page-status');
+    if (pdfSelectedPages.has(i)) {
+      check.classList.add('checked');
+      check.innerHTML = '&#10003;';
+      thumb.classList.remove('deselected');
+      status.textContent = 'selected';
+    } else {
+      check.classList.remove('checked');
+      check.innerHTML = '';
+      thumb.classList.add('deselected');
+      status.textContent = 'skipped';
+    }
+  }
+}
+
+function updatePdfSelectCount() {
+  const total = pdfPages.length;
+  const selected = pdfSelectedPages.size;
+  document.getElementById('pdfSelectCount').textContent = `${selected} of ${total} pages selected`;
+  document.getElementById('pdfClassifyBtn').disabled = selected === 0;
+}
+
+function pdfSelectAll() {
+  for (let i = 0; i < pdfPages.length; i++) pdfSelectedPages.add(i);
+  document.getElementById('pdfRangeInput').value = '';
+  updatePdfThumbStates();
+  updatePdfSelectCount();
+}
+
+function pdfSelectNone() {
+  pdfSelectedPages.clear();
+  document.getElementById('pdfRangeInput').value = '';
+  updatePdfThumbStates();
+  updatePdfSelectCount();
+}
+
+function applyRangeInput() {
+  const input = document.getElementById('pdfRangeInput').value.trim();
+  if (!input) {
+    // Empty input = select all
+    for (let i = 0; i < pdfPages.length; i++) pdfSelectedPages.add(i);
+    updatePdfThumbStates();
+    updatePdfSelectCount();
+    return;
+  }
+  pdfSelectedPages.clear();
+  const parts = input.split(',');
+  for (const part of parts) {
+    const trimmed = part.trim();
+    const rangeMatch = trimmed.match(/^(\d+)\s*-\s*(\d+)$/);
+    if (rangeMatch) {
+      const start = Math.max(1, parseInt(rangeMatch[1]));
+      const end = Math.min(pdfPages.length, parseInt(rangeMatch[2]));
+      for (let i = start; i <= end; i++) pdfSelectedPages.add(i - 1);
+    } else {
+      const num = parseInt(trimmed);
+      if (!isNaN(num) && num >= 1 && num <= pdfPages.length) {
+        pdfSelectedPages.add(num - 1);
+      }
+    }
+  }
+  updatePdfThumbStates();
+  updatePdfSelectCount();
+}
+
+function buildRangeString() {
+  const sorted = Array.from(pdfSelectedPages).sort((a, b) => a - b);
+  if (sorted.length === 0) return '';
+  if (sorted.length === pdfPages.length) return '';
+  const ranges = [];
+  let start = sorted[0], end = sorted[0];
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === end + 1) {
+      end = sorted[i];
+    } else {
+      ranges.push(start === end ? `${start + 1}` : `${start + 1}-${end + 1}`);
+      start = end = sorted[i];
+    }
+  }
+  ranges.push(start === end ? `${start + 1}` : `${start + 1}-${end + 1}`);
+  return ranges.join(', ');
+}
+
+function startClassification() {
+  if (pdfSelectedPages.size === 0) return;
+  document.getElementById('pdfSelectSection').style.display = 'none';
+  setPdfProgress('Classifying selected pages...', 60);
+  classifyPages();
+}
+
+async function classifyPages() {
+  // Build list of only selected page indices
+  const selectedIndices = Array.from(pdfSelectedPages).sort((a, b) => a - b);
+  const batchSize = 5;
+  const numBatches = Math.ceil(selectedIndices.length / batchSize);
+  let allRecipes = [];
+  let allSkipped = [];
+
+  for (let b = 0; b < numBatches; b++) {
+    // Wait between batches to avoid rate limits (30s to stay under 30k tokens/min)
+    if (b > 0) await new Promise(r => setTimeout(r, 30000));
+    const batchIndices = selectedIndices.slice(b * batchSize, (b + 1) * batchSize);
+
+    setPdfProgress(`Classifying batch ${b + 1}/${numBatches}...`, 60 + Math.round(((b + 1) / numBatches) * 30));
+
+    const images = batchIndices.map(idx => ({ data: pdfPages[idx].base64, media_type: pdfPages[idx].mediaType }));
+
+    // Retry with exponential backoff on rate limit errors
+    let retries = 0;
+    const maxRetries = 5;
+    while (true) {
+      try {
+        const res = await fetch('/api/classify-pages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ images }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          const errMsg = data.error || 'Classification failed';
+          if ((res.status === 502 || res.status === 429) && errMsg.includes('rate') && retries < maxRetries) {
+            retries++;
+            const wait = Math.min(30 + retries * 30, 180);
+            setPdfProgress(`Rate limited on batch ${b + 1}. Waiting ${wait}s before retry ${retries}/${maxRetries}...`, 60 + Math.round(((b) / numBatches) * 30));
+            await new Promise(r => setTimeout(r, wait * 1000));
+            continue;
+          }
+          throw new Error(errMsg);
+        }
+
+        // Map batch-local page indices back to original page indices
+        (data.recipes || []).forEach(r => {
+          allRecipes.push({
+            title: r.title,
+            pages: r.pages.map(p => batchIndices[p]),
+          });
+        });
+        (data.skipped_pages || []).forEach(p => {
+          allSkipped.push(batchIndices[p]);
+        });
+        break; // Success, move to next batch
+      } catch (err) {
+        if (err.message && err.message.includes('rate') && retries < maxRetries) {
+          retries++;
+          const wait = Math.min(30 + retries * 30, 180);
+          setPdfProgress(`Rate limited on batch ${b + 1}. Waiting ${wait}s before retry ${retries}/${maxRetries}...`, 60 + Math.round(((b) / numBatches) * 30));
+          await new Promise(r => setTimeout(r, wait * 1000));
+          continue;
+        }
+        setPdfProgress(`Error classifying batch ${b + 1}: ${err.message}`, 0);
+        return;
+      }
+    }
+  }
+
+  pdfClassification = { recipes: allRecipes, skipped_pages: allSkipped };
+
+  // Update page grid with status
+  const thumbs = document.getElementById('pdfPageGrid').children;
+  const pageRecipeMap = {};
+  allRecipes.forEach(r => r.pages.forEach(p => { pageRecipeMap[p] = r.title; }));
+
+  for (let i = 0; i < thumbs.length; i++) {
+    const t = thumbs[i];
+    const check = t.querySelector('.page-check');
+    if (check) check.style.display = 'none';
+    t.classList.remove('deselected');
+    if (pageRecipeMap[i] !== undefined) {
+      t.classList.add('recipe');
+      t.querySelector('.page-status').textContent = 'recipe';
+    } else if (!pdfSelectedPages.has(i)) {
+      t.classList.add('skipped');
+      t.querySelector('.page-status').textContent = 'skipped';
+    } else {
+      t.classList.add('skipped');
+      t.querySelector('.page-status').textContent = 'no recipe';
+    }
+  }
+
+  // Show classification results
+  showClassificationResults();
+  setPdfProgress('Classification complete.', 100);
+}
+
+function showClassificationResults() {
+  const container = document.getElementById('pdfRecipeGroups');
+  container.innerHTML = '';
+
+  pdfClassification.recipes.forEach((recipe, idx) => {
+    const group = document.createElement('div');
+    group.className = 'pdf-recipe-group';
+
+    const thumbsHtml = recipe.pages.map(p =>
+      `<img src="${pdfPages[p].dataUrl}" title="Page ${p + 1}">`
+    ).join('');
+
+    group.innerHTML = `
+      <div class="group-thumbs">${thumbsHtml}</div>
+      <div class="group-info">
+        <h4>${esc(recipe.title)}</h4>
+        <small>Pages: ${recipe.pages.map(p => p + 1).join(', ')}</small>
+      </div>
+      <button class="group-remove" onclick="removePdfRecipe(${idx})" title="Remove">&times;</button>
+    `;
+    container.appendChild(group);
+  });
+
+  document.getElementById('pdfClassifySection').style.display = '';
+}
+
+function removePdfRecipe(idx) {
+  pdfClassification.recipes.splice(idx, 1);
+  showClassificationResults();
+}
+
+async function extractAllRecipes() {
+  const recipes_to_extract = pdfClassification.recipes;
+  if (!recipes_to_extract.length) return;
+
+  document.getElementById('pdfExtractBtn').disabled = true;
+  pdfExtracted = [];
+
+  for (let i = 0; i < recipes_to_extract.length; i++) {
+    // Wait between extractions to avoid rate limits
+    if (i > 0) await new Promise(r => setTimeout(r, 7500));
+    const recipe = recipes_to_extract[i];
+    setPdfProgress(`Extracting recipe ${i + 1} of ${recipes_to_extract.length}: ${recipe.title}...`,
+      Math.round(((i) / recipes_to_extract.length) * 100));
+
+    let retries = 0;
+    const maxRetries = 5;
+    let extracted = false;
+    while (!extracted) {
+      try {
+        // Rebuild formData on retry since it can only be consumed once
+        const fd = new FormData();
+        for (let j = 0; j < recipe.pages.length && j < 5; j++) {
+          const pageIdx = recipe.pages[j];
+          const resp2 = await fetch(pdfPages[pageIdx].dataUrl);
+          const blob2 = await resp2.blob();
+          fd.append(`image_${j}`, blob2, `page_${pageIdx}.jpg`);
+        }
+        const res = await fetch('/api/scan', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) {
+          const errMsg = data.error || 'Extraction failed';
+          if ((res.status === 502 || res.status === 429) && errMsg.includes('rate') && retries < maxRetries) {
+            retries++;
+            const wait = Math.min(30 + retries * 30, 180);
+            setPdfProgress(`Rate limited on recipe ${i + 1}. Waiting ${wait}s before retry ${retries}/${maxRetries}...`,
+              Math.round(((i) / recipes_to_extract.length) * 100));
+            await new Promise(r => setTimeout(r, wait * 1000));
+            continue;
+          }
+          throw new Error(errMsg);
+        }
+        pdfExtracted.push(data);
+        extracted = true;
+      } catch (err) {
+        if (err.message && err.message.includes('rate') && retries < maxRetries) {
+          retries++;
+          const wait = Math.min(30 + retries * 30, 180);
+          setPdfProgress(`Rate limited on recipe ${i + 1}. Waiting ${wait}s before retry ${retries}/${maxRetries}...`,
+            Math.round(((i) / recipes_to_extract.length) * 100));
+          await new Promise(r => setTimeout(r, wait * 1000));
+          continue;
+        }
+        // Push a placeholder with the error
+        pdfExtracted.push({
+          title: recipe.title + ' (extraction failed)',
+          preamble: '',
+          tags: [],
+          time: { active: '', total: '' },
+          servings: [],
+          ingredients: [],
+          steps: [],
+          _error: err.message,
+        _images_b64: [],
+        _images_media_types: [],
+      });
+        extracted = true;
+      }
+    }
+  }
+
+  setPdfProgress('All recipes extracted. Review below.', 100);
+  showReviewList();
+}
+
+function showReviewList() {
+  document.getElementById('pdfClassifySection').style.display = 'none';
+  document.getElementById('pdfReviewSection').style.display = '';
+
+  const list = document.getElementById('pdfReviewList');
+  list.innerHTML = '';
+
+  pdfExtracted.forEach((recipe, idx) => {
+    const item = document.createElement('div');
+    item.className = 'pdf-review-item';
+    item.id = `pdfReview_${idx}`;
+
+    const ingLines = (recipe.ingredients || []).map(ing => {
+      let line = '';
+      if (ing.count) line += ing.count + ' ';
+      if (ing.unit) line += ing.unit + ' ';
+      line += ing.name;
+      if (ing.info) line += ' - ' + ing.info;
+      if (ing.group) line += ' [' + ing.group + ']';
+      return line;
+    }).join('\n');
+
+    const stepsText = (recipe.steps || []).join('\n');
+    const tagsText = (recipe.tags || []).join(', ');
+    const servings = recipe.servings?.[0]?.count || '';
+
+    item.innerHTML = `
+      <h4>${esc(recipe.title)}${recipe._error ? ' <span style="color:#c0392b;font-size:0.8rem">(error: ' + esc(recipe._error) + ')</span>' : ''}</h4>
+      <label>Title</label>
+      <input type="text" data-field="title">
+      <label>Tags</label>
+      <input type="text" data-field="tags">
+      <label>Servings</label>
+      <input type="text" data-field="servings">
+      <label>Ingredients (one per line)</label>
+      <textarea data-field="ingredients"></textarea>
+      <label>Steps (one per line)</label>
+      <textarea data-field="steps"></textarea>
+    `;
+    // Set values via DOM to avoid HTML injection from recipe content
+    item.querySelector('[data-field="title"]').value = recipe.title || '';
+    item.querySelector('[data-field="tags"]').value = tagsText;
+    item.querySelector('[data-field="servings"]').value = servings;
+    item.querySelector('[data-field="ingredients"]').value = ingLines;
+    item.querySelector('[data-field="steps"]').value = stepsText;
+    list.appendChild(item);
+  });
+}
+
+async function bulkSaveRecipes() {
+  document.getElementById('pdfSaveAllBtn').disabled = true;
+  const items = document.querySelectorAll('.pdf-review-item');
+  let saved = 0;
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const title = item.querySelector('[data-field="title"]').value.trim();
+    if (!title) continue;
+
+    setPdfProgress(`Saving recipe ${i + 1} of ${items.length}...`,
+      Math.round(((i) / items.length) * 100));
+
+    const tagsStr = item.querySelector('[data-field="tags"]').value;
+    const servingsStr = item.querySelector('[data-field="servings"]').value.trim();
+    const ingText = item.querySelector('[data-field="ingredients"]').value;
+    const stepsText = item.querySelector('[data-field="steps"]').value;
+
+    const recipe = {
+      title,
+      preamble: pdfExtracted[i]?.preamble || '',
+      tags: tagsStr.split(',').map(t => t.trim()).filter(Boolean),
+      time: pdfExtracted[i]?.time || { active: '', total: '' },
+      servings: servingsStr ? [{ count: servingsStr, unit: 'serve' }] : [],
+      ingredients: ingText.split('\n').map(parseIngredientLine).filter(Boolean),
+      steps: stepsText.split('\n').map(s => s.trim()).filter(Boolean),
+      _images_b64: pdfExtracted[i]?._images_b64 || [],
+      _images_media_types: pdfExtracted[i]?._images_media_types || [],
+      _hero_index: 0,
+    };
+
+    try {
+      const res = await fetch('/api/recipes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(recipe),
+      });
+      const savedRecipe = await res.json();
+      if (res.ok) {
+        recipes.push(savedRecipe);
+        saved++;
+      }
+    } catch (err) {
+      console.error('Failed to save recipe:', title, err);
+    }
+  }
+
+  // Rebuild UI
+  activeTag = null;
+  document.getElementById('tagSelect').value = '';
+  buildTagBar();
+  render();
+
+  setPdfProgress(`Saved ${saved} recipes!`, 100);
+  setTimeout(() => closePdfImportModal(), 1500);
+}
+
+init();
+</script>
+</body>
+</html>
