@@ -3228,10 +3228,11 @@ document.getElementById('pdfFileInput').addEventListener('change', function(e) {
 // Drag and drop for PDF
 (function() {
   const area = document.getElementById('pdfUploadArea');
-  area.addEventListener('dragover', (e) => { e.preventDefault(); area.classList.add('drag-over'); });
-  area.addEventListener('dragleave', (e) => { e.preventDefault(); area.classList.remove('drag-over'); });
+  area.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); area.classList.add('drag-over'); });
+  area.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); area.classList.remove('drag-over'); });
   area.addEventListener('drop', (e) => {
     e.preventDefault();
+    e.stopPropagation();
     area.classList.remove('drag-over');
     const file = Array.from(e.dataTransfer.files).find(f => f.type === 'application/pdf' || f.name.endsWith('.pdf'));
     if (file) handlePdfFile(file);
