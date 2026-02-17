@@ -30882,65 +30882,6 @@
     }
   },
   {
-    "uuid": "59E14CF7-858D-4079-8FFF-A6DBB44D2583",
-    "title": "",
-    "lang": "",
-    "version": "1",
-    "favourite": false,
-    "rating": 0.0,
-    "updated": "2020-01-15 18:22:52.584000",
-    "importDate": "2020-01-15 18:10:50.105000",
-    "hasImage": true,
-    "time": {
-      "active": "",
-      "total": ""
-    },
-    "cooking": {
-      "times": "0",
-      "last": ""
-    },
-    "tags": [],
-    "servings": [],
-    "ingredients": [
-      {
-        "name": "T0 8 AS AN APPETIZER",
-        "count": "6"
-      },
-      {
-        "name": "ground sumac About",
-        "count": "1",
-        "unit": "tbsp",
-        "unit-text": "tablespoon"
-      },
-      {
-        "name": "Grilled Tomatoes",
-        "info": "recipe follows"
-      },
-      {
-        "name": "Flatbreads for serving"
-      },
-      {
-        "name": "lemons",
-        "count": "2",
-        "info": "optional; cut into wedges"
-      },
-      {
-        "name": "Wedges of raw onion",
-        "info": "optional"
-      }
-    ],
-    "steps": [
-      "Put the meat in a food processor, along with the onions, salt, and pepper. Pulse for about a minute; if the meat rides up the sides of the bowl, use a spatula to push it back down. (If you are doubling the recipe, or if your processor is small, divide the meat and onions into two batches to process and then combine them.) Turn the meat out into a bowl and knead it for half a minute. It should be paste -like.",
-      "Cover the bowl of meat and refrigerate it for at least 30 minutes. This makes it easier to shape, and it will adhere to the skewers better too.",
-      "Preheat a charcoal or gas grill. Put the ground sumac near your grill, as well as a plate or platter to hold the cooked skewers. continued"
-    ],
-    "preamble": "",
-    "source": {
-      "name": "",
-      "address": ""
-    }
-  },
-  {
     "uuid": "5A3D1F19-FD16-4734-98E2-46A562CCAA3C",
     "title": "Micro green salad with hazelnut and pecorino",
     "lang": "",
@@ -86649,6 +86590,310 @@
     "source": {
       "name": "cooking.nytimes.com",
       "address": "cooking.nytimes.com/guides/37-how-to-make-cassoulet"
+    }
+  },
+  {
+    "uuid": "440BA40D-AC1E-4A80-9D19-88CF008F1568",
+    "title": "Pescado a la Talla/Red and Green Roasted Fish",
+    "lang": "",
+    "version": "1",
+    "favourite": false,
+    "rating": 0.0,
+    "updated": "",
+    "importDate": "",
+    "hasImage": true,
+    "time": {
+      "active": "45 mins",
+      "total": "2 hours 30 mins"
+    },
+    "cooking": {
+      "times": "0",
+      "last": ""
+    },
+    "tags": [
+      "mexican",
+      "fish",
+      "seafood",
+      "main course",
+      "restaurant style"
+    ],
+    "servings": [
+      {
+        "count": "4-6",
+        "unit": "serve"
+      }
+    ],
+    "ingredients": [
+      {
+        "name": "whole whitefish",
+        "unit": "",
+        "count": "1",
+        "info": "1kg to 2kg, butterflied and deboned",
+        "group": ""
+      },
+      {
+        "name": "sea salt",
+        "unit": "",
+        "count": "",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "Green Sauce",
+        "unit": "ml",
+        "count": "240",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "Adobo Rojo de Chiles",
+        "unit": "ml",
+        "count": "240",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "dried black beans",
+        "unit": "g",
+        "count": "240",
+        "info": "soaked overnight and rinsed",
+        "group": "For the Frijoles Aguados/Soupy Beans"
+      },
+      {
+        "name": "garlic cloves",
+        "unit": "",
+        "count": "10",
+        "info": "",
+        "group": "For the Frijoles Aguados/Soupy Beans"
+      },
+      {
+        "name": "sprig epazote",
+        "unit": "",
+        "count": "1",
+        "info": "or 2 avocado leaves",
+        "group": "For the Frijoles Aguados/Soupy Beans"
+      },
+      {
+        "name": "salt",
+        "unit": "",
+        "count": "",
+        "info": "to taste",
+        "group": "For the Frijoles Aguados/Soupy Beans"
+      },
+      {
+        "name": "chile cascabel",
+        "unit": "g",
+        "count": "30",
+        "info": "destemmed and seeded",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "chile ancho",
+        "unit": "g",
+        "count": "12",
+        "info": "destemmed and seeded",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "chile guajillo",
+        "unit": "g",
+        "count": "9",
+        "info": "destemmed and seeded",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "chile pasilla",
+        "unit": "g",
+        "count": "9",
+        "info": "destemmed and seeded",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "chile de árbol",
+        "unit": "g",
+        "count": "1",
+        "info": "destemmed and seeded",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "roma tomatoes",
+        "unit": "g",
+        "count": "450",
+        "info": "roughly chopped",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "white onion",
+        "unit": "g",
+        "count": "70",
+        "info": "roughly chopped",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "garlic cloves",
+        "unit": "g",
+        "count": "12",
+        "info": "roughly chopped",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "freshly squeezed orange juice",
+        "unit": "g",
+        "count": "12",
+        "info": "",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "achiote paste",
+        "unit": "g",
+        "count": "3",
+        "info": "",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "grapeseed oil",
+        "unit": "g",
+        "count": "36",
+        "info": "",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "cumin",
+        "unit": "pinch",
+        "count": "1",
+        "info": "",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "oregano",
+        "unit": "pinch",
+        "count": "1",
+        "info": "",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "sea salt",
+        "unit": "g",
+        "count": "18",
+        "info": "plus more for seasoning",
+        "group": "For the Adobo Rojo de Chiles sauce"
+      },
+      {
+        "name": "garlic cloves",
+        "unit": "g",
+        "count": "10",
+        "info": "",
+        "group": "For the Green Sauce"
+      },
+      {
+        "name": "parsley leaves",
+        "unit": "g",
+        "count": "40",
+        "info": "",
+        "group": "For the Green Sauce"
+      },
+      {
+        "name": "safflower oil",
+        "unit": "ml",
+        "count": "120",
+        "info": "or grapeseed oil",
+        "group": "For the Green Sauce"
+      },
+      {
+        "name": "cumin",
+        "unit": "pinch",
+        "count": "1",
+        "info": "",
+        "group": "For the Green Sauce"
+      },
+      {
+        "name": "sea salt",
+        "unit": "",
+        "count": "",
+        "info": "to taste",
+        "group": "For the Green Sauce"
+      },
+      {
+        "name": "vegetable oil",
+        "unit": "g",
+        "count": "20",
+        "info": "or lard",
+        "group": "For the Frijoles Refritos/Refried Beans"
+      },
+      {
+        "name": "white onion",
+        "unit": "g",
+        "count": "150",
+        "info": "finely diced",
+        "group": "For the Frijoles Refritos/Refried Beans"
+      },
+      {
+        "name": "Frijoles Aguados",
+        "unit": "g",
+        "count": "240",
+        "info": "strained",
+        "group": "For the Frijoles Refritos/Refried Beans"
+      },
+      {
+        "name": "reserved bean cooking liquid",
+        "unit": "ml",
+        "count": "240",
+        "info": "",
+        "group": "For the Frijoles Refritos/Refried Beans"
+      },
+      {
+        "name": "Salsa Verde Cruda",
+        "unit": "",
+        "count": "",
+        "info": "recipe on page 14",
+        "group": "To assemble"
+      },
+      {
+        "name": "Salsa Tatemada",
+        "unit": "",
+        "count": "",
+        "info": "recipe on page 33",
+        "group": "To assemble"
+      },
+      {
+        "name": "fresh corn tortillas",
+        "unit": "",
+        "count": "",
+        "info": "warmed, recipe on page 10",
+        "group": "To assemble"
+      },
+      {
+        "name": "Ocosingo cheese",
+        "unit": "g",
+        "count": "80",
+        "info": "queso fresco, or cotija cheese for serving",
+        "group": "To assemble"
+      },
+      {
+        "name": "lime wedges",
+        "unit": "",
+        "count": "",
+        "info": "for serving",
+        "group": "To assemble"
+      }
+    ],
+    "steps": [
+      "Make the Frijoles Aguados: 1 day before cooking, soak the dried beans overnight in cold water (this will ensure that the beans cook faster and more evenly). The next day, rinse the beans thoroughly to remove any debris. Place the beans in a medium pot and cover with water until the beans are completely submerged and there's an extra 10 centimeters of water above them. Add the garlic and epazote (or avocado leaves). Remove any beans that float to the surface.",
+      "Bring the water to a boil, then reduce the heat to low to maintain a simmer. Cover the pot. After about 30 minutes, remove the lid, stir the beans, and add more water if needed to maintain 10 centimeters of water covering the beans. Replace the lid and simmer for another 15 minutes. After 15 minutes, taste a bean for doneness—it will likely still be firm, but check every 10 minutes from this point, stirring gently between each test and adding more water as needed. Cook the beans until soft but still whole with skin intact. Season with salt and set aside.",
+      "Store in an airtight container in the refrigerator for up to 1 week or freeze for up to 6 months. Reheat gently over low heat.",
+      "Make the Adobo Rojo de Chiles sauce: If possible, turn on the exhaust fan or above your stove or open a window before toasting your chiles. Heat a large nonstick pan or clay comal over medium-high heat. Cook the chiles in the dry pan or on the comal, flipping once, until lightly toasted and aromatic, about 1 to 2 minutes.",
+      "Put the toasted chiles in a blender. Add the tomato, onion, and garlic. Place the chopped orange in a small bowl. Slice the orange in half and squeeze one half into the achiote paste. Stir to combine. Add the mixture to the blender, along with the juice from the other half of the orange. Add the grapeseed oil, cumin, and oregano. Blend on high until the sauce is thick but smooth, about 1 minute. Add the cumin and oregano, and stir. Add salt to taste.",
+      "Make the Green Sauce: Combine all ingredients in a blender (or a tall vessel if you're using an immersion blender). Blend until all ingredients are smooth and combined, about 2 to 3 minutes. Parsley can be fibrous and tricky to blend; just keep pulsing until emulsified.",
+      "Prepare the fish: Preheat the oven to 200°C (375°F). Liberally grease a baking sheet with olive oil to avoid sticking. Place the butterflied fish on the baking sheet skin side down. Salt the fish. Use a serving spoon to coat one side of the fish with the Adobo Rojo de Chiles sauce, spreading an even layer across the entire surface of the fish. Use a fresh serving spoon to coat the other side of the fish with the Green Sauce.",
+      "Once both sides are amply coated with sauce, roast the fish in the oven until the flesh is white and slightly visible from beneath the sauce, about 15 to 20 minutes. Check fish after 15 minutes to avoid overcooking.",
+      "Make the Frijoles Refritos: While the fish is cooking, prepare the Refried Beans. In a large cast-iron skillet, heat the vegetable oil or lard over medium heat. Add the onion and cook until soft and translucent, about 2 to 3 minutes. While the onions are cooking, spoon the reserved bean cooking liquid and 240 grams of the Frijoles Aguados into a blender (or a tall vessel if using an immersion blender). Blend until the beans are smooth and resemble a light yet watery paste.",
+      "Once the onions are translucent, pour the bean paste into the cast-iron skillet with the onions. Stir well with a wooden spoon to combine. The mixture should be silky smooth and not too thick—it should coat the back of a spoon but still drip off. Taste the beans for seasoning and add more salt if necessary. Set aside.",
+      "Assemble: Remove the fish from the oven and transfer it to a platter (or leave it on the baking sheet). Serve with warm tortillas, a bowl of Frijoles Refritos topped with Ocosingo, queso fresco, or cotija cheese, Salsa Verde Cruda, Salsa Tatemada, and fresh lime."
+    ],
+    "preamble": "This stunning two-tone fish is the very first thing Gabriela put on the menu at Contramar when she opened the restaurant in 1998. It's inspired by a traditional grilled fish from the Mexican state of Guerrero, where fish is cooked over an open flame and served with tortillas and a variety of salsas, beans, and pickled vegetables to create a DIY taco situation. The red and green sauces represent the two sides of her heritage: a fiery red salsa, which is a nod to her Mexican roots, and a fresh parsley-based salsa that references her Italian influences.",
+    "source": {
+      "name": "",
+      "address": ""
     }
   }
 ]
