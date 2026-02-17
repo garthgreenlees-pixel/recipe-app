@@ -1780,7 +1780,7 @@ header h1 span { color: var(--accent); }
     <h1><span>Prov</span>enance</h1>
     <nav class="header-actions">
       <button class="scan-btn" onclick="openScanModal()">Scan Recipe</button>
-      <button class="scan-btn btn-secondary" onclick="openPdfImportModal()">Import PDF</button>
+      <button class="scan-btn btn-secondary" onclick="openPdfImportModal()">Import PDF</button><button class="scan-btn btn-secondary" onclick="openUrlImportModal()" style="background:#4A6274">Import URL</button>
     </nav>
   </div>
   <div class="search-bar">
@@ -1968,6 +1968,67 @@ header h1 span { color: var(--accent); }
       <div class="pdf-actions">
         <button class="primary" id="pdfSaveAllBtn" onclick="bulkSaveRecipes()">Save All Recipes</button>
         <button onclick="closePdfImportModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- URL Import Modal -->
+<div class="scan-overlay" id="urlOverlay">
+  <div class="scan-modal">
+    <button class="close-btn" onclick="closeUrlImportModal()">&times;</button>
+    <h2>Import Recipe from URL</h2>
+
+    <div id="urlInputSection">
+      <label style="display:block;font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.35rem">Recipe URL</label>
+      <input class="edit-input" type="text" id="urlInput" placeholder="https://www.example.com/recipe/..." style="margin-bottom:1rem" onkeydown="if(event.key==='Enter')doUrlImport()">
+      <div class="scan-error" id="urlError"></div>
+      <div class="scan-actions">
+        <button class="primary" id="urlImportBtn" onclick="doUrlImport()">Import with AI</button>
+        <button onclick="closeUrlImportModal()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="scan-spinner" id="urlSpinner">
+      <div class="spinner"></div>
+      Fetching and extracting recipe...
+    </div>
+
+    <div class="scan-preview" id="urlPreview">
+      <div id="urlHeroPreview" style="display:none;text-align:center;margin-bottom:1rem">
+        <img id="urlHeroImg" style="max-width:100%;max-height:300px;border-radius:8px" crossorigin="anonymous">
+      </div>
+      <label>Title</label>
+      <input type="text" id="urlTitle">
+
+      <label>Preamble</label>
+      <textarea id="urlPreamble"></textarea>
+
+      <label>Tags (comma-separated)</label>
+      <input type="text" id="urlTags">
+
+      <label>Active Time</label>
+      <input type="text" id="urlTimeActive">
+
+      <label>Total Time</label>
+      <input type="text" id="urlTimeTotal">
+
+      <label>Servings</label>
+      <input type="text" id="urlServings" placeholder="e.g. 4">
+
+      <label>Source</label>
+      <input type="text" id="urlSourceName" placeholder="Website name" style="margin-bottom:0.4rem">
+      <input type="text" id="urlSourceAddress" placeholder="https://...">
+
+      <label>Ingredients (one per line: count unit name - info)</label>
+      <textarea class="ing-textarea" id="urlIngredients"></textarea>
+
+      <label>Steps (one per line)</label>
+      <textarea class="steps-textarea" id="urlSteps"></textarea>
+
+      <div class="scan-actions" style="margin-top:1rem">
+        <button class="primary" onclick="saveUrlRecipe()">Save Recipe</button>
+        <button onclick="closeUrlImportModal()">Cancel</button>
       </div>
     </div>
   </div>
@@ -3898,6 +3959,182 @@ async function bulkSaveRecipes() {
 
   setPdfProgress(`Saved ${saved} recipes!`, 100);
   setTimeout(() => closePdfImportModal(), 1500);
+}
+
+// === URL Import ===
+
+let urlImportedRecipe = {};
+
+function openUrlImportModal() {
+  document.getElementById('urlOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  resetUrlModal();
+  document.getElementById('urlInput').focus();
+}
+
+function closeUrlImportModal() {
+  document.getElementById('urlOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function resetUrlModal() {
+  document.getElementById('urlInput').value = '';
+  document.getElementById('urlImportBtn').disabled = false;
+  document.getElementById('urlImportBtn').textContent = 'Import with AI';
+  document.getElementById('urlSpinner').classList.remove('active');
+  document.getElementById('urlPreview').classList.remove('active');
+  document.getElementById('urlError').classList.remove('active');
+  document.getElementById('urlInputSection').style.display = '';
+  document.getElementById('urlHeroPreview').style.display = 'none';
+  urlImportedRecipe = {};
+}
+
+document.getElementById('urlOverlay').addEventListener('click', function(e) {
+  if (e.target === e.currentTarget) closeUrlImportModal();
+});
+
+async function doUrlImport() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) return;
+
+  document.getElementById('urlImportBtn').disabled = true;
+  document.getElementById('urlSpinner').classList.add('active');
+  document.getElementById('urlError').classList.remove('active');
+  document.getElementById('urlPreview').classList.remove('active');
+  document.getElementById('urlHeroPreview').style.display = 'none';
+  urlImportedRecipe = {};
+
+  try {
+    const res = await fetch('/api/import-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Import failed');
+
+    populateUrlPreview(data);
+
+    const heroImg = document.getElementById('urlHeroImg');
+    const heroPreview = document.getElementById('urlHeroPreview');
+    if (data._hero_b64) {
+      urlImportedRecipe._hero_b64 = data._hero_b64;
+      heroImg.src = 'data:image/jpeg;base64,' + data._hero_b64;
+      heroPreview.style.display = '';
+    } else if (data._hero_url) {
+      const proxySrc = '/api/proxy-image?url=' + encodeURIComponent(data._hero_url);
+      heroImg.src = proxySrc;
+      heroPreview.style.display = '';
+      heroImg.onload = function() {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = heroImg.naturalWidth;
+          canvas.height = heroImg.naturalHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(heroImg, 0, 0);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          urlImportedRecipe._hero_b64 = dataUrl.split(',')[1];
+        } catch (e) {
+          console.warn('Could not convert hero image to base64:', e);
+        }
+      };
+    }
+
+    document.getElementById('urlPreview').classList.add('active');
+    document.getElementById('urlInputSection').style.display = 'none';
+  } catch (err) {
+    const errorEl = document.getElementById('urlError');
+    errorEl.textContent = err.message;
+    errorEl.classList.add('active');
+    document.getElementById('urlImportBtn').disabled = false;
+  } finally {
+    document.getElementById('urlSpinner').classList.remove('active');
+  }
+}
+
+function populateUrlPreview(recipe) {
+  document.getElementById('urlTitle').value = recipe.title || '';
+  document.getElementById('urlPreamble').value = recipe.preamble || '';
+  document.getElementById('urlTags').value = (recipe.tags || []).join(', ');
+  document.getElementById('urlTimeActive').value = (recipe.time || {}).active || '';
+  document.getElementById('urlTimeTotal').value = (recipe.time || {}).total || '';
+  document.getElementById('urlServings').value = recipe.servings?.[0]?.count || '';
+  document.getElementById('urlSourceName').value = (recipe.source || {}).name || '';
+  document.getElementById('urlSourceAddress').value = (recipe.source || {}).address || '';
+
+  const ingLines = (recipe.ingredients || []).map(ing => {
+    let line = '';
+    if (ing.count) line += ing.count + ' ';
+    if (ing.unit) line += ing.unit + ' ';
+    line += ing.name;
+    if (ing.info) line += ' - ' + ing.info;
+    if (ing.group) line += ' [' + ing.group + ']';
+    return line;
+  });
+  document.getElementById('urlIngredients').value = ingLines.join('\n');
+  document.getElementById('urlSteps').value = (recipe.steps || []).join('\n');
+}
+
+async function saveUrlRecipe() {
+  const recipe = {
+    title: document.getElementById('urlTitle').value.trim() || 'Untitled',
+    preamble: document.getElementById('urlPreamble').value.trim(),
+    tags: document.getElementById('urlTags').value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean),
+    time: {
+      active: document.getElementById('urlTimeActive').value.trim(),
+      total: document.getElementById('urlTimeTotal').value.trim(),
+    },
+    servings: [],
+    ingredients: [],
+    steps: [],
+    source: {
+      name: document.getElementById('urlSourceName').value.trim(),
+      address: document.getElementById('urlSourceAddress').value.trim(),
+    },
+    _images_b64: [],
+    _images_media_types: [],
+    _hero_index: -1,
+  };
+
+  if (urlImportedRecipe._hero_b64) {
+    recipe._images_b64 = [urlImportedRecipe._hero_b64];
+    recipe._images_media_types = ['image/jpeg'];
+    recipe._hero_index = 0;
+  }
+
+  const servingsVal = document.getElementById('urlServings').value.trim();
+  if (servingsVal) {
+    recipe.servings = [{ count: servingsVal, unit: 'serve' }];
+  }
+
+  recipe.ingredients = document.getElementById('urlIngredients').value
+    .split('\n')
+    .map(parseIngredientLine)
+    .filter(Boolean);
+
+  recipe.steps = document.getElementById('urlSteps').value
+    .split('\n')
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  try {
+    const res = await fetch('/api/recipes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(recipe),
+    });
+    const saved = await res.json();
+    if (!res.ok) throw new Error(saved.error || 'Save failed');
+
+    recipes.push(saved);
+    buildTagBar();
+    render();
+    closeUrlImportModal();
+  } catch (err) {
+    const errorEl = document.getElementById('urlError');
+    errorEl.textContent = err.message;
+    errorEl.classList.add('active');
+  }
 }
 
 init();

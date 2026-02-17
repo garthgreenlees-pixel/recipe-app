@@ -225,6 +225,244 @@ Rules:
         return jsonify(error=str(e)), 500
 
 
+# ─── Import from URL ─────────────────────────────────────────────────────────
+
+import re as _re
+
+def _extract_jsonld_recipe(html_text):
+    """Try to extract a Recipe from JSON-LD structured data in the HTML."""
+    pattern = r'<script[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>'
+    blocks = _re.findall(pattern, html_text, _re.DOTALL | _re.IGNORECASE)
+
+    for block in blocks:
+        try:
+            data = json.loads(block)
+        except json.JSONDecodeError:
+            continue
+
+        items = []
+        if isinstance(data, list):
+            items = data
+        elif isinstance(data, dict):
+            if data.get("@graph"):
+                items = data["@graph"]
+            else:
+                items = [data]
+
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            item_type = item.get("@type", "")
+            if isinstance(item_type, list):
+                item_type = " ".join(item_type)
+            if "Recipe" in item_type:
+                return item
+    return None
+
+
+def _parse_duration(iso_str):
+    """Convert ISO 8601 duration (PT1H30M) to readable string."""
+    if not iso_str or not isinstance(iso_str, str):
+        return ""
+    m = _re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', iso_str, _re.IGNORECASE)
+    if not m:
+        return iso_str
+    hours, mins, secs = m.groups()
+    parts = []
+    if hours:
+        parts.append(f"{hours} hr{'s' if int(hours) > 1 else ''}")
+    if mins:
+        parts.append(f"{mins} min")
+    if secs and not parts:
+        parts.append(f"{secs} sec")
+    return " ".join(parts) if parts else iso_str
+
+
+def _jsonld_to_recipe(ld):
+    """Convert a JSON-LD Recipe object to our app's recipe format."""
+    ingredients = []
+    for ing_str in (ld.get("recipeIngredient") or []):
+        ingredients.append({
+            "count": "",
+            "unit": "",
+            "name": str(ing_str).strip(),
+            "info": "",
+            "group": "",
+        })
+
+    steps = []
+    raw_steps = ld.get("recipeInstructions") or []
+    if isinstance(raw_steps, str):
+        steps = [s.strip() for s in raw_steps.split('\n') if s.strip()]
+    else:
+        for step in raw_steps:
+            if isinstance(step, str):
+                steps.append(step.strip())
+            elif isinstance(step, dict):
+                if step.get("@type") == "HowToSection":
+                    for sub in (step.get("itemListElement") or []):
+                        if isinstance(sub, dict):
+                            steps.append(sub.get("text", str(sub)))
+                        else:
+                            steps.append(str(sub))
+                else:
+                    steps.append(step.get("text", str(step)))
+
+    tags = []
+    for field in ["recipeCategory", "recipeCuisine", "keywords"]:
+        val = ld.get(field)
+        if isinstance(val, str):
+            tags.extend([t.strip().lower() for t in val.split(",") if t.strip()])
+        elif isinstance(val, list):
+            tags.extend([str(t).strip().lower() for t in val if t])
+    tags = list(dict.fromkeys(tags))[:10]
+
+    servings = []
+    yield_val = ld.get("recipeYield")
+    if yield_val:
+        if isinstance(yield_val, list):
+            yield_val = yield_val[0]
+        servings = [{"count": str(yield_val), "unit": "serve"}]
+
+    image_url = ""
+    img = ld.get("image")
+    if isinstance(img, str):
+        image_url = img
+    elif isinstance(img, list) and img:
+        image_url = img[0] if isinstance(img[0], str) else (img[0].get("url", "") if isinstance(img[0], dict) else "")
+    elif isinstance(img, dict):
+        image_url = img.get("url", "")
+
+    return {
+        "title": ld.get("name", "Untitled"),
+        "preamble": ld.get("description", ""),
+        "tags": tags,
+        "time": {
+            "active": _parse_duration(ld.get("prepTime", "")),
+            "total": _parse_duration(ld.get("totalTime", "")),
+        },
+        "servings": servings,
+        "ingredients": ingredients,
+        "steps": steps,
+        "source": {"name": "", "address": ""},
+        "_image_url": image_url,
+    }
+
+
+@app.route("/api/import-url", methods=["POST"])
+def import_url():
+    data = request.get_json()
+    url = (data.get("url") or "").strip()
+    if not url:
+        return jsonify(error="No URL provided"), 400
+
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
+        resp = http_requests.get(url, headers=headers, timeout=15)
+        resp.raise_for_status()
+        html_text = resp.text
+    except Exception as e:
+        return jsonify(error=f"Could not fetch URL: {e}"), 400
+
+    # Try JSON-LD extraction first (fast, no API cost)
+    ld_recipe = _extract_jsonld_recipe(html_text)
+    if ld_recipe:
+        recipe = _jsonld_to_recipe(ld_recipe)
+        recipe["source"] = {"name": "", "address": url}
+        recipe["_method"] = "jsonld"
+
+        # Try to download hero image, fall back to passing URL to browser
+        if recipe.get("_image_url"):
+            hero_downloaded = False
+            try:
+                img_resp = http_requests.get(recipe["_image_url"], headers=headers, timeout=10)
+                if img_resp.status_code == 200 and len(img_resp.content) > 1000:
+                    recipe["_hero_b64"] = base64.b64encode(img_resp.content).decode("utf-8")
+                    hero_downloaded = True
+            except Exception:
+                pass
+            if not hero_downloaded:
+                recipe["_hero_url"] = recipe["_image_url"]
+            del recipe["_image_url"]
+
+        return jsonify(recipe)
+
+    # Fallback: send page text to Claude for extraction
+    text_only = _re.sub(r'<script[^>]*>.*?</script>', '', html_text, flags=_re.DOTALL | _re.IGNORECASE)
+    text_only = _re.sub(r'<style[^>]*>.*?</style>', '', text_only, flags=_re.DOTALL | _re.IGNORECASE)
+    text_only = _re.sub(r'<[^>]+>', ' ', text_only)
+    text_only = _re.sub(r'\s+', ' ', text_only).strip()[:8000]
+
+    prompt = f"""Extract the recipe from this webpage text. Return a JSON object with these fields:
+{{
+  "title": "Recipe title",
+  "preamble": "Brief description or headnote",
+  "tags": ["tag1", "tag2"],
+  "time": {{"active": "20 mins", "total": "1 hour"}},
+  "servings": [{{"count": "4", "unit": "serve"}}],
+  "ingredients": [
+    {{"count": "2", "unit": "cups", "name": "flour", "info": "sifted", "group": ""}}
+  ],
+  "steps": ["Step 1 text", "Step 2 text"]
+}}
+
+Rules:
+- Extract ALL ingredients with precise quantities
+- Include ALL steps in full detail
+- Use lowercase tags
+- Return ONLY valid JSON, no markdown fences
+
+Webpage text:
+{text_only}"""
+
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=4096,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        response_text = response.content[0].text.strip()
+        if response_text.startswith("```"):
+            lines = response_text.split("\n")
+            lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            response_text = "\n".join(lines)
+
+        recipe = json.loads(response_text)
+        recipe["source"] = {"name": "", "address": url}
+        recipe["_method"] = "ai"
+        return jsonify(recipe)
+
+    except json.JSONDecodeError as e:
+        return jsonify(error=f"Failed to parse AI response: {e}"), 500
+    except anthropic.RateLimitError as e:
+        return jsonify(error=f"rate limit: {e}"), 429
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+
+
+# ─── Image proxy (for URL import hero images) ───────────────────────────────
+
+@app.route("/api/proxy-image")
+def proxy_image():
+    url = request.args.get("url", "").strip()
+    if not url:
+        return jsonify(error="No URL"), 400
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+        }
+        resp = http_requests.get(url, headers=headers, timeout=15)
+        resp.raise_for_status()
+        ct = resp.headers.get("Content-Type", "image/jpeg")
+        return Response(resp.content, content_type=ct)
+    except Exception:
+        return jsonify(error="Failed to fetch image"), 400
+
+
 # ─── CRUD endpoints ─────────────────────────────────────────────────────────
 
 @app.route("/api/recipes", methods=["POST"])

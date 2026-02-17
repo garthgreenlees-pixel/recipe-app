@@ -86895,5 +86895,261 @@
       "name": "",
       "address": ""
     }
+  },
+  {
+    "uuid": "9034AA47-09AB-41A4-9874-E502737C0F20",
+    "title": "My Favorite Banana Bread",
+    "lang": "",
+    "version": "1",
+    "favourite": false,
+    "rating": 0.0,
+    "updated": "",
+    "importDate": "",
+    "hasImage": false,
+    "time": {
+      "active": "10 mins",
+      "total": "3 hours"
+    },
+    "cooking": {
+      "times": "0",
+      "last": ""
+    },
+    "tags": [
+      "banana bread",
+      "quick bread",
+      "moist",
+      "brown sugar",
+      "bananas",
+      "baking",
+      "american",
+      "nut free"
+    ],
+    "servings": [
+      {
+        "count": "1",
+        "unit": "serve"
+      }
+    ],
+    "ingredients": [
+      {
+        "name": "all-purpose flour",
+        "unit": "cups",
+        "count": "2",
+        "info": "spooned & leveled",
+        "group": ""
+      },
+      {
+        "name": "baking soda",
+        "unit": "teaspoon",
+        "count": "1",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "salt",
+        "unit": "teaspoon",
+        "count": "1/4",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "ground cinnamon",
+        "unit": "teaspoon",
+        "count": "1/2",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "unsalted butter",
+        "unit": "cup",
+        "count": "1/2",
+        "info": "softened to room temperature",
+        "group": ""
+      },
+      {
+        "name": "packed light or dark brown sugar",
+        "unit": "cup",
+        "count": "3/4",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "large eggs",
+        "unit": "",
+        "count": "2",
+        "info": "at room temperature",
+        "group": ""
+      },
+      {
+        "name": "plain Greek yogurt or full-fat sour cream",
+        "unit": "cup",
+        "count": "1/3",
+        "info": "at room temperature",
+        "group": ""
+      },
+      {
+        "name": "and 1/2 cups mashed bananas",
+        "unit": "",
+        "count": "1",
+        "info": "about 3–4 ripe bananas",
+        "group": ""
+      },
+      {
+        "name": "pure vanilla extract",
+        "unit": "teaspoon",
+        "count": "1",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "chopped pecans or walnuts",
+        "unit": "cup",
+        "count": "3/4",
+        "info": "optional",
+        "group": ""
+      },
+      {
+        "name": "semi-sweet chocolate chips",
+        "unit": "cup",
+        "count": "1",
+        "info": "optional",
+        "group": ""
+      }
+    ],
+    "steps": [
+      "Adjust the oven rack to the lower third position and preheat the oven to 350°F (177°C). Lowering the oven rack prevents the top of your bread from browning too much, too soon. Grease a 9×5-inch loaf pan with nonstick spray. Set aside.",
+      "In a medium bowl, whisk the flour, baking soda, salt, and cinnamon together. Set aside.",
+      "In a large bowl using a handheld or stand mixer fitted with a paddle attachment, beat the butter and brown sugar together on medium-high speed until light and creamy, about 3 minutes. With the mixer running on medium speed, add the eggs one at a time, beating well after each addition. Scrape down the sides of the bowl as needed. Beat in the yogurt, vanilla, and mashed bananas until combined.",
+      "Add the dry ingredients into the wet ingredients and beat on low speed just until combined. Do not over-mix. Fold in the nuts/chocolate chips, if using. The batter should be thick.",
+      "Pour and spread the batter into the prepared baking pan. Bake for 60–65 minutes, making sure to loosely cover the pan with aluminum foil halfway through, to prevent the top from getting too brown. The bread is done when a toothpick inserted in the center comes out clean with only a few small moist crumbs. Cool the bread in the pan set on a cooling rack for 1 hour. Remove the bread from the pan and cool it directly on the rack until ready to slice and serve.",
+      "Store wrapped tightly at room temperature for up to 3 days or in the refrigerator for up to 1 week."
+    ],
+    "preamble": "With its super-moist and buttery texture, banana and brown sugar flavors, soft crumb, and 1,000+ reviews, this is a delicious AND undeniably popular banana bread recipe. You need 4 large ripe bananas.",
+    "source": {
+      "name": "Sally's Baking",
+      "address": "https://sallysbakingaddiction.com/best-banana-bread-recipe/"
+    }
+  },
+  {
+    "uuid": "B688CB48-9A1A-4529-AECB-67C4E86B607F",
+    "title": "My Favorite Banana Bread",
+    "lang": "",
+    "version": "1",
+    "favourite": false,
+    "rating": 0.0,
+    "updated": "",
+    "importDate": "",
+    "hasImage": true,
+    "time": {
+      "active": "10 min",
+      "total": "3 hrs"
+    },
+    "cooking": {
+      "times": "0",
+      "last": ""
+    },
+    "tags": [
+      "bread",
+      "american",
+      "banana bread"
+    ],
+    "servings": [
+      {
+        "count": "1",
+        "unit": "serve"
+      }
+    ],
+    "ingredients": [
+      {
+        "name": "(250g) all-purpose flour (spooned &amp; leveled)",
+        "unit": "cups",
+        "count": "2",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "baking soda",
+        "unit": "teaspoon",
+        "count": "1",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "salt",
+        "unit": "teaspoon",
+        "count": "1/4",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "ground cinnamon",
+        "unit": "teaspoon",
+        "count": "1/2",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "(8 Tbsp; 113g) unsalted butter, softened to room temperature",
+        "unit": "cup",
+        "count": "1/2",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "(150g) packed light or dark brown sugar",
+        "unit": "cup",
+        "count": "3/4",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "large eggs, at room temperature",
+        "unit": "",
+        "count": "2",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "(80g) plain Greek yogurt or full-fat sour cream, at room temperature",
+        "unit": "cup",
+        "count": "1/3",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "and 1/2 cups (345g) mashed bananas (about 3–4 ripe bananas)",
+        "unit": "",
+        "count": "1",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "pure vanilla extract",
+        "unit": "teaspoon",
+        "count": "1",
+        "info": "",
+        "group": ""
+      },
+      {
+        "name": "optional: 3/4 cup (90g) chopped pecans or walnuts, or 1 cup (180g) semi-sweet chocolate chips",
+        "unit": "",
+        "count": "",
+        "info": "",
+        "group": ""
+      }
+    ],
+    "steps": [
+      "Adjust the oven rack to the lower third position and preheat the oven to 350°F (177°C). Lowering the oven rack prevents the top of your bread from browning too much, too soon. Grease a 9&#215;5-inch loaf pan with nonstick spray. Set aside.",
+      "In a medium bowl, whisk the flour, baking soda, salt, and cinnamon together. Set aside.",
+      "In a large bowl using a handheld or stand mixer fitted with a paddle attachment, beat the butter and brown sugar together on medium-high speed until light and creamy, about 3 minutes. (Here’s a helpful tutorial if you need guidance on how to cream butter and sugar.) With the mixer running on medium speed, add the eggs one at a time, beating well after each addition. Scrape down the sides of the bowl as needed. Beat in the yogurt, vanilla, and mashed bananas until combined.",
+      "Add the dry ingredients into the wet ingredients and beat on low speed just until combined. Do not over-mix. Fold in the nuts/chocolate chips, if using. The batter should be thick.",
+      "Pour and spread the batter into the prepared baking pan. Bake for 60–65 minutes, making sure to loosely cover the pan with aluminum foil halfway through, to prevent the top from getting too brown. The bread is done when a toothpick inserted in the center comes out clean with only a few small moist crumbs. Cool the bread in the pan set on a cooling rack for 1 hour. Remove the bread from the pan and cool it directly on the rack until ready to slice and serve.",
+      "Store wrapped tightly at room temperature for up to 3 days or in the refrigerator for up to 1 week."
+    ],
+    "preamble": "With its super-moist and buttery texture, banana and brown sugar flavors, soft crumb, and 1,000+ reviews, this is a delicious AND undeniably popular banana bread recipe. You need 4 large ripe bananas. This recipe is also in my cookbook, Sally's Baking 101.",
+    "source": {
+      "name": "",
+      "address": "https://sallysbakingaddiction.com/best-banana-bread-recipe/"
+    }
   }
 ]
