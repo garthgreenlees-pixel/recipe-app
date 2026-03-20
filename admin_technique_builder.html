@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technique Builder — Admin</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f0; color: #1a1a1a; line-height: 1.5; }
+  .header { background: #1a1a1a; color: #fff; padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 20px; font-weight: 600; }
+  .header .subtitle { font-size: 13px; opacity: 0.5; margin-top: 2px; }
+  .header-links { display: flex; gap: 12px; align-items: center; }
+  .header-links a { color: #fff; opacity: 0.6; text-decoration: none; font-size: 13px; }
+  .header-links a:hover { opacity: 1; }
+  .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 500; transition: background 0.15s; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary { background: #1a1a1a; color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: #333; }
+  .btn-secondary { background: #e8e8e8; color: #1a1a1a; }
+  .btn-secondary:hover:not(:disabled) { background: #ddd; }
+  .btn-danger { background: #d32f2f; color: #fff; }
+  .btn-danger:hover:not(:disabled) { background: #b71c1c; }
+  .btn-success { background: #2e7d32; color: #fff; }
+  .btn-success:hover:not(:disabled) { background: #1b5e20; }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+  .badge { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block; }
+  .badge-category { background: #e3f2fd; color: #1565c0; }
+  .badge-tier { background: #f3e5f5; color: #7b1fa2; }
+  .badge-level { background: #e8f5e9; color: #2e7d32; }
+  .badge-pro { background: #fff3e0; color: #e65100; }
+
+  /* Sections */
+  .section { max-width: 960px; margin: 0 auto; padding: 24px 32px; }
+  .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+
+  /* Step 1: Upload */
+  .upload-zone { border: 2px dashed #ccc; border-radius: 12px; padding: 40px 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: #fff; }
+  .upload-zone:hover, .upload-zone.dragover { border-color: #1a1a1a; background: #fafafa; }
+  .upload-zone p { color: #666; font-size: 14px; margin-top: 8px; }
+  .upload-zone .icon { font-size: 32px; }
+  .thumbnail-strip { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .thumbnail-strip img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
+  .thumbnail-strip .thumb-wrap { position: relative; }
+  .thumbnail-strip .thumb-remove { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; background: #d32f2f; color: #fff; border: none; border-radius: 50%; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .upload-form { margin-top: 16px; display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+  .upload-form .form-group { flex: 1; min-width: 200px; }
+  .upload-form label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; }
+  .upload-form input[type="text"] { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+
+  /* Step 2: Loading */
+  .loading { text-align: center; padding: 40px; display: none; }
+  .loading.active { display: block; }
+  .spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top-color: #1a1a1a; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Step 3: Review */
+  .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+  .review-actions { display: flex; gap: 8px; }
+
+  .technique-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid transparent; overflow: hidden; }
+  .technique-card.approved { border-left-color: #2e7d32; }
+  .technique-card.rejected { border-left-color: #d32f2f; opacity: 0.5; }
+  .card-top { padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+  .card-top-left { display: flex; gap: 8px; align-items: center; }
+  .card-top .card-name { font-weight: 600; font-size: 15px; }
+  .card-top-actions { display: flex; gap: 6px; }
+  .card-top-actions button { width: 32px; height: 32px; border-radius: 6px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+  .card-top-actions .approve-btn:hover { background: #e8f5e9; border-color: #2e7d32; }
+  .card-top-actions .reject-btn:hover { background: #ffebee; border-color: #d32f2f; }
+  .card-top-actions .edit-btn:hover { background: #e3f2fd; border-color: #1565c0; }
+  .technique-card.approved .approve-btn { background: #2e7d32; color: #fff; border-color: #2e7d32; }
+  .technique-card.rejected .reject-btn { background: #d32f2f; color: #fff; border-color: #d32f2f; }
+
+  /* Inline edit form */
+  .card-edit { padding: 0 20px 16px; display: none; }
+  .card-edit.open { display: block; }
+  .form-group { margin-bottom: 12px; }
+  .form-group label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: #666; display: block; margin-bottom: 4px; }
+  .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; font-family: inherit; }
+  .form-group textarea { resize: vertical; min-height: 60px; }
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-group { flex: 1; }
+
+  /* Step 4: Save */
+  .save-bar { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .save-bar .count-text { font-size: 14px; color: #666; }
+  .save-bar .count-text strong { color: #1a1a1a; }
+
+  /* Processing log */
+  .log-section { margin-top: 32px; }
+  .log-toggle { cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #666; margin-bottom: 8px; }
+  .log-toggle:hover { color: #1a1a1a; }
+  .log-table { width: 100%; border-collapse: collapse; font-size: 13px; display: none; }
+  .log-table.open { display: table; }
+  .log-table th, .log-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #eee; }
+  .log-table th { font-weight: 600; color: #666; text-transform: uppercase; font-size: 11px; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a1a; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 200; display: none; }
+  .toast.show { display: block; }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Technique Builder</h1>
+    <div class="subtitle">Extract technique knowledge from cookbook pages</div>
+  </div>
+  <div class="header-links">
+    <a href="/admin/techniques">View all techniques</a>
+  </div>
+</div>
+
+<!-- Step 1: Upload -->
+<div class="section" id="step-upload">
+  <div class="section-title">1. Upload cookbook pages</div>
+  <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <div class="icon">&#128247;</div>
+    <p>Drop cookbook page photos here, or click to browse</p>
+    <input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="handleFiles(this.files)">
+  </div>
+  <div class="thumbnail-strip" id="thumbStrip"></div>
+  <div class="upload-form">
+    <div class="form-group">
+      <label>Book title / Author (optional)</label>
+      <input type="text" id="bookTitle" placeholder="e.g. Salt Fat Acid Heat — Samin Nosrat">
+    </div>
+    <button class="btn btn-primary" id="extractBtn" onclick="extractTechniques()" disabled>Extract Techniques</button>
+  </div>
+</div>
+
+<!-- Step 2: Loading -->
+<div class="section loading" id="step-loading">
+  <div class="spinner"></div>
+  <p>Analysing cookbook pages with Claude...</p>
+  <p style="font-size:13px;color:#999;margin-top:8px">This may take 15-30 seconds</p>
+</div>
+
+<!-- Step 3 & 4: Review & Save -->
+<div class="section hidden" id="step-review">
+  <div class="save-bar">
+    <div class="count-text" id="saveCount"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-secondary" onclick="resetAll()">Start over</button>
+      <button class="btn btn-success" id="saveBtn" onclick="saveApproved()">Save approved</button>
+    </div>
+  </div>
+
+  <div class="review-header">
+    <div class="section-title" style="margin-bottom:0">2. Review extracted techniques</div>
+    <div class="review-actions">
+      <button class="btn btn-success btn-sm" onclick="bulkAction('approve')">Approve all</button>
+      <button class="btn btn-danger btn-sm" onclick="bulkAction('reject')">Reject all</button>
+    </div>
+  </div>
+  <div id="techniqueList"></div>
+
+  <!-- Processing log -->
+  <div class="log-section">
+    <div class="log-toggle" onclick="toggleLog()">
+      <span id="logArrow">&#9654;</span> Processing log
+    </div>
+    <table class="log-table" id="logTable">
+      <thead>
+        <tr><th>Date</th><th>Book</th><th>Pages</th><th>Extracted</th><th>Approved</th></tr>
+      </thead>
+      <tbody id="logBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CATEGORIES = [
+  'heat_application','knife_skills','sauce_making','flavour_building','preparation',
+  'wet_heat','pastry_technique','finishing','grains_and_dough','presentation_and_philosophy','preparation_and_service'
+];
+
+let uploadedFiles = [];
+let extractedTechniques = [];
+
+// ─── File handling ──────────────────────────────────────────────────────────
+
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(fileList) {
+  for (const f of fileList) {
+    if (f.type.startsWith('image/')) uploadedFiles.push(f);
+  }
+  renderThumbs();
+  document.getElementById('extractBtn').disabled = uploadedFiles.length === 0;
+}
+
+function renderThumbs() {
+  const strip = document.getElementById('thumbStrip');
+  strip.innerHTML = '';
+  uploadedFiles.forEach((f, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'thumb-wrap';
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(f);
+    const btn = document.createElement('button');
+    btn.className = 'thumb-remove';
+    btn.textContent = '\u00d7';
+    btn.onclick = () => { uploadedFiles.splice(i, 1); renderThumbs(); document.getElementById('extractBtn').disabled = uploadedFiles.length === 0; };
+    wrap.appendChild(img);
+    wrap.appendChild(btn);
+    strip.appendChild(wrap);
+  });
+}
+
+// ─── Extraction ─────────────────────────────────────────────────────────────
+
+async function extractTechniques() {
+  const fd = new FormData();
+  uploadedFiles.forEach((f, i) => fd.append(`image_${i}`, f));
+  const bookTitle = document.getElementById('bookTitle').value.trim();
+  if (bookTitle) fd.append('book_title', bookTitle);
+
+  document.getElementById('extractBtn').disabled = true;
+  document.getElementById('step-loading').classList.add('active');
+
+  try {
+    const res = await fetch('/api/extract-techniques', { method: 'POST', body: fd });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Extraction failed');
+    }
+    extractedTechniques = (await res.json()).map((t, i) => ({ ...t, _status: 'pending', _editing: false, _id: i }));
+    showReview();
+  } catch (e) {
+    alert('Extraction error: ' + e.message);
+  } finally {
+    document.getElementById('step-loading').classList.remove('active');
+    document.getElementById('extractBtn').disabled = false;
+  }
+}
+
+// ─── Review UI ──────────────────────────────────────────────────────────────
+
+function showReview() {
+  document.getElementById('step-upload').classList.add('hidden');
+  document.getElementById('step-review').classList.remove('hidden');
+  renderTechniqueCards();
+  updateSaveCount();
+  loadLog();
+}
+
+function updateSaveCount() {
+  const approved = extractedTechniques.filter(t => t._status === 'approved').length;
+  const total = extractedTechniques.length;
+  document.getElementById('saveCount').innerHTML = `<strong>${approved}</strong> of ${total} approved`;
+  document.getElementById('saveBtn').disabled = approved === 0;
+  document.getElementById('saveBtn').textContent = `Save ${approved} approved`;
+}
+
+function renderTechniqueCards() {
+  const list = document.getElementById('techniqueList');
+  list.innerHTML = extractedTechniques.map((t, i) => `
+    <div class="technique-card ${t._status}" id="tc-${i}">
+      <div class="card-top">
+        <div class="card-top-left">
+          <span class="card-name">${esc(t.name)}</span>
+          <span class="badge badge-category">${esc((t.category || '').replace(/_/g, ' '))}</span>
+          <span class="badge badge-tier">Tier ${t.authority_tier || 1}</span>
+          <span class="badge ${t.tier_level === 'professional' ? 'badge-pro' : 'badge-level'}">${esc(t.tier_level || 'standard')}</span>
+        </div>
+        <div class="card-top-actions">
+          <button class="edit-btn" onclick="toggleEdit(${i})" title="Edit">&#9998;</button>
+          <button class="approve-btn" onclick="setStatus(${i},'approved')" title="Approve">&#10003;</button>
+          <button class="reject-btn" onclick="setStatus(${i},'rejected')" title="Reject">&#10007;</button>
+        </div>
+      </div>
+      <div class="card-edit ${t._editing ? 'open' : ''}" id="edit-${i}">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" value="${escAttr(t.name)}" onchange="updateField(${i},'name',this.value)">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select onchange="updateField(${i},'category',this.value)">
+              ${CATEGORIES.map(c => `<option value="${c}" ${t.category === c ? 'selected' : ''}>${c.replace(/_/g, ' ')}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Authority tier (1-4)</label>
+            <input type="number" min="1" max="4" value="${t.authority_tier || 1}" onchange="updateField(${i},'authority_tier',parseInt(this.value))">
+          </div>
+          <div class="form-group">
+            <label>Tier level</label>
+            <select onchange="updateField(${i},'tier_level',this.value)">
+              <option value="standard" ${t.tier_level !== 'professional' ? 'selected' : ''}>standard</option>
+              <option value="professional" ${t.tier_level === 'professional' ? 'selected' : ''}>professional</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea rows="2" onchange="updateField(${i},'description',this.value)">${esc(t.description || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Key principles</label>
+          <textarea rows="4" onchange="updateField(${i},'key_principles',this.value)">${esc(t.key_principles || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Common mistakes</label>
+          <textarea rows="3" onchange="updateField(${i},'common_mistakes',this.value)">${esc(t.common_mistakes || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Pro tips</label>
+          <textarea rows="3" onchange="updateField(${i},'pro_tips',this.value)">${esc(t.pro_tips || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Trigger keywords (comma-separated)</label>
+          <textarea rows="2" onchange="updateField(${i},'trigger_keywords',this.value.split(',').map(s=>s.trim()).filter(Boolean))">${esc((t.trigger_keywords || []).join(', '))}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Related techniques (comma-separated)</label>
+          <textarea rows="1" onchange="updateField(${i},'related_techniques',this.value.split(',').map(s=>s.trim()).filter(Boolean))">${esc((t.related_techniques || []).join(', '))}</textarea>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setStatus(i, status) {
+  const t = extractedTechniques[i];
+  t._status = t._status === status ? 'pending' : status;
+  const card = document.getElementById('tc-' + i);
+  card.className = 'technique-card ' + t._status;
+  updateSaveCount();
+}
+
+function toggleEdit(i) {
+  extractedTechniques[i]._editing = !extractedTechniques[i]._editing;
+  document.getElementById('edit-' + i).classList.toggle('open');
+}
+
+function updateField(i, field, value) {
+  extractedTechniques[i][field] = value;
+  // Update the card name display if name changed
+  if (field === 'name') {
+    document.getElementById('tc-' + i).querySelector('.card-name').textContent = value;
+  }
+  if (field === 'category') {
+    const badge = document.getElementById('tc-' + i).querySelector('.badge-category');
+    if (badge) badge.textContent = value.replace(/_/g, ' ');
+  }
+}
+
+function bulkAction(status) {
+  extractedTechniques.forEach((t, i) => {
+    t._status = status;
+    const card = document.getElementById('tc-' + i);
+    if (card) card.className = 'technique-card ' + status;
+  });
+  updateSaveCount();
+}
+
+// ─── Save ───────────────────────────────────────────────────────────────────
+
+async function saveApproved() {
+  const approved = extractedTechniques.filter(t => t._status === 'approved');
+  if (!approved.length) return;
+
+  // Clean internal fields
+  const entries = approved.map(t => {
+    const clean = { ...t };
+    delete clean._status;
+    delete clean._editing;
+    delete clean._id;
+    return clean;
+  });
+
+  document.getElementById('saveBtn').disabled = true;
+  document.getElementById('saveBtn').textContent = 'Saving...';
+
+  try {
+    const res = await fetch('/api/techniques/bulk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entries),
+    });
+    if (!res.ok) throw new Error('Save failed');
+    const result = await res.json();
+
+    // Log the processing
+    await fetch('/api/technique-builder/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        book_title: document.getElementById('bookTitle').value.trim() || '(unknown)',
+        pages_count: uploadedFiles.length,
+        techniques_extracted: extractedTechniques.length,
+        techniques_approved: approved.length,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+
+    toast(`Saved ${result.inserted} technique${result.inserted !== 1 ? 's' : ''}`);
+    loadLog();
+    updateSaveCount();
+  } catch (e) {
+    alert('Save error: ' + e.message);
+  } finally {
+    document.getElementById('saveBtn').disabled = false;
+    updateSaveCount();
+  }
+}
+
+// ─── Processing log ─────────────────────────────────────────────────────────
+
+async function loadLog() {
+  try {
+    const res = await fetch('/api/technique-builder/log');
+    const log = await res.json();
+    const body = document.getElementById('logBody');
+    body.innerHTML = log.reverse().map(e => `
+      <tr>
+        <td>${new Date(e.timestamp).toLocaleDateString()} ${new Date(e.timestamp).toLocaleTimeString()}</td>
+        <td>${esc(e.book_title)}</td>
+        <td>${e.pages_count}</td>
+        <td>${e.techniques_extracted}</td>
+        <td>${e.techniques_approved}</td>
+      </tr>
+    `).join('');
+  } catch (e) { /* ignore */ }
+}
+
+function toggleLog() {
+  const table = document.getElementById('logTable');
+  const arrow = document.getElementById('logArrow');
+  table.classList.toggle('open');
+  arrow.innerHTML = table.classList.contains('open') ? '&#9660;' : '&#9654;';
+}
+
+// ─── Reset ──────────────────────────────────────────────────────────────────
+
+function resetAll() {
+  uploadedFiles = [];
+  extractedTechniques = [];
+  renderThumbs();
+  document.getElementById('bookTitle').value = '';
+  document.getElementById('extractBtn').disabled = true;
+  document.getElementById('step-review').classList.add('hidden');
+  document.getElementById('step-upload').classList.remove('hidden');
+}
+
+// ─── Utilities ──────────────────────────────────────────────────────────────
+
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function escAttr(s) {
+  return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

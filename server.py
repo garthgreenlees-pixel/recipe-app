@@ -1,28 +1,97 @@
 import os
+import sentry_sdk
+
+SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    traces_sample_rate=1.0,
+    send_default_pii=True,
+)
+
 import json
 import uuid
 import base64
 import shutil
 from pathlib import Path
 
+import psycopg2
+import psycopg2.extras
 import requests as http_requests
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, send_from_directory, send_file, Response
 from flask_cors import CORS
 import anthropic
 
-PRODUCTION_HOST = "https://garth-recipe-browser.fly.dev"
-
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-RECIPES_FILE = Path(__file__).parent / "recipes.json"
-EXTRACTED_DIR = Path(__file__).parent / "extracted"
+DATA_DIR = Path(os.environ.get("DATA_DIR", "/data" if Path("/data").is_dir() else "./data"))
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+RECIPES_FILE = DATA_DIR / "recipes.json"
+EXTRACTED_DIR = DATA_DIR / "extracted"
 EXTRACTED_DIR.mkdir(exist_ok=True)
 
+# Seed local data from repo on first run
+if not RECIPES_FILE.exists():
+    repo_dir = Path(__file__).parent
+    repo_recipes = repo_dir / "recipes.json"
+    if repo_recipes.exists():
+        shutil.copy2(repo_recipes, RECIPES_FILE)
+    # Also seed recipe images
+    repo_extracted = repo_dir / "extracted"
+    if repo_extracted.is_dir():
+        for item in repo_extracted.iterdir():
+            if item.is_dir():
+                dest = EXTRACTED_DIR / item.name
+                if not dest.exists():
+                    shutil.copytree(item, dest)
+
 client = anthropic.Anthropic()
+
+DATABASE_URL = os.environ.get("DATABASE_URL", "")
+
+
+def get_db():
+    conn = psycopg2.connect(DATABASE_URL)
+    conn.autocommit = True
+    return conn
+
+
+def init_db():
+    if not DATABASE_URL:
+        return
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS technique_references (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(200) NOT NULL,
+            category VARCHAR(100) NOT NULL,
+            description TEXT NOT NULL,
+            key_principles TEXT NOT NULL,
+            common_mistakes TEXT NOT NULL,
+            pro_tips TEXT NOT NULL,
+            trigger_keywords JSONB NOT NULL,
+            authority_tier INTEGER NOT NULL,
+            related_techniques JSONB,
+            tier_level VARCHAR(20) DEFAULT 'standard',
+            created_at TIMESTAMP DEFAULT NOW(),
+            updated_at TIMESTAMP DEFAULT NOW()
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_technique_trigger_keywords
+        ON technique_references USING GIN (trigger_keywords)
+    """)
+    cur.close()
+    conn.close()
+
+
+init_db()
 
 
 # ─── Static files ────────────────────────────────────────────────────────────
@@ -41,22 +110,10 @@ def recipes_json():
 
 @app.route("/images/<recipe_uuid>/<filename>")
 def serve_image(recipe_uuid, filename):
-    # Serve locally if available
     image_dir = EXTRACTED_DIR / recipe_uuid
     filepath = image_dir / filename
     if filepath.is_file():
         return send_file(filepath)
-
-    # Proxy from production server and cache locally
-    remote_url = f"{PRODUCTION_HOST}/images/{recipe_uuid}/{filename}"
-    try:
-        resp = http_requests.get(remote_url, timeout=10)
-        if resp.status_code == 200:
-            image_dir.mkdir(parents=True, exist_ok=True)
-            filepath.write_bytes(resp.content)
-            return Response(resp.content, content_type=resp.headers.get("Content-Type", "image/jpeg"))
-    except Exception:
-        pass
     return jsonify(error="Not found"), 404
 
 
@@ -84,6 +141,21 @@ def save_hero_image(recipe_uuid, image_b64):
     (image_dir / "miniature.jpg").write_bytes(image_bytes)
 
 
+# ─── Media type detection ────────────────────────────────────────────────────
+
+def _detect_media_type(data: bytes) -> str:
+    """Detect image media type from file header bytes."""
+    if data[:3] == b'\xff\xd8\xff':
+        return "image/jpeg"
+    if data[:4] == b'\x89PNG':
+        return "image/png"
+    if data[:4] == b'RIFF' and data[8:12] == b'WEBP':
+        return "image/webp"
+    if data[:4] in (b'GIF8',):
+        return "image/gif"
+    return "image/jpeg"
+
+
 # ─── Scan (AI recipe extraction) ────────────────────────────────────────────
 
 @app.route("/api/scan", methods=["POST"])
@@ -97,7 +169,7 @@ def scan_recipe():
         f = request.files[key]
         data = f.read()
         b64 = base64.b64encode(data).decode("utf-8")
-        media_type = f.content_type or "image/jpeg"
+        media_type = _detect_media_type(data)
         images.append({"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64}})
         images_b64.append(b64)
         images_media_types.append(media_type)
@@ -512,6 +584,29 @@ def create_recipe():
             ext = "jpg" if "jpeg" in mt or "jpg" in mt else "png"
             (image_dir / f"page_{i}.{ext}").write_bytes(base64.b64decode(b64))
 
+    # Enhance steps automatically
+    try:
+        ingredient_strings = []
+        for ing in recipe.get("ingredients", []):
+            parts = []
+            if ing.get("count"):
+                parts.append(ing["count"])
+            if ing.get("unit"):
+                parts.append(ing["unit"])
+            parts.append(ing.get("name", ""))
+            if ing.get("info"):
+                parts.append(f"({ing['info']})")
+            ingredient_strings.append(" ".join(parts).strip())
+
+        result = _enhance_recipe_steps(recipe["title"], ingredient_strings, recipe["steps"])
+        if result:
+            enhanced_strings, enhanced_objects = result
+            recipe["original_steps"] = list(recipe["steps"])
+            recipe["enhanced_steps"] = enhanced_objects
+            recipe["steps"] = enhanced_strings
+    except Exception:
+        pass  # Enhancement failure doesn't block saving
+
     recipes.append(recipe)
     save_recipes(recipes)
     return jsonify(recipe), 201
@@ -532,6 +627,30 @@ def update_recipe(recipe_uuid):
     for field in ["title", "preamble", "tags", "time", "servings", "ingredients", "steps", "source"]:
         if field in data:
             recipe[field] = data[field]
+
+    # Re-enhance if steps were updated
+    if "steps" in data:
+        try:
+            ingredient_strings = []
+            for ing in recipe.get("ingredients", []):
+                parts = []
+                if ing.get("count"):
+                    parts.append(ing["count"])
+                if ing.get("unit"):
+                    parts.append(ing["unit"])
+                parts.append(ing.get("name", ""))
+                if ing.get("info"):
+                    parts.append(f"({ing['info']})")
+                ingredient_strings.append(" ".join(parts).strip())
+
+            result = _enhance_recipe_steps(recipe["title"], ingredient_strings, recipe["steps"])
+            if result:
+                enhanced_strings, enhanced_objects = result
+                recipe["original_steps"] = list(recipe["steps"])
+                recipe["enhanced_steps"] = enhanced_objects
+                recipe["steps"] = enhanced_strings
+        except Exception:
+            pass  # Enhancement failure doesn't block saving
 
     # Handle hero image update
     hero_b64 = data.get("_hero_b64")
@@ -561,6 +680,387 @@ def delete_recipe(recipe_uuid):
         shutil.rmtree(image_dir)
 
     return jsonify(success=True)
+
+
+# ─── Technique reference endpoints ───────────────────────────────────────────
+
+@app.route("/api/techniques")
+def list_techniques():
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM technique_references ORDER BY id")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    # Convert datetime objects to strings for JSON serialization
+    for row in rows:
+        for key in ("created_at", "updated_at"):
+            if row.get(key):
+                row[key] = row[key].isoformat()
+    return jsonify(rows)
+
+
+def _match_techniques_for_step(step_text):
+    """Return technique rows matching a step (internal helper, no HTTP)."""
+    step_lower = step_text.lower()
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM technique_references ORDER BY id")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    matches = []
+    for row in rows:
+        keywords = row.get("trigger_keywords", [])
+        if any(kw.lower() in step_lower for kw in keywords):
+            for key in ("created_at", "updated_at"):
+                if row.get(key):
+                    row[key] = row[key].isoformat()
+            matches.append(row)
+    return matches
+
+
+@app.route("/api/techniques/match")
+def match_techniques():
+    step = request.args.get("step", "").strip()
+    if not step:
+        return jsonify(error="No step text provided"), 400
+    return jsonify(_match_techniques_for_step(step))
+
+
+@app.route("/api/techniques/bulk", methods=["POST"])
+def bulk_create_techniques():
+    entries = request.get_json()
+    if not isinstance(entries, list):
+        return jsonify(error="Expected a JSON array"), 400
+    conn = get_db()
+    cur = conn.cursor()
+    count = 0
+    for e in entries:
+        cur.execute(
+            """INSERT INTO technique_references
+               (name, category, description, key_principles, common_mistakes, pro_tips,
+                trigger_keywords, authority_tier, related_techniques, tier_level)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+            (
+                e.get("name", ""),
+                e.get("category", ""),
+                e.get("description", ""),
+                e.get("key_principles", ""),
+                e.get("common_mistakes", ""),
+                e.get("pro_tips", ""),
+                json.dumps(e.get("trigger_keywords", [])),
+                e.get("authority_tier", 1),
+                json.dumps(e.get("related_techniques", [])),
+                e.get("tier_level", "standard"),
+            ),
+        )
+        count += 1
+    cur.close()
+    conn.close()
+    return jsonify(inserted=count), 201
+
+
+@app.route("/api/techniques/<int:technique_id>", methods=["GET"])
+def get_technique(technique_id):
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM technique_references WHERE id = %s", (technique_id,))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not row:
+        return jsonify(error="Not found"), 404
+    for key in ("created_at", "updated_at"):
+        if row.get(key):
+            row[key] = row[key].isoformat()
+    return jsonify(row)
+
+
+@app.route("/api/techniques/<int:technique_id>", methods=["PUT"])
+def update_technique(technique_id):
+    data = request.get_json()
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT id FROM technique_references WHERE id = %s", (technique_id,))
+    if not cur.fetchone():
+        cur.close()
+        conn.close()
+        return jsonify(error="Not found"), 404
+    cur.execute(
+        """UPDATE technique_references SET
+           name=%s, category=%s, description=%s, key_principles=%s,
+           common_mistakes=%s, pro_tips=%s, trigger_keywords=%s,
+           authority_tier=%s, related_techniques=%s, tier_level=%s,
+           updated_at=NOW()
+           WHERE id=%s""",
+        (
+            data.get("name", ""),
+            data.get("category", ""),
+            data.get("description", ""),
+            data.get("key_principles", ""),
+            data.get("common_mistakes", ""),
+            data.get("pro_tips", ""),
+            json.dumps(data.get("trigger_keywords", [])),
+            data.get("authority_tier", 1),
+            json.dumps(data.get("related_techniques", [])),
+            data.get("tier_level", "standard"),
+            technique_id,
+        ),
+    )
+    cur.close()
+    conn.close()
+    return jsonify(success=True)
+
+
+@app.route("/api/techniques/<int:technique_id>", methods=["DELETE"])
+def delete_technique(technique_id):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM technique_references WHERE id = %s RETURNING id", (technique_id,))
+    deleted = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not deleted:
+        return jsonify(error="Not found"), 404
+    return jsonify(success=True)
+
+
+@app.route("/admin/techniques")
+def admin_techniques():
+    return send_file("admin_techniques.html")
+
+
+@app.route("/admin/technique-builder")
+def admin_technique_builder():
+    return send_file("admin_technique_builder.html")
+
+
+# ─── Technique extraction (AI) ───────────────────────────────────────────────
+
+TECHNIQUE_EXTRACTION_PROMPT = """You are Provenance, a culinary intelligence engine. You extract cooking technique knowledge from cookbook pages.
+
+Analyse the provided cookbook page images and extract every distinct cooking technique discussed or demonstrated. For each technique, return a JSON object with these fields:
+
+{
+  "name": "Technique name (title case)",
+  "category": "one of: heat_application, knife_skills, sauce_making, flavour_building, preparation, wet_heat, pastry_technique, finishing, grains_and_dough, presentation_and_philosophy, preparation_and_service",
+  "description": "2-4 sentence description of what this technique is and why it matters",
+  "key_principles": "The core principles — what must happen for this technique to succeed. Be specific: temperatures, times, ratios, visual/tactile cues.",
+  "common_mistakes": "What home cooks and even professionals get wrong. Be specific and practical.",
+  "pro_tips": "Professional-level insights that elevate the technique. Include specific temperatures, timing, ratios where relevant.",
+  "trigger_keywords": ["keyword1", "keyword2", "keyword3"],
+  "related_techniques": ["Related Technique 1", "Related Technique 2"],
+  "authority_tier": 1,
+  "tier_level": "standard"
+}
+
+Rules:
+- Return a JSON ARRAY of technique objects — even if only one technique is found
+- Extract ALL distinct techniques from the pages — a single page may contain multiple techniques
+- trigger_keywords should be 5-12 terms a recipe step might use that would indicate this technique is relevant
+- authority_tier: 1 = foundational, 2 = intermediate, 3 = advanced, 4 = specialist
+- tier_level: "standard" for home cooks, "professional" for restaurant-level techniques
+- Write in the voice of a senior chef — direct, specific, never condescending
+- Include specific temperatures (°C), timing, and quantities where the cookbook provides them
+- Do NOT invent information not present or clearly implied by the cookbook pages
+- Return ONLY valid JSON, no markdown fences"""
+
+
+@app.route("/api/extract-techniques", methods=["POST"])
+def extract_techniques():
+    images = []
+    for key in sorted(request.files.keys()):
+        f = request.files[key]
+        data = f.read()
+        b64 = base64.b64encode(data).decode("utf-8")
+        media_type = _detect_media_type(data)
+        images.append({"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64}})
+
+    if not images:
+        return jsonify(error="No images uploaded"), 400
+
+    book_title = request.form.get("book_title", "").strip()
+
+    user_text = "Extract all cooking techniques from these cookbook pages."
+    if book_title:
+        user_text = f"These pages are from: {book_title}. Extract all cooking techniques from them."
+
+    content = images + [{"type": "text", "text": user_text}]
+
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=8192,
+            system=TECHNIQUE_EXTRACTION_PROMPT,
+            messages=[{"role": "user", "content": content}],
+        )
+
+        response_text = response.content[0].text.strip()
+        if response_text.startswith("```"):
+            lines = response_text.split("\n")
+            lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            response_text = "\n".join(lines)
+
+        techniques = json.loads(response_text)
+        if isinstance(techniques, dict):
+            techniques = [techniques]
+        return jsonify(techniques)
+
+    except json.JSONDecodeError as e:
+        return jsonify(error=f"Failed to parse AI response: {e}"), 500
+    except anthropic.RateLimitError as e:
+        return jsonify(error=f"rate limit: {e}"), 429
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+
+
+# ─── Technique builder processing log ─────────────────────────────────────────
+
+TECHNIQUE_BUILDER_LOG_FILE = DATA_DIR / "technique_builder_log.json"
+
+
+@app.route("/api/technique-builder/log", methods=["GET"])
+def get_technique_builder_log():
+    if not TECHNIQUE_BUILDER_LOG_FILE.exists():
+        return jsonify([])
+    with open(TECHNIQUE_BUILDER_LOG_FILE, "r", encoding="utf-8") as f:
+        return jsonify(json.load(f))
+
+
+@app.route("/api/technique-builder/log", methods=["POST"])
+def post_technique_builder_log():
+    entry = request.get_json()
+    log = []
+    if TECHNIQUE_BUILDER_LOG_FILE.exists():
+        with open(TECHNIQUE_BUILDER_LOG_FILE, "r", encoding="utf-8") as f:
+            log = json.load(f)
+    log.append(entry)
+    with open(TECHNIQUE_BUILDER_LOG_FILE, "w", encoding="utf-8") as f:
+        json.dump(log, f, indent=2, ensure_ascii=False)
+    return jsonify(success=True), 201
+
+
+# ─── Recipe enhancement pipeline ─────────────────────────────────────────────
+
+ENHANCE_SYSTEM_PROMPT = (
+    "You are Provenance, a culinary intelligence engine. You enhance recipe methods "
+    "to professional standard. Write in the voice of a senior chef talking to a "
+    "capable cook — direct, specific, never condescending. Always include temperatures, "
+    "timing, and quantities where appropriate. For each step, return JSON with two "
+    "fields: enhanced_step (the rewritten method step) and insight (a 1-2 sentence "
+    "explanation of WHY the technique matters — this powers an optional learning feature)."
+)
+
+
+def _enhance_recipe_steps(title, ingredients, steps):
+    """Enhance recipe steps using Claude and technique matching.
+
+    Returns (enhanced_step_strings, enhanced_step_objects) or None on failure.
+    """
+    if not steps:
+        return None
+
+    ingredient_block = "\n".join(f"- {ing}" for ing in ingredients)
+    enhanced_steps = []
+
+    for i, step_text in enumerate(steps):
+        matched = _match_techniques_for_step(step_text)
+
+        technique_block = ""
+        if matched:
+            parts = []
+            for t in matched:
+                parts.append(
+                    f"Technique: {t['name']}\n"
+                    f"Key principles: {t['key_principles']}\n"
+                    f"Common mistakes: {t['common_mistakes']}\n"
+                    f"Pro tips: {t['pro_tips']}"
+                )
+            technique_block = (
+                "\n\nMatched technique references:\n"
+                + "\n---\n".join(parts)
+            )
+
+        user_prompt = (
+            f"Recipe: {title}\n\n"
+            f"Ingredients:\n{ingredient_block}\n\n"
+            f"Original step {i + 1}: {step_text}"
+            f"{technique_block}\n\n"
+            "Enhance this step. Fix technique errors. Add missing temperatures, "
+            "timing, quantities. If the step is vague, expand it into proper method. "
+            "If it references a technique that should be multiple steps, split it. "
+            'Return JSON: {"enhanced_step": "string", "insight": "string"}'
+        )
+
+        try:
+            response = client.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=1000,
+                system=ENHANCE_SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": user_prompt}],
+            )
+            resp_text = response.content[0].text.strip()
+            if resp_text.startswith("```"):
+                lines = resp_text.split("\n")
+                lines = lines[1:]
+                if lines and lines[-1].strip() == "```":
+                    lines = lines[:-1]
+                resp_text = "\n".join(lines)
+            result = json.loads(resp_text)
+        except (json.JSONDecodeError, Exception) as e:
+            result = {"enhanced_step": step_text, "insight": f"Enhancement failed: {e}"}
+
+        enhanced_steps.append({
+            "enhanced_step": result.get("enhanced_step", step_text),
+            "insight": result.get("insight", ""),
+            "matched_techniques": [t["name"] for t in matched],
+        })
+
+    enhanced_strings = [s["enhanced_step"] for s in enhanced_steps]
+    return (enhanced_strings, enhanced_steps)
+
+
+@app.route("/api/enhance-recipe", methods=["POST"])
+def enhance_recipe():
+    data = request.get_json()
+    recipe_title = data.get("recipe_title", "Untitled")
+    ingredients = data.get("ingredients", [])
+    steps = data.get("steps", [])
+
+    if not steps:
+        return jsonify(error="No steps provided"), 400
+
+    result = _enhance_recipe_steps(recipe_title, ingredients, steps)
+    if result is None:
+        return jsonify(error="Enhancement failed"), 500
+
+    enhanced_strings, enhanced_steps = result
+    return jsonify({
+        "recipe_title": recipe_title,
+        "ingredients": ingredients,
+        "original_steps": steps,
+        "enhanced_steps": enhanced_steps,
+    })
+
+
+@app.route("/test/enhance")
+def test_enhance_page():
+    return send_file("test_enhance.html")
+
+
+@app.route("/test/enhance-barramundi")
+def test_enhance_barramundi_page():
+    return send_file("test_enhance_barramundi.html")
+
+
+# ─── Sentry test route ───────────────────────────────────────────────────────
+
+@app.route("/debug-sentry")
+def trigger_error():
+    division_by_zero = 1 / 0
 
 
 # ─── Run ─────────────────────────────────────────────────────────────────────
