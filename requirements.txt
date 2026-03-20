@@ -4,3 +4,7 @@ anthropic
 python-dotenv
 gunicorn
 requests
+sentry-sdk[flask]
+psycopg2-binary
+Pillow
+pillow-heif

@@ -15,6 +15,7 @@ import base64
 import shutil
 from pathlib import Path
 
+import io
 import psycopg2
 import psycopg2.extras
 import requests as http_requests
@@ -22,6 +23,10 @@ from dotenv import load_dotenv
 from flask import Flask, request, jsonify, send_from_directory, send_file, Response
 from flask_cors import CORS
 import anthropic
+from PIL import Image
+import pillow_heif
+
+pillow_heif.register_heif_opener()
 
 load_dotenv()
 
@@ -141,10 +146,10 @@ def save_hero_image(recipe_uuid, image_b64):
     (image_dir / "miniature.jpg").write_bytes(image_bytes)
 
 
-# ─── Media type detection ────────────────────────────────────────────────────
+# ─── Media type detection + HEIC conversion ──────────────────────────────────
 
 def _detect_media_type(data: bytes) -> str:
-    """Detect image media type from file header bytes."""
+    """Detect actual image format from file header bytes."""
     if data[:3] == b'\xff\xd8\xff':
         return "image/jpeg"
     if data[:4] == b'\x89PNG':
@@ -153,7 +158,23 @@ def _detect_media_type(data: bytes) -> str:
         return "image/webp"
     if data[:4] in (b'GIF8',):
         return "image/gif"
+    # HEIC/HEIF: ftyp box with heic/heix/mif1 brand
+    if len(data) >= 12 and data[4:8] == b'ftyp':
+        brand = data[8:12]
+        if brand in (b'heic', b'heix', b'mif1', b'hevc'):
+            return "image/heic"
     return "image/jpeg"
+
+
+def _prepare_image(data: bytes) -> tuple[bytes, str]:
+    """Detect format and convert HEIC to JPEG. Returns (image_bytes, media_type)."""
+    media_type = _detect_media_type(data)
+    if media_type == "image/heic":
+        img = Image.open(io.BytesIO(data))
+        buf = io.BytesIO()
+        img.convert("RGB").save(buf, format="JPEG", quality=92)
+        return buf.getvalue(), "image/jpeg"
+    return data, media_type
 
 
 # ─── Scan (AI recipe extraction) ────────────────────────────────────────────
@@ -167,9 +188,9 @@ def scan_recipe():
 
     for key in sorted(request.files.keys()):
         f = request.files[key]
-        data = f.read()
+        raw = f.read()
+        data, media_type = _prepare_image(raw)
         b64 = base64.b64encode(data).decode("utf-8")
-        media_type = _detect_media_type(data)
         images.append({"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64}})
         images_b64.append(b64)
         images_media_types.append(media_type)
@@ -838,33 +859,21 @@ def admin_technique_builder():
 
 # ─── Technique extraction (AI) ───────────────────────────────────────────────
 
-TECHNIQUE_EXTRACTION_PROMPT = """You are Provenance, a culinary intelligence engine. You extract cooking technique knowledge from cookbook pages.
-
-Analyse the provided cookbook page images and extract every distinct cooking technique discussed or demonstrated. For each technique, return a JSON object with these fields:
-
-{
-  "name": "Technique name (title case)",
-  "category": "one of: heat_application, knife_skills, sauce_making, flavour_building, preparation, wet_heat, pastry_technique, finishing, grains_and_dough, presentation_and_philosophy, preparation_and_service",
-  "description": "2-4 sentence description of what this technique is and why it matters",
-  "key_principles": "The core principles — what must happen for this technique to succeed. Be specific: temperatures, times, ratios, visual/tactile cues.",
-  "common_mistakes": "What home cooks and even professionals get wrong. Be specific and practical.",
-  "pro_tips": "Professional-level insights that elevate the technique. Include specific temperatures, timing, ratios where relevant.",
-  "trigger_keywords": ["keyword1", "keyword2", "keyword3"],
-  "related_techniques": ["Related Technique 1", "Related Technique 2"],
-  "authority_tier": 1,
-  "tier_level": "standard"
-}
-
-Rules:
-- Return a JSON ARRAY of technique objects — even if only one technique is found
-- Extract ALL distinct techniques from the pages — a single page may contain multiple techniques
-- trigger_keywords should be 5-12 terms a recipe step might use that would indicate this technique is relevant
-- authority_tier: 1 = foundational, 2 = intermediate, 3 = advanced, 4 = specialist
-- tier_level: "standard" for home cooks, "professional" for restaurant-level techniques
-- Write in the voice of a senior chef — direct, specific, never condescending
-- Include specific temperatures (°C), timing, and quantities where the cookbook provides them
-- Do NOT invent information not present or clearly implied by the cookbook pages
-- Return ONLY valid JSON, no markdown fences"""
+TECHNIQUE_EXTRACTION_PROMPT = (
+    "You are a culinary technique extraction engine working for Provenance. "
+    "Read these cookbook pages and extract ONLY technique knowledge — not recipes, "
+    "not ingredient lists, not serving suggestions. For each distinct technique you find, "
+    "output valid JSON matching this exact schema: "
+    '[{name, category, description, key_principles, common_mistakes, pro_tips, '
+    'trigger_keywords (array of strings), authority_tier (integer 1-3), '
+    'related_techniques (array of strings), tier_level (either \'standard\' or \'professional\')}]. '
+    "Categories must be one of: heat_application, knife_skills, sauce_making, flavour_building, "
+    "preparation, wet_heat, pastry_technique, finishing, grains_and_dough, "
+    "presentation_and_philosophy, preparation_and_service. "
+    "Include the book title and author context in descriptions. "
+    "Extract the author's unique insights — what makes their explanation authoritative. "
+    "If a page has no extractable technique knowledge, return an empty array []."
+)
 
 
 @app.route("/api/extract-techniques", methods=["POST"])
@@ -872,9 +881,9 @@ def extract_techniques():
     images = []
     for key in sorted(request.files.keys()):
         f = request.files[key]
-        data = f.read()
+        raw = f.read()
+        data, media_type = _prepare_image(raw)
         b64 = base64.b64encode(data).decode("utf-8")
-        media_type = _detect_media_type(data)
         images.append({"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64}})
 
     if not images:
