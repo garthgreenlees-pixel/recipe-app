@@ -928,6 +928,11 @@ def extract_techniques():
         techniques = json.loads(response_text)
         if isinstance(techniques, dict):
             techniques = [techniques]
+        # Coerce array-valued text fields to newline-joined strings
+        for t in techniques:
+            for field in ("description", "key_principles", "common_mistakes", "pro_tips"):
+                if isinstance(t.get(field), list):
+                    t[field] = "\n".join(str(s) for s in t[field])
         return jsonify(techniques)
 
     except json.JSONDecodeError as e:

@@ -209,10 +209,10 @@ function renderList() {
         </div>
       </div>
       <div class="card-body">
-        <div class="field"><label>Description</label><p>${esc(t.description)}</p></div>
-        <div class="field"><label>Key principles</label><p>${esc(t.key_principles)}</p></div>
-        <div class="field"><label>Common mistakes</label><p>${esc(t.common_mistakes)}</p></div>
-        <div class="field"><label>Pro tips</label><p>${esc(t.pro_tips)}</p></div>
+        <div class="field"><label>Description</label><p>${fmtText(t.description)}</p></div>
+        <div class="field"><label>Key principles</label><p>${fmtText(t.key_principles)}</p></div>
+        <div class="field"><label>Common mistakes</label><p>${fmtText(t.common_mistakes)}</p></div>
+        <div class="field"><label>Pro tips</label><p>${fmtText(t.pro_tips)}</p></div>
         <div class="field"><label>Trigger keywords</label><div class="keywords">${t.trigger_keywords.map(k => `<span class="kw">${esc(k)}</span>`).join('')}</div></div>
         <div class="field"><label>Related techniques</label><div class="keywords">${(t.related_techniques||[]).map(k => `<span class="kw">${esc(k)}</span>`).join('')}</div></div>
         ${t.source_book ? `<div class="field"><label>Source book</label><p>${esc(t.source_book)}</p></div>` : ''}
@@ -234,6 +234,20 @@ function toggle(id) {
 function esc(s) {
   if (!s) return '';
   const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+function fmtText(val) {
+  if (!val) return '';
+  if (Array.isArray(val)) return val.map(s => esc(s)).join('<br>');
+  let s = String(val);
+  // Handle JSON-encoded arrays stored as strings
+  if (s.startsWith('{') || s.startsWith('[')) {
+    try {
+      const arr = JSON.parse(s.startsWith('{') ? '[' + s.slice(1, -1) + ']' : s);
+      if (Array.isArray(arr)) return arr.map(v => esc(String(v))).join('<br>');
+    } catch(e) {}
+  }
+  return esc(s);
 }
 
 function openNew() {
