@@ -240,7 +240,12 @@ async function extractTechniques() {
       const err = await res.json();
       throw new Error(err.error || 'Extraction failed');
     }
-    extractedTechniques = (await res.json()).map((t, i) => ({ ...t, _status: 'pending', _editing: false, _id: i }));
+    extractedTechniques = (await res.json()).map((t, i) => ({
+      ...t,
+      source_book: t.source_book || bookTitle || null,
+      cross_cuisine_parallels: t.cross_cuisine_parallels || [],
+      _status: 'pending', _editing: false, _id: i,
+    }));
     showReview();
   } catch (e) {
     alert('Extraction error: ' + e.message);
@@ -332,6 +337,14 @@ function renderTechniqueCards() {
         <div class="form-group">
           <label>Related techniques (comma-separated)</label>
           <textarea rows="1" onchange="updateField(${i},'related_techniques',this.value.split(',').map(s=>s.trim()).filter(Boolean))">${esc((t.related_techniques || []).join(', '))}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Source book</label>
+          <input type="text" value="${escAttr(t.source_book || '')}" onchange="updateField(${i},'source_book',this.value||null)">
+        </div>
+        <div class="form-group">
+          <label>Cross-cuisine parallels (comma-separated)</label>
+          <textarea rows="1" onchange="updateField(${i},'cross_cuisine_parallels',this.value.split(',').map(s=>s.trim()).filter(Boolean))">${esc((t.cross_cuisine_parallels || []).join(', '))}</textarea>
         </div>
       </div>
     </div>

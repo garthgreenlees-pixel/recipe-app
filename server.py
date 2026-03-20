@@ -92,6 +92,12 @@ def init_db():
         CREATE INDEX IF NOT EXISTS idx_technique_trigger_keywords
         ON technique_references USING GIN (trigger_keywords)
     """)
+    # Add columns introduced after initial schema
+    for stmt in [
+        "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS source_book TEXT",
+        "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS cross_cuisine_parallels JSONB DEFAULT '[]'::jsonb",
+    ]:
+        cur.execute(stmt)
     cur.close()
     conn.close()
 
@@ -761,8 +767,9 @@ def bulk_create_techniques():
         cur.execute(
             """INSERT INTO technique_references
                (name, category, description, key_principles, common_mistakes, pro_tips,
-                trigger_keywords, authority_tier, related_techniques, tier_level)
-               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                trigger_keywords, authority_tier, related_techniques, tier_level,
+                source_book, cross_cuisine_parallels)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
             (
                 e.get("name", ""),
                 e.get("category", ""),
@@ -774,6 +781,8 @@ def bulk_create_techniques():
                 e.get("authority_tier", 1),
                 json.dumps(e.get("related_techniques", [])),
                 e.get("tier_level", "standard"),
+                e.get("source_book"),
+                json.dumps(e.get("cross_cuisine_parallels", [])),
             ),
         )
         count += 1
@@ -813,6 +822,7 @@ def update_technique(technique_id):
            name=%s, category=%s, description=%s, key_principles=%s,
            common_mistakes=%s, pro_tips=%s, trigger_keywords=%s,
            authority_tier=%s, related_techniques=%s, tier_level=%s,
+           source_book=%s, cross_cuisine_parallels=%s,
            updated_at=NOW()
            WHERE id=%s""",
         (
@@ -826,6 +836,8 @@ def update_technique(technique_id):
             data.get("authority_tier", 1),
             json.dumps(data.get("related_techniques", [])),
             data.get("tier_level", "standard"),
+            data.get("source_book"),
+            json.dumps(data.get("cross_cuisine_parallels", [])),
             technique_id,
         ),
     )

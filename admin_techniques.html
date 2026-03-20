@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technique References — Admin</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f0; color: #1a1a1a; line-height: 1.5; }
+  .header { background: #1a1a1a; color: #fff; padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 20px; font-weight: 600; }
+  .header .count { font-size: 14px; opacity: 0.6; }
+  .toolbar { padding: 16px 32px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #fff; border-bottom: 1px solid #e0e0e0; }
+  .toolbar input[type="text"] { flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+  .toolbar select { padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; }
+  .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 500; }
+  .btn-primary { background: #1a1a1a; color: #fff; }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary { background: #e8e8e8; color: #1a1a1a; }
+  .btn-secondary:hover { background: #ddd; }
+  .btn-danger { background: #d32f2f; color: #fff; }
+  .btn-danger:hover { background: #b71c1c; }
+  .btn-success { background: #2e7d32; color: #fff; }
+  .btn-success:hover { background: #1b5e20; }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+  .list { padding: 16px 32px; }
+  .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+  .card-header { padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 12px; }
+  .card-header:hover { background: #fafafa; }
+  .card-title { font-weight: 600; font-size: 16px; }
+  .card-meta { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .badge { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+  .badge-category { background: #e3f2fd; color: #1565c0; }
+  .badge-tier { background: #f3e5f5; color: #7b1fa2; }
+  .badge-level { background: #e8f5e9; color: #2e7d32; }
+  .badge-pro { background: #fff3e0; color: #e65100; }
+  .card-body { padding: 0 20px 16px; display: none; }
+  .card.open .card-body { display: block; }
+  .card.open .card-header { border-bottom: 1px solid #eee; }
+  .field { margin-top: 12px; }
+  .field label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: #666; display: block; margin-bottom: 4px; }
+  .field p { font-size: 14px; white-space: pre-wrap; }
+  .field .keywords { display: flex; flex-wrap: wrap; gap: 4px; }
+  .field .kw { background: #f0f0f0; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+  .card-actions { margin-top: 16px; display: flex; gap: 8px; }
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: start; padding: 40px 16px; overflow-y: auto; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: #fff; border-radius: 12px; width: 100%; max-width: 700px; }
+  .modal-header { padding: 16px 24px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+  .modal-header h2 { font-size: 18px; }
+  .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
+  .modal-body { padding: 16px 24px; max-height: 70vh; overflow-y: auto; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 8px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; }
+  .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; font-family: inherit; }
+  .form-group textarea { resize: vertical; min-height: 60px; }
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-group { flex: 1; }
+  .toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a1a; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 200; display: none; }
+  .toast.show { display: block; }
+  .empty { text-align: center; padding: 60px 20px; color: #999; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Technique References</h1>
+    <span class="count" id="count"></span>
+  </div>
+  <button class="btn btn-primary" onclick="openNew()">+ Add technique</button>
+</div>
+
+<div class="toolbar">
+  <input type="text" id="search" placeholder="Search techniques..." oninput="renderList()">
+  <select id="filterCategory" onchange="renderList()">
+    <option value="">All categories</option>
+  </select>
+  <select id="filterTier" onchange="renderList()">
+    <option value="">All tiers</option>
+    <option value="1">Tier 1</option>
+    <option value="2">Tier 2</option>
+    <option value="3">Tier 3</option>
+    <option value="4">Tier 4</option>
+  </select>
+</div>
+
+<div class="list" id="list"></div>
+
+<!-- Edit / New modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add technique</h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="f_name">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <input type="text" id="f_category" placeholder="e.g. knife_skills">
+        </div>
+        <div class="form-group">
+          <label>Authority tier (1-4)</label>
+          <input type="number" id="f_authority_tier" min="1" max="4" value="1">
+        </div>
+        <div class="form-group">
+          <label>Tier level</label>
+          <select id="f_tier_level">
+            <option value="standard">standard</option>
+            <option value="professional">professional</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="f_description" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Key principles</label>
+        <textarea id="f_key_principles" rows="4"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Common mistakes</label>
+        <textarea id="f_common_mistakes" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Pro tips</label>
+        <textarea id="f_pro_tips" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Trigger keywords (comma-separated)</label>
+        <textarea id="f_trigger_keywords" rows="2" placeholder="brunoise, julienne, dice"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Related techniques (comma-separated)</label>
+        <textarea id="f_related_techniques" rows="1" placeholder="Mirepoix, Mise en place"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Source book</label>
+        <input type="text" id="f_source_book" placeholder="e.g. Salt Fat Acid Heat — Samin Nosrat">
+      </div>
+      <div class="form-group">
+        <label>Cross-cuisine parallels (comma-separated)</label>
+        <textarea id="f_cross_cuisine_parallels" rows="1" placeholder="French roux, Japanese dashi"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let techniques = [];
+
+async function load() {
+  const res = await fetch('/api/techniques');
+  techniques = await res.json();
+  populateFilters();
+  renderList();
+}
+
+function populateFilters() {
+  const cats = [...new Set(techniques.map(t => t.category))].sort();
+  const sel = document.getElementById('filterCategory');
+  sel.innerHTML = '<option value="">All categories</option>';
+  cats.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c.replace(/_/g, ' ');
+    sel.appendChild(o);
+  });
+}
+
+function renderList() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const cat = document.getElementById('filterCategory').value;
+  const tier = document.getElementById('filterTier').value;
+  let filtered = techniques.filter(t => {
+    if (q && !t.name.toLowerCase().includes(q) && !t.description.toLowerCase().includes(q) && !t.trigger_keywords.some(k => k.toLowerCase().includes(q))) return false;
+    if (cat && t.category !== cat) return false;
+    if (tier && t.authority_tier !== parseInt(tier)) return false;
+    return true;
+  });
+  document.getElementById('count').textContent = filtered.length + ' of ' + techniques.length + ' entries';
+  const list = document.getElementById('list');
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty">No techniques found</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(t => `
+    <div class="card" id="card-${t.id}">
+      <div class="card-header" onclick="toggle(${t.id})">
+        <span class="card-title">${esc(t.name)}</span>
+        <div class="card-meta">
+          <span class="badge badge-category">${esc(t.category.replace(/_/g, ' '))}</span>
+          <span class="badge badge-tier">Tier ${t.authority_tier}</span>
+          <span class="badge ${t.tier_level === 'professional' ? 'badge-pro' : 'badge-level'}">${esc(t.tier_level)}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="field"><label>Description</label><p>${esc(t.description)}</p></div>
+        <div class="field"><label>Key principles</label><p>${esc(t.key_principles)}</p></div>
+        <div class="field"><label>Common mistakes</label><p>${esc(t.common_mistakes)}</p></div>
+        <div class="field"><label>Pro tips</label><p>${esc(t.pro_tips)}</p></div>
+        <div class="field"><label>Trigger keywords</label><div class="keywords">${t.trigger_keywords.map(k => `<span class="kw">${esc(k)}</span>`).join('')}</div></div>
+        <div class="field"><label>Related techniques</label><div class="keywords">${(t.related_techniques||[]).map(k => `<span class="kw">${esc(k)}</span>`).join('')}</div></div>
+        ${t.source_book ? `<div class="field"><label>Source book</label><p>${esc(t.source_book)}</p></div>` : ''}
+        ${(t.cross_cuisine_parallels||[]).length ? `<div class="field"><label>Cross-cuisine parallels</label><div class="keywords">${t.cross_cuisine_parallels.map(k => `<span class="kw">${esc(k)}</span>`).join('')}</div></div>` : ''}
+        <div class="card-actions">
+          <button class="btn btn-secondary btn-sm" onclick="openEdit(${t.id})">Edit</button>
+          ${t.tier_level === 'standard' ? `<button class="btn btn-success btn-sm" onclick="setTier(${t.id},'professional')">Promote to professional</button>` : `<button class="btn btn-secondary btn-sm" onclick="setTier(${t.id},'standard')">Revert to standard</button>`}
+          <button class="btn btn-danger btn-sm" onclick="del(${t.id})">Delete</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggle(id) {
+  document.getElementById('card-' + id).classList.toggle('open');
+}
+
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+function openNew() {
+  document.getElementById('editId').value = '';
+  document.getElementById('modalTitle').textContent = 'Add technique';
+  ['f_name','f_category','f_description','f_key_principles','f_common_mistakes','f_pro_tips','f_trigger_keywords','f_related_techniques','f_source_book','f_cross_cuisine_parallels'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f_authority_tier').value = '1';
+  document.getElementById('f_tier_level').value = 'standard';
+  document.getElementById('modal').classList.add('active');
+}
+
+function openEdit(id) {
+  const t = techniques.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('editId').value = id;
+  document.getElementById('modalTitle').textContent = 'Edit: ' + t.name;
+  document.getElementById('f_name').value = t.name;
+  document.getElementById('f_category').value = t.category;
+  document.getElementById('f_description').value = t.description;
+  document.getElementById('f_key_principles').value = t.key_principles;
+  document.getElementById('f_common_mistakes').value = t.common_mistakes;
+  document.getElementById('f_pro_tips').value = t.pro_tips;
+  document.getElementById('f_trigger_keywords').value = (t.trigger_keywords || []).join(', ');
+  document.getElementById('f_related_techniques').value = (t.related_techniques || []).join(', ');
+  document.getElementById('f_source_book').value = t.source_book || '';
+  document.getElementById('f_cross_cuisine_parallels').value = (t.cross_cuisine_parallels || []).join(', ');
+  document.getElementById('f_authority_tier').value = t.authority_tier;
+  document.getElementById('f_tier_level').value = t.tier_level;
+  document.getElementById('modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+function getFormData() {
+  return {
+    name: document.getElementById('f_name').value.trim(),
+    category: document.getElementById('f_category').value.trim(),
+    description: document.getElementById('f_description').value.trim(),
+    key_principles: document.getElementById('f_key_principles').value.trim(),
+    common_mistakes: document.getElementById('f_common_mistakes').value.trim(),
+    pro_tips: document.getElementById('f_pro_tips').value.trim(),
+    trigger_keywords: document.getElementById('f_trigger_keywords').value.split(',').map(s => s.trim()).filter(Boolean),
+    related_techniques: document.getElementById('f_related_techniques').value.split(',').map(s => s.trim()).filter(Boolean),
+    source_book: document.getElementById('f_source_book').value.trim() || null,
+    cross_cuisine_parallels: document.getElementById('f_cross_cuisine_parallels').value.split(',').map(s => s.trim()).filter(Boolean),
+    authority_tier: parseInt(document.getElementById('f_authority_tier').value) || 1,
+    tier_level: document.getElementById('f_tier_level').value,
+  };
+}
+
+async function saveEntry() {
+  const data = getFormData();
+  if (!data.name) { alert('Name is required'); return; }
+  const id = document.getElementById('editId').value;
+  let res;
+  if (id) {
+    res = await fetch('/api/techniques/' + id, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+  } else {
+    res = await fetch('/api/techniques/bulk', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify([data]) });
+  }
+  if (res.ok) {
+    closeModal();
+    toast(id ? 'Updated' : 'Created');
+    await load();
+  } else {
+    const err = await res.json();
+    alert(err.error || 'Save failed');
+  }
+}
+
+async function setTier(id, level) {
+  const t = techniques.find(x => x.id === id);
+  if (!t) return;
+  const data = { ...t, tier_level: level };
+  delete data.id; delete data.created_at; delete data.updated_at;
+  const res = await fetch('/api/techniques/' + id, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+  if (res.ok) { toast('Tier updated to ' + level); await load(); }
+}
+
+async function del(id) {
+  if (!confirm('Delete this technique entry?')) return;
+  const res = await fetch('/api/techniques/' + id, { method: 'DELETE' });
+  if (res.ok) { toast('Deleted'); await load(); }
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+load();
+</script>
+</body>
+</html>
