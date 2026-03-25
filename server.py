@@ -96,6 +96,8 @@ def init_db():
     for stmt in [
         "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS source_book TEXT",
         "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS cross_cuisine_parallels JSONB DEFAULT '[]'::jsonb",
+        "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS origin TEXT",
+        "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS flavour_context TEXT",
     ]:
         cur.execute(stmt)
     cur.close()
