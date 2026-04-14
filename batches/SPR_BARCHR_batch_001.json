@@ -1,0 +1,72 @@
+{
+  "tradition": "spirits",
+  "region": "Barbados — Christ Church Parish (Mount Gay XO Rum, Pot-Column Double Distillation, Coral Limestone)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:38:41.294421+00:00",
+  "entries": [
+    {
+      "name": "Mount Gay XO Rum — Christ Church Parish, Coral Limestone Water, Pot-Column Double Distillation 17-Year",
+      "category": "spirits",
+      "subcategory": "rum",
+      "origin": "Barbados",
+      "region": "Barbados — Christ Church Parish (Mount Gay XO Rum, Pot-Column Double Distillation, Coral Limestone)",
+      "producer": "Mount Gay Distilleries — St Lucy Parish, Barbados",
+      "alcohol_content": 43.0,
+      "price_tier": "premium",
+      "terroir_origin": "Barbados is a flat, entirely limestone island — unlike the volcanic Windward Islands (Martinique, St Vincent) or the karst-limestone Greater Antilles (Jamaica, Cuba), Barbados is composed entirely of raised coral reef limestone, a thin veneer of reddish-orange coral-derived soil over a bedrock of coralline limestone formed from the accumulated skeletons of coral organisms over millions of years. The island sits at the easternmost point of the Caribbean arc, fully exposed to the northeast Atlantic trade winds, and its limestone geology produces the most alkaline, mineral-rich water aquifer in the Caribbean rum world: Barbados groundwater filtered through coral limestone contains high calcium carbonate content that provides an optimal mineral environment for the yeast fermentation of molasses wash and contributes a specific mineral character to the final proofing water. Christ Church Parish occupies the southern tip of Barbados — a flat, wind-exposed limestone plateau with extremely permeable coral rock soils that drain rapidly after tropical rainfall. The Barbadian climate is drier than Jamaica or Martinique (approximately 1,300mm annual rainfall) with the constant northeast trade wind producing evaporative cooling that moderates temperatures. Barbados's central position in the English colonial Caribbean trade network made it the first island where Saccharum officinarum sugarcane cultivation produced commercial-scale rum — the 1703 Mount Gay deed establishes this primacy — and the island's documented production history longer than any other Caribbean territory by primary archival evidence.",
+      "production_technique": "Mount Gay XO is produced through the Barbadian double distillation hybrid method: molasses from Barbadian sugar production (primarily from the Andrew's Sugarcane Factory in Saint George Parish, the last operating sugar factory in Barbados) is fermented in closed stainless steel fermenters using selected Saccharomyces cerevisiae cultures for 30–36 hours at controlled temperatures of 28–32°C, producing a clean, consistent wash at 6–8% ABV. Distillation uses both a traditional copper double-retort pot still (producing high-ester, heavy-bodied spirit at 65–72% ABV) and a double-column continuous Coffey still (producing lighter, cleaner spirit at 85–95% ABV). The master blender Allen Smith creates the blending recipe for the XO from the pot still and column still distillates: typically a majority column still base for lightness and consistency, with the pot still component providing the ester richness, body, and aromatic complexity that distinguish Barbadian rum from the purely column-still Cuban and Puerto Rican traditions. Both components age separately in American white oak ex-bourbon barrels for a minimum of 17 years in the Mount Gay warehouses in northern Barbados, where the trade wind ventilation moderates the tropical aging rate compared to more sheltered warehouses in leeward-coast Caribbean islands. Blending occurs after the individual components reach their target maturity, followed by short rest (3–6 months) in cask for integration, then proofing to 43% ABV with Barbados coral limestone water and bottling.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Blended Scotch Whisky (single malt blended with grain whisky)",
+          "connection": "Mount Gay XO and premium blended Scotch whisky share the fundamental blending philosophy of combining a high-congener, pot still distillate with a lighter, column still spirit to achieve complexity and consistency simultaneously: Mount Gay pot still rum provides the ester richness and body exactly as Highland single malt provides aromatic complexity to a blended Scotch; the column still rum fraction provides the same clean, neutral structure as grain whisky. Both the Barbadian blending tradition and the Scotch blending tradition operate through a master blender who manages the pot-to-column ratio across batches to maintain a house style — the oldest institutional expression of the master blender art in spirits."
+        },
+        {
+          "tradition": "Cognac Fine Champagne (blend of Grande and Petite Champagne crus)",
+          "connection": "Mount Gay's blend of pot still and column still components parallels the Cognac Fine Champagne blend of Grande Champagne (richer, more concentrated) and Petite Champagne (lighter, more aromatic) cru expressions: both are deliberate assemblages of complementary components where neither part alone produces the target expression, and both operate under a master blender whose institutional knowledge — accumulated over decades of tasting the component parts at different stages of aging — determines the final blend quality and character."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep amber with mahogany tones; 17 years of Barbadian ex-bourbon tropical aging in trade-wind-ventilated warehouses produces a somewhat lighter colour intensity than sheltered Caribbean warehouse aging at equivalent age; clear and brilliant; good legs from the pot still glycerol contribution.",
+        "nose": "Banana and tropical fruit from the pot still ester component, integrated with vanilla and caramel from 17 years of ex-bourbon American oak — the classic Barbadian blended rum aromatic profile of fruit complexity and oak refinement; dried apricot and toasted coconut from the long barrel contact; a fine mineral quality from the coral limestone water integration in both fermentation and proofing; the Allen Smith signature of precise balance between fruit freshness and aged barrel depth.",
+        "palate": "Medium-full body with the pot still's glycerol richness providing texture beneath the column still base's clean structure; vanilla and caramel from the ex-bourbon oak arrive immediately; dried tropical fruit through the mid-palate from the 17-year aging; the coral limestone mineral character threads through the finish as a clean, dry mineral note; long, warm finish with the Barbadian pot still ester quality persisting — banana, dried apricot, light tropical spice — before resolving to a clean oak-and-mineral conclusion."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Mount Gay Eclipse (Silver/Gold, 3-year blend)",
+          "criteria": "The entry-level Barbadian rum: 3-year minimum aged blend from the same pot-column combination, showing initial ester and oak character without the dried fruit depth of the XO — the cocktail baseline for Barbadian rum in mixed drink applications."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Mount Gay Black Barrel (port cask finish)",
+          "criteria": "Eclipse blend finished for 6–12 months in ex-American oak casks previously used for port wine: the secondary maturation adds toffee, dark fruit, and a gentle sweetness from the port cask tannin — the premium mid-tier accessible expression that demonstrates the Barbadian rum's responsiveness to secondary maturation."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Mount Gay XO (17-year blend)",
+          "criteria": "The flagship expression: 17-year minimum aged pot-column blend, the full Barbadian rum architecture in maturity — the Allen Smith benchmark that defines the Christ Church Parish aged rum standard internationally."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Mount Gay 1703 Old Cask Selection (ultra-aged)",
+          "criteria": "Selected barrels aged 10–30 years, the oldest stock in the Mount Gay warehouses: maximum Barbadian coral limestone terroir expression through extended ex-bourbon aging, the apex of the oldest documented rum production tradition in the world presented at collector-tier pricing."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Mount Gay XO at 18–20°C for neat evaluation — the 17-year ex-bourbon character is most accessible at ambient temperature where the dried tropical fruit volatile compounds are fully active; a single ice sphere reduces to 12–14°C for a relaxed sipping context; the XO is also exceptional in a premium Rum Sour (XO, fresh lime, sugarcane syrup, egg white) served at 6–8°C in a chilled coupe where the Barbadian pot still character provides textural richness absent from column-only rum alternatives.",
+        "vessel": "Glencairn or tulip for neat evaluation; rocks glass for casual sipping with ice; the XO works in a prestige Rum Old Fashioned format (XO, Barbados sugarcane syrup, aromatic bitters, orange peel) in a wide rocks glass over a 40mm ice cube — one of the most instructive side-by-side comparisons available is the XO Old Fashioned alongside a bourbon Old Fashioned to demonstrate how Barbadian coral limestone terroir and pot-column distillation produce a spirit of equivalent cocktail-building capability to Kentucky bourbon from a completely different agricultural and geographic base."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Mount Gay Distilleries (Saint Lucy, Barbados) — the world's oldest documented rum estate (1703); XO is the Barbadian aged rum benchmark; Rémy Cointreau ownership provides global distribution; Allen Smith as master blender is the recognized authority for the Mount Gay house style.",
+        "north_america_access": "Mount Gay distributed in all US states through Rémy Cointreau USA; available throughout Canada through provincial liquor boards; XO pricing at USD $45–60 retail; the 1703 limited edition at USD $120–180; Eclipse widely available at mainstream retail price points.",
+        "culinary_application": "Mount Gay XO anchors the Barbados rum narrative in a PCT colonial spirits programme: Barbados as the first documented Caribbean rum producer (1703), the English colonial plantation system that established the Transatlantic rum trade, and the coral limestone geology that creates the most geologically unique water chemistry in Caribbean rum production — the PCT's deepest terroir argument for the Barbados rum category."
+      },
+      "price_trajectory": "rising",
+      "entry_id": "SPR-BARCHR-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T19:38:41.293994+00:00",
+      "batch_number": 1
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "tradition": "coffee",
+  "region": "Brazil — Cerrado Mineiro (Patrocínio, Altitude Savanna, Mechanical Harvest Natural Process)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T18:03:13.544796+00:00",
+  "entries": [
+    {
+      "name": "Brazil Cerrado Mineiro Pulped Natural — Patrocínio GI, Flat Savanna 1,100m, Caramel Chocolate Profile",
+      "category": "coffee",
+      "subcategory": "pulped_natural_process",
+      "origin": "Brazil",
+      "region": "Cerrado Mineiro, Minas Gerais, Brazil",
+      "producer": "Fazenda Samambaia — Patrocínio, Cerrado Mineiro",
+      "alcohol_content": 0.0,
+      "price_tier": "premium",
+      "terroir_origin": "The Cerrado Mineiro sits on the Brazilian Central Plateau at 900–1,250m elevation — a flat-to-gently-rolling savanna landscape that contrasts sharply with the steep, mountainous Sul de Minas terrain. The Cerrado biome is characterized by distinctive vegetation: twisted, fire-resistant savanna trees (cerrado sensu stricto), extensive grassland, and gallery forests along the watercourses. Annual rainfall is concentrated in a 6-month wet season (October–March) with a remarkably dry 6-month dry season (April–September) — a bimodal pattern that is more pronounced than Sul de Minas and creates reliable, predictable drying conditions for natural and pulped-natural processing. The flat topography and reliable dry season make Cerrado Mineiro the primary zone for mechanized harvesting in Brazilian specialty coffee: the terrain allows strip-pick mechanical harvesting machines that operate efficiently on flat land, reducing labor costs while maintaining acceptable quality at the 87–90 point tier (compared to the 90+ point handpicked tier achievable only in the steeper Sul de Minas). The soils of the Cerrado plateau are deep red latosol over weathered Precambrian basement rock — poor in nutrients but excellent in drainage and depth, providing the long root access to subsoil water reserves that coffee plants require during the dry season. The basaltic mineral composition of the basement rock contributes iron and manganese to the soil that the coffee plant absorbs, contributing to the distinctly clean, sweet cup character of Cerrado Mineiro — different from the more complex, acidic Sul de Minas character.",
+      "production_technique": "Fazenda Samambaia uses mechanical strip-pick harvesting during the July–September dry season, deploying Brastoft harvesting machines on the flat Cerrado terrain. The mechanical harvesting removes all cherries (ripe, underripe, and overripe) simultaneously from each tree pass — the quality is maintained through selective field management (multiple passes at staggered ripeness) and through post-harvest flotation sorting that separates overripe and damaged cherries from ripe by density. The farm uses the pulped-natural process — a Brazilian innovation that has largely replaced traditional dry natural processing in the Cerrado: cherries are passed through a depulper that removes the outer cherry skin but leaves the mucilage (the sticky sugar layer between skin and parchment) intact on the parchment bean. The mucilage-covered parchment is then transferred to raised drying beds or cemented terraces and dried for 15–18 days, turning every 4 hours during peak daylight. The mucilage ferments gently during drying, contributing soft fruit acids and a residual sweetness to the parchment that transfers to the green bean and ultimately to the cup. The result: more sugar-sweetness and body than a fully washed coffee (no mucilage) but less wild-fruit intensity than a full natural (whole cherry drying). The pulped natural process from the Cerrado produces the characteristic \"classic Brazilian\" profile of chocolate, caramel, and nut that has made Brazil the world's preferred espresso base by volume for 50+ years.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Brazil Sul de Minas Yellow Bourbon Natural (same country, different terroir)",
+          "connection": "Cerrado Mineiro and Sul de Minas are the definitive within-Brazil terroir contrast: Cerrado's flat savanna terrain produces the clean, chocolatey, commercially reliable Brazilian baseline; Sul de Minas's steep mountain terrain produces the fruity, complex, specialty-benchmark Brazilian ceiling — the same fermentable substrate (coffee cherry) and similar processing (natural vs pulped-natural) produces dramatically different cup profiles based entirely on altitude, terrain, and climate variation within a single state"
+        },
+        {
+          "tradition": "Colombian Huila Washed (clean, consistent, technically precise)",
+          "connection": "Cerrado Mineiro pulped natural and Huila washed Caturra occupy the same commercial-to-premium quality segment globally: both are the reliable, consistently clean coffees that provide the backbone of specialty roasters' offerings — Cerrado with chocolate-caramel body, Huila with bright citrus acidity — both produced at scale with consistent mechanical or semi-mechanical processing that delivers 87–89 point quality reliably across large production volumes"
+        },
+        {
+          "tradition": "Ethiopian Sidama Natural (fruit process, African savanna altitude)",
+          "connection": "The Cerrado Mineiro's savanna altitude (cerrado biome at 1,000–1,200m) parallels Ethiopia's Sidama highland savanna at 1,500–2,000m in geographical type — both are high-altitude savanna coffee growing environments that produce coffees of full body with natural sweetness, the Cerrado through pulped-natural processing and the Sidama through full natural processing of indigenous Heirloom varieties"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Dark brown to mahogany filter brew; medium-full body visible in texture; natural process character shows as slight translucence compared to washed coffees; espresso produces a rich, persistent crema of deep chestnut color",
+        "nose": "Classic Brazilian: dark chocolate, milk chocolate, toasted almond, caramel, dried tropical fruit (very subtle from the pulped-natural mucilage contact) — clean and immediately recognizable as the \"Brazilian\" baseline that professional tasters identify reliably; less fruity than Sul de Minas natural, less floral than washed Colombian, more structured than full natural",
+        "palate": "Full body from the pulped-natural process (more body than washed, less than full natural), chocolate mid-palate, caramel sweetness from the mucilage fermentation residual, clean finish without fermented off-notes, low acidity — the globally preferred espresso base character: body and sweetness without acid that can fight milk or blending"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Commercial Cerrado Grade (Santos commercial export)",
+          "criteria": "Mechanical strip-pick, basic pulped natural, exported through Santos port as Brazilian commercial specialty grade — the backbone of global espresso blending at 83–86 points; reliable but undifferentiated"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Cerrado Mineiro GI Certified (87–89 points)",
+          "criteria": "Estate-certified Cerrado Mineiro GI production, careful pulped-natural processing, Q-grader cupped 87–89 — the accessible specialty tier from named farms including Fazenda Samambaia; available through direct-trade roasters"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Cup of Excellence Cerrado (89–91 points)",
+          "criteria": "Brazil COE lots from the Cerrado zone, achieving jury-verified 89+ points — the specialist tier commanding premium prices through online auction; Fazenda Samambaia and neighboring estates regularly submit winning lots"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Cerrado Experimental Processing (Natural, Anaerobic)",
+          "criteria": "Full natural or anaerobic fermentation processing from Cerrado producers experimenting beyond the traditional pulped-natural method — produces fruit-forward coffees that challenge the Cerrado's \"clean and chocolatey\" identity while demonstrating the terroir's flexibility"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Filter: 94–95°C at 60g/L (slightly stronger than typical to appreciate the body); Espresso: 93°C at 9 bars for 25 seconds; the Cerrado character is best as espresso or espresso-based preparation where the full body and chocolate-caramel profile dominates without the dilution of pour-over",
+        "vessel": "Espresso: standard demitasse; Filter: ceramic drip cup or Aeropress for concentrated body; the pulped natural process body benefits from vessels that retain heat — avoid glass cups",
+        "roast_profile": "Cerrado Mineiro peaks at medium-dark roast (Full City to Vienna): lighter roasts expose an unexpected citric acidity that is atypical and may disappoint drinkers expecting the classic Brazilian profile; the chocolate-caramel character fully develops at medium-dark and is destroyed by dark roast"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Fazenda Samambaia (Patrocínio) and Fazenda Bom Jesus (Araxá) — the consistent Cup of Excellence contenders from the Cerrado Mineiro zone",
+        "north_america_access": "Counter Culture Coffee (Durham NC) and Intelligentsia (Chicago) source Cerrado Mineiro; in Vancouver, 49th Parallel and Matchstick Coffee carry Cerrado origins seasonally; Hatch Coffee (Victoria) sources direct-trade Brazilian coffees including Cerrado",
+        "culinary_application": "Cerrado Mineiro espresso concentrate is the preferred base for dark chocolate ganache in professional pastry due to the clean chocolate-caramel profile that integrates without competing with cacao bitterness; works in Brazilian-inspired dessert preparations (brigadeiro, café com leite) where the full-bodied coffee character anchors the sweet element; the PCT connection to Portuguese colonial coffee agriculture in Brazil makes it a natural pairing with Portuguese pastéis de nata in heritage café programming"
+      },
+      "price_trajectory": "stable",
+      "entry_id": "COF-CERMIN-001",
+      "tradition": "coffee",
+      "extracted_at": "2026-04-12T18:03:13.544330+00:00",
+      "batch_number": 1
+    }
+  ]
+}

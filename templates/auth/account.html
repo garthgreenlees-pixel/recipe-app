@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Account — Provenance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
+  --cream:#F5F1E9;--text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);
+  --border:rgba(201,168,76,0.20);--bg:#08080A;--surface:#131210;
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3)}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms}
+.nav-links a:hover{color:#C9A84C}
+.nav-links .nav-active{color:rgba(201,168,76,0.75)}
+.container{max-width:680px;margin:0 auto;padding:3rem 2rem 5rem}
+.account-logo{width:56px;height:56px;border-radius:50%;border:1px solid rgba(201,168,76,0.35);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
+.account-logo span{font-family:var(--serif);font-size:22px;color:var(--gold)}
+.account-name{font-family:var(--serif);font-size:1.8rem;font-weight:600;letter-spacing:-0.5px;margin-bottom:0.2rem}
+.account-plan{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+.rule{border:none;border-top:1px solid rgba(201,168,76,0.08);margin:2rem 0}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-light);margin-bottom:1rem}
+.plan-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.5rem}
+.plan-name{font-size:0.95rem;color:var(--text-secondary)}
+.plan-detail{font-size:0.82rem;color:var(--text-light)}
+.billing-btn{display:inline-block;margin-top:1.25rem;padding:9px 20px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:4px;color:var(--gold);font-family:var(--sans);font-size:0.8rem;font-weight:400;letter-spacing:0.05em;text-decoration:none;transition:background 200ms,border-color 200ms}
+.billing-btn:hover{background:rgba(201,168,76,0.16);border-color:rgba(201,168,76,0.4)}
+.upgrade-card{padding:1.5rem;border:1px solid rgba(201,168,76,0.1);border-radius:6px;background:rgba(201,168,76,0.03);margin-bottom:1rem}
+.upgrade-card-name{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem}
+.upgrade-card-price{font-family:var(--serif);font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:0.5rem}
+.upgrade-card-desc{font-size:0.82rem;color:var(--text-light);line-height:1.6;margin-bottom:1rem}
+.upgrade-link{display:inline-block;padding:7px 16px;background:transparent;border:1px solid rgba(201,168,76,0.25);border-radius:4px;color:rgba(201,168,76,0.8);font-family:var(--sans);font-size:0.78rem;letter-spacing:0.04em;text-decoration:none;transition:all 200ms}
+.upgrade-link:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.notice{padding:10px 14px;border-radius:4px;font-size:0.82rem;margin-bottom:1.5rem}
+.notice-success{background:rgba(60,160,80,0.12);border:1px solid rgba(60,160,80,0.25);color:#70c085}
+.notice-neutral{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:rgba(201,168,76,0.8)}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:680px;margin:0 auto;flex-wrap:wrap;gap:1rem}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+
+{% set tier_labels = {
+  'free': 'Free',
+  'kitchen': 'The Kitchen',
+  'library': 'The Library',
+  'profession': 'The Profession',
+  'trade': 'The Trade'
+} %}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/auth/account" class="nav-active">{{ user.display_name or 'Account' }}</a>
+    <a href="/auth/logout">Sign Out</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  {% if subscribed %}
+  <div class="notice notice-success">Payment successful — welcome to Provenance.</div>
+  {% elif cancelled %}
+  <div class="notice notice-neutral">Payment cancelled. Your account is unchanged.</div>
+  {% endif %}
+
+  <div class="account-logo"><span>P</span></div>
+
+  <h1 class="account-name">{{ user.display_name or user.email }}</h1>
+  <div class="account-plan">
+    {% if user.subscription_tier == 'free' %}Free Plan{% else %}
+    {% if user.subscription_tier == 'kitchen' %}The Kitchen{% elif user.subscription_tier == 'library' %}The Library{% elif user.subscription_tier == 'profession' %}The Profession{% elif user.subscription_tier == 'trade' %}The Trade{% endif %}
+    · since {{ user.created_at.strftime('%B %Y') if user.created_at else '' }}
+    {% endif %}
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">Your plan</div>
+
+  {% if user.subscription_tier == 'free' %}
+  <div class="plan-row">
+    <span class="plan-name">Free</span>
+    <span class="plan-detail">No active subscription</span>
+  </div>
+  <a href="/pricing" class="billing-btn">Explore plans →</a>
+
+  {% else %}
+  <div class="plan-row">
+    <span class="plan-name">
+      {% if user.subscription_tier == 'kitchen' %}The Kitchen{% elif user.subscription_tier == 'library' %}The Library{% elif user.subscription_tier == 'profession' %}The Profession{% elif user.subscription_tier == 'trade' %}The Trade{% endif %}
+    </span>
+    <span class="plan-detail">
+      {% if user.subscription_status == 'active' %}Active{% elif user.subscription_status == 'past_due' %}Past due — update payment{% else %}Inactive{% endif %}
+    </span>
+  </div>
+  {% if user.stripe_customer_id %}
+  <a href="/billing" class="billing-btn">Manage Billing →</a>
+  {% endif %}
+  {% endif %}
+
+  <hr class="rule">
+
+  {% if user.subscription_tier not in ['profession', 'trade'] %}
+
+  <div class="section-label">Available upgrades</div>
+
+  {% if user.subscription_tier == 'free' %}
+  <div class="upgrade-card">
+    <div class="upgrade-card-name">The Kitchen</div>
+    <div class="upgrade-card-price">$49/year <span style="font-family:var(--sans);font-size:0.75rem;font-weight:300;color:var(--text-light)">or $4.99/month</span></div>
+    <div class="upgrade-card-desc">Full seven-pillar depth on every technique. Quality hierarchy, sensory tests, species precision. The complete entry.</div>
+    <a href="/subscribe/kitchen/yearly" class="upgrade-link">Open The Kitchen →</a>
+  </div>
+  {% endif %}
+
+  {% if user.subscription_tier in ['free', 'kitchen'] %}
+  <div class="upgrade-card">
+    <div class="upgrade-card-name">The Library</div>
+    <div class="upgrade-card-price">$149/year <span style="font-family:var(--sans);font-size:0.75rem;font-weight:300;color:var(--text-light)">or $14.99/month</span></div>
+    <div class="upgrade-card-desc">CMS deductive grid. Service protocols. Three Spice Routes complete. Beverage pairings at depth.</div>
+    <a href="/subscribe/library/yearly" class="upgrade-link">Open The Library →</a>
+  </div>
+  {% endif %}
+
+  {% if user.subscription_tier not in ['profession', 'trade'] %}
+  <div class="upgrade-card">
+    <div class="upgrade-card-name">The Profession</div>
+    <div class="upgrade-card-price">$299/year <span style="font-family:var(--sans);font-size:0.75rem;font-weight:300;color:var(--text-light)">or $29.99/month</span></div>
+    <div class="upgrade-card-desc">Supplier connections. Programme builder. Costing tools. Team accounts. Built for working kitchens.</div>
+    <a href="/subscribe/profession/yearly" class="upgrade-link">Open The Profession →</a>
+  </div>
+  {% endif %}
+
+  {% endif %}
+
+  <hr class="rule">
+
+  <a href="/auth/logout" style="font-size:0.8rem;color:var(--text-light);text-decoration:none">Sign out →</a>
+
+</div>
+
+<footer>
+  <div class="about-footer">
+    <div class="footer-links">
+      <a href="/about">About</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/methodology">Methodology</a>
+    </div>
+    <span class="footer-wm">Provenance</span>
+  </div>
+</footer>
+</body>
+</html>

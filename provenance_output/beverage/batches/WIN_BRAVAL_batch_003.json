@@ -1,0 +1,103 @@
+{
+  "tradition": "wine",
+  "region": "Brazil — Vale dos Vinhedos DOC (Rio Grande do Sul)",
+  "batch_number": 3,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:46:39.160559+00:00",
+  "entries": [
+    {
+      "tradition": "wine",
+      "sub_tradition": "brazilian doc wine italian immigrant heritage",
+      "region": "Brazil — Vale dos Vinhedos DOC (Serra Gaúcha, Rio Grande do Sul)",
+      "name": "Vale dos Vinhedos — Brazil's First DOC Wine, Italian Colonial Heritage",
+      "terroir_origin": "Vale dos Vinhedos ('Valley of Vineyards') is located in Serra Gaúcha, the highland region of Rio Grande do Sul state at 600–800m altitude, 130km north of Porto Alegre. The vineyards are planted on hillside basalt and sandstone soils derived from the same geological formation that underlies much of southern Brazil. The wine industry here was not created by the Portuguese colonial administration — it was built by Italian immigrants, primarily from the Veneto, Trentino-Alto Adige, and Lombardia regions, who arrived in Rio Grande do Sul between 1875 and 1914 as part of Brazil's post-abolition immigration wave. The PCT connection is indirect: Portugal's colonial agricultural infrastructure (land grants, port of Santos access, agricultural credit systems) created the framework within which Italian immigrants established their viticultural communities. The Brazilian government that recruited these immigrants was operating the same colonial agricultural expansion model established by the Portuguese Empire. Vale dos Vinhedos became Brazil's first DOC (Denominação de Origem Controlada) in 2012 — a watershed moment for Brazilian wine's international credibility. Key varieties: Merlot (the most widely planted and critically acclaimed red in the region); Chardonnay (benchmark white); Moscato Emiliano (aromatic white, Italian immigrant heritage); Cabernet Franc (secondary red, high quality). Cave Geisse's méthode traditionnelle sparkling wines (Champenoise method) are internationally the most critically acclaimed Brazilian wines.",
+      "production_technique": "Vale dos Vinhedos DOC regulations require: minimum 85% Vale dos Vinhedos fruit; maximum 12,000kg/hectare yield; specific variety requirements for each wine category. The Serra Gaúcha climate presents challenges: the humid subtropical climate (Cfa classification) brings significant harvest-season rainfall and fungal pressure — vineyard management focuses on canopy management and timing to avoid rot. Key winemaking approaches: Miolo Wine Group (the largest Brazilian winery): modern winery facilities, temperature-controlled vinification, barrel ageing (French and American oak); produces the widest commercial range including DOC Reserva tier. Cave Geisse: méthode traditionnelle; secondary fermentation in bottle; 5+ years on lees for the Natur Brut; considered the finest Brazilian sparkling. Dal Pizzol: family estate, Italian immigrant heritage family, benchmark for traditional Serra Gaúcha wine production. Casa Valduga: producer of the most internationally decorated Brazilian wines; Gran Reserva Merlot won consistent international medal recognition. Altitude and aspect are the primary quality variables: south-facing slopes at 700–800m with clay-basalt soils produce the finest Merlot.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Friuli Colli Orientali Merlot (Northeastern Italy)",
+          "connection": "The Italian immigrant winegrowers of Serra Gaúcha brought Merlot from the same Friuli-Veneto corridor where the variety established its Italian identity. Vale dos Vinhedos Merlot and Friuli Colli Orientali Merlot share the Italian winemaker's sensibility applied to non-French terroir: both produce soft, plummy, accessible Merlot with enough structure to age; both resist the heavy extraction associated with Bordeaux Merlot; both are understood primarily in the Italian-heritage wine culture context"
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Champagne (Blanc de Blancs, méthode traditionnelle)",
+          "connection": "Cave Geisse's Natur Brut (5+ years on lees) invites comparison with entry-level Champagne blanc de blancs: both use méthode traditionnelle secondary fermentation; both develop biscuit-brioche-autolytic character; both are made in humid northern climates where acidity is the primary quality driver. Cave Geisse is considerably less expensive than comparable Champagne and demonstrates that the méthode can produce genuine complexity in non-European terroir"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Vale dos Vinhedos Merlot: deep ruby to purple-ruby; medium density; moderate legs. Cave Geisse Natur Brut: pale gold with persistent fine bead; slow continuous bubbles indicating extended lees contact.",
+        "nose": "Vale dos Vinhedos Merlot (Miolo Reserva or Casa Valduga Gran Reserva): ripe plum, black cherry, milk chocolate, vanilla-oak, violets; the tropical-latitude character is evident — riper fruit than European Merlot but without the jammy excess that limits warm-climate Merlot elsewhere. Cave Geisse Natur Brut: green apple, brioche, lemon zest, toasted almond, slight minerality from the Serra Gaúcha basalt; the extended autolysis gives genuine complexity.",
+        "palate": "Merlot: medium to full body; polished tannin; 13.5–14% ABV; ripe fruit persistence; the oak integration at reserve level is good — French barrique ageing 12–18 months; the finish is warm, long, chocolate and plum. Cave Geisse Natur Brut: excellent mousse; creamy texture; brioche-dominant mid-palate; dry, clean finish; acidity surprisingly high for a subtropical origin — the altitude drives the freshness.",
+        "conclusion": "Vale dos Vinhedos proves that serious, terroir-driven wine can be produced in the Southern Hemisphere tropics with the right combination of altitude, variety selection, and winemaking discipline. Cave Geisse's sparkling wines are the most globally undervalued expression in the category. For a PCT programme: position as Brazil's wine answer to cachaça — a European tradition transformed by Latin American terroir."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Cave Geisse Natur Brut / Casa Valduga Gran Reserva",
+          "criteria": "Cave Geisse méthode traditionnelle 5+ years on lees; or Casa Valduga Gran Reserva Merlot aged 18+ months French oak; DOC Vale dos Vinhedos certification",
+          "markers": "Cave Geisse Natur Brut; Casa Valduga Gran Reserva Merlot; Dal Pizzol Reserve; US ~$20–35; UK ~£18–28"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Miolo Reserva DOC / Dal Pizzol Estate",
+          "criteria": "DOC Vale dos Vinhedos; single estate or named reserve; Merlot or Chardonnay primary; French oak; SRP ~$15–22",
+          "markers": "Miolo Terranova Reserve; Dal Pizzol Family Estate; Casa Valduga Reserva; US ~$14–22"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Serra Gaúcha Indicação de Procedência",
+          "criteria": "Serra Gaúcha IP certification; varietal correct; commercial quality",
+          "markers": "Commercial Miolo Serra Gaúcha; Salton; Aurora (cooperative); US ~$10–14"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Brazilian Table Wine (Entry)",
+          "criteria": "Brazil-origin; accessible; entry to Vale dos Vinhedos character",
+          "markers": "Entry Miolo or similar; Brazilian restaurant wine list standard; US ~$8–12"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Merlot: 16–18°C; open 30 minutes before serving for Gran Reserva tier. Cave Geisse Natur Brut: 8–10°C; serve in flute or tulip",
+        "vessel": "Standard red Bordeaux/Burgundy glass for Merlot; flute or sparkling tulip for Cave Geisse",
+        "technique": "Gran Reserva Merlot: decant 20 minutes; serve at 17°C. Cave Geisse Natur Brut: use a pouring motion that preserves the mousse (pour down the glass side); serve cold; allow 2 minutes to settle before tasting. Food pairing for Merlot: churrasco (Brazilian mixed grill) is the canonical pairing — the fat of the picanha cut and the ripe-plum Vale dos Vinhedos Merlot is Brazil's answer to Barossa Shiraz with grilled lamb.",
+        "programme_position": "Brazilian wine anchor for PCT-13 Brazil programme; Italian immigrant heritage narrative; Cave Geisse as a discovery sparkling alongside Champagne comparison",
+        "verbal_presentation": "Cave Geisse Natur Brut — Vale dos Vinhedos, Brazil. Five years on lees. The Italian winemakers who came to Brazil in 1875 and made Champagne in the tropics."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Cave Geisse (Pinto Bandeira, RS) and Casa Valduga (Vale dos Vinhedos, RS)",
+        "producer_location": "Vale dos Vinhedos, Bento Gonçalves, Rio Grande do Sul, Brazil",
+        "key_person": "Mario Geisse (Cave Geisse founder; Chilean-Brazilian sparkling wine specialist); João Valduga (Casa Valduga); Adriano Miolo (Miolo Wine Group)",
+        "production_volume": "Cave Geisse: boutique sparkling (~100,000 bottles); Miolo: Brazil's largest fine wine producer (~10 million bottles nationally)",
+        "certifications": [
+          "Vale dos Vinhedos DOC (2012 — Brazil's first DOC)",
+          "ISO 9001 (Miolo)"
+        ],
+        "bc_distributor": "Limited: Miolo available through some BC private wine importers; no confirmed dedicated BC distributor for Cave Geisse; check BCLDB special order for Miolo Reserva",
+        "us_distributor": "Miolo: Winebow (national US importer — confirmed); Cave Geisse: Vinho Verde Imports (specialty Brazilian wines); Casa Valduga: Brasil Wine (US specialty importer)",
+        "uk_distributor": "Miolo: Enotria&Coe (London — UK importer); widely available UK online; Corney & Barrow (occasional)",
+        "price_tier": "Market (Miolo Reserva US ~$14; Cave Geisse Natur Brut US ~$22–28; Casa Valduga Gran Reserva US ~$25–35)",
+        "availability_notes": "In BC: Miolo Chardonnay and Merlot appear occasionally at BC Liquor stores; private import through BC specialty wine merchants. US: Winebow distribution nationally for Miolo; Brasil Wine and Vinho Verde Imports for Cave Geisse and Casa Valduga. UK: Enotria&Coe is the most accessible route."
+      },
+      "trail_connection": "PCT-12",
+      "trail_note": "Vale dos Vinhedos is the PCT's most complex provenance story: the Portuguese colonial framework created the conditions for Italian immigration; Italian immigrants brought European vine culture to subtropical South America; five generations later, their descendants produce DOC wines that compete internationally. The DOC designation (2012) used the European appellation model introduced to Brazil through the colonial relationship with Portugal — the regulatory framework itself is a PCT artifact. Cave Geisse's Mario Geisse came from Chile; the Italian families came from Veneto; the vines came from Europe; the terroir is Brazilian volcanic basalt. Vale dos Vinhedos is a distillation of South American wine history.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Picanha (Brazilian top sirloin cap, churrasco grilled)",
+          "pairing_type": "complement",
+          "rationale": "Picanha — the top sirloin cap, skewered and slowly grilled over charcoal at Brazilian churrasco — is the canonical Vale dos Vinhedos Merlot pairing. The fat-marbled muscle develops a Maillard-sweet crust that mirrors the Merlot's plum-chocolate sweetness; the wine's polished tannin manages the fat without astringency"
+        },
+        {
+          "technique_id": "",
+          "dish": "Risotto de cogumelos silvestres (wild mushroom risotto, Italian heritage)",
+          "pairing_type": "bridge",
+          "rationale": "The Italian immigrant heritage of Serra Gaúcha is preserved in its kitchen as much as its wine. Risotto made with locally gathered wild mushrooms (porcini, cogumelos) bridges with Cave Geisse Natur Brut through the shared umami-autolytic register: mushroom umami + yeast autolysis create a flavour feedback loop between the food and the wine"
+        }
+      ],
+      "source": "IBRAVIN (Instituto Brasileiro do Vinho) Vale dos Vinhedos DOC documentation; Wines of Brazil official export statistics; Cave Geisse official production documentation; Miolo Wine Group official brand documentation; Winebow import portfolio (US distribution confirmation)",
+      "entry_id": "WIN-BRAVAL-001",
+      "extracted_at": "2026-04-11T15:46:39.160195+00:00",
+      "batch_number": 3
+    }
+  ]
+}

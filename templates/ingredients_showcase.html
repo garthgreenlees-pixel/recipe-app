@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingredient Intelligence — Provenance Reserve</title>
+<meta name="description" content="Live ingredient intelligence — supplier sourcing, product catalogue, and supply chain data. Provenance Reserve.">
+<link rel="canonical" href="https://provenance.kitchen/ingredients/showcase">
+<meta property="og:title" content="Ingredient Intelligence — Provenance">
+<meta property="og:description" content="Live ingredient intelligence — supplier sourcing, product catalogue, and supply chain data.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://provenance.kitchen/ingredients/showcase">
+<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ingredient Intelligence — Provenance">
+<meta name="twitter:description" content="Live ingredient intelligence — supplier sourcing, product catalogue, and supply chain data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#8B6914;--gold-light:#C49B2A;--gold-bg:rgba(139,105,20,0.08);--gold-border:rgba(139,105,20,0.2);
+  --green:#2D6B4F;--green-bg:rgba(45,107,79,0.08);
+  --cream:#FDFCF9;--cream-dark:#F5F0E8;
+  --text:#1A1A1A;--text-secondary:#6B6B6B;--text-light:#999;
+  --border:#E8E3D8;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--cream);color:var(--text);font-family:var(--sans);line-height:1.65;padding-top:60px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
+.nav-links a:hover{color:#C9A84C}
+.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
+.nav-p:hover{border-color:#C9A84C}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+
+/* ─── HERO ─── */
+.hero{
+  background:linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
+  padding:60px 24px 48px;text-align:center;
+}
+.hero h1{
+  font-family:var(--serif);font-size:48px;font-weight:700;color:#fff;
+  letter-spacing:-1.5px;line-height:1.1;margin-bottom:8px;
+}
+.hero .subtitle{
+  font-size:17px;color:rgba(255,255,255,0.55);font-style:italic;
+  font-family:var(--serif);margin-bottom:40px;
+}
+
+/* ─── STAT CARDS ─── */
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  max-width:900px;margin:-32px auto 0;padding:0 24px;position:relative;z-index:10;
+}
+.stat-card{
+  background:#fff;border-radius:12px;padding:24px;text-align:center;
+  border:1px solid var(--border);
+  box-shadow:0 4px 24px rgba(0,0,0,0.06);
+  transition:transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+.stat-number{
+  font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);
+  line-height:1;margin-bottom:4px;
+}
+.stat-label{font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+
+/* ─── CONTAINER ─── */
+.container{max-width:1100px;margin:0 auto;padding:48px 24px 80px}
+
+/* ─── SECTION ─── */
+.section{margin-bottom:56px}
+.section-header{
+  display:flex;align-items:baseline;gap:12px;margin-bottom:20px;
+  border-bottom:2px solid var(--border);padding-bottom:12px;
+}
+.section-number{
+  font-family:var(--serif);font-size:14px;font-weight:700;color:var(--gold);
+  background:var(--gold-bg);border-radius:20px;padding:2px 12px;
+  white-space:nowrap;
+}
+.section-title{font-family:var(--serif);font-size:28px;font-weight:700;letter-spacing:-0.5px}
+
+/* ─── SUPPLIER RANKED CARDS ─── */
+.ranked-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.ranked-card{
+  background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 20px;
+  display:flex;align-items:center;gap:14px;
+  transition:transform 0.15s ease, box-shadow 0.15s ease;
+}
+.ranked-card:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+.rank-badge{
+  font-family:var(--serif);font-size:20px;font-weight:700;color:var(--gold);
+  background:var(--gold-bg);border-radius:50%;width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.ranked-info h3{font-size:14px;font-weight:600;margin-bottom:2px;line-height:1.3}
+.ranked-info .country-tag{font-size:12px;color:var(--text-secondary)}
+.ranked-info .count{font-size:12px;color:var(--gold);font-weight:600}
+
+/* ─── CATEGORY / COUNTRY PILLS ─── */
+.pill-grid{display:flex;flex-wrap:wrap;gap:10px}
+.pill{
+  background:#fff;border:1px solid var(--border);border-radius:40px;
+  padding:10px 20px;font-size:14px;font-weight:500;
+  display:flex;align-items:center;gap:8px;
+  transition:all 0.15s ease;
+}
+.pill:hover{border-color:var(--gold);background:var(--gold-bg)}
+.pill .pill-count{
+  background:var(--gold-bg);color:var(--gold);font-weight:700;font-size:12px;
+  border-radius:20px;padding:2px 10px;
+}
+.pill.country-pill .pill-count{
+  background:var(--green-bg);color:var(--green);
+}
+
+/* ─── PAT'S RULE CHAIN ─── */
+.chain-demo{
+  background:#fff;border:1px solid var(--border);border-radius:12px;
+  padding:28px;overflow-x:auto;
+}
+.chain-product{
+  font-family:var(--serif);font-size:24px;font-weight:700;margin-bottom:20px;
+  color:var(--text);
+}
+.chain-row{
+  display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;
+}
+.chain-node{
+  border-radius:10px;padding:12px 18px;font-size:13px;line-height:1.4;
+}
+.chain-node.origin{
+  background:var(--green-bg);border:1px solid rgba(45,107,79,0.2);
+}
+.chain-node.origin .role-tag{color:var(--green);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px}
+.chain-node.provider{
+  background:var(--gold-bg);border:1px solid rgba(139,105,20,0.2);
+}
+.chain-node.provider .role-tag{color:var(--gold);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px}
+.chain-node .node-name{font-weight:600;margin-top:2px}
+.chain-node .node-country{font-size:12px;color:var(--text-secondary);margin-top:1px}
+.chain-arrow{font-size:20px;color:var(--text-light);flex-shrink:0}
+
+/* ─── RECENT TABLE ─── */
+.recent-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.recent-table thead{background:var(--cream-dark)}
+.recent-table th{
+  text-align:left;padding:12px 16px;font-size:11px;text-transform:uppercase;
+  letter-spacing:1px;color:var(--text-secondary);font-weight:600;
+}
+.recent-table td{padding:12px 16px;border-top:1px solid var(--border);font-size:14px}
+.recent-table tr:hover td{background:rgba(139,105,20,0.03)}
+.origin-badge{
+  display:inline-block;background:var(--green-bg);color:var(--green);
+  font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.category-badge{
+  display:inline-block;background:var(--gold-bg);color:var(--gold);
+  font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;
+}
+
+/* ─── FOOTER ─── */
+.page-footer{
+  text-align:center;padding:40px 24px;border-top:1px solid var(--border);
+  font-size:13px;color:var(--text-light);
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:32px}
+  .stat-number{font-size:32px}
+  .ranked-grid{grid-template-columns:1fr}
+  .chain-row{flex-direction:column;align-items:stretch}
+  .chain-arrow{transform:rotate(90deg);text-align:center}
+}
+@media(max-width:480px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .section-title{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+  </div>
+  <a href="/auth/account" class="nav-p" aria-label="My Kitchen"><span>P</span></a>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/auth/account">My Kitchen</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Ingredient Intelligence</h1>
+  <p class="subtitle">The full supply chain layer — live from the database</p>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.products }}</div>
+    <div class="stat-label">Products</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.suppliers }}</div>
+    <div class="stat-label">Active Suppliers</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.links }}</div>
+    <div class="stat-label">Supply Chain Links</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.connected_products }}</div>
+    <div class="stat-label">Connected Products</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TOP SUPPLIERS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">Top Suppliers by Product Count</h2>
+    </div>
+    <div class="ranked-grid">
+      {% for s in top_suppliers %}
+      <div class="ranked-card">
+        <div class="rank-badge">{{ loop.index }}</div>
+        <div class="ranked-info">
+          <h3>{{ s.name }}</h3>
+          <span class="country-tag">{{ s.country or 'Unknown' }}</span>
+          <span class="count"> · {{ s.products }} product{{ 's' if s.products != 1 }}</span>
+        </div>
+      </div>
+      {% endfor %}
+      {% if not top_suppliers %}
+      <p style="color:var(--text-light);font-style:italic">No supplier data yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- PRODUCTS BY CATEGORY -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Products by Category</h2>
+    </div>
+    <div class="pill-grid">
+      {% for c in categories %}
+      <div class="pill">
+        {{ c.category or 'Uncategorized' }}
+        <span class="pill-count">{{ c.count }}</span>
+      </div>
+      {% endfor %}
+      {% if not categories %}
+      <p style="color:var(--text-light);font-style:italic">No categories yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- SUPPLIERS BY COUNTRY -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">Suppliers by Country</h2>
+    </div>
+    <div class="pill-grid">
+      {% for c in countries %}
+      <div class="pill country-pill">
+        {{ c.country or 'Unknown' }}
+        <span class="pill-count">{{ c.count }}</span>
+      </div>
+      {% endfor %}
+      {% if not countries %}
+      <p style="color:var(--text-light);font-style:italic">No supplier country data yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- PAT'S RULE DEMO -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Pat's Rule — Live Supply Chain</h2>
+    </div>
+    {% if chain_rows %}
+    <div class="chain-demo">
+      <div class="chain-product">{{ chain_rows[0].product_name }}</div>
+      {% for row in chain_rows %}
+      <div class="chain-row">
+        <div class="chain-node {{ 'origin' if row.role == 'ORIGIN' else 'provider' }}">
+          <div class="role-tag">{{ row.role }}</div>
+          <div class="node-name">{{ row.supplier_name }}</div>
+          <div class="node-country">{{ row.country }}{% if row.region %} · {{ row.region }}{% endif %}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="chain-demo">
+      <p style="color:var(--text-light);font-style:italic">No supply chain data for soy sauce products yet.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- RECENT PRODUCTS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Recent Products</h2>
+    </div>
+    <table class="recent-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Brand</th>
+          <th>Origin</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in recent_products %}
+        <tr>
+          <td style="font-weight:600">{{ p.name }}</td>
+          <td><span class="category-badge">{{ p.category or '—' }}</span></td>
+          <td>{{ p.origin_brand or '—' }}</td>
+          <td>{% if p.origin_country %}<span class="origin-badge">{{ p.origin_country }}</span>{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+        {% if not recent_products %}
+        <tr><td colspan="4" style="text-align:center;color:var(--text-light);padding:40px">No products yet.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="about-footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/suppliers">Suppliers</a>
+    <a href="/for-professionals">For Professionals</a>
+    <a href="/methodology">Methodology</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="mailto:info@provenance.kitchen">Contact</a>
+  </div>
+  <span class="footer-wm">Provenance</span>
+</div>
+
+<script>
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+</script>
+</body>
+</html>

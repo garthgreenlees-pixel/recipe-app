@@ -1,0 +1,110 @@
+{
+  "tradition": "spirits",
+  "region": "Africa — Cape Verde (Fogo Island, Grogue)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T17:28:41.120321+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "cape verde grogue sugarcane pot still volcanic island",
+      "region": "Africa — Cape Verde (Fogo Island, Grogue Tradition)",
+      "name": "Grogue Fogo — Cape Verde Volcanic Island Sugarcane Spirit, Active Volcano Terroir",
+      "terroir_origin": "Cape Verde is an archipelago of 10 islands in the Atlantic, approximately 570km off the coast of Senegal — the first Portuguese Atlantic island chain beyond Madeira and the Azores. The Portuguese arrived in Cape Verde in 1456 (uninhabited) and established it as the primary staging post for the Atlantic slave trade, for provisioning ships on the route to Brazil, India, and the Gulf of Guinea. Grogue (from the Portuguese word aguardente — burning water) is the traditional cane spirit of Cape Verde, produced on all islands but reaching its highest expression on Fogo Island. Fogo Island terroir: Pico do Fogo (2,829m) is one of the world's most geologically active volcanoes — the 2014-15 eruption destroyed the village of Chã das Caldeiras and buried the vineyards and cane fields. The sugarcane grown on the volcanic flanks (800-1,400m altitude) is planted in mineral-rich basalt and scoria soils — the same volcanic mineral character that defines Martinique's agricultural spirits is present in Cape Verde cane, but in a much smaller, more isolated production. Production volumes: Fogo produces approximately 300,000 litres of Grogue annually — tiny compared to Martinique (4 million+) or Barbados (10+ million). The WADT connection: Cape Verde was the primary disembarkation point for enslaved West Africans heading to Brazil and the Caribbean — the island's population is itself a creolised mix of Portuguese and West African origin.",
+      "production_technique": "Traditional Grogue production on Fogo: Sugarcane: traditional varieties grown on volcanic flanks; harvested by hand in the dry season (November-April). Pressing: traditional wooden or mechanical rollers; fresh cane juice is pressed immediately after cutting. This is an agricole method (fresh juice, not molasses) — making Grogue technically a rhum agricole in French classification. Fermentation: 24-72 hours in clay or concrete vessels; wild indigenous yeast; the tropical volcanic environment drives rapid fermentation. Distillation: copper pot still (alambique) — the Portuguese alembic tradition carried directly from mainland Portugal to the Atlantic islands. The pot still used on Fogo is similar in design to the pot stills of Galicia and northern Portugal — copper, single distillation, low ABV output (55-70%). No ageing for standard Grogue: bottled immediately after distillation; the fresh agricultural character is the point. Aged Grogue (Grogue Velho): some producers age in used wine casks for 2-5 years; the rarity and quality parallels early agricole exploration in Martinique before the AOC framework.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Rhum Agricole Blanc (Martinique, fresh cane juice column still)",
+          "connection": "Both are fresh cane juice spirits — Grogue uses a Portuguese pot still; AOC Martinique uses a French column still. The comparison shows how the same agricultural raw material (fresh cane juice) produces different character depending on the distillation technology derived from each colonial tradition."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Aguardente de Cana (Madeira or mainland Portugal)",
+          "connection": "Grogue is linguistically and technically derived from the Portuguese aguardente tradition. The comparison with Madeira aguardente (used to fortify wine) and Cape Verde Grogue (consumed directly) shows how the same production technique served different purposes in different Atlantic colonial contexts."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Clairin Vaval (Haiti, fresh cane juice unaged)",
+          "connection": "Both are pot-still, fresh cane juice, tropical volcanic island spirits from small Atlantic island communities with strong African diaspora heritage. Clairin has become a bartender darling through Velier's distribution; Grogue has not yet achieved that commercial recognition. The comparison demonstrates that Grogue is technically at the same level."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Ginjinha de Obidos (Portuguese sour cherry liqueur)",
+          "connection": "Both are traditional Portuguese-lineage spirits consumed in the community where they are produced, rarely exported, and defined by raw material quality rather than production technology. Both are best consumed fresh from the producer — they share the 'do not travel well' characteristic of artisan agricultural spirits."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Crystal clear (unaged); faint yellow-gold in aged versions; the volcanic mineral soils create a faintly dusty matte appearance in very fresh examples",
+        "nose": "Fresh sugarcane juice, tropical citrus, volcanic mineral (faint sulphur-salt from the basalt soil), green banana, grassy herbal freshness",
+        "palate": "Entry: clean, agricultural, light and precise. Mid-palate: the pot still character adds slight oiliness that column-still agricole lacks. The volcanic mineral is a secondary note, most prominent in the finish",
+        "texture": "Light-to-medium body; the single distillation in a copper pot still creates a fuller texture than a column still at equivalent ABV; oily mid-palate",
+        "finish": "35-50 seconds; clean cane-grass and mineral; the volcanic soil character persists longer than the fruit; gentle warmth without harshness",
+        "conclusion": "The hidden original of the Atlantic cane spirit tradition — the PCT's most direct link between Portuguese colonialism and Caribbean rum development"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Grogue Velho (aged 3-5 years, Fogo estate)",
+          "criteria": "Aged in used wine or French oak casks; 3-5 years; rancio developing; rare — fewer than 5,000 bottles per year from Fogo; the premium expression",
+          "markers": "Grogue Velho; Cape Verde local purchase or direct import; not commercially available in North America"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Destilaria Fogo (SOGEI) Grogue Standard",
+          "criteria": "Formal distillery production; consistent quality control; the most reliable commercial standard for the Fogo character",
+          "markers": "Destilaria Fogo; Cape Verde purchase; European specialty spirits retailers; not BCLDB listed"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Household artisan Grogue (direct from Fogo farmers)",
+          "criteria": "Traditional wooden still; family recipe; consumed locally; the most authentic expression but subject to inconsistency",
+          "markers": "Purchase direct in Fogo Island; not commercially exported"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Rhum Agricole Blanc (Martinique) as proxy outside Cape Verde",
+          "criteria": "Nearest commercially available substitute for Grogue's fresh cane juice character; use for professional tasting contexts outside Cape Verde",
+          "markers": "Clement or Neisson Blanc; BC ~$50-70; US ~$45-65"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at room temperature or with a single ice sphere; the fresh cane juice character is preserved at ambient temperature",
+        "vessel": "Shot glass for traditional Cape Verdean service; tulip for professional tasting; the Grogue tradition is not a sipping-glass culture",
+        "technique": "Traditional Cape Verde service: neat shot (ponche) at room temperature, often with a squeeze of local citrus (lemon or orange). The formal tasting context: present as the missing link in the Atlantic cane spirit timeline — the distillery that existed between the Portuguese alembic tradition and Caribbean rum. The PCT narrative sequence: Madeira wine (aguardente) → Cape Verde Grogue (pot still fresh cane) → Martinique Agricole (column still fresh cane) → Barbados column still rum (molasses). The full Atlantic chain in four pours.",
+        "programme_position": "PCT heritage sequence; Atlantic cane spirit education; rare origin tasting for advanced guests",
+        "verbal_presentation": "Grogue — Fogo Island, Cape Verde. At the base of one of the world's most active volcanoes. Portuguese pot still, fresh cane juice, volcanic Atlantic island. The original Atlantic cane spirit."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Destilaria Fogo (SOGEI) — the primary formal producer on Fogo Island",
+        "producer_location": "Fogo Island (Sao Filipe), Cape Verde",
+        "key_person": "SOGEI management; traditional household distillers in Cha das Caldeiras",
+        "bc_distributor": "Not available in BC. No BCLDB listing.",
+        "us_distributor": "Not commercially available in the US at scale. Specialty imports only through European spirits distributors.",
+        "uk_distributor": "Increasingly available through UK craft spirits retailers (Master of Malt, The Whisky Exchange)",
+        "price_tier": "Not applicable for standard North American commerce. Educational and heritage context only for the PCT programme.",
+        "availability_notes": "Grogue is not commercially available in North America at time of writing. The closest commercially available proxy is Rhum Agricole Blanc (Martinique) for the fresh cane juice character, or Clairin (Haiti) for the pot still unaged character."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Cachupa (Cape Verde national stew — hominy, beans, meat, vegetables)",
+          "pairing_type": "complement",
+          "rationale": "Cachupa is the Cape Verdean national dish — a slow-cooked hominy and bean stew that reflects the African and Portuguese cultural synthesis of the islands. The fresh agricultural Grogue and the earthy hominy stew share the same volcanic-island agricultural register — the pairing is the taste of the Cape Verde cultural identity."
+        },
+        {
+          "technique_id": "",
+          "dish": "Queijo de vaca fresco (fresh Cape Verdean cow cheese with cane honey)",
+          "pairing_type": "bridge",
+          "rationale": "Fresh Cape Verdean cow cheese with cane honey (mel de cana) bridges the Grogue's agricultural freshness and the mineral sweetness of the local unrefined cane syrup — a three-product pairing that communicates the entire sugarcane-agriculture chain of the PCT in one moment."
+        }
+      ],
+      "source": "SOGEI Destilaria Fogo production documentation; Cape Verde Ministry of Agriculture traditional spirits survey; Fogo Island cultural heritage records",
+      "trail_connection": "PCT-4",
+      "trail_note": "PCT Region 4: Cape Verde — the Atlantic midpoint between Europe, Africa, and the Americas. Grogue is the most direct expression of the Portuguese alembic tradition transplanted to a subtropical volcanic island. The PCT chain: the copper pot still that arrived with Portuguese colonists in the 1500s is still operating on Fogo Island five centuries later.",
+      "entry_id": "SPR-AFRCAP-001",
+      "extracted_at": "2026-04-11T17:28:41.119989+00:00",
+      "batch_number": 2
+    }
+  ]
+}

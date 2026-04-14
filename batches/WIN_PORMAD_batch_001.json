@@ -1,0 +1,77 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Madeira (Malmsey Malvasia, Sweetest Style, Blandy's Reserve, 100-Year Aging Potential)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T14:23:45.984460+00:00",
+  "entries": [
+    {
+      "name": "Blandy's Malmsey 10 Year — Madeira Malvasia Dolce, Estufagem Canteiro, Sweetest Madeira Style",
+      "category": "wine",
+      "subcategory": "fortified_sweet",
+      "origin": "Portugal",
+      "region": "Madeira Island, Portugal",
+      "producer": "Blandy's Wine Lodge — Madeira Wine Company",
+      "alcohol_content": 19.0,
+      "price_tier": "premium",
+      "terroir_origin": "Malmsey Madeira is produced from the Malvasia grape variety — in Madeira called Malvasia Cândida or simply Malmsey after the English corruption of \"Malvasia\" used since the 15th century when Venetian traders introduced the grape to the Atlantic islands. In Shakespeare's Richard III (1592), the Duke of Clarence is murdered by drowning in a butt of Malmsey wine — evidence that Madeira Malmsey was familiar enough to English audiences as a luxury product to serve as a recognizable literary metaphor 400 years ago. The Malvasia Cândida grape is the rarest of Madeira's noble varieties: after the phylloxera and oidium devastation of the 1850s–1880s, Malvasia Cândida vines were nearly eradicated on the island, replaced by the less disease-susceptible Tinta Negra Mole hybrid. The modern revival of authentic Malmsey production requires the small surviving population of Malvasia Cândida vines grown on the warmer south-facing coastal terraces at 200–400m elevation — the lowest elevation Madeira vineyard zone, where the sugar accumulation driven by Atlantic sun exposure and volcanic thermal radiation from the dark basalt walls produces the ultra-ripe character necessary for Malmsey's characteristic sweetness of 90–120 g/L residual sugar after fortification. The volcanic basalt and tuff soils of the southern Madeira coast, combined with the ocean proximity, create a saline-mineral context that prevents the extreme sweetness from becoming cloying — the volcanic minerality is the balancing force that preserves freshness across decades of aging.",
+      "production_technique": "Malmsey production begins with late-harvest Malvasia Cândida grapes picked at high sugar levels (23–28 Brix) from south-coast terraces, processed within 24 hours of harvest. After gentle pressing, the must ferments briefly (2–3 days) until the winemaker judges the sugar-alcohol balance for fortification: for Malmsey (the sweetest standard Madeira style), neutral grape spirit is added to arrest fermentation at 95–110 g/L residual sugar, producing a sweet fortified wine at 18–20% ABV. The critical transformation that distinguishes Madeira from all other fortified wines is estufagem — the deliberate heating of the wine. In the canteiro method used for premium Blandy's Malmsey, the wine is placed in small (approximately 600-litre) American or French oak casks in lofts (adegas) at the top of the Blandy's Wine Lodge building in Funchal, where the subtropical Madeiran sun heats the wine through the roof naturally to 30–45°C over multiple summers. This canteiro estufagem — heating by the sun rather than industrial hot water coils — is gentler and more complex than the industrial estufagem and is the only method used for premium quality Madeira. The heat drives the Maillard reaction, caramelization, and esterification reactions in the wine that create Madeira's characteristic rancio flavors (walnut, dried citrus, caramel, toffee). Extended aging in canteiro followed by glass demijohn or old cask storage produces the 10-year, 15-year, 20-year, and vintage Blandy's Malmsey expressions. A 10-year reserve blends wines averaging 10 years of age in cask before bottling; vintage Malmsey declarations represent wines from single harvests aged 20+ years. The wine is virtually indestructible once bottled — oxidative stability from the estufagem process means that opened bottles remain drinkable for weeks or months.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Tawny Port 20 Year (oxidative aging, nut-dried fruit character)",
+          "connection": "Blandy's Malmsey 10 Year and 20-year Tawny Port occupy the same tasting register of oxidatively aged, fortified sweet wines with nut-caramel-dried fruit character — but Malmsey's volcanic island terroir and canteiro heating produce additional layers of volcanic mineral and toffee complexity absent in the cooler, cellar-aged Port tawny style"
+        },
+        {
+          "tradition": "Vin Santo Toscano (Italian dried grape sweet wine, very long aging)",
+          "connection": "Both Malmsey and Vin Santo represent the \"seemingly immortal sweet wine\" category that ages in a semi-oxidative environment for decades and produces concentrated dried-fruit, nut, and caramel complexity from the process rather than from primary fruit — both survive accidental exposure to heat and oxygen that would destroy most wines"
+        },
+        {
+          "tradition": "Oloroso Sherry (oxidative fortified, walnut-caramel character)",
+          "connection": "Malmsey and Oloroso Sherry are the two great sweet-to-semi-sweet oxidative fortified wine traditions from volcanic Atlantic islands (Madeira) and limestone Andalucia — both develop walnut, dried fig, and caramel complexity through long oxidative aging, but Malmsey's volcanic origin imparts a saline mineral depth and higher acidity that gives it a more structured, acidic finish than the rounder Oloroso"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep amber-mahogany with green-gold oxidative rim; viscous and rich; the color at 10 years is already remarkably deep from the canteiro heating and oxidative aging; older expressions approach dark treacle in color",
+        "nose": "Sweet and complex: toffee, salted caramel, walnut skin, dried fig, orange marmalade, volcanic mineral smoke in background, dried apricot, coffee toffee at full canteiro development — the nose is dense and rewarding at room temperature; warming the glass in the palm reveals additional dried citrus peel and volcanic sulfur layers",
+        "palate": "Rich medium-full body, the sweetness (90–110 g/L) perfectly balanced by the Malvasia's naturally high acidity and the volcanic mineral structure, toffee-caramel core, long oxidative finish with rancio (walnut-rancid) complexity that signals genuine canteiro aging — the acid-sugar balance in great Malmsey is extraordinary: despite 110 g/L sugar it finishes more like a fortified dry wine than a dessert wine due to the volcanic acidity baseline"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Blandy's Malmsey 5 Year Reserve",
+          "criteria": "The entry to the Malmsey style: younger wines with fresher fruit character, good sweetness-acid balance, toffee beginning to develop — widely available at accessible premium pricing; the best introduction to the Malmsey style"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Blandy's Malmsey 10 Year",
+          "criteria": "The reference expression: 10-year average canteiro aging, full toffee-walnut-dried fruit development, volcanic mineral evident — the benchmark for age-expression Madeira at the accessible super-premium level"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Blandy's Malmsey 15 and 20 Year",
+          "criteria": "Extended canteiro and cask aging producing deeper rancio complexity, more pronounced volcanic mineral, longer finish — the specialist tier for serious fortified wine collectors"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Blandy's Malmsey Vintage Declarations (1920–1941)",
+          "criteria": "Single-vintage releases from Blandy's historic solera and individual cask stocks — wines of 80+ years of age producing some of the most complex and long-lived beverages on Earth; a 1920 Blandy's Malmsey opened in 2024 is 104 years old and still improving; priced at auction at $500–$3,000 per bottle depending on condition and vintage"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 16–18°C — slightly warmer than most fortified wines to allow the canteiro-developed aromatic complexity to express fully; the high viscosity benefits from warming in the palm; refrigerating Malmsey masks the volcanic mineral and rancio character",
+        "vessel": "Small tulip glass (80–100ml) to concentrate the complex aromatics; the sweetness and complexity mean small pours (40–60ml) are appropriate; at 10+ years, the wine is best treated like a spirit (25–40ml) and sipped slowly over 20–30 minutes; never serve in a wide-mouthed glass that disperses the dense aromatics",
+        "food_pairing_philosophy": "Malmsey is one of the few wines that matches aged blue cheese without being destroyed by it — the volcanic acidity cuts through Roquefort or Gorgonzola's fat while the sweetness resonates with the creamy base; also exceptional with duck liver preparations, Christmas pudding, pecan pie, and any preparation where caramelized sugar meets salt (salted caramel desserts)"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Blandy's Wine Lodge — the benchmark 10 Year and Vintage Malmsey expressions; also Barbeito (whose Malvasia produces even drier, more mineral Malmsey expressions) for specialist comparison",
+        "north_america_access": "Broadbent Selections (US standard range); The Rare Wine Co. (US vintage and special releases); LCBO Ontario carries Blandy's standard range; private import for 15, 20, and vintage expressions in BC",
+        "culinary_application": "Malmsey as a cooking wine: extraordinary for reduction sauces where the sweet-acid-volcanic balance creates multi-dimensional depth in Portuguese-inspired preparations (caldo verde variation, duck cataplana); as a dessert wine pairing, the volcanic mineral element creates resonance with dark chocolate (the mineral-iron note in cacao mirrors the volcanic mineral in Malmsey); the 100-year aging capacity is a compelling cellar investment narrative for restaurants with multi-year wine programs"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "WIN-MADISL-001",
+      "tradition": "wine",
+      "extracted_at": "2026-04-12T14:23:45.983780+00:00",
+      "batch_number": 1
+    }
+  ]
+}

@@ -1,0 +1,433 @@
+import sys
+sys.path.insert(0, '/Users/garthgreenlees/Desktop/provenance-tester-1')
+from beverage_extractor import BeverageSession
+
+session = BeverageSession(
+    tradition='wine',
+    region='Brazil — Campanha Meridional (Guatambu Estate Tannat, Uruguayan Border Pampa, Basalt and Sandy Loam)',
+    output_dir='.',
+    starting_entry=1,
+    session_number=81,
+    running_total=0
+)
+
+session.add_producer({
+    'tradition': 'wine',
+    'name': 'Guatambu Estate (Estância Guatambu)',
+    'location': 'Bagé, Rio Grande do Sul, Brazil — Campanha Meridional',
+    'country': 'Brazil',
+    'region': 'Campanha Meridional, Rio Grande do Sul',
+    'key_person': 'Adriano Dal Pizzol (winemaking); the Dal Pizzol family (ownership)',
+    'founded': '1996',
+    'production_volume': 'Boutique estate: under 50,000 bottles per year',
+    'notable_products': [
+        'Guatambu Tannat Reserva',
+        'Guatambu Cabernet Franc',
+        'Guatambu Pinot Noir',
+    ],
+    'certifications': ['sustainable viticulture'],
+    'website': 'guatambu.com.br',
+    'philosophy': (
+        'Estância Guatambu applies the pampa cattle-ranch terroir logic '
+        'of the Uruguayan border region to fine wine production — the '
+        'same sandy basalt-based soils that support the natural grazing '
+        'of the Pampa biome produce Tannat of structural intensity '
+        'and black-fruit concentration comparable to the best '
+        'Uruguayan Tannat across the border in Canelones and Rivera.'
+    ),
+    'trail_connection': 'PCT-13 (Brazil wine and spirits node)',
+    'verified': True
+})
+
+session.add_beverage({
+    'name': (
+        'Campanha Meridional Tannat — Brazilian Pampa Border Viticulture, '
+        'Basalt and Sandy Loam, Rio Grande do Sul Atlantic Influence, '
+        'PCT South America Wine Node'
+    ),
+    'tradition': 'wine',
+    'sub_tradition': 'still red — Tannat',
+    'region': 'Brazil — Campanha Meridional (Guatambu Estate Tannat, Uruguayan Border Pampa, Basalt and Sandy Loam)',
+    'terroir_origin': (
+        'The Campanha Meridional is the southernmost wine region of '
+        'Brazil, occupying the western edge of Rio Grande do Sul '
+        'state along the border with Uruguay between the cities '
+        'of Bagé, Dom Pedrito, and Santana do Livramento (which '
+        'shares its main street with Uruguayan Rivera). The region '
+        'occupies the Brazilian portion of the Pampas biome — '
+        'the flat to gently rolling grassland that extends from '
+        'southern Brazil through Uruguay and into the Argentine '
+        'Pampas — at 200–400m above sea level with a continental '
+        'mesothermal climate modified by Atlantic influence '
+        '(450km to the southeast). Annual rainfall is 1,200–1,400mm, '
+        'concentrated in winter and spring with a drier '
+        'summer-autumn harvest window that reduces disease '
+        'pressure compared to the wetter Serra Gaúcha wine '
+        'region to the northeast. The critical geological '
+        'difference from Serra Gaúcha: Campanha Meridional '
+        'soils are predominantly free-draining sandy loam '
+        'with basalt-derived red clay subsoils (the Pampa '
+        'basalt formation of 120–130 million years ago), '
+        'producing grapes with lower natural acidity and '
+        'higher phenolic concentration than the granite '
+        'and basalt soils of Serra Gaúcha. Tannat — the '
+        'Basque-origin variety that is Uruguay\'s national '
+        'grape across the border — finds the deep, '
+        'free-draining Campanha soils and the continental '
+        'summer heat (30–35°C during ripening) producing '
+        'a naturally concentrated, full-tannin, high-colour '
+        'expression comparable to the finest Uruguayan Tannat '
+        'from Canelones and Rivera departments.'
+    ),
+    'production_technique': (
+        'Campanha Meridional Tannat viticulture is managed on the '
+        'traditional espaldera (vertical shoot positioning) trellis '
+        'system at 1,500–2,000 vines per hectare, with hand '
+        'harvesting in late March to April (Southern Hemisphere '
+        'autumn) when the Tannat bunches reach phenolic maturity '
+        'at 13.5–15.5 Brix natural sugar. The phenolic ripeness '
+        'requirement for Tannat is typically 2–3 weeks after '
+        'sugar ripeness — a distinction that is critical for '
+        'managing the extreme tannin intensity of the variety. '
+        'At Guatambu Estate, the Tannat clusters are destemmed '
+        'and crushed before 4–6 days cold soak at 10°C to '
+        'extract colour and fruit character without tannin '
+        'extraction; fermentation is conducted in temperature-controlled '
+        'stainless steel tanks at 26–28°C with selected '
+        'Saccharomyces cerevisiae yeast (RA17 or similar '
+        'Tannat-adapted strain); twice-daily pump-over '
+        'and daily délestage (rack-and-return) during '
+        'fermentation manages the tannin integration; '
+        'extended maceration post-fermentation '
+        '(7–14 days) extracts the full tannin complement '
+        'from the Campanha Tannat skins — the variety '
+        'has one of the highest procyanidin concentrations '
+        'of any Vitis vinifera cultivar (comparable to '
+        'Sagrantino di Montefalco), producing wines '
+        'capable of 15–20 year cellaring. Malolactic '
+        'fermentation follows in barrel (225L French oak, '
+        '50% new) with 12–18 months maturation in a '
+        'combination of new and second-fill French and '
+        'American oak. Bottled unfined and unfiltered '
+        'for the Reserva tier; a light filtration for '
+        'the entry tier wines.'
+    ),
+    'cross_tradition_parallels': [
+        {
+            'tradition': 'wine — Uruguay, Tannat (Pisano, Bouza, Garzón)',
+            'beverage': 'Uruguayan Tannat Reserva — Canelones and Maldonado Departments, Atlantic-Moderated Pampas',
+            'connection': (
+                'Campanha Meridional Tannat and Uruguayan Tannat share '
+                'a continuous terroir across the Brazilian-Uruguayan border '
+                '— the same Pampas geology, the same Atlantic-modified '
+                'continental climate, and the same Tannat variety that '
+                'Basque immigrants brought to both sides of the border '
+                'in the 19th century. The Santana do Livramento/Rivera '
+                'border crossing is the most visible expression of this '
+                'terroir continuity: the Campanha Meridional vineyard of '
+                'one producer can be visible from the Uruguayan Rivera '
+                'vineyard of another across a street-width border. '
+                'The production distinction is that Uruguayan producers '
+                'have a longer formal wine tradition (Uruguay\'s first '
+                'commercial wines are 19th century; Brazil\'s Campanha '
+                'commercial viticulture is primarily post-1990) and '
+                'have developed a specific microoxidation technique '
+                '(micro-oxygenation was pioneered partly in the '
+                'context of Tannat tannin management) that is now '
+                'standard in both countries for softening '
+                'the extreme Tannat procyanidin profile.'
+            )
+        },
+        {
+            'tradition': 'wine — Madiran AOC, southwest France (the origin of Tannat)',
+            'beverage': 'Madiran Tannat — Pyrenean Foothills, Clay-Limestone, Basque Heritage Variety',
+            'connection': (
+                'The Campanha Meridional expression of Tannat returns '
+                'the variety to its origin terroir type: Madiran AOC '
+                'in the Pyrenean foothills of Gascony uses Tannat '
+                'on clay-limestone soils with continental Atlantic '
+                'influence — a geological parallel to the basalt-clay '
+                'sandy loam of Campanha with similar Atlantic distance '
+                'and similar summer heat during ripening. The '
+                'difference is altitude and rainfall: Madiran sits '
+                'at 150–250m with 900mm annual rainfall versus '
+                'Campanha\'s 200–400m with 1,200–1,400mm. Both '
+                'produce the same characteristically opaque dark '
+                'ruby Tannat with the extreme tannin structure '
+                'and black fruit that require extended aging to '
+                'resolve. The Basque immigrant route that brought '
+                'Tannat to Uruguay and Brazil traces directly back '
+                'to Madiran — making the South American Tannat '
+                'expressions a diaspora wine in the truest PCT sense.'
+            )
+        }
+    ],
+    'sensory_profile': {
+        'appearance': (
+            'Opaque deep ruby-purple with violet rim — the characteristic '
+            'high-anthocyanin signature of young Campanha Tannat; '
+            'even at 5–7 years of age the colour remains intense '
+            'with only slight garnet movement at the rim; '
+            'brilliant clarity (filtered Market tier) to slight '
+            'natural haze (unfiltered Reserva tier); pronounced '
+            'slow-moving legs from 13.5–14.5% ABV and '
+            'extract-rich phenolic concentration.'
+        ),
+        'nose': (
+            'Blackberry and black plum as the dominant primary fruit '
+            'register — the characteristic signature of Tannat on '
+            'warm-climate sandy loam soils where the variety '
+            'achieves full phenolic ripeness; beneath, '
+            'violets and dark floral compounds from '
+            'the anthocyanin-rich skin fermentation; '
+            'crushed black pepper and graphite from '
+            'the Campanha basalt soil contribution; '
+            'dark chocolate and cedar from the French '
+            'oak maturation (12–18 months, 225L); '
+            'tobacco and leather from the extended '
+            'maceration tannin development; at '
+            'younger vintages (2–3 years), the '
+            'oak integration is not yet complete '
+            'and the tannin astringency is detectable '
+            'even on the nose through the '
+            'drying sensation of the anthocyanin '
+            'volatile aromatics.'
+        ),
+        'palate': (
+            'Full body and dense — Campanha Tannat is one of the '
+            'most structured red wines in South America, with '
+            'tannin density (procyanidin and proanthocyanidin '
+            'polymerisation) at the level of young Madiran or '
+            'Sagrantino; the black fruit intensity from the '
+            'nose carries through the entry and mid-palate '
+            'with blackberry preserves and plum skin character; '
+            'the tannins at young vintages (under 5 years) '
+            'are powerful and grippy — fine-grained from the '
+            'French oak but not yet fully integrated with '
+            'the fruit; at 8–12 years of age the tannins '
+            'polymerise to a silkier, more structured texture; '
+            'acidity is moderate (pH 3.5–3.7) — lower than '
+            'Serra Gaúcha wines from the same vintage due '
+            'to the warmer, drier Campanha conditions; '
+            'the finish is very long (45–60+ seconds) '
+            'with persistent tannin grip and black fruit; '
+            'the correct food pairing is essential — '
+            'Tannat at this tannin level requires '
+            'protein-rich food to buffer the astringency.'
+        ),
+        'conclusion': (
+            'Campanha Meridional Tannat is the reference expression '
+            'of Brazilian serious red wine potential, demonstrating '
+            'that the Pampas terroir (shared with Uruguay) is '
+            'capable of world-class structured red wine with '
+            'genuine aging potential — a significant departure '
+            'from the Italian-grape light reds that dominated '
+            'Brazilian wine production for most of the 20th century.'
+        )
+    },
+    'quality_hierarchy': [
+        {
+            'tier': 4,
+            'tier_name': 'Reserve',
+            'criteria': (
+                'Single-vineyard Campanha Tannat Reserva (Guatambu, '
+                'Don Giovanni, or Almadén Reserva) with 18+ months '
+                'French oak maturation, unfined and unfiltered, '
+                'from low-yield parcels (under 3 tonnes per hectare) '
+                'of 15+ year old vines on the deepest basalt-clay '
+                'subsoil sections; capable of 15–20 year cellaring; '
+                'comparable in quality to benchmark Uruguayan Tannat '
+                'from Bouza or Pisano at their Grand Reserva tier.'
+            ),
+            'markers': (
+                'Opaque colour; 14.5%+ ABV; 12+ years aging potential; '
+                'unfined; single-vineyard designation; award recognition '
+                'at Concurso Nacional de Vinhos (Brazil) or Vinisur.'
+            )
+        },
+        {
+            'tier': 3,
+            'tier_name': 'Estate',
+            'criteria': (
+                'Estate Campanha Tannat with 12–15 months French oak, '
+                'from estate-grown fruit across the full Campanha '
+                'plateau; distinctive Tannat structure and black fruit '
+                'with the basalt mineral signature; the correct '
+                'expression at the restaurant-by-the-glass and '
+                'retail fine wine tier (USD $18–28 per bottle '
+                'in international markets).'
+            ),
+            'markers': (
+                'Vineyard-designated estate label; Campanha GI indication; '
+                'production under 30,000 bottles; winemaker-signed lots.'
+            )
+        },
+        {
+            'tier': 2,
+            'tier_name': 'Market',
+            'criteria': (
+                'Campanha IGP Tannat from multi-vineyard blends '
+                'or contracted fruit — competent commercial red '
+                'with recognisable Tannat structure but without '
+                'the single-vineyard depth or extended oak '
+                'maturation of the Estate tier; priced at '
+                'BRL 60–100 (USD $10–18) in Brazilian domestic '
+                'retail; the everyday Campanha tier.'
+            ),
+            'markers': (
+                'Multi-vineyard blend; 6–9 months American or French oak; '
+                'earlier commercial release (12–14 months from vintage); '
+                'standard filtration.'
+            )
+        },
+        {
+            'tier': 1,
+            'tier_name': 'House',
+            'criteria': (
+                'Generic Brazilian red labelled as Tannat or Tannat blend '
+                'from Serra Gaúcha (the traditional Brazilian wine region) '
+                'or non-specific origin — the entry-level commercial '
+                'Brazilian red that uses Tannat as a blending component '
+                'for colour and structure rather than as a variety-defining '
+                'expression; limited Campanha terroir character; '
+                'priced under BRL 40 (USD $8) in domestic retail.'
+            ),
+            'markers': (
+                'Generic origin label; Tannat as blend component; '
+                'short maceration; minimal oak; neutral profile.'
+            )
+        }
+    ],
+    'service_intelligence': {
+        'temperature': (
+            'Serve Campanha Tannat Reserva at 17–18°C — slightly warmer '
+            'than European red wine service temperature (16–18°C is '
+            'the standard red wine range) but within that bracket; '
+            'the high tannin concentration of Tannat means that '
+            'temperatures below 15°C suppress the fruit and '
+            'amplify the astringency, making the wine unnecessarily '
+            'austere; temperatures above 20°C soften the tannins '
+            'but suppress the acidity structure and make the '
+            'alcohol warming more prominent. For restaurant service '
+            'in the Brazilian context (where cellars are rarely '
+            'available and ambient temperatures are 22–28°C), '
+            'service from a wine cooler at 17°C is the professional '
+            'standard. Decanting is strongly recommended for '
+            'Reserva tier Tannat under 8 years of age: '
+            '45–60 minutes in a standard Bordeaux decanter '
+            'allows the tannin polymerisation to begin in '
+            'oxygen contact, softening the initial astringency '
+            'and releasing the black fruit aromatic register.'
+        ),
+        'vessel': (
+            'Serve in a large-format Bordeaux glass (450–550ml capacity) '
+            'with a 100–120ml pour — the wide bowl allows the concentrated '
+            'black fruit aromatics to develop and the tannin-carrying '
+            'vapours to disperse before reaching the nose, reducing '
+            'the initial astringency perception; the chimney narrows '
+            'sufficiently to concentrate the aromatic complex for '
+            'evaluation without trapping the harsh tannin volatiles '
+            'at nose height. In a formal Southern Cone wine programme '
+            '(alongside Argentine Malbec and Chilean Carménère), '
+            'Campanha Tannat occupies the structured red position '
+            '— it is denser and more austere than either Malbec '
+            'or Carménère in youth and requires '
+            'the most food-substantial pairing of the flight.'
+        ),
+        'technique': 'Decant 45–60 minutes; large Bordeaux glass; protein-rich food pairing essential.',
+        'programme_position': (
+            'Place after lighter-styled South American reds (Pinot Noir, '
+            'Malbec) in a Southern Cone wine flight; or use as the '
+            'structured anchor of a Brazil wine tasting alongside '
+            'Miolo Lote 43 (multi-varietal), Lidio Carraro '
+            'Agnus Dei (merlot blend), and Pizzato Concentus '
+            '(Cabernet Sauvignon) to demonstrate the full '
+            'range of Brazilian serious red wine.'
+        ),
+        'verbal_presentation': (
+            'Tannat from the Brazilian Pampa — the same variety that '
+            'made Uruguay famous, grown across the border on the '
+            'same geological formation. A wine that needs time '
+            'and food. The tannins are the point, not the problem.'
+        )
+    },
+    'purveyor_intelligence': {
+        'benchmark_producer': (
+            'Guatambu Estate (Estância Guatambu), Bagé, Rio Grande do Sul, Brazil '
+            '(est. 1996 — benchmark for Campanha Meridional Tannat; '
+            'consistent award recognition at Concurso Nacional de '
+            'Vinhos Brasileiros; the Dal Pizzol family winemaking '
+            'lineage connects to the broader Rio Grande do Sul '
+            'fine wine tradition).'
+        ),
+        'producer_location': 'Bagé, Campanha Meridional, Rio Grande do Sul, Brazil',
+        'key_person': 'Adriano Dal Pizzol (winemaking)',
+        'production_volume': 'Under 50,000 bottles per year',
+        'certifications': ['sustainable viticulture — Campanha biome preservation'],
+        'bc_distributor': '[PROVIDER: verify Brazilian wine importer for BC — Brazil wines are underrepresented in BC; check private importers or Cascadia Wines]',
+        'us_distributor': '[PROVIDER: verify — Campanha wines have limited US distribution; specialist South American importers such as Vine Connections or Winebow may carry Guatambu]',
+        'uk_distributor': '[PROVIDER: verify — Brazilian fine wine has growing UK presence through Wines of Brazil promotional body; check Bibendum or specialist Latin American importers]',
+        'price_tier': 'Estate',
+        'availability_notes': (
+            'Campanha Meridional wines are well-distributed within Brazil '
+            '(major Brazilian supermarkets and wine retailers carry '
+            'the Estate and Market tiers) but remain niche in '
+            'international markets despite the quality level. '
+            'The Wines of Brazil trade body (winesofbrazil.com) '
+            'maintains an importer directory for international '
+            'trade professionals. At wine-country direct sales, '
+            'Guatambu Reserva Tannat is priced at BRL 150–200 '
+            '(USD $28–38), representing exceptional value for '
+            'the quality level relative to equivalent-structured '
+            'Uruguayan Tannat (USD $25–40) and French Madiran '
+            '(USD $18–35).'
+        )
+    },
+    'trail_connection': 'PCT-13',
+    'trail_note': (
+        'Campanha Meridional wine connects the Brazilian section of the '
+        'Portuguese Colonial Trail through the Rio Grande do Sul wine '
+        'tradition established by Azorean and Italian immigrants in '
+        'the 19th century. The Tannat variety arrived via Uruguayan '
+        'Basque immigrants — a cross-colonial transmission that '
+        'brings Gascon viticulture (Madiran) through the Basque '
+        'diaspora to the Brazilian border region in a single '
+        'PCT narrative arc from metropolitan France '
+        'to South American pampa.'
+    ),
+    'food_pairings': [
+        {
+            'technique_id': 'BRA-001',
+            'dish': 'Churrasco gaucho (Brazilian pampa grilled beef — picanha, costela, fraldinha)',
+            'pairing_type': 'complement',
+            'rationale': (
+                'The protein and fat of Brazilian churrasco-style '
+                'beef directly buffers the high procyanidin tannin '
+                'of Campanha Tannat through tannin-protein binding — '
+                'the textbook Tannat + red meat pairing that has '
+                'been the dominant food context for this variety '
+                'since Basque immigrants introduced it to the '
+                'cattle-ranching Pampas in the 19th century.'
+            )
+        },
+        {
+            'technique_id': 'URU-001',
+            'dish': 'Grilled Uruguayan asado (short ribs, lamb, blood sausage) with chimichurri',
+            'pairing_type': 'bridge',
+            'rationale': (
+                'The cross-border pairing reinforces the Campanha '
+                'terroir narrative — the same grassland cattle '
+                'tradition on both sides of the Uruguayan border '
+                'produces the grilled meat tradition that Tannat '
+                'was developed alongside; the chimichurri herb '
+                'acidity provides a bridge from the wine\'s moderate '
+                'pH acidity to the charred fat of the grilled meat.'
+            )
+        }
+    ],
+    'source': 'Wines of Brazil promotional records; Guatambu Estate technical sheets; IBRAVIN (Brazilian Wine Institute) regional data; Campanha Meridional GI documentation',
+    'price_trajectory': 'rising'
+})
+
+session.commit_batch()
+session.finish()

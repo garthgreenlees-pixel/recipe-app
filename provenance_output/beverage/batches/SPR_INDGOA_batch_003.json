@@ -1,0 +1,195 @@
+{
+  "tradition": "spirits",
+  "region": "India — Goa (Feni)",
+  "batch_number": 3,
+  "entry_count": 2,
+  "extracted_at": "2026-04-11T15:19:07.580091+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "cashew feni",
+      "region": "India — Goa",
+      "name": "Cashew Feni — Single and Double Distilled",
+      "terroir_origin": "Feni is a spirit unique to the Indian state of Goa — one of only two products from Goa with Geographical Indication (GI) status (the other being Goa cashew). The cashew apple (the swollen stalk of the cashew nut, Anacardium occidentale) is the primary fermentation base for cashew feni. Goa's cashew cultivation is a direct product of Portuguese colonialism: the cashew tree is native to northeastern Brazil and was brought to Goa by Portuguese merchants in the 16th century as a ground-cover crop to prevent soil erosion on Goa's laterite hillsides. Over 400 years, the cashew became inseparable from Goan identity — the cashew apple season (March–May) is a cultural event in Goan villages, with the urrak (first distillation) flowing freely. The PCT node: Goa was a Portuguese colony from 1510 to 1961 (the last European colony in India, taken by India by military action). Feni is the PCT's most vivid example of how Portuguese agricultural transfers transformed the food and drink culture of their territories.",
+      "production_technique": "Cashew feni production: ripe cashew apples are collected from the ground (never picked — the fruit must fall naturally at full ripeness). The apples are foot-trodden in stone troughs (a technique that parallels Port wine's lagar treading) to extract juice. The juice ferments naturally with indigenous wild yeasts for 2–3 days to produce a 5–8% ABV wash (the neero/niro — unfermented, it is a prized fresh juice). Single distillation produces urrak at 15–20% ABV — the seasonal first-run spirit consumed locally. Double distillation in traditional terracotta cazani (clay pot stills) — the traditional Goan still — produces cashew feni at 40–45% ABV. The cazani is a critical PCT artifact: a direct continuation of Portuguese copper alembic distillation technology adapted to local materials. Triple-distilled cashew feni (rare) reaches 55%+ ABV. Modern producers (Cazulo, Bhati Village) have introduced stainless steel pot stills and hygienic fermentation to standardise quality for export markets. GI protection (2009) restricts Feni production exclusively to Goa.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Cachaça (Brazil)",
+          "connection": "The most direct PCT parallel: both Feni and Cachaça were created when Portuguese agricultural transfers (cashew to Goa; sugarcane to Brazil) were fermented and distilled using adapted Portuguese distillation techniques. Both are GI-protected spirits unique to a single former Portuguese territory. Both face export challenges due to unfamiliar flavour profiles in Western markets"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Armagnac (Gascony, France)",
+          "connection": "Both are copper-pot-distilled fruit spirits with strong terroir identity; both are produced in geographically protected regions by small artisanal producers; both face market pressure from industrial spirits. Armagnac uses column still variation; Feni uses traditional cazani; both preserve the original pot-still distillation character that column spirits lack"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Urrak: clear, pale yellow; cashew feni: crystal clear to very pale golden. Aged cashew feni: light amber from brief wood contact",
+        "nose": "Unmistakably distinctive — tropical fruit (cashew apple has no Western parallel), slight acetone note (a Feni signature, reduces with premium production), wild fruit ferment character, coconut, light floral notes. Cazulo premium: refined, tropical citrus, cashew fruit candy, clean spirit backbone",
+        "palate": "Urrak: light, sweet-sour, fresh; easy at 15–20% ABV. Double-distilled Feni: full spirit weight (40–45%), pungent raw character in standard production; refined in premium expressions with fruit-tropical-clean finish. Acetone note distinguishes traditional from premium production. With water or ice: opens dramatically",
+        "conclusion": "Cashew Feni is the PCT's most challenging spirit for Western palates — and the most educationally important. The acetone controversy is a production quality issue: premium producers (Cazulo) have eliminated it. On a serious cocktail programme, premium Feni serves as a tropical base spirit with no Western equivalent."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Aged Premium Single-Origin",
+          "criteria": "Named cashew orchard; hygienic modern fermentation; stainless or clay still distillation; brief wood rest; reduced acetone; export quality",
+          "markers": "Cazulo Premium Feni; wood-aged expressions; collector's packaging; international distribution"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Double-Distilled Premium",
+          "criteria": "Traditional cazani distillation; selected cashew apples; cleaner fermentation; reduced acetone",
+          "markers": "Certified GI production; quality label; local Goan specialist market + export"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Standard Cashew Feni",
+          "criteria": "Traditional production; correct cashew feni character; some acetone typical; genuinely double-distilled",
+          "markers": "Local Goan production; traditional bottle; the authentic experience"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Urrak",
+          "criteria": "Single-distilled; seasonal; 15–20% ABV; consumed fresh in Goa during cashew season; not for export",
+          "markers": "Seasonal product March–May; local bars and homes only"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature (18–22°C) for neat; with ice or water for cocktail use",
+        "vessel": "Shot glass for traditional service; coupe or rocks glass for cocktail",
+        "technique": "Traditional Goan service: neat, room temperature, with a plate of sausages (Goan pork chouriço — also a PCT artifact). Cocktail use: Feni Sour (cashew feni + lime + palm sugar + soda); Feni-based fruit punch. With coconut water: the Goan summer drink",
+        "programme_position": "Specialty spirits education; cocktail innovation; Indian-focused or Southeast Asian tasting menu pairing. A genuine conversation piece on any programme discussing post-colonial terroir",
+        "verbal_presentation": "Cashew Feni from Goa — the only spirit in the world made from cashew apples. The cashew tree came to India on Portuguese ships from Brazil in the 1500s. Five centuries later: this. GI-protected. Made only in Goa. Foot-trodden, clay-pot distilled."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Cazulo Premium Feni (Nadia Coutinho, Goa)",
+        "producer_location": "Cansaulim village, Goa, India",
+        "key_person": "Nadia Coutinho (founder, Cazulo); Hansel Vaz (Goa Cashew Feni advocacy)",
+        "production_volume": "Very limited; Cazulo produces ~5,000 bottles annually in export format",
+        "certifications": [
+          "GI — Feni (Goa only, since 2009)"
+        ],
+        "bc_distributor": "[NEEDS VERIFICATION — Feni has essentially no BC commercial distribution]",
+        "us_distributor": "[NEEDS VERIFICATION — Cazulo has limited US presence; check specialty Indian spirits importers]",
+        "uk_distributor": "Cazulo available through UK specialists; some Indian food importers stock generic Feni",
+        "price_tier": "Reserve to Estate (€25–50 in Goa for premium; £50–80 if available in UK; extremely limited North American pricing)",
+        "availability_notes": "BC: essentially unavailable through normal channels. US: Cazulo has been attempting US market entry; check specialty South Asian grocery importers or Indian restaurant supply companies. For a professional programme: procure via direct import from Goa or UK specialist."
+      },
+      "trail_connection": "PCT-8",
+      "trail_note": "Feni IS the PCT node in Goa — the distillation of 500 years of Portuguese presence compressed into one bottle. The cashew tree (Brazil), the cazani still (adapted from Portuguese alembic), and the Goan Catholic culture that produces and consumes Feni are all direct PCT artifacts. Without the Portuguese, there would be no cashew in Goa; without the cashew, no Feni. The 1961 Indian annexation of Goa ended the colonial period but Feni survives as the most durable PCT food-production legacy in Asia.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Goan pork vindaloo",
+          "pairing_type": "complement",
+          "rationale": "Vindaloo (itself a PCT artifact: vinho d'alhos = Portuguese wine-garlic marinade) with Feni is the classic pairing. The spirit's intensity matches the dish's heat; its tropical fruit note balances the vinegar-chilli base"
+        },
+        {
+          "technique_id": "",
+          "dish": "Prawn recheado (Goan stuffed prawns)",
+          "pairing_type": "bridge",
+          "rationale": "Goan spiced prawns and cashew Feni share the same tropical-terroir register; the masala's complexity is navigated by the spirit's clean fruit base"
+        }
+      ],
+      "source": "GI registration documents for Feni (Government of Goa, 2009); Cazulo official documentation; Hansel Vaz advocacy materials for Goa Feni; The Hindu / Times of India Feni cultural coverage; Frederick Noronha food writing on Goa",
+      "entry_id": "SPR-INDGOA-001",
+      "extracted_at": "2026-04-11T15:19:07.579565+00:00",
+      "batch_number": 3
+    },
+    {
+      "tradition": "spirits",
+      "sub_tradition": "coconut feni",
+      "region": "India — Goa",
+      "name": "Coconut Feni (Coconut Toddy Spirit)",
+      "terroir_origin": "Coconut feni is produced from the fermented sap (toddy) of the coconut palm (Cocos nucifera) — collected from the immature flower spadix at the crown of the palm tree. Toddy collection in Goa is an ancient pre-Portuguese practice (the toddy tapper or rendi is among Goa's oldest professional traditions), but coconut feni as a distilled product developed during the Portuguese colonial period when distillation knowledge arrived from Europe. Coconut palms grow throughout coastal Goa, and the toddy tradition extends across Kerala, Karnataka, and coastal South Asia — but the distilled feni is unique to Goa. The coastal laterite soils and tropical monsoon climate of Goa's coastal belt define the coconut palm's productivity and the toddy's fermentation character.",
+      "production_technique": "Toddy collection: the rendi (toddy tapper) climbs the coconut palm daily (at sunrise and sunset), cuts the flower spadix, and collects the sap that runs overnight into clay or modern plastic pots tied to the palm crown. Fresh sap (neera) is sweet and mildly alcoholic (2–4% ABV from ambient yeast fermentation); older sap (toddy) has fermented to 5–7% ABV. Fermentation lasts 24–36 hours in clay pots. Distillation in the traditional cazani (identical to cashew Feni production) produces coconut feni at 40–45% ABV. The two-still system: the daijem (first distillation) and moddso/cazulo (second distillation). Coconut feni is lighter and more delicate than cashew feni — the coconut sap produces fewer congeners than the cashew apple. Production volume is smaller than cashew feni as toddy collection is more labour-intensive and yields less per palm than cashew season production.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Palm Toddy / Ogogoro (West Africa)",
+          "connection": "Both are palm-sap distillates from tropical colonial contexts; West African ogogoro (from raffia palm, Nigeria) is produced by communities whose ancestors were connected to the same colonial trade routes that brought the Portuguese to Goa. The PCT and WADT trails converge here: Portuguese palm knowledge transferred across Africa and Asia along the same sea routes"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Arrack (Sri Lanka)",
+          "connection": "Sri Lankan coconut arrack is the direct regional parallel — both use coconut palm toddy as the fermentation base, both are GI-adjacent spirits in former South Asian territories with colonial history. Arrack is more widely exported; coconut feni is more artisanal and Goa-specific"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Crystal clear; colourless",
+        "nose": "Lighter than cashew feni: fresh coconut, slight sweetness, clean spirit, light tropical florals; less pungent, more delicate; the fresh toddy character is distinct from the artificial coconut of Caribbean spirits",
+        "palate": "Clean, light-to-medium body; coconut sweetness in the background; warming alcohol (40–45% ABV); shorter finish than cashew feni; less complex but more delicate",
+        "conclusion": "The lighter, more elegant expression of Goan distillation. Less challenging for non-Indian palates than cashew feni; serves well in tropical cocktails as a coconut-forward spirit with genuine provenance rather than artificial flavouring."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Double-Distilled Premium Coconut Feni",
+          "criteria": "Daily-collected fresh toddy; hygienic fermentation; double distillation in clean cazani; consistent quality",
+          "markers": "Named producer; export packaging; reduced congeners; light clean profile"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Traditional Double-Distilled",
+          "criteria": "Traditional cazani distillation; correct coconut feni character; genuine GI production",
+          "markers": "Goa GI; traditional production; local quality"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Standard Coconut Feni",
+          "criteria": "Traditional production; typical coconut toddy character; local market quality",
+          "markers": "Standard Goa village production; local bars"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Neera / Fresh Toddy",
+          "criteria": "Unfermented or lightly fermented; 3–5% ABV; not distilled; consumed fresh or as mixer",
+          "markers": "Street-side toddy stalls; seasonal availability"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature or over ice",
+        "vessel": "Shot glass or rocks glass",
+        "technique": "Coconut Feni & Tender Coconut Water: traditional Goan mixing. Cocktail: coconut feni base for tropical sours and punches. Neat: with Goan snacks (cashews, kokum, pork crackling)",
+        "programme_position": "Tropical cocktail programme; Indian-focused bar; education alongside cashew feni to demonstrate the full Goan spirits vocabulary",
+        "verbal_presentation": "Coconut Feni — from the palm groves of coastal Goa. The toddy tapper climbs each palm at sunrise, collects the sap overnight, and it becomes this by afternoon. The lighter, more delicate side of Goa's distillation tradition."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Bhati Village Coconut Feni (Goa)",
+        "producer_location": "Coastal Goa, India",
+        "key_person": "[NEEDS VERIFICATION — no single nationally prominent coconut feni producer]",
+        "production_volume": "Very small; even more limited than cashew feni",
+        "certifications": [
+          "GI — Feni (Goa only, coconut sub-category)"
+        ],
+        "bc_distributor": "[NEEDS VERIFICATION — unavailable commercially in BC]",
+        "us_distributor": "[NEEDS VERIFICATION — not commercially available in US mainstream channels]",
+        "uk_distributor": "[NEEDS VERIFICATION — occasional UK specialist availability]",
+        "price_tier": "Reserve (€20–40 in Goa; very limited international pricing)",
+        "availability_notes": "Essentially unavailable outside Goa through normal commercial channels. Direct procurement from Goa or UK specialist import required for any programme use."
+      },
+      "trail_connection": "PCT-8",
+      "trail_note": "Coconut palm toddy traditions existed in Goa before Portuguese arrival, but distillation of toddy into feni is attributed to Portuguese distillation knowledge transfer in the 16th century. The coconut palm itself spread along Portuguese trade routes from Southeast Asia across the Indian Ocean — Goa's coastal coconut groves are a visible PCT landscape.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Fish curry with coconut milk (Goan fish curry)",
+          "pairing_type": "complement",
+          "rationale": "Coconut-on-coconut: the feni's fresh coconut base mirrors the curry's coconut milk foundation; the spirit's alcohol cuts through the richness"
+        },
+        {
+          "technique_id": "",
+          "dish": "Dried prawn chutney (balchão)",
+          "pairing_type": "bridge",
+          "rationale": "The fermented-dried shrimp intensity of balchão meets the clean coconut spirit; a classic Goan country pairing"
+        }
+      ],
+      "source": "GI Feni documentation; Frederick Noronha food writing on Goa's toddy tradition; NDTV and Times of India coverage of Goa feni revival",
+      "entry_id": "SPR-INDGOA-002",
+      "extracted_at": "2026-04-11T15:19:07.579828+00:00",
+      "batch_number": 3
+    }
+  ]
+}

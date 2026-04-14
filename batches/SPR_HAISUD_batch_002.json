@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Haiti — Sud Department Cavaillon (Clairin Le Rocher, Wild Tropical, Limestone Coast)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T04:39:55.557426+00:00",
+  "entries": [
+    {
+      "name": "Clairin Le Rocher — Wild Tropical Single-Village, Cavaillon Sud Haiti Limestone Coast",
+      "category": "spirits",
+      "subcategory": "cane_spirit",
+      "origin": "Haiti",
+      "region": "Sud Department, Haiti",
+      "producer": "Chelo Bellizaire — Clairin Le Rocher, Cavaillon",
+      "alcohol_content": 51.4,
+      "price_tier": "premium",
+      "terroir_origin": "Cavaillon sits in Haiti's Sud Department on the southern peninsula, at approximately 100m elevation in a transitional zone between the coastal limestone plain and the interior Massif de la Hotte mountain range. The southern peninsula receives higher rainfall than the Artibonite plateau (1,800–2,200mm annually from Atlantic and Caribbean moisture) and maintains higher ambient humidity (75–85% RH) throughout the year. Bellizaire's cane fields occupy shallow red clay soils over exposed limestone karst — the \"rocher\" (rock) of the name refers to the visible limestone outcrops in the cane fields where bedrock breaks through the thin soil layer. This limestone karst drainage creates a distinct mineral quality in the water used for fermentation, contributing calcium and magnesium to the fermentation environment. The coastal location exposes the cane to sea breeze throughout the growing season, a maritime influence that contributes saline precursors to the cane's volatile compound profile. The combination of humid coastal environment, limestone terroir, and longer fermentation duration creates Le Rocher's distinctly wild, aromatic, and complex profile compared to the highland-cool, cleaner Sajous. Le Rocher demonstrates how the same production philosophy — unaged cane spirit, wild fermentation, pot still — produces fundamentally different spirits when applied to different Haitian microclimates and geological substrates.",
+      "production_technique": "Bellizaire harvests cane from his limestone-terrace fields in a single annual cutting (December–March), crushing immediately at a traditional moulin located on the property. The fresh juice is transferred to open wooden fermentation vats — larger than Sajous's — and left to ferment with wild yeast populations for 8–12 days: more than double the Sajous fermentation time. The extended fermentation at higher ambient humidity and temperature (28–34°C coastal range vs 24–28°C at Artibonite altitude) produces a dramatically different fermentation profile: higher volatile acidity from Acetobacter activity, more complex ester formation from the extended contact between yeast metabolites and organic acids, and a characteristic wild fruit-forward aromatics from Pichia and Candida yeast strains that thrive in the more tropical fermentation environment. Some batches show active co-fermentation with local wild flowers added to the fermentation vat — a traditional practice that adds floral terpene complexity to the wash. Distillation occurs in Bellizaire's copper pot still (smaller than Sajous's at approximately 500-litre capacity) in a direct-fire single distillation, with a slightly more aggressive heads fraction inclusion than Sajous — the Le Rocher house style deliberately captures more of the volatile heads character. Bottling at 51.4% for the Velier release without water addition to preserve the concentrated tropical intensity. Annual production is approximately 1,500–3,000 bottles, fully batch-identified.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Clairin Sajous (direct contrast within same tradition)",
+          "connection": "Le Rocher and Sajous are the defining contrast pair within the Clairin tradition: Sajous represents the clean, fruity, highland-cool expression at 3–5 day fermentation, while Le Rocher represents the wild, intense, coastal-humid expression at 8–12 day fermentation — the same unaged cane spirit philosophy producing dramatically different outcomes from different Haitian microclimates, like comparing two Burgundy villages from opposite ends of the Côte d'Or"
+        },
+        {
+          "tradition": "Mezcal Tobaziche vs Tobalá (wild vs semi-wild agave)",
+          "connection": "The Clairin Sajous/Le Rocher contrast mirrors the mezcal wild vs cultivated agave spectrum: Tobaziche (wild-growing) produces intense, complex, terroir-specific mezcal while cultivated Espadín produces more consistent, accessible mezcal — both pairs show how the degree of \"wildness\" in the primary substrate directly translates to spirit complexity and variability"
+        },
+        {
+          "tradition": "Cachaça artesanal (Minas Gerais copper alembic)",
+          "connection": "Le Rocher's extended wild fermentation and immediate pot still distillation without aging share production principles with the finest Minas Gerais artisanal cachaça producers (Novo Fogo, Leblon artesanal) — both represent unaged fresh cane spirits where the fermentation duration and yeast diversity create the complexity that aging provides in commercial rum"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Crystal clear with a faint green-gold tint from extended fermentation congeners; slightly more viscous than Sajous at 51.4%; visible oil droplets when swirled in glass",
+        "nose": "Wild and complex: ripe tropical fruit (mango, guava, overripe banana), white flowers, earthy limestone mineral, light smoke from direct-fire distillation, fermented fruit (near-overripe intensity), sea salt-mineral in background — dramatically different from Sajous; the extra fermentation days are immediately apparent in the aromatic complexity",
+        "palate": "Full body, tropical fruit intensity, significant alcohol presence at 51.4%, complex mid-palate with simultaneous fruit sweetness and mineral-earth depth, long finish with limestone mineral and dried mango — a spirit that demands attention and rewards it with the most complex flavor journey in the Clairin range"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Domestic Clairin (Village Production)",
+          "criteria": "Unbranded village clairin from the Cavaillon area — the base product available locally without export traceability"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Clairin Le Rocher Annual (Velier Bottling)",
+          "criteria": "Chelo Bellizaire's Velier-bottled annual production at 51.4%, with harvest-year character variation as the primary quality variable — the international reference for southern Haiti coastal terroir"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Clairin Le Rocher Millesime (Selected Harvest)",
+          "criteria": "Exceptional harvest batches identified by Velier's Luca Gargano as representing peak Le Rocher terroir expression — limited to 1,000–2,000 bottles per identified batch"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Clairin Le Rocher Reserve",
+          "criteria": "The aspirational aged tier: Le Rocher's intensity in ex-bourbon or ex-rum wood would theoretically produce one of the Caribbean's most complex aged spirits — currently only experimental quantities exist, as Bellizaire's production is primarily oriented toward the fresh, unaged style"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature or with a single large ice rock for initial temperature reduction; the complexity of Le Rocher benefits from slow warming in the glass over 15–20 minutes — the evolving aromatic reveal as temperature rises is part of the tasting experience; at 51.4% it is strong enough to handle a small water addition (5–10ml) without losing character",
+        "vessel": "Wide tulip glass to contain and concentrate the complex floral-fruit-mineral aromatics without trapping the alcohol spike; the complexity rewards a wider bowl than spirits typically receive — a white Burgundy glass is ideal for exploring the full aromatic range",
+        "service_context": "Le Rocher's intensity makes it better as a contemplative single-spirit experience than a casual cocktail base — though it works brilliantly in Ti' Punch where the lime acid cuts through the tropical intensity; for restaurant service, position it as the \"exploration\" spirit on a Caribbean spirits menu rather than the first pour"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Chelo Bellizaire — Clairin Le Rocher via Velier SpA",
+        "north_america_access": "Same Velier distribution as Clairin Sajous; slightly harder to find than Sajous due to lower production volume; Whisky Exchange online ships internationally; Clairin.com (Velier direct) lists current inventory; The Rum Howler (online specialist) carries the range",
+        "culinary_application": "Le Rocher's wild tropical intensity makes it challenging in food applications that require subtlety; works best in applications where its intensity IS the point — tropical punch reductions for dessert sauces, mango-clairin ceviche preparation where the raw cane wildness mirrors the fish's rawness, or as a finishing spirit in pineapple-based cocktails where its complexity reads as depth rather than competition"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "SPR-SUDDEP-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T04:39:55.557136+00:00",
+      "batch_number": 2
+    }
+  ]
+}

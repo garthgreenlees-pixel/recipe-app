@@ -1,0 +1,103 @@
+{
+  "tradition": "fortified",
+  "region": "Portugal — Setúbal Peninsula (Moscatel de Setúbal)",
+  "batch_number": 3,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:51:01.976631+00:00",
+  "entries": [
+    {
+      "tradition": "fortified",
+      "sub_tradition": "moscatel setubal fortified wine",
+      "region": "Portugal — Setúbal Peninsula (Arrábida coast, south of Lisbon)",
+      "name": "Moscatel de Setúbal — The Oldest Portuguese Fortified, Pre-Port",
+      "terroir_origin": "Moscatel de Setúbal (DOC Setúbal, established 1907) is the oldest documented Portuguese wine appellation — predating the Douro's official DOC demarcation by two years. The Setúbal Peninsula, between the Tagus estuary and the Sado River south of Lisbon, produces Moscatel Graúdo (Muscat of Alexandria) and Moscatel Roxo (a rare pink-skinned Moscatel unique to Setúbal) on sandy limestone and clay soils at low altitude (50–150m). The terroir effect: Setúbal's proximity to the Atlantic moderates the heat (cooler than the Alentejo just inland) while the sandy soils drain well and concentrate the Moscatel's natural aromatics. The Arrábida Natural Reserve's southern slopes — where limestone cliffs descend to the Atlantic — provide the highest-quality Moscatel vineyard sites. José Maria da Fonseca (founded 1834) is the only producer of international scale: their Moscatel de Setúbal is the category's reference and one of Portugal's most exported wines historically. The Fonseca family has produced unbroken vintage Moscatel since the mid-19th century; their oldest cellar stocks include bottles from 1900, 1920, 1934 — extraordinary aged Moscatel that develops a rancio-aged complexity beyond almost anything in the fortified world. Moscatel Roxo — the rare pink variety — produces only a few thousand bottles annually and is considered one of the world's great sweet wine rarities.",
+      "production_technique": "Moscatel de Setúbal production: grapes harvested at full physiological ripeness (September); fermentation begins; when alcohol reaches approximately 6–8% ABV, the must is fortified with Portuguese grape spirit (aguardente vínica) to arrest fermentation at approximately 17.5–18% ABV. The critical step: maceration. After fortification, the fresh grape skins (or in some cases, additional dried Moscatel skins) are macerated in the fortified must for 4–6 months. This extended skin contact after fortification is Moscatel de Setúbal's defining technique — it extracts intense aromatic compounds from the Muscat skins without astringent tannin (the alcohol prevents tannin extraction while allowing aromatic extraction). The result: a wine with the pure, perfumed aromatic intensity of the Muscat grape at concentrations impossible without the extended maceration. Ageing: José Maria da Fonseca ages in large wooden tonéis (700–2000L vessels); standard vintage: 5–7 years in oak; reserve 20-year: significant wood character; vintage 1900s: extraordinary rancio-aged complexity equivalent to 50-year Tawny Port or Madeira Sercial reserve. Moscatel Roxo: same process but the pink-skinned grape adds rose-petal and dried apricot aromatics absent in the Graúdo.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "fortified",
+          "beverage": "Muscat de Beaumes-de-Venise (VDN, Rhône)",
+          "connection": "Both use Muscat Blanc à Petits Grains or Muscat of Alexandria; both are fortified to arrest fermentation; both achieve extraordinary aromatic purity through the Muscat's high linalool content. The crucial difference: Setúbal's extended skin maceration after fortification produces far greater aromatic concentration and complexity than Beaumes-de-Venise, and Setúbal's aged expressions (20yr, 40yr vintages) achieve a complexity far beyond anything VDN can offer"
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Málaga Virgen (DO Málaga, Spain)",
+          "connection": "Moscatel de Setúbal and Málaga both use Muscat of Alexandria (Moscatel Graúdo) as their primary variety and both produce fortified sweet wines from the same grape in similar Mediterranean coast climates. Setúbal's extended skin maceration gives it greater aromatic intensity; Málaga's raisin-dry production gives it greater sugar concentration. Both are undervalued relative to the quality they achieve"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Standard (5–7 years): deep amber-gold; viscous; slow tears. 20-year Reserve: deep mahogany-amber; tawny at the edge. Vintage 1934+: dark molasses-brown; extraordinary concentration.",
+        "nose": "Standard Moscatel de Setúbal (5yr): explosive — candied orange peel, dried apricot, honey, rose water, fresh Muscat grape (almost impossible to achieve in a fortified wine without the maceration), marmalade, vanilla. The linalool content of Muscat drives the pure floral aromatic intensity to levels impossible in any non-Muscat variety. 20-year Reserve: dried dates, orange peel confit, coffee, toffee, rancio (oxidative ageing character), walnut, tobacco — still the Muscat aromatic beneath the wood ageing complexity. Moscatel Roxo: adds dried rose petals and dried apricot over the standard profile.",
+        "palate": "Standard: full sweetness (80–120g/L residual sugar); full body; the Muscat aromatic persistence is extraordinary — the finish lasts 2–3 minutes in a top vintage; the balance between sweetness and the acid-structure from Setúbal's sandy soils prevents heaviness. 20-year Reserve: nutty complexity; the sweetness is less forward; the rancio character dominates; extraordinary length. Vintage: the greatest fortified wine experience in Portugal outside Vintage Port.",
+        "conclusion": "Moscatel de Setúbal is the most overlooked great fortified wine in the world. At standard 5-year pricing, it outpoints Beaumes-de-Venise at twice the price for aromatic purity. At 20-year Reserve or vintage level, it is in the same conversation as aged Tawny and Malmsey Madeira. For a programme: serve the 20-year alongside a Colheita Port or 10-year Madeira — the Moscatel's rose and orange character provides the most distinctive contrast in a fortified wine flight."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "José Maria da Fonseca Vintage Moscatel / Moscatel Roxo",
+          "criteria": "Vintage-dated (pre-1980 if available); or Moscatel Roxo (rare pink variety); 10+ years minimum ageing; single harvest expression",
+          "markers": "JMF Moscatel de Setúbal vintage 1934, 1966, 1976, 2000; Moscatel Roxo Palmela; BC/US ~$45–120+ depending on vintage"
+        },
+        {
+          "tier": 3,
+          "tier_name": "José Maria da Fonseca 20-Year Reserve",
+          "criteria": "20-year average age; significant rancio character; extraordinary complexity; reference for the aged style",
+          "markers": "JMF Setúbal 20yr Reserve; US ~$35–45; BC ~$40–55"
+        },
+        {
+          "tier": 2,
+          "tier_name": "José Maria da Fonseca 5–7 Year",
+          "criteria": "Standard vintage; Moscatel Graúdo; full aromatic character; accessible sweetness; commercial benchmark",
+          "markers": "JMF Moscatel de Setúbal standard (5yr); US ~$18–22; BC ~$20–25"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Palmela Moscatel (Entry / Regional)",
+          "criteria": "DOC Setúbal or Palmela; Moscatel variety; correct aromatic character",
+          "markers": "Quinta do Piloto Moscatel; commercial Setúbal Moscatel; BC/US ~$12–16"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "10–12°C; serve chilled — the Muscat aromatics express most clearly cold; 20-year Reserve at 12–14°C to allow complexity to open",
+        "vessel": "Dessert wine glass (tulip or ISO); smaller volume (75–100mL per service); the aromatics fill the glass rapidly — no large pour needed",
+        "technique": "Standard: serve 75mL very cold as dessert service. 20-year Reserve: 60mL at 13°C as a contemplative digestif. Comparative flight: Moscatel de Setúbal 5yr alongside 10yr Malmsey Madeira and a White Port — three Portuguese fortified wines, three completely different flavour registers from the same national tradition. Cheese service: serve alongside Azeitão cheese (Setúbal Peninsula sheep milk cheese) for the canonical local pairing.",
+        "programme_position": "Dessert wine anchor for PCT programme; pre-Port Portuguese fortified narrative; comparative flight with Port and Madeira",
+        "verbal_presentation": "José Maria da Fonseca Moscatel de Setúbal — Arrábida coast, Portugal. Fortified in 1834. Six months' skin maceration after fermentation. The Muscat the Portuguese kept for themselves while selling Port to England."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "José Maria da Fonseca (Azeitão, Setúbal Peninsula)",
+        "producer_location": "Azeitão, Setúbal Peninsula, south of Lisbon, Portugal",
+        "key_person": "Domingos Soares Franco (chief winemaker, JMF); Fonseca family (founded 1834, now publicly owned but family-managed)",
+        "production_volume": "Medium commercial scale; José Maria da Fonseca is Portugal's largest Setúbal Moscatel producer and a major table wine producer as well",
+        "certifications": [
+          "DOC Setúbal",
+          "DOC Palmela"
+        ],
+        "bc_distributor": "José Maria da Fonseca: available at BC Liquor stores (Evaton Inc. imports some JMF products); confirm current Moscatel listing with BCLDB",
+        "us_distributor": "José Maria da Fonseca: Winebow (US national — confirmed for JMF table wines; Moscatel may be separate import); Premium Port Wines (specialty fortified)",
+        "uk_distributor": "JMF widely available UK: Sainsbury's, Waitrose; The Wine Society; specialist Portuguese merchants",
+        "price_tier": "Market to Reserve (5yr standard BC ~$20; 20yr Reserve BC ~$45; vintage ~$80–120+)",
+        "availability_notes": "In BC: JMF Periquita (red) widely available; Moscatel less consistent — check BCLDB catalogue or request through Evaton. US: Winebow carries JMF nationally; Moscatel at specialty wine shops and online retailers. UK: most accessible market globally after Portugal."
+      },
+      "trail_connection": "PCT-1",
+      "trail_note": "Moscatel de Setúbal is older than Port as a named, regulated wine style. The Setúbal Peninsula's wine wealth preceded the Douro's rise and was consumed by the Lisbon court throughout the Age of Discovery. Vasco da Gama's ships were provisioned from Setúbal before departing for the Cape of Good Hope route to India — Moscatel de Setúbal was on those ships. The 1907 DOC designation, when Portugal created its first modern appellation, chose Setúbal first: a recognition of the region's historical primacy in Portuguese wine culture.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Azeitão cheese (Setúbal Peninsula, cured sheep's milk)",
+          "pairing_type": "complement",
+          "rationale": "Azeitão DOP — soft, runny, strongly flavoured sheep's milk cheese from the same Setúbal Peninsula as the Moscatel — creates the canonical local pairing. The cheese's sharp lactic-ovine character contrasts against the Moscatel's honeyed-orange sweetness while the sheep milk fat finds the wine's full body. Same terroir, same climate, complementary flavour chemistry"
+        },
+        {
+          "technique_id": "",
+          "dish": "Pastel de nata (Pastéis de Belém, Lisbon)",
+          "pairing_type": "complement",
+          "rationale": "The Portuguese custard tart's egg-custard richness and caramelised sugar crust mirror the Moscatel's own dried-apricot and caramel register — the most historically resonant pairing in Lisbon's food culture. The pastéis de Belém recipe was developed by Hieronymite monks at the same time the JMF estate was founding its Moscatel production"
+        }
+      ],
+      "source": "CVR Setúbal (Comissão Vitivinícola Regional de Setúbal) DOC documentation; José Maria da Fonseca official history and production documentation; Jancis Robinson 'Wine Grapes' (Moscatel Graúdo / Muscat of Alexandria entry); Wines of Portugal Setúbal regional guide; Portuguese 1907 wine appellation historical records",
+      "entry_id": "FOR-PORSET-001",
+      "extracted_at": "2026-04-11T15:51:01.976263+00:00",
+      "batch_number": 3
+    }
+  ]
+}

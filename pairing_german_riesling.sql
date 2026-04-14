@@ -1,0 +1,76 @@
+BEGIN;
+INSERT INTO pairing_intelligence
+  (beverage_product_id, food_flavour_profile, food_category, food_description, pairing_type, flavour_logic, meal_context, confidence, authority_tier)
+VALUES
+-- 473 Egon Müller Scharzhofberger Riesling Auslese (Mosel, very sweet, legendary)
+(473,'Scharzhofberger, Auslese, sweet, Mosel','cheese','Roquefort AOP with walnut bread and honey','bridge','Egon Müller Auslese''s slate mineral sweetness bridges the Roquefort''s salt; a classic sweet-salt German pairing','cheese','classic',1),
+(473,'fruit, foie gras, sweet, luxury','foie gras','Foie gras torchon with Sauternes gelée and brioche toast','complement','Scharzhofberger Auslese''s off-dry sweetness complements the foie gras; both are pinnacle luxury expressions of their category','starter','classic',1),
+(473,'dessert, peach, stone fruit','dessert','Peach Melba with vanilla ice cream and raspberry sauce','complement','The Mosel Auslese''s peach and apricot character mirrors the Peach Melba; a German and French dessert partnership','dessert','classic',1),
+(473,'cheese, washed rind, pungent','cheese','Epoisses washed rind with Alsace bread and walnut','contrast','Egon Müller''s residual sweetness contrasts the pungent Epoisses beautifully; sweet and stinky is one of wine''s great pairings','cheese','established',2),
+(473,'delicate, light, white fish','seafood','Steamed Dover sole with lemon butter and white truffle','elevate','The Scharzhofberger Auslese elevates Dover sole; the Mosel slate mineral echoes the truffle''s earthy depth','fish_course','classic',1),
+(473,'apricot, concentrated, noble rot','dessert','Tarte aux abricots with crème patissière and almond frangipane','complement','The Auslese''s concentrated apricot and botrytis character mirrors the French apricot tart; stone fruit in the glass','dessert','established',2),
+(473,'celebration, luxury, German Riesling','celebration','Champagne and caviar alternative — Auslese with Beluga','elevate','Egon Müller Scharzhofberger Auslese as the world''s greatest Riesling producer serves with Beluga caviar at the finest tables','celebration','classic',1),
+
+-- 474 Joh. Jos. Prüm Wehlener Sonnenuhr Riesling Spätlese (Mosel, off-dry)
+(474,'Spätlese, off-dry, Mosel, Prüm','seafood','Dungeness crab with lemon and tarragon cream','complement','Prüm Wehlener Sonnenuhr Spätlese''s off-dry slate mineral pairs with Dungeness crab; the sweetness balances the crab richness','fish_course','classic',1),
+(474,'smoked salmon, off-dry, Mosel','seafood','Smoked salmon blinis with crème fraîche and chives','complement','Spätlese''s off-dry sweetness bridges the smoked salmon''s richness; a classic German Riesling seafood pairing','starter','classic',1),
+(474,'Peking duck, Asian fusion, sweet-sour','duck','Peking duck pancakes with plum sauce and cucumber','complement','Prüm Wehlener''s residual sweetness bridges the Peking duck''s plum sauce; the slate mineral cuts through the duck fat','main','established',2),
+(474,'Asian fusion, Thai, spice','spicy','Thai green chicken curry with jasmine rice and lime leaves','bridge','The Spätlese''s residual sugar tames Thai curry heat; off-dry Riesling is the universal spice pairing choice','main','classic',1),
+(474,'foie gras, sweet, French luxury','foie gras','Pan-seared foie gras with poached fig and brioche','complement','Wehlener Sonnenuhr''s Auslese sweetness complements foie gras; the fig bridges both','starter','classic',2),
+(474,'cheese, blue, sweet-salt','cheese','Gorgonzola dolce with pear and walnut crostini','bridge','Prüm Spätlese''s slate sweetness bridges Gorgonzola Dolce and pear; a classic sweet wine and blue cheese pairing','cheese','classic',2),
+(474,'dessert, tart, lemon','dessert','Lemon tart with fresh raspberries and crème fraîche','complement','Wehlener Sonnenuhr''s citrus brightness and residual sweetness complement the lemon tart; the raspberry echoes Mosel fruit','dessert','established',2),
+
+-- 475 Fritz Haag Brauneberger Juffer Sonnenuhr Riesling Auslese (Mosel, sweet, concentrated)
+(475,'Brauneberger, Auslese, dense, slate','seafood','Pacific oysters with ginger mignonette and yuzu granita','cleanse','Fritz Haag Auslese''s Mosel mineral cleanses after oysters; ginger and yuzu echo the wine''s own citrus and mineral notes','starter','established',2),
+(475,'duck, sweet-sour, Asian','duck','Cantonese BBQ duck with plum sauce and steamed rice','complement','Fritz Haag Auslese''s concentrated sweetness bridges Cantonese duck sauce; a classic off-dry Riesling and Asian food pairing','main','established',2),
+(475,'pork, Alsatian, rich','pork','Choucroute garnie with smoked pork and saucisses de Strasbourg','complement','Brauneberger Auslese''s residual sweetness cuts through the choucroute richness; the Mosel and Alsace border tradition','main','classic',1),
+(475,'spicy, Sichuan, numbing','spicy','Mapo tofu with silken tofu and Sichuan pepper','contrast','Fritz Haag Auslese''s sweetness dramatically contrasts Sichuan mala spice; the sugar draws out the flavours safely','main','adventurous',2),
+(475,'cheese, German, aged','cheese','Aged Allgäu Emmental with sourdough and mustard','complement','Brauneberger Juffer''s slate mineral bridges aged Swiss-style cheese; a classic German wine and cheese pairing','cheese','established',2),
+(475,'dessert, honey, botrytis','dessert','Honey panna cotta with peach compote and almond tuile','complement','Fritz Haag Auslese''s honey and peach botrytis character directly mirrors the dessert; noble rot and honey are one','dessert','established',2),
+(475,'salmon, smoked, complex','seafood','Cold-smoked wild salmon with horseradish cream and rye cracker','complement','The Mosel Auslese''s mineral depth bridges cold-smoked salmon; the horseradish echoes the wine''s fresh edge','starter','classic',2),
+
+-- 476 Dönnhoff Oberhäuser Brücke Riesling Spätlese (Nahe, pure, mineral)
+(476,'Nahe, Dönnhoff, mineral, off-dry','seafood','Grilled sea trout with lemon beurre blanc and asparagus','complement','Dönnhoff''s Nahe mineral purity bridges grilled sea trout; the lemon beurre blanc mirrors the wine''s own acidity','fish_course','classic',1),
+(476,'Asian cuisine, spice, off-dry','spicy','Vietnamese pho with beef, herbs and lime','bridge','Dönnhoff Spätlese''s off-dry mineral bridges the pho''s complex broth; the lime and herbs echo the wine''s own delicacy','main','established',2),
+(476,'Mosel-style, German, White wine','seafood','River trout (Forelle Müllerin) with brown butter and almonds','complement','Dönnhoff Oberhäuser bridges the trout meunière tradition; a Nahe wine for the German river fish tradition','fish_course','classic',1),
+(476,'pork, slow-roasted, Nahe','pork','Suckling pig with apple sauce and roasted root vegetables','complement','Dönnhoff Spätlese''s bright acidity and mineral depth cuts through suckling pig richness; an Ahr valley Sunday pairing','main','classic',2),
+(476,'cheese, mild, semi-soft','cheese','Affligem abbey cheese with honey and walnuts','complement','Nahe Riesling''s pure mineral character bridges the mild abbey cheese; a German-Flemish pairing with natural affinity','cheese','established',2),
+(476,'dessert, fresh, berry','dessert','Fresh strawberry tart with pastry cream and mint syrup','complement','Dönnhoff''s bright Nahe acidity and the fresh strawberry tart share a vivid red berry character','dessert','established',2),
+(476,'Alsatian, choucroute, classic','pork','Baeckeoffe (Alsace meat and potato stew) with pork and lamb','complement','Nahe Riesling''s mineral bridges the slow Alsace stew; the region is adjacent to the Rhine border German-French tradition','main','established',2),
+
+-- 477 Georg Breuer Berg Schlossberg Riesling Grosses Gewächs (Rheingau, dry, mineral)
+(477,'Rheingau, GG, dry, mineral','seafood','Lobster with Riesling beurre blanc and saffron','elevate','Breuer Berg Schlossberg GG''s dry mineral structure elevates lobster; the Riesling in the beurre blanc creates unity','fish_course','classic',1),
+(477,'German cuisine, Schnitzel, veal','veal','Wiener Schnitzel mit Kartoffelsalat und Preiselbeer','complement','Rheingau GG Riesling and Wiener Schnitzel is a classic German pairing; the dry mineral wine cuts the breadcrumb oil','main','classic',1),
+(477,'dry, elegant, Rheingau','seafood','Turbot with chive beurre blanc and steamed vegetables','complement','Berg Schlossberg GG''s dry Rheingau mineral elevates the delicate turbot; a classic German white wine and fish pairing','fish_course','classic',1),
+(477,'pork, roasted, German','pork','Schweinebraten (Bavarian roasted pork) with Knödel and Sauerkraut','complement','Breuer GG''s dry mineral structure bridges the roasted pork and sauerkraut; a Rheingau wine for a Bavarian Sunday feast','main','classic',2),
+(477,'cheese, Riesling, German classic','cheese','Frischer Ziegenkäse (fresh goat cheese) with herb salad','complement','Berg Schlossberg GG''s dry mineral character pairs with fresh German goat cheese; both express a clean mineral terroir','starter','established',2),
+(477,'asparagus, German, spring','vegetable','Weisser Spargel (white asparagus) with Hollandaise and ham','complement','Rheingau Riesling and German white asparagus is a national spring pairing tradition; both are seasonal celebrations','starter','classic',1),
+(477,'dessert, moderate, refreshing','dessert','Lemon sorbet with fresh berries and mint','cleanse','Berg Schlossberg GG''s dry acidity bridges the lemon sorbet''s clean freshness; a palate-cleansing intermezzo pairing','pre_dessert','established',2),
+
+-- 478 Dr. Bürklin-Wolf Kirchenstück Riesling Grosses Gewächs (Pfalz, dry, complex)
+(478,'Pfalz, GG, Kirchenstück, dry premium','seafood','Chilled king prawn with cocktail sauce and avocado','complement','Kirchenstück GG''s Pfalz warmth and dry mineral bridges the cold prawn cocktail; the Pfalz''s Southern character lifts the dish','starter','classic',2),
+(478,'German riesling, Pfalz, food-friendly','seafood','Grilled halibut with potato gratin and beurre blanc','complement','Bürklin-Wolf Kirchenstück''s warm Pfalz character bridges halibut; the potato gratin echoes the wine''s own roundness','fish_course','classic',1),
+(478,'Alsatian cuisine, choucroute, classic','pork','Choucroute royale with Champagne and three sausages','complement','The Pfalz is the Alsace equivalent on the German side; Kirchenstück GG bridges the richest choucroute preparation','main','classic',2),
+(478,'Asian spice, Pfalz, versatile','spicy','Penang laksa with prawn, coconut and tamarind','bridge','Kirchenstück GG''s Pfalz warmth and residual complexity bridges the coconut laksa; German Riesling and SE Asian food affinity','main','established',2),
+(478,'roast chicken, Pfalz, classic','poultry','Pfalz-style roast chicken (Pfälzer Saumagen mit Brot)','complement','Bürklin-Wolf GG''s Pfalz terroir pairs with the regional Saumagen stuffed pig''s stomach; a local tradition pairing','main','classic',1),
+(478,'cheese, Munster, Pfalz border','cheese','Munster AOP avec cumin seed on rye bread','complement','Kirchenstück GG''s Pfalz character bridges the Munster from the adjacent Alsace; a German-French border pairing','cheese','classic',2),
+(478,'dessert, fruit, elegant','dessert','Zwetschgendatschi (Bavarian plum cake) with vanilla cream','complement','Pfalz Riesling GG''s warm character bridges the plum cake; a German home baking and Riesling tradition','dessert','classic',2),
+
+-- 479 Markus Molitor Zeltinger Sonnenuhr Riesling Auslese (Mosel, sweet, golden)
+(479,'Mosel, Zeltingen, Auslese, golden','cheese','Stilton with quince paste and walnut bread','bridge','Molitor Auslese''s golden sweetness bridges the Stilton''s blue salt; a British-German pairing of sweet wine and blue cheese','cheese','established',2),
+(479,'Asian cuisine, spicy, off-dry','spicy','Red Thai curry with coconut, lemongrass and jasmine rice','bridge','Zeltinger Sonnenuhr Auslese''s residual sugar tames Thai curry heat; the citrus and ginger notes find harmony','main','classic',2),
+(479,'foie gras, German, sweet','foie gras','Terrine of foie gras with Mosel Riesling gelée and brioche','complement','Molitor Auslese''s golden sweetness belongs with the foie gras terrine; the Riesling gelée creates a flavour loop','starter','classic',1),
+(479,'German cake, pastry, sweet','dessert','Bienenstich (bee sting cake) with vanilla custard and almonds','complement','Mosel Auslese''s honey sweetness bridges the bee sting cake''s custard and almond; a Rhineland café pairing','dessert','classic',2),
+(479,'smoked fish, mineral, complex','seafood','Smoked eel on rye with horseradish cream and pickled cucumber','complement','Molitor''s Mosel mineral and sweetness bridge the smoked eel; the horseradish and pickle echo the wine''s vibrant acidity','starter','classic',2),
+(479,'cheese, soft, rich','cheese','Brie de Meaux with black truffle and walnut bread','complement','Zeltinger Sonnenuhr Auslese''s sweetness pairs with the rich Brie; the truffle bridges the wine''s earthy mineral character','cheese','established',2),
+(479,'dessert, peach, botrytis','dessert','White peach and pistachio tart with honey cream','complement','Molitor Auslese''s peach and botrytis character mirrors the white peach tart; a stone fruit and sweet wine alignment','dessert','established',2),
+
+-- 480 Rebholz Birkweiler Kastanienbusch Riesling Grosses Gewächs (Pfalz, dry, volcanic)
+(480,'Pfalz, volcanic, GG, dry, Rebholz','seafood','John Dory (Saint-Pierre) with fennel and saffron nage','complement','Rebholz Kastanienbusch GG''s volcanic Pfalz mineral elevates John Dory; the saffron nage bridges the wine''s depth','fish_course','classic',1),
+(480,'German, Riesling, biodynamic, food','seafood','Pike-perch (Zander) with lemon herb crust and potato cake','complement','Kastanienbusch GG''s biodynamic character bridges the river fish; both are expressions of the same Rhine terroir','fish_course','classic',1),
+(480,'spicy, Asian fusion, versatile','spicy','Vietnamese banh mi with pâté, pickled vegetables and chilli','bridge','Rebholz GG''s dry mineral acidity bridges the banh mi''s complex layers; German dry Riesling and Vietnamese fusion affinity','casual','established',2),
+(480,'German cuisine, sauerkraut, pork','pork','Pfälzer Saumagenbraten (roast stuffed pork stomach) with sauerkraut','complement','Kastanienbusch GG is from the Pfalz; the regional Saumagen preparation is the definitive Pfalz table pairing','main','classic',1),
+(480,'cheese, Pfalz, local','cheese','Handkäse mit Musik (marinated cheese with onion and vinegar)','complement','Rebholz GG''s Pfalz origin pairs with the local Handkäse; the vinegar dressing echoes the wine''s acidity','casual','classic',2),
+(480,'asparagus, white, spring','vegetable','Weisser Spargel mit Sauce Hollandaise und Schinken','complement','GG Riesling and German white asparagus season is the Pfalz''s most celebrated spring pairing; a regional tradition','starter','classic',1),
+(480,'dessert, clean, refreshing','dessert','Riesling granita with lemon verbena and fresh white peach','complement','Kastanienbusch GG''s mineral character bridges the Riesling granita; drinking the wine beside its own frozen form','pre_dessert','adventurous',2);
+COMMIT;

@@ -1,0 +1,77 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Dão (Granite and Schist, Encruzado White, Touriga Nacional Red, Central Portugal Highland)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T20:43:44.516415+00:00",
+  "entries": [
+    {
+      "name": "Quinta dos Roques Encruzado — Dão DOC Granite and Schist, Serra da Estrela Foothills 400–600m, Benchmark Portuguese White Wine",
+      "category": "wine",
+      "subcategory": "wine_still",
+      "origin": "Portugal",
+      "region": "Portugal — Dão (Granite and Schist, Encruzado White, Touriga Nacional Red, Central Portugal Highland)",
+      "producer": "Quinta dos Roques / Quinta das Maias — Dão DOC, Serra da Estrela Foothills",
+      "alcohol_content": 13.0,
+      "price_tier": "premium",
+      "terroir_origin": "Dão DOC is located in central Portugal, occupying the upper Mondego River basin in the Serra da Estrela and Serra do Caramulo mountain system at 400–650m elevation — a distinctly cooler and more continental climate than the Douro or Alentejo wine regions. The Serra da Estrela, the highest mountain range in mainland Portugal (Torre peak at 1,993m), creates a rain shadow effect that divides the Dão into sectors with different precipitation patterns: the western Dão (Carregal do Sal, Santa Comba Dão) receives Atlantic moisture more directly; the eastern Dão (Mangualde, Nelas) is more continental with more extreme winter cold and summer heat. The Dão DOC encompasses approximately 20,000 hectares of actual vineyard within 376,000 hectares of total agricultural land, reflecting the fragmented, small-plot viticulture characteristic of the region. The defining geological character is granite — Hercynian-age granite (300 million years old) that weathers to sandy, free-draining soils (granitic arenosols) of moderate fertility. Pine forests surround and intersperse the Dão vineyard plots, contributing to the microclimate moderation that characterizes the best Dão sites: the pine forest canopy filters extreme solar radiation and retains atmospheric moisture, extending the vegetative cycle and slowing fruit ripening. Encruzado (whose name means \"crossroads\" from the crossing of variety characteristics — body, acidity, and aromatic richness) is the Dão's flagship white variety: a late-ripening, naturally high-acid variety with exceptional aging potential that the 400–600m granite and continental climate of the Dão uniquely expresses at its full quality potential.",
+      "production_technique": "Quinta dos Roques Encruzado is harvested from the estate's granite arenosol sites at Cunha Alta (450–550m elevation) in late September to mid-October — 2–3 weeks later than Alentejo white varieties at equivalent latitude, reflecting the Serra da Estrela altitude effect on ripening timeline. Selective hand-picking targets 12.5–13.5% potential alcohol while preserving natural acidity at 7.5–9.0 g/L total acidity as tartaric — the combination of moderate alcohol and high acidity that defines the Encruzado style. Whole-cluster pneumatic pressing (0.5 bar maximum) extracts the free-run fraction only; cold settling at 4°C for 24 hours before transferring to fermentation vessels. Fermentation takes place in a combination of stainless steel (70%) at 15–17°C for varietal fruit preservation and 600L used French oak demi-muids (30%) for textural complexity — the larger-format old oak contributing oxygen integration without the overwhelming vanilla and toast character of new 225L barriques. Fermentation duration 21–28 days; malolactic conversion blocked in steel and partial (50%) in the demi-muid fraction to preserve the characteristic Encruzado acidity while softening the texture marginally. Sur lie aging for 6–8 months with monthly bâtonnage (lees stirring) builds the textural richness that distinguishes Quinta dos Roques Encruzado from simpler stainless-only Dão white wines. The final blend (steel and demi-muid fractions) is assembled after tasting in January–February before bottling. Total production: approximately 20,000–30,000 bottles annually. The wine has a documented 10–15 year aging trajectory in the finest vintages from the Cunha Alta granite sites.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "White Burgundy Premier Cru (Puligny-Montrachet, Chardonnay, limestone)",
+          "connection": "Quinta dos Roques Encruzado and white Burgundy Premier Cru share the winemaking philosophy of partial barrel fermentation and extended sur lie aging to build textural complexity without sacrificing the structural acidity that defines the wine's aging potential. The critical terroir parallel is granite versus limestone: Dão granite produces a sandy, mineral, lower-pH soil environment that gives Encruzado its specific citrus-and-stone mineral character, while Burgundy's Bathonian limestone gives Chardonnay its chalky mineral identity. Both represent the benchmark for their respective European white wine regions based on a single dominant variety expression of specific geological identity, with 10–15 year aging potential in the finest expressions."
+        },
+        {
+          "tradition": "Austrian Grüner Veltliner Smaragd (Wachau, granite-gneiss, cool highland)",
+          "connection": "Dão Encruzado and Wachau Grüner Veltliner Smaragd share the structural character of high-altitude continental European white wines: both achieve the combination of high natural acidity and full phenolic ripeness from their respective mountain-adjacent viticultural environments (Serra da Estrela foothills; Wachau granite gorge) that produce wines capable of 10–20 year development. Both varieties are indigenous to their respective regions, producing wines of terroir specificity that international varieties (Chardonnay, Sauvignon Blanc) cannot replicate in the same soils."
+        },
+        {
+          "tradition": "Galician Albariño (Rías Baixas, granite, Atlantic mineral)",
+          "connection": "Dão Encruzado and Galician Albariño represent the two poles of Iberian granite-terroir white wine: Albariño is a coastal Atlantic granite expression at sea level with maritime salinity and fresh citrus intensity; Encruzado is a continental inland granite expression at 400–600m with stone fruit richness and mountain mineral character. Both emerge from the same Hercynian granite geological foundation of the Iberian Peninsula, making the terroir comparison between them the most direct demonstration of how altitude, climate, and variety modulate the expression of the same mineral-geological substrate in white wine."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale gold with silver-green tints from the high natural acidity typical of Encruzado grown on granite arenosol soils at 400–600m; brilliant clarity after cold stabilization; medium intensity consistent with 13% ABV and the granite terroir's tendency toward precision over extraction; slight golden warmth in the center from the demi-muid fermentation fraction; the color deepens over 3–5 years of bottle aging toward golden-amber as the Encruzado secondary development begins.",
+        "nose": "The Encruzado primary aromatics combine stone fruit ripeness with granite mineral precision: ripe white peach and apricot from the late October Dão harvest at 450–550m; citrus blossom and lime zest from the high natural acidity contribution; a distinctive pine resin note from the Dão pine forest microclimate environment — genuinely terroir-specific to the Dão rather than universal to the variety; cream and brioche from the demi-muid lees aging; in mature expressions (5+ years), lanolin, beeswax, and dried apricot secondary development emerges that connects Encruzado to the greatest aged Chenin Blanc expressions of the Loire.",
+        "palate": "Medium-full body from the demi-muid fermentation texture and bâtonnage enrichment; the high natural acidity (7.5–9.0 g/L) provides the structural frame for all the textural elements; white peach and apricot through the mid-palate; the granite mineral character on the finish — a dry, precise mineral quality that is specific to the Dão granite arenosol and distinguishes Encruzado from the schist mineral character of Douro whites; long mineral finish; the wine demonstrates Encruzado's status as Portugal's finest indigenous white variety for the production of structured, age-worthy dry white wine from granite highland terroir."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Dão White DOC (cooperative commercial)",
+          "criteria": "Multi-variety blend from Dão DOC permitted white varieties, stainless steel only, early bottling at 4–6 months — fresh, clean, no mineral complexity; the commodity Dão white tier at accessible EUR 6–10 retail pricing."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Dão Encruzado Varietal (estate, stainless)",
+          "criteria": "Single-variety Encruzado from granite arenosol sites, stainless steel fermentation with 4 months sur lie, no oak — genuine variety and terroir character without barrel complexity; the competent single-variety tier demonstrating why Encruzado is the Dão's benchmark white variety."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Quinta dos Roques Encruzado (partial barrel, bâtonnage)",
+          "criteria": "Cunha Alta granite sites at 450–550m, 30% demi-muid fermentation, 6–8 months bâtonnage, malolactic partial — the national benchmark for Dão Encruzado at premium estate level; stone fruit, granite mineral, pine, and cream in a structured, 8–12 year aging package."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Niepoort Dão Encruzado Reserva / Quinta da Pellada apex",
+          "criteria": "Single old-vine granite block selection, full demi-muid fermentation, 10–12 months bâtonnage, low yield (20–25 hl/ha) — the collector tier for Dão white wine; 15–20 year aging potential; the definitive statement that Encruzado on the finest Dão granite sites produces white wine of world-class complexity and longevity."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Quinta dos Roques Encruzado at 10–12°C for young vintages (1–3 years) to preserve the citrus-and-stone fruit primary character; for mature expressions (5–10 years), 12–14°C allows the developing secondary beeswax-lanolin-dried apricot aromas to emerge — the Encruzado aging profile rewards the extra 2°C of warmth that cold service would suppress. The wine sustains 15 minutes at ambient temperature before the high natural acidity begins to work against the stone-fruit mid-palate; serve quickly from refrigerator or ice bucket directly into glass.",
+        "vessel": "White Burgundy or aged Chardonnay glass (wide bowl, moderate chimney) to capture the stone fruit and pine resin aromatic complexity; the Encruzado character benefits from the wider-bowl format versus a narrow Riesling glass — the stone fruit richness needs space to develop. Pour 150ml for table service; 80ml for programme tasting flight to allow aromatic development at the rim over 5–8 minutes in the glass. In a PCT Portuguese white wine comparison flight, serve Encruzado before Douro Rabigato-Gouveio to compare granite (Dão) versus schist (Douro) mineral character in two major Portuguese indigenous white variety traditions.",
+        "programme_position": "In a PCT Portuguese highland wines programme: Dão Encruzado serves as the structural reference for the entire Portuguese white wine tradition — its granite mineral precision, high-altitude acidity, and aging potential establish the benchmark against which Vinho Verde (lighter, Atlantic), Douro (schist, fuller), and Alentejo (hot, richer) white wine styles can all be meaningfully compared."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Quinta dos Roques — Cunha Alta, Mangualde, Dão DOC (the national reference for Encruzado at estate premium level; multiple Decanter World Wine Awards; Nuno Roques is the leading practitioner of minimal-intervention granite Encruzado); Quinta da Pellada (Aguiar da Beira) as the secondary apex producer with deep schist-influence Dão character.",
+        "north_america_access": "Quinta dos Roques available through specialist Portuguese wine importers in New York, Boston, and California; BCLDB BC and LCBO Ontario on special order; approximately USD $25–40 for the estate Encruzado in US specialty retail. Wines of Portugal promotional tastings provide the primary North American consumer access point for the Dão region.",
+        "culinary_application": "Dão Encruzado's stone-fruit richness and granite mineral precision pair with freshwater fish preparations (trout, carp from the Mondego River drainage) and with Dão region mountain cheeses (Queijo Serra da Estrela, the most celebrated Portuguese cheese) — both pairing with the same geological and climatic origin as the wine, demonstrating PCT's principle of within-region agricultural coherence as the highest form of culinary programme design."
+      },
+      "price_trajectory": "rising",
+      "entry_id": "WIN-PORDÃO-001",
+      "tradition": "wine",
+      "extracted_at": "2026-04-12T20:43:44.515759+00:00",
+      "batch_number": 1
+    }
+  ]
+}

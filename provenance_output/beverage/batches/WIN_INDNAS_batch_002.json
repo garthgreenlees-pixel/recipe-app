@@ -1,0 +1,111 @@
+{
+  "tradition": "wine",
+  "region": "India — Nashik Valley (Sula Vineyards, Chenin Blanc)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T00:52:41.174303+00:00",
+  "entries": [
+    {
+      "tradition": "wine",
+      "sub_tradition": "india nashik valley chenin blanc tropical continental",
+      "region": "India — Nashik Valley (Maharashtra, 600m altitude)",
+      "name": "Sula Chenin Blanc — Nashik Valley, India's First World-Class White Wine Origin",
+      "terroir_origin": "The Nashik Valley is the centre of India's wine revolution — located in Maharashtra state, approximately 180km northeast of Mumbai, at 600m altitude on basalt-derived soils. The PCT connection: Nashik's wine production was not historically Portuguese, but the Portuguese colonial presence in nearby Goa (PCT-8) created a wine-drinking culture in western India that provided the market context for the modern Indian wine industry. The Nashik terroir: the Deccan Plateau's basalt geology creates a distinctive growing environment — well-drained basalt soils with high mineral content, altitude-moderated temperature (30-35 degrees C summer peak vs. Mumbai's coastal 35-38 degrees C), and a continental monsoon pattern that provides 700mm rainfall concentrated in June-September (the growing season is October-March, the dry, cool winter). Chenin Blanc as the dominant variety: Sula founder Rajeev Samant chose Chenin Blanc as the signature white variety based on its proven performance in warm climates (Loire Valley, South Africa, Argentina). The Nashik Chenin is dramatically different from Loire Valley Chenin: lower acidity (the monsoon break creates warmer winters than Vouvray), higher tropical fruit concentration, and a richer mouthfeel from the basalt mineral content and warm harvest conditions.",
+      "production_technique": "Sula Nashik production: Harvest: manual, January-February — the cool dry winter is the Nashik harvest window. Vine training: double cordon Royat on trellises at 600m altitude; average vine age at Sula's estate: 15-25 years. Varieties: Chenin Blanc (dominant for premium white); also Sauvignon Blanc, Riesling (atypical for this latitude). Fermentation: temperature-controlled stainless steel; whole-cluster pressing; Sula's winemakers use Burgundy-trained techniques. Lees ageing: the Sula Dindori Reserve Chenin Blanc is aged 6 months on gross lees in a combination of stainless steel and neutral French oak (10-20% new oak) — the lees ageing adds texture that compensates for the lower natural acidity. The harvest timing challenge: the Nashik growing season ends when temperatures begin rising in March-April; delayed harvest produces overripe fruit; early harvest produces underripe acid. Vintage variation in Nashik: significant — good vintages have a cool, dry March (slow phenolic maturation); difficult vintages arrive with early heat (rapid sugar accumulation before acid develops). Wine tourism: Sula's winery at Gangapur Village is the largest wine tourism destination in India — approximately 300,000 visitors per year.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Chenin Blanc Vouvray Sec (Loire Valley, France)",
+          "connection": "The same variety from the cooler origin. Vouvray Sec: higher acidity, mineral, apple-quince, beeswax texture, capable of 20-30 year ageing. Nashik Chenin: lower acidity, more tropical (mango-papaya), richer texture, drink within 3-5 years. The comparison demonstrates that Chenin Blanc is a variety whose character is determined almost entirely by climate latitude."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Stellenbosch Chenin Blanc (South Africa, Swartland)",
+          "connection": "Both are warm-climate Chenin Blancs from former British-influenced wine regions. South African Chenin (Ken Forrester, Mullineux) is the closest established reference for warm-climate Chenin quality. The comparison contextualises Nashik's quality level within the global Chenin Blanc conversation."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Grover Zampa La Reserve Blanc (Nandi Hills, Karnataka, India)",
+          "connection": "The internal India comparison: Nashik (Maharashtra, Chenin dominant) vs Nandi Hills (Karnataka, cooler altitude, Sauvignon Blanc and Chardonnay). The two regions show the range of Indian terroir — both are 20-30 year old industries; both are developing regional identity."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Torrontes Cafayate (Argentina, high altitude tropical white)",
+          "connection": "Both are tropical-latitude, high-altitude white wines from formerly non-traditional wine regions that have achieved international recognition in the last 25 years. Argentina's Torrontes and India's Chenin Blanc both demonstrate that altitude can compensate for latitude in tropical wine production."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale gold with green-gold highlights; medium viscosity; faint spritz at 1-2 years from partial CO2 retention",
+        "nose": "Ripe white peach, green mango, guava, fresh lychee, lemon blossom; the tropical fruit character is more pronounced than Loire Valley Chenin at equivalent price",
+        "palate": "Entry: off-dry with perceptible residual sugar (3-8g/L in standard; up to 15g/L in late-harvest expressions). Mid-palate: tropical fruit concentration balanced by medium-plus acidity. Finish: the Nashik basalt mineral provides a dry stone note under the fruit",
+        "texture": "Medium body; the lees ageing on Dindori Reserve creates a textured mid-palate; rounder than Loire Chenin but with more tension than many tropical whites",
+        "finish": "40-55 seconds; tropical fruit yielding to mineral and light acidity; the finish is clean and dry despite the residual sugar impression on entry",
+        "conclusion": "The proof that India has a wine identity — not a European imitation but a tropical-basalt-altitude expression of a globally adaptable variety"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Sula Dindori Reserve Chenin Blanc (lees aged, neutral oak)",
+          "criteria": "Estate vineyard; 6 months lees contact; 10-20% neutral French oak; the most textured and age-worthy Sula Chenin expression",
+          "markers": "Sula Dindori Reserve; India ~$18-22 equivalent; UK ~$22-28; limited US distribution"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Sula Chenin Blanc Vineyards (vintage single estate)",
+          "criteria": "Gangapur estate; stainless steel; no oak; the definitive expression of Nashik Chenin terroir at standard commercial price",
+          "markers": "Sula Chenin Blanc; India ~$10-14 equivalent; UK ~$14-18; US specialty wine shops ~$18-24"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Grover Zampa Sauvignon Blanc (Nandi Hills, alternative Indian white)",
+          "connection": "Alternative premium Indian white for programme depth",
+          "criteria": "Nandi Hills terroir; 4-6 months lees contact; reference for the Karnataka wine region as alternative to Nashik",
+          "markers": "Grover Zampa SB; India ~$12-16; UK ~$16-20"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Sula Sauvignon Blanc or Sula Riesling (entry Indian white)",
+          "criteria": "Nashik estate; stainless steel; accessible pricing; introduction to Indian wine for guests new to the category",
+          "markers": "Sula SB; India ~$7-10 equivalent; US ~$15-18; UK ~$12-16"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 10-12 degrees C — the tropical fruit character needs some chill to stay fresh; too warm makes it cloying",
+        "vessel": "Narrow white wine glass (Riesling or Loire style) to preserve the floral and tropical aromatics without dissipating them too rapidly",
+        "technique": "Sula Dindori Reserve Chenin as a white Burgundy substitute: the lees texture and mineral finish position this wine in the same service context as a mid-range Macon-Villages or Chablis at a fraction of the price. The India origin narrative: 'Indian wine has existed for 25 years at quality level. Nashik is 600m altitude; basalt soils; cool winters for growing. This wine contains 0% compromise and 100% Indian wine history.'",
+        "programme_position": "Indian cuisine pairing; PCT education wine; affordable white for by-the-glass program",
+        "verbal_presentation": "Sula Dindori Reserve Chenin Blanc — Nashik Valley, Maharashtra. 600 metres altitude on the Deccan Plateau. Indian wine on its own terms."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Sula Vineyards (Rajeev Samant) — the first and most internationally recognised Indian wine producer",
+        "producer_location": "Gangapur Village, Nashik, Maharashtra, India",
+        "key_person": "Rajeev Samant (founder/CEO); Kerry Damskey (consulting winemaker, US)",
+        "bc_distributor": "Not available through BCLDB. Private import only.",
+        "us_distributor": "ASV Wines (US); limited distribution in Indian restaurant markets (New York, Bay Area)",
+        "uk_distributor": "Widely available in UK: Waitrose, Marks and Spencer, Oddbins, The Wine Society",
+        "price_tier": "Entry: $15-18 (Sula SB). Mid: $18-24 (Sula Chenin Blanc). Premium: $22-28 (Dindori Reserve).",
+        "availability_notes": "Sula is widely available in the UK (Waitrose, M&S). US availability is limited to Indian-focused specialty wine retailers. BC: private order required."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Grilled tandoori prawn with mint chutney and fresh lime",
+          "pairing_type": "complement",
+          "rationale": "The tropical-citrus character of Nashik Chenin Blanc is the natural Indian wine pairing for tandoori seafood. The lime in the chutney and the citrus in the wine create a mutual citrus bridge; the tandoor smoke and the mineral basalt character of the Chenin create a second-layer dialogue."
+        },
+        {
+          "technique_id": "",
+          "dish": "Goa prawn curry (coconut milk base, green chilli, tamarind)",
+          "pairing_type": "bridge",
+          "rationale": "The PCT bridge pairing: a Goa prawn curry (PCT-8) paired with a Nashik Valley Chenin Blanc (adjacent Maharashtra) is the most natural Indian wine-and-food pairing in the context of a PCT beverage programme. The coconut and tamarind sweetness bridges the tropical fruit in the wine and the spiced coconut in the dish."
+        }
+      ],
+      "source": "Sula Vineyards production documentation; FSSAI (Food Safety and Standards Authority of India) wine classification; ASV Wines US distribution portfolio; UK Wine & Spirit Trade Association India wine import data 2024",
+      "trail_connection": "PCT-8",
+      "trail_note": "PCT Region 8: Goa → Nashik extension. The Portuguese wine-drinking culture in Goa (PCT-8) and the historical British colonial wine import market in Mumbai and Bangalore together created the consumer demand that Sula's 1999 launch capitalised on. The Nashik wine industry is the commercial offspring of the Portuguese-British wine culture layered on the Indian subcontinent.",
+      "entry_id": "WIN-INDNAS-001",
+      "extracted_at": "2026-04-12T00:52:41.174016+00:00",
+      "batch_number": 2
+    }
+  ]
+}

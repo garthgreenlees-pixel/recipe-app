@@ -1,0 +1,77 @@
+{
+  "tradition": "wine",
+  "region": "Brazil — Vale dos Vinhedos DOCG (Serra Gaúcha Red, Merlot-Tannat-Cabernet Blend, Italian Immigrant Heritage)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T18:52:31.046120+00:00",
+  "entries": [
+    {
+      "name": "Miolo Lote 43 Red — Vale dos Vinhedos DOCG, Merlot-Tannat-Cabernet Blend, Italian Immigrant Heritage 1897",
+      "category": "wine",
+      "subcategory": "red_wine",
+      "origin": "Brazil",
+      "region": "Vale dos Vinhedos DOCG, Serra Gaúcha, Brazil",
+      "producer": "Miolo Wine Group — Vale dos Vinhedos DOCG",
+      "alcohol_content": 13.5,
+      "price_tier": "premium",
+      "terroir_origin": "The Vale dos Vinhedos (Valley of the Vineyards) sits at the heart of Serra Gaúcha — the highlands of Rio Grande do Sul state at 700–900m elevation, where the steep-sided valley of the Pelotas River tributary has accumulated deep soils on the valley walls while maintaining cold air drainage through the valley floor that prevents frost damage to the highest-elevation vineyards. The valley was settled by Venetian immigrants (predominantly from Treviso, Vicenza, and Verona provinces) brought to Brazil by the Portuguese colonial government from 1875 onward to populate the southern highlands after Brazilian abolition reduced the plantation labor supply — creating the most direct contemporary Italian viticulture transplant to a Portuguese colonial agricultural framework in the world. The soils of Vale dos Vinhedos are derived from the weathering of the same Paraná-Santa Catarina basaltic flood volcanic complex that also underlies parts of Argentina's Mendoza wine region — deep, iron-rich red basaltic soils with excellent drainage and strong mineral content. The tropical highlands of Rio Grande do Sul receive 1,600–1,800mm of annual rainfall distributed throughout the year without a true dry season, creating the most challenging viticulture conditions of any major DOCG in the world: humidity management is the primary technical challenge, requiring both canopy management to promote air circulation and grape variety selection that resists downy mildew and botrytis in high-humidity conditions. Merlot was identified early as the variety best adapted to these conditions — its thicker skin and earlier ripening allow harvest before the heaviest autumn rains.",
+      "production_technique": "Miolo harvests manually from their certified Vale dos Vinhedos DOCG parcels in February-March (Southern Hemisphere harvest), selecting Merlot (approximately 70%), Tannat (15%), Cabernet Sauvignon (10%), and Cabernet Franc (5%) in separate passes timed to variety-specific ripening. The varieties are fermented separately in temperature-controlled stainless steel tanks at 26–28°C for 10–12 days with selected Saccharomyces cerevisiae, then blended for malolactic fermentation and subsequent barrel aging. The Lote 43 blend is designed to balance the ripe plum-chocolate character of Merlot (the backbone variety best adapted to Vale dos Vinhedos) with the structure and tannin of Tannat (a Basque-origin variety introduced to Rio Grande do Sul by French-Basque immigrants who settled adjacent to the Italian community) and the aromatic depth of Cabernet Sauvignon and Franc. Aging occurs in 225-litre French and American oak barrels (approximately 30–40% new oak) for 12–16 months, followed by 6 months of bottle aging before release. The resulting wine represents Brazil's closest approximation to a Bordeaux or Pomerol blend: Merlot-dominant, medium-bodied, accessible in youth but structured for 5–8 year aging. The DOCG certification (Brazil's first) requires all fruit to originate from the demarcated Vale dos Vinhedos zone, harvest by hand (machine harvest prohibited), and meeting minimum chemical and sensory standards for the Vinho com Indicação de Procedência designation.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Pomerol Merlot (France, Merlot-dominant, clay soil)",
+          "connection": "Miolo Lote 43 and Pomerol both anchor on Merlot as the primary variety contributing plum-chocolate body, with supporting Cabernet Franc providing aromatic precision — both from high-clay-content volcanic or sedimentary soils (basalt-derived red clay in Vale dos Vinhedos, Pomerol's famous blue clay plateau) that produce Merlot of exceptional depth and softness"
+        },
+        {
+          "tradition": "Argentine Malbec Mendoza (South American high-altitude, Italian immigrant parallel)",
+          "connection": "Both Brazil Vale dos Vinhedos and Argentina Mendoza are South American wine regions built by European immigrant communities under colonial agricultural frameworks (Portuguese in Brazil, Spanish in Argentina) who adapted European viticulture to New World volcanic mountain terrain — Vale dos Vinhedos with Italian Veneto immigrants, Mendoza with Italian and Spanish Andalucian immigrants producing distinctly South American expressions of Old World varieties"
+        },
+        {
+          "tradition": "Cave Geisse Serra Gaúcha Sparkling (same valley, same immigrant heritage)",
+          "connection": "Miolo Lote 43 red and Cave Geisse Brut Nature represent the two signature expressions of Vale dos Vinhedos wine culture — the still red and the sparkling white — both produced by descendants of the same 1890s Italian immigrant wave on the same volcanic highland terrain, creating the complete \"New World Portuguese colonial Italian wine culture\" narrative of Serra Gaúcha"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep ruby with purple tint; medium opacity; good legs at 13.5% ABV; clear without sediment in youth",
+        "nose": "Accessible and ripe: plum, dark cherry, subtle vanilla from French oak, mocha from the Merlot-Tannat combination, dried herbs in the Cabernet component — the tropical highland character shows as a slightly more exuberant, fruit-forward approach than Bordeaux while maintaining European grape variety recognition",
+        "palate": "Medium-full body, accessible in youth with soft Merlot tannins, plum-chocolate mid-palate, the Tannat contribution shows as a firmer backbone than standard Merlot-only blends, medium-long finish with sweet oak integration — a wine that communicates its Merlot heritage while showing the Brazilian highland origin through the tropical ripeness"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Miolo Reserva Range",
+          "criteria": "Single-variety wines from Vale dos Vinhedos (Merlot Reserva, Cabernet Sauvignon Reserva) — accessible entry to the DOCG quality tier at modest pricing"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Miolo Lote 43",
+          "criteria": "The flagship blend: Merlot-Tannat-Cabernet, hand-harvested, French and American oak, 16 months barrel — the benchmark Vale dos Vinhedos red and Brazil's most internationally recognized red wine"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Miolo Merlot DOCG Single Vineyard",
+          "criteria": "Identified single-vineyard Merlot expressions from the Vale dos Vinhedos demarcated zone, 24+ months barrel aging, lower production — the precision tier demonstrating how specific valley micro-terroirs express differently within the DOCG"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Miolo Seival Reserva (Tannat Dominant)",
+          "criteria": "Tannat-dominant expressions from cooler, higher-altitude parcels — demonstrating the Basque immigrant Tannat variety's ability to produce structured, age-worthy red wine in the Serra Gaúcha highlands"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 16–18°C — standard red wine temperature appropriate for the Merlot-dominant blend; slightly cooler serving temperature than Bordeaux because the tropical ripeness can overwhelm at 20°C; 30 minutes decanting recommended for wines under 5 years old",
+        "vessel": "Standard Bordeaux or Burgundy glass appropriate for the Merlot-dominant character; no special requirements given the accessible tannin structure and medium body",
+        "food_pairing_philosophy": "Vale dos Vinhedos red is the natural companion for the churrasco tradition of southern Brazil: the tropical ripeness and Tannat structure cut through the fat of grilled meat beautifully; in PNW context, works with BC lamb, wild Pacific salmon in a reduction sauce, and any preparation where a fruit-forward but structured red is needed rather than a highly tannic or highly acidic expression"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Miolo Wine Group — Lote 43 is the internationally exported benchmark for Vale dos Vinhedos DOCG red wine; also Quinta do Seival (Miolo) and Casa Valduga for comparison within the appellation",
+        "north_america_access": "Miolo through Vias Imports (US); limited BCLDB listing in BC but available through private import; growing availability in Brazilian restaurant programs in Vancouver and Toronto; Lote 43 is available on LCBO Ontario product submissions",
+        "culinary_application": "The Portuguese colonial narrative connecting Vale dos Vinhedos to the same immigration-in-colonial-framework as Macau and Goa creates compelling cross-cultural menu storytelling; serve with Brazilian churrasco-inspired preparations at PCT-themed dinners; the Tannat-Merlot structure works with gamey preparations where a lighter New World red would be overwhelmed"
+      },
+      "price_trajectory": "stable",
+      "entry_id": "WIN-VALDOS-001",
+      "tradition": "wine",
+      "extracted_at": "2026-04-12T18:52:31.045776+00:00",
+      "batch_number": 2
+    }
+  ]
+}

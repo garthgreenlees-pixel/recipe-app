@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Provenance Originals — We're going to the source.</title>
+<meta name="description" content="Twenty-four culinary traditions. Every continent. Field research, primary sources, and the knowledge that only exists at origin. Coming 2027.">
+<link rel="canonical" href="https://provenance.kitchen/provenance-originals">
+<meta property="og:title" content="Provenance Originals — We're going to the source.">
+<meta property="og:description" content="Twenty-four culinary traditions. Every continent. Field research, primary sources, and the knowledge that only exists at origin. Coming 2027.">
+<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<meta property="og:url" content="https://provenance.kitchen/provenance-originals">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Provenance Originals — We're going to the source.">
+<meta name="twitter:description" content="Twenty-four culinary traditions. Every continent. Field research, primary sources, and the knowledge that only exists at origin. Coming 2027.">
+<meta name="twitter:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080A;--surface:#111113;--surface2:#18181B;
+  --cream:#F5F1E9;--smoke:#9C9A93;--stone:#6B6962;--dim:#3A3835;
+  --gold:#C9A84C;--gold-faint:rgba(201,168,76,0.1);--gold-border:rgba(201,168,76,0.22);
+  --border:rgba(74,72,64,0.3);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.7}
+
+/* ── Nav ──────────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:60px;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--cream);text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:var(--smoke);text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
+.nav-links a:hover{color:var(--gold)}
+.nav-links .nav-active{color:rgba(201,168,76,0.75)}
+.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
+.nav-p:hover{border-color:var(--gold)}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:var(--gold);line-height:1}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
+
+/* ── Layout ───────────────────────────────────────────── */
+main{padding-top:60px}
+.container{max-width:780px;margin:0 auto;padding:5rem 2rem 6rem}
+
+/* ── Hero ─────────────────────────────────────────────── */
+.orig-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:rgba(201,168,76,0.6);
+  margin-bottom:1.25rem;
+}
+.orig-hero-title{
+  font-family:var(--serif);font-size:clamp(2rem,5vw,3.2rem);
+  font-weight:400;font-style:italic;color:var(--cream);letter-spacing:-0.02em;
+  line-height:1.2;margin-bottom:1.75rem;
+}
+.orig-hero-rule{
+  width:80px;height:1px;background:var(--gold-border);margin-bottom:4rem;
+}
+
+/* ── Sections ─────────────────────────────────────────── */
+.about-section{margin-bottom:4rem}
+.section-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--gold);opacity:0.7;
+  margin-bottom:1.25rem;display:flex;align-items:center;gap:12px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--gold-border)}
+.about-body{
+  font-size:16px;color:var(--smoke);font-weight:300;line-height:1.85;
+  max-width:660px;
+}
+.about-body strong{color:var(--cream);font-weight:400}
+.about-body + .about-body{margin-top:1.25rem}
+
+/* ── Traditions grid ──────────────────────────────────── */
+.traditions-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:1px;border:1px solid var(--gold-border);margin-top:0.5rem;
+}
+.tradition-item{
+  padding:1.25rem 1.5rem;background:rgba(201,168,76,0.03);
+  transition:background 180ms;
+}
+.tradition-item:hover{background:rgba(201,168,76,0.07)}
+.trad-num{
+  font-family:var(--mono);font-size:8px;letter-spacing:2px;
+  color:rgba(201,168,76,0.3);margin-bottom:0.35rem;
+}
+.trad-name{
+  font-family:var(--serif);font-size:14px;font-weight:400;
+  color:var(--cream);
+}
+.trad-region{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.5px;
+  color:var(--stone);margin-top:0.2rem;
+}
+
+/* ── Timeline ─────────────────────────────────────────── */
+.timeline-item{
+  display:flex;gap:2rem;padding:1.25rem 0;
+  border-bottom:1px solid var(--border);align-items:flex-start;
+}
+.timeline-item:first-child{border-top:1px solid var(--border)}
+.tl-year{
+  font-family:var(--mono);font-size:10px;letter-spacing:2px;
+  color:rgba(201,168,76,0.45);flex-shrink:0;min-width:48px;padding-top:2px;
+}
+.tl-label{font-family:var(--serif);font-size:15px;font-weight:400;color:var(--cream);}
+.tl-desc{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--stone);margin-top:0.2rem;}
+
+/* ── Footer ───────────────────────────────────────────── */
+.about-footer{
+  border-top:1px solid var(--border);padding:2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;
+}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--stone);text-decoration:none;transition:color 180ms;}
+.footer-links a:hover{color:var(--gold)}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:var(--dim)}
+
+@media(max-width:640px){
+  .container{padding:3.5rem 1.25rem 5rem}
+  .traditions-grid{grid-template-columns:repeat(2,1fr)}
+  .timeline-item{flex-direction:column;gap:0.4rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Nav ─────────────────────────────────────────────────────────── -->
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+  </div>
+  <a href="/auth/account" class="nav-p" aria-label="My Kitchen"><span>P</span></a>
+  <button class="mobile-menu-btn" aria-label="Open navigation" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()" aria-label="Close navigation">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/auth/account">My Kitchen</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+<main>
+<div class="container">
+
+  <!-- Hero -->
+  <div class="orig-eyebrow">Provenance Originals</div>
+  <h1 class="orig-hero-title">We're going to the source.</h1>
+  <div class="orig-hero-rule"></div>
+
+  <!-- Section 1: The Commitment -->
+  <div class="about-section">
+    <div class="section-label">The Commitment</div>
+    <p class="about-body">The deepest culinary knowledge does not live in textbooks. It lives in the hands of the people who have made the same dish, in the same place, for generations. <strong>Provenance Originals</strong> is a field research project to document that knowledge before it disappears.</p>
+    <p class="about-body" style="margin-top:1.25rem">Twenty-four culinary traditions. Every continent. We go to the source — the home kitchen in Oaxaca, the teff farm in the Ethiopian highlands, the izakaya in Osaka that has been open since 1947 — and we document with the rigour of a professional examination and the patience of a long meal.</p>
+  </div>
+
+  <!-- Section 2: Twenty-Four Canons -->
+  <div class="about-section">
+    <div class="section-label">Twenty-Four Canons</div>
+    <p class="about-body" style="margin-bottom:1.5rem">Each tradition is documented as a Canon: a complete record of origin, technique, ingredient hierarchy, seasonal rhythm, and the cultural context that makes the food legible. The twenty-four traditions span every inhabited continent and represent the foundational pillars of the world's culinary inheritance.</p>
+    <div class="traditions-grid">
+      <div class="tradition-item"><div class="trad-num">01</div><div class="trad-name">Japanese</div><div class="trad-region">Honshu, Japan</div></div>
+      <div class="tradition-item"><div class="trad-num">02</div><div class="trad-name">Oaxacan</div><div class="trad-region">Oaxaca, Mexico</div></div>
+      <div class="tradition-item"><div class="trad-num">03</div><div class="trad-name">Ethiopian</div><div class="trad-region">Addis Ababa, Ethiopia</div></div>
+      <div class="tradition-item"><div class="trad-num">04</div><div class="trad-name">French</div><div class="trad-region">Lyon &amp; Provence</div></div>
+      <div class="tradition-item"><div class="trad-num">05</div><div class="trad-name">Indian</div><div class="trad-region">Kerala &amp; Punjab</div></div>
+      <div class="tradition-item"><div class="trad-num">06</div><div class="trad-name">Peruvian</div><div class="trad-region">Lima &amp; Cusco</div></div>
+      <div class="tradition-item"><div class="trad-num">07</div><div class="trad-name">Georgian</div><div class="trad-region">Tbilisi, Georgia</div></div>
+      <div class="tradition-item"><div class="trad-num">08</div><div class="trad-name">Chinese</div><div class="trad-region">Sichuan &amp; Guangdong</div></div>
+      <div class="tradition-item"><div class="trad-num">09</div><div class="trad-name">Lebanese</div><div class="trad-region">Beirut, Lebanon</div></div>
+      <div class="tradition-item"><div class="trad-num">10</div><div class="trad-name">Thai</div><div class="trad-region">Chiang Mai &amp; Bangkok</div></div>
+      <div class="tradition-item"><div class="trad-num">11</div><div class="trad-name">Moroccan</div><div class="trad-region">Fès &amp; Marrakech</div></div>
+      <div class="tradition-item"><div class="trad-num">12</div><div class="trad-name">Spanish</div><div class="trad-region">Basque Country</div></div>
+      <div class="tradition-item"><div class="trad-num">13</div><div class="trad-name">Indonesian</div><div class="trad-region">West Sumatra</div></div>
+      <div class="tradition-item"><div class="trad-num">14</div><div class="trad-name">Italian</div><div class="trad-region">Emilia-Romagna</div></div>
+      <div class="tradition-item"><div class="trad-num">15</div><div class="trad-name">West African</div><div class="trad-region">Ghana &amp; Senegal</div></div>
+      <div class="tradition-item"><div class="trad-num">16</div><div class="trad-name">Vietnamese</div><div class="trad-region">Hanoi &amp; Hội An</div></div>
+      <div class="tradition-item"><div class="trad-num">17</div><div class="trad-name">Brazilian</div><div class="trad-region">Bahia &amp; Minas Gerais</div></div>
+      <div class="tradition-item"><div class="trad-num">18</div><div class="trad-name">Turkish</div><div class="trad-region">Istanbul &amp; Gaziantep</div></div>
+      <div class="tradition-item"><div class="trad-num">19</div><div class="trad-name">Korean</div><div class="trad-region">Jeonju &amp; Seoul</div></div>
+      <div class="tradition-item"><div class="trad-num">20</div><div class="trad-name">Greek</div><div class="trad-region">Crete &amp; Thessaloniki</div></div>
+      <div class="tradition-item"><div class="trad-num">21</div><div class="trad-name">Filipino</div><div class="trad-region">Manila &amp; Pampanga</div></div>
+      <div class="tradition-item"><div class="trad-num">22</div><div class="trad-name">Scandinavian</div><div class="trad-region">Copenhagen &amp; Bergen</div></div>
+      <div class="tradition-item"><div class="trad-num">23</div><div class="trad-name">Russian</div><div class="trad-region">Siberia &amp; Caucasus</div></div>
+      <div class="tradition-item"><div class="trad-num">24</div><div class="trad-name">American</div><div class="trad-region">Deep South &amp; Southwest</div></div>
+    </div>
+  </div>
+
+  <!-- Section 3: The Table -->
+  <div class="about-section">
+    <div class="section-label">The Table</div>
+    <p class="about-body">Each Canon documents six layers of culinary truth. The <strong>ingredient hierarchy</strong> — what makes one chilli pepper the correct one, and every other a substitute. The <strong>technique sequence</strong> — the order of operations that is non-negotiable. The <strong>sensory benchmarks</strong> — what the dish smells like when it is right, and what it smells like when it is about to go wrong. The <strong>cultural frame</strong> — the meal context, the occasion, the table it was built for. The <strong>professional standard</strong> — what separates a competent execution from a memorable one. And the <strong>provenance record</strong> — a verified chain of sources from primary producers to living practitioners.</p>
+    <p class="about-body" style="margin-top:1.25rem">This is not journalism. It is not tourism. It is culinary archaeology conducted with professional standards and published for professional kitchens.</p>
+  </div>
+
+  <!-- Section 4: The Timeline -->
+  <div class="about-section">
+    <div class="section-label">The Timeline</div>
+    <div class="timeline-item">
+      <div class="tl-year">2025</div>
+      <div>
+        <div class="tl-label">Foundation</div>
+        <div class="tl-desc">Platform infrastructure complete. 12,000+ technique references. 24 tradition frameworks drafted.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-year">2026</div>
+      <div>
+        <div class="tl-label">Field Research Begins</div>
+        <div class="tl-desc">First five canons enter active documentation. Japan, Oaxaca, Ethiopia, France, India.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-year">2027</div>
+      <div>
+        <div class="tl-label">Publication</div>
+        <div class="tl-desc">All twenty-four canons published on the platform. Available to professional subscribers and institutional partners.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<!-- ── Footer ────────────────────────────────────────────────────── -->
+<div class="about-footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/suppliers">Suppliers</a>
+    <a href="/for-professionals">For Professionals</a>
+    <a href="/methodology">Methodology</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="mailto:info@provenance.kitchen">Contact</a>
+  </div>
+  <span class="footer-wm">Provenance</span>
+</div>
+
+<script>
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+</script>
+</body>
+</html>

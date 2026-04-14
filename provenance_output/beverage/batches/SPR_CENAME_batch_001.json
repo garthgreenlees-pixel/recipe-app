@@ -1,0 +1,104 @@
+{
+  "tradition": "spirits",
+  "region": "Central America — Nicaragua (Flor de Caña)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T16:04:59.350663+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "nicaraguan rum slow aged column",
+      "region": "Central America — Nicaragua (Chichigalpa, Chinandega)",
+      "name": "Flor de Caña — Nicaragua Slow Aged, Carbon Neutral",
+      "terroir_origin": "Flor de Caña ('Flower of the Sugarcane') is produced at the Compañía Licorera de Nicaragua (CLN) in Chichigalpa, Chinandega — Nicaragua's Pacific coast agricultural lowland on the volcanic plain at the base of the San Cristóbal and Casita volcanoes. The region is one of Central America's most fertile agricultural zones: the volcanic soils (basalt and andisols from recent eruptions) and Pacific-influenced climate (distinct wet-dry seasons; hot, humid growing conditions) produce dense, high-yield sugarcane. The PCT connection: the same Portuguese-initiated Atlantic sugarcane chain (Madeira → Caribbean → mainland Central America) reaches Nicaragua through the Spanish colonial trade network. The Pellas family, who have operated CLN since 1937, built a vertically integrated sugarcane estate from field to bottle on the same volcanic Pacific plain. The volcano proximity: both San Cristóbal (Nicaragua's highest active volcano, 1,745m) and Casita are within sight of the distillery. The volcanic terroir is the Central American equivalent of Martinique's Mont Pelée influence — an active volcanic environment shaping the agricultural raw material. Flor de Caña achieved: Carbon Neutral certification (2018), Fair Trade certification (2018) — the first rum to achieve both simultaneously. The Fair Trade certification is significant: it covers not just environmental practices but the social infrastructure for CLN's 1,400+ employees, including healthcare, education, and housing.",
+      "production_technique": "Flor de Caña production: Sugarcane: estate-grown on the Chichigalpa estate; hand-harvested during the dry season (November–April); immediately crushed and clarified. Molasses: from CLN's own sugar mill — not purchased commodity molasses but directly produced from their own cane. This vertical integration controls the fermentation substrate from the field. Fermentation: 3–4 days in stainless steel; specific yeast strain maintained by CLN; the volcanic mineral character of the Pacific plain is argued to influence the fermentation environment (mineral-rich water from the volcano watershed). Distillation: multiple column stills; the final distillate is clean, lighter-bodied than pot-still Caribbean rum — the Central American style. Natural ageing: CLN ages exclusively in ex-American bourbon casks in the Nicaraguan warehouse without temperature control or artificial aging — the tropical heat and humidity work on the rum naturally. 'Slow aged' marketing claim: CLN emphasises that no additives or artificial ageing acceleration is used — the same claim Richard Seale makes for Foursquare, but framed as a Central American sustainability narrative. 12yr: 12 years minimum; the accessible premium benchmark. 18yr: 18 years minimum; extraordinary by column still standards; one of the most complex light-rum expressions available. 25yr: the prestige expression; limited allocation.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Diplomatico Reserva Exclusiva (Venezuela)",
+          "connection": "Flor de Caña 18yr and Diplomatico Reserva Exclusiva represent the two benchmark premium Central/South American column-still aged rums at comparable price points. Both are lighter-bodied than Caribbean pot-still expressions; both achieve richness through extended wood ageing rather than post-production sugar addition (a key marketing distinction). Flor de Caña's volcanic Pacific terroir vs. Diplomatico's Venezuelan Andean foothills is the primary terroir contrast between the two"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Flor de Caña alongside Angostura 1824 (comparative)",
+          "connection": "The side-by-side of Flor de Caña 18yr (column-still, Central American) and Angostura 1824 12yr (pot-column blend, Trinidad) demonstrates the fundamental style division in aged rum: column-still elegance and precision (Flor de Caña) vs. pot-still weight and funk (Angostura). Both achieve comparable complexity through different means; both represent regional terroir through their distillation tradition"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Flor de Caña 12yr: medium amber, clear, golden highlights. 18yr: deeper amber, more red-orange tones from extended barrel time. 25yr: deep mahogany, very viscous.",
+        "nose": "12yr: clean, precise, accessible — vanilla, caramel, dried peach, light tropical fruit (mango, papaya), gentle oak, the characteristic Nicaraguan column-still lightness. No heaviness, no molasses-rawness — the cleanest major rum style. 18yr: much more complex — dark caramel, dried stone fruit, leather, tobacco, cinnamon, light coffee; the Pacific volcanic terroir adds a faint mineral dryness. 25yr: extraordinary — dark chocolate, prune, espresso, warm wood, vanilla cream; the finest Flor de Caña expression.",
+        "palate": "12yr (40% ABV): light-to-medium body; smooth, clean; sweet caramel-vanilla forward; short-to-medium finish; the easiest-drinking premium aged rum in the category. 18yr (40% ABV): medium-full body; dried fruit and oak persistence; a subtle dryness on the finish from the volcanic-mineral water influence. 25yr (40% ABV): the most complete Flor de Caña expression; long, complex finish; extraordinary by column-still standards.",
+        "conclusion": "Flor de Caña 18yr is the column-still rum's best argument: 18 years in natural tropical ageing achieves a complexity that respects the clean-elegant column-still tradition while delivering genuine premium spirit depth. The Carbon Neutral + Fair Trade credentials make it the most sustainability-positioned premium rum in the category."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Flor de Caña 25yr / 20yr Reserve",
+          "criteria": "25 years natural ageing; No Sugar Added certified; single estate estate-vertically integrated production",
+          "markers": "Flor de Caña 25yr; 20yr Reserve; BC ~$95–120; US ~$80–100"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Flor de Caña 18yr",
+          "criteria": "18 years minimum; complex extended ageing; the benchmark expression; Carbon Neutral + Fair Trade",
+          "markers": "Flor de Caña 18yr; BC ~$65–80; US ~$55–70"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Flor de Caña 12yr",
+          "criteria": "12 years; accessible premium; correct Nicaraguan character; Carbon Neutral certified",
+          "markers": "Flor de Caña 12yr; BC ~$40–50; US ~$30–40"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Flor de Caña 7yr / 4yr",
+          "criteria": "Younger age; entry to the brand character; cocktail grade",
+          "markers": "Flor de Caña 7yr; 4yr Extra Seco; BC ~$25–35; US ~$18–25"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature for 18yr and 25yr; over ice or in cocktails for 12yr",
+        "vessel": "Glencairn or tulip for 18yr and 25yr neat; rocks glass for cocktails",
+        "technique": "Flor de Caña 18yr neat: 45mL, room temperature — the clean column-still character needs no water addition to open. Nicaraguan Sour: Flor de Caña 12yr 60mL + lime 20mL + sugar 15mL + egg white. Rum Old Fashioned: 18yr 60mL + 5mL agave syrup + Angostura + orange peel — the 18yr's dried fruit and oak depth makes an unusually clean-elegant cocktail. Sustainability narrative: the Carbon Neutral + Fair Trade combination is the most compelling ethical story in the rum category.",
+        "programme_position": "Sustainability-focused premium rum; comparative tasting with Caribbean rums; cocktail programme base for tropical/rum menus",
+        "verbal_presentation": "Flor de Caña 18 Years — Chichigalpa, Nicaragua. Eighteen years in volcanic Pacific heat. Carbon neutral, Fair Trade certified. The rum at the base of the San Cristóbal volcano."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Compañía Licorera de Nicaragua (CLN) — Pellas Family",
+        "producer_location": "Chichigalpa, Chinandega, Nicaragua (Pacific coast lowland)",
+        "key_person": "Alfredo Pellas family (CLN ownership since 1937; also control Grupo Pellas, Nicaragua's largest private company)",
+        "production_volume": "Large commercial; distributed in 50+ countries; one of Central America's largest beverage companies",
+        "certifications": [
+          "Carbon Neutral (2018 — first rum)",
+          "Fair Trade (2018 — first rum)",
+          "No Sugar Added certified"
+        ],
+        "bc_distributor": "BCLDB / Diageo Canada (Diageo distributes in Canada); Flor de Caña 12yr and 18yr available at BC Liquor stores",
+        "us_distributor": "DropCo Beverages (formerly Gemini Spirits) — US national; widely available Total Wine, BevMo, premium spirits retailers",
+        "uk_distributor": "Widely available UK: Master of Malt, The Whisky Exchange; mainstream UK supermarket distribution",
+        "price_tier": "Market to Reserve (12yr BC ~$45; 18yr BC ~$70; 25yr BC ~$105)",
+        "availability_notes": "In BC: BC Liquor stores carry Flor de Caña 12yr and 18yr nationally. US: DropCo national distribution; Total Wine carries 7yr through 18yr. One of the most widely available premium aged rums in North America."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "Nicaragua's rum industry follows the same Portuguese-Atlantic sugarcane trade chain that underlies all Caribbean and Central American rum: Madeira → Caribbean → mainland via Spanish colonial networks. Flor de Caña's Carbon Neutral and Fair Trade certifications represent the most significant corporate sustainability achievement in rum production — a direct response to the category's historical associations with the Atlantic plantation economy (WADT). The Pellas family's vertical integration (field to bottle) on the volcanic Pacific plain is the contemporary answer to the plantation model that the PCT and WADT built.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Vigorón (Nicaraguan pork rinds with yuca and cabbage slaw)",
+          "pairing_type": "complement",
+          "rationale": "Nicaragua's most celebrated street food — crispy pork rinds (chicharrón), boiled yuca, and pickled cabbage slaw — pairs with Flor de Caña 12yr as the canonical Nicaraguan food-spirit combination. The rum's caramel-vanilla sweetness complements the pork fat richness while the lactic slaw acidity mirrors the rum's clean column-still finish"
+        },
+        {
+          "technique_id": "",
+          "dish": "Tres leches cake (Latin American cream-soaked sponge)",
+          "pairing_type": "complement",
+          "rationale": "Tres leches — sponge cake soaked in three milks (condensed, evaporated, cream) — is the regional dessert most calibrated to Flor de Caña 18yr's vanilla-caramel-dried stone fruit profile. The rum's extended wood-ageing sweetness finds its exact register in the condensed milk sweetness of the dessert"
+        }
+      ],
+      "source": "Compañía Licorera de Nicaragua official production documentation; Carbon Neutral certification documentation (Bureau Veritas, 2018); Fair Trade certification documentation (Fair Trade USA, 2018); DropCo Beverages US distribution portfolio",
+      "entry_id": "SPR-CENAME-001",
+      "extracted_at": "2026-04-11T16:04:59.350109+00:00",
+      "batch_number": 1
+    }
+  ]
+}

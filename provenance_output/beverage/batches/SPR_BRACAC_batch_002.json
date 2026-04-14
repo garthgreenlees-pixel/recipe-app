@@ -1,0 +1,104 @@
+{
+  "tradition": "spirits",
+  "region": "Brazil — Cachaça (Aged, Wood Varieties)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:36:40.672311+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "aged cachaça wood-matured",
+      "region": "Brazil — Cachaça (Ceará, Interior States)",
+      "name": "Aged Cachaça — Amburana, Carvalho, and Native Wood Maturation",
+      "terroir_origin": "Cachaça's ageing tradition is the most distinctive in global spirits: Brazil law permits maturation in over 28 different wood species, including tropical hardwoods unique to the Amazon basin and Brazilian cerrado. This is categorically different from every other major spirits category (Scotch, Cognac, Bourbon, Armagnac) where ageing is almost exclusively in oak. The result is a spectrum of cachaça aged expression with no direct parallel in world spirits. The key native Brazilian woods: Amburana (Amburana cearensis) — from the northeastern Caatinga and cerrado biomes; imparts vanilla, coconut husk, cinnamon, and a distinctive sweet coumarin character. The most celebrated cachaça ageing wood globally. Carvalho (Brazilian oak, various Quercus species) — similar to European oak but with stronger tannin extraction; less common than amburana but valued for structure. Castanheira (Brazilian chestnut, Bertholletia excelsa) — imparts bold tannin, dried fruit, and walnut character; the most tannic of the native wood options. Bálsamo (Myroxylon balsamum) — aromatic; adds resin and spice. Jequitibá (Cariniana legalis) — mild; preserves fruit freshness; often used for expression of unaged character in wood-aged cachaça. Ypióca (founded 1846, Ceará state; owned by Diageo since 2012) is the most globally distributed aged cachaça brand and the commercial benchmark for the wood-aged category.",
+      "production_technique": "Brazilian law defines aged ('envelhecida') cachaça as minimum 50% of volume aged in wood vessels of maximum 700L capacity for at least one year. Premium aged cachaças typically age 2–12 years in 225–500L barrels. The spirit base: fresh sugarcane juice fermented with natural or added yeasts (24–72 hours); single distillation in copper pot still (alambique) at 38–54% ABV for premium artisanal; industrial column-distilled cachaça at 54–70% ABV for commercial brands (Ypióca uses both). Wood treatment: amburana barrels are typically air-dried 2–3 years before use; the coumarin (a naturally occurring aromatic compound) in amburana wood is the source of its distinctive coconut-vanilla-cinnamon character. Ypióca's flagship aged expression: Ypióca Ouro (Gold) — a blend of amburana and carvalho aged 6 months minimum; the commercial accessible entry. Ypióca Legítima (aged 1 year amburana): the premium standard expression. Artisanal benchmark: Novo Fogo Single Barrel (amburana or Brazilian carvalho) — Skurnik-distributed in the US, single farm, certified organic, full traceability.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Japanese Whisky (Mizunara Oak aged)",
+          "connection": "Brazil's amburana wood and Japan's mizunara oak are the two most celebrated non-traditional ageing woods in global spirits, both producing unmistakable flavour compounds unavailable from standard oak: amburana gives coconut-coumarin; mizunara gives sandalwood-incense. Both are expensive, difficult to source, and produce aged spirits with no Western equivalent — the East and the South American expressions of the same question: what does wood other than oak do?"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Mezcal (añejo, barrel aged)",
+          "connection": "Aged cachaça and aged mezcal are the two most significant aged spirits expressions from Latin America where terroir and native production tradition intersect with wood influence. Both resist the globalized barrel format (bourbon-cask dominance); both use indigenous raw materials and traditional distillation methods; both are gaining critical recognition as alternatives to European aged spirit categories precisely because they cannot be understood through European frameworks"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Amburana-aged: pale gold to medium amber (surprisingly light colour given flavour intensity — amburana wood extracts differently from oak); carvalho: deeper amber",
+        "nose": "Amburana: extraordinary — fresh coconut, vanilla pod, Ceylon cinnamon, raw cane, dried flowers, warm bread; the coumarin character is immediate and unmistakable. Carvalho: more familiar oak structure (vanilla, toffee, toasted wood) but with Brazilian cane's characteristic fresh fruit underneath. Castanheira: bold — walnut skin, dried cherry, firm tannin even on the nose; the most structured of the native wood options.",
+        "palate": "Amburana-aged: medium body; the wood character is aromatic rather than astringent — the finish is dry-spiced, warm, coconut-cinnamon; extremely long. Carvalho: firmer tannin; more linear; excellent cocktail structure. Ypióca Legítima: the commercial benchmark — slightly sweet finish (column distillate base); more accessible than artisanal amburana; correct varietal character.",
+        "conclusion": "Aged cachaça is the most undervalued premium spirits category in North America. For any programme: a Novo Fogo amburana single barrel alongside a standard bourbon provides the clearest demonstration that wood choice in spirits is as profound as grape choice in wine. The table story is the Amazon itself."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Artisanal Single Barrel Amburana / Named Estate",
+          "criteria": "Named farm; certified organic; single barrel or micro-lot; pot-still only; vintage-dated; 2–10 years amburana or castanheira",
+          "markers": "Novo Fogo Single Barrel; Avuá Amburana; Germana Heritage; Magnífica do Salinas; BC/US specialist spirits merchants; ~$60–100+"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Premium Aged (Ypióca Legítima / Avuá Carvalho)",
+          "criteria": "Named wood; 1–3 years minimum aged; traceable origin; artisanal or premium commercial",
+          "markers": "Ypióca Legítima; Avuá Carvalho; Novo Fogo Aged (12–24 month); BC/US ~$40–60"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Standard Aged (Ypióca Ouro / Leblon Reserva Especial)",
+          "criteria": "Blended aged; correct wood character; commercial quality",
+          "markers": "Ypióca Ouro; Leblon Reserva Especial; Sagatiba Velha; BC/US ~$28–40"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Entry Aged / Commercial",
+          "criteria": "Brief ageing; accessible; introduction to wood-aged category",
+          "markers": "Ypióca Gold; commercial aged Cachaça 51 variants; BC/US ~$18–28"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature for premium amburana; standard cocktail temperature for others",
+        "vessel": "Copita or snifter for premium amburana neat; rocks glass for cocktails",
+        "technique": "Novo Fogo amburana neat: 45mL, room temperature — open for 5 minutes. Water drops optional: the high coumarin content means it needs less water than Scotch to open. Batida de Amburana: 60mL aged cachaça + 30mL lime + 20mL sugar syrup + 60mL condensed milk — traditional Brazilian creamy cocktail. Aged Cachaça Old Fashioned: Novo Fogo amburana 60mL + 5mL demerara + 2 dashes Angostura + orange peel — the coumarin reads as a fourth dimension against the bitters and citrus.",
+        "programme_position": "Premium spirits discovery section; PCT-13 Brazil provenance narrative; pairing with cacao-forward desserts or dark chocolate programmes",
+        "verbal_presentation": "Novo Fogo Single Barrel Amburana — Santa Catarina, Brazil. Three years in native Amazon timber. The wood that grows nowhere else on earth."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Novo Fogo (Morretes, Santa Catarina) for artisanal; Ypióca (Ceará, Diageo-owned since 2012) for commercial scale",
+        "producer_location": "Novo Fogo: Morretes, Santa Catarina, Brazil; Ypióca: Maranguape, Ceará, Brazil",
+        "key_person": "Dragos Axinte (Novo Fogo founder/CEO); Ypióca: Diageo Brazil management",
+        "production_volume": "Ypióca: major commercial scale (~2M cases; Diageo distribution); Novo Fogo: artisanal premium (US and international specialist distribution)",
+        "certifications": [
+          "Brazilian Cachaça GI",
+          "Organic (Novo Fogo — certified Brazilian organic)",
+          "IBRAC (Brazilian Institute of Cachaça) member"
+        ],
+        "bc_distributor": "Novo Fogo: Sovereign Canada (BC — confirmed); Ypióca: Diageo Canada (national distribution — BC Liquor through BCLDB)",
+        "us_distributor": "Novo Fogo: Skurnik Wines & Spirits (US national — confirmed); Ypióca: Diageo North America (Diageo-owned brand, direct distribution); Avuá: Chosen Spirits (specialist importer)",
+        "uk_distributor": "Novo Fogo: specialist UK retailers (Master of Malt, The Whisky Exchange); Ypióca: not widely distributed UK market",
+        "price_tier": "Market to Reserve (Ypióca Ouro BC ~$25; Legítima ~$35; Novo Fogo Single Barrel BC ~$75–95; Avuá Amburana ~$60–70)",
+        "availability_notes": "Novo Fogo: Marquis Wine Cellars and Liberty Wine Vancouver carry aged expressions. Ypióca: BC Liquor stores (BCLDB import via Diageo). US: Novo Fogo Skurnik nationally; Ypióca at Total Wine and Latino specialty markets. Amburana single barrels: extremely limited allocation — pre-order with specialist merchants."
+      },
+      "trail_connection": "PCT-13",
+      "trail_note": "Cachaça is the most produced spirit in the Southern Hemisphere and the direct descendant of Portuguese Atlantic colonial sugarcane agriculture. The aged wood tradition — using Amazon and cerrado hardwoods rather than European oak — represents the most distinctly Brazilian cultural adaptation of the PCT legacy: the Portuguese introduced the agricultural and distillation technology; Brazil's pre-colonial forest knowledge transformed the process into something categorically new. Ypióca's Diageo acquisition (2012) and Novo Fogo's organic certification and US market success represent the two poles of how Brazilian cachaça is navigating global spirits markets.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Brigadeiro (Brazilian chocolate-condensed milk fudge truffle)",
+          "pairing_type": "bridge",
+          "rationale": "Amburana's coumarin-vanilla-coconut register bridges directly with brigadeiro's condensed milk sweetness and cocoa powder depth — the spirit and the confection share the same warm, sweet, tropical character but through different pathways. Amburana cachaça alongside premium brigadeiro is the most elegant Brazilian pairing"
+        },
+        {
+          "technique_id": "",
+          "dish": "Pão de queijo (Minas Gerais cheese bread)",
+          "pairing_type": "contrast",
+          "rationale": "The sharp, slightly sour fresh queijo minas in pão de queijo contrasts cleanly against carvalho-aged cachaça's structured tannin and vanilla — the dairy acid cuts the wood tannin; the bread's starchiness supports the spirit's moderate weight. The canonical Minas Gerais aperitif pairing"
+        }
+      ],
+      "source": "Instituto Brasileiro da Cachaça (IBRAC) wood species documentation; Novo Fogo production documentation (novofogo.com); Ypióca official brand history and Diageo acquisition 2012; Brazilian agricultural law (MAPA) cachaça definitions and wood regulations; Dave Broom 'Rum' (cachaça section); Avuá production documentation",
+      "entry_id": "SPR-BRACAC-001",
+      "extracted_at": "2026-04-11T15:36:40.672018+00:00",
+      "batch_number": 2
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Peru — Ica and Arequipa Valleys (Pisco GI, Quebranta and Italia Varieties, Desert Coast Viticulture)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T18:52:31.043993+00:00",
+  "entries": [
+    {
+      "name": "Peruvian Pisco GI Quebranta — Ica Valley Desert Coast, Single Variety Non-Aromatic, Copper Pot Still",
+      "category": "spirits",
+      "subcategory": "pisco",
+      "origin": "Peru",
+      "region": "Ica Valley, Peru",
+      "producer": "Bodegas y Viñedos Tabernero — Ica Valley",
+      "alcohol_content": 42.0,
+      "price_tier": "premium",
+      "terroir_origin": "The Ica Valley is Peru's most historically significant pisco-producing zone — located in the hyper-arid Atacama Desert coastal zone at approximately 400m elevation above sea level, where the Ica River (fed by Andean glacier and snowmelt) creates an irrigated oasis in one of the driest environments on Earth. Annual rainfall in the Ica Valley averages 2–4mm — essentially zero precipitation — making viticulture entirely dependent on the gravity-fed irrigation channels (canales de riego) built during the Inca Empire and expanded under Spanish colonial administration from the 16th century onward. The Quebranta grape variety cultivated in Ica is a non-aromatic Vitis vinifera variety developed in Peru during the colonial era from a cross between Mission (Listán Negro, brought from Spain) and Mollar — a grape with no direct European parent variety, making it the first New World grape variety developed from colonial hybridization. Quebranta thrives in the desert heat and near-zero humidity of the Ica Valley: it has adapted over 400+ years to minimal water stress, intense UV radiation at low altitude with no cloud cover, and sandy alluvial soils over the Ica Valley floor that produce very low yields of concentrated, low-acid, high-sugar grapes. The resulting must ferments to a dry wine at 12–14% ABV with very high sugar concentration but low acidity — a profile that produces the distinctively full-bodied, earthy, slightly phenolic character of non-aromatic Quebranta pisco.",
+      "production_technique": "Peruvian pisco production is governed by the most restrictive technical standard of any brandy category in the world: the Peruvian GI regulation requires that pisco be distilled exclusively from freshly fermented grape juice (mosto verde — must distilled before fermentation completes) or from completely fermented grape wine (mosto fermentado) in copper pot alembic stills, with no dilution after distillation — the pisco must be brought to the final serving strength (38–48% ABV for most styles) entirely by the distillation cut, with no water addition permitted. This no-dilution requirement fundamentally shapes the character of Peruvian pisco: it is a \"true\" grape distillate in which the water content of the final bottling comes entirely from the original grape juice water, not from added water. Tabernero's Quebranta production follows the \"mosto fermentado\" method: freshly pressed Quebranta juice ferments to complete dryness over 10–14 days in stainless steel tanks with selected Saccharomyces cerevisiae, producing a dry wine at 12–14% ABV. Single distillation in copper pot stills — the alembic de cobre of the colonial Peruvian tradition — at 42–48% ABV final cut; the distiller controls the cut point to bring the spirit exactly to the target bottling strength, since post-distillation dilution is prohibited. The hearts cut in Peruvian pisco is considerably wider than in Cognac or Armagnac, incorporating more of the heads fraction to preserve the complex ester and fusel alcohol notes that define the pisco's grape variety character. No aging required by Peruvian GI regulations; rested in neutral stainless steel for 3 months minimum after distillation before bottling.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Armagnac single vintage (grape-variety distillate, pot still, unaged or minimally aged)",
+          "connection": "Peruvian pisco and young Armagnac share the category of grape-based pot still spirits where the primary character comes from the grape variety itself (Quebranta or Folle Blanche/Ugni Blanc) rather than from wood aging — both are among the world's most transparent expressions of how a specific Vitis vinifera variety translates into distillate character when copper pot still and single distillation preserve maximum varietal aromas"
+        },
+        {
+          "tradition": "Mezcal Espadín (unaged, desert cultivation, terroir transparency)",
+          "connection": "Peruvian pisco and unaged mezcal Espadín both produce transparent, unaged spirits from desert-grown plants that rely on extreme irrigation scarcity and UV radiation to concentrate sugars — both are expressions of how plants under stress in arid environments produce the most concentrated aromatic substrates for distillation"
+        },
+        {
+          "tradition": "Grappa di Moscato (Italian grape marc distillate, aromatic variety)",
+          "connection": "Peruvian Italia pisco and Grappa di Moscato both derive intense floral-aromatic character (lychee, rose, white flower) from the Muscat-family grape varieties — Muscat of Alexandria (Italia) in Peru's Ica Valley and Moscato Bianco in Italy's Asti zone — demonstrating how Muscat terpene compounds survive distillation to produce one of the most identifiable aromatic distillate profiles in the world"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Water-clear and brilliant; Peruvian GI requires no aging for non-acholado expressions, producing a completely uncolored spirit; slight oiliness from the fusel alcohol content retained through the wide hearts cut",
+        "nose": "Distinctly earthy and herbal for Quebranta variety: dried herbs (sage, thyme), earthy stone fruit (dried apricot, dried peach), slight mineral, light floral undertone — the \"non-aromatic\" variety profile is subtler and more earthy than the explosive floral of Italia; characteristic dried-fruit-and-herb complexity that serious pisco drinkers identify as distinctly Peruvian",
+        "palate": "Full body from the no-dilution production requirement (all water content from the original grape juice rather than added water), warm and complex, earthy stone fruit mid-palate, grape varietal character unmistakable in the finish, slightly phenolic warmth from the wide heads cut — the Pisco Sour (lime, sugar, egg white, Angostura) is specifically designed around Quebranta's earthy character as the base"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Commercial Peruvian Pisco (standard grade)",
+          "criteria": "Volume production pisco from Ica or other GI zone, single variety Quebranta or Mollar, standard mosto fermentado method — the accessible baseline for Pisco Sour production"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Tabernero or Macchu Pisco Single Variety",
+          "criteria": "Named single-variety Quebranta from identified estate vineyards, controlled fermentation, precise distillation cut at target ABV without dilution — the premium tier for connoisseur Pisco Sour and neat service"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Acholado Blend (Multi-Variety)",
+          "criteria": "Blended pisco from multiple varieties (typically aromatic Italia or Torontel combined with earthy Quebranta) — the most complex pisco style, with the aromatic variety contributing floral intensity and the non-aromatic contributing body and earthy depth"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Mosto Verde (Partially Fermented, Premium)",
+          "criteria": "Pisco distilled from must that has not completed fermentation — the residual unfermented sugar transfers as glycerol and sugar compounds to the distillate through the copper pot still, producing a rounder, more complex spirit at higher cost due to lower conversion efficiency; the luxury tier of Peruvian pisco production"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature (20–22°C) for neat tasting; chilled at 4–6°C in the Pisco Sour preparation; a few drops of still water at room temperature opens the earthy Quebranta aromatics effectively for neat assessment",
+        "vessel": "Pisco Sour: coupe glass (traditional) or rocks glass with frothy egg white foam; Neat: tulip or small wine glass to concentrate the subtle earthy aromatics; Copa glass for a Pisco and Tonic (pisco + tonic + lime + salt rim)",
+        "pisco_sour_protocol": "Classic Pisco Sour: 60ml pisco Quebranta, 30ml fresh lime juice, 20ml simple syrup, 1 egg white, shake violently with ice, strain into coupe, dash of Angostura bitters on the foam; the Angostura connects the Peru PCT narrative to the Trinidad production origin of the bitters that complete the classic cocktail"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Bodegas y Viñedos Tabernero (Ica Valley) — the accessible premium benchmark; Caravedo (Ica) — the fine artisan benchmark; Tres Generaciones and Macchu for specialist allocation",
+        "north_america_access": "Peruvian pisco growing availability in US through specialty spirits retailers; in BC Canada through BCLDB (Tabernero and Macchu listed); the Pisco Sour's popularity in Latin American restaurants in Vancouver (Yuwa, Coppino's) has driven retail demand",
+        "culinary_application": "The Pisco Sour is the gateway cocktail but Quebranta pisco also works as a Singani-style base for Andean-inspired cocktails: pairing with fresh herb garnishes (huacatay, muña) in South American diaspora restaurant programming; the desert-terroir origin connects narratively to cacti-inspired garnishes and Peruvian botanical ingredients"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "SPR-ICAVAL-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T18:52:31.043466+00:00",
+      "batch_number": 1
+    }
+  ]
+}

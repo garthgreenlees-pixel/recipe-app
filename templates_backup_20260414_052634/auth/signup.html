@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account — Provenance</title>
+<meta name="description" content="Create a free Provenance account to explore culinary techniques, ingredient sourcing, and professional beverage programmes.">
+<link rel="canonical" href="https://provenance.kitchen/auth/signup">
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
+  --cream:#F5F1E9;--text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);
+  --border:rgba(201,168,76,0.20);--bg:#08080A;--surface:#131210;
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;min-height:100vh;display:flex;flex-direction:column}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3)}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms}
+.nav-links a:hover{color:#C9A84C}
+.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:80px 1rem 4rem}
+.auth-card{width:100%;max-width:400px}
+.auth-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.auth-title{font-family:var(--serif);font-size:2rem;font-weight:600;letter-spacing:-0.5px;margin-bottom:0.4rem}
+.auth-sub{font-size:0.85rem;color:var(--text-light);margin-bottom:2rem}
+.auth-sub a{color:var(--gold);text-decoration:none}
+.auth-sub a:hover{text-decoration:underline}
+.field{margin-bottom:1.25rem}
+.field label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);margin-bottom:0.5rem}
+.field input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:10px 14px;color:var(--text);font-family:var(--sans);font-size:0.9rem;font-weight:300;outline:none;transition:border-color 200ms}
+.field input:focus{border-color:rgba(201,168,76,0.45)}
+.field input::placeholder{color:rgba(245,241,233,0.2)}
+.auth-error{background:rgba(180,60,60,0.12);border:1px solid rgba(180,60,60,0.25);border-radius:4px;padding:10px 14px;font-size:0.82rem;color:#E07070;margin-bottom:1.25rem}
+.auth-btn{width:100%;padding:12px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);border-radius:4px;color:var(--gold);font-family:var(--sans);font-size:0.875rem;font-weight:400;letter-spacing:0.04em;cursor:pointer;transition:background 200ms,border-color 200ms}
+.auth-btn:hover{background:rgba(201,168,76,0.2);border-color:rgba(201,168,76,0.5)}
+.auth-divider{text-align:center;margin-top:1.5rem;font-size:0.8rem;color:var(--text-light)}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/auth/login">Sign In</a>
+  </div>
+</nav>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-eyebrow">Create Account</div>
+    <h1 class="auth-title">Join Provenance</h1>
+    <p class="auth-sub">Already have an account? <a href="/auth/login">Sign in →</a></p>
+
+    {% if error %}
+    <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+      <div class="field">
+        <label>Your name</label>
+        <input type="text" name="name" placeholder="Garth Greenlees" autocomplete="name">
+      </div>
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="At least 8 characters" required autocomplete="new-password" minlength="8">
+      </div>
+      <button type="submit" class="auth-btn">Create Account →</button>
+    </form>
+
+    <p class="auth-divider">
+      By signing up you agree to use test card 4242 4242 4242 4242 while in beta.
+    </p>
+  </div>
+</div>
+
+<footer style="width:100%">
+  <div class="about-footer">
+    <div class="footer-links">
+      <a href="/about">About</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/methodology">Methodology</a>
+    </div>
+    <span class="footer-wm">Provenance</span>
+  </div>
+</footer>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
+</body>
+</html>

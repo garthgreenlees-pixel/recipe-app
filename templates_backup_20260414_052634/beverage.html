@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beverage Terroir — Provenance</title>
+<meta name="description" content="Browse wine, spirits, sake, tea, coffee, and ceremonial beverages from France, Japan, Pacific Northwest, and beyond. Every tradition traced to its terroir.">
+<link rel="canonical" href="https://provenance.kitchen/beverage">
+<meta property="og:title" content="Beverage Terroir — Provenance">
+<meta property="og:description" content="Browse wine, spirits, sake, tea, coffee, and ceremonial beverages — every tradition traced to its terroir.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://provenance.kitchen/beverage">
+<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Beverage — Provenance">
+<meta name="twitter:description" content="Browse wine, spirits, sake, tea, coffee, and ceremonial beverages — every tradition traced to its terroir.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Beverage Terroir — Provenance",
+  "description": "Browse wine, spirits, sake, tea, coffee, and ceremonial beverages — every tradition traced to its terroir.",
+  "url": "https://provenance.kitchen/beverage"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#8B6914;--gold-light:#C49B2A;--gold-bg:rgba(139,105,20,0.08);--gold-border:rgba(139,105,20,0.2);
+  --cream:#FDFCF9;--cream-dark:#F5F0E8;--cream-mid:#EDE8E0;
+  --text:#1A1A1A;--text-secondary:#6B6B6B;--text-light:#999;
+  --border:#E8E3D8;--border-mid:#D6D0C8;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
+
+/* ─── NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
+.nav-links a:hover{color:#C9A84C}
+.nav-links .nav-active{color:rgba(201,168,76,0.75)}
+.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
+.nav-p:hover{border-color:#C9A84C}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+
+/* ─── HERO ─── */
+.hero{
+  background:linear-gradient(160deg,#1A1410 0%,#2A1E16 50%,#1E1812 100%);
+  padding:64px 32px 48px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 80%,rgba(139,105,20,0.18) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 20%,rgba(139,105,20,0.10) 0%,transparent 50%);
+  pointer-events:none;
+}
+.hero-inner{max-width:860px;margin:0 auto;position:relative}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(196,155,42,0.7);margin-bottom:16px;
+}
+.hero-title{
+  font-family:var(--serif);font-size:clamp(36px,5vw,56px);font-weight:700;
+  color:#FDFCF9;line-height:1.1;letter-spacing:-1px;margin-bottom:16px;
+}
+.hero-subtitle{font-size:17px;color:rgba(253,252,249,0.6);font-weight:300;line-height:1.6;max-width:540px;margin-bottom:32px}
+.hero-stats{display:flex;gap:40px;flex-wrap:wrap}
+.stat{border-left:1px solid rgba(196,155,42,0.3);padding-left:16px}
+.stat-number{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--gold-light);line-height:1}
+.stat-label{font-size:12px;color:rgba(253,252,249,0.5);letter-spacing:0.5px;margin-top:4px}
+
+/* ─── BROWSE TABS ─── */
+.browse-container{max-width:1000px;margin:0 auto;padding:48px 32px 80px}
+.browse-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:40px}
+.tab-btn{
+  font-family:var(--sans);font-size:14px;font-weight:400;color:var(--text-secondary);
+  background:none;border:none;cursor:pointer;
+  padding:12px 20px;border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:all 0.18s;letter-spacing:0.2px;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:500}
+
+/* ─── SECTION LABEL ─── */
+.section-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:20px;
+}
+
+/* ─── REGION GRID ─── */
+.region-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.region-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:20px 24px;text-decoration:none;color:var(--text);
+  transition:all 0.2s;display:block;
+}
+.region-card:hover{border-color:var(--gold-border);box-shadow:0 4px 16px rgba(139,105,20,0.08)}
+.region-country{
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:8px;
+}
+.region-name{font-family:var(--serif);font-size:20px;font-weight:600;margin-bottom:6px}
+.region-meta{font-size:13px;color:var(--text-secondary);font-weight:300}
+.region-count{
+  display:inline-block;margin-top:12px;font-size:11px;letter-spacing:0.5px;
+  color:var(--gold);font-weight:400;
+}
+
+/* ─── CATEGORY LIST ─── */
+.category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.category-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+  text-decoration:none;color:var(--text);transition:all 0.2s;cursor:pointer;
+}
+.category-card:hover{border-color:var(--gold-border);background:var(--gold-bg)}
+.category-name{font-size:14px;font-weight:400;text-transform:capitalize}
+.category-count{font-family:var(--mono);font-size:12px;color:var(--gold)}
+
+/* ─── PAIRING FOOD TYPES ─── */
+.pairing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.pairing-type-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:16px 20px;text-decoration:none;color:var(--text);
+  transition:all 0.2s;cursor:pointer;
+}
+.pairing-type-card:hover{border-color:var(--gold-border);background:var(--gold-bg)}
+.pairing-type-name{font-size:14px;font-weight:400;text-transform:capitalize;margin-bottom:4px}
+.pairing-type-count{font-size:12px;color:var(--text-light);font-weight:300}
+
+/* ─── PAIRING RESULTS ─── */
+.pairing-results{margin-top:32px}
+.pairing-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:20px 24px;margin-bottom:12px;
+}
+.pairing-type-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.pairing-beverage{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:8px}
+.pairing-logic{font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.6;margin-bottom:12px}
+.pairing-badges{display:flex;gap:8px;flex-wrap:wrap}
+.confidence-badge,.context-badge{
+  font-size:11px;font-weight:400;padding:3px 8px;border-radius:3px;
+  letter-spacing:0.5px;
+}
+.confidence-badge{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border)}
+.context-badge{background:var(--cream-dark);color:var(--text-secondary);border:1px solid var(--border)}
+
+/* ─── LOADING / EMPTY ─── */
+.loading{font-size:13px;color:var(--text-light);padding:24px 0;font-weight:300}
+.empty-state{padding:40px 0;color:var(--text-light);font-size:14px;font-weight:300}
+
+/* ─── TWO-COLUMN BROWSE ─── */
+.browse-split{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:56px}
+.browse-col .section-label{margin-bottom:16px}
+.tradition-list{display:flex;flex-direction:column;gap:6px}
+.tradition-list-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-radius:6px;border:1px solid var(--border);
+  background:#fff;text-decoration:none;color:var(--text);
+  font-size:14px;font-weight:400;cursor:pointer;transition:all 0.18s;
+}
+.tradition-list-item:hover{border-color:var(--gold-border);background:var(--gold-bg);color:var(--gold)}
+.tradition-list-count{font-family:var(--mono);font-size:11px;color:var(--text-light)}
+.tradition-list-item:hover .tradition-list-count{color:var(--gold)}
+
+.world-region-list{display:flex;flex-direction:column;gap:6px}
+.region-list-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-radius:6px;border:1px solid var(--border);
+  font-size:14px;font-weight:400;transition:all 0.18s;
+}
+.region-list-item.populated{
+  background:#fff;color:var(--text);text-decoration:none;cursor:pointer;
+}
+.region-list-item.populated:hover{border-color:var(--gold-border);background:var(--gold-bg);color:var(--gold)}
+.region-list-item.coming{
+  background:transparent;color:var(--text-light);opacity:0.55;cursor:default;
+  font-style:italic;
+}
+.region-list-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.region-list-item.populated .region-list-dot{background:var(--gold-light)}
+.region-list-item.coming .region-list-dot{background:var(--border-mid)}
+
+/* ─── TRADITION CARDS ─── */
+.traditions-section{margin-bottom:56px}
+.tradition-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.tradition-card{
+  background:#fff;border:1px solid var(--border);border-radius:10px;
+  padding:20px 24px;cursor:pointer;transition:all 0.2s;
+}
+.tradition-card:hover{border-color:var(--gold-border);box-shadow:0 4px 16px rgba(139,105,20,0.08);transform:translateY(-1px)}
+.tradition-card-name{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--text);margin-bottom:6px}
+.tradition-card-desc{font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.5;margin-bottom:12px}
+.tradition-card-count{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:0.5px}
+.tradition-card-empty{opacity:0.35;pointer-events:none;cursor:default}
+.tradition-card-empty:hover{border-color:var(--border);box-shadow:none;transform:none}
+.tradition-card-empty .tradition-card-count{font-style:italic;color:rgba(201,168,76,0.4);font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase}
+
+/* ─── PAIRING LOGIC BROWSE ─── */
+.pairing-logic-section{margin-bottom:56px}
+.pairing-logic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:0}
+.pairing-logic-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:20px 20px 16px;cursor:pointer;transition:all 0.18s;text-align:left;
+}
+.pairing-logic-card:hover{border-color:var(--gold-border);background:var(--gold-bg)}
+.pairing-logic-name{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.pairing-logic-desc{font-size:12px;color:var(--text-secondary);font-weight:300;line-height:1.5}
+
+/* ─── FOOD PAIRING BROWSE ─── */
+.food-pairing-section{margin-bottom:24px}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .browse-split{grid-template-columns:1fr;gap:32px}
+}
+@media(max-width:600px){
+  .hero{padding:40px 20px 32px}
+  .browse-container{padding:32px 20px 60px}
+  .hero-stats{gap:24px}
+  .tradition-cards{grid-template-columns:1fr}
+}
+</style>
+<!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4G21HCX2D0');
+</script>
+<!-- PWA -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Provenance">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+    {% if is_authenticated %}
+    <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
+    {% else %}
+    <a href="/auth/login">Sign In</a>
+    {% endif %}
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/auth/account">My Kitchen</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Beverage Terroir</div>
+    <h1 class="hero-title">Browse<br>Beverages</h1>
+    <p class="hero-subtitle">{{ total_products }} beverages across {{ total_regions }} regions — wine, spirits, sake, tea, coffee, and ceremonial traditions from every producing latitude.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-number">{{ total_products }}</div>
+        <div class="stat-label">Beverages</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">11</div>
+        <div class="stat-label">Traditions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">{{ total_regions }}</div>
+        <div class="stat-label">Regions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">{{ total_pairings }}</div>
+        <div class="stat-label">Pairings</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="browse-container">
+
+  <!-- ─── Two-column browse architecture ─── -->
+  <div class="browse-split">
+
+    <!-- Left: Browse by Tradition -->
+    <div class="browse-col">
+      <div class="section-label">Browse by Tradition</div>
+      <div class="tradition-list">
+        <div class="tradition-list-item" onclick="scrollToTradition('wine')">
+          <span>Wine</span>
+          <span class="tradition-list-count">{{ tradition_counts.wine }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('spirits')">
+          <span>Spirits</span>
+          <span class="tradition-list-count">{{ tradition_counts.spirits }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('sake')">
+          <span>Sake</span>
+          <span class="tradition-list-count">{{ tradition_counts.sake }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('coffee')">
+          <span>Coffee</span>
+          <span class="tradition-list-count">{{ tradition_counts.coffee }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('beer')">
+          <span>Beer</span>
+          <span class="tradition-list-count">{{ tradition_counts.beer }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('tea')">
+          <span>Tea</span>
+          <span class="tradition-list-count">{{ tradition_counts.tea }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('ceremonial')">
+          <span>Ceremonial</span>
+          <span class="tradition-list-count">{{ tradition_counts.ceremonial }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('fortified')">
+          <span>Fortified</span>
+          <span class="tradition-list-count">{{ tradition_counts.fortified }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('non_alcoholic')">
+          <span>Non-Alcoholic</span>
+          <span class="tradition-list-count">{{ tradition_counts.non_alcoholic }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('fermented')">
+          <span>Fermented</span>
+          <span class="tradition-list-count">{{ tradition_counts.fermented }}</span>
+        </div>
+        <div class="tradition-list-item" onclick="scrollToTradition('water')">
+          <span>Water</span>
+          <span class="tradition-list-count">{{ tradition_counts.water }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Browse by World Region -->
+    <div class="browse-col">
+      <div class="section-label">Browse by World Region</div>
+      <div class="world-region-list">
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>Pacific Northwest</span>
+        </a>
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>USA</span>
+        </a>
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>France</span>
+        </a>
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>Italy</span>
+        </a>
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>Spain</span>
+        </a>
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>Germany</span>
+        </a>
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>Japan</span>
+        </a>
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>Australia</span>
+        </a>
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>South America</span>
+        </a>
+        <a href="/beverage" class="region-list-item populated">
+          <span class="region-list-dot"></span>
+          <span>Mediterranean</span>
+        </a>
+        <div class="region-list-item coming">
+          <span class="region-list-dot"></span>
+          <span>Portuguese Colonial Trail</span>
+        </div>
+        <div class="region-list-item coming">
+          <span class="region-list-dot"></span>
+          <span>Pacific Migration Trail</span>
+        </div>
+        <div class="region-list-item coming">
+          <span class="region-list-dot"></span>
+          <span>West African Diaspora Trail</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── Tradition Cards ─── -->
+  <div class="traditions-section" id="traditions">
+    <div class="section-label">All Traditions</div>
+    <div class="tradition-cards">
+
+      <div class="tradition-card" id="trad-wine" onclick="loadTradition('wine','wine','sparkling')">
+        <div class="tradition-card-name">Wine</div>
+        <div class="tradition-card-desc">From Bordeaux to Burgundy to Okanagan. Fermented grape, terroir-driven, vintage-dependent.</div>
+        <div class="tradition-card-count">{{ tradition_counts.wine }} beverages</div>
+      </div>
+
+      <div class="tradition-card" id="trad-spirits" onclick="loadTradition('spirits','spirits_whiskey','spirits_brandy','gin')">
+        <div class="tradition-card-name">Spirits</div>
+        <div class="tradition-card-desc">Whisky, brandy, gin, and aged distillates. Grain, fruit, and botanical — the long patience of the still.</div>
+        <div class="tradition-card-count">{{ tradition_counts.spirits }} beverages</div>
+      </div>
+
+      <div class="tradition-card" id="trad-sake" onclick="loadTradition('sake','sake')">
+        <div class="tradition-card-name">Sake</div>
+        <div class="tradition-card-desc">Brewed rice wine of Japan. Koji, water, and precision fermentation — the quietest complexity in the cellar.</div>
+        <div class="tradition-card-count">{{ tradition_counts.sake }} beverages</div>
+      </div>
+
+      <div class="tradition-card" id="trad-coffee" onclick="loadTradition('coffee','coffee')">
+        <div class="tradition-card-name">Coffee</div>
+        <div class="tradition-card-desc">Origin, varietal, process, roast. From cherry to cup — as specific as wine, as daily as bread.</div>
+        <div class="tradition-card-count">{{ tradition_counts.coffee }} beverages</div>
+      </div>
+
+      <div class="tradition-card" id="trad-beer" onclick="loadTradition('beer','beer_ale','beer_lager','wild beer')">
+        <div class="tradition-card-name">Beer</div>
+        <div class="tradition-card-desc">Lager, ale, wild, and spontaneous fermentation. Grain, hop, yeast, water — the oldest four-ingredient tradition.</div>
+        <div class="tradition-card-count">{{ tradition_counts.beer }} beverages</div>
+      </div>
+
+      <div class="tradition-card" id="trad-tea" onclick="loadTradition('tea','tea')">
+        <div class="tradition-card-name">Tea</div>
+        <div class="tradition-card-desc">Camellia sinensis, every elevation and oxidation. From first flush Darjeeling to aged pu-erh — altitude made liquid.</div>
+        <div class="tradition-card-count">{{ tradition_counts.tea }} beverages</div>
+      </div>
+
+      <div class="tradition-card" id="trad-ceremonial" onclick="loadTradition('ceremonial','ceremonial')">
+        <div class="tradition-card-name">Ceremonial</div>
+        <div class="tradition-card-desc">Mezcal, ceremonial cacao, pisco, pulque. Tradition above commerce — these were never meant for the supermarket shelf.</div>
+        <div class="tradition-card-count">{{ tradition_counts.ceremonial }} beverages</div>
+      </div>
+
+      <div class="tradition-card{% if tradition_counts.fortified == 0 %} tradition-card-empty{% endif %}" id="trad-fortified"{% if tradition_counts.fortified > 0 %} onclick="loadTradition('fortified','wine_fortified')"{% endif %}>
+        <div class="tradition-card-name">Fortified</div>
+        <div class="tradition-card-desc">Port, sherry, madeira, vermouth. Age, intention, and the addition of spirit — the cellar's longest conversation.</div>
+        {% if tradition_counts.fortified > 0 %}<div class="tradition-card-count">{{ tradition_counts.fortified }} beverages</div>{% else %}<div class="tradition-card-count">Tracing to the source</div>{% endif %}
+      </div>
+
+      <div class="tradition-card" id="trad-non_alcoholic" onclick="loadTradition('non_alcoholic','NA','na_dealcoholised')">
+        <div class="tradition-card-name">Non-Alcoholic</div>
+        <div class="tradition-card-desc">Kombucha, shrubs, jun, and de-alcoholised wine. The full table — no guest left to sparkling water alone.</div>
+        <div class="tradition-card-count">{{ tradition_counts.non_alcoholic }} beverages</div>
+      </div>
+
+      <div class="tradition-card{% if tradition_counts.fermented == 0 %} tradition-card-empty{% endif %}" id="trad-fermented"{% if tradition_counts.fermented > 0 %} onclick="loadTradition('fermented','na_fermented','fermented')"{% endif %}>
+        <div class="tradition-card-name">Fermented</div>
+        <div class="tradition-card-desc">Kvass, tepache, water kefir, lacto-fermented juice. Living beverages — culture in the most literal sense.</div>
+        {% if tradition_counts.fermented > 0 %}<div class="tradition-card-count">{{ tradition_counts.fermented }} beverages</div>{% else %}<div class="tradition-card-count">Tracing to the source</div>{% endif %}
+      </div>
+
+      <div class="tradition-card{% if tradition_counts.water == 0 %} tradition-card-empty{% endif %}" id="trad-water"{% if tradition_counts.water > 0 %} onclick="loadTradition('water','water')"{% endif %}>
+        <div class="tradition-card-name">Water</div>
+        <div class="tradition-card-desc">Still, sparkling, mineral. The foundation of every service — its character shapes everything poured alongside it.</div>
+        {% if tradition_counts.water > 0 %}<div class="tradition-card-count">{{ tradition_counts.water }} beverages</div>{% else %}<div class="tradition-card-count">Tracing to the source</div>{% endif %}
+      </div>
+
+    </div>
+    <div id="tradition-results" class="pairing-results" style="display:none;margin-top:32px">
+      <div class="section-label" id="tradition-results-label"></div>
+      <div id="tradition-results-list"></div>
+    </div>
+  </div>
+
+  <!-- ─── Pairing Logic Browse ─── -->
+  <div class="pairing-logic-section">
+    <div class="section-label">Browse by Pairing Logic</div>
+    <div class="pairing-logic-grid">
+      <div class="pairing-logic-card" onclick="browsePairingType('complement')">
+        <div class="pairing-logic-name">Complement</div>
+        <div class="pairing-logic-desc">Like meets like. Richness with richness, acidity with acidity.</div>
+      </div>
+      <div class="pairing-logic-card" onclick="browsePairingType('contrast')">
+        <div class="pairing-logic-name">Contrast</div>
+        <div class="pairing-logic-desc">Opposition creates tension. Sweet against salt. Tannin against fat.</div>
+      </div>
+      <div class="pairing-logic-card" onclick="browsePairingType('bridge')">
+        <div class="pairing-logic-name">Bridge</div>
+        <div class="pairing-logic-desc">A shared element — spice, smoke, citrus — that connects the glass and the plate.</div>
+      </div>
+      <div class="pairing-logic-card" onclick="browsePairingType('cleanse')">
+        <div class="pairing-logic-name">Cleanse</div>
+        <div class="pairing-logic-desc">Acidity and effervescence that reset the palate between bites.</div>
+      </div>
+      <div class="pairing-logic-card" onclick="browsePairingType('elevate')">
+        <div class="pairing-logic-name">Elevate</div>
+        <div class="pairing-logic-desc">The pairing that makes both dish and beverage greater than either alone.</div>
+      </div>
+    </div>
+    <div id="pairing-logic-results" class="pairing-results" style="display:none;margin-top:32px">
+      <div class="section-label" id="pairing-logic-results-label"></div>
+      <div id="pairing-logic-results-list"></div>
+    </div>
+  </div>
+
+  <!-- ─── Food Pairing Browse ─── -->
+  <div class="food-pairing-section">
+    <div class="section-label">Browse by Food</div>
+    {% if pairing_food_types %}
+    <div class="pairing-grid">
+      {% for f in pairing_food_types %}
+      <div class="pairing-type-card" onclick="browsePairing('{{ f.food_category }}')">
+        <div class="pairing-type-name">{{ f.food_category.replace('_', ' ') }}</div>
+        <div class="pairing-type-count">{{ f.count }} pairing{% if f.count != 1 %}s{% endif %}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <div id="pairing-results" class="pairing-results" style="display:none;margin-top:32px">
+      <div class="section-label" id="pairing-results-label"></div>
+      <div id="pairing-results-list"></div>
+    </div>
+    {% else %}
+    <div class="empty-state">No pairing data yet — entries in progress.</div>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+function scrollToTradition(name) {
+  const el = document.getElementById('trad-' + name);
+  if (el) { el.scrollIntoView({behavior:'smooth', block:'center'}); el.click(); }
+}
+
+async function loadTradition(label, ...categories) {
+  const resultsEl = document.getElementById('tradition-results');
+  const labelEl = document.getElementById('tradition-results-label');
+  const listEl = document.getElementById('tradition-results-list');
+
+  resultsEl.style.display = '';
+  labelEl.textContent = label.replace(/_/g,' ');
+  listEl.innerHTML = '<div class="loading">Loading…</div>';
+  resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
+
+  const allRows = [];
+  try {
+    for (const cat of categories) {
+      const res = await fetch('/api/beverage/products?category=' + encodeURIComponent(cat) + '&limit=50');
+      if (!res.ok) continue;
+      const rows = await res.json();
+      allRows.push(...rows);
+    }
+    if (!allRows.length) {
+      listEl.innerHTML = '<div class="empty-state">No beverages in this tradition yet — entries in progress.</div>';
+      return;
+    }
+    listEl.innerHTML = allRows.map(p => `
+      <div class="pairing-card">
+        <div class="pairing-type-label">${(p.category || '').replace(/_/g,' ')}</div>
+        <a href="/beverage/${esc(p.slug || p.id)}" class="pairing-beverage" style="text-decoration:none;color:inherit">${esc(p.name)}</a>
+        ${p.description ? `<div class="pairing-logic">${esc(p.description.substring(0,180))}${p.description.length > 180 ? '…' : ''}</div>` : ''}
+        <div class="pairing-badges">
+          ${p.quality_tier ? `<span class="confidence-badge">${esc(p.quality_tier)}</span>` : ''}
+          ${p.region_name ? `<span class="context-badge">${esc(p.region_name)}</span>` : ''}
+        </div>
+      </div>`).join('');
+  } catch (e) {
+    listEl.innerHTML = '<div class="empty-state">Could not load beverages.</div>';
+  }
+}
+
+async function browsePairingType(pairingType) {
+  const resultsEl = document.getElementById('pairing-logic-results');
+  const labelEl = document.getElementById('pairing-logic-results-label');
+  const listEl = document.getElementById('pairing-logic-results-list');
+
+  resultsEl.style.display = '';
+  labelEl.textContent = pairingType.toUpperCase();
+  listEl.innerHTML = '<div class="loading">Loading…</div>';
+  resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
+
+  try {
+    const res = await fetch('/api/pairings?pairing_type=' + encodeURIComponent(pairingType) + '&limit=40');
+    if (!res.ok) throw new Error();
+    const rows = await res.json();
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="empty-state">No pairings of this type yet.</div>';
+      return;
+    }
+    listEl.innerHTML = rows.map(p => `
+      <div class="pairing-card">
+        ${p.pairing_type ? `<div class="pairing-type-label">${esc(p.pairing_type)}</div>` : ''}
+        <div class="pairing-beverage">${esc(p.product_name || p.beverage_category || 'Beverage')}</div>
+        ${p.flavour_logic ? `<div class="pairing-logic">${esc(p.flavour_logic)}</div>` : ''}
+        <div class="pairing-badges">
+          ${p.confidence ? `<span class="confidence-badge">${esc(p.confidence)}</span>` : ''}
+          ${p.meal_context ? `<span class="context-badge">${esc(p.meal_context)}</span>` : ''}
+        </div>
+      </div>`).join('');
+  } catch (e) {
+    listEl.innerHTML = '<div class="empty-state">Could not load pairings.</div>';
+  }
+}
+
+async function browsePairing(foodCategory) {
+  const resultsEl = document.getElementById('pairing-results');
+  const labelEl = document.getElementById('pairing-results-label');
+  const listEl = document.getElementById('pairing-results-list');
+
+  resultsEl.style.display = '';
+  labelEl.textContent = foodCategory.replace(/_/g, ' ');
+  listEl.innerHTML = '<div class="loading">Loading…</div>';
+  resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
+
+  try {
+    const res = await fetch('/api/pairings?food_category=' + encodeURIComponent(foodCategory));
+    if (!res.ok) throw new Error();
+    const rows = await res.json();
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="empty-state">No pairings found for this food type.</div>';
+      return;
+    }
+    listEl.innerHTML = rows.map(p => `
+      <div class="pairing-card">
+        ${p.pairing_type ? `<div class="pairing-type-label">${esc(p.pairing_type)}</div>` : ''}
+        <div class="pairing-beverage">${esc(p.product_name || p.beverage_category || 'Beverage')}</div>
+        ${p.flavour_logic ? `<div class="pairing-logic">${esc(p.flavour_logic)}</div>` : ''}
+        <div class="pairing-badges">
+          ${p.confidence ? `<span class="confidence-badge">${esc(p.confidence)}</span>` : ''}
+          ${p.meal_context ? `<span class="context-badge">${esc(p.meal_context)}</span>` : ''}
+        </div>
+      </div>`).join('');
+  } catch (e) {
+    listEl.innerHTML = '<div class="empty-state">Could not load pairings.</div>';
+  }
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+
+<script>
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+</script>
+
+<div class="about-footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/suppliers">Suppliers</a>
+    <a href="/for-professionals">For Professionals</a>
+    <a href="/methodology">Methodology</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="mailto:info@provenance.kitchen">Contact</a>
+  </div>
+  <span class="footer-wm">Provenance</span>
+</div>
+<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
+  <span>Add Provenance to your home screen</span>
+  <div>
+    <button onclick="installPWA()" style="background:rgba(201,168,76,0.12);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-right:8px">Install</button>
+    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(245,241,233,0.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
+  </div>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .catch(err => console.log('SW:', err));
+}
+let _pwaPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  if (!localStorage.getItem('pwa-dismissed')) {
+    document.getElementById('pwa-prompt').style.display = 'flex';
+  }
+});
+function installPWA() {
+  if (_pwaPrompt) {
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(() => {
+      document.getElementById('pwa-prompt').style.display = 'none';
+      _pwaPrompt = null;
+    });
+  }
+}
+function dismissPWA() {
+  document.getElementById('pwa-prompt').style.display = 'none';
+  localStorage.setItem('pwa-dismissed', 'true');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+{
+  "tradition": "tea",
+  "region": "Macau — Peninsula and Taipa (Portuguese-Macanese Milk Tea, Galão Heritage, Colonial Café Culture)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T05:06:29.948197+00:00",
+  "entries": [
+    {
+      "name": "Macanese Galão — Portuguese-Colonial Milk Tea, Ceylon-Oolong Blend, Condensed Evaporated Milk",
+      "category": "tea",
+      "subcategory": "milk_tea",
+      "origin": "Macau",
+      "region": "Macau SAR, China",
+      "producer": "Margaret's Café e Nata — Macau",
+      "alcohol_content": 0.0,
+      "price_tier": "everyday",
+      "terroir_origin": "The Macanese galão is the beverage artifact of Portugal's longest-lasting colonial presence: Macau was a Portuguese territory from 1557 to 1999 — 442 years of Lusophone administration on a small peninsula at the mouth of the Pearl River Delta, creating the most complex cultural synthesis in the Portuguese colonial world. The galão itself originated in mainland Portugal as a foamy coffee drink (one-quarter espresso, three-quarters steamed milk foam), but Macau's version evolved through contact with both Cantonese milk tea culture and the colonial import of Ceylon tea and sweetened condensed milk (introduced to East Asia by European traders from the 1860s onward). The specific tea blend used in Macanese galão — traditionally a Ceylon OP base for body with Taiwanese or Chinese oolong for fragrance — reflects the geographic position of Macau as a trading hub between Portugal's Ceylon (Sri Lanka) and India tea sources and the regional East Asian tea culture. The condensed and evaporated milk combination used in Macau (rather than fresh milk used in Portugal or the Hong Kong-style strained-milk preparation) is a direct consequence of the refrigeration limitations of colonial Macau before the 20th century, when canned milk products were more reliable than fresh dairy in the subtropical climate. The resulting drink is denser, sweeter, and more tea-forward than the Lisbon galão while being less \"silky\" than the finest Hong Kong milk teas — a genuinely hybrid preparation that belongs fully to neither tradition.",
+      "production_technique": "Margaret's and the best Macanese café operators prepare the galão through a specific multi-step process that distinguishes the Macanese style from both its Portuguese and Hong Kong cousins. First, a Ceylon OP tea is brewed at high concentration: 15–20g of tea per liter of water at 94–96°C for 4–5 minutes (compared to the 2–3 minute steep of delicate teas), producing a very dark, tannic, astringent concentrate. This is blended 1:4 with a separately brewed high-mountain oolong tea at 90–92°C for 3 minutes — the oolong infusion adds floral complexity (orchid, grapefruit, osmanthus) to the tannin foundation of the Ceylon base. The tea blend is then strained through a fine mesh sock (known as the \"silk stocking\" method in Hong Kong, adapted in Macau) into a ceramic pitcher. Condensed milk (sweetened, approximately 320g sugar per 1L) and evaporated milk (unsweetened, concentrated) are combined in a 3:1 ratio (evaporated to condensed) and heated to 60–70°C. The Macanese galão is assembled by pouring the hot tea blend over the hot milk mixture at a ratio of 3:2 (tea to milk), creating the characteristic amber color and sweetened-milk fragrance. Served in a traditional Portuguese handle glass (copo de vidro com asa) at approximately 65°C — the drinking temperature standard in Macanese café culture.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Hong Kong-style milk tea (silk stocking, Ceylon-Assam blend)",
+          "connection": "Macanese galão and Hong Kong milk tea share the strained Ceylon tea base and condensed/evaporated milk tradition, but diverge in the oolong addition (Macau) vs pure black tea blend (Hong Kong) and in the milk ratio — Hong Kong milk tea is typically less sweet and more tea-forward than the Macanese version, reflecting the British colonial influence on Hong Kong versus the Portuguese colonial influence on Macau"
+        },
+        {
+          "tradition": "Portuguese galão (mainland origin, coffee-based)",
+          "connection": "The Macanese galão retains the name and glass format of the Lisbon original but substitutes tea for coffee — a substitution that occurred through 442 years of adaptation to the tea-drinking culture of China and the availability of Ceylon and India tea through Portuguese colonial trade routes, demonstrating how a beverage format can migrate across substance while retaining its cultural identity"
+        },
+        {
+          "tradition": "Sri Lanka Ceylon milk tea (the source tradition)",
+          "connection": "The Ceylon tea that forms the Macanese galão's backbone traces directly to Portuguese Ceylon (Sri Lanka was Portuguese from 1505 to 1658 before Dutch and then British colonial succession) — the tea plant was established in Ceylon after the Portuguese colonial period, but Portuguese trade routes through Ceylon and India created the channel through which Ceylon tea reached Macau in the 19th century, completing the PCT beverage loop"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Warm amber-ochre; the milk-tea combination creates a naturally cloudy, rich appearance distinct from black tea clarity or coffee opacity; medium viscosity from the condensed milk sugar; thin skin of foam if steamed milk is used in modern preparation",
+        "nose": "Ceylon tea astringency, warm milk-caramel sweetness from condensed milk, subtle oolong florality (orchid, grapefruit), bread-like warmth from evaporated milk reduction — the character is immediately identifiable as Portuguese-influenced East Asian hybrid: Western dairy-sweet over Eastern tea structure",
+        "palate": "Full body from condensed milk density, sweet-milky entry, strong Ceylon tea astringency in the mid-palate that cuts through the sweetness, oolong floral finish, long warm-milk aftertaste — the balance of sugar and tannin is the defining quality of superior Macanese galão preparation"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Hotel Lobby / Tourist Standard",
+          "criteria": "Commercial tea bags, standard condensed milk, no oolong addition, made in advance and held warm — convenient but lacks the depth of fresh preparation; widely available in Macau's casino hotels"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Traditional Café Standard (Margaret's, Café Safari)",
+          "criteria": "High-quality Ceylon OP loose leaf, oolong addition, freshly brewed in correct ratios, served in traditional handle glass — the authentic Macanese galão tradition at its accessible best"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Heritage Café (Privately Sourced Tea Blend)",
+          "criteria": "Specific house tea blends developed over decades (some cafés maintain proprietary Ceylon-oolong ratio recipes), fresh dairy elements, traditional silk-sock straining — the connoisseur tier that regulars seek out and that represents peak Macanese café culture"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Heritage Galão with Pastéis de Nata Pairing",
+          "criteria": "The complete Macanese café ritual: galão prepared to house specification alongside freshly baked Macanese pastéis de nata (egg tarts with flaky lard-based pastry and softly set custard), consumed at a marble-topped table in a historic café space — the cultural experience cannot be separated from the product quality"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Served at 65–70°C in traditional cafés — hot enough to maintain temperature through slow consumption; the condensed milk sweetness is best expressed warm; cold versions exist (Macanese \"iced galão\") but are a modern adaptation rather than the traditional form",
+        "vessel": "Traditional Portuguese handle glass (clear glass with a small metal or ceramic handle); or a ceramic café cup in modern contexts; the visual amber color through clear glass is part of the Macanese café aesthetic and should not be obscured in opaque vessels",
+        "cultural_context": "The galão in Macau is inseparable from the pastéis de nata and the space of the heritage café — ordering a galão at Margaret's or Café Safari is participating in the 442-year Portuguese colonial legacy in East Asia; for PNW restaurant programming, the Macanese galão-with-nata pairing represents the PCT's most photogenic and culturally distinct beverage moment"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Margaret's Café e Nata, Macau — the internationally recognized benchmark for Macanese galão and pastéis de nata preparation",
+        "north_america_access": "Not commercially exported; the galão is a made-to-order café drink accessible only in Macau (and Hong Kong's Portuguese-influenced cafés); however, the Ceylon-oolong tea blend and condensed/evaporated milk components are universally available and can be prepared in PNW café or restaurant contexts",
+        "culinary_application": "PNW implementation: the Macanese galão preparation method (Ceylon-oolong blend, condensed/evaporated milk, silk-sock straining, handle glass service) is reproducible in restaurant café programs as part of a PCT beverage menu; the cultural narrative of 442 years of Portuguese-Chinese synthesis is compelling for menus exploring colonial food history; pairs naturally with Portuguese-inspired egg tart preparations where the tannin-sweet tea cuts through the rich custard"
+      },
+      "price_trajectory": "stable",
+      "entry_id": "TEA-MACSAR-001",
+      "tradition": "tea",
+      "extracted_at": "2026-04-12T05:06:29.947630+00:00",
+      "batch_number": 1
+    }
+  ]
+}

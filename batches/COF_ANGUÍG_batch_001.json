@@ -1,0 +1,74 @@
+{
+  "tradition": "coffee",
+  "region": "Angola — Uíge and Malanje Provinces (Robusta Conillon, Colonial Arabica Revival, Post-War Agricultural Recovery)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:16:37.354473+00:00",
+  "entries": [
+    {
+      "name": "Angola Uíge Arabica Revival Lot — Post-War Colonial Highland Terroir, Bourbon Heritage Variety, Plateau Volcanic Soils",
+      "category": "coffee",
+      "subcategory": "arabica_single_origin",
+      "origin": "Angola",
+      "region": "Angola — Uíge and Malanje Provinces (Robusta Conillon, Colonial Arabica Revival, Post-War Agricultural Recovery)",
+      "producer": "Angola Specialty Coffee Alliance — Uíge Province Arabica",
+      "alcohol_content": 0.0,
+      "price_tier": "premium",
+      "terroir_origin": "Uíge Province in northern Angola sits on the Angolan plateau at 1,200-1,600m elevation — geologically a continuation of the Congo Basin highland edge, with deep lateritic soils of ancient volcanic origin overlying the Precambrian basement rock of the African shield. The plateau's climate at this elevation combines the equatorial rainfall of the Congo Basin catchment (1,500-2,000mm per year) with the altitude-induced temperature moderation (18-25°C year-round) that creates ideal Arabica coffee conditions: warm enough for continuous growth, cool enough for slow cherry development that concentrates aromatic compounds. The Bourbon and Typica varieties introduced to Uíge by Portuguese colonial agricultural policy in the early 20th century adapted to the plateau's specific lateritic mineral conditions over 50-60 years before the civil war effectively ended commercial production. The post-war agricultural recovery since 2002 has found that many of the old colonial coffee farms still harbor surviving old-growth trees, some of which are 60-80 years old — a living record of pre-war Angolan coffee terroir that is slowly being restored to production through international NGO and private investment support.",
+      "production_technique": "Uíge revival Arabica production is characterized by the challenge of rebuilding post-conflict agricultural infrastructure: many farms lack the wet mills, drying beds, and road access that a functioning specialty coffee supply chain requires. The current production model combines traditional hand-picking of ripe cherries from old-growth and replanted Bourbon trees with basic wet processing using locally built fermentation tanks and sun-drying on plastic tarpaulins or repurposed concrete surfaces — not the raised-bed infrastructure of Ethiopia or Colombia, but achieving the basic separation between well-processed and defective lots necessary for SCA 80+ grades. The washed process is preferred for Uíge Arabica because the Congo Basin fermentation environment (high temperatures, high humidity) can produce over-fermented natural-process lots with undesirable sourness; the washed process limits fermentation to 24-36 hours with water washing that cleans the bean surface and reduces fermentation defects. Green bean milling occurs at a central Uíge wet mill before export through the port of Luanda.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Ethiopia Limu Washed (Congo Basin edge, equatorial highland, colonial introduction)",
+          "connection": "Angola Uíge Arabica and Ethiopia Limu both represent Arabica grown on the edge of the Congo-Nile watershed highlands — the same geological and climatic zone that spans from southern Ethiopia through Rwanda, Uganda, and into the Angolan plateau — producing washed Arabica of similar clean, fruit-forward profile with a mineral backbone from the ancient African shield soils; the key difference is that Ethiopia's Limu represents 1,000+ years of coffee cultivation while Angola's Uíge represents a 100-year colonial introduction being rebuilt after war"
+        },
+        {
+          "tradition": "Rwanda Kivu Washed (post-conflict agricultural recovery, highland volcanic, speciality revival)",
+          "connection": "Angola Uíge and Rwanda Kivu are the two most significant 'post-conflict coffee revival' stories in Africa — both had their specialty coffee sectors destroyed by civil war (Rwanda genocide 1994, Angola civil war 1975-2002) and both are being rebuilt through international NGO support, smallholder cooperatives, and specialty market access; both produce highland African washed Arabica of genuine quality that carries a powerful political narrative of agricultural recovery and food sovereignty"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Green bean: variable quality (post-war production still shows some inconsistency in sorting); roasted at medium: milk chocolate brown; brewed: golden amber, good clarity in well-processed lots",
+        "nose": "When well-processed: clean and fruit-forward for an African highland origin — mild red fruit (strawberry, raspberry in the best lots), mild citrus, pleasant earthy-chocolate undertone from the lateritic soils; less floral than Ethiopia but cleaner and more mineral than commercial Congo Basin Robusta",
+        "palate": "Medium body; medium acidity (lower than Ethiopia, appropriate for the plateau terroir); clean mid-palate of mild fruit and chocolate; medium finish; the quality varies significantly between lots but the best expressions show that Angola's highland terroir has genuine specialty potential that was present before the war and is slowly being recovered",
+        "conclusion": "Post-conflict revival coffee of historical and political significance; quality variable (SCA 80-86 range) but trending upward as processing infrastructure improves; compelling PCT narrative for engaged restaurant programming"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Angola Commercial Grade (Robusta/Arabica blend)",
+          "criteria": "Commercial export grade combining Uíge Arabica and Malanje Robusta; the primary volume export; below specialty grade (SCA 78-80)"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Angola Arabica Standard Washed (SCA 80-83)",
+          "criteria": "Washed Uíge Arabica at standard specialty grade; the current benchmark for the revival sector; accessible through specialty importers"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Angola Uíge Old-Growth Bourbon (SCA 84-87)",
+          "criteria": "Selected lots from identified old-growth colonial-era Bourbon trees on Uíge plateau farms; the quality breakthrough tier of the Angolan revival; occasionally available through specialty roasters"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Angola Competition Lot (SCA 87+)",
+          "criteria": "Competition-grade lots submitted to Cup of Excellence Angola (first held 2015); the highest expression of the revival; limited availability at auction"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Brew at 93-95°C; standard specialty parameters; the lateritic soil mineral character is best expressed at standard brewing temperatures without the reduction needed for more acidic Ethiopian origins",
+        "vessel": "Pour-over or drip for the washed lot clarity; the earthy-mineral character of the old-growth Bourbon is best highlighted in a clean extraction method",
+        "programme_position": "Morning or afternoon coffee service; the political narrative of post-war recovery makes this a compelling choice for café menus that rotate origins with storytelling — Angola is unknown to most coffee consumers, making it a genuine discovery origin"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Angola Specialty Coffee Alliance — the benchmark for revival quality; Cup of Excellence Angola winning lots for the precision tier",
+        "north_america_access": "Growing availability through specialty roasters; Sweet Maria's green bean catalog has featured Angola; Atlas Coffee Club has included Angola in subscription rotations; the PCT narrative makes this a strong candidate for ethically-focused restaurant coffee programming",
+        "culinary_application": "Angola's coffee story is inseparable from its colonial history: the Portuguese forced-cultivation system that created the Uíge coffee estates, the MPLA and UNITA civil war that destroyed them, and the Chinese-led post-war reconstruction that is now rebuilding them creates a complete geopolitical coffee narrative; pair with Angolan-style calulu (dried fish and okra stew) for a complete colonial-independence food culture story"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "COF-ANGUÍG-001",
+      "tradition": "coffee",
+      "extracted_at": "2026-04-12T19:16:37.353981+00:00",
+      "batch_number": 1
+    }
+  ]
+}

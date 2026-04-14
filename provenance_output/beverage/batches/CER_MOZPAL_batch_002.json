@@ -1,0 +1,102 @@
+{
+  "tradition": "ceremonial",
+  "region": "Mozambique — Palm Wine, Pombe, Cashew Wine",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:46:39.159717+00:00",
+  "entries": [
+    {
+      "tradition": "ceremonial",
+      "sub_tradition": "mozambique traditional fermented beverages",
+      "region": "Mozambique — Coastal and Interior Provinces",
+      "name": "Mozambique Traditional Fermented Beverages — Pombe, Palm Wine, and Cashew Wine",
+      "terroir_origin": "Mozambique, the Portuguese East African colony established in the late 15th century (Vasco da Gama's landing at Quelimane in 1498), maintains a deep tradition of indigenous fermented beverages that existed before Portuguese arrival and persist across all regions today. These beverages are not colonial products — they are pre-colonial Bantu and coastal Swahili food traditions that the Portuguese colonial presence absorbed into without replacing. The PCT connection: understanding Portuguese East African beverage culture requires understanding both the indigenous tradition and the colonial overlay. Three primary categories: Pombe (also opaque beer, tchibuku): a sorghum or maize fermented beverage, opaque, slightly sour, consumed fresh (shelf life 24–48 hours). Common across sub-Saharan Africa; Mozambique's version uses locally grown sorghum varieties. Sura (palm wine): tapped from coconut palms (coastal regions) or doum palms (north); fresh toddy drunk within hours of tapping or allowed to ferment 12–48 hours into a more potent version. Cashew wine (vinho de cajueiro): fermented cashew apple juice — the cashew apple is the fruit that surrounds the nut; when pressed and fermented for 24–72 hours, it produces a tangy, light (2–5% ABV), refreshing fermented drink. The cashew tree (Anacardium occidentale) was introduced to Mozambique by the Portuguese from Brazil in the 16th century — a direct PCT transfer (Brazil → Portugal → Mozambique) of an Amazonian indigenous crop that became the dominant cash crop in northern Mozambique by the 20th century.",
+      "production_technique": "Pombe production: sorghum or maize grain malted by soaking and sprouting 2–3 days; dried and ground; mixed with water and cooked; cooled; inoculated with wild yeast and lactobacillus from previous batch or environment; fermented 24–72 hours in sealed clay pots or plastic containers; consumed while still fermenting (fresh pombe is preferred). ABV: typically 2–4%; intentionally low and meant for daily consumption. Commercial pombe (Laurentina brand, Cervejas de Moçambique) is now produced at industrial scale and widely distributed. Palm wine (sura) production: palm wine tapper (sura-tapper) climbs coconut or doum palm; cuts inflorescence to expose the sap flow; attaches gourd or clay pot to collect; harvests twice daily (morning/evening). Fresh sura: sweet, lightly carbonated, naturally fermenting, 2–3% ABV; within 24 hours becomes more sour and fermented (4–6% ABV). Cashew wine production: cashew harvest season (September–November in Mozambique); cashew apples sorted, pressed, juice extracted; fermented naturally in containers 24–72 hours; most consumed immediately in rural areas; some distilled into cashew spirits (aguardente de caju — similar to Goan Feni via the same PCT agricultural transfer of cashew from Brazil).",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "ceremonial",
+          "beverage": "Kefir / traditional fermented dairy (Central Asia)",
+          "connection": "Both Mozambican pombe and Central Asian kefir represent the functional fermented beverage tradition: beverages consumed for daily nutritional and probiotic value rather than intoxication. Both are alive at point of consumption; both use indigenous microbial cultures preserved through the production batch; both cannot be easily commercialised without losing their essential character — the freshness IS the product"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Goan Cashew Feni (PCT-8)",
+          "connection": "Mozambique's cashew wine (vinho de cajueiro) and Goan Cashew Feni both derive from the same Amazonian indigenous plant transferred by Portuguese colonial networks in the 16th century. The agricultural PCT: cashew moves from Brazil → Goa (1560s) → Mozambique (1560s, separate transfer). In Goa, the cashew apple is distilled into Feni; in Mozambique, it is fermented into wine. Two destinations of the same PCT botanical transfer, two different traditions from the same raw material"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pombe: opaque, off-white to pale tan; yeast in suspension; thick, slightly viscous. Sura (fresh): pale yellow, cloudy, lightly effervescent. Cashew wine: pale orange-amber, slight haze from cashew tannins",
+        "nose": "Pombe: lactic-sour, cereal-grain warmth (sorghum character), light fermentation (CO2 from active yeast); earthy, slightly musty — recognisably alive. Sura (fresh): floral, honey, light tropical fruit; within 24 hours becomes wine-like, fermented, more acidic. Cashew wine: astringent cashew-skin tannin, tropical fruit (mango, guava), light fermentation acidity — distinct and unlike any other fermented beverage in the world.",
+        "palate": "Pombe: low alcohol; sour-tangy; refreshing in tropical heat; thin to medium body depending on grain ratio; no bitterness (no hops); the lactic character is central — this is essentially a grain kefir. Sura: sweet-tropical at fresh; increasingly acidic with age; light carbonation; refreshing and transient. Cashew wine: unique astringency from the cashew apple's high tannin content; tangy-tropical; the most unusual flavour among all PCT beverages — nothing else tastes like fermented cashew apple.",
+        "conclusion": "These beverages cannot be sourced in North American commercial markets — they exist only in their place of production and must be understood as context for the PCT tradition rather than as programme items. For a professional programme: serve as reference knowledge; demonstrate the cashew wine connection to Goan Feni through the shared botanical ancestry — the PCT as a botanical shipping network."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Artisanal Palm Wine (Sura) — Same-Day Tapped",
+          "criteria": "Freshly tapped; within 4 hours of harvest; coastal Mozambique or northern province coconut palm; served at point of production",
+          "markers": "Roadside sura vendors in Inhambane, Pemba, Maputo coast; experience only available in Mozambique; priceless as an experience, trivial in monetary cost (~5–20 MTN equivalent)"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Fresh Cashew Wine (Vinho de Cajueiro) — Harvest Season",
+          "criteria": "Freshly fermented from cashew harvest; Northern Mozambique (Nampula, Cabo Delgado); consumed within 48 hours of fermentation",
+          "markers": "Rural production, September–November; local market only"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Commercial Pombe (Tchibuku/Chibuku)",
+          "criteria": "Commercial sorghum opaque beer; Cervejas de Moçambique or Laurentina brand; correct lactic-grain character",
+          "markers": "Chibuku Shake-Shake (widely distributed sub-Saharan Africa); Laurentina Preta (commercial dark lager, easier to source internationally)"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Laurentina Lager (Commercial Reference)",
+          "criteria": "Mozambique-brewed commercial lager; simplest access point to Mozambican beverage culture outside Africa",
+          "markers": "Laurentina Preta or Clara; occasionally available at African restaurants in Vancouver and US major cities; ~$3–5 per bottle"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Pombe: room temperature or slightly chilled (18–22°C); never serve cold — the lactic character requires warmth to express. Sura: fresh at ambient tropical temperature (25–30°C). Cashew wine: ambient temperature; chilling suppresses the astringency.",
+        "vessel": "Traditional: carved gourd or clay cup for pombe and sura; communal vessel for pombe (the sharing tradition is central to its cultural function). Modern: small glasses for cashew wine tasting presentation.",
+        "technique": "These beverages require educational presentation rather than sommelier service. For a PCT programme: demonstrate the cashew wine-Feni connection by serving a small amount of Goan Feni alongside a description of cashew wine — the PCT as botanical chain made sensory. Pombe: discuss as context for commercial sub-Saharan African opaque beer category (Chibuku Shake-Shake, Umqombothi in South Africa).",
+        "programme_position": "Educational context; PCT geographical completeness; not a commercial programme item but essential PCT knowledge",
+        "verbal_presentation": "The cashew tree was an Amazonian plant. Portugal took it to Goa in the 1560s — where it became Feni. Portugal took it to Mozambique in the same decade — where it became cashew wine. The same botanical, two coastlines, entirely different traditions."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "No commercial international purveyor for traditional Mozambican fermented beverages; Cervejas de Moçambique (Laurentina, SABMiller subsidiary) for commercial reference",
+        "producer_location": "Mozambique — national distribution via Cervejas de Moçambique (Maputo)",
+        "key_person": "Traditional producers: home production across all provinces; no nationally prominent artisanal name",
+        "production_volume": "Pombe: millions of litres annually through informal household production; commercial Chibuku: SABMiller-level volume across sub-Saharan Africa",
+        "certifications": [
+          "None applicable for traditional production"
+        ],
+        "bc_distributor": "Not commercially available in BC. Laurentina occasionally at African specialty food shops (Nile Ethiopian, African international markets in Metro Vancouver)",
+        "us_distributor": "Chibuku Shake-Shake: African specialty retailers in diaspora communities (US major cities). Laurentina: African restaurants only. No distribution of traditional artisanal versions outside Mozambique.",
+        "uk_distributor": "Chibuku: African specialty shops (London, Birmingham); not mainstream UK distribution",
+        "price_tier": "Negligible (traditional artisanal); Commercial Chibuku ~$2–4/bottle",
+        "availability_notes": "Context-only item: not commercially available in standard trade channels outside Mozambique and sub-Saharan Africa. For a programme: use the Feni-cashew wine connection as the teaching vehicle."
+      },
+      "trail_connection": "PCT-7",
+      "trail_note": "Mozambique is the PCT's easternmost African node: Vasco da Gama stopped at Quelimane in 1498 en route to India, establishing the Portuguese presence that would last until independence in 1975. The cashew tree — Amazonian in origin — was introduced by the Portuguese in the 1500s and became Mozambique's largest agricultural export by the 20th century. The cashew wine tradition is the most direct beverage expression of the PCT botanical transfer network in East Africa.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Matapa (Mozambican coconut-cassava leaf stew with prawns)",
+          "pairing_type": "complement",
+          "rationale": "Matapa — cassava leaves ground with garlic, coconut milk, and prawns — is Mozambique's most celebrated dish. Fresh sura (palm wine from the same coconut tree that provides the milk) is the canonical pairing: the coconut milk in the dish and the coconut palm wine are literally from the same agricultural source, creating a complete island-kitchen coherence"
+        },
+        {
+          "technique_id": "",
+          "dish": "Grilled prawns (camarão grelhado, Maputo coast)",
+          "pairing_type": "contrast",
+          "rationale": "Mozambican coast prawns grilled with peri-peri and lime — the country's most internationally recognised dish — contrast cleanly against cashew wine's astringency and tropical acidity. The cashew wine cuts the peri-peri heat while the fruit-tannin character provides structural support for the grilled shellfish"
+        }
+      ],
+      "source": "IIAM (Instituto de Investigação Agrária de Moçambique) traditional beverages documentation; Cervejas de Moçambique production records; FAO Mozambique cashew production statistics (2020); World Bank Mozambique agricultural development reports; João de Barros, Décadas da Ásia (1552) — Vasco da Gama coastal documentation",
+      "entry_id": "CER-MOZCOA-001",
+      "extracted_at": "2026-04-11T15:46:39.159319+00:00",
+      "batch_number": 2
+    }
+  ]
+}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Provenance</title>
+<meta name="description" content="Four doors into Provenance. Start free and open further when you're ready.">
+<link rel="canonical" href="https://provenance.kitchen/pricing">
+<meta property="og:title" content="Pricing — Provenance">
+<meta property="og:description" content="Four doors into Provenance. Start free and open further when you're ready.">
+<meta property="og:url" content="https://provenance.kitchen/pricing">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pricing — Provenance">
+<meta name="twitter:description" content="Four doors into Provenance. Start free and open further when you're ready.">
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
+  --cream:#F5F1E9;--text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);
+  --border:rgba(201,168,76,0.20);--bg:#08080A;--surface:#131210;
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3)}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms}
+.nav-links a:hover{color:#C9A84C}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.mobile-menu-btn{display:flex}}
+
+.hero{max-width:780px;margin:0 auto;padding:4rem 2rem 2rem;text-align:center}
+.hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.hero-title{font-family:var(--serif);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;letter-spacing:-1px;margin-bottom:1rem}
+.hero-sub{font-size:1rem;color:var(--text-light);max-width:480px;margin:0 auto}
+
+.toggle-wrap{display:flex;align-items:center;justify-content:center;gap:1rem;margin:2.5rem auto 3rem}
+.toggle-label{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light)}
+.toggle{position:relative;width:44px;height:24px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-track{position:absolute;inset:0;background:rgba(255,255,255,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;transition:background 200ms}
+.toggle input:checked + .toggle-track{background:rgba(201,168,76,0.2)}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;background:#C9A84C;border-radius:50%;transition:transform 200ms}
+.toggle input:checked ~ .toggle-thumb{transform:translateX(20px)}
+.toggle-save{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(201,168,76,0.7);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:3px;padding:2px 6px}
+
+.cards{max-width:1100px;margin:0 auto;padding:0 1.5rem 5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.cards{grid-template-columns:1fr}}
+
+.card{background:#0E0D0B;border:1px solid rgba(201,168,76,0.1);border-radius:8px;padding:2rem 1.5rem;display:flex;flex-direction:column}
+.card.featured{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.04)}
+.card-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem}
+.card-name{font-family:var(--serif);font-size:1.5rem;font-weight:700;letter-spacing:-0.5px;margin-bottom:1.25rem}
+.card-price-yr{font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--text)}
+.card-price-mo{font-size:0.78rem;color:var(--text-light);margin-top:0.2rem;margin-bottom:1.5rem}
+.card-price-yr .per{font-family:var(--sans);font-size:0.85rem;font-weight:300;color:var(--text-light)}
+
+.card-rule{border:none;border-top:1px solid rgba(201,168,76,0.08);margin:1.25rem 0}
+
+.card-features{list-style:none;padding:0;margin:0 0 1.75rem;display:flex;flex-direction:column;gap:0.6rem;flex:1}
+.card-features li{font-size:0.82rem;color:var(--text-secondary);padding-left:1.1rem;position:relative}
+.card-features li::before{content:'—';position:absolute;left:0;color:var(--gold);font-size:11px;top:1px}
+
+.card-btn{display:block;text-align:center;padding:10px 16px;border-radius:4px;font-family:var(--sans);font-size:0.82rem;font-weight:400;letter-spacing:0.05em;text-decoration:none;transition:all 200ms}
+.card-btn-outline{background:transparent;border:1px solid rgba(201,168,76,0.25);color:rgba(201,168,76,0.8)}
+.card-btn-outline:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.45);color:var(--gold)}
+.card-btn-solid{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:var(--gold)}
+.card-btn-solid:hover{background:rgba(201,168,76,0.25);border-color:rgba(201,168,76,0.6)}
+
+.faq{max-width:680px;margin:0 auto;padding:0 2rem 5rem}
+.faq-title{font-family:var(--serif);font-size:1.5rem;font-weight:600;margin-bottom:2rem;text-align:center}
+.faq-item{border-bottom:1px solid rgba(201,168,76,0.08);padding:1.25rem 0}
+.faq-q{font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.5rem}
+.faq-a{font-size:0.82rem;color:var(--text-light);line-height:1.7}
+
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+    {% if is_authenticated %}
+    <a href="/auth/account">{{ current_user.display_name or 'Account' }}</a>
+    {% else %}
+    <a href="/auth/login">Sign In</a>
+    {% endif %}
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+  <a href="/pricing" class="mobile-nav-secondary">Pricing</a>
+  {% if is_authenticated %}
+  <a href="/auth/account" class="mobile-nav-secondary">{{ current_user.display_name or 'Account' }}</a>
+  {% else %}
+  <a href="/auth/login" class="mobile-nav-secondary">Sign In</a>
+  {% endif %}
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Four Doors</div>
+  <h1 class="hero-title">The bread is on the table.<br>The room is beautiful.</h1>
+  <p class="hero-sub">Start free and open further when you're ready. Every tier unlocks more depth — never less access.</p>
+</div>
+
+<div class="toggle-wrap">
+  <span class="toggle-label">Monthly</span>
+  <label class="toggle">
+    <input type="checkbox" id="billingToggle" checked onchange="toggleBilling(this.checked)">
+    <div class="toggle-track"></div>
+    <div class="toggle-thumb"></div>
+  </label>
+  <span class="toggle-label">Yearly</span>
+  <span class="toggle-save">Save ~17%</span>
+</div>
+
+<div class="cards">
+
+  <!-- THE KITCHEN -->
+  <div class="card featured">
+    <div class="card-eyebrow">Door I</div>
+    <div class="card-name">The Kitchen</div>
+    <div class="card-price-yr" id="price-kitchen">$49<span class="per">/year</span></div>
+    <div class="card-price-mo" id="price-kitchen-sub">or $4.99/month</div>
+    <hr class="card-rule">
+    <ul class="card-features">
+      <li>Full seven-pillar depth on every technique</li>
+      <li>Quality hierarchy — Reserve vs House</li>
+      <li>Sensory tests with pass/fail cues</li>
+      <li>Species precision on every ingredient</li>
+      <li>Cookbook scanning &amp; recipe extraction</li>
+      <li>Basic beverage pairings</li>
+    </ul>
+    <a href="/subscribe/kitchen/yearly" class="card-btn card-btn-solid" id="btn-kitchen" data-yearly="/subscribe/kitchen/yearly" data-monthly="/subscribe/kitchen/monthly">Open The Kitchen →</a>
+  </div>
+
+  <!-- THE LIBRARY -->
+  <div class="card">
+    <div class="card-eyebrow">Door II</div>
+    <div class="card-name">The Library</div>
+    <div class="card-price-yr" id="price-library">$149<span class="per">/year</span></div>
+    <div class="card-price-mo" id="price-library-sub">or $14.99/month</div>
+    <hr class="card-rule">
+    <ul class="card-features">
+      <li>Everything in The Kitchen</li>
+      <li>CMS deductive grid</li>
+      <li>Full service protocols (82 entries)</li>
+      <li>Three Spice Routes complete</li>
+      <li>Beverage terroir at full depth</li>
+      <li>Beverage references &amp; references library</li>
+    </ul>
+    <a href="/subscribe/library/yearly" class="card-btn card-btn-outline" id="btn-library" data-yearly="/subscribe/library/yearly" data-monthly="/subscribe/library/monthly">Open The Library →</a>
+  </div>
+
+  <!-- THE PROFESSION -->
+  <div class="card">
+    <div class="card-eyebrow">Door III</div>
+    <div class="card-name">The Profession</div>
+    <div class="card-price-yr" id="price-profession">$299<span class="per">/year</span></div>
+    <div class="card-price-mo" id="price-profession-sub">or $29.99/month</div>
+    <hr class="card-rule">
+    <ul class="card-features">
+      <li>Everything in The Library</li>
+      <li>Supplier connections &amp; sourcing</li>
+      <li>Programme builder (full build/save/export)</li>
+      <li>Beverage programme costing tools</li>
+      <li>Team accounts</li>
+      <li>Priority access to new canons</li>
+    </ul>
+    <a href="/subscribe/profession/yearly" class="card-btn card-btn-outline" id="btn-profession" data-yearly="/subscribe/profession/yearly" data-monthly="/subscribe/profession/monthly">Open The Profession →</a>
+  </div>
+
+  <!-- THE TRADE -->
+  <div class="card">
+    <div class="card-eyebrow">Door IV</div>
+    <div class="card-name">The Trade</div>
+    <div class="card-price-yr" id="price-trade">$999<span class="per">/year</span></div>
+    <div class="card-price-mo" id="price-trade-sub">or $99/month</div>
+    <hr class="card-rule">
+    <ul class="card-features">
+      <li>Everything in The Profession</li>
+      <li>Self-service producer/supplier portal</li>
+      <li>Product listing &amp; regional targeting</li>
+      <li>Pairing intelligence analytics</li>
+      <li>Restaurant connection listings</li>
+      <li>API access for integrations</li>
+    </ul>
+    <a href="/subscribe/trade/yearly" class="card-btn card-btn-outline" id="btn-trade" data-yearly="/subscribe/trade/yearly" data-monthly="/subscribe/trade/monthly">Open The Trade →</a>
+  </div>
+
+</div>
+
+<div class="faq">
+  <div class="faq-title">Common questions</div>
+
+  <div class="faq-item">
+    <div class="faq-q">Can I try it free?</div>
+    <div class="faq-a">Yes. The first four pillars of every technique — origin, description, cross-cuisine parallels, and flavour context — are always free. Create an account and start exploring immediately.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What's a "pillar"?</div>
+    <div class="faq-a">Each technique entry is structured around seven pillars: origin, technique description, cross-cuisine parallels, flavour context, quality hierarchy, sensory tests, and species precision. Free access covers the first four. The Kitchen opens all seven.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What payment methods do you accept?</div>
+    <div class="faq-a">All major credit and debit cards via Stripe. We're currently in test mode — use card 4242 4242 4242 4242 with any future expiry and any CVC.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Can I cancel anytime?</div>
+    <div class="faq-a">Yes. Manage your subscription from your account page. You keep access until the end of your billing period.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Is this right for professional kitchens?</div>
+    <div class="faq-a">The Profession tier is built for working kitchens — programme builder, supplier sourcing, costing tools. The Trade tier adds a self-service portal for producers and suppliers who want to list products.</div>
+  </div>
+</div>
+
+<footer>
+  <div class="about-footer">
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/recipes">Recipes</a>
+      <a href="/techniques/browse">Techniques</a>
+      <a href="/suppliers">Suppliers</a>
+      <a href="/for-professionals">For Professionals</a>
+      <a href="/methodology">Methodology</a>
+      <a href="/pricing">Pricing</a>
+      <a href="mailto:info@provenance.kitchen">Contact</a>
+    </div>
+    <span class="footer-wm">Provenance</span>
+  </div>
+</footer>
+
+<script>
+const PRICES = {
+  kitchen:    { yearly: '$49/year',  monthly: '$4.99/month' },
+  library:    { yearly: '$149/year', monthly: '$14.99/month' },
+  profession: { yearly: '$299/year', monthly: '$29.99/month' },
+  trade:      { yearly: '$999/year', monthly: '$99/month' },
+};
+
+function toggleBilling(isYearly) {
+  const period = isYearly ? 'yearly' : 'monthly';
+  ['kitchen', 'library', 'profession', 'trade'].forEach(tier => {
+    const prEl = document.getElementById('price-' + tier);
+    const subEl = document.getElementById('price-' + tier + '-sub');
+    const btn = document.getElementById('btn-' + tier);
+
+    if (isYearly) {
+      const yr = PRICES[tier].yearly;
+      const perYear = yr.replace('/year', '');
+      prEl.innerHTML = perYear + '<span class="per">/year</span>';
+      subEl.textContent = 'or ' + PRICES[tier].monthly;
+    } else {
+      const mo = PRICES[tier].monthly;
+      prEl.innerHTML = mo.replace('/month', '') + '<span class="per">/month</span>';
+      subEl.textContent = 'billed monthly';
+    }
+
+    btn.href = btn.dataset[period];
+  });
+}
+
+function toggleMobileMenu() {
+  var nav = document.getElementById('mobileNav');
+  var overlay = document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+}
+</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
+</body>
+</html>

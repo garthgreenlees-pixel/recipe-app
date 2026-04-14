@@ -8,3 +8,7 @@ sentry-sdk[flask]
 psycopg2-binary
 Pillow
 pillow-heif
+weasyprint
+fal-client
+beautifulsoup4
+stripe

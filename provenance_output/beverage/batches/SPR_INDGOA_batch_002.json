@@ -1,0 +1,103 @@
+{
+  "tradition": "spirits",
+  "region": "India — Goa (Paul John Single Malt Whisky)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:55:18.620066+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "indian single malt whisky goa",
+      "region": "India — Goa (John Distilleries, Goa facility)",
+      "name": "Paul John Single Malt — Indian Whisky from a Portuguese Colonial Distillation Territory",
+      "terroir_origin": "Paul John Single Malt Whisky, produced by John Distilleries at their Goa facility, represents a remarkable convergence: the same Indian coastal state that holds the world's only GI-protected sugarcane spirit (Cashew Feni) also produces what is now recognised as the most internationally acclaimed Indian single malt whisky. The PCT connection: Goa's 450-year Portuguese colonial distillation heritage — the Feni copper retort tradition — created infrastructure, skilled craftsmen, and institutional distillation knowledge that made the transition to malt whisky production technically feasible for an Indian company choosing Goa as their whisky site. The terroir: Goa's climate is extreme for whisky maturation — tropical heat (average 27–32°C year-round) and high humidity produce evaporation rates of 8–12% annually (the 'angel's share'), compared to 2–3% in Scotland. This accelerates ageing dramatically: a 7-year Paul John can have the flavour development of a 12–15 year Scotch. The barley: Indian-grown two-row barley from the Punjab (not Himalayan malted barley), producing a lighter, more grain-forward spirit than Scottish peat-influenced malts. The stills: traditional copper pot stills; the same distillation form used for Feni production, adapted to whisky production.",
+      "production_technique": "Paul John production at the Goa distillery: Barley: Indian two-row barley, malted at John's own maltings facility in Bangalore; both peated (Bold) and unpeated (Brilliance, Classic Select) expressions produced. Mashing: traditional Scottish mashing; lautered mash tun; the warm Indian climate means faster saccharification than Scotland. Fermentation: 72–96 hours using own cultured yeast; longer fermentation in Indian heat develops ester compounds not produced in cooler Scottish conditions. Distillation: copper pot stills (wash still and spirit still); the Goa craft distillation tradition means the distillers are experienced with copper pot still management from the Feni heritage. Maturation: exclusively ex-American white oak bourbon barrels; in Goa's tropical climate, the wood interaction is dramatically faster — extracting vanilla, caramel, and spice compounds rapidly. Aged expressions: 7yr, 10yr, 12yr; a 7-year Paul John shows more barrel integration than most 12-year Scotch from cooler climates. Peated expression (Bold): Islay-style peated barley at 30 ppm phenol; the tropical wood ageing transforms the peat character — Indian tropical peat in American oak produces something unlike any Scotch. Paul John won Jim Murray's 'Indian Whisky of the Year' in 2012 (for Brilliance) and has received consistent World Whisky Award recognition.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Highland Park 12yr (Orkney, Scotland)",
+          "connection": "Paul John Classic Select and Highland Park 12yr occupy the same quality tier in the single malt hierarchy — both are non-chill-filtered, natural colour, accessible premium single malts with genuine complexity. The flavour profiles differ fundamentally: Highland Park is maritime-heather-honey-peat; Paul John Classic is tropical-vanilla-caramel-exotic-spice. Both reward side-by-side tasting as a demonstration that single malt whisky is a global conversation, not exclusively Scottish"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Goa Cashew Feni (PCT-8, same distillation territory)",
+          "connection": "Paul John Single Malt and Cazulo Cashew Feni are both distilled in Goa using copper pot still tradition. The comparison demonstrates what the same distillation technology and climate does to two completely different raw materials: sugarcane sap → Feni (funky, agricultural, 42.8%); malted barley → whisky (structured, barrel-aged, 46%). Both are products of Goa's Portuguese colonial distillation heritage, expressed through two entirely different traditions"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Paul John Brilliance (7yr): pale gold; lighter than expected for the age — ex-bourbon barrels in Indian heat extract colour more slowly than ex-sherry. Classic Select: medium gold. Bold (peated): medium amber.",
+        "nose": "Brilliance: extraordinary aromatic purity — vanilla ice cream, coconut, caramelised banana, tropical fruit, light floral (the unpeated Indian barley's own aromatics amplified by tropical barrel ageing). The most tropical-register single malt outside Japanese mizunara-aged expressions. Classic Select: richer — dried apricot, toffee, cinnamon, light tobacco, more barrel influence. Bold (peated): smoked papaya, BBQ smoke, overripe tropical fruit, coconut-smoke hybrid — the Indian peat-tropical-barrel combination produces a profile unavailable anywhere else in whisky.",
+        "palate": "Brilliance: 46% ABV; unchill-filtered; light to medium body; tropical fruit forward; vanilla-creamy mid-palate; clean sweet finish. Classic Select: fuller body; more barrel spice; dried fruit; warmer finish. Bold: 46% ABV; the smoke is tropical-sweet rather than medicinal; unusual and compelling. All: the shared character is the tropical barrel ageing — a warmth and exotic-spice richness impossible in any northern-climate whisky.",
+        "conclusion": "Paul John Single Malt is the strongest argument that single malt whisky has become a genuinely global tradition. For a programme: the Brilliance alongside a Speyside 12yr (Glenfarclas, Aberlour) demonstrates that same production method + same barrel type + different climate = completely different whisky. The PCT narrative: Goa's distillation heritage made this possible."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Paul John Peated Select Cask / Special Release",
+          "criteria": "Special annual release; cask strength or named cask; limited allocation; Brilliance Reserve or special peated expression",
+          "markers": "Paul John Peated Select Cask; Paul John Christmas Edition; Paul John Kanya or comparable special release; US ~$90–150+"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Paul John Bold (Peated) / Classic Select Cask",
+          "criteria": "Peated expression or Classic cask-strength; 46%+ ABV; non-chill-filtered; Indian tropical maturation",
+          "markers": "Paul John Bold; Paul John Classic Select Cask; US ~$50–70; BC ~$65–80"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Paul John Brilliance / Classic Select",
+          "criteria": "Standard range; 46% ABV; non-chill-filtered; natural colour; entry to Paul John's quality tier",
+          "markers": "Paul John Brilliance; Paul John Classic Select; US ~$40–50; BC ~$55–65"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Paul John Edited (ex-sherry influence)",
+          "criteria": "Entry-level; accessible; introduction to Paul John's tropical-barrel style",
+          "markers": "Paul John Edited; US ~$30–38; BC ~$40–48"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature (18–20°C); do not refrigerate — the tropical spice character closes below 15°C",
+        "vessel": "Glencairn or nosing glass (captures the extraordinary aromatic complexity); Riedel Single Malt glass would also work",
+        "technique": "Paul John Brilliance neat: 45mL, room temperature, 5 minutes to open — the tropical barrel esters open slowly. Water: 2–3 drops in Brilliance to open the coconut-floral; not needed for Classic (already rounded). Comparative tasting: Paul John Brilliance alongside Aberlour 12yr A'bunadh or Glenfarclas 10yr — the same production method, the same barrel type, Scotland vs. Goa climate. Bold: neat at cask strength, no water — the smoke-tropical balance is best undiluted.",
+        "programme_position": "Indian whisky discovery experience; PCT-8 Goa distillation narrative; Feni-and-whisky comparative tasting from the same territory",
+        "verbal_presentation": "Paul John Brilliance — Goa, India. Seven years in ex-bourbon oak in the tropics. Twelve percent of the whisky disappeared as angel's share. What's left is what happens when Scotland's tradition meets five hundred years of Goan distillation history."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "John Distilleries Ltd (Goa facility and Bangalore maltings)",
+        "producer_location": "Goa distillery (finishing and bottling); Bangalore (malt production)",
+        "key_person": "John Distilleries management; Michael D'Souza (master distiller, Goa facility); Jim Murray (key international reviewer who first brought global attention to Paul John with Brilliance 2012 World Whisky Award)",
+        "production_volume": "Growing; Paul John now distributed in 40+ countries; currently the most internationally visible Indian single malt brand",
+        "certifications": [
+          "Indian FSSAI food safety standard",
+          "World Whisky Awards multiple wins"
+        ],
+        "bc_distributor": "Paul John available at BC Liquor stores (BCLDB listed — confirmed); Brilliance and Classic Select most widely available",
+        "us_distributor": "Anchor Distilling Company / Preiss Imports (national US distributor for Paul John — confirmed); widely available Total Wine, BevMo, premium spirits retailers",
+        "uk_distributor": "Elixir Distillers (UK) handles Paul John; available at Master of Malt, The Whisky Exchange, Harvey Nichols",
+        "price_tier": "Market to Reserve (Edited BC ~$45; Brilliance BC ~$60; Bold BC ~$75; Classic Select Cask BC ~$90)",
+        "availability_notes": "In BC: BC Liquor stores carry Paul John Brilliance and Classic Select. Specialty spirits merchants (Marquis Wine Cellars, Firefly Fine Wines) carry Bold and premium expressions. US: Anchor Distilling/Preiss Imports nationally; Total Wine carries standard range; specialty shops carry Bold and cask expressions."
+      },
+      "trail_connection": "PCT-8",
+      "trail_note": "Paul John Single Malt is the PCT's most contemporary production achievement: a post-colonial Indian company using the distillation infrastructure and expertise legacy of 450 years of Portuguese colonial Feni production in Goa to produce single malt whisky that competes internationally with Scotland. The 2012 Jim Murray recognition was not a novelty rating — it was an acknowledgment that the Indian single malt category had produced a genuinely world-class spirit. The copper pot still that makes Feni is the same copper pot still philosophy that makes Paul John. Goa is the only place in the world where you can drink a GI-protected indigenous spirit (Feni) and a prize-winning single malt whisky distilled in the same territory by the same cultural tradition.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Goa pork vindaloo (vindalho — wine-and-garlic marinade, PCT origin)",
+          "pairing_type": "bridge",
+          "rationale": "Vindaloo's name derives from the Portuguese 'vinha d'alhos' (wine and garlic marinade) — the dish is a direct PCT culinary creation. Paul John Bold's tropical-smoke character bridges with the vindaloo's piri-piri heat and pork fat: the smoke echoes the charring on the pork; the whisky's tropical sweetness cuts the chilli heat. The most historically resonant Goa whisky pairing: PCT food and PCT spirit"
+        },
+        {
+          "technique_id": "",
+          "dish": "Dark chocolate and smoked cashews (Goa-regional)",
+          "pairing_type": "complement",
+          "rationale": "Paul John Brilliance with Goan smoked cashews and a dark chocolate piece: the whisky's coconut-vanilla character bridges with the cashew's roasted-sweet register; the dark chocolate provides bitter contrast. The cashew is the same Anacardium occidentale that the Portuguese brought from Brazil — Goa's most iconic nut, pairing with Goa's most awarded spirit"
+        }
+      ],
+      "source": "John Distilleries official production documentation; Jim Murray Whisky Bible 2012 (Paul John Brilliance Indian Whisky of the Year); World Whiskies Awards Paul John citations 2013–2023; Preiss Imports US portfolio; Indian Malt Whisky Association production documentation",
+      "entry_id": "SPR-INDGOA-001",
+      "extracted_at": "2026-04-11T15:55:18.619712+00:00",
+      "batch_number": 2
+    }
+  ]
+}

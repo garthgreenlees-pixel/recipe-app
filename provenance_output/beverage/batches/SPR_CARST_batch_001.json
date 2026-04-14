@@ -1,0 +1,110 @@
+{
+  "tradition": "spirits",
+  "region": "Caribbean — St Lucia (Chairman's Reserve)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T17:22:18.713736+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "caribbean rum eastern island pot column blend",
+      "region": "Caribbean — St Lucia, Eastern Caribbean Island",
+      "name": "Chairman's Reserve St Lucia — Pot-Column Blend, Eastern Caribbean Island Character",
+      "terroir_origin": "St Lucia is a volcanic island in the Eastern Caribbean Windward Islands chain — one of the most geologically active islands in the Lesser Antilles, dominated by the twin Piton mountains (UNESCO World Heritage Site). The PCT connection: St Lucia was under Portuguese maritime influence in the early 16th century before French and then British colonial control. The rum industry reflects this multi-layered colonial history: French agricultural rum tradition (fresh cane juice, agricole influence) combined with British industrial rum production (molasses, column still) creates the distinctive St Lucia style. The Roseau Valley, where St Lucia Distillers is located, is a volcanic river valley with exceptionally fertile alluvial soils — sugarcane grown in volcanic mineral-rich conditions that proponents argue can be tasted in the rum. St Lucia Distillers is the sole producer on the island — a monopoly in the best sense: total creative control over what the island produces, with no commercial pressure to reduce quality for volume. The Eastern Caribbean island character: smaller, more volcanic, more maritime than the larger Greater Antilles (Jamaica, Cuba, Barbados) — the rum reflects the island's scale and the distillery's care.",
+      "production_technique": "St Lucia Distillers pot-column production: Fermentation: 48-72 hours in stainless steel; molasses-based for standard expressions; longer fermentation for premium lots to develop heavier esters. Distillation: dual-stream production: Column still (vintage 1960s Coffey still from Scotland): light, clean, neutral spirit for the column component of the blend. Pot still (copper pot still): heavy, ester-rich, funky spirit for the pot-still component. Blending: the ratio of pot-to-column determines the final character. Chairman's Reserve standard: approximately 40% pot, 60% column — the pot still contribution is detectable but not dominant. Chairman's Reserve 1931: higher pot still ratio; more ester-forward; named for the year the original distillery was founded. Ageing: ex-bourbon American oak; tropical ageing in Roseau Valley warehouse. The tropical ageing removes approximately 6-8% per year to evaporation — the accelerated evolution is central to Caribbean rum character.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Foursquare Barbados (pot-column blend, Seale)",
+          "connection": "Both are eastern Caribbean pot-column blends from single-distillery islands. Foursquare is more refined and Scotch-adjacent; Chairman's Reserve is more pot-forward and funkier. The comparison demonstrates how the pot-to-column ratio is the fundamental parameter defining Caribbean rum house style."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Rhum Agricole AOC Martinique (Clement VSOP)",
+          "connection": "Both are eastern Caribbean rums from volcanic islands. The fundamental contrast: Martinique is fresh cane juice (agricole); St Lucia is molasses-based. The agricole-vs-industrial divide is visible in the final glass — fresh grass and vegetable character vs caramel and tropical fruit."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Single Pot Still Irish Whiskey (Redbreast 15yr)",
+          "connection": "Both use pot still distillation as a defining character component. Irish pot still (unmalted barley) creates a spicy, oily register; Caribbean pot still rum creates a fruity, ester-rich register. The comparison teaches guests that pot still is a process, not a flavour — the raw material determines the outcome."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Angostura 1824 12yr (Trinidad)",
+          "connection": "Both are Eastern Caribbean aged rums from small volcanic islands with colonial rum heritage. Trinidad (column-dominant) vs St Lucia (pot-column blend) demonstrates the column-pot divide within the same island chain and historical period."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Medium amber with golden highlights; the tropical ageing adds colour faster than temperate wood ageing — appears older than its stated age",
+        "nose": "Ripe banana, tropical fruit (mango, pineapple), caramel, vanilla, faint heavy pot-still funk (overripe fruit, acetone edge), light oak spice",
+        "palate": "Medium-full body; the pot still component gives weight and roundness that column-only Caribbean rum lacks; caramel, dried tropical fruit, warm wood spice",
+        "texture": "Rounder and more glycerous than column-only rum; the pot still esters create a mid-palate fullness; less sharp than a molasses-based column still",
+        "finish": "45-60 seconds; tropical fruit and caramel; slight banana-funk aftertaste from the pot still component; warm and lingering",
+        "conclusion": "The unheralded pot-column blend — achieves Foursquare-level quality discussion at lower commercial recognition"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Chairman's Reserve 1931 (highest pot still ratio)",
+          "criteria": "Named for original 1931 distillery; higher pot-still component ratio; more ester-forward; the flagship expression requiring the most ageing",
+          "markers": "Chairman's Reserve 1931; BC ~$60-80; US ~$55-70; limited availability"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Chairman's Reserve Forgotten Casks",
+          "criteria": "Extra aged; selected barrels; higher ex-bourbon wood contribution; the richest standard Chairman's Reserve expression",
+          "markers": "Chairman's Reserve Forgotten Casks; BC ~$50-65; US ~$45-60"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Chairman's Reserve Spiced or Original",
+          "criteria": "Standard expression; 40% pot still; the correct by-the-glass introduction; accessible price for cocktail programme use",
+          "markers": "Chairman's Reserve Original; BC ~$35-45; US ~$30-40; BCLDB listed"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Chairman's Reserve White Label",
+          "criteria": "Unaged or lightly aged; column-dominant; the cocktail workhorse expression; introduction to the house character without the aged complexity",
+          "markers": "Chairman's Reserve White Label; BC ~$25-35; US ~$22-30"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve neat at room temperature for 1931; over ice for standard; the tropical-aged character opens at room temperature better than temperate-aged whisky",
+        "vessel": "Rocks glass or tulip for neat service; highball for cocktail; the pot still funk needs no glass to be detected",
+        "technique": "Chairman's Reserve 1931 in a rum sour: 60mL + 20mL lime + 15mL sugar + egg white. The pot still ester character survives citrus dilution better than column-only rum. The St Lucia Piton narrative: 'Grown in the shadow of the Piton volcanoes. The only rum distillery on the island. Pot still and column, blended in the Roseau Valley.'",
+        "programme_position": "Eastern Caribbean rum education; pot-column blend comparison; cocktail program alternative to Foursquare",
+        "verbal_presentation": "Chairman's Reserve — St Lucia, Eastern Caribbean. The Piton mountains in a glass. Pot still and column, aged in the volcanic valley."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "St Lucia Distillers — the sole rum producer on St Lucia",
+        "producer_location": "Roseau Valley, St Lucia, Eastern Caribbean",
+        "key_person": "The Barnard family (ownership); Master Blender (rotating)",
+        "bc_distributor": "BCLDB lists Chairman's Reserve Original and Spiced; 1931 through BCLDB Signature stores",
+        "us_distributor": "Spirited Brands (US national); widely distributed through Total Wine and premium spirits retailers",
+        "uk_distributor": "Speciality Brands (UK); available through The Whisky Exchange and Master of Malt",
+        "price_tier": "Entry: $25-35 (White Label). Mid: $35-45 (Original). Premium: $50-65 (Forgotten Casks). Ultra: $60-80 (1931).",
+        "availability_notes": "Chairman's Reserve Original and Spiced are widely available in BC. 1931 is BCLDB Signature Stores and specialty. Forgotten Casks through private order in BC."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Grilled jerk chicken (Scotch bonnet, allspice, thyme marinade)",
+          "pairing_type": "complement",
+          "rationale": "The Caribbean spice-char-citrus profile of jerk chicken and Chairman's Reserve's tropical fruit and pot still character are the canonical Eastern Caribbean food-spirit pairing — both reflecting the volcanic island ingredient palette."
+        },
+        {
+          "technique_id": "",
+          "dish": "Pineapple rum cake or banana foster",
+          "pairing_type": "bridge",
+          "rationale": "The ripe pineapple and banana character of Chairman's Reserve bridges the tropical fruit in classic Caribbean desserts — the pot still funk creates a caramel-fruit bridge that column-only rum cannot replicate."
+        }
+      ],
+      "source": "St Lucia Distillers production documentation; Spirited Brands US distribution portfolio; BCLDB product listings verified April 2026",
+      "trail_connection": "PCT-WADT",
+      "trail_note": "PCT×WADT: St Lucia sits at the intersection of the PCT (Portuguese Atlantic cane chain) and WADT (West African Diaspora Trail). The island changed hands 14 times between French and British, creating a colonial palimpsest that is audible in every aspect of the culture — and visible in the rum distillery's dual pot-column production reflecting both British industrial and French agricultural philosophies.",
+      "entry_id": "SPR-CARST-001",
+      "extracted_at": "2026-04-11T17:22:18.712714+00:00",
+      "batch_number": 1
+    }
+  ]
+}

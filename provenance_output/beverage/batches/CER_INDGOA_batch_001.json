@@ -1,0 +1,102 @@
+{
+  "tradition": "ceremonial",
+  "region": "India — Goa (Toddy and Aged Feni continuation)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:55:18.618348+00:00",
+  "entries": [
+    {
+      "tradition": "ceremonial",
+      "sub_tradition": "goa coconut toddy fresh",
+      "region": "India — Goa (Coastal)",
+      "name": "Goa Coconut Toddy (Neera and Sura) — The Living Sap of the Coconut Palm",
+      "terroir_origin": "Coconut toddy (neera in fresh form; sura or soro when fermented) is one of the oldest continuously consumed beverages in the Indian subcontinent. The coconut palm (Cocos nucifera) has been cultivated on the Konkan coast — of which Goa is the defining coastal section — for at least 3,000 years. The same coconut palm that produces Feni's base spirit (when the sap is distilled) provides toddy in its unfermented (neera) and lightly fermented (sura) forms. Goa's coastal architecture, cuisine, and daily rhythm are entirely organised around the coconut palm — a fact that remains unchanged since before the Portuguese arrived in 1510. The toddy tradition: the 'toddy tapper' (render in Konkani; palm-wine tapper) climbs the palm twice daily at dawn and dusk. A clay pot is tied to the cut inflorescence stalk; the palm sap flows overnight (6–8 hours) into the pot. Collected before sunrise: neera (fresh, unfermented, sweet, 0% ABV). Left to ferment in tropical heat: sura (fermented, 2–6% ABV depending on fermentation time). The same sap, distilled twice in a copper pot still: Coconut Feni (42.8% ABV). The PCT connection: when Afonso de Albuquerque conquered Goa in 1510, his officers encountered toddy-tapping as an established local practice centuries old. Portuguese colonial administrators created regulations around the toddy trade — licensing tavernas (taverns), taxing production — the same regulatory framework that later shaped Feni's commercial structure.",
+      "production_technique": "Toddy tapping process: toddy tapper identifies mature coconut palm (8–10 years old); climbs using a waist loop (often without shoes; the traditional Goan tapper climbs 30–40 palms before sunrise); cuts the tip of the flower bud (inflorescence) with a sharp knife; binds the cut inflorescence with twine to direct sap flow; attaches a clay pot (traditionally) or plastic container to collect. The palm can produce 2–3 litres of sap per day at peak season (October–May). Neera (fresh toddy): collected before fermentation begins (within 2–4 hours of flow at ambient tropical temperature). Naturally sweet, 10–15 Brix sugar content; contains live yeast cells; begins fermenting within 3–4 hours at 30–35°C Goan ambient temperature. Commercial neera preservation: some producers chill immediately or add lime juice to slow fermentation for short-distance transport. Sura (fermented toddy): left 8–12 hours; naturally ferments to 2–4% ABV; 24–36 hours: 5–7% ABV; naturally carbonated from CO2 production. Consumed fresh at local tavernas and toddy stalls along Goa's coast. Cannot be transported more than a few hours without quality loss — the most local of all beverages in the PCT.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "ceremonial",
+          "beverage": "Mozambique Palm Wine (Sura) — PCT-7 Mozambique",
+          "connection": "Goa's coconut toddy and Mozambique's sura are the same Portuguese colonial encounter repeated on two different coastlines: Portuguese traders met established coconut-toddy cultures in both Goa (1510) and coastal Mozambique (1498). Both use the same tapping method; both produce the same fresh-sweet-to-fermented beverage spectrum. The PCT connected these two traditions through the same colonial trade network that moved cashew from Brazil to both coasts simultaneously"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Coconut Feni (PCT-8, distilled from same sap)",
+          "connection": "Toddy and Feni are the same raw material at three stages of transformation: sap collected fresh (neera, 0% ABV) → fermented toddy (sura, 2–6% ABV) → single-distilled urrak (15–18% ABV) → double-distilled Feni (42.8% ABV). Serving all three stages from the same palm is the most instructive demonstration of the distillation concept in the entire PCT programme — the same agricultural raw material, three completely different beverages, each at a different stage of the same process"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Neera: milky white to pale cream, slight cloudiness from suspended yeast; effervescent (natural CO2). Sura (lightly fermented): more opaque, white-ivory; slight fizz. Older fermented: pale tan, more settled.",
+        "nose": "Neera: extraordinary — fresh coconut water, young coconut flesh, light floral (coconut blossom), natural sweetness, faint tropical green. Impossible to replicate from commercial coconut water: the live-yeast content and just-harvested freshness create a complexity that shelf-stable coconut products cannot approach. Sura (2–3 hours fermented): the same coconut freshness, now with lactic-light acidity developing; gentle CO2 on the nose; the fermentation's own wild yeast character emerging.",
+        "palate": "Neera: 10–15g/L natural sugars; medium sweetness; extraordinary natural carbonation; the coconut-water mineral quality at higher concentration than commercial coconut water. Sura: dry to off-dry as fermentation progresses; light body; refreshing acidity; the coconut character persists through fermentation in a way other fermented beverages lose their raw material identity. Both: a perishability that defines their character — the freshest possible beverage, exists for 4 hours at most.",
+        "conclusion": "Neera and sura cannot be served in a standard programme context outside Goa unless the programme is on-location. For educational use: describe the toddy spectrum alongside Coconut Feni to demonstrate the distillation ladder from same raw material. For any guest who has been to Goa: the memory of fresh neera at dawn is the single most powerful PCT sensory anchor available."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Fresh Neera — Same-Day Tapped (Goa on-location only)",
+          "criteria": "Collected within 2 hours; served at point of tapping; no additives; coastal Goa palm",
+          "markers": "Roadside toddy tappers (morning route); toddy stalls at Old Goa market; experience only available in Goa; trivial monetary cost"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Fresh Sura — 4–8 Hour Fermented",
+          "criteria": "Same-day fermented; Goa coastal production; consumed same day",
+          "markers": "Goan toddy tavernas; local beach stalls (North Goa: Morjim, Mandrem); available only in Goa during toddy season (Oct–May)"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Commercial Coconut Water (Reference Tier)",
+          "criteria": "Industrial coconut water; not toddy but the closest commercial equivalent for educational reference",
+          "markers": "Vita Coco, Harmless Harvest (cold-pressed, unpasteurised is closest); widely available BC and US"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Coconut Feni (distilled equivalent)",
+          "criteria": "The distilled product of the same raw material; GI-protected Goa Coconut Feni",
+          "markers": "Cazulo Coconut Feni; Desmondji Coconut Feni; see PCT-8 Coconut Feni entry for full purveyor detail"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Neera: ambient temperature or very slightly chilled (25°C). Never serve cold — the fermentation is halted below 18°C and the aromatic complexity collapses. Sura: room temperature, at point of consumption.",
+        "vessel": "Clay cup (traditional Goan toddy taverna service); glass tumbler if clay unavailable. No stemmed glass — toddy is a working person's daily beverage, not a ceremony.",
+        "technique": "Educational programme: serve Coconut Feni (commercially available) alongside a description of neera and sura to demonstrate the distillation ladder concept. For on-location Goa programmes: arrange a morning toddy tapper visit — the 5am tapping sequence is one of the PCT's most memorable experiences. For the classroom: Harmless Harvest cold-pressed coconut water as the closest commercial approximation of neera's character.",
+        "programme_position": "Educational context and PCT-8 Goa narrative completion; on-location Goa programme anchor; not commercially serviceable outside Goa",
+        "verbal_presentation": "Before Goa Feni, there is sura. Before sura, there is neera. The same palm: fresh at dawn, fermenting by noon, distilled by evening. The Portuguese regulated the trade; the Goans maintained the tradition. Five hundred years, same method, same morning route."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Independent toddy tappers of coastal Goa (hereditary profession, primarily families from the Render/Catholic community)",
+        "producer_location": "Coastal Goa — North Goa (Calangute, Morjim, Assagao) and South Goa (Palolem, Patnem, Agonda) toddy belt",
+        "key_person": "No nationally prominent individual — artisanal hereditary family production",
+        "production_volume": "Small-scale individual tappers: 30–80L per day per tapper across a route of 30–40 palms",
+        "certifications": [
+          "None applicable for artisanal production; GI Goa Coconut Feni (for distilled product)"
+        ],
+        "bc_distributor": "Not commercially available outside Goa; Harmless Harvest raw coconut water (closest commercial equivalent): widely available at Whole Foods, health food stores in BC and US",
+        "us_distributor": "Not commercially distributed; on-location Goa experience only. Harmless Harvest as reference product: nationwide US.",
+        "uk_distributor": "Not commercially distributed outside Goa",
+        "price_tier": "Negligible (₹20–40 per glass in Goa; one of the world's least expensive beverages)",
+        "availability_notes": "Neera and sura are not available outside Goa. For the PCT programme: serve Cazulo or Desmondji Coconut Feni as the commercially available Goa expression; describe toddy as the raw material antecedent."
+      },
+      "trail_connection": "PCT-8",
+      "trail_note": "Toddy-tapping in Goa is a pre-Portuguese practice at least 2,000 years old. The Portuguese licensing of toddy tavernas (1510 onwards) created the first formal regulatory structure for a traditional Goan beverage — making Goa's toddy trade arguably the oldest continuously regulated artisanal beverage industry in the Portuguese colonial world. Today, the toddy tapper profession is in demographic decline: fewer young Goans are learning the palm-climbing trade. The morning toddy route is both an ancient tradition and a fragile one.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Sannas (Goan steamed rice cakes fermented with toddy)",
+          "pairing_type": "bridge",
+          "rationale": "Sannas — Goa's traditional steamed rice cakes — are leavened specifically with toddy: the same sura used as a beverage is also used to ferment the rice batter. Serving neera alongside a freshly steamed sanna demonstrates the dual culinary function of the same beverage. The coconut-lactic character in the sanna derives from the toddy leaven; the fresh neera echoes the same flavour in unfermented form"
+        },
+        {
+          "technique_id": "",
+          "dish": "Xacuti chicken (Goan coconut-spice curry)",
+          "pairing_type": "complement",
+          "rationale": "Fresh neera's natural sweetness and coconut identity finds its culinary equivalent in Goa's most beloved curry — roasted coconut, poppy seed, spice, and the same coastal coconut that the palm provides. Both the toddy and the xacuti express the Goa coconut palm's total integration into the local food system"
+        }
+      ],
+      "source": "Goa State Biodiversity Board coconut palm documentation; Frank Simoes 'Glad Seasons in Goa' (Goa toddy cultural documentation); ICAR-Central Coastal Agricultural Research Institute (Goa) coconut research; Portuguese colonial licensing records (Arquivo Histórico de Goa, 16th century)",
+      "entry_id": "CER-INDGOA-001",
+      "extracted_at": "2026-04-11T15:55:18.617777+00:00",
+      "batch_number": 1
+    }
+  ]
+}

@@ -1,0 +1,2232 @@
+/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+======================================================================
+PROVENANCE — FULL BATCH IMAGE GENERATION
+Photo Sashimi Standard · Dark Editorial Aesthetic
+Started: 2026-04-12 17:43:30
+======================================================================
+
+Fetching API key...
+  API key loaded (bb8b...61dc)
+
+──────────────────────────────────────────────────────────────────────
+PHASE 1: RECIPES
+──────────────────────────────────────────────────────────────────────
+Fetching all recipes...
+  Fetched 686 recipes
+Total unique recipes: 618
+Already have fal.media images: 1
+Need generation: 617
+
+[RECIPE 1/617] Aglio e Olio
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960606/iziYnMonNhpQ0tTqa_PJJ_576cf9741...
+
+[RECIPE 2/617] Agua de Jamaica (Hibiscus Concentrate — Extraction Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960607/tv33L9Dn_uOdrtx3L-Ltm_a94555cac...
+
+[RECIPE 3/617] Aioli
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96060c/PyMtyOO5uPpAgdSazPqkX_efb10c66b...
+
+[RECIPE 4/617] Air Fryer Chicken (Why It Works — Convection Science and Rapid Crisping)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960611/qoywJcu4-qcyXf1m9rqZ9_d7c8f6ce5...
+
+[RECIPE 5/617] Aloo Gobi
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960616/o3CTo5cM3VJBlmHslODmg_fad69aaa4...
+
+[RECIPE 6/617] Aloo Gobi (Naturally Vegan)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96061a/mSQlp7EWh1PLELjHHMSti_5717bcc20...
+
+[RECIPE 7/617] Anchovies as Pantry Ingredient
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96061f/KKkPUtTVqsUIngEzhr-r8_fff103e73...
+
+[RECIPE 8/617] Andhra Gongura Mutton
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960624/mSM_A4BX5AlcUYwXHcLGX_ea0b51cc0...
+
+[RECIPE 9/617] Andhra Pesarattu
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960629/P7qCakLPahiXbtNPUtXVQ_b26eb9c39...
+
+[RECIPE 10/617] Apple Pie
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96062e/X9-F1VOoRMGuqQ6okiaJB_92a47bdba...
+
+[RECIPE 11/617] Arancini
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960630/whru5EKc8ve9IlS4TVYBh_e613b902d...
+
+[RECIPE 12/617] Arancini (Sicilian — Saffron Ragù Rice Balls — Frying Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960633/Hhxu-qgZ9UvTRrz_bhoIR_339c0d44e...
+
+[RECIPE 13/617] Arroz con Leche (Naturally Gluten-Free — Rice Pudding)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960635/hV9YwiMeVYRCGgG_1Nql0_9b024dbfc...
+
+[RECIPE 14/617] Avadhi Kakori Kebab
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960639/Y-abq_hdxHJsxY_OthjkR_979fa7330...
+
+[RECIPE 15/617] Avocado Toast (Brunch Viral — Sourdough, Lemon, Chilli, Egg Variations)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96063c/FavaLAJPR24hukCrTfN3-_f1a5be9bc...
+
+[RECIPE 16/617] Bacalhau à Brás (Christmas Eve — Portuguese Tradition)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960641/HafbEsZG3FskPwEK3--UX_c0a20f4f1...
+
+[RECIPE 17/617] Baccalà Mantecato (Venetian Whipped Salt Cod)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960646/QpZovh2W1Cy15x19dGlE4_6720451cf...
+
+[RECIPE 18/617] Bagna Càuda (Piedmontese — Anchovy and Garlic Hot Dip)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96064b/mbaPOyMVCpTGrlbXe39Ir_4f2fb4ca3...
+
+[RECIPE 19/617] Baguette
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960650/TD7XdJ9bVnHHtN_P8DaXB_e70b4c9c0...
+
+[RECIPE 20/617] Baharat
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960656/4NqUfwBUZw0ZlxmO9TNxo_f5c71f236...
+
+[RECIPE 21/617] Baked Feta Pasta (Finnish TikTok Viral — Oven Method and Acid Balance)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96065b/-lyXB1l3a7FFZsPnsw-JZ_c5c04ce0d...
+
+[RECIPE 22/617] Baked Oats (Overnight into Oven — Texture and Sweetness Balance)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960660/WVuPWd6DVYjuaruxik0JZ_9de743ccc...
+
+[RECIPE 23/617] Baklava
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960665/GRS-cJUkHis7pQxqFGZ_0_b7ee208da...
+
+[RECIPE 24/617] Banana Bread
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960669/HTrmy8atrOfdWtdZ25QIs_95010863d...
+
+[RECIPE 25/617] Banh Mi
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96066f/jNT8KJfFE9RSc3Al54jv__b383ca925...
+
+  ── Progress: 25/617 recipes — 25 ok, 0 failed — 18.0 min elapsed ──
+
+
+[RECIPE 26/617] Banh Xeo
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960672/I50mqif8NkixWsiQ_A85Z_e6421c18b...
+
+[RECIPE 27/617] Barbacoa (Central — Slow-Cooked Lamb Cheek in Maguey Leaves)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960674/5wipI90Z5UL-SPhfmjMyG_6ee6f0670...
+
+[RECIPE 28/617] Bastilla (Moroccan Pigeon Pie — Celebration)
+  ✗ error: 
+
+[RECIPE 29/617] Battuto
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96067c/D941o8H26LuBqYu8Xk2jh_0044f21da...
+
+[RECIPE 30/617] BBQ Ribs
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960682/wiqDQOCjPeHz12lVTDhc0_2a27f6619...
+
+[RECIPE 31/617] Béarnaise — Reduction, Sabayon, Mounting
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960687/WUddhH_UTb8bBQMgbq_eY_9c42c7241...
+
+[RECIPE 32/617] Bearnaise Sauce
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96068b/zgB4cgOek2Fr8fUMIPih3_271656d45...
+
+[RECIPE 33/617] Béchamel (Mother Sauce — Roux Ratio, Nutmeg, Milk Temperature)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96068f/oCTtMn2lv3PXmWi1fQAHl_f5f67f088...
+
+[RECIPE 34/617] Bechamel Sauce
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960691/7uwHlSAsPuMjED1jlQTsg_af262d766...
+
+[RECIPE 35/617] Beef Bourguignon
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960695/mL2jpdYJ_gHsiHvnRH24q_add790fe7...
+
+[RECIPE 36/617] Beef Pho (Traditional — Naturally Gluten-Free with Tamari)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96069a/cKPyOMo2Sa6LTXE-jKiD__84ace090e...
+
+[RECIPE 37/617] Bengali Chingri Malai Curry (Prawn in Coconut Cream)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96069f/wSHmLl1X6rsK9lZCgcsXJ_a69de0d19...
+
+[RECIPE 38/617] Bengali Machher Jhol (Mustard-Oil Fish Curry — Technique)
+  ✗ error: 
+
+[RECIPE 39/617] Bengali Shorshe Ilish (Hilsa in Mustard Paste — Steam Method)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606a9/GxC5ipGq26oeCZGQg_0So_1a896db67...
+
+[RECIPE 40/617] Beurre Blanc (Emulsified Butter Sauce — Reduction Base)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9606ac/FPQvt6H_nC9W26ecHt_Wz_5c4de6ef5...
+
+[RECIPE 41/617] Beurre Blanc — Emulsified Butter Sauce Technique
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606b0/kKnVZyAqqkf0_Hcnjxh2e_eddffa335...
+
+[RECIPE 42/617] Beurre Noisette (Brown Butter — Milk Solids, Nutty Point)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606b6/0AymwpNVZdJD_1swG3uG7_a79674e40...
+
+[RECIPE 43/617] Bibimbap
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606bb/PdxzxG-rnOsGKSI8VERRS_c26d7b6ea...
+
+[RECIPE 44/617] Bibimbap (Naturally Gluten-Free with Tamari)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9606bf/HBv1Ujxd1-j0Hv4BghfpT_30a60caef...
+
+[RECIPE 45/617] Bigoli in Salsa (Venetian — Whole Wheat Pasta, Anchovy, Onion)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606c4/ULAVzZXPZqq1fyaBKdJn8_8bda8887c...
+
+[RECIPE 46/617] Bigos (Polish Christmas Eve and Hunter's Stew)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9606c7/Lovb_MBtDaRqhT6BVtHNW_eb467c14f...
+
+[RECIPE 47/617] Birria (Full Jalisco Dum Method — Chilli Consommé, Goat or Beef)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606cc/8CKu1cjkYFGGYW_0qccSy_a5b994c08...
+
+[RECIPE 48/617] Birria Ramen (Fusion Viral — Consommé Broth with Ramen Noodle)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606d2/QD-lOsS15q4SsOqPyFELJ_662c5a36c...
+
+[RECIPE 49/617] Birria Tacos
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9606d5/kZBibfkxffYAP8mJ4yu5M_46fd39cf2...
+
+[RECIPE 50/617] Birria Tacos (Proper Jalisco Method vs Shortcut)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9606d8/7C-iD0uhGB2z2qVBshuQ6_5929b3244...
+
+  ── Progress: 50/617 recipes — 48 ok, 2 failed — 35.3 min elapsed ──
+
+
+[RECIPE 51/617] Birria Tacos (Vegan — Jackfruit Method)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606dd/LifCI0HDtup9UtrJNDLrf_bb96b5521...
+
+[RECIPE 52/617] Biryani
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606e2/a_p8zo7DICZZHNv19_Gmy_05d0c0d80...
+
+[RECIPE 53/617] Biryani for Eid al-Fitr (Breaking the Fast Feast)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 54/617] Biryani (Full Dum Method — Layered, Sealed, Steamed)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 55/617] Biscuits and Gravy
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 56/617] Bo Luc Lac
+  ✗ error: 
+
+[RECIPE 57/617] Borscht (Naturally Vegan)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9606eb/NJLKyNcjW2AdhjCWIKrW5_67770220f...
+
+[RECIPE 58/617] Bottarga (Sardinian Cured Mullet Roe — Preparation and Use)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 59/617] Bouillabaisse
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 60/617] Braciole (Calabrian/Southern — Stuffed Rolled Beef Braised in Tomato)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 61/617] Brasato al Barolo (Piedmontese — Red Wine Braise)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 62/617] Bread — Autolyse, Stretch-and-Fold, Long Cold Fermentation
+  ✗ error: 
+
+[RECIPE 63/617] Brigadeiro (Brazilian Celebration — Valentine's and Festas)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606f4/qRu8ravP5gTWMsAOWg0tm_dbd4c602d...
+
+[RECIPE 64/617] Bruschetta
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606f8/nacAuGYLtGORcjRWsTsMu_08e081693...
+
+[RECIPE 65/617] Buddha's Delight (Luohan Zhai — 罗汉斋)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9606fe/6_9BI9qNlOdpSE0g1ukVL_ced883609...
+
+[RECIPE 66/617] Buffalo Wings
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960703/Eglie1Gm9Ow67WZjoUQhA_05f293c8d...
+
+[RECIPE 67/617] Bulgogi
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960705/HcuWe4maJ5AA6Y6lrFheq_7d3f3ba08...
+
+[RECIPE 68/617] Bun Cha
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96070a/9DT0NP-qq59qkLrtgzPsd_973a0bd5e...
+
+[RECIPE 69/617] Buñuelos (Colombian and Mexican Christmas Fritters)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960710/--ySVaeCAbrOHt_mjWqyy_b3db84581...
+
+[RECIPE 70/617] Burnt Basque Cheesecake (La Viña Origin — High Temperature, No Crust)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960715/kAjm4cvw0AOXpbJkAK1oP_5a05f1b2a...
+
+[RECIPE 71/617] Buta no Kakuni (Nagasaki-Style Braised Pork Belly — Soy and Awamori)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96071a/abEjls-zWCECtmj_RhgSD_bda37da9c...
+
+[RECIPE 72/617] Butter Board (TikTok 2022 — Technique vs Gimmick Analysis)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96071f/yG02oWWJj8YtFGd4Knxbp_f4e0f103f...
+
+[RECIPE 73/617] Butter Chicken
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960722/IXJjlr_Czr3jKPqydSNq__61e690bd1...
+
+[RECIPE 74/617] Cacio e Pepe
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960726/rSTmQFPqyuWE9nVhAVM1u_aa8bcdfc1...
+
+[RECIPE 75/617] Cacio e Pepe (Roman — The Emulsion Method)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96072c/4JTHj5oY8ug-Qh3DffoaV_fe5732caa...
+
+  ── Progress: 75/617 recipes — 64 ok, 11 failed — 49.3 min elapsed ──
+
+
+[RECIPE 76/617] Caldo de Pollo (Día de los Muertos Celebration Soup)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960731/rdC9KvFo5sozUbOVGQ7Wi_3b81fdd6a...
+
+[RECIPE 77/617] Caldo de Pozole Rojo (Mexican Independence Day)
+  ✗ error: 
+
+[RECIPE 78/617] Canh Chua
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960739/sXtsWasw3BIio6_l68bHJ_222b6507c...
+
+[RECIPE 79/617] Cannoli
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96073c/qdoGvNQbJ1qsczfT99quC_2bd03ff58...
+
+[RECIPE 80/617] Cantonese Roast Duck (广式烧鸭)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960741/5_ieIWNDnvF31ob980KY2_5bf67116e...
+
+[RECIPE 81/617] Caponata (Naturally Vegan — Sicilian Sweet-Sour Aubergine)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960746/alhKO3Tw4CbSdwH1Zboa9_d359d6586...
+
+[RECIPE 82/617] Caponata (Sicilian Sweet-Sour Aubergine — Agrodolce)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 83/617] Caprese Salad
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960757/5vV3ylGE1Gkn7uB0ndBIK_786c7a2d1...
+
+[RECIPE 84/617] Caramel — Dry vs Wet Methods (Sugar Science)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96075c/xtpZbOUq-QDRnCRW76geo_45f12f6bf...
+
+[RECIPE 85/617] Carnitas
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96075f/x9Xz0r_nB-P71U6oXyHxo_4f1f14b76...
+
+[RECIPE 86/617] Carnitas (Michoacán — Lard-Braised Pork — Copper Pot Method)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960764/wlFTfMzNolnJLWI0-5miO_e5816f759...
+
+[RECIPE 87/617] Cassata (Easter — Sicilian Tradition)
+  ✗ error: 
+
+[RECIPE 88/617] Cassoeula (Lombardian — Pork Rib and Savoy Cabbage Stew)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96076d/Z6_ydrxZJqubnz_eK6oH__9c7a9631e...
+
+[RECIPE 89/617] Cassoulet
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960773/m1-nu4MZgOW0wjEEa-j4h_9c57b30b7...
+
+[RECIPE 90/617] Cemita Poblana (Pueblan Sandwich — Sesame Roll, Milanesa, Chipotle)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960779/izr6nB8gaIzmlLOc4U1w-_8a9ed308d...
+
+[RECIPE 91/617] Ceviche
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96077e/V3bkLXGyKnTn5bdgoIOUm_ebf310fc5...
+
+[RECIPE 92/617] Ceviche (Naturally Gluten-Free)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960780/AlLGNo0SzzFBTw53XtSdv_e50733a2a...
+
+[RECIPE 93/617] Chana Masala
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960785/MphnaUyvpeQg5K7tCzoca_6cbff430a...
+
+[RECIPE 94/617] Chana Masala (Naturally Vegan)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960789/rV503IInGRs2HJPMdqiwr_ebbe5ea67...
+
+[RECIPE 95/617] Chanpon (Nagasaki — Pork, Seafood, Vegetable Noodle Soup)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96078f/gTAwFjGC0HtPHbiWaHrSP_68468a405...
+
+[RECIPE 96/617] Char Siu
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960793/1Kk06ghpOWUXoVPyBCCf7_b0e16ca1f...
+
+[RECIPE 97/617] Char Siu (Cantonese Barbecue Pork)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960798/73SCzt0sGbSv5HvGC7F_q_433fa5f4e...
+
+[RECIPE 98/617] Chāshū (Ramen Pork Belly — Soy-Mirin Braise and Roll)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96079d/cobWZ32p7z4jlNRh8jYyy_59c484476...
+
+[RECIPE 99/617] Chawanmushi
+  ✗ error: 
+
+[RECIPE 100/617] Cheese Souffle
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607a4/-RctCiWnTjeH58nm9_0x2_f99ebcd38...
+
+  ── Progress: 100/617 recipes — 85 ok, 15 failed — 69.4 min elapsed ──
+
+
+[RECIPE 101/617] Chermoula (North African — Herb Marinade and Sauce)
+  ✗ error: 
+
+[RECIPE 102/617] Chettinad Chicken (Tamil Nadu — Full Spice-Roasting Method)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607ab/ey9KNiXjjXzXPaSKY1qTj_614e07e24...
+
+[RECIPE 103/617] Chettinad Kuzhambu (Pepper and Tamarind Gravy)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607b1/Mm0dGlE4TNo2GGKZEWaJY_f53fb2da6...
+
+[RECIPE 104/617] Chicken Enchiladas
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607b6/K5GRvDYEaeIgIwdVbBGfG_101f4b155...
+
+[RECIPE 105/617] Chicken Parmesan
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9607b8/Og_TMmC_yyWm3DfYGnD1S_b739b1a86...
+
+[RECIPE 106/617] Chicken Piccata (Naturally Gluten-Free — Almond Flour)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9607bb/DwAxvydxxyQkCad2BOzSs_caeb02458...
+
+[RECIPE 107/617] Chicken Thighs Braised in White Wine (Naturally Gluten-Free)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607bf/INpxEW3HGAJ26uHC4Tol-_dd602010a...
+
+[RECIPE 108/617] Chicken Tikka Masala
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607c4/nfTBvDUDWwWBz0kumuPNl_bd5681191...
+
+[RECIPE 109/617] Chilaquiles
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607c9/YcmlguRDo6-3H0b78qx1X_e6d07a4c1...
+
+[RECIPE 110/617] Chiles en Nogada (Pueblan — Stuffed Poblano, Walnut Cream, Pomegranate — September Dish)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607cd/DhO5Ctn62--3iXUvFi62o_716e8901c...
+
+[RECIPE 111/617] Chiles Rellenos
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607d2/6aCsvmjoSyyFnew5kxaA4_e0fd7586c...
+
+[RECIPE 112/617] Chimichurri (Argentine — Herb, Vinegar, Garlic — Resting Time)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607d7/llphBl8IwIJfSncmS6-xV_54dc066eb...
+
+[RECIPE 113/617] Chinese Five Spice
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607dc/1lKmJ5bOWCiH6Wvj-xb4G_47dd7d38e...
+
+[RECIPE 114/617] Chocolate Chip Cookies
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607e0/W5dwwEMJFdBfTGHSBfrXC_8eb73ee3c...
+
+[RECIPE 115/617] Chocolate Mousse
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9607e2/hPpzUhENgkEeL4Ejtm8YF_f9de86826...
+
+[RECIPE 116/617] Chole Bhature (Punjabi — Spiced Chickpeas and Fried Bread)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607e7/WEN2eGM2QZxorG3oyW5Kh_c9886fded...
+
+[RECIPE 117/617] Chongqing Chicken (La Zi Ji — 辣子鸡)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607ed/3roO4Uyd5S9oCXFpjCCQ9_a3f361b54...
+
+[RECIPE 118/617] Chow Mein
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607f1/q6pWG-aAFFAQUQGp1UFun_53d5cb3cf...
+
+[RECIPE 119/617] Christmas Bûche de Noël (Yule Log)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607f7/-Iq6cJVmTRt5l93xbqJ0F_0d1990e3e...
+
+[RECIPE 120/617] Christmas Pudding (British Steamed — Full Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9607f9/-jSUoHp4JQQI-TZQ8Oq0w_e6dfcd14c...
+
+[RECIPE 121/617] Christmas Roast Turkey (Full Method)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9607ff/lpCGTEGQLvVUzxj5hKusT_3e7a39107...
+
+[RECIPE 122/617] Churros
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960801/OsN4NEy9cIMPU4nEcstBQ_53bf6ad76...
+
+[RECIPE 123/617] Clam Chowder
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960803/RyHSFO6owgPv7gWrmyHS5_c7ab136e2...
+
+[RECIPE 124/617] Cloud Bread (3-Ingredient — Egg White, Cream Cheese, Cream of Tartar)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960808/QqoFz6GORJkx943_3N20A_139f8dfbf...
+
+[RECIPE 125/617] Cloud Eggs (Separated White and Yolk — French Oeufs en Neige Origin)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+  ── Progress: 125/617 recipes — 108 ok, 17 failed — 86.7 min elapsed ──
+
+
+[RECIPE 126/617] Cochinita Pibil
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 127/617] Cochinita Pibil (Yucatecan — Achiote Pork, Banana Leaf, Underground Pit Method)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 128/617] Coda alla Vaccinara (Roman Oxtail Stew — Offal and Chocolate)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 129/617] Cold Smoking — Salmon, Cheese, and Butter
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 130/617] Colomba Pasquale (Italian Easter Dove Bread)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960818/YbKQPKgPWVLq4S5Q_j8Fi_9e44e6e6b...
+
+[RECIPE 131/617] Com Tam
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 132/617] Congee
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 133/617] Congee (Naturally Vegan — Mushroom and Ginger)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96081e/OVGe7GxWAsSeIRcvY4ytm_e0d4a1589...
+
+[RECIPE 134/617] Coq au Vin
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960823/SERSixz-vlUGLwBvB2bef_7b382de52...
+
+[RECIPE 135/617] Coquito (Puerto Rican Christmas Drink)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 136/617] Cornbread
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960828/sNzO0Sl85CJplKeiyLCCX_72b22bbab...
+
+[RECIPE 137/617] Cotechino con Lenticchie (New Year's Cotechino — Slow Simmer)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96082d/lpTIK23_2ACzfCXCNDHtg_9824be1ac...
+
+[RECIPE 138/617] Cranberry Sauce (Thanksgiving — Fresh vs. Canned)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960831/uoSDUqK2l6Yl7wSxz7hQX_73235c45c...
+
+[RECIPE 139/617] Creme Brulee
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960834/zoM6OpNwF3Pqd0j7LvHAw_ed615170b...
+
+[RECIPE 140/617] Crepes
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960836/QOcGh0jw-qRIncj9LMBYu_a85322cd3...
+
+[RECIPE 141/617] Crispy Rice (Viral — Japanese Sushi Rice Technique with Avocado Topping)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96083b/RE3IJKNv31xgVhh1vVKYE_1c591ebbd...
+
+[RECIPE 142/617] Croissants
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96083c/HklDiEAek2uP-NQmoy948_1e547a2bd...
+
+[RECIPE 143/617] Croque Monsieur
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960840/EMF0et52KwMYfzkTl92oj_c76c9e5e0...
+
+[RECIPE 144/617] Dakgalbi
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960845/J7KpTffkNdbdm2Vu8TwZ4_2b03c9c85...
+
+[RECIPE 145/617] Dal
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96084a/3krn3dkgJnWM_ndgQfq_D_c96a8b2c7...
+
+[RECIPE 146/617] Dal Makhani (Delhi — Long-Simmered Black Lentils with Butter)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96084f/M2ciH30BDiYYpdR595aAJ_f0b8188bf...
+
+[RECIPE 147/617] Dal Makhani (Gluten-Free — Naturally)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960854/f6ug7x9rPEFzA7uLQga3c_b862f14c1...
+
+[RECIPE 148/617] Dal Tadka (Naturally Vegan)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960859/8m3mfmDL4Dls0JyFW7wu5_39e51f63f...
+
+[RECIPE 149/617] Dan Dan Noodles
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a96085e/tVRleCBrPY2zUM1MDZSlA_da460771e...
+
+[RECIPE 150/617] Dan Dan Noodles (Sichuan Street Classic)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960864/OaSo2vbe1pUVGp2OfDYZ3_e88462650...
+
+  ── Progress: 150/617 recipes — 126 ok, 24 failed — 101.3 min elapsed ──
+
+
+[RECIPE 151/617] Dashi
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a960869/VEAu5KYapPXxUT3HnEtNb_1e7d2c0db...
+
+[RECIPE 152/617] Dashimaki Tamago (Kyoto-Style Rolled Omelette — Dashi Ratio)
+  ✗ timeout: 
+
+[RECIPE 153/617] Dehydration — Making Powders, Chips, and Jerky
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96089b/uLGJPNaY_N4k4yzmkx1Y0_531145939...
+
+[RECIPE 154/617] Dhokla (Naturally Vegan — Gujarati Steamed Cake)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608a0/qJV8b2-MIoPkQ-VPgF6XV_d3a12c0b5...
+
+[RECIPE 155/617] Dim Sum — Har Gow (虾饺 — Steamed Shrimp Dumplings)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608a5/ed4aplGzU4IzBnbTMIXKI_f601d7820...
+
+[RECIPE 156/617] Diwali Gulab Jamun
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608aa/3jN1ib1L6_FBk36UYFpGY_01ab36a5f...
+
+[RECIPE 157/617] Doenjang Jjigae (Fermented Soybean Paste Stew)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608af/5NCLahnuDnC9MXeG0Bn0d_e034faa08...
+
+[RECIPE 158/617] Dosa
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608b2/qrSRmqgJAqf6BtICrrpK2_4f1bb4539...
+
+[RECIPE 159/617] Doubanjiang (Sichuan Fermented Bean Paste — Aged vs Fresh)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608b7/JTfpAoLJgXBBl1wgniBYG_1537286d5...
+
+[RECIPE 160/617] Drunken Noodles
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608bc/YOvzjvTfFdq3nAN1IJG5z_001f7cf5d...
+
+[RECIPE 161/617] Dry-Aging at Home (Beef and Lamb — Controlled Humidity)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608c1/TJireuYeXOUmtLY99a2ML_d58912d24...
+
+[RECIPE 162/617] Dry Curing — Salt and Sugar Ratios for Charcuterie
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608c6/beacxTC3odrC5ikCXeGR6_ff2c42d2c...
+
+[RECIPE 163/617] Dubai Chocolate Bar (Viral 2024 — Kunafa Pistachio Filling)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 164/617] Duck Confit
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 165/617] Dukkah
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608ce/gY2rPUlejfZV7f5klprNb_6ca2e5c59...
+
+[RECIPE 166/617] Dumplings (Jiaozi)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 167/617] Easter Simnel Cake
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608d6/OfCACKNmxd_hfA_zWopsp_cf673d50a...
+
+[RECIPE 168/617] Edamame
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608d8/LSxoUygl8zG8S0CKyDYux_c554be2a3...
+
+[RECIPE 169/617] Egg Drop Soup (Viral Restaurant Style — Cornstarch and Pour Method)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608dc/FFbBxgV_ecJrWfHWKBX7I_418524eef...
+
+[RECIPE 170/617] Egg Fried Rice (扬州炒饭 — Yangzhou Style)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608e1/EBbR0apV6xEo_-C9aCzho_e384f31c3...
+
+[RECIPE 171/617] Eggplant Parmesan
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608e7/LDYUXHEz8kTXW5x8bzWGo_113f5525d...
+
+[RECIPE 172/617] Eid al-Adha Mansaf (Jordanian Feast Lamb)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608ea/G6BYvM6bSdRmslwnDD5Kg_efda056c0...
+
+[RECIPE 173/617] Eid Biryani (Full Dum Method — Celebration)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 174/617] Elote
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 175/617] Emulsification — Cold (Lecithin and High-Speed Blending)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+  ── Progress: 175/617 recipes — 144 ok, 31 failed — 124.1 min elapsed ──
+
+
+[RECIPE 176/617] Enchiladas Verdes (Classic — Tomatillo Sauce, Chicken, Crema)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 177/617] En Papillote — Steam Parcel Cookery
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 178/617] Enzyme Tenderisation — Papain, Bromelain, Actinidin
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 179/617] Espagnole (Mother Sauce — Brown Stock, Tomato Paste, Long Reduction)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 180/617] Espinacas con Garbanzos (Naturally Vegan — Seville)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 181/617] Faisán en Escabeche (Easter — Yucatecan Celebration)
+  ✓ Generated ~ unverified  https://v3b.fal.media/files/b/0a9608f4/Mq_KW3-d2yDjzCsIBQT67_225f4de77...
+
+[RECIPE 182/617] Falafel
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608f7/SxufjZyPULmdEp4-kB4Ms_c880e21f5...
+
+[RECIPE 183/617] Falafel (Naturally Vegan)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608fa/s3i0oFZALuGH9f0iHcA60_fc2cacdcd...
+
+[RECIPE 184/617] Fegato alla Veneziana (Venetian Calf's Liver and Onions)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608fb/mtvVIWNxPf9jH1ujQ1Afs_3bb8d1ce7...
+
+[RECIPE 185/617] Feta and Watermelon Salad (Ottolenghi Viral — Flavour Contrasts)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608fc/ZFvBHfXOrTQFcMFKpodVu_5e9e9f664...
+
+[RECIPE 186/617] Fettuccine Alfredo
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608fc/TBjn0vEZt--syoGa9oH_N_10b812028...
+
+[RECIPE 187/617] Fish Sauce (Southeast Asian — Making and Grading — Use in Cooking)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608fd/a4v0_Mjc9rGRbSV3NaFwr_404d5720b...
+
+[RECIPE 188/617] Flourless Chocolate Cake (Naturally Gluten-Free)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608fe/p89F1P8wLUOBNtHpqkwTd_a62eaf44b...
+
+[RECIPE 189/617] Focaccia
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608ff/8io1bJ_V_gTvdrq3LmoWD_3a191f3a5...
+
+[RECIPE 190/617] Focaccia di Recco (Ligurian — Thin Cheese-Filled Flatbread)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9608ff/rHzTjjqtp3maKOH44LIrc_42ec1a6e5...
+
+[RECIPE 191/617] Fregola con Arselle (Sardinian Clam and Toasted Pasta)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960900/eHRnCSErz0b306CkLw3nO_13ee4eb7b...
+
+[RECIPE 192/617] French Omelette
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960901/PKmyDdcfjGm9HYRKX-Vbl_fa28c8826...
+
+[RECIPE 193/617] French Onion Soup
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960902/gxmzTa9RR5eYQHd7TBaNI_0e3e4df6b...
+
+[RECIPE 194/617] Fried Rice
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960903/lkXcZSL4xxqXRm700tcwP_7caa626a2...
+
+[RECIPE 195/617] Fumet de Poisson — Fish Stock Technique
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960903/tNAcl2tIaNcX7bs5BaLXJ_fdd81bd72...
+
+[RECIPE 196/617] Galbi Jjim (Braised Short Ribs — Full Korean Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960904/uYJ0eNOzGzsQAfPdRo5Qa_c0a21865f...
+
+[RECIPE 197/617] Galette des Rois (Epiphany — French King Cake)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960905/85YGSvJ-YTpiIU7p-PQIC_bae356b65...
+
+[RECIPE 198/617] Garam Masala
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960906/a-K8Doaf7IGyxzXZm832n_50ee03cb7...
+
+[RECIPE 199/617] Garam Masala (Fresh-Ground — Indian Spice Pantry)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960907/fun6uAtQSHNqzoDjwvwnm_b456f00f4...
+
+[RECIPE 200/617] Gazpacho (Naturally Vegan)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960907/z-tEJ9p2v8BFMprYk188n_2b02bcdc0...
+
+  ── Progress: 200/617 recipes — 164 ok, 36 failed — 128.5 min elapsed ──
+
+
+[RECIPE 201/617] General Tso's Chicken
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960908/b2YlXhG-kCEGWMLVsS0yV_8cc7c8d31...
+
+[RECIPE 202/617] Gingerbread (Christmas — Nordic and British Traditions)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960909/aAi4ZI08p8nuy8zwkO7E4_9de486cbe...
+
+[RECIPE 203/617] Gnocchi
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96090a/BkXRIRQOLHAsQP9GWepU7_43fbfca7d...
+
+[RECIPE 204/617] Goan Fish Curry (Kokum and Coconut — Coastal Technique)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96090b/XUDj2nCogSGMEDZ7nvnTS_1b36db88c...
+
+[RECIPE 205/617] Goan Sorpotel (Pork and Offal — Vinegar Preserved)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96090c/ISsFQdbapgtWLVNlgg0cD_2a0532b72...
+
+[RECIPE 206/617] Goan Vindaloo — Full Method (Pork, Vinegar, Kashmiri Chilli)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96090d/Byp8fpXQEodN2rdU0LE-b_9ba576925...
+
+[RECIPE 207/617] Gochujang (Korean Fermented Chilli Paste — Ratio and Use)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96090d/Bvci9bj7c3OPuWb_Bh57D_a74423fdc...
+
+[RECIPE 208/617] Goi Cuon (Vietnamese Spring Rolls — Tet Preparation)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96090e/aW9xy5V7tforp1k7VIgEO_1370c7c53...
+
+[RECIPE 209/617] Gorditas (Thick Masa Cakes — Stuffed and Griddled vs Fried)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96090f/JrmsHI1htkSTGvlbIQnXx_23389167e...
+
+[RECIPE 210/617] Goya Champurū (Okinawan — Bitter Melon, Egg, Pork Stir-Fry)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96090f/GQoKYPvUnn2nJnF1vjm5p_7b6c4a052...
+
+[RECIPE 211/617] Greek Salad
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960910/VL8-JtnPbYd3Tq56rESyz_a3d34438d...
+
+[RECIPE 212/617] Green Curry
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960911/m5voRfR2AcURamK9Jpa2Y_2887dbba6...
+
+[RECIPE 213/617] Green Goddess Salad (Viral 2022 — Tahini, Herb and Lemon Build)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960912/y9a-RK9-X9lCNfpn3D0oW_fdc7a29be...
+
+[RECIPE 214/617] Gremolata
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960913/NCf36CyeE4uw2LPytnkjn_4424598f5...
+
+[RECIPE 215/617] Guacamole
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960913/pIK8FKp41rSLI0LR5cmE5_01bac5091...
+
+[RECIPE 216/617] Gujarati Dal Dhokli (Lentil Soup with Fresh Pasta)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960914/ln1lys7NcS8JyVh-kNZUX_d573bb9d8...
+
+[RECIPE 217/617] Gujarati Dhokla (Fermented Chickpea Flour Steam Cake)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960915/i0PiBYbH6lTQG5ql8FeY0_fa23262ce...
+
+[RECIPE 218/617] Gujarati Undhiyu (Winter Vegetable Mixed Pot)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960916/-cPl_LHb4XpyBMoJbCsQy_00f8643e6...
+
+[RECIPE 219/617] Gulab Jamun
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960917/cyBCBz7oU2srP5f1oQPfi_54002880f...
+
+[RECIPE 220/617] Gumbo
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960918/783-kVmO3Ow3QdA2ns2zz_fb717c86d...
+
+[RECIPE 221/617] Gyoza
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960919/7g-0St1SNUCWYZ21TAOu6_d5b1b535e...
+
+[RECIPE 222/617] Gyōza (Pan-Fried Dumplings — Crisp Skirt Pleating Technique)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960919/702-NK-sgy00-TSbG4HWm_5a0a51279...
+
+[RECIPE 223/617] Haggis, Neeps and Tatties (Burns Night — Scottish January 25)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96091a/t75fHsKdLS0_8CZPwRDpc_0aaec1a61...
+
+[RECIPE 224/617] Hamantaschen (Purim — Jewish Triangle Pastry)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96091b/b8ZulZ316wF6AJngMfSzy_a4efc783f...
+
+[RECIPE 225/617] Harissa (North African — Dried Chilli Paste, Rose Petal Version)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96091c/bjaymgclqlVLeptP3fWVd_d4ba0a4ee...
+
+  ── Progress: 225/617 recipes — 189 ok, 36 failed — 131.9 min elapsed ──
+
+
+[RECIPE 226/617] Holi Thandai (Indian Spring Festival Drink)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96091d/On8a9kN9bWM9X0sFaQsyG_7e0f4895f...
+
+[RECIPE 227/617] Hollandaise (Mother Sauce — Emulsified Butter, Temperature Control)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96091d/5yDmAMyO0fP-dce2cCnFc_5db03a98d...
+
+[RECIPE 228/617] Hollandaise Sauce
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96091e/d0HZ_J-L6_IEUkmBEzVkl_f05ec366c...
+
+[RECIPE 229/617] Hollandaise — Temperature Control and Double Boiler
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96091f/n1y6Lti2IZVogzKe7Zsk6_dc4a9acb0...
+
+[RECIPE 230/617] Hot and Sour Soup
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960920/p9nan60GysMIuXEBAsox4_cdde3d25d...
+
+[RECIPE 231/617] Hot Cross Buns (Easter — British Tradition)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960920/GzEOsEiE4hCM3Tmg8ZQac_717146642...
+
+[RECIPE 232/617] Hōtō (Yamanashi — Flat Noodle and Pumpkin Miso Stew)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960921/b4AGhhmB3YzY00xW3G-zX_ec7b5511d...
+
+[RECIPE 233/617] Hot Smoking — Full Chamber Method (Offset and Kettle)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960922/ytwXnt9HJpsQLAhntrSZJ_b1ff72e43...
+
+[RECIPE 234/617] Hotteok
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960922/ZYmIz8FZ0RyjiOH3q7wl1_7e0ce8b81...
+
+[RECIPE 235/617] Huevos Rancheros
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960923/RR9Wm29rsZt4U3G5Hxi6K_3b6aea95e...
+
+[RECIPE 236/617] Hummus
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960924/JFwSx0IiItuGW8gtl2cfl_229e3d8d8...
+
+[RECIPE 237/617] Hummus (Naturally Vegan)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960925/ehsAdEzLJtDFmvK_orgT5_2536dd959...
+
+[RECIPE 238/617] Hyderabadi Double Ka Meetha
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960925/qkuvUsOJJGzVhj91MEpfc_19b3c4e1d...
+
+[RECIPE 239/617] Hyderabadi Haleem (Slow-Pounded Wheat and Lamb)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960926/phIitQ09OmrXwnfyZYOK0_793b0acdb...
+
+[RECIPE 240/617] Hydrocolloids — Gelatin vs Agar Setting Ratios
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960927/vGfQqIOF4CUdYyxcDl2Kv_c1fed65a3...
+
+[RECIPE 241/617] Idli and Sambar
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960928/AWUdESNrbNhn1Gu6cw4OL_afe767848...
+
+[RECIPE 242/617] Imoni (Yamagata — Taro Root and Beef Outdoor Stew)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960928/sgLZpmPa1Lc1nZqT_7Bay_e367e1baa...
+
+[RECIPE 243/617] Ishikari Nabe (Hokkaido — Salmon and Miso Hot Pot)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960929/xMlQwM9GHeJHaHyBJnT-m_5d742d10b...
+
+[RECIPE 244/617] Jambalaya
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96092a/BcBsQxmj50UdHSu3XqnSX_3953ccae0...
+
+[RECIPE 245/617] Japanese Curry Rice
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96092b/DMyZJQMMim3YACfjFzEMg_b01c30326...
+
+[RECIPE 246/617] Japanese Jiggly Cheesecake (Soufflé Method and Water Bath)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96092c/gbYDoY0L05QU4NTV4zGM6_e70901f4c...
+
+[RECIPE 247/617] Japchae
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96092d/IqyKMSxcYYH_Zlpb1Fyx1_355f7acc4...
+
+[RECIPE 248/617] Jingisukan (Hokkaido — Lamb Barbecue on Dome Grill)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96092e/8tV15zMXR8YUg9i0o8rvS_fc4851b55...
+
+[RECIPE 249/617] Kaiseki — Hassun Course (The Seasonal Platter — Composition Rules)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96092e/tCVpQ1eQZ08-zy8KuTziP_ca013b5ff...
+
+[RECIPE 250/617] Kakuni Manju (Steamed Pork Belly Bun — Southern Japan)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96092f/l1EVe_7fBr9Oq-ffM0MNv_047bf25e2...
+
+  ── Progress: 250/617 recipes — 214 ok, 36 failed — 135.1 min elapsed ──
+
+
+[RECIPE 251/617] Kamameshi (Iron Pot Rice — Regional Toppings Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960930/0lO6WWW4cQ1-BBinPqs-w_92224159b...
+
+[RECIPE 252/617] Kashmiri Dum Aloo (Whole Potatoes — Fennel-Yogurt Sauce)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960931/2BeCRQITjAjkzXrxspg8M_6e50c3642...
+
+[RECIPE 253/617] Kashmiri Rogan Josh (Slow Lamb — Kashmiri Chilli, No Onion Base)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960932/203rG7JXqtNKuoElNPIBl_6a445625e...
+
+[RECIPE 254/617] Kashmiri Wazwan — Roghan Josh Variant (Festive Banquet Context)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960933/1uqCoQFiIyE13DQJi9kmk_5724f96bb...
+
+[RECIPE 255/617] Katsu Curry
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a960933/QVS8TquMw4UFJfoMJGB6v_65450a596...
+
+[RECIPE 256/617] Keema
+  ✗ timeout: 
+
+[RECIPE 257/617] Kerala Appam (Fermented Rice Hoppers — Fermentation Timing)
+  ✗ timeout: 
+
+[RECIPE 258/617] Kerala Fish Molee (Coconut Milk Poached Fish)
+  ✗ timeout: 
+
+[RECIPE 259/617] Keralite Stew (White Stew — Coconut Milk and Cardamom)
+  ✗ timeout: 
+
+[RECIPE 260/617] Key Lime Pie
+  ✗ timeout: 
+
+[RECIPE 261/617] Kimbap
+  ✗ timeout: 
+
+[RECIPE 262/617] Kimchi
+  ✗ timeout: 
+
+[RECIPE 263/617] Kimchi Jjigae
+  ✗ timeout: 
+
+[RECIPE 264/617] Kimchi Jjigae (Kimchi Stew)
+  ✗ timeout: 
+
+[RECIPE 265/617] King Cake (Mardi Gras — New Orleans Tradition)
+  ✗ timeout: 
+
+[RECIPE 266/617] Kiritanpo Nabe (Akita — Pressed Rice Stick Hot Pot)
+  ✗ timeout: 
+
+[RECIPE 267/617] Korean BBQ Galbi
+  ✗ timeout: 
+
+[RECIPE 268/617] Korean Fried Chicken
+  ✗ timeout: 
+
+[RECIPE 269/617] Korean Fried Chicken (Double Fry — Potato Starch Batter Science)
+  ✗ timeout: 
+
+[RECIPE 270/617] Korean Japchae (Vegan Version)
+  ✗ timeout: 
+
+[RECIPE 271/617] Korma
+  ✗ timeout: 
+
+[RECIPE 272/617] Korova (Ukrainian Christmas Eve — The Holy Supper)
+  ✗ timeout: 
+
+[RECIPE 273/617] Kourambiedes (Greek Christmas Butter Cookies)
+  ✗ timeout: 
+
+[RECIPE 274/617] Kung Pao Chicken
+  ✗ timeout: 
+
+[RECIPE 275/617] Kung Pao Chicken (Full Sichuan Method)
+  ✗ timeout: 
+
+  ── Progress: 275/617 recipes — 219 ok, 56 failed — 545.4 min elapsed ──
+
+
+[RECIPE 276/617] Kushikatsu (Osaka — Breadcrumbed Skewers, No Double-Dipping Rule)
+  ✗ timeout: 
+
+[RECIPE 277/617] Kwanzaa Feast — Jollof Rice and Suya
+  ✗ timeout: 
+
+[RECIPE 278/617] Lacto-Fermentation — Wild Vegetable Ferments
+  ✗ timeout: 
+
+[RECIPE 279/617] Lamb Tagine with Preserved Lemon (Naturally Gluten-Free)
+  ✗ timeout: 
+
+[RECIPE 280/617] Larb
+  ✗ timeout: 
+
+[RECIPE 281/617] Larb (Thai Minced Meat Salad — Naturally Gluten-Free)
+  ✗ timeout: 
+
+[RECIPE 282/617] Lasagna
+  ✗ timeout: 
+
+[RECIPE 283/617] Lebkuchen (Advent — Nuremberg Gingerbread)
+  ✗ timeout: 
+
+[RECIPE 284/617] Lebkuchen Mousse (Christmas — Modern Interpretation)
+  ✗ timeout: 
+
+[RECIPE 285/617] Lentil Soup (Adas bi Hamod — Naturally Vegan)
+  ✗ timeout: 
+
+[RECIPE 286/617] Lucknowi Dum Pukht (Slow Sealed Pot — Awadhi Technique)
+  ✗ timeout: 
+
+[RECIPE 287/617] Lucknowi Galouti Kebab (Melt-in-Mouth Minced Lamb)
+  ✗ timeout: 
+
+[RECIPE 288/617] Lunar New Year Whole Steamed Fish
+  ✗ timeout: 
+
+[RECIPE 289/617] Mac and Cheese
+  ✗ timeout: 
+
+[RECIPE 290/617] Madeleines
+  ✗ timeout: 
+
+[RECIPE 291/617] Makki di Roti and Sarson da Saag (Punjabi Winter Staple)
+  ✗ timeout: 
+
+[RECIPE 292/617] Mango Sticky Rice
+  ✗ timeout: 
+
+[RECIPE 293/617] Manipuri Eromba
+  ✗ timeout: 
+
+[RECIPE 294/617] Mapo Eggplant
+  ✗ timeout: 
+
+[RECIPE 295/617] Mapo Tofu
+  ✗ timeout: 
+
+[RECIPE 296/617] Mapo Tofu (Full Sichuan Method)
+  ✗ timeout: 
+
+[RECIPE 297/617] Marathi Kolhapuri Mutton (Dry-Roasted Coconut Spice Paste)
+  ✗ timeout: 
+
+[RECIPE 298/617] Marathi Sol Kadhi (Kokum and Coconut Milk Digestive)
+  ✗ timeout: 
+
+[RECIPE 299/617] Margherita Pizza
+  ✗ timeout: 
+
+[RECIPE 300/617] Marry Me Chicken (Viral Recipe — Sun-Dried Tomato Cream Sauce)
+  ✗ timeout: 
+
+  ── Progress: 300/617 recipes — 219 ok, 81 failed — 621.7 min elapsed ──
+
+
+[RECIPE 301/617] Masala Chai
+  ✗ error: 
+
+[RECIPE 302/617] Massaman Curry
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96149b/XaJCC6MhYmWdPCAlNaHuk_c103a936f...
+
+[RECIPE 303/617] Matcha Latte
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96149c/XGxE5MCgs8_IzDS7l_DzE_223a35e50...
+
+[RECIPE 304/617] Matzo Ball Soup (Passover — Seder Tradition)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96149d/F_mSs-_9To6SGXdd_TiJH_1383f070e...
+
+[RECIPE 305/617] Mayonnaise — Hand Method and Emulsion Science
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96149e/JSb56p2a8i8wais32ZuAe_e56490ba6...
+
+[RECIPE 306/617] Meat Resting — Carryover Cooking and Juice Redistribution
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96149f/41AI4AgrQVqsfBJGdMN7C_5f9e394fb...
+
+[RECIPE 307/617] Memelas (Oaxacan Oval Masa Cakes with Black Beans)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a0/JcJ4ZuPJKA3wjtG0spll4_08d991199...
+
+[RECIPE 308/617] Mentaiko Pasta (Fukuoka Spiced Cod Roe Pasta — Cold Sauce Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a1/gr7UTDxutbav9rR10SYEA_81712e2ac...
+
+[RECIPE 309/617] Midsummer Gravlax with Dill
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a2/at0ER5u3eqCw8saGHv1Fu_eaff32efd...
+
+[RECIPE 310/617] Mince Pies (British Christmas — Traditional Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a2/ufMgp5F58jcs3qedS49ZW_831a9e724...
+
+[RECIPE 311/617] Minestrone
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a3/pT5h3iAYkeenHo7JiGLUh_5a5d07c21...
+
+[RECIPE 312/617] Miso Soup
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a4/F6xm0ej6cHAG35Z2nA14m_3eb82fb66...
+
+[RECIPE 313/617] Miso Soup with Tofu and Wakame (Naturally Vegan)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a5/ZBa2o9E_hA3-92nW4ooJv_9cd9fb80b...
+
+[RECIPE 314/617] Miso — White, Red, and Hatcho (Fermentation Periods Explained)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a6/BzJp-iU7kqoAGVpFMwAnL_263e1a3d7...
+
+[RECIPE 315/617] Mizoram Bai
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a7/cjOjG0yb8lys4qHY1J88S_2646d1394...
+
+[RECIPE 316/617] Mochi
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a7/_F1zLHTI_6BzLSGT32Zip_d46b09cb1...
+
+[RECIPE 317/617] Mole Base (The Dried Chilli Paste — Before Adding Chocolate)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a8/8OnY7R1aGCuJTZ_hKHmBO_6d68bf04f...
+
+[RECIPE 318/617] Mole Coloradito (Oaxacan — Simpler Red Mole with Chocolate)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614a9/SL1cjeiQKVdqWt-SRhIC7_a36c80f29...
+
+[RECIPE 319/617] Mole Negro (Day of the Dead — Full Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614aa/pqRQ6tC1D113_OgbR94CE_184ddce11...
+
+[RECIPE 320/617] Mole Negro (Oaxacan — Full 30-Ingredient Method, Charring and Grinding)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614ab/fJDkjuOVQ-w339ndAc1xM_b0cc22162...
+
+[RECIPE 321/617] Mole Poblano
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614ac/yB5Vd-8s8pu3MttzPd7uE_317d5baad...
+
+[RECIPE 322/617] Mole Poblano (Pueblan — Chocolate and Dried Chilli — Turkey Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614ad/itY_Kucpu_VE1oZiXAjlU_c10e7595f...
+
+[RECIPE 323/617] Mooncake (Mid-Autumn Festival — Chinese Tradition)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614ae/PEhtKV157L9mAGkmTXzr9_96ebe88e3...
+
+[RECIPE 324/617] Moussaka
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614af/7yR7savM45WyvjvATGXSG_68230c085...
+
+[RECIPE 325/617] Mujaddara (Naturally Vegan — Lentils and Rice)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614b1/5EbJM7gHJyfE3KMeQosj5_2951ffeda...
+
+  ── Progress: 325/617 recipes — 243 ok, 82 failed — 626.0 min elapsed ──
+
+
+[RECIPE 326/617] Mushroom Wellington (Vegan Showpiece)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614b2/UCvq6VN2hYwMzWkyhLuln_ba4450c61...
+
+[RECIPE 327/617] Naan Bread
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614b3/3LDcvCRYnpup_p2fstu5Z_4dbec31bb...
+
+[RECIPE 328/617] Naengmyeon
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614b4/oCXUXoZ8eylfmy4cI1vIS_0b92ae76c...
+
+[RECIPE 329/617] Nam Jim (Thai Dipping Sauce — Garlic, Chilli, Fish Sauce, Lime)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614b5/wohQ5X-0UfoguruwqN2-q_bfd8ace1f...
+
+[RECIPE 330/617] Nashville Hot Chicken
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 331/617] Navruz Sumalak (Persian/Central Asian Spring Feast)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 332/617] 'Nduja (Calabrian — Spreadable Spiced Cured Sausage)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 333/617] Nian Gao (Chinese New Year Sticky Rice Cake)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 334/617] Nicoise Salad
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614ba/MXo5IfsdICRXn3wX1jAyF_a331016c7...
+
+[RECIPE 335/617] Nikujaga (Comfort Stew — Beef, Potato, Onion, Mirin)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614bb/ajzvflPv2eRSHlwR6DBJ0_b3672f782...
+
+[RECIPE 336/617] Northeast India Pork with Axone
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 337/617] Nuoc Cham (Vietnamese — Fish Sauce, Lime, Chilli — Ratio)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 338/617] Oden (Japanese Winter — Comfort Hotpot)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 339/617] Odia Dalma (Lentils with Mixed Vegetables — Eastern Style)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 340/617] Okonomiyaki
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614be/VYALIrT3oyIoL6tfKoFea_d9e584329...
+
+[RECIPE 341/617] Okonomiyaki Hiroshima Style (Layered vs Mixed — Technique Difference)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614bf/eYivuaCsIHS8v6jykPzpP_96fdd51a6...
+
+[RECIPE 342/617] Okonomiyaki (Vegan — Without Egg Method)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 343/617] Oliebollen (Dutch New Year's Eve Fritters)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 344/617] One-Pan Pasta (Pasta Cooked in Sauce Water — Starch Magic)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 345/617] Onigiri
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 346/617] Osechi Ryori (Japanese New Year's Feast)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 347/617] Osso Buco
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 348/617] Ossobuco alla Milanese (Lombardian — Marrow Bone, Gremolata, Saffron Risotto)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614c5/fwCfr4T2VEoXLdpOI8Ixz_7237ef0a9...
+
+[RECIPE 349/617] Overnight Oats (Fermentation-Adjacent — Oat Softening and Ratio Science)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 350/617] Oyster Sauce (Cantonese — Original Method vs Commercial)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+  ── Progress: 350/617 recipes — 252 ok, 98 failed — 630.0 min elapsed ──
+
+
+[RECIPE 351/617] Pad Krapao
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 352/617] Pad See Ew
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 353/617] Pad Thai
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 354/617] Pad Thai (Traditional — Naturally Gluten-Free)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 355/617] Pajeon
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614cb/IxOZD6TxIXllZ-wj3uHOb_702e9a850...
+
+[RECIPE 356/617] Palak Paneer
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614cc/SUYREdbJyQG7fitBIvNnz_155e0da0f...
+
+[RECIPE 357/617] Panang Curry
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 358/617] Pancakes
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614d3/mwDOFwkd77G-nNZAj-bvt_ce5a029ab...
+
+[RECIPE 359/617] Panelle (Sicilian Chickpea Fritters — Street Food)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 360/617] Panettone (Christmas — Traditional Method)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 361/617] Panna Cotta
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 362/617] Panna Cotta (Naturally Gluten-Free)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614db/9Tk08w-JIwu_43I3tQg2f_21f0ee356...
+
+[RECIPE 363/617] Pan Sauce (Deglazing — The Universal Restaurant Technique)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614dc/ZL6MYiIO13rdxmBv6ZNwE_025492213...
+
+[RECIPE 364/617] Papadzules (Yucatecan — Egg-Filled Tortillas in Pumpkin Seed Sauce)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 365/617] Paratha
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 366/617] Pasta alla Norma (Sicilian — Fried Aubergine and Ricotta Salata)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 367/617] Pasta e Fagioli (Naturally Vegan)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 368/617] Pastry — Laminated Dough (Croissant: Détrempe and Beurrage)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 369/617] Pavlova (Christmas — Southern Hemisphere Summer Tradition)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614e4/prLvc6FF6F7H6YsgsjQ3j_1acf3fbf6...
+
+[RECIPE 370/617] Peking Duck
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614e5/2Nd8vzElatpsEy10ZS0bJ_34f20dc0c...
+
+[RECIPE 371/617] Peking Duck (Full Method)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 372/617] Perfect Pan-Seared Steak
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 373/617] Pernil (Puerto Rican and Dominican Christmas Roast Pork)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 374/617] Persillade
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614e9/_eim25MhFJobsDL5zRMYs_06ccad627...
+
+[RECIPE 375/617] Pesto alla Genovese (Ligurian — Marble Mortar Cold Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614ea/_3nFenH9Bw5SzJEEaVz7C_d7ef6fae3...
+
+  ── Progress: 375/617 recipes — 261 ok, 114 failed — 635.7 min elapsed ──
+
+
+[RECIPE 376/617] Pesto Genovese
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 377/617] Pho
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 378/617] Pho Bo (Vegan — Mushroom and Spice Broth)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 379/617] Pho for Tet (Vietnamese Lunar New Year)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 380/617] Pistou
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 381/617] Poc Chuc (Yucatecan — Grilled Orange-Marinated Pork)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a9614f0/kHmv_HUeW42HenWzI9RwD_4e74e8209...
+
+[RECIPE 382/617] Polenta Concia (Alpine — Cheese-Loaded Mountain Polenta)
+  ✗ error: 
+
+[RECIPE 383/617] Polenta (Naturally Gluten-Free)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961503/kS0LiJGsiYjz1hY3sn_qa_a484870b9...
+
+[RECIPE 384/617] Ponzu (Japanese — Citrus Soy — Dashi Base)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 385/617] Pork Carnitas (Naturally Gluten-Free)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 386/617] Potato Latkes (Hanukkah — Full Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961506/6hTODFisNgOQ-kdpuPSqC_8ec3c9b2f...
+
+[RECIPE 387/617] Pot-au-Feu
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961507/rb0NptJQBvKm2hrPsAiGM_250c89bc5...
+
+[RECIPE 388/617] Pozole
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 389/617] Pozole Rojo (Jalisco — Red Hominy and Pork Soup)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 390/617] Pozole Verde (Guerrero — Green Tomatillo and Pumpkin Seed Version)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 391/617] Prawn Cocktail (British Christmas Starter — Classic)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 392/617] Preserved Lemon
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 393/617] Pressure Cooking — Braising Acceleration Science
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 394/617] Profiteroles
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 395/617] Pumpkin Soup (Autumn Equinox — Seasonal Harvest)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 396/617] Quesadillas
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 397/617] Quiche Lorraine
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961510/PwZmgmoij6xVOdzK_wTLs_450ca4e66...
+
+[RECIPE 398/617] Rafute (Okinawan Braised Pork Belly in Awamori and Soy)
+  ✗ error: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Inte
+
+[RECIPE 399/617] Raita
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961512/21EH5SzEYamGvCPIJxHYy_730f82bba...
+
+[RECIPE 400/617] Rajas con Crema (Roasted Poblano Strips in Crema — Side Dish)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961514/SW1skOgCxDQJR3gHmU6oN_660a1e588...
+
+  ── Progress: 400/617 recipes — 268 ok, 132 failed — 642.6 min elapsed ──
+
+
+[RECIPE 401/617] Rajasthani Dal Baati Churma (Baked Lentils, Bread, Crumble)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961516/tY-oSgp-8nKiwlINY7a8N_888361c72...
+
+[RECIPE 402/617] Rajasthani Ker Sangri (Wild Berry and Bean Desert Curry)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961517/QxI4IlrwWJAODXTLVm1LB_b46a37388...
+
+[RECIPE 403/617] Rajasthani Laal Maas (Fiery Red Mutton Curry)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961518/IOO20u8VAcrgF8RURKpRu_92f3fd2f9...
+
+[RECIPE 404/617] Ras el Hanout
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961519/vVBLn6CJw7b5QSKdoi0uw_1e8818c19...
+
+[RECIPE 405/617] Ratatouille
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96151a/kaweBNHOq_CtZ1SwKFkgU_d5d85772a...
+
+[RECIPE 406/617] Ratatouille (Naturally Vegan — Confit Byaldi Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96151a/4mSNyr3Lo_099wAtdeHi8_0946c5071...
+
+[RECIPE 407/617] Red-Braised Pork Belly (Hong Shao Rou)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96151b/bP27mIlZUopL7PP1tw1gq_e3e01ace9...
+
+[RECIPE 408/617] Reduction Sauce (Braising Liquid into Sauce — Concentration Point)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96151c/Y1zxDrQD4sb48YhAcQAkG_2a8802dc0...
+
+[RECIPE 409/617] Refried Beans
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96151e/V-GiVPC-8_P0AWWBQC3SV_2c74581f2...
+
+[RECIPE 410/617] Reverse Sear Steak (Low Oven First then Hot Sear — Sous Vide Alternative)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96151f/qkreIdEEVfIeLL-80eD07_fe380185d...
+
+[RECIPE 411/617] Reverse Spherification (Calcium Lactate Shell Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961520/u8OmY8b6XKHma6hESEVK9_153b7e029...
+
+[RECIPE 412/617] Ribollita
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961521/51mFohtDWiUxYmj4BuFWr_b309acdf3...
+
+[RECIPE 413/617] Ribollita (Naturally Vegan)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961522/xPEt2b9WrUFgjS0GJpmYD_6a4296a72...
+
+[RECIPE 414/617] Risotto alla Milanese
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961523/-vCZU_MfMS2hWZwYrQ5tj_fc5b71fb9...
+
+[RECIPE 415/617] Risotto (Naturally Gluten-Free)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961526/n3kw1E7G5_1tbkmjsle_w_67df36bfd...
+
+[RECIPE 416/617] Risotto Nero (Venetian — Squid Ink and Soffritto)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961527/bblNgGYlhAhD5WYJ2RlXu_7ab93b381...
+
+[RECIPE 417/617] Riz au Lait de Coquelicot (French Mother's Day — Rose Petal Rice Pudding)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961528/7GQimiRn9XIIgTZzxpI5__6f70f1f2e...
+
+[RECIPE 418/617] Roast Chicken
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961529/5VHb9VBDz1LyntsPIL1T4_6bc912771...
+
+[RECIPE 419/617] Roast Leg of Lamb (Easter Sunday — British and Australian)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96152a/MWnMKySB1mz5slxP_H0LY_6ef80336d...
+
+[RECIPE 420/617] Rogan Josh
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96152b/yywoqM0rBgnSg6SnY9QnX_5e35b1aef...
+
+[RECIPE 421/617] Rolled Ice Cream (Thai Street Food Origin — Freeze Plate Technique)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96152b/pxY4PCn9jQLeY7OJz9Pfm_d15bbf2c1...
+
+[RECIPE 422/617] Romesco Sauce (Catalan — Roasted Pepper, Almonds, Pimentón)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96152c/5hiFH2Hl_uiBZwXm3MmDN_c228724b3...
+
+[RECIPE 423/617] Rosca de Reyes (Epiphany — Mexico and Spain)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96152d/AVpHyIw0K57avxITIfKot_6154e2914...
+
+[RECIPE 424/617] Rouille
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96152e/pUIIkzlydpWVIXMzkKuIi_4df8219dd...
+
+[RECIPE 425/617] Salmoriglio (Sicilian Summer Feast — Grilled Swordfish)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96152f/7qPtbxANH_hn89doJaAYL_f22f3f46e...
+
+  ── Progress: 425/617 recipes — 293 ok, 132 failed — 647.1 min elapsed ──
+
+
+[RECIPE 426/617] Salsa Verde
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961530/9jcGHVOrek1jSzdwxXIjF_44d645e53...
+
+[RECIPE 427/617] Salsa Verde (Italian — Herb, Anchovy, Caper, Lemon)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961531/XqvQ6lsOm9g0GSQ0JEAOI_94af37842...
+
+[RECIPE 428/617] Salt Block Cooking (Himalayan Salt Block — Heat Transfer and Seasoning)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961531/TgpOVIrktJ6kRLf3kxdal_f8a4fb9c9...
+
+[RECIPE 429/617] Salt Crusting — Fish, Poultry, and Whole Vegetables
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961532/Bvx05mjXCO-0izySdGcHK_3e2f0e314...
+
+[RECIPE 430/617] Saltimbocca
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961533/oquOtoSQFKVEvWDntEbar_05aa96383...
+
+[RECIPE 431/617] Saltimbocca alla Romana (Veal, Prosciutto, Sage — Pan Sauce)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961534/8sOrhvF9Y8BuBAwaZ6ZZH_8c9746892...
+
+[RECIPE 432/617] Sambal Oelek (Indonesian — Raw Chilli Paste — No Cook Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961535/35VhwhFqj3l2umFJZmiij_a32f8b5c7...
+
+[RECIPE 433/617] Samgyeopsal
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961535/1rdY2NKZmFPrBkArHcEad_43f1a5b5e...
+
+[RECIPE 434/617] Samosa
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961536/glHSl8ZDyoVyeg5Hw1IYG_bedd26fef...
+
+[RECIPE 435/617] Sarde in Saor (Venetian Sweet-Sour Sardines — Centuries-Old Preservation)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961537/wfNQEW0NBnqYLNCS8e5_w_f6577fa48...
+
+[RECIPE 436/617] Sashimi
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961538/Lw9115rtwFk2uolFlSBZj_1af0caf27...
+
+[RECIPE 437/617] Satay with Peanut Sauce
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961539/q8MsFNg7qV6rtnuft1Ivi_a41697b04...
+
+[RECIPE 438/617] Satsuma-age (Kagoshima — Deep-Fried Fish Cake)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96153a/gT6lmz6fUDOxNT9NuhudA_df0a19c9c...
+
+[RECIPE 439/617] Sauce Bordelaise
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96153a/Ox45mrKmHRGE2YAbk5CUS_ee49d27a1...
+
+[RECIPE 440/617] Sauce Espagnole and Demi-Glace (Classical Brown Sauce System)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96153b/5hGGOrj_S-RrNXfNvMoab_a31381b7e...
+
+[RECIPE 441/617] Sauce Tomate (Classical French — Not Italian — Stock and Pork)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96153c/gefv83kABww_kaq6b8aBH_e33b0c015...
+
+[RECIPE 442/617] Scallion Pancakes
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96153d/xwZ8PYRUVuwfEeoqO0_pi_f5ded0825...
+
+[RECIPE 443/617] Scrambled Eggs
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96153e/XiAuiMcCuEaksnZBCMh2P_048891790...
+
+[RECIPE 444/617] Sfinci di San Giuseppe (St Joseph's Day — Sicilian Tradition)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96153e/x4OHNDjMRBjFxS-5LLhZJ_bda421c07...
+
+[RECIPE 445/617] Shab-e Yalda Celebration — Pomegranate and Aash Reshteh
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96153f/sAtBnSRWD0D1VfjtMGZdc_22f579a98...
+
+[RECIPE 446/617] Shakshuka (Egg Version — Naturally Gluten-Free)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961540/JBZHix7GAHdh1eMgWbEIO_616701346...
+
+[RECIPE 447/617] Shakshuka (Second Wave Viral — Middle East Backstory and Method)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961541/Fs_f2-VvQpqqWs_wIvf4-_54ced6668...
+
+[RECIPE 448/617] Shakshuka (Vegan — Egg-Free)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961542/M8L6Es7Yuzmn1YGNjUEe2_fd01e7992...
+
+[RECIPE 449/617] Shawarma
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961542/7VamIKvQrE-X3l9ke273P_2958ec3d4...
+
+[RECIPE 450/617] Sichuan Hot Pot
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961543/n-lsSREcYATHs-JAqTbAd_7587ef3e0...
+
+  ── Progress: 450/617 recipes — 318 ok, 132 failed — 650.5 min elapsed ──
+
+
+[RECIPE 451/617] Sindhi Sai Bhaji
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961544/vBGoTSaKdFrNuguQTnCT7_6025c45ef...
+
+[RECIPE 452/617] Smash Burger (Griddle vs Cast Iron — Crust Science)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961545/Ztwyes7Ge5Voj8U7wi8k0_568fc5e88...
+
+[RECIPE 453/617] Smoked Brisket
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961546/Bg8_XZPooRKYGjcjjd-Qm_9dadd6d34...
+
+[RECIPE 454/617] Soba Noodles (100% Buckwheat — Naturally Gluten-Free)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961547/lnE5nFQdTzYUHsgyWpo8D_026087fd6...
+
+[RECIPE 455/617] Soba Toshikoshi (New Year's Eve — Japanese Tradition)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961547/UD-hT1BOsFSYy4upMd0XW_42f3cf4f9...
+
+[RECIPE 456/617] Socca (Naturally Vegan — Chickpea Pancake)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961548/_TX9vkRQv3xWBtEqxEQwq_cca1d57b1...
+
+[RECIPE 457/617] Sofrito
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961549/znYaz9DsMrJjV6GlNy4VW_abcec4cd7...
+
+[RECIPE 458/617] Som Tam
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96154a/HaiuTVhvrbAtKJAhWdt3h_51690db12...
+
+[RECIPE 459/617] Sopa de Lima (Yucatecan — Lime-Soured Chicken Soup)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96154b/y28SV-9ikKwl7DyADM4hd_0bce3c92c...
+
+[RECIPE 460/617] Sopa Tarasca (Michoacán — Pureed Black Bean Soup, Fried Tortilla)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96154c/slSgIA3xjtHiA15F2QjoA_7602f97d9...
+
+[RECIPE 461/617] Soufflé Pancakes (Tokyo Café Style — Meringue Folding Technique)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961554/kTwu4oAG6wCuIc5rxVGMS_ee9ec05b5...
+
+[RECIPE 462/617] Sourdough Bread
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961555/yZltRETMOGutDMMH5KnjP_17fdf3652...
+
+[RECIPE 463/617] Sous Vide Eggs — 63°C Precision (Onsen Tamago Principles)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961556/QvQAok99BKV4L0LenaQ2Y_fac0247dc...
+
+[RECIPE 464/617] Sous Vide Proteins — Temperature Tables and Finishing
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961557/jCvFDs6Gh1kbdp7vZnMaI_b3060283d...
+
+[RECIPE 465/617] South Indian Sambar
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961558/QzmBWwttNBlkmREDEOVC4_1846c2f3b...
+
+[RECIPE 466/617] Souvlaki
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a961559/X6xdebkUH1Ai0JS87nj3x_bd119553f...
+
+[RECIPE 467/617] Spaghetti Bolognese
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96155a/wHGM-kMPufJS4aLryTKKe_cf3accde6...
+
+[RECIPE 468/617] Spaghetti Carbonara
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96155b/vZ5Zs7Jnq0Ca9-9seaRVc_f380707b0...
+
+[RECIPE 469/617] Spanakopita
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96155c/Y8awtwH-hoUDPyq9TWkkR_cc314efa1...
+
+[RECIPE 470/617] Spherification — Basic (Sodium Alginate + Calcium Chloride)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96155d/mWnbZhPU7VzGI066sgCWX_b940de969...
+
+[RECIPE 471/617] Springerle (Advent — German Anise Cookies)
+  ✓ Generated ✓ verified  https://v3b.fal.media/files/b/0a96155e/UU9MsNqhtxRs0hMHABA6x_b171881cd...
+
+[RECIPE 472/617] Spring Rolls
+  ✗ timeout: 
+
+[RECIPE 473/617] Steak au Poivre (Valentine's Day — Classic French Bistro)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 474/617] Steamed Sea Bass with Ginger and Scallion (清蒸鱼)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 475/617] Stock — Brown (Fond Brun: Roasting, Tomato Paste, Deglaze)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+  ── Progress: 475/617 recipes — 339 ok, 136 failed — 807.4 min elapsed ──
+
+
+[RECIPE 476/617] Stock — White Veal (Fond Blanc de Veau)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 477/617] Stollen (Advent — German Christmas Bread)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 478/617] St Patrick's Day Corned Beef and Cabbage
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 479/617] Sundubu Jjigae
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 480/617] Sundubu Jjigae (Soft Tofu Stew — Spicy)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 481/617] Supplì al Telefono (Roman Fried Rice Croquettes)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 482/617] Sushi (Nigiri)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 483/617] Sweet and Sour Pork
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 484/617] Tabbouleh
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 485/617] Tabbouleh (Naturally Gluten-Free with Cauliflower 'Bulgur')
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 486/617] Tacos al Pastor
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 487/617] Tacos al Pastor (Gluten-Free — Naturally)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 488/617] Tacos de Canasta (Mexico City — Steamed Basket Tacos, Guajillo Grease)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 489/617] Tacos de Rajas (Vegan — Roasted Pepper Tacos)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 490/617] Tagliatelle al Ragù Bolognese (Emilian — Full Long Method)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 491/617] Tahdig
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 492/617] Tahini (Sesame Paste — Cold Press vs Roasted — Ratios)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 493/617] Takoyaki
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 494/617] Takoyaki (Osaka — Octopus Balls — Batter and Turning Method)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 495/617] Tamagoyaki
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 496/617] Tamales
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 497/617] Tamales (Full Method — Masa Preparation, Lard Ratio, Banana Leaf vs Corn Husk)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 498/617] Tamales (Mexican Christmas — Posadas Tradition)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 499/617] Tamil Nadu Chettinad Idli
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 500/617] Tandoori Chicken
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+  ── Progress: 500/617 recipes — 339 ok, 161 failed — 894.8 min elapsed ──
+
+
+[RECIPE 501/617] Tare — Shoyu, Shio, and Miso (Ramen Seasoning Concentrate)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 502/617] Tarte Tatin
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 503/617] Tempering Chocolate — Seed Method and Tabling
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 504/617] Tempura
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 505/617] Tepache (Fermented Pineapple Drink — Wild Fermentation, 2–3 Days)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 506/617] Teriyaki Chicken
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 507/617] Teriyaki Sauce (Japanese — Soy, Mirin, Sake, Sugar Ratio)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 508/617] Thai Fried Rice
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 509/617] Thai Green Curry (Vegan with Coconut Milk)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 510/617] Thai Red Curry
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 511/617] Thanksgiving Green Bean Casserole (Classic Method)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 512/617] Thanksgiving Pumpkin Pie (Full Method)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 513/617] Thanksgiving Stuffing / Dressing (Classic Bread Stuffing)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 514/617] The Aged Meat (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 515/617] The Braise (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 516/617] The Bread (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 517/617] The Caramel (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 518/617] The Ceviche (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 519/617] The Char (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 520/617] The Cold Dish (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 521/617] The Condiment (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 522/617] The Confection (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 523/617] The Cure (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 524/617] The Curry (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 525/617] The Custard (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+  ── Progress: 525/617 recipes — 339 ok, 186 failed — 956.0 min elapsed ──
+
+
+[RECIPE 526/617] The Deep Fry (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 527/617] The Dehydration (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 528/617] The Dressing (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 529/617] The Dumpling (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 530/617] The Emulsify (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 531/617] The Ferment (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 532/617] The Final Dish (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 533/617] The Flatbread (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 534/617] The Fritter (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 535/617] The Grill (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 536/617] The Jam (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 537/617] The Last Dish (Provenance Original)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 538/617] The Marinade (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 539/617] The Noodle (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 540/617] The Offal Dish (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 541/617] The One-Pot (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 542/617] The Pancake (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 543/617] The Pickle (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 544/617] The Pie (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 545/617] The Porridge (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 546/617] The Preservation (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 547/617] The Reduction (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 548/617] The Resting (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 549/617] The Rice Dish (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 550/617] The Roast (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+  ── Progress: 550/617 recipes — 339 ok, 211 failed — 1077.9 min elapsed ──
+
+
+[RECIPE 551/617] The Salad (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 552/617] The Smoke (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 553/617] The Soup (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 554/617] The Spice Paste (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 555/617] The Steam (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 556/617] The Stew (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 557/617] The Stock (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 558/617] The Stuffed Vegetable (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 559/617] The Sweet-Sour (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 560/617] The Tempering (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 561/617] The Terrine (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 562/617] The Whole Animal (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 563/617] The Wrap (Cross-Cultural)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 564/617] TikTok Pasta (Vodka Sauce Trend — Butter and Cream Balance)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 565/617] Tiramisu
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 566/617] Tiramisu (Naturally Gluten-Free — Savoiardi Substitution)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 567/617] Tlayuda (Oaxacan — Large Crisp Tortilla with Tasajo and Quesillo)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 568/617] Tom Kha Gai
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 569/617] Tom Yam Kung
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 570/617] Tom Yum Soup (Vegan Version)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 571/617] Tonkatsu
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 572/617] Tonkotsu Ramen
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 573/617] Tonnarelli all'Amatriciana (Roman — Guanciale, Tomato, Pecorino)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 574/617] Tori Paitan (Creamy Chicken Bone Broth Ramen — Emulsification)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 575/617] Tornado Omelette (Korean Tornado Style — Swirl Technique)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+  ── Progress: 575/617 recipes — 339 ok, 236 failed — 1139.4 min elapsed ──
+
+
+[RECIPE 576/617] Tororo Soba (Grated Mountain Yam over Cold Buckwheat)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 577/617] Tortellini in Brodo (Emilian — Folding Technique and Capon Broth)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 578/617] Tostadas de Tinga (Pueblan Shredded Chicken in Chipotle)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 579/617] Toum
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 580/617] Tres Leches Cake
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 581/617] Trofie al Pesto (Ligurian — Hand-Rolled Pasta)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 582/617] Tsukimi Dango (Moon-Viewing Festival — Japanese Autumn)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 583/617] Tteokbokki
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 584/617] Tteok-bokki (Spicy Rice Cakes — Street Food Style)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 585/617] Turducken (American Thanksgiving — Multi-Bird Tradition)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 586/617] Twice-Cooked Pork
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 587/617] Twice-Cooked Pork (Hui Guo Rou)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 588/617] Tzatziki
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 589/617] Udon Noodles
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 590/617] Vacuum Compression — Rapid Marination and Texture Change
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 591/617] Vasilopita (Greek New Year's Cake)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 592/617] Vegan Butter Chicken (Cashew-Based)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 593/617] Vegan Carbonara (Cashew-Based Method)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 594/617] Vegan Ramen (Shio-Style — Mushroom Broth)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 595/617] Velouté (Mother Sauce — Light Stock-Based Roux Sauce)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 596/617] Vietnamese Coffee
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 597/617] Vietnamese Spring Rolls
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 598/617] Vindaloo
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 599/617] Viral Cucumber Salad (Smashed Cucumber — Chinese Origin Method)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 600/617] Vitello Tonnato
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+  ── Progress: 600/617 recipes — 339 ok, 261 failed — 1200.4 min elapsed ──
+
+
+[RECIPE 601/617] Vitello Tonnato (Piedmontese — Cold Veal with Tuna Mayonnaise)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 602/617] Wet Brine — Equilibrium Brining (Precise Salt Percentage)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 603/617] Whipped Coffee (Dalgona — Korean Origin, Foam Science)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 604/617] Wild Sourdough Starter — Building and Maintaining
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 605/617] Wonton Noodle Soup (Cantonese)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 606/617] Wonton Soup
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 607/617] Worcestershire Sauce (Victorian — Fermented Anchovy Base — Home Version)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 608/617] Xiao Long Bao
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 609/617] Xiao Long Bao (Shanghai Soup Dumplings)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 610/617] XO Sauce (Hong Kong — Dried Scallop, Ham, Prawn — Umami Bomb)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 611/617] Yakitori
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 612/617] Yakitori (Binchōtan Grill — Tare vs Shio Technique)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 613/617] Za'atar
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 614/617] Zeppole di San Giuseppe (St Joseph's Day — Neapolitan)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 615/617] Zha Jiang Mian (炸酱面 — Beijing Noodles with Meat Sauce)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 616/617] Zhug (Yemeni Green Chilli Sauce — Cardamom and Cumin Base)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+[RECIPE 617/617] Zōsui (Japanese Rice Porridge from Leftover Broth)
+  ✗ error: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded w
+
+──────────────────────────────────────────────────────────────────────
+PHASE 2: BEVERAGES
+──────────────────────────────────────────────────────────────────────
+Fetching all beverages...
+Traceback (most recent call last):
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py", line 953, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 759, in connect
+    self.sock = sock = self._new_conn()
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/connection.py", line 211, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: HTTPSConnection(host='provenance.kitchen', port=443): Failed to resolve 'provenance.kitchen' ([Errno 8] nodename nor servname provided, or not known)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded with url: /api/beverage/products?limit=500&offset=0 (Caused by NameResolutionError("HTTPSConnection(host='provenance.kitchen', port=443): Failed to resolve 'provenance.kitchen' ([Errno 8] nodename nor servname provided, or not known)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/garthgreenlees/Desktop/provenance-tester-1/batch_generate_all.py", line 322, in <module>
+    main()
+  File "/Users/garthgreenlees/Desktop/provenance-tester-1/batch_generate_all.py", line 217, in main
+    all_beverages = get_all_beverages()
+  File "/Users/garthgreenlees/Desktop/provenance-tester-1/batch_generate_all.py", line 54, in get_all_beverages
+    resp = requests.get(
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/requests/api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/Users/garthgreenlees/Library/Python/3.9/lib/python/site-packages/requests/adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='provenance.kitchen', port=443): Max retries exceeded with url: /api/beverage/products?limit=500&offset=0 (Caused by NameResolutionError("HTTPSConnection(host='provenance.kitchen', port=443): Failed to resolve 'provenance.kitchen' ([Errno 8] nodename nor servname provided, or not known)"))

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drinks — Provenance</title>
+<meta name="description" content="Browse {{ total_drinks }} drinks by category — Wine, Beer, Spirits, Sake, Coffee, Tea, and more. Provenance beverage terroir.">
+<link rel="canonical" href="https://provenance.kitchen/drinks">
+<meta property="og:title" content="Drinks — Provenance">
+<meta property="og:description" content="Browse {{ total_drinks }} drinks by category.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://provenance.kitchen/drinks">
+<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Drinks — Provenance">
+<meta name="twitter:description" content="Browse drinks by category — Wine, Beer, Spirits, Sake, Coffee, Tea, and more. Provenance beverage terroir.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Provenance Drinks Catalogue",
+  "description": "Browse drinks by category including wine, beer, spirits, sake, coffee, and more",
+  "url": "https://provenance.kitchen/drinks"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#8B6914;--gold-light:#C49B2A;--gold-bg:rgba(139,105,20,0.08);--gold-border:rgba(139,105,20,0.2);
+  --cream:#FDFCF9;--cream-dark:#F5F0E8;--cream-mid:#EDE8E0;
+  --text:#1A1A1A;--text-secondary:#6B6B6B;--text-light:#999;
+  --border:#E8E3D8;--border-mid:#D6D0C8;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
+
+/* ─── NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
+.nav-links a:hover{color:#C9A84C}
+.nav-links .nav-active{color:rgba(201,168,76,0.75)}
+.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
+.nav-p:hover{border-color:#C9A84C}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+
+/* ─── HERO ─── */
+.hero{
+  background:linear-gradient(160deg,#1A1410 0%,#2A1E16 50%,#1E1812 100%);
+  padding:64px 32px 48px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 80%,rgba(139,105,20,0.18) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 20%,rgba(139,105,20,0.10) 0%,transparent 50%);
+  pointer-events:none;
+}
+.hero-inner{max-width:1000px;margin:0 auto;position:relative}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(196,155,42,0.7);margin-bottom:16px}
+.hero-title{font-family:var(--serif);font-size:clamp(36px,5vw,56px);font-weight:700;color:#FDFCF9;line-height:1.1;letter-spacing:-1px;margin-bottom:16px}
+.hero-subtitle{font-size:17px;color:rgba(253,252,249,0.6);font-weight:300;line-height:1.6;max-width:540px;margin-bottom:32px}
+.hero-stats{display:flex;gap:40px;flex-wrap:wrap}
+.stat{border-left:1px solid rgba(196,155,42,0.3);padding-left:16px}
+.stat-number{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--gold-light);line-height:1}
+.stat-label{font-size:12px;color:rgba(253,252,249,0.5);letter-spacing:0.5px;margin-top:4px}
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb{padding:12px 32px;font-size:13px;color:var(--text-light);border-bottom:1px solid var(--border)}
+.breadcrumb a{color:var(--text-secondary);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb sep{margin:0 8px;opacity:0.4}
+
+/* ─── CONTAINER ─── */
+.browse-container{max-width:1000px;margin:0 auto;padding:48px 32px 80px}
+
+/* ─── SECTION LABEL ─── */
+.section-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:20px;
+}
+
+/* ─── CATEGORY GRID ─── */
+.category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:48px}
+.category-card{
+  border-radius:6px;cursor:pointer;
+  text-decoration:none;color:var(--text);
+  transition:transform 0.2s,box-shadow 0.2s;display:block;
+  overflow:hidden;
+  border:none;
+}
+.category-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.18)}
+.category-card.active{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.22)}
+.category-card-grad{
+  width:100%;aspect-ratio:3/2;
+  display:flex;align-items:flex-end;padding:16px;
+}
+.category-card-body{padding:12px 4px 4px}
+.category-icon{display:none}
+.category-name{font-family:var(--sans);font-size:13px;font-weight:400;color:#1A1A1A;margin-bottom:3px}
+.category-count{font-family:var(--mono);font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em}
+
+/* ─── PRODUCT RESULTS ─── */
+.products-panel{display:none}
+.products-panel.active{display:block}
+.products-panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;flex-wrap:wrap;gap:8px;
+}
+.products-panel-title{
+  font-family:var(--serif);font-size:28px;font-weight:600;
+}
+.products-panel-count{font-family:var(--mono);font-size:12px;color:var(--text-light)}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.product-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:20px 22px;text-decoration:none;color:var(--text);
+  transition:all 0.2s;display:block;
+}
+.product-card:hover{border-color:var(--gold-border);box-shadow:0 4px 16px rgba(139,105,20,0.08)}
+.product-category-tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.product-name{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:6px;line-height:1.2}
+.product-region{font-size:12px;color:var(--text-light);margin-bottom:8px}
+.product-desc{font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.5}
+.product-meta{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.badge-gold{font-size:11px;background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border);padding:2px 8px;border-radius:4px}
+.badge-cream{font-size:11px;background:var(--cream-dark);color:var(--text-secondary);border:1px solid var(--border);padding:2px 8px;border-radius:4px}
+
+/* ─── LOADING / EMPTY ─── */
+.loading-text{font-size:13px;color:var(--text-light);padding:32px 0;font-weight:300}
+.empty-results{padding:40px 0;color:var(--text-light);font-size:14px}
+
+/* ─── VIEW ALL LINK ─── */
+.view-all-link{
+  display:inline-block;margin-top:24px;
+  font-size:13px;color:var(--gold);text-decoration:none;font-weight:500;
+  border-bottom:1px solid var(--gold-border);padding-bottom:2px;
+  transition:border-color 0.15s;
+}
+.view-all-link:hover{border-color:var(--gold)}
+
+@media(max-width:600px){
+  .hero{padding:40px 20px 32px}
+  .browse-container{padding:32px 20px 60px}
+  .hero-stats{gap:24px}
+  .breadcrumb{padding:14px 20px}
+}
+
+/* ─── PROVENANCE 500 SECTION ─── */
+.p500{
+  background:#0A0A09;
+  padding:64px 32px 72px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.p500-inner{max-width:1200px;margin:0 auto}
+.p500-header{text-align:center;margin-bottom:40px}
+.p500-eyebrow{
+  font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(196,155,42,0.55);margin-bottom:12px
+}
+.p500-title{
+  font-family:var(--serif);font-size:clamp(28px,4vw,46px);font-weight:700;
+  color:#F4F1E8;letter-spacing:-0.02em;line-height:1.1;margin-bottom:12px
+}
+.p500-sub{
+  font-size:15px;font-weight:300;color:rgba(244,241,232,0.4);
+  max-width:500px;margin:0 auto;line-height:1.6
+}
+.p500-tabs{
+  display:flex;gap:4px;margin-bottom:32px;flex-wrap:wrap;justify-content:center;
+  border-bottom:1px solid rgba(255,255,255,0.07);padding-bottom:0;
+}
+.p500-tab{
+  background:transparent;border:none;border-bottom:2px solid transparent;
+  color:rgba(244,241,232,0.38);cursor:pointer;
+  font-family:var(--sans);font-size:12.5px;font-weight:400;
+  padding:9px 13px 11px;display:flex;align-items:center;gap:5px;
+  transition:color 0.18s,border-color 0.18s;margin-bottom:-1px;
+  white-space:nowrap;
+}
+.p500-tab:hover{color:rgba(244,241,232,0.7)}
+.p500-tab.active{color:#F4F1E8;border-bottom-color:#C49B2A}
+.p500-tab-count{font-family:var(--mono);font-size:9px;color:rgba(196,155,42,0.45)}
+.p500-tab.active .p500-tab-count{color:rgba(196,155,42,0.8)}
+.p500-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:10px;
+}
+.p500-card{
+  position:relative;border-radius:8px;overflow:hidden;
+  cursor:pointer;aspect-ratio:4/3;display:block;
+  text-decoration:none;color:inherit;
+  transition:transform 240ms ease,box-shadow 240ms ease;
+}
+.p500-card:hover{
+  transform:translateY(-3px) scale(1.02);
+  box-shadow:0 12px 40px rgba(0,0,0,0.6),0 0 0 1px rgba(196,155,42,0.25);
+  z-index:2;position:relative;
+}
+.p500-card img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform 360ms ease;
+}
+.p500-card:hover img{transform:scale(1.06)}
+.p500-card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.35) 50%,transparent 100%);
+  pointer-events:none;
+}
+.p500-card-name{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:10px 11px 10px;
+  font-size:11.5px;font-weight:400;color:#F4F1E8;line-height:1.3;letter-spacing:0.01em;
+}
+.p500-card-tag{
+  position:absolute;top:8px;left:9px;
+  font-family:var(--mono);font-size:8px;letter-spacing:1px;text-transform:uppercase;
+  color:rgba(196,155,42,0.7);background:rgba(0,0,0,0.55);padding:2px 6px;border-radius:3px;
+}
+.p500-card.p500-no-img{display:flex;align-items:flex-end}
+.p500-card.p500-no-img img{display:none}
+.p500-loading{
+  grid-column:1/-1;text-align:center;padding:48px;
+  color:rgba(244,241,232,0.3);font-size:13px;
+}
+.p500-view-all{
+  display:block;text-align:center;margin-top:28px;
+  font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(196,155,42,0.65);text-decoration:none;
+  border:1px solid rgba(196,155,42,0.2);border-radius:6px;
+  padding:10px 24px;width:fit-content;margin-left:auto;margin-right:auto;
+  transition:all 0.18s;
+}
+.p500-view-all:hover{color:rgba(196,155,42,0.9);border-color:rgba(196,155,42,0.5);background:rgba(196,155,42,0.06)}
+@media(max-width:1024px){.p500-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:768px){
+  .p500{padding:40px 16px 52px}
+  .p500-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .p500-tab{font-size:11px;padding:8px 10px 10px}
+}
+@media(max-width:480px){.p500-grid{grid-template-columns:repeat(2,1fr);gap:6px}}
+</style>
+<!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4G21HCX2D0');
+</script>
+<!-- PWA -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Provenance">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks" class="nav-active">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+    {% if is_authenticated %}
+    <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
+    {% else %}
+    <a href="/auth/login">Sign In</a>
+    {% endif %}
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/auth/account">My Kitchen</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Provenance Beverage Terroir</div>
+    <h1 class="hero-title">The Drinks<br>Catalogue</h1>
+    <p class="hero-subtitle">Wine, sake, spirits, coffee, beer and beyond — with pairing intelligence and service knowledge.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-number">500</div>
+        <div class="stat-label">Most Searched</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">{{ total_drinks }}</div>
+        <div class="stat-label">Beverage Products</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">{{ categories | length }}</div>
+        <div class="stat-label">Categories</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="breadcrumb">
+  <a href="/">Home</a><sep>/</sep>Drinks
+</div>
+
+<!-- ─── PROVENANCE 500 ─── -->
+<section class="p500" id="p500Section">
+  <div class="p500-inner">
+    <div class="p500-header">
+      <p class="p500-eyebrow">500 Entries · 10 Categories</p>
+      <h2 class="p500-title">THE PROVENANCE 500</h2>
+      <p class="p500-sub">The world's most searched drinks. Each one the definitive version.</p>
+    </div>
+
+    <div class="p500-tabs" id="p500Tabs">
+      <button class="p500-tab active" onclick="p500Tab(this,'Cocktails')">Cocktails <span class="p500-tab-count">75</span></button>
+      <button class="p500-tab" onclick="p500Tab(this,'Wine')">Wine <span class="p500-tab-count">60</span></button>
+      <button class="p500-tab" onclick="p500Tab(this,'Beer')">Beer <span class="p500-tab-count">50</span></button>
+      <button class="p500-tab" onclick="p500Tab(this,'Spirits')">Spirits <span class="p500-tab-count">45</span></button>
+      <button class="p500-tab" onclick="p500Tab(this,'Sake &amp; East Asian')">Sake &amp; East Asian <span class="p500-tab-count">30</span></button>
+      <button class="p500-tab" onclick="p500Tab(this,'Coffee')">Coffee <span class="p500-tab-count">40</span></button>
+      <button class="p500-tab" onclick="p500Tab(this,'Tea')">Tea <span class="p500-tab-count">40</span></button>
+      <button class="p500-tab" onclick="p500Tab(this,'Non-Alcoholic')">Non-Alcoholic <span class="p500-tab-count">60</span></button>
+      <button class="p500-tab" onclick="p500Tab(this,'Traditional')">Traditional <span class="p500-tab-count">50</span></button>
+      <button class="p500-tab" onclick="p500Tab(this,'Pairing Guides')">Pairing Guides <span class="p500-tab-count">50</span></button>
+    </div>
+
+    <div class="p500-grid" id="p500Grid">
+      <div class="p500-loading">Loading…</div>
+    </div>
+
+    <a href="/techniques/browse" class="p500-view-all">Browse all 500+ techniques →</a>
+  </div>
+</section>
+
+<div class="browse-container">
+
+  <div class="section-label">Browse by category</div>
+  <div class="category-grid" id="categoryGrid">
+    {% set grads = {
+      'wine':               'linear-gradient(135deg,#2A0810 0%,#6B1428 50%,#4A0A1E 100%)',
+      'sake':               'linear-gradient(135deg,#1A1A18 0%,#3A3830 50%,#5A5848 100%)',
+      'coffee':             'linear-gradient(135deg,#1A0C06 0%,#3D1E0A 50%,#6B3510 100%)',
+      'beer_ale':           'linear-gradient(135deg,#2A1A04 0%,#7A4A08 50%,#A06814 100%)',
+      'beer_lager':         'linear-gradient(135deg,#2A2208 0%,#7A6410 50%,#A08818 100%)',
+      'spirits_whiskey':    'linear-gradient(135deg,#1A0C04 0%,#5A2C08 50%,#8B4A12 100%)',
+      'spirits_brandy':     'linear-gradient(135deg,#1E0A04 0%,#5A200A 50%,#8B3A14 100%)',
+      'gin':                'linear-gradient(135deg,#041818 0%,#0A3830 50%,#105848 100%)',
+      'sparkling':          'linear-gradient(135deg,#1A1A10 0%,#4A4818 50%,#7A7828 100%)',
+      'wild_beer':          'linear-gradient(135deg,#041408 0%,#0A3818 50%,#145828 100%)',
+      'wild beer':          'linear-gradient(135deg,#041408 0%,#0A3818 50%,#145828 100%)',
+      'na':                 'linear-gradient(135deg,#041810 0%,#0A4028 50%,#106840 100%)',
+      'NA':                 'linear-gradient(135deg,#041810 0%,#0A4028 50%,#106840 100%)',
+      'na dealcoholised':   'linear-gradient(135deg,#041810 0%,#0A4028 50%,#106840 100%)',
+      'NA dealcoholised':   'linear-gradient(135deg,#041810 0%,#0A4028 50%,#106840 100%)',
+    } %}
+    {% for c in categories %}
+    {% set grad = grads.get(c.category, 'linear-gradient(135deg,#1A1410 0%,#3A2C18 50%,#5A4428 100%)') %}
+    <div class="category-card" id="cat-{{ loop.index }}" onclick="browseCategory('{{ c.category }}', {{ loop.index }})">
+      <div class="category-card-grad" style="background:{{ grad }}"></div>
+      <div class="category-card-body">
+        <div class="category-name">{{ c.category | replace('_', ' ') | title }}</div>
+        <div class="category-count">{{ c.count }} drink{% if c.count != 1 %}s{% endif %}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div id="productsPanel" class="products-panel">
+    <div class="products-panel-header">
+      <div class="products-panel-title" id="panelTitle"></div>
+      <div class="products-panel-count" id="panelCount"></div>
+    </div>
+    <div id="panelProducts"></div>
+    <a href="/beverage" class="view-all-link">View full beverage catalogue →</a>
+  </div>
+
+</div>
+
+<script>
+/* ─── Provenance 500 ─── */
+(function() {
+  var PCM = 'https://picsum.photos/seed/';
+  var p500Cache = {};
+  var p500ActiveTab = null;
+
+  var p500Grads = {
+    'Cocktails':         'linear-gradient(135deg,#2A0A1A 0%,#6B1535 100%)',
+    'Wine':              'linear-gradient(135deg,#2A0808 0%,#7A1818 100%)',
+    'Beer':              'linear-gradient(135deg,#1A1000 0%,#5A3800 100%)',
+    'Spirits':           'linear-gradient(135deg,#1A0A00 0%,#5A2A00 100%)',
+    'Sake & East Asian': 'linear-gradient(135deg,#0A1020 0%,#1A3060 100%)',
+    'Coffee':            'linear-gradient(135deg,#0D0800 0%,#3D2000 100%)',
+    'Tea':               'linear-gradient(135deg,#051A08 0%,#1A5A20 100%)',
+    'Non-Alcoholic':     'linear-gradient(135deg,#051520 0%,#155A5A 100%)',
+    'Traditional':       'linear-gradient(135deg,#100A20 0%,#3A2060 100%)',
+    'Pairing Guides':    'linear-gradient(135deg,#1A1400 0%,#5A4A00 100%)',
+  };
+
+  var p500Imgs = {
+    'negroni':                                              PCM+'negroni-cocktail/400/300',
+    'espresso-martini':                                     PCM+'espresso-martini-dark/400/300',
+    'margarita':                                            PCM+'margarita-lime/400/300',
+    'old-fashioned':                                        PCM+'old-fashioned-whiskey/400/300',
+    'martini-dry':                                          PCM+'martini-elegant/400/300',
+    'manhattan':                                            PCM+'manhattan-cocktail/400/300',
+    'mojito':                                               PCM+'mojito-mint-lime/400/300',
+    'aperol-spritz':                                        PCM+'aperol-spritz-orange/400/300',
+    'daiquiri-classic':                                     PCM+'daiquiri-rum/400/300',
+    'pisco-sour':                                           PCM+'pisco-sour-lime/400/300',
+    'moscow-mule':                                          PCM+'moscow-mule-ginger/400/300',
+    'champagne-the-worlds-most-celebrated-sparkling-wine':  PCM+'champagne-sparkle/400/300',
+    'cabernet-sauvignon-napa-valley-profile':               PCM+'red-wine-glass/400/300',
+    'pinot-noir-burgundy-vs-oregon-vs-central-otago':       PCM+'pinot-noir-wine/400/300',
+    'chardonnay-white-burgundy-style':                      PCM+'chardonnay-white-wine/400/300',
+    'india-pale-ale-ipa-the-hop-revolutions-icon':          PCM+'craft-beer-hops/400/300',
+    'stout-the-dark-art-of-roasted-beer':                   PCM+'stout-beer-dark/400/300',
+    'german-pilsner-and-czech-pilsner-the-worlds-most-drunk-beer-styles': PCM+'pilsner-lager/400/300',
+    'espresso-the-foundation-of-coffee':                    PCM+'espresso-shot/400/300',
+    'flat-white-australias-gift-to-coffee':                 PCM+'flat-white-latte/400/300',
+    'cold-brew-slow-steep-big-reward':                      PCM+'cold-brew-coffee/400/300',
+    'cappuccino-italys-morning-ritual':                     PCM+'cappuccino-foam/400/300',
+    'sake-japans-rice-wine':                                PCM+'sake-japanese/400/300',
+    'junmai-daiginjo-the-pinnacle-of-sake':                 PCM+'sake-premium-cup/400/300',
+    'green-tea-japan-and-chinas-living-tradition':          PCM+'green-tea-zen/400/300',
+    'matcha-japans-powdered-green-tea-mastery':             PCM+'matcha-powder-tea/400/300',
+    'masala-chai-indias-spiced-milk-tea':                   PCM+'masala-chai-spice/400/300',
+    'kombucha-fermented-tea-culture':                       PCM+'kombucha-bottle/400/300',
+    'matcha-latte-and-ceremonial-matcha-drinks-the-modern-classic': PCM+'matcha-latte-green/400/300',
+    'whisky-scotch-single-malt':                            PCM+'scotch-whisky/400/300',
+    'gin-the-botanical-spirit':                             PCM+'gin-botanicals/400/300',
+  };
+
+  window.p500Tab = async function(btn, cat) {
+    document.querySelectorAll('.p500-tab').forEach(function(t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+    if (p500ActiveTab === cat) return;
+    p500ActiveTab = cat;
+    var grid = document.getElementById('p500Grid');
+    if (!grid) return;
+    if (p500Cache[cat]) { p500Render(p500Cache[cat], cat, grid); return; }
+    grid.innerHTML = '<div class="p500-loading">Loading\u2026</div>';
+    try {
+      var res = await fetch('/api/drinks/p500?category=' + encodeURIComponent(cat) + '&limit=500');
+      if (!res.ok) throw new Error();
+      var entries = await res.json();
+      p500Cache[cat] = entries;
+      p500Render(entries, cat, grid);
+    } catch(e) {
+      grid.innerHTML = '<div class="p500-loading">Could not load entries.</div>';
+    }
+  };
+
+  function p500Render(entries, cat, grid) {
+    var grad = p500Grads[cat] || 'linear-gradient(135deg,#1A1400 0%,#5A4A00 100%)';
+    var shortCat = cat.replace(' & East Asian','').replace(' and Cultural','');
+    grid.innerHTML = entries.map(function(e) {
+      var imgSrc = p500Imgs[e.slug] || null;
+      var imgTag = imgSrc ? '<img src="' + imgSrc + '" alt="' + h(e.name) + '" loading="lazy" onerror="this.parentElement.classList.add(\'p500-no-img\')">' : '';
+      var displayName = (e.name || '').split('\u2014')[0].split(' \u2014 ')[0].trim();
+      return '<a href="/technique/' + h(e.slug || '') + '" class="p500-card' + (imgSrc ? '' : ' p500-no-img') + '" style="background:' + grad + '">'
+        + imgTag
+        + '<div class="p500-card-overlay"></div>'
+        + '<div class="p500-card-tag">' + h(shortCat) + '</div>'
+        + '<div class="p500-card-name">' + h(displayName) + '</div>'
+        + '</a>';
+    }).join('');
+  }
+
+  function h(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Auto-load first tab
+  document.addEventListener('DOMContentLoaded', function() {
+    var firstTab = document.querySelector('.p500-tab');
+    if (firstTab) window.p500Tab(firstTab, 'Cocktails');
+  });
+})();
+</script>
+
+<script>
+let activeCategory = null;
+
+async function browseCategory(category, idx) {
+  // Toggle off if same
+  if (activeCategory === category) {
+    activeCategory = null;
+    document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('productsPanel').classList.remove('active');
+    return;
+  }
+
+  activeCategory = category;
+  document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('cat-' + idx).classList.add('active');
+
+  const panel = document.getElementById('productsPanel');
+  const title = document.getElementById('panelTitle');
+  const count = document.getElementById('panelCount');
+  const products = document.getElementById('panelProducts');
+
+  title.textContent = category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  count.textContent = '';
+  products.innerHTML = '<div class="loading-text">Loading…</div>';
+  panel.classList.add('active');
+
+  // Scroll to panel
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+
+  try {
+    const res = await fetch('/api/beverage/products?category=' + encodeURIComponent(category) + '&limit=50');
+    if (!res.ok) throw new Error();
+    const rows = await res.json();
+    count.textContent = rows.length + ' result' + (rows.length !== 1 ? 's' : '');
+
+    if (!rows.length) {
+      products.innerHTML = '<div class="empty-results">No products found in this category.</div>';
+      return;
+    }
+
+    products.innerHTML = '<div class="products-grid">' + rows.map(p => `
+      <a href="${p.slug ? '/beverage/' + esc(p.slug) : '/beverage'}" class="product-card">
+        <div class="product-category-tag">${esc((p.category || '').replace(/_/g,' '))}</div>
+        <div class="product-name">${esc(p.name)}</div>
+        ${p.region_name ? `<div class="product-region">${esc(p.region_name)}</div>` : ''}
+        ${p.description ? `<div class="product-desc">${esc(p.description.substring(0,120))}${p.description.length > 120 ? '…' : ''}</div>` : ''}
+        <div class="product-meta">
+          ${p.quality_tier ? `<span class="badge-gold">${esc(p.quality_tier)}</span>` : ''}
+          ${p.abv ? `<span class="badge-cream">${esc(String(p.abv))}% ABV</span>` : ''}
+        </div>
+      </a>`).join('') + '</div>';
+  } catch (e) {
+    products.innerHTML = '<div class="empty-results">Could not load products.</div>';
+  }
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+
+<script>
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+</script>
+
+<div class="about-footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/suppliers">Suppliers</a>
+    <a href="/for-professionals">For Professionals</a>
+    <a href="/methodology">Methodology</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="mailto:info@provenance.kitchen">Contact</a>
+  </div>
+  <span class="footer-wm">Provenance</span>
+</div>
+<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
+  <span>Add Provenance to your home screen</span>
+  <div>
+    <button onclick="installPWA()" style="background:rgba(201,168,76,0.12);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-right:8px">Install</button>
+    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(245,241,233,0.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
+  </div>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .catch(err => console.log('SW:', err));
+}
+let _pwaPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  if (!localStorage.getItem('pwa-dismissed')) {
+    document.getElementById('pwa-prompt').style.display = 'flex';
+  }
+});
+function installPWA() {
+  if (_pwaPrompt) {
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(() => {
+      document.getElementById('pwa-prompt').style.display = 'none';
+      _pwaPrompt = null;
+    });
+  }
+}
+function dismissPWA() {
+  document.getElementById('pwa-prompt').style.display = 'none';
+  localStorage.setItem('pwa-dismissed', 'true');
+}
+</script>
+</body>
+</html>

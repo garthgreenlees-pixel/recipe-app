@@ -1,0 +1,72 @@
+{
+  "tradition": "spirits",
+  "region": "Barbados — St Philip Parish (Doorly's XO, Foursquare, Pot Still Blended, Barbadian Rum Style)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:38:41.295503+00:00",
+  "entries": [
+    {
+      "name": "Doorly's XO — Foursquare Distillery, St Philip Parish, Pot-Column Barbadian Blend, Sherry Cask Finish",
+      "category": "spirits",
+      "subcategory": "rum",
+      "origin": "Barbados",
+      "region": "Barbados — St Philip Parish (Doorly's XO, Foursquare, Pot Still Blended, Barbadian Rum Style)",
+      "producer": "Foursquare Rum Distillery — Saint Philip Parish, Barbados",
+      "alcohol_content": 40.0,
+      "price_tier": "mid_range",
+      "terroir_origin": "Saint Philip Parish occupies the southeastern corner of Barbados — the most trade-wind-exposed zone of the island, facing the Atlantic directly on the eastern coast. The Foursquare estate sits on the southeastern coral limestone plateau at 30–50m elevation, where the full northeast Atlantic trade wind accelerates across the low terrain and creates the most evaporative aging environment on the island — the trade wind-driven evaporation through the Foursquare warehouse structures actively manages the angel's share and aging rate, which Richard Seale has identified as a key differentiator of the Saint Philip Parish aging microclimate versus more sheltered parish locations. The Foursquare estate's coral limestone geology is identical to the rest of Barbados — all Barbadian rum production benefits from the same coral limestone aquifer water chemistry — but the exposure and trade wind airflow of the Saint Philip site creates a specific aging environment that Seale has studied and documented more thoroughly than any other contemporary Caribbean rum distiller. The estate encompasses the original plantation-era buildings including a working windmill (no longer used for production but maintained as the visual centerpiece of the Foursquare heritage site) and the original cane crusher building that is now the visitor center, connecting the contemporary rum operation directly to the 18th-century plantation-era agricultural infrastructure of Barbadian sugar production.",
+      "production_technique": "Foursquare produces both pot still and column still distillates from Barbadian molasses using a hybrid distillation system that Richard Seale operates with the most publicly documented transparency in the Caribbean rum industry. Seale is notable for explicitly rejecting caramel colouring and added sugar in all Foursquare and Doorly's expressions — a position he has advocated publicly in the rum trade as a consumer protection issue. The Doorly's XO is a blend of pot still rum (approximately 40% of the blend, providing ester richness, tropical fruit, and body) and column still rum (approximately 60%, providing lightness and aromatic elegance) aged separately in American white oak ex-bourbon barrels for 6–7 years before blending, followed by a finishing period of 6–12 months in ex-Oloroso sherry casks for the XO expression. The sherry cask finish is the technical signature of the Doorly's XO versus the standard aged range: the Oloroso sherry cask contributes dried fruit, walnut, and raisin compounds from the residual Oloroso wine solids in the wood, adding a specifically Jerez-derived complexity to the Barbadian rum base without masking the coral limestone terroir or the pot-column distillation character. This secondary maturation approach mirrors the Scotch whisky industry's use of sherry cask finishing: using Spanish fortified wine casks to add the distinctive dried fruit and nutty character that sherry-seasoned wood uniquely contributes. Proofed to 40% ABV with Barbados coral limestone water; no added sugar or caramel colouring — Seale's production standards guarantee full transparency.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Sherry-finished Single Malt Scotch (Macallan, GlenDronach) — dual maturation",
+          "connection": "Doorly's XO sherry cask finish and the Scottish sherry-cask finishing tradition (Macallan exclusively sherry seasoned oak; GlenDronach heavily sherried) share the same technical principle: a spirit primary-aged in American ex-bourbon oak for structure, vanilla, and caramel, then transferred to ex-Oloroso sherry casks for a secondary maturation that adds dried fruit, walnut, and raisin complexity from the sherry wood tannin-polyphenol chemistry. Both the Barbadian rum and the Scottish whisky categories have seen the sherry cask finish become the primary differentiating premium tier — the Foursquare/Doorly's adoption of this technique connects the Barbadian rum tradition to the Scottish whisky innovation that has defined premium aged spirits globally."
+        },
+        {
+          "tradition": "Amontillado Sherry (Jerez-Xérès-Sherry, oxidative aging after flor)",
+          "connection": "The Oloroso sherry casks that finish Doorly's XO represent the direct material connection between the Jerez sherry solera system and Caribbean rum production: the compounds that defined Amontillado and Oloroso character in the sherry wine (aldehyde and acetal compounds from flor aging; tannin-derived compounds from American oak oxidative aging) migrate into the rum during the finishing period, creating a hybrid expression that bridges the PCT colonial trade network's Spanish colonial contribution (Jerez sherry as the export beverage of the Spanish empire) with the British colonial rum tradition of Barbados in a single glass."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep amber with walnut-brown tints from the sherry cask finish; darker and more saturated than American ex-bourbon aged rums at equivalent age; clear and brilliant; good legs from the pot still glycerol contribution.",
+        "nose": "The sherry cask finish immediately distinguishes Doorly's XO from standard ex-bourbon Caribbean rums: dried raisins, Medjool dates, and walnut from the Oloroso sherry wood compounds; beneath the sherry influence, the Barbadian pot still ester character shows as banana and tropical fruit; the coral limestone mineral quality of Barbadian rum adds a clean, dry mineral note as a foundation beneath the dried fruit richness of the sherry finish.",
+        "palate": "Medium-full body with the sherry cask finish contributing a richer, more wine-like texture than standard ex-bourbon Caribbean rums; the dried fruit and walnut from the Oloroso arrive immediately with the Barbadian pot still tropical fruit through the mid-palate; the tannin from the sherry cask provides fine-grained grip that extends the finish; long, complex conclusion with dried fruit, mineral limestone, and the faint banana-and-tropical-fruit signature of the Barbadian pot still base persisting through the sherry-derived dried fruit and walnut finish — a multi-register complexity at exceptional value."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Doorly's 3-Year (white/gold)",
+          "criteria": "Entry-level Foursquare production: minimal aging, clean pot-column character, Richard Seale's no-added-sugar guarantee at the most accessible price point in the range — the honest baseline for Barbadian rum without the secondary maturation complexity."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Doorly's 8-Year (ex-bourbon only)",
+          "criteria": "Eight-year ex-bourbon aged blend from the same pot-column Foursquare production base, without sherry cask finishing: the American oak vanilla and tropical fruit character of Barbadian rum in clean expression — the comparison tier against which the sherry-finished XO demonstrates the cask finish contribution."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Doorly's XO (sherry cask finish)",
+          "criteria": "The Doorly's flagship with Oloroso sherry cask finishing: the most complex expression in the standard Doorly's range, combining Barbadian pot-column distillation with dual American-oak and Spanish-sherry-cask maturation — Richard Seale's best-value argument in the Barbadian premium rum category."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Foursquare Exceptional Cask Selection (annual vintage release)",
+          "criteria": "Richard Seale's annual single-vintage Exceptional Cask Selection releases: specified vintage year, specific cask combinations (ex-bourbon + Cognac cask, ex-bourbon + Sauternes cask, etc.), non-chill-filtered, no added sugar or colouring, cask strength or 59% ABV — the apex of contemporary Barbadian rum artisanship and the expressions that have received the highest scores in modern rum evaluation."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Doorly's XO at 18–20°C for neat evaluation to appreciate the sherry cask-derived dried fruit and walnut register alongside the Barbadian pot still character; the sherry finish makes the XO more temperature-tolerant than lighter Barbadian rums — the wine-derived compounds in the sherry cask tannin remain aromatic across a wider temperature range; a single ice sphere at 12–14°C is acceptable without loss of the key sherry-derived aromatic characteristics; for cocktail use, the sherry finish makes Doorly's XO an excellent base for the Bamboo format (split spirit / sherry vermouth / orange bitters) where the Oloroso connection is made explicit in the cocktail construction.",
+        "vessel": "Tulip or Glencairn for neat evaluation; rocks glass for casual sipping; the combination of Barbadian rum mineral character and sherry-derived dried fruit makes the Doorly's XO one of the most versatile aged rum expressions for spirits service programming — it bridges the Scotch whisky drinker (familiar with sherry-cask finishing) and the rum connoisseur (familiar with Barbadian coral limestone terroir) in a single expression at mid-range pricing."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Foursquare Rum Distillery (Saint Philip, Barbados) / Richard Seale master distiller — Doorly's XO is the benchmark for accessible Barbadian rum with sherry cask finish; Foursquare Exceptional Cask Selection is the critical collector benchmark; Richard Seale is the most influential advocate for production transparency standards in the global rum industry.",
+        "north_america_access": "Doorly's XO distributed in the US through specialty spirits importers; BCLDB private import and specialty retailers in BC; LCBO Ontario listings; pricing USD $25–35 for Doorly's XO — exceptional value relative to comparably complex expressions in the Scotch whisky or Cognac categories; Foursquare Exceptional Cask Selection at USD $60–100 through allocation-basis specialty retail.",
+        "culinary_application": "The Doorly's XO sherry finish creates a natural bridge cocktail for a PCT spirits programme connecting the Barbadian rum colonial heritage to the Spanish Jerez trade — the most explicit material connection in the rum category to the Portuguese-Spanish colonial maritime trade network that PCT traces."
+      },
+      "price_trajectory": "rising",
+      "entry_id": "SPR-BARST-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T19:38:41.295148+00:00",
+      "batch_number": 2
+    }
+  ]
+}

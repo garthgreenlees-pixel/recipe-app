@@ -1,0 +1,110 @@
+{
+  "tradition": "chocolate",
+  "region": "Africa — Sao Tome and Principe (Claudio Corallo)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T23:30:08.626639+00:00",
+  "entries": [
+    {
+      "tradition": "chocolate",
+      "sub_tradition": "single origin bean to bar volcanic island forastero nacional",
+      "region": "Africa — Sao Tome and Principe (Principe Island)",
+      "name": "Claudio Corallo Cacao — Principe Island, Forastero Nacional, Bean-to-Bar Volcanic Origin",
+      "terroir_origin": "Sao Tome and Principe are two small islands in the Gulf of Guinea, approximately 250km off the coast of Gabon — among the smallest countries in Africa and the first sub-Saharan African territory reached by Portuguese explorers (1470). The islands were uninhabited when discovered and were colonised as sugar-producing plantations using enslaved West Africans — the model that was then replicated in Brazil, the Caribbean, and every PCT territory. Cacao replaced sugar as the islands' primary cash crop in the 19th century when the large Portuguese roças (plantation estates) shifted production. Sao Tome and Principe's cacao heritage: the Amelonado Forastero variety was planted in the late 19th century and became the dominant variety after the introduction of modern hybrids elsewhere. The Sao Tome cacao is genetically unusual — the 'Forastero Nacional' or 'Sao Tome' type has been isolated on the island long enough to develop distinguishable island-specific genetics. Principe Island: Claudio Corallo settled on Principe (the smaller, less populated island) after leaving his previous operations in Congo and Sao Tome. Principe is now designated a UNESCO Biosphere Reserve — the rainforest cacao agroforestry of Corallo's estate is within this protected zone. Volcanic soils: derived from the Cameroon Volcanic Line (the same tectonic system that created Mount Cameroon); the soils are deep andisols with high mineral content, exceptional water retention, and extreme organic matter from the rainforest floor — the most mineral-rich cacao soils outside of the Peruvian Amazon.",
+      "production_technique": "Claudio Corallo production on Principe: Cultivation: shade-grown under indigenous rainforest canopy; no chemical inputs; traditional agroforestry. Varieties: Forastero Nacional (primary Sao Tome genetic type), with small plots of Trinitario and rare Amelonado selections. Harvest: manual, selective — only ripe cherries; done continuously through the main and mid-harvest (October-January and May-June). Fermentation: Claudio Corallo does his own fermentation in wood boxes under banana leaves for 5-8 days — precise temperature monitoring (the fermentation peak must hit 50-52 degrees C for flavour development). This is more careful than most industrial cacao processing. Drying: sun-dried on raised beds for 5-7 days; the volcanic island air has a salt-mineral character that Corallo argues influences the dried bean mineral note. Roasting: Corallo roasts on the island in small batches; each lot is roasted differently based on bean character. Grinding: stone grinding on site; no added emulsifiers, no added vanilla, no added sugar beyond the minimum. The 70% bar: Forastero Nacional cacao at 70% is the benchmark expression — bitter, mineral, fermented dried fruit without the sweetness of milk chocolate. The 80% bar: for tasting contexts where full cacao character is required.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "chocolate",
+          "beverage": "Felchlin Maracaibo Clasificado 65% (Venezuela, Criollo)",
+          "connection": "Both are bean-to-bar volcanic-island origin chocolates from former plantation-agriculture colonial territories. Felchlin Maracaibo (Venezuela Criollo) is more floral and mild; Corallo Principe (Forastero Nacional) is more mineral and fermented-fruit. The comparison teaches guests the variety-driven flavour dimension in cacao."
+        },
+        {
+          "tradition": "chocolate",
+          "beverage": "Valrhona Guanaja 70% (Madagascar Trinitario)",
+          "connection": "Both are reference 70% dark chocolates from volcanic African island origins. Valrhona Guanaja (Madagascar) is the international industry standard for dark chocolate profiling. Corallo Principe is the artisan-scale equivalent from the adjacent African Atlantic island tradition."
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Sao Tome Island Coffee (same island, single origin)",
+          "connection": "The multi-crop volcanic island comparison: Sao Tome produces both specialty cacao and specialty coffee from the same roça estates. Pairing Sao Tome cacao and Sao Tome coffee creates a single-island sensory experience with the PCT colonial history expressed through two different crop traditions."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Douro Vintage Port (Quinta do Vesuvio)",
+          "connection": "The PCT pairing: Sao Tome Forastero Nacional 70% dark chocolate and Quinta do Vesuvio Vintage Port is the canonical Portuguese colonial product pairing — cacao from the equatorial Atlantic island, Port from the Portuguese river valley, both products of the same Atlantic colonial trade infrastructure."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Dark brown-ebony; 70%+ cacao shows minimal added sugar; matte surface with visible cocoa butter bloom in older bars",
+        "nose": "Fermented dried red fruit (cassis, dried cherry), volcanic mineral, dark chocolate bitterness, light tobacco, sea-salinity from the Principe island air",
+        "palate": "Entry: immediate cacao bitterness with no milk dilution. Mid-palate: fermented dried fruit complexity from the carefully controlled fermentation. Finish: mineral-volcanic persistence that coastal African cacao has over South American origins",
+        "texture": "Full body from high cocoa butter; fine grain from stone-grinding; long melt from the slow particle reduction",
+        "finish": "45-60 seconds; the mineral volcanic character persists after the cacao bitterness resolves; faint fermented dried fruit in the aftertaste",
+        "conclusion": "The PCT's most extreme raw material story — the island that launched the Atlantic slave trade now produces one of the world's most ethically significant bean-to-bar chocolates"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Claudio Corallo Granellato 70% Forastero Nacional (with cacao nibs)",
+          "criteria": "70% cacao; Forastero Nacional variety; cacao nibs added for texture; the full expression of Principe island terroir with textural complexity; extremely limited export production",
+          "markers": "Claudio Corallo Granellato; BC: specialty chocolate retailers; US ~$15-20/50g; very limited"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Claudio Corallo Cacao 70% (standard Principe bar)",
+          "criteria": "70% cacao; single origin Principe; no added vanilla or emulsifier; the reference Corallo expression for tasting",
+          "markers": "Claudio Corallo 70%; BC: Mink Chocolates and specialty; US ~$12-18/50g"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Sao Tome 70% from other producers (Alter Eco, Theo)",
+          "criteria": "Sao Tome certified organic; major Western chocolate producers; accessible introduction to Sao Tome island character",
+          "markers": "Alter Eco Sao Tome 70%; BC ~$8-12/75g; US ~$7-10/75g; natural food stores"
+        },
+        {
+          "tier": 1,
+          "tier_name": "West African Forastero blend (70%, major craft)",
+          "criteria": "West African Forastero including Sao Tome component; blended but accessible; introduction to the African cacao mineral character",
+          "markers": "Various craft producers; BC ~$5-10/75g; widely available"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 20-22 degrees C (slightly warm room temperature) — cold temperature hardens the cocoa butter and reduces the melt speed that develops the flavour",
+        "vessel": "White ceramic small plate or a wooden board for tasting; serve in thin squares cut with a sharp knife to maximise surface area-to-volume ratio",
+        "technique": "Corallo 70% in a PCT pairing sequence: serve with Quinta do Vesuvio Port (or Graham's 20yr LBV as accessible substitute). The PCT colonial chain in two products: cacao from Sao Tome (Gulf of Guinea), Port from the Douro (mainland Portugal) — both products of the Portuguese Atlantic colonial infrastructure. The educational narrative: 'Both come from Portuguese colonial territories. The cacao was first planted by Portuguese colonists in the 1600s. The Port grapes were cultivated by English merchants who traded through Portugal. Both are on the table because of the same 300 years of Atlantic trade.'",
+        "programme_position": "PCT pairing anchor; single-origin chocolate tasting; chocolate-Port dessert course",
+        "verbal_presentation": "Claudio Corallo, Principe Island. The first island the Portuguese reached in sub-Saharan Africa. Forastero Nacional cacao, grown in volcanic rainforest soil. Bean-to-bar on the island where it is grown."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Claudio Corallo — Principe Island; the sole producer of this cacao at fine-dining quality",
+        "producer_location": "Principe Island, Sao Tome and Principe",
+        "key_person": "Claudio Corallo (Italian agronomist; resident on Principe since 1997)",
+        "bc_distributor": "Mink Chocolates (Vancouver) occasionally stocks Corallo; specialty chocolate retailers",
+        "us_distributor": "Chocosphere (Portland, OR) — primary US Corallo source; also available through specialty food importers",
+        "uk_distributor": "Paul A Young Fine Chocolates (London); Rococo Chocolates; direct from Corallo website",
+        "price_tier": "Entry: $5-10 (West African blend). Mid: $8-12 (Sao Tome Alter Eco). Premium: $12-18 (Corallo 70%). Ultra: $15-20 (Corallo Granellato).",
+        "availability_notes": "Claudio Corallo exports in very small volumes. Contact Chocosphere (US) or Mink Chocolates (Vancouver) for current stock. Availability is seasonal based on harvest cycles on Principe Island."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Quinta do Vesuvio Vintage Port 2011 or Graham's LBV",
+          "pairing_type": "bridge",
+          "rationale": "The canonical PCT pairing: Sao Tome volcanic cacao and Douro Vintage Port — both products of the Portuguese Atlantic colonial world. The tannin in the 70% cacao and the tannin in aged Vintage Port create a mutual tannin bridge; the dried fruit in the chocolate and the dried fruit in the Port are mirror expressions."
+        },
+        {
+          "technique_id": "",
+          "dish": "Fleur de sel from Guerande (on top of the chocolate)",
+          "pairing_type": "complement",
+          "rationale": "The Principe island salt-mineral character in the cacao is amplified by Atlantic sea salt — the salt on the chocolate creates a mineral dialogue between the island volcanic soil and the Atlantic ocean that produced it. The simplest and most direct expression of the Sao Tome terroir."
+        }
+      ],
+      "source": "Claudio Corallo production documentation and Principe Island estate records; UNESCO Biosphere Reserve Principe Island documentation; Chocosphere sourcing documentation; FAPROS (Sao Tome cacao federation) technical records",
+      "trail_connection": "PCT-6",
+      "trail_note": "PCT Region 6: Sao Tome and Principe — the Gulf of Guinea islands that launched the Portuguese equatorial plantation model subsequently replicated in Brazil, the Caribbean, and Mozambique. Claudio Corallo's bean-to-bar operation on Principe Island is the most direct post-colonial rehabilitation of the cacao tradition that the Portuguese colonial system introduced in the 16th century.",
+      "entry_id": "BEV-AFRSAO-001",
+      "extracted_at": "2026-04-11T23:30:08.626162+00:00",
+      "batch_number": 2
+    }
+  ]
+}

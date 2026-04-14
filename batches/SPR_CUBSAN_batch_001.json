@@ -1,0 +1,72 @@
+{
+  "tradition": "spirits",
+  "region": "Cuba — Santiago de Cuba (Ron Santiago de Cuba, Eastern Province, Colonial Cane Heritage)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:38:24.922596+00:00",
+  "entries": [
+    {
+      "name": "Ron Santiago de Cuba Añejo 11 Años — Eastern Province, Oriente Cane, Column Still Cuban Style",
+      "category": "spirits",
+      "subcategory": "rum",
+      "origin": "Cuba",
+      "region": "Cuba — Santiago de Cuba (Ron Santiago de Cuba, Eastern Province, Colonial Cane Heritage)",
+      "producer": "Cuba Ron S.A. — Santiago de Cuba Distillery",
+      "alcohol_content": 40.0,
+      "price_tier": "premium",
+      "terroir_origin": "Santiago de Cuba occupies the southeastern corner of Cuba — the island's most mountainous region, where the Sierra Maestra range rises steeply from the Caribbean coast to peaks exceeding 1,900m. The Oriente region (of which Santiago de Cuba is the capital) was the center of Spanish colonial Cuba's most intensively developed sugarcane economy, built on enslaved African agricultural labour from the 17th century onward. The city of Santiago de Cuba itself sits at the head of a natural harbour formed by a narrow coastal inlet backed by the Sierra Maestra foothills — a subtropical Mediterranean climate zone with more pronounced seasonality than Havana: hot, humid summers (30–35°C) with heavy Caribbean-facing rainfall from the Sierra Maestra rain shadow effect on the northern slopes, and drier winters (22–26°C) influenced by the Oriente's southern exposure. The sugarcane grown in the Oriente region benefits from the combination of volcanic soil derived from the Sierra Maestra's igneous basement and the intense solar radiation of the Caribbean-facing southern coastal plain. Cuba's national Saccharum officinarum sugarcane varieties, developed and selected over 400 years of plantation agriculture, produce a high-sucrose, high-yield cane that is processed at large centralized sugar mills (centrales) before the resulting molasses is transported to the Santiago de Cuba distillery for fermentation and distillation. Cuba's sugarcane agricultural heritage is inseparable from its history of African enslaved labour: the Transatlantic Slave Trade brought an estimated 750,000 enslaved Africans to Cuba between 1500 and 1860, creating the labour base of the plantation economy that produced Cuban rum's agricultural foundation.",
+      "production_technique": "Cuban ron production follows a technical tradition established in the 19th century under Spanish colonial rule and codified in the Cuban rum regulations that distinguish ron cubano from other Caribbean rum styles. The defining characteristics of the Cuban method are: distillation to high proof (90–95% ABV) in multiple-column continuous stills, producing a very light, clean, low-congener spirit base; deliberate low-ester fermentation using selected pure Saccharomyces cultures in closed stainless steel fermenters for 24–30 hours at 28–32°C; and blending with a portion of aguardiente — a lower-proof, higher-congener column still distillate aged separately — to provide complexity and body to the light column still spirit base. The Santiago de Cuba Añejo 11 Años is aged in American white oak ex-bourbon barrels for a minimum of 11 years in Cuban tropical warehouse conditions (28–30°C average, 70–80% relative humidity), producing an accelerated maturation that would require 20–25 years in temperate European conditions. The Cuban master blender (maestro ronero) applies a solera-influenced approach to aging: younger distillates are blended with older reserves before final barrel aging, ensuring consistency across batches despite the variable angel's share loss of tropical aging. Final proofing to 40% ABV for the Añejo 11 Años expression. No caramel colouring added to the premium expressions — the amber colour is entirely derived from 11 years of ex-bourbon barrel contact in tropical Cuban conditions.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Bacardí (Puerto Rico/global) — Cuban light-style column still rum heritage",
+          "connection": "Ron Santiago de Cuba and Bacardí share direct historical lineage: Facundo Bacardí Massó founded the original Bacardí distillery in Santiago de Cuba in 1862, and the technical approach he developed — high-proof column distillation for lightness, filtered charcoal treatment for clarity, ex-bourbon barrel aging for vanilla character — became the template for both the modern Bacardí operation in Puerto Rico (after nationalization forced the family to relocate in 1960) and the continuing state-owned Santiago de Cuba production. Both express the Cuban light-style ron tradition defined by Bacardí's 19th century innovation."
+        },
+        {
+          "tradition": "Spanish brandy (Jerez solera system) — solera aging influence in Cuban ron",
+          "connection": "Cuba's colonial relationship with Spain introduced the Jerez solera-influence to rum maturation: the Cuban maestro ronero tradition of blending younger and older distillate reserves before final barrel aging mirrors the Jerez criadera y solera system in which younger wine fractions are added to progressively older reserves to maintain consistency and accelerate maturation — both systems use the fractional blending principle to manage aging variance and produce consistent expressions across production years in tropical and sub-tropical aging environments."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Medium amber with golden tints; 11 years of tropical ex-bourbon aging produces colour depth greater than equivalent age in temperate conditions; clear and brilliant with moderate legs at 40% ABV.",
+        "nose": "The Cuban light-style column still character shows as a clean, aromatic base: vanilla and dried coconut from ex-bourbon American oak dominate the primary aromatics; dried apricot and raisin from 11 years of tropical ester development; light tobacco and cedar from the Cuban terroir expressed through the extended barrel contact; a faint anise thread from the column still congener profile — more restrained and elegant than the heavy ester profiles of Jamaican or Demeraran pot still rum, reflecting the Cuban design philosophy of lightness and aromatic precision.",
+        "palate": "Light to medium body — the Cuban column distillation style produces a thinner, drier texture than pot still rums; the vanilla-caramel oak character from the ex-bourbon barrel arrives cleanly on the mid-palate without molasses richness competing; the 11-year aging has added dried fruit depth without adding weight; the finish is medium-long, dry, with cedar and light tobacco lingering — the classic Cuban añejo profile that defines the light-style aged rum category."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Ron Santiago de Cuba Carta Blanca (white, unaged)",
+          "criteria": "Unaged or minimally aged white rum filtered to water-clarity: the raw column still expression, clean, light, and primarily useful as a cocktail base for Daiquiri and Mojito production where the light Cuban style requires a neutral, low-congener white rum base."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Ron Santiago de Cuba Añejo 8 Años",
+          "criteria": "Eight-year tropical aged Cuban ron: sufficient ex-bourbon integration for neat service, the classic Cuban añejo profile of vanilla, dried fruit, and light oak without the complexity of the 11-year — the standard premium reference for Cuban rum evaluation at accessible price points."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Ron Santiago de Cuba Añejo 11 Años",
+          "criteria": "Eleven-year tropical aged: maximum integration of the Cuban column-still light spirit and ex-bourbon American oak, dried fruit and cedar development, the definitive expression of the Santiago de Cuba style for international connoisseur consumption and spirits programme deployment."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Ron Santiago de Cuba Extra Añejo 25 Años",
+          "criteria": "Twenty-five year ultra-aged Cuban rum at the apex of state production: very deep amber, concentrated dried fruit, leather, tobacco, and cedar from maximum tropical barrel contact — the prestige expression demonstrating that the light Cuban column-still style can develop equivalent complexity to aged Cognac or single malt through extended tropical warehouse maturation."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Añejo 11 Años served neat at 18–20°C to appreciate the full dried fruit and cedar aromatics from 11 years of tropical aging; the Cuban light style is particularly sensitive to temperature — serving warm opens the volatile aromatic profile fully; a single small ice cube reduces serving temperature to 14–16°C while providing slow dilution that opens the mid-palate without washing the delicate column-still aromatic character.",
+        "vessel": "Tulip or copita glass for neat service to concentrate the light, aromatic Cuban rum character; a wide snifter disperses the delicate aromatics too rapidly; for the classic Cuban cocktail context (Daiquiri: white rum, lime, sugar; Mojito: white rum, lime, sugar, mint, soda), use the Carta Blanca rather than the añejo as the cocktail base; the Añejo 11 Años works in an Old Fashioned format with Cuban sugarcane syrup and a tobacco-forward bitters."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Cuba Ron S.A. (Santiago de Cuba) — state-owned custodian of the eastern Cuban rum tradition; Ron Santiago de Cuba is the primary expression of the Oriente province style available internationally; Havana Club (Pernod Ricard partnership) is the alternative reference for western Cuban light-style ron from the Havana area.",
+        "north_america_access": "US embargo significantly restricts Cuban rum import — Ron Santiago de Cuba and Havana Club are not legally available in the US market; available through BCLDB British Columbia, LCBO Ontario, and SAQ Quebec in Canada; widely available in EU and UK markets; pricing in Canada approximately CAD $50–80 for the Añejo 11 Años expression.",
+        "culinary_application": "In a PCT-themed programme, Cuban ron represents the Spanish colonial contribution to Caribbean rum culture: the Oriente province's plantation heritage, the Bacardí foundation narrative, and the post-revolutionary state continuation of the light-style rum tradition as Cuban national identity — the spirits equivalent of the cultural preservation story that defines PCT engagement with colonial-heritage production systems."
+      },
+      "price_trajectory": "stable",
+      "entry_id": "SPR-CUBSAN-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T19:38:24.922147+00:00",
+      "batch_number": 1
+    }
+  ]
+}

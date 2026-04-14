@@ -1,0 +1,110 @@
+{
+  "tradition": "spirits",
+  "region": "Caribbean — Guyana (Demerara Rum, ICBU/DDL)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T23:38:21.632540+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "demerara rum antique wooden pot still guyana",
+      "region": "Caribbean — Guyana (Demerara River, East Bank)",
+      "name": "El Dorado Demerara Rum — Antique Wooden Pot Still Heritage, Last of Its Kind",
+      "terroir_origin": "The Demerara River in Guyana is the last location on earth where 17th and 18th century wooden pot stills are still in operation for commercial rum production. The Versailles wooden pot still dates to 1703; the Port Mourant double wooden pot still dates to 1732. These are not museum exhibits — DDL uses them weekly to produce the distinctive heavy ester Demerara character that cannot be replicated in any modern still design. The wooden pot still contribution: the wood of the still itself contributes to the fermentation and distillation character. The bacterial populations in the wood create ester compounds (ethyl acetate, isoamyl acetate) that are absent from metal stills. This is the 'Demerara funk' — a deeply estery, leather-and-dried-fruit character that defines the Demerara style and is the foundation of most British Navy rum blends and many rum cocktail recipes. The PCT connection: the Demerara sugar trade was established by Dutch colonists following the Portuguese Atlantic cane chain. The Dutch brought sugarcane cultivation methods from their Brazilian colony (Recife/Pernambuco, captured from the Portuguese in 1630) to Guyana. The PCT sugarcane lineage runs directly through the Dutch-Portuguese colonial exchange.",
+      "production_technique": "DDL Demerara still system: Molasses source: Demerara Sugar Refinery (adjacent to DDL) — one of the world's last working Demerara sugar estates. Fermentation: 48-72 hours in open-top fermenters with wild yeast populations that have colonised the fermentation hall over decades. The specific ester compounds in Demerara rum (principally ethyl esters of fatty acids) are produced by the bacterial population in the fermentation environment — a living biome accumulated across centuries of production. Still selection: DDL blends distillate from multiple stills for El Dorado. Port Mourant (double wooden pot): produces the heaviest, most funky rum — ethyl acetate and isoamyl acetate dominant; the darkest and richest component. Versailles (single wooden pot): lighter than PM; more fruity and floral. Enmore Coffey (continuous): the lightest component; adds approachability to the PM-dominated blend. Ageing: El Dorado 12yr (12 years minimum in ex-bourbon American oak); El Dorado 15yr (15 years minimum); El Dorado 21yr (21 years minimum) — the most complex standard expression. Velier single-still releases: DDL supplies Luca Gargano (Velier) with single-cask, single-still rum at cask strength — the most sought-after rum in the world for connoisseurs.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Springbank 15yr (Campbeltown Scotch, direct-fired wash still)",
+          "connection": "Both are distilleries that maintain archaic equipment because it produces a character that modern technology cannot replicate. Springbank's direct-fired copper wash still and DDL's wooden pot stills are both expensive, inefficient, and irreplaceable. Both produce the most character-driven spirits in their respective traditions."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Worthy Park 109 Jamaica Rum (high-ester pot still)",
+          "connection": "Both are high-ester Caribbean pot still rums from the British colonial rum tradition. Demerara wooden pot: earthy-leathery ester. Jamaican metal pot: fruity-banana ester. The comparison teaches guests that 'pot still' is a hardware category with enormous variability in outcome depending on material and configuration."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Armagnac Blanc de Blancs (Gascony, single continuous still)",
+          "connection": "Both traditions preserve a single antique still design that was superseded by technological improvement elsewhere. Armagnac's alembic armagnacais (single continuous still) and DDL's wooden pot still both produce character through inefficiency — the inefficiency is the character."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Rhum Barbancourt Reserve du Domaine (Haiti, Cognac double-distillation)",
+          "connection": "Both are South American/Caribbean rums whose production method was determined by European colonial heritage. Demerara wooden pot still: Dutch/British industrial heavy rum. Barbancourt double-distillation: French Cognac method applied to Caribbean cane. The PCT×WADT colonial technology comparison in two pours."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "El Dorado 12yr: deep amber-mahogany, thick legs; 15yr: deeper, more red-mahogany; 21yr: dark amber with exceptional viscosity from long tropical ageing",
+        "nose": "Port Mourant component: leather, dried prune, overripe banana, ethyl acetate (nail varnish at full strength, pineapple-candy when diluted), roasted coffee, dark molasses. The Demerara funk is unmistakable — not subtle",
+        "palate": "Full body from high-ester fermentation; the wooden still contribution creates a weight and texture unlike metal-still rum; caramelised molasses sweetness; dried fruit; coffee; persistent leather",
+        "texture": "Dense, almost syrupy at 21yr; the high-ester content and long ageing create a coating texture; the sugar refinery context means natural sweetness from the Demerara molasses is present",
+        "finish": "90+ seconds; the longest finish of any Caribbean rum style; the ester compounds persist well after the sweetness resolves; leather and dried fruit in the final breath",
+        "conclusion": "The living museum of colonial rum production — the stills that were operating when the sugar trade was at its height are still producing rum today"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Velier DDL Single-Still Single-Cask (Port Mourant or Versailles)",
+          "criteria": "Single still; single cask; cask strength (50-65%); no blending or dilution; the maximum expression of the wooden still character; produced for the connoisseur market by Luca Gargano",
+          "markers": "Velier DDL Port Mourant; US and UK ~$150-400+; allocations through specialty retailers"
+        },
+        {
+          "tier": 3,
+          "tier_name": "El Dorado 21yr",
+          "criteria": "21 years minimum; multi-still blend at its most complex; rancio developing; the highest standard production expression",
+          "markers": "El Dorado 21yr; BC ~$90-120; US ~$80-100; BCLDB Signature stores"
+        },
+        {
+          "tier": 2,
+          "tier_name": "El Dorado 15yr",
+          "criteria": "15 years minimum; the balanced benchmark; accessible premium for cocktail programme and neat service",
+          "markers": "El Dorado 15yr; BC ~$60-80; US ~$55-70; BCLDB listed"
+        },
+        {
+          "tier": 1,
+          "tier_name": "El Dorado 12yr",
+          "criteria": "12 years minimum; the accessible entry to Demerara character; full ester contribution from wooden stills detectable",
+          "markers": "El Dorado 12yr; BC ~$40-55; US ~$35-48; BCLDB listed"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "El Dorado 15yr and 21yr: room temperature, neat first before any ice. The wooden still ester character needs no dilution to open — it is present from the first pour",
+        "vessel": "Glencairn or tulip for neat service; the ester nose needs concentration not dissipation",
+        "technique": "The education tool for ester chemistry: El Dorado 12yr in a Glencairn, neat. The first nose: most guests identify pineapple-candy or banana. Explain: 'That is ethyl acetate — produced by the bacteria in the wooden still walls. The wood is 320 years old. The bacteria are part of the recipe.' The history tool: El Dorado 15yr + a map of the Demerara river. The stills are still on the same bank. The sugar refinery is next door. The Dutch brought cane from Brazil. The Portuguese brought it to Brazil. The PCT chain ends (begins?) in Demerara.",
+        "programme_position": "Caribbean rum education; PCT×WADT heritage sequence; cocktail programme anchor for Demerara character",
+        "verbal_presentation": "El Dorado — Demerara River, Guyana. The last wooden pot stills from 1703. They have been making rum on the same bank of the same river for 320 years."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Demerara Distillers Ltd (DDL) — El Dorado brand; Velier bottlings",
+        "producer_location": "Diamond, East Bank Demerara, Guyana",
+        "key_person": "Shaun Caleb (Master Blender, DDL); Luca Gargano (Velier, Italy — independent bottlings)",
+        "bc_distributor": "BCLDB stocks El Dorado 12yr and 15yr; 21yr at Signature stores",
+        "us_distributor": "DropCo Beverages (US national for El Dorado); Velier distributed through select US importers (Italian importers vary by state)",
+        "uk_distributor": "Speciality Brands (El Dorado); Velier through Master of Malt and The Whisky Exchange",
+        "price_tier": "Entry: $40-55 (12yr). Mid: $60-80 (15yr). Premium: $90-120 (21yr). Ultra: $150-400+ (Velier single-still).",
+        "availability_notes": "El Dorado 12yr and 15yr are among the most widely available premium aged rums in North America. Velier single-still releases sell out immediately on release — allocation required."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Pepperpot (Guyanese national dish — Amerindian cassareep-braised beef and pork)",
+          "pairing_type": "complement",
+          "rationale": "Pepperpot — Guyana's national dish, a slow-cooked beef and pork stew in cassareep (reduced cassava juice) with aromatic spices — and El Dorado 15yr is the canonical Guyanese meal pairing. The cassareep's dark bitter sweetness and the rum's molasses caramel and leather create a colonial-Caribbean food culture dialogue."
+        },
+        {
+          "technique_id": "",
+          "dish": "Dark Demerara sugar cake (pecan and molasses)",
+          "pairing_type": "bridge",
+          "rationale": "The Demerara sugar in the cake is from the same Sugar Refinery adjacent to DDL — the cane was processed on the same land that produced the molasses for the rum. The bridge pairing is literal: both the dessert and the rum come from the same raw material, the same location, the same history."
+        }
+      ],
+      "source": "Demerara Distillers Ltd production documentation; Velier SpA DDL release notes; DropCo Beverages US distribution portfolio; BCLDB product listings verified April 2026",
+      "trail_connection": "PCT-WADT",
+      "trail_note": "PCT×WADT: Demerara rum is the most historically loaded rum in the Atlantic. The wooden stills from 1703 and 1732 predate American independence. The sugar was grown by enslaved West Africans on Dutch colonial land where cane cultivation was brought by the Dutch from Portuguese Brazil. The Demerara wooden still pot rum is the PCT's most concentrated expression of the colonial cane chain.",
+      "entry_id": "SPR-CARGUY-001",
+      "extracted_at": "2026-04-11T23:38:21.631346+00:00",
+      "batch_number": 1
+    }
+  ]
+}

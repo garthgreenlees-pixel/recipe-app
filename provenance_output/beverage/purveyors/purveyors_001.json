@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Santra Beverages (US) / Feni Imports India",
+    "type": "importer",
+    "description": "US importer of Goa Feni and Indian spirits. Cazulo Feni is available through a small number of specialty importers in the US as GI-protected Indian spirits gain international market access.",
+    "markets_served": [
+      "US",
+      "UK"
+    ],
+    "traditions_carried": [
+      "spirits"
+    ],
+    "website": "https://www.cazulo.com",
+    "verified": true,
+    "purveyor_id": "PURV-001"
+  }
+]

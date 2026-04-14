@@ -1,0 +1,72 @@
+{
+  "tradition": "spirits",
+  "region": "Haiti — Grande Anse Department (Barbancourt Reserve Spéciale, 15-Year Aged, Plantation Heritage)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:38:14.046940+00:00",
+  "entries": [
+    {
+      "name": "Barbancourt Reserve du Domaine — 15-Year Tropical Aged, Limousin Oak, Haitian Plantation Heritage",
+      "category": "spirits",
+      "subcategory": "rum",
+      "origin": "Haiti",
+      "region": "Haiti — Grande Anse Department (Barbancourt Reserve Spéciale, 15-Year Aged, Plantation Heritage)",
+      "producer": "Distillerie Barbancourt — Domaine de Barbancourt Estate",
+      "alcohol_content": 43.0,
+      "price_tier": "super_premium",
+      "terroir_origin": "The Grande Anse Department is Haiti's southernmost administrative region, facing the Caribbean Sea along the southwestern peninsula — a more isolated, less industrially developed zone than the Artibonite corridor, with traditional small-holder sugarcane cultivation persisting in the coastal river valleys. The Cul-de-Sac plain where the Barbancourt domaine sits is geologically a tectonic graben — a down-dropped rift valley bounded by the Chaîne des Matheux to the north and the Massif de la Selle to the south, at elevations of 20–80m above sea level with deep calcareous alluvial soils. The tropical climate at the domaine is characterized by mean annual temperatures of 26–28°C, approximately 600mm annual precipitation (supplemented by irrigation from the Artibonite drainage system), and the consistency of tropical maritime conditions — minimal seasonal temperature variation — that creates the unique accelerated aging environment of tropical rum maturation. In a tropical warehouse at 28°C average, the cask oak expands and contracts daily with ambient temperature fluctuations, driving spirit in and out of the wood at rates 4–6 times greater than a Cognac cellar in Charente at 12–15°C average. The angel's share loss at the domaine runs 8–12% per year, meaning that after 15 years of tropical aging, the original cask volume has been reduced by approximately 60–80%, concentrating the remaining spirit to remarkable intensity of colour, flavour, and oak-derived complexity.",
+      "production_technique": "The Reserve du Domaine 15-year is produced from the same agricole base as the VSOP: fresh Artibonite Valley cane juice fermented 30–36 hours, double-distilled through column brouillis pass followed by copper pot second distillation at 65–70% ABV final strength. The critical distinction is extended aging in a selection of Limousin oak casks — both new and previously used — for a minimum of 15 years in the tropical warehouse at Domaine de Barbancourt. The master blender selects individual casks that have developed the characteristic tropical rancio note — a complex oxidative quality combining dried fruit, mushroom, walnut, and exotic spice formed through long-chain fatty acid ester oxidation in the presence of French oak tannins at tropical temperatures. This rancio development in aged Caribbean rum mirrors the rancio that develops in 20–30 year Cognac but at a compressed timescale due to the tropical aging climate. Selected casks are blended to produce the Reserve du Domaine at consistent quality; the final blend is proofed to 43% ABV with demineralized water before bottling. No caramel colouring is added — the deep mahogany colour is entirely derived from 15 years of tropical Limousin oak contact. The Reserve du Domaine is Barbancourt's argument that the Caribbean tropics can produce aged spirits of equivalent complexity to temperate-aged European brandies — on a shorter chronological timeline but with more dramatic cumulative oak contact.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "XO Cognac (Charente, 10+ years in Limousin oak)",
+          "connection": "Barbancourt Reserve du Domaine and XO Cognac are the most structurally comparable spirits across the French brandy and Caribbean rum categories: both use double pot still distillation, both age exclusively in Limousin forest French oak, both develop rancio quality through extended oxidative aging, and both use the French brandy age designation vocabulary (Réserve, Reserve du Domaine, XO, VSOP). The fundamental difference is that 15 years of Haitian tropical aging produces colour depth and rancio development equivalent to approximately 40–50 years in a Charente cellar — demonstrating how tropical climate compresses aging time without shortcutting the underlying oak chemistry."
+        },
+        {
+          "tradition": "El Dorado 21-Year (Guyana, Demerara, aged column-still rum)",
+          "connection": "Barbancourt 15-Year and El Dorado 21-Year are both the premium apex expressions of their respective national rum traditions, both aged in tropical warehouses for extended periods to develop maximum complexity, and both marketed at price points that position Caribbean rum against aged Cognac and single malt Scotch in the luxury spirits category. The key structural difference is distillation heritage: Barbancourt uses Cognac pot-still double distillation, El Dorado uses antique wooden Coffey still column distillation — producing different textural and ester profiles in the spirit base that then age into different rancio characters."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep mahogany with garnet tints; full opacity; heavy, slow-moving legs indicating high glycerol content from 15 years of tropical oak extraction; the colour alone communicates the extended tropical aging — darker than most 30-year Cognac by volume of oak contact despite shorter chronological age.",
+        "nose": "Pronounced tropical rancio: dried exotic fruit (tamarind, dried mango, prune), Limousin oak tannin expressed as furniture polish and nutmeg, dark caramel, a thread of fresh cane blossom still visible beneath the aged complexity — the agricole origin persisting through 15 years of oak. Beeswax and leather from long cask contact; the Cognac heritage unmistakable in the rancio register despite the unmistakably Caribbean fruit character from the ester development during tropical fermentation and aging.",
+        "palate": "Full-bodied and warming; the fresh cane base has been transformed by 15 years of tropical Limousin oak into a rich, layered spirit in which dried tropical fruit, vanilla, dark chocolate, and warm oak spice succeed each other through a very long finish; tannin grip is present but fully integrated; the 43% ABV gives warmth without heat; the finish extends through oak-derived bitterness into a clean, dry agricultural cane character that is the signature of Barbancourt's agricole base surviving even the most intense aging program in the Caribbean."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Barbancourt Three Stars (white / minimally aged)",
+          "criteria": "Entry expression aged 1–2 years or unaged: green cane, young spirit character, minimal oak — the cocktail workhorse and the starting point for understanding the fresh agricole cane base before aging transforms it."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Barbancourt VSOP Réserve Spéciale (8 years)",
+          "criteria": "Eight-year tropical aged: the balance point between fresh cane character and oak development — sufficient Limousin oak integration for neat service but retaining the vegetal, floral cane thread that identifies the agricole origin."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Barbancourt Estate Reserve (small batch selections)",
+          "criteria": "Periodic small-batch releases from exceptional cask selections aged 10–12 years: intermediate between the VSOP and the Reserve du Domaine, showing accelerated tropical rancio development in standout individual casks before blending."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Barbancourt Reserve du Domaine (15 years)",
+          "criteria": "The apex of the Barbancourt range: maximum tropical Limousin oak integration, full rancio development, deep mahogany colour — the expression that positions Barbancourt in direct comparison with XO Cognac and demonstrates how the Haitian tropical aging environment compresses French brandy maturation timelines while preserving the agricole cane character as the spirit's foundation."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve neat at 18–20°C in a warmed glass to open the full tropical rancio and dried fruit complexity; avoid ice, which suppresses the evolved volatiles that make the 15-year expression distinct from younger Barbancourt expressions; a few drops of still water at room temperature opens the rancio register and softens the oak tannin for the first tasting pour.",
+        "vessel": "Tulip or Glencairn glass exclusively for the Reserve du Domaine — the concentrated aromatics require a vessel that focuses vapour at the rim; a snifter is acceptable for tableside presentation but the wider aperture disperses the rancio aromatics too rapidly; serve in a flight context following the VSOP to demonstrate the vertical aging progression from 8 to 15 years of tropical Limousin oak."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Distillerie Barbancourt — Reserve du Domaine 15-Year is the undisputed apex of Haitian rum production and the sole Caribbean expression with structural Cognac heritage (double distillation, Limousin oak) at this aging level; no comparable Haitian producer at this quality tier exists for cross-reference.",
+        "north_america_access": "Available through specialty spirits retailers in major US markets; BCLDB private import in BC; allocation-basis availability given limited production from extended tropical aging and high angel's share losses; price tier positions the Reserve du Domaine at USD $80–120 retail, competing directly with aged single malts and XO Cognac.",
+        "culinary_application": "The Reserve du Domaine is a prestige spirits service item at the close of a PCT-themed tasting dinner: its Cognac heritage connects the Charente to the Caribbean through the French colonial maritime network; its Haitian origin connects to the West African Diaspora Trail and the agricultural history of Saint-Domingue as the Caribbean's most productive colonial plantation economy before the 1804 revolution."
+      },
+      "price_trajectory": "rising",
+      "entry_id": "SPR-HAIGRA-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T19:38:14.046423+00:00",
+      "batch_number": 2
+    }
+  ]
+}

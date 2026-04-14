@@ -1,0 +1,77 @@
+{
+  "tradition": "coffee",
+  "region": "Brazil — Bahia (Chapada Diamantina Highlands, São Desidério Cerrado Baiano, Atlantic Forest Coffee)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T18:49:27.653175+00:00",
+  "entries": [
+    {
+      "name": "Brazil Chapada Diamantina Washed Catuaí — Quartzite Highlands 1,100m, Delicate Citrus, Atlantic Forest Edge",
+      "category": "coffee",
+      "subcategory": "washed_process",
+      "origin": "Brazil",
+      "region": "Chapada Diamantina, Bahia, Brazil",
+      "producer": "Finca Ibiraba — Chapada Diamantina Highland Cooperative",
+      "alcohol_content": 0.0,
+      "price_tier": "premium",
+      "terroir_origin": "The Chapada Diamantina (Diamond Plateau) is Brazil's most geologically distinctive coffee-growing region — a 1,200km² quartzite sandstone plateau rising abruptly from the Bahia semi-arid backlands (sertão) to elevations of 1,000–1,600m. The plateau was formed by Precambrian quartzite and sandstone formations, creating some of the oldest and most mineralogically unique soils in Brazilian agriculture: the quartzite-derived sandy soils are extremely nutrient-poor (necessitating organic amendment), highly acidic (pH 4.5–5.5), and remarkably well-drained due to the sandstone fracture network. The resulting terroir is unlike any other Brazilian coffee-growing zone: the combination of nutrient-limited sandy quartzite soils, high altitude (1,000–1,200m), the semi-arid Bahia climate moderated by plateau altitude, and the Atlantic Forest transition zone ecosystems creates a growing environment closer to Ethiopian or Colombian highland coffee conditions than to the classic Minas Gerais Brazilian profile. The Chapada Diamantina produces coffees with significantly higher acidity than Sul de Minas or Cerrado — delicate citrus (yellow peach, lemon, tangerine) rather than the chocolate-caramel baseline — from the same Catuaí and Bourbon varieties that produce rich, low-acid coffees in the warmer, lower-altitude Minas Gerais zones. The altitude and sandstone geology create the longest ripening cycle in Brazilian coffee production, with harvest extending into September-October (later than any other Brazilian zone), producing exceptional sucrose concentration in the cherry.",
+      "production_technique": "Chapada Diamantina washed production is the exception in Brazil — where the vast majority of production uses natural or pulped-natural processing, Chapada's semi-arid highland climate creates ideal conditions for the washed process (full depulping and fermentation in water) that is standard in Ethiopia and Colombia but rare in Brazil. Finca Ibiraba cooperative members harvest Catuaí by selective hand-picking, brought to the cooperative processing station where the cherries are de-pulped within 4 hours of harvest. The de-pulped parchment is fermented in tanks for 18–24 hours — shorter fermentation than Ethiopian washed coffees due to the drier Chapada climate reducing the spontaneous microbial diversity — then washed through clean water channels and transferred to raised drying beds. The Chapada's dry highland climate enables raised-bed sun drying for 15–18 days without the excessive moisture that would trigger mold in the more humid Minas Gerais zones. The resulting washed Chapada coffee is Brazil's closest approximation to the \"clean, bright, acidic\" coffee profile that specialty roasters source from Ethiopia and Colombia — a fundamentally different cup character from the dominant Brazilian natural-process style. The cooperative QC cupper targets 87–89 points for the specialty lot minimum, with the best micro-lots achieving 90+ points that qualify for Brazil Cup of Excellence submission.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Ethiopia Yirgacheffe Washed (citrus-floral, highland quartzite)",
+          "connection": "Chapada Diamantina washed Catuaí and Yirgacheffe washed Heirloom are the closest cup-character parallels across different continents: both produce citrus-delicate, floral-bright washed coffees from high-altitude soils derived from ancient crystalline rock (quartzite for Chapada, gneiss for Yirgacheffe) — Chapada is Brazil's answer to the Ethiopian washed coffee profile"
+        },
+        {
+          "tradition": "Colombia Huila Washed (altitude-citrus, contrasting Brazilian normal)",
+          "connection": "The Chapada washed contradicts the expectation that Brazilian coffee is always chocolatey, low-acid, and natural-processed — demonstrating that when Brazilian coffee grows in the right altitude-terroir combination (quartzite plateau, 1,100m, semi-arid), it produces coffees structurally indistinguishable from Andean highland Colombia Huila: bright citrus, clean cup, delicate floral mid-palate"
+        },
+        {
+          "tradition": "Brazil Sul de Minas Natural (same country, opposite terroir)",
+          "connection": "Chapada Diamantina washed and Sul de Minas natural represent the maximum poles of Brazilian specialty coffee terroir: Sul de Minas produces full-bodied, chocolatey, fruit-forward naturals from granite-clay volcanic soils; Chapada produces bright, acidic, delicate washeds from nutrient-poor quartzite sandstone soils — demonstrating that Brazilian coffee is not a monolithic flavor profile but a continental diversity"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Clear, light to medium amber; washed process produces higher clarity than natural; medium body visible in the brew; delicate crema in espresso from the lighter congener load of washed processing",
+        "nose": "Citrus-forward and delicate: yellow peach, tangerine peel, jasmine, lemon blossom, very light brown sugar from the natural sweetness of the highland Catuaí variety — completely unexpected from a Brazilian origin; if served blind, would be identified as Colombian or Ethiopian by most specialty coffee professionals",
+        "palate": "Light-medium body (the quartzite sandstone mineral terroir produces less body than the volcanic-clay Minas Gerais coffees), bright malic-citric acidity unusual for Brazil, clean citrus fruit mid-palate, clean finish without the chocolate-caramel baseline of Sul de Minas — a coffee that challenges Brazilian coffee identity assumptions"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Bahia Commercial (Cerrado Baiano natural)",
+          "criteria": "Western Bahia lowland cerrado production at 800–950m, mechanical harvest natural process — the standard commercial Bahia grade with chocolatey-nutty Sul de Minas-adjacent character"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Chapada Diamantina Cooperative Washed (87–89 points)",
+          "criteria": "Finca Ibiraba and similar cooperative production from the Chapada highland quartzite zone, full washed process, Q-grader cupped 87–89 — the distinctive citrus-delicate Chapada character at accessible specialty pricing"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Chapada Diamantina Micro-Lot (89–91 points)",
+          "criteria": "Individual farm micro-lots from named Chapada producers, exceptional vintage character, 89+ points — available through direct-trade roasters sourcing the Chapada zone as an alternative-to-Colombia option"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Chapada Cup of Excellence (92+ points)",
+          "criteria": "Brazil COE lots from the Chapada zone achieving jury-verified 92+ points — the rare occasion when a Brazilian coffee achieves the acidity and delicacy scores that Ethiopian and Colombian coffees routinely achieve; represents the frontier of the Chapada terroir's potential"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Filter: 92–93°C pour-over (lower than Sul de Minas to preserve delicate citrus aromatics); V60 or Chemex recommended; serve at 65–70°C and allow to cool to 55°C for best citrus expression — the delicate Chapada character is heat-sensitive",
+        "vessel": "Ceramic pour-over cup or clean glass cup that does not add metallic interference; the light-medium body does not need heat retention as much as the heavier Sul de Minas naturals",
+        "roast_profile": "Light roast (City level) is essential for Chapada washed to preserve the unusual citrus-delicate character; medium roast immediately converts the citrus to caramel-chocolate and makes the coffee indistinguishable from standard Brazilian; avoid dark roast entirely"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Finca Ibiraba cooperative and individual Mucugê farms — the consistent Chapada Diamantina specialty zone; niche but growing recognition among specialty roasters seeking Brazilian coffee with non-standard profiles",
+        "north_america_access": "Rare in North America — Counter Culture Coffee (Durham NC) and Heart Coffee Roasters (Portland OR) have sourced Chapada Diamantina; in Vancouver, Nemesis Coffee and 49th Parallel occasionally feature Chapada lots; extremely limited availability compared to Sul de Minas",
+        "culinary_application": "Chapada washed citrus character makes it an outstanding cold brew concentrate for cocktail applications where Ethiopian-style coffee is traditionally used: espresso martini, coffee tonic (cold brew + tonic water + lemon), and food pairings where the bright acidity provides the acid element in a preparation (coffee-cured gravlax uses Chapada cold brew as the acid rather than lemon in the most modern applications)"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "COF-CHADIA-001",
+      "tradition": "coffee",
+      "extracted_at": "2026-04-12T18:49:27.652825+00:00",
+      "batch_number": 2
+    }
+  ]
+}

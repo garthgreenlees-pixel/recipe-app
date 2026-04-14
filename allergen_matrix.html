@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Allergen Matrix — Provenance</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f0; color: #1a1a1a; line-height: 1.5; }
+  .header { background: #1a1a1a; color: #fff; padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 20px; font-weight: 600; }
+  .header .meta { display: flex; align-items: center; gap: 16px; }
+  .header .count { font-size: 14px; opacity: 0.6; }
+  .header a { color: #ccc; text-decoration: none; font-size: 14px; }
+  .header a:hover { color: #fff; }
+  .content { padding: 24px 32px; }
+  .table-wrap { overflow-x: auto; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; min-width: 600px; }
+  thead th { position: sticky; top: 0; background: #fafafa; border-bottom: 2px solid #e0e0e0; padding: 10px 14px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: #666; white-space: nowrap; }
+  thead th.recipe-col { text-align: left; min-width: 200px; }
+  thead th.allergen-col { text-align: center; min-width: 80px; }
+  tbody tr { border-bottom: 1px solid #f0f0f0; }
+  tbody tr:hover { background: #fafaf8; }
+  tbody td { padding: 10px 14px; font-size: 14px; }
+  tbody td.recipe-name { font-weight: 500; }
+  tbody td.allergen-cell { text-align: center; font-size: 16px; }
+  .dot { color: #C0392B; }
+  .empty-state { text-align: center; padding: 60px 20px; color: #999; }
+  .empty-state p { margin-top: 8px; font-size: 14px; }
+
+  @media print {
+    .header { background: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .header a { display: none; }
+    body { background: #fff; }
+    .content { padding: 0; }
+    .table-wrap { border: none; border-radius: 0; }
+    .dot { color: #C0392B; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Allergen Matrix</h1>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="meta">
+    <a href="/">← Back to recipes</a>
+  </div>
+</div>
+
+<div class="content" id="content">
+  <div class="empty-state" id="loading">Loading…</div>
+</div>
+
+<script>
+async function init() {
+  const contentEl = document.getElementById('content');
+  const countEl = document.getElementById('count');
+
+  try {
+    const res = await fetch('/api/allergen-matrix');
+    const data = await res.json();
+
+    if (!data.length) {
+      contentEl.innerHTML = `<div class="empty-state">
+        <p><strong>No allergen data yet</strong></p>
+        <p>Generate a HACCP Brief for your recipes to populate allergen information.</p>
+      </div>`;
+      return;
+    }
+
+    // Collect all unique allergens sorted alphabetically
+    const allergenSet = new Set();
+    data.forEach(r => (r.allergens || []).forEach(a => allergenSet.add(a)));
+    const allergens = [...allergenSet].sort((a, b) => a.localeCompare(b));
+
+    countEl.textContent = `${data.length} recipe${data.length !== 1 ? 's' : ''} · ${allergens.length} allergen${allergens.length !== 1 ? 's' : ''}`;
+
+    // Build table
+    let headerHtml = '<th class="recipe-col">Recipe</th>';
+    allergens.forEach(a => {
+      headerHtml += `<th class="allergen-col">${esc(a)}</th>`;
+    });
+
+    let bodyHtml = '';
+    data.forEach(r => {
+      const rAllergens = new Set(r.allergens || []);
+      bodyHtml += `<tr><td class="recipe-name">${esc(r.title)}</td>`;
+      allergens.forEach(a => {
+        bodyHtml += `<td class="allergen-cell">${rAllergens.has(a) ? '<span class="dot">●</span>' : ''}</td>`;
+      });
+      bodyHtml += '</tr>';
+    });
+
+    contentEl.innerHTML = `<div class="table-wrap">
+      <table>
+        <thead><tr>${headerHtml}</tr></thead>
+        <tbody>${bodyHtml}</tbody>
+      </table>
+    </div>`;
+  } catch (err) {
+    contentEl.innerHTML = `<div class="empty-state"><p>Failed to load allergen data.</p></div>`;
+  }
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+init();
+</script>
+</body>
+</html>

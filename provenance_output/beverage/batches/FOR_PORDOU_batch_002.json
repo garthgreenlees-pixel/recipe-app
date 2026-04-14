@@ -1,0 +1,110 @@
+{
+  "tradition": "fortified",
+  "region": "Portugal — Douro (Garrafeira Port, Niepoort)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T17:09:34.933339+00:00",
+  "entries": [
+    {
+      "tradition": "fortified",
+      "sub_tradition": "port garrafeira wood then bottle aged",
+      "region": "Portugal — Douro (Garrafeira Port Category)",
+      "name": "Garrafeira Port — Niepoort, Wood Ageing Then Extended Glass Maturation",
+      "terroir_origin": "Garrafeira Port is a category so rare that only Niepoort produces it commercially. The category was defined in the 1937 Port regulations but abandoned by all other houses. A Garrafeira must age a minimum of 3.5 years in small wood (20-600L barrels), then transfer to large glass demijohns (10-15 litres) for extended bottle maturation — minimum 8 years in glass, but Niepoort ages for decades. The result: a wine that combines the oxidative rancio of wood ageing with the reductive evolution of bottle maturation — a combination found nowhere else in the fortified world. Douro terroir: Quinta de Santa Clara and Quinta de Roriz grapes (Cima Corgo, 100-150m); decomposed schist soils; hand harvested; foot treaded in stone lagares. Dirk Niepoort revived the Garrafeira programme in the 1980s having found pre-war stocks in the Gaia lodge. He has continued single-vintage releases, now typically 20-30 years old at release.",
+      "production_technique": "Garrafeira production at Niepoort: Harvest and fermentation: identical to Vintage Port — foot-treaded granite lagares, fortified at 5-6 Baume (higher sugar than Tawny), full colour and tannin extraction. Wood phase: 3.5-7 years in 550L pipes; the wine oxidises slowly, developing rancio and amber colour — but the wood phase is deliberately shorter than Tawny to preserve primary fruit. Transfer to glass demijohns: the wine moves from wood to sealed glass, cutting off all further oxidation and beginning a long reductive maturation. The glass phase: 10-30+ years in demijohn. Niepoort's 1985 Garrafeira was only released in 2015 after 30 years total maturation. During the glass phase: tannins polymerise and soften; primary fruit re-emerges through the rancio layer; tertiary volatile-floral develops that resembles old Vintage Port but with rancio depth that pure bottle maturation never achieves. Bottling: into 750mL bottles under cork; significant sediment; decanting essential. Annual production: fewer than 3,000 bottles per vintage release.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "fortified",
+          "beverage": "Vintage Port (Declared Vintage, same house)",
+          "connection": "Garrafeira starts identically to Vintage Port — same lagare treading, same fortification level. The divergence is in the subsequent maturation path: Vintage goes straight to bottle; Garrafeira goes to wood then glass. The comparison of Niepoort 2000 Vintage vs 1985 Garrafeira demonstrates how the wood phase permanently redirects the wine's evolution."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "40yr Tawny Port",
+          "connection": "Both undergo wood ageing in Gaia lodges and develop rancio. But Tawny goes from wood to bottle for immediate consumption; Garrafeira goes from wood to glass for decades of reductive evolution. Tawny is the oxidative endpoint; Garrafeira is an oxidative-reductive hybrid."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Cognac Grande Champagne 40yr+ (Tres Vieux Reserve)",
+          "connection": "The closest structural parallel: both develop in wood for a defined period then continue evolving after transfer. Cognac's extended barrel phase creates rancio that resembles Garrafeira's wood-then-glass trajectory. The Cognac comparison contextualises rancio for guests who know spirits."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Penfolds Grange (Australian Shiraz, 30yr+ old vintages)",
+          "connection": "Both demand extraordinary patience for full expression — Garrafeira 15-30 years from bottling; old Grange 20-40 years from vintage. Both develop tertiary complexity that transforms the original production. The category bridge teaches guests about wine's time dimension."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Dark amber-garnet; bricking at the rim indicates 20+ year bottle age; less tawny than a 40yr but less deep ruby than a 15yr Vintage Port",
+        "nose": "Layer one: rancio walnut and dried fig from the wood phase. Layer two: dark berry and roasted coffee from the glass phase reduction. Layer three: volatile dried floral (rose petal, dried violet) that signals extreme bottle age. The three layers are distinct and sequential.",
+        "palate": "Medium-full body; tannins fine-grained from double maturation; sweetness lower than 40yr Tawny; the rancio and primary fruit coexist rather than one replacing the other",
+        "texture": "The glass phase produces a silkiness that wood ageing alone never achieves — tannins polymerised under reductive conditions into the smoothest texture in the Port category",
+        "finish": "2 minutes+; rancio yields to primary fruit yields to volatile floral in a sequence that continues evolving in the glass for several minutes after the last sip",
+        "conclusion": "The intellectual achievement of Port — the only category that deliberately combines both major maturation philosophies in sequence"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Niepoort Garrafeira 1985 or pre-1990",
+          "criteria": "30+ years of glass maturation on top of 3.5+ years wood; tertiary volatile-floral at maximum development; extreme rarity — fewer than 3,000 bottles per vintage",
+          "markers": "Niepoort 1985 Garrafeira; BC: private import required; US: Broadbent or direct; $200-400+"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Niepoort Garrafeira 1995-2005",
+          "criteria": "20-30 years combined maturation; full glass-phase evolution achieved; at drinking peak; the mid-career expression at its most dimensional",
+          "markers": "Niepoort Garrafeira 1990s-2000s vintage; US ~$150-250 via Broadbent Selections"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Niepoort Garrafeira 2005-2010",
+          "criteria": "15-20 years combined maturation; still developing glass phase; rancio and primary fruit tension at its most dynamic and teachable",
+          "markers": "Niepoort Garrafeira; US ~$100-180 via Broadbent; Canada: private import"
+        },
+        {
+          "tier": 1,
+          "tier_name": "No entry-level Garrafeira",
+          "criteria": "Category produced by Niepoort only; no entry-level version exists; the closest substitute is Niepoort Colheita 10yr at a lower price point",
+          "markers": "Recommend Niepoort Colheita as entry to the house style; BC ~$65-80"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 16-18 degrees C (just below room temperature) — warmth is essential for the three-layer nose to open sequentially",
+        "vessel": "Tulip glass or white Burgundy glass — large enough to hold the nose but narrow enough to concentrate it",
+        "technique": "Garrafeira requires a 20-minute decanting before service — the sediment from glass maturation is significant and the wine needs air to open. Service: as a meditation wine after dessert, or as centrepiece of a Port vertical showing Tawny (oxidative) vs Garrafeira (oxidative-reductive) vs Vintage (reductive). The three-category comparison is the most educational Port tasting in a professional service context.",
+        "programme_position": "Rare Port vertical anchor; cellar programme signature; sommelier education centrepiece",
+        "verbal_presentation": "Niepoort Garrafeira — three and a half years in oak, then thirty in glass. The only Port that goes through both maturation philosophies in sequence. One producer. One category. Fewer than three thousand bottles per vintage."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Niepoort — the sole producer of Garrafeira Port commercially",
+        "producer_location": "Vila Nova de Gaia, Porto, Portugal",
+        "key_person": "Dirk Niepoort (5th generation; revived the Garrafeira category from pre-war stocks)",
+        "bc_distributor": "No BCLDB listing; private import required through a licensed BC agent",
+        "us_distributor": "Broadbent Selections (New York) — primary US Niepoort allocation holder",
+        "uk_distributor": "Les Caves de Pyrene (UK), Fine and Rare (London)",
+        "price_tier": "No entry tier. Minimum $100. Premium: $150-250. Ultra: $200-400+.",
+        "availability_notes": "Production limited to fewer than 3,000 bottles per vintage release. Allocation required in advance through Broadbent Selections (US) or Niepoort direct (Europe)."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Queijo da Serra aged 24 months with walnut bread",
+          "pairing_type": "complement",
+          "rationale": "The rancio walnut oil in Garrafeira and the crystalline sheep fat of aged Queijo da Serra are in direct flavour dialogue — two Portuguese products from opposite sides of the country that reach maximum expression in the same tasting moment."
+        },
+        {
+          "technique_id": "",
+          "dish": "Chestnut honey and aged almond pastry (Queijadas de Sintra)",
+          "pairing_type": "bridge",
+          "rationale": "The chestnut and almond of traditional Portuguese pastry bridges the rancio almond-walnut character of the wine with the sweetness register of the glass-matured fruit — a bridge pairing requiring no explanation; the mutual recognition is immediate."
+        }
+      ],
+      "source": "Niepoort production documentation; IVDP Garrafeira category technical specifications; Broadbent Selections US allocation catalogue 2024",
+      "trail_connection": "PCT-1",
+      "trail_note": "PCT Region 1: Portugal (Douro). Niepoort Garrafeira represents the most extreme expression of Port's willingness to invest time as a production input. The Dutch family (Niepoort) producing this most Portuguese of wines reflects the Anglo-Dutch-Portuguese trade triangle that built the Douro wine industry.",
+      "entry_id": "FOR-PORDOU-001",
+      "extracted_at": "2026-04-11T17:09:34.932631+00:00",
+      "batch_number": 2
+    }
+  ]
+}

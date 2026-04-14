@@ -1,0 +1,102 @@
+{
+  "tradition": "coffee",
+  "region": "Macau — Portuguese café culture",
+  "batch_number": 3,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:32:05.554400+00:00",
+  "entries": [
+    {
+      "tradition": "coffee",
+      "sub_tradition": "macanese coffee galão",
+      "region": "Macau — South China Sea",
+      "name": "Macau Coffee Culture — Galão and the Macanese Café",
+      "terroir_origin": "Macau was a Portuguese colony from 1557 to 1999 — the last European colony in Asia, returned to China 38 years after Goa's annexation (1961). The Portuguese galão (a tall, latte-like coffee of espresso and foamed milk) arrived with Macau's cafés and became inseparable from the territory's Macanese identity. The Macau café culture occupies a unique position: it is the convergence of Portuguese café tradition (the espresso-milk drinking culture of Lisbon's pastelarias) with Cantonese tea culture (the cha chaan teng — Hong Kong and Macau's distinctive cafés that blend Western diner and Cantonese tea house). The result is a coffee culture unlike any other in Asia: the 'Macau-style milk coffee' (kāfē), the galão (espresso + foamed milk + honey), and the iconic pairing of the Macanese egg tart (pastel de nata adapted to Macanese custard with a flakier, more caramelised shell than the Lisbon original) with a small milky coffee. The Macanese egg tart itself travelled from Lisbon to Macau to Hong Kong — the Tai Cheong Bakery in Hong Kong credits the Macanese Portuguese confection as the origin of Hong Kong's beloved egg tart tradition.",
+      "production_technique": "The Macau galão is prepared in the traditional Portuguese method: a single or double espresso (60–80mL) extended with hot foamed milk to fill a tall glass (240–300mL), creating a 1:3 or 1:4 coffee-to-milk ratio. The Portuguese original uses a tall cylindrical glass; the Macanese adaptation allows for a ceramic cup or glass. In the cha chaan teng tradition, coffee and black tea are combined in a hybrid drink 'yuenyeung' (coffee + Hong Kong-style milk tea 1:1) — the PCT meets Cantonese tea culture literally in a cup. Macanese café milk coffee uses evaporated milk rather than fresh milk — a colonial-era adaptation when refrigeration was unavailable, which became the defining characteristic of Cantonese-Portuguese café coffee culture. Evaporated milk's caramel-sweetness and greater heat stability made it preferred over fresh milk for the cha chaan teng environment.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "coffee",
+          "beverage": "Vietnamese Cà Phê Sữa (condensed milk coffee, French colonial)",
+          "connection": "Both are colonial-era adaptations of European coffee culture to tropical Southeast/East Asian climates without reliable dairy refrigeration. French condensed milk coffee (Vietnam) and Portuguese evaporated milk coffee (Macau) share the sweet-milk-coffee character produced by the same infrastructure limitation (no fresh milk) in the same colonial era. The PCT and the French colonial trail converge at the same technological solution"
+        },
+        {
+          "tradition": "tea",
+          "beverage": "Hong Kong Milk Tea (cha chaan teng style)",
+          "connection": "The Macanese café is the bridge between Portuguese galão culture and Hong Kong cha chaan teng. Yuenyeung (coffee + Hong Kong milk tea) is the literal synthesis: the PT coffee tradition fused with the British-colonial Cantonese milk tea tradition. Macau sat geographically between both colonial spheres — Portuguese territory adjacent to British Hong Kong"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Galão: caramel-brown in tall clear glass; layered milk and espresso visible if poured correctly; frothy top. Macanese café coffee: lighter brown due to evaporated milk ratio",
+        "nose": "Espresso: roasted, dark caramel, slight smoky. With evaporated milk: caramel sweetness dominates; the milk's lactose and slight caramelisation from evaporation adds distinct sweetness absent in fresh milk preparations",
+        "palate": "The galão: smooth, balanced, coffee-forward with milk texture; less sweet than a latte (no added sugar in the Portuguese original, though honey is optional). With evaporated milk: noticeably sweeter, richer, more indulgent; lower bitterness than espresso alone; comfort-beverage character",
+        "conclusion": "The Macau coffee moment is the egg tart + galão — two of the PCT's most successful food exports. The Macanese pastel de nata (adapted in Macau, then again in Hong Kong) is now the most popular pastry in Asia by unit volume. The coffee-pastry pairing is the PCT's most commercially successful cultural legacy."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Authentic Macanese Galão (named café)",
+          "criteria": "Traditional preparation with quality espresso + Portuguese technique; historic Macau café; egg tart pairing integral",
+          "markers": "Café Ou Mun (Macau); Lord Stow's Bakery (Coloane); Café Litoral; Macau-side named cafés"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Portuguese-style Galão (outside Macau)",
+          "criteria": "Espresso-to-milk ratio correct (1:3–1:4); tall glass service; quality espresso; egg tart or pastel de nata pairing",
+          "markers": "Portuguese café or Macanese restaurant; named galão; correct format"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Cha Chaan Teng Style",
+          "criteria": "Evaporated milk coffee; Hong Kong/Macau café tradition; strong espresso or drip coffee base",
+          "markers": "Cha chaan teng menu; evaporated milk listed; classic yuenyeung option"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Generic Latte (Western format)",
+          "criteria": "Espresso + steamed milk; no Portuguese-Macanese cultural context; standard Western café preparation",
+          "markers": "Standard latte without Macanese or Portuguese cultural framing"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "65–70°C (hot galão); or iced in cha chaan teng style",
+        "vessel": "Tall clear cylindrical glass (200–300mL) for galão; ceramic cup for Portuguese pastelaria style; plastic takeaway cup for cha chaan teng",
+        "technique": "Galão: single or double espresso (30–60mL) in tall glass, top with foamed whole milk to 3:1 milk:coffee ratio. Optional: teaspoon honey. For Macanese cha chaan teng style: use evaporated milk (30mL) diluted with hot water, add espresso or strong drip coffee. Egg tart pairing: serve simultaneously — the pastry's caramelised egg custard and the galão's sweetness are designed as a unit",
+        "programme_position": "Coffee programme cultural story; brunch menu; Asian-fusion programme anchor; Portuguese tasting menu dessert course pairing",
+        "verbal_presentation": "The Macau galão — Portugal's café culture at the edge of China. The same coffee tradition that fills Lisbon's pastelarias, translated 500 years ago to the South China Sea. With the egg tart: the PCT's most successful export, now on every street corner in Hong Kong."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Lord Stow's Bakery (Macau egg tart) + any quality espresso",
+        "producer_location": "Coloane Village, Macau SAR (Lord Stow's); Macau café district",
+        "key_person": "Andrew Stow (Lord Stow's founder, 1989 — an Englishman who adapted the Macanese pastel de nata)",
+        "production_volume": "Lord Stow's produces ~21,000 egg tarts daily (Wikipedia citation); global brand",
+        "certifications": [
+          "N/A — retail food category"
+        ],
+        "bc_distributor": "Lord Stow's egg tarts: available at T&T Supermarket (Vancouver) and Asian grocery stores [NEEDS VERIFICATION]; Galão: any quality espresso equipment + whole milk or evaporated milk",
+        "us_distributor": "Lord Stow's: US retail through Asian specialty stores; Galão: preparation only",
+        "uk_distributor": "N/A",
+        "price_tier": "Preparation cost only (galão materials); egg tart ~MOP8/HKD8 in Macau",
+        "availability_notes": "The galão requires no specific distributor — it is a preparation. Evaporated milk (Carnation or Marigold brand) available at any Asian grocery. For programme purposes: source good espresso, quality evaporated milk, and fresh-baked pastel de nata."
+      },
+      "trail_connection": "PCT-10",
+      "trail_note": "Macau's egg tart and galão represent the PCT's most globally diffused food legacy by unit volume. Andrew Stow's 1989 Coloane bakery adapted the Lisbon pastel de nata into the Macanese egg tart, which his Hong Kong business partner Kenneth Chan then brought to Hong Kong as 'tai tart' — now found across Hong Kong, mainland China, and wherever there is a Cantonese diaspora. The sequence: Lisbon bakery tradition → Portuguese colonial Macau → English baker adaptation → Cantonese diffusion → global spread. The PCT in one pastry.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Pastel de nata / Macanese egg tart",
+          "pairing_type": "complement",
+          "rationale": "The canonical PCT pairing: the tart's caramelised custard and the galão's sweet espresso-milk were designed as a unit in every Macau café since the 1950s"
+        },
+        {
+          "technique_id": "",
+          "dish": "Minchi (Macanese ground meat with potatoes)",
+          "pairing_type": "bridge",
+          "rationale": "Minchi — the Macanese comfort dish of soy-spiced ground pork with crispy potato — is the Macanese equivalent of a one-pot meal. Coffee served after minchi is the Macau café's defining sequence"
+        }
+      ],
+      "source": "Lord Stow's Bakery official history; Macau Government Tourism Office food documentation; Margaret Orr research on Macanese food culture; Wikipedia — Lord Stow's Bakery; South China Morning Post Macau food writing",
+      "entry_id": "COF-MACSOU-001",
+      "extracted_at": "2026-04-11T15:32:05.554105+00:00",
+      "batch_number": 3
+    }
+  ]
+}

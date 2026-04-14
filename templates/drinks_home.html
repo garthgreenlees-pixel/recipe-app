@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beverages — Provenance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080A;
+  --gold:#C9A84C;
+  --gold-dim:rgba(201,168,76,0.2);
+  --gold-faint:rgba(201,168,76,0.06);
+  --cream:#F5F1E9;
+  --smoke:rgba(245,241,233,0.55);
+  --stone:rgba(245,241,233,0.35);
+  --muted:rgba(245,241,233,0.18);
+  --border:rgba(245,241,233,0.07);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--cream)}
+.nav-brand svg{flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:2.2rem}
+.nav-links a{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);transition:color 200ms}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-links a.nav-cta{color:var(--gold);border:1px solid var(--gold-dim);padding:6px 14px}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px}
+.nav-hamburger span{display:block;width:22px;height:1px;background:var(--cream)}
+@media(max-width:740px){.nav-links{display:none}.nav-hamburger{display:flex}}
+
+/* MOBILE OVERLAY */
+.mobile-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:500;flex-direction:column;padding:2rem}
+.mobile-overlay.open{display:flex}
+.mobile-close{align-self:flex-end;background:none;border:none;color:var(--stone);font-size:1.4rem;cursor:pointer;padding:4px 8px;margin-bottom:2rem}
+.mobile-links{display:flex;flex-direction:column;gap:0}
+.mobile-links a{display:block;font-family:var(--serif);font-size:1.6rem;font-weight:400;color:var(--cream);padding:1rem 0;border-bottom:1px solid var(--border)}
+.mobile-links a:hover{color:var(--gold)}
+
+/* FADE-UP */
+.fade-up{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* LAYOUT */
+.page{padding-top:58px}
+.container{max-width:1180px;margin:0 auto;padding:0 2rem}
+
+/* PAGE HEADER */
+.page-header{padding:4rem 0 3rem;border-bottom:1px solid var(--border)}
+.page-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.35em;color:rgba(201,168,76,0.5);text-transform:uppercase;margin-bottom:1rem}
+.page-title{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.6rem);font-weight:400;line-height:1.05;color:var(--cream);margin-bottom:.8rem}
+.page-title em{font-style:italic;color:var(--smoke)}
+.page-sub{font-family:var(--sans);font-size:.9rem;font-weight:300;color:var(--stone);max-width:480px;line-height:1.7}
+.page-stats{display:flex;gap:2.5rem;margin-top:1.5rem;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:.2rem}
+.stat-num{font-family:var(--serif);font-size:1.6rem;font-weight:400;color:var(--cream)}
+.stat-label{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--stone)}
+
+/* SECTION LABEL */
+.section-label{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--stone);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ACTION CARDS */
+.action-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:3rem}
+.action-card{background:var(--bg);padding:2rem 1.6rem;display:flex;flex-direction:column;gap:1rem;transition:background .2s;cursor:pointer}
+.action-card:hover{background:rgba(201,168,76,0.04)}
+.action-num{font-family:var(--mono);font-size:9px;letter-spacing:.25em;color:rgba(201,168,76,0.4)}
+.action-icon{width:28px;height:28px;border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;color:var(--gold)}
+.action-label{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--cream)}
+.action-desc{font-family:var(--sans);font-size:.8rem;font-weight:300;color:var(--stone);line-height:1.6}
+.action-arrow{margin-top:auto;font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--gold);opacity:.6;text-transform:uppercase}
+@media(max-width:640px){.action-row{grid-template-columns:1fr}}
+
+/* COCKTAIL GRID */
+.cocktail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:2rem}
+.cocktail-card{background:var(--bg);padding:1.4rem 1.2rem;display:flex;flex-direction:column;gap:.4rem;transition:background .2s;min-height:110px}
+.cocktail-card:hover{background:var(--gold-faint)}
+.cocktail-origin{font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:rgba(201,168,76,0.45);text-transform:uppercase}
+.cocktail-name{font-family:var(--serif);font-size:.95rem;font-weight:400;color:var(--cream);line-height:1.3}
+.cocktail-base{font-family:var(--sans);font-size:.75rem;font-weight:300;color:var(--stone)}
+@media(max-width:900px){.cocktail-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.cocktail-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* WINE GRID */
+.wine-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:2rem}
+.wine-card{background:var(--bg);padding:1.4rem 1.2rem;display:flex;flex-direction:column;gap:.4rem;transition:background .2s;min-height:110px}
+.wine-card:hover{background:var(--gold-faint)}
+.wine-card-skeleton{background:rgba(245,241,233,0.04);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.8}}
+.wine-region{font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:rgba(201,168,76,0.45);text-transform:uppercase}
+.wine-name{font-family:var(--serif);font-size:.95rem;font-weight:400;color:var(--cream);line-height:1.3}
+.wine-variety{font-family:var(--sans);font-size:.75rem;font-weight:300;color:var(--stone)}
+@media(max-width:640px){.wine-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* PAIRING MATRIX */
+.pairing-matrix{border:1px solid var(--border);margin-bottom:3rem;overflow-x:auto}
+.matrix-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.6rem;border-bottom:1px solid var(--border)}
+.matrix-title{font-family:var(--serif);font-size:1rem;font-weight:400;color:var(--cream)}
+.matrix-link{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);opacity:.7}
+.matrix-link:hover{opacity:1}
+.matrix-body{padding:1.4rem 1.6rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
+.matrix-pair{display:flex;flex-direction:column;gap:.3rem;padding:.8rem;border:1px solid var(--border);background:var(--gold-faint)}
+.matrix-bev{font-family:var(--mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:rgba(201,168,76,0.6)}
+.matrix-food{font-family:var(--sans);font-size:.8rem;font-weight:300;color:var(--smoke)}
+.matrix-type{font-family:var(--mono);font-size:7px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+
+/* COMING SOON */
+.locked-section{border:1px solid var(--border);background:var(--bg);position:relative;overflow:hidden;margin-bottom:4rem}
+.locked-section::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(245,241,233,0.015) 6px,rgba(245,241,233,0.015) 7px);pointer-events:none}
+.locked-inner{padding:3rem 2rem;display:flex;flex-direction:column;align-items:flex-start;gap:1rem;position:relative}
+.locked-badge{font-family:var(--mono);font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--stone);border:1px solid var(--border);padding:4px 10px}
+.locked-title{font-family:var(--serif);font-size:1.4rem;font-weight:400;color:rgba(245,241,233,0.4)}
+.locked-items{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.4rem}
+.locked-item{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:5px 12px}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:3rem 0;margin-top:2rem}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-brand{font-family:var(--serif);font-size:.9rem;color:var(--stone)}
+.footer-links{display:flex;gap:1.8rem}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.footer-links a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <svg width="18" height="22" viewBox="0 0 18 22" fill="none">
+      <path d="M9 1C5 1 2 4.5 2 8.5C2 13.5 9 21 9 21C9 21 16 13.5 16 8.5C16 4.5 13 1 9 1Z" stroke="#C9A84C" stroke-width="1" fill="none"/>
+      <path d="M9 5.5C7.3 5.5 6 6.8 6 8.5C6 10.2 7.3 11.5 9 11.5C10.7 11.5 12 10.2 12 8.5C12 6.8 10.7 5.5 9 5.5Z" fill="#C9A84C" fill-opacity="0.4"/>
+    </svg>
+    Provenance
+  </a>
+  <div class="nav-links">
+    <a href="/kitchen">Cook</a>
+    <a href="/drinks" class="active">Pour</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/auth/login" id="nav-auth">Sign In</a>
+  </div>
+  <button class="nav-hamburger" onclick="document.querySelector('.mobile-overlay').classList.add('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay">
+  <button class="mobile-close" onclick="this.closest('.mobile-overlay').classList.remove('open')">✕</button>
+  <nav class="mobile-links">
+    <a href="/kitchen">Cook</a>
+    <a href="/drinks">Pour</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/beverages">Beverages</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/about">About</a>
+    <a href="/auth/login">Sign In</a>
+  </nav>
+</div>
+
+<main class="page">
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="container">
+      <div class="fade-up">
+        <p class="page-eyebrow">The Beverage Room</p>
+        <h1 class="page-title">Pair with<br><em>precision.</em></h1>
+        <p class="page-sub">{{ total_drinks }} beverage products. Every pairing mapped. The logic — what bridges, what contrasts, what cuts — written out in full.</p>
+        <div class="page-stats">
+          <div class="stat"><span class="stat-num">{{ total_drinks }}</span><span class="stat-label">Products</span></div>
+          <div class="stat"><span class="stat-num">{{ p500_total }}</span><span class="stat-label">P500 Drinks</span></div>
+          <div class="stat"><span class="stat-num">1,482</span><span class="stat-label">Pairing Entries</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTION CARDS -->
+  <section style="padding:3rem 0 0">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label">Explore</div>
+        <div class="action-row">
+
+          <a href="/beverages" class="action-card">
+            <span class="action-num">001</span>
+            <div class="action-icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 2h6l-1 5H5L4 2Z" stroke="#C9A84C" stroke-width="1.2"/><path d="M5 7c0 3 4 3 4 0" stroke="#C9A84C" stroke-width="1.2"/><path d="M3 12h8" stroke="#C9A84C" stroke-width="1.2"/></svg>
+            </div>
+            <div class="action-label">Browse Products</div>
+            <div class="action-desc">363 products across wine, spirits, beer, fermented, and ceremonial categories. Filter by region, style, and quality tier.</div>
+            <span class="action-arrow">Browse →</span>
+          </a>
+
+          <a href="/beverages" class="action-card">
+            <span class="action-num">002</span>
+            <div class="action-icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#C9A84C" stroke-width="1.2"/><path d="M5 7h4M7 5v4" stroke="#C9A84C" stroke-width="1.2"/></svg>
+            </div>
+            <div class="action-label">Find Pairings</div>
+            <div class="action-desc">Start with a dish or a flavour profile. We'll surface the beverages that work — and tell you exactly why each one fits.</div>
+            <span class="action-arrow">Pair →</span>
+          </a>
+
+          <a href="/programme" class="action-card">
+            <span class="action-num">003</span>
+            <div class="action-icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="4" height="4" stroke="#C9A84C" stroke-width="1.2"/><rect x="8" y="2" width="4" height="4" stroke="#C9A84C" stroke-width="1.2"/><rect x="2" y="8" width="4" height="4" stroke="#C9A84C" stroke-width="1.2"/><rect x="8" y="8" width="4" height="4" stroke="#C9A84C" stroke-width="1.2"/></svg>
+            </div>
+            <div class="action-label">Build a Programme</div>
+            <div class="action-desc">Sequence beverages across a meal. Clash collision points surfaced automatically. Export as PDF for service briefing.</div>
+            <span class="action-arrow">Programme →</span>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASSIC COCKTAILS -->
+  <section style="padding:0 0 2rem">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label">Classic Cocktails</div>
+        <div class="cocktail-grid">
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">Italy · 1919</span><span class="cocktail-name">Negroni</span><span class="cocktail-base">Gin · Campari · Vermouth Rosso</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">USA · 1880s</span><span class="cocktail-name">Old Fashioned</span><span class="cocktail-base">Bourbon · Angostura · Sugar</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">USA · 1860s</span><span class="cocktail-name">Dry Martini</span><span class="cocktail-base">Gin · Dry Vermouth</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">USA · 1880s</span><span class="cocktail-name">Manhattan</span><span class="cocktail-base">Rye · Sweet Vermouth · Bitters</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">Cuba · 1900s</span><span class="cocktail-name">Daiquiri</span><span class="cocktail-base">White Rum · Lime · Caster Sugar</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">Cuba · 1910s</span><span class="cocktail-name">Mojito</span><span class="cocktail-base">White Rum · Lime · Mint · Soda</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">Italy · 2000s</span><span class="cocktail-name">Aperol Spritz</span><span class="cocktail-base">Aperol · Prosecco · Soda</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">Mexico · 1930s</span><span class="cocktail-name">Margarita</span><span class="cocktail-base">Blanco Tequila · Lime · Triple Sec</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">USA · 1870s</span><span class="cocktail-name">Whisky Sour</span><span class="cocktail-base">Bourbon · Lemon · Simple Syrup</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">Mexico · 1960s</span><span class="cocktail-name">Paloma</span><span class="cocktail-base">Tequila · Grapefruit · Salt</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">UK · 1980s</span><span class="cocktail-name">Espresso Martini</span><span class="cocktail-base">Vodka · Espresso · Kahlúa</span></a>
+          <a href="/beverages" class="cocktail-card"><span class="cocktail-origin">Bermuda · 1800s</span><span class="cocktail-name">Dark &amp; Stormy</span><span class="cocktail-base">Goslings Dark Rum · Ginger Beer</span></a>
+        </div>
+        <div style="text-align:center;margin-bottom:1rem">
+          <a href="/beverages" style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--stone);border-bottom:1px solid var(--border);padding-bottom:2px">Browse all spirits &amp; cocktails →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WINE GRID -->
+  <section style="padding:0 0 2rem">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label">Wine — Featured</div>
+        <div class="wine-grid">
+          <a href="/beverages" class="wine-card">
+            <span class="wine-region">Marlborough, New Zealand</span>
+            <span class="wine-name">Cloudy Bay Sauvignon Blanc</span>
+            <em style="font-family:var(--sans);font-size:.75rem;font-weight:300;color:rgba(245,241,233,0.35);font-style:italic;line-height:1.5">Vibrant citrus, fresh-cut grass, mineral finish</em>
+          </a>
+          <a href="/beverages" class="wine-card">
+            <span class="wine-region">Margaux, Bordeaux, France</span>
+            <span class="wine-name">Château Margaux</span>
+            <em style="font-family:var(--sans);font-size:.75rem;font-weight:300;color:rgba(245,241,233,0.35);font-style:italic;line-height:1.5">Blackcurrant, violet, cedar. The definition of elegance</em>
+          </a>
+          <a href="/beverages" class="wine-card">
+            <span class="wine-region">Barossa Valley, Australia</span>
+            <span class="wine-name">Penfolds Grange</span>
+            <em style="font-family:var(--sans);font-size:.75rem;font-weight:300;color:rgba(245,241,233,0.35);font-style:italic;line-height:1.5">Dark fruit, chocolate, earth. Australia's First Growth</em>
+          </a>
+          <a href="/beverages" class="wine-card">
+            <span class="wine-region">Piedmont, Italy</span>
+            <span class="wine-name">Barolo DOCG</span>
+            <em style="font-family:var(--sans);font-size:.75rem;font-weight:300;color:rgba(245,241,233,0.35);font-style:italic;line-height:1.5">Tar, roses, dried cherry. The king of Italian wine</em>
+          </a>
+          <a href="/beverages" class="wine-card">
+            <span class="wine-region">Loire Valley, France</span>
+            <span class="wine-name">Sancerre</span>
+            <em style="font-family:var(--sans);font-size:.75rem;font-weight:300;color:rgba(245,241,233,0.35);font-style:italic;line-height:1.5">Flinty Sauvignon Blanc. Gooseberry, chalk, precision</em>
+          </a>
+          <a href="/beverages" class="wine-card">
+            <span class="wine-region">Napa Valley, USA</span>
+            <span class="wine-name">Opus One</span>
+            <em style="font-family:var(--sans);font-size:.75rem;font-weight:300;color:rgba(245,241,233,0.35);font-style:italic;line-height:1.5">Bordeaux structure, California warmth. Cassis, graphite, silk</em>
+          </a>
+        </div>
+        <div style="text-align:center;margin-bottom:1rem">
+          <a href="/beverages" style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--stone);border-bottom:1px solid var(--border);padding-bottom:2px">Browse all wine →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAIRING MATRIX PREVIEW -->
+  <section style="padding:0 0 2rem">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label">Pairing intelligence — sample</div>
+        <div class="pairing-matrix">
+          <div class="matrix-header">
+            <span class="matrix-title">What pairs with what — and why</span>
+            <a href="/beverages" class="matrix-link">Full matrix →</a>
+          </div>
+          <div class="matrix-body">
+            <div class="matrix-pair"><span class="matrix-bev">Champagne Blanc de Blancs</span><span class="matrix-food">Oysters, lemon crudo, smoked salmon</span><span class="matrix-type">Bridge · Cleanse</span></div>
+            <div class="matrix-pair"><span class="matrix-bev">Barolo DOCG</span><span class="matrix-food">Braised Piemontese beef, white truffle pasta, aged Parmigiano</span><span class="matrix-type">Complement · Classic</span></div>
+            <div class="matrix-pair"><span class="matrix-bev">Islay Single Malt</span><span class="matrix-food">Smoked mackerel, dark chocolate, aged cheddar</span><span class="matrix-type">Bridge · Contrast</span></div>
+            <div class="matrix-pair"><span class="matrix-bev">Mezcal Artesanal</span><span class="matrix-food">Mole negro, charred corn, black bean</span><span class="matrix-type">Bridge · Suggested</span></div>
+            <div class="matrix-pair"><span class="matrix-bev">Grüner Veltliner Smaragd</span><span class="matrix-food">Wiener Schnitzel, white asparagus, Vacherin</span><span class="matrix-type">Complement · Classic</span></div>
+            <div class="matrix-pair"><span class="matrix-bev">Pedro Ximénez</span><span class="matrix-food">Vanilla ice-cream, fig tart, aged Manchego</span><span class="matrix-type">Complement · Classic</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMING SOON — LOCKED -->
+  <section style="padding:0 0 2rem">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label">In development</div>
+        <div class="locked-section">
+          <div class="locked-inner">
+            <span class="locked-badge">Coming</span>
+            <span class="locked-title">The professional layer</span>
+            <div class="locked-items">
+              <span class="locked-item">Programme Builder v2</span>
+              <span class="locked-item">Supplier Network</span>
+              <span class="locked-item">Vintage Intelligence</span>
+              <span class="locked-item">Staff Briefing Export</span>
+              <span class="locked-item">Regional Deep Dives</span>
+              <span class="locked-item">Producer Profiles</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-brand">Provenance — The intelligence behind the recipe.</span>
+      <nav class="footer-links">
+        <a href="/techniques/browse">Techniques</a>
+        <a href="/beverages">Beverages</a>
+        <a href="/about">About</a>
+        <a href="/pricing">Pricing</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Fade-up observer
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// Auth check
+fetch('/api/me').then(r => r.json()).then(d => {
+  if (d.user) {
+    const a = document.getElementById('nav-auth');
+    if (a) { a.textContent = d.user.email ? d.user.email.split('@')[0] : 'Account'; a.href = '/auth/account'; }
+  }
+}).catch(() => {});
+
+</script>
+</body>
+</html>

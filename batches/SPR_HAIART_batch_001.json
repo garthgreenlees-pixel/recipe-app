@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Haiti — Artibonite Valley (Barbancourt VSOP, Rhum Agricole, Haitian Highland Cane)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:38:14.043562+00:00",
+  "entries": [
+    {
+      "name": "Barbancourt VSOP Réserve Spéciale — Artibonite Valley Rhum Agricole, Fresh Cane Juice, Limousin Oak 8-Year",
+      "category": "spirits",
+      "subcategory": "rum",
+      "origin": "Haiti",
+      "region": "Haiti — Artibonite Valley (Barbancourt VSOP, Rhum Agricole, Haitian Highland Cane)",
+      "producer": "Distillerie Barbancourt — Port-au-Prince, Haiti",
+      "alcohol_content": 43.0,
+      "price_tier": "premium",
+      "terroir_origin": "The Artibonite Valley is Haiti's primary agricultural plain — a broad, irrigated alluvial valley stretching inland from the Gulf of Gonâve between the Chaîne des Matheux and the Montagnes Noires, at elevations between 50 and 200 metres above sea level. The valley is fed by the Artibonite River, the longest river in Hispaniola at 320km, which drains the central plateau and brings sediment-rich water to the coastal plain, creating deep, fertile alluvial soils with excellent moisture retention. Barbancourt sources fresh sugarcane (Saccharum officinarum) from the Artibonite Valley as well as from the Cul-de-Sac plain surrounding the distillery near Croix des Bouquets — an area of flat, intensely cultivated land east of Port-au-Prince at 30–60m elevation with calcareous soils and a tropical wet-dry climate. Haiti sits at the western third of Hispaniola, sharing the island with the Dominican Republic, in the northern Caribbean. The maritime tropical climate brings consistent heat (average 27°C), high humidity, and a pronounced wet season from April to October that promotes vigorous cane growth. Haiti's colonial history as Saint-Domingue — once the wealthiest colony in the Western Hemisphere and the source of 40% of European sugar and 60% of European coffee in the 1780s — means its sugarcane agriculture has roots going back to the earliest phase of Columbian Exchange crop transplantation in the Caribbean from the Spanish colonization of 1492 onward.",
+      "production_technique": "Barbancourt is produced by the rhum agricole method — pressing fresh-cut sugarcane to juice (vesou) within hours of harvest rather than fermenting molasses, the byproduct of sugar refining. This fundamental distinction between agricole (fresh juice) and traditionnel (molasses-based) rum defines the character of Barbancourt as a fresh, vegetal, grassy spirit with immediate cane character versus the deeper, more molasses-inflected character of most Caribbean rums. The fresh cane juice is inoculated with selected Saccharomyces cerevisiae and fermented in open-top stainless steel fermenters for 30–36 hours — a relatively short, warm fermentation that preserves the primary cane aromatics without generating excess ester complexity. Distillation follows the Cognac double-distillation principle that founder Dupré Barbancourt imported from Charente: first distillation in continuous column stills produces a low-wine at approximately 25–30% ABV (the brouillis equivalent); second distillation through copper pot stills produces the spirit at 65–70% ABV, concentrating and refining the cane character. This pot still second-distillation step distinguishes Barbancourt from standard column-only agricole producers and gives the spirit additional copper contact and reflux that shapes its texture. The VSOP (Réserve Spéciale) is aged a minimum of 8 years in Limousin French oak casks — the same forest oak used in Cognac aging — at the Domaine de Barbancourt estate in Haiti's tropical climate. Tropical aging accelerates maturation: the angel's share loss is approximately 10–12% per year in Haiti compared to 2–3% in Cognac, meaning that 8 years of tropical aging imparts colour and oak integration equivalent to 30–40 years of temperate aging. Final proofing to 43% ABV for export.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Cognac (Charente, France) — double distillation, Limousin oak",
+          "connection": "Barbancourt is the direct Caribbean heir of the Cognac distillation tradition: founder Dupré Barbancourt transplanted the double-distillation method (brouillis + repasse in copper pot stills) and Limousin oak aging from his native Charente to Haiti in 1862, creating the only Caribbean spirit whose technical lineage traces explicitly to the Cognac production code rather than to British or Spanish colonial rum traditions. The parallels are structural: both use double pot still distillation for texture, both age in the same forest oak, both produce VSOP and XO age designations following French brandy nomenclature."
+        },
+        {
+          "tradition": "Martinique AOC Rhum Agricole — fresh cane juice distillation",
+          "connection": "Barbancourt and Martinique rhum agricole share the fresh-cane-juice fermentation base that distinguishes both from molasses-based rums: both capture the grassiness, floral cane character, and vegetal freshness of vesou fermented within 24–36 hours of cane cutting. The key technical difference is that Martinique AOC requires column-still distillation with precise cut points, while Barbancourt adds a Cognac-derived copper pot second pass that introduces rounder texture and greater phenolic complexity absent from pure column agricole distillates."
+        },
+        {
+          "tradition": "Clairin (Haiti) — small-producer wild-ferment cane spirit",
+          "connection": "Barbancourt and Haitian clairin represent the two poles of Haitian cane spirit production: Barbancourt is the industrialized, export-oriented, Cognac-heritage aged spirit; clairin is the small-batch, wild-fermented, unaged cane spirit made by village distillers throughout rural Haiti using indigenous Saccharomyces and pit fermentation. Both draw from the same Artibonite Valley agricultural base but express the terroir through radically different technical lenses — Barbancourt through French colonial viticultural refinement, clairin through pre-industrial subsistence distillation unchanged since the colonial era."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep amber-gold with mahogany tints from 8 years in Limousin oak; tropical aging produces a richer, deeper colour than equivalent age in temperate conditions; good legs indicating 43% ABV and residual glycerol from the pot still distillation.",
+        "nose": "Fresh sugarcane and vegetal green character from the agricole base persists beneath the oak influence; vanilla and caramel from the Limousin oak integration; dried tropical fruit (ripe mango, guava) from the ester development during tropical aging; floral cane blossom on the mid-nose; a faint Cognac-like rancio quality beginning to develop in older bottlings from long oak contact — a character formed by fatty acid ester oxidation that is the signature of pot still distillation aged in used French oak over extended periods.",
+        "palate": "Medium-full body from the dual distillation and oak contact; the fresh cane character of the agricole base remains present as a green, vegetal thread beneath the oak-derived vanilla and dried fruit; warm but balanced at 43% ABV; the Limousin oak tannin is fine-grained and integrative rather than harsh; long finish with agricultural raw cane character transitioning through oak spice to a clean, dry end — the Cognac double-distillation heritage showing in the precision of the spirit's architecture despite the tropical origin."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Barbancourt Three Stars (unaged)",
+          "criteria": "The unaged Barbancourt expression aged only 1–2 years before release, showing fresh green cane, young spirit heat, and minimal oak development — the entry point to the Barbancourt range used primarily in cocktail applications where the raw agricole character is an asset."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Barbancourt Five Star (aged 4 years)",
+          "criteria": "The 4-year-aged expression in Limousin oak showing initial oak integration — vanilla and light caramel beginning to emerge while the fresh cane character still dominates; the standard rum bar reference point for accessible aged agricole quality without the price of the VSOP."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Barbancourt VSOP Réserve Spéciale (8 years)",
+          "criteria": "The 8-year flagship: full Limousin oak integration, tropical rancio development beginning, the fresh cane and oak in genuine balance — the benchmark expression that defines Barbancourt's position as a Cognac-heritage Caribbean aged agricole of international standard, suitable for neat service at fine dining level."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Barbancourt Reserve du Domaine (15 years)",
+          "criteria": "The 15-year estate reserve aged in oak at the Domaine de Barbancourt: maximum tropical aging concentration, deep mahogany colour, pronounced rancio complexity, dried fruit and exotic spice dominating the palate — Barbancourt at its most Cognac-like in character, with the fresh cane origin now serving as a structural foundation beneath layers of oak-derived complexity."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve the VSOP at 18–20°C for neat appreciation; a single large ice sphere reduces the serving temperature to 12–14°C while diluting slowly enough to open the tropical fruit aromatics without washing out the Limousin oak character; avoid refrigeration which suppresses the volatile cane aromatics that distinguish agricole from molasses rum.",
+        "vessel": "Glencairn or tulip glass for neat tasting to concentrate the agricole vegetal-fruit-oak aromatics; a wide rocks glass with a single large sphere for cocktail service; the Barbancourt Sour (VSOP, fresh lime, falernum, egg white) served in a coupe demonstrates how the agricole cane character interacts with citrus acid in a way that molasses rum cannot replicate.",
+        "programme_note": "In a PCT-themed spirits programme, Barbancourt VSOP anchors the West African Diaspora Trail connection: Haiti was the first Black republic in history (independence 1804), its sugarcane agriculture was built on African enslaved labour transported via the Middle Passage, and Barbancourt's survival through earthquake, political instability, and economic embargo represents the persistence of a distilling tradition rooted in both French colonial technique and Haitian resistance heritage."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Distillerie Barbancourt — the only internationally exported aged Haitian rum; the VSOP and Reserve du Domaine are the PCT standard-bearer expressions for Haiti in any rhum agricole or PCT colonial spirits programme.",
+        "north_america_access": "Barbancourt is distributed in most US states through regional spirits importers; available in Canada through provincial boards including LCBO Ontario listings and BC special orders; growing presence in premium cocktail bars across North America following the rhum agricole category expansion since 2015.",
+        "culinary_application": "Barbancourt VSOP works as the agricole component in a ti' punch (pure cane sugar syrup, lime, spirit — the canonical French Antilles service) or as a Cognac analogue in preparations calling for aged brandy where the fresh cane note adds Caribbean agricultural register to sauces, reductions, or plated spirits service."
+      },
+      "price_trajectory": "stable",
+      "entry_id": "SPR-HAIART-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T19:38:14.042364+00:00",
+      "batch_number": 1
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "tradition": "coffee",
+  "region": "Timor-Leste — Ermera, Aileu, Ainaro",
+  "batch_number": 3,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:42:17.567847+00:00",
+  "entries": [
+    {
+      "tradition": "coffee",
+      "sub_tradition": "timor hybrid specialty coffee",
+      "region": "Timor-Leste — Ermera District (Central Highlands)",
+      "name": "Timor-Leste Coffee — Origin of the Timor Hybrid, Ermera Highlands",
+      "terroir_origin": "Timor-Leste (East Timor) is one of the most globally significant coffee origins in botanical history while remaining among the least-known in specialty markets. The reason: in approximately 1927, a spontaneous natural cross-pollination occurred on Timor between Coffea arabica and Coffea canephora (robusta) — the only documented natural arabica-robusta hybrid in coffee history. This plant, known as the 'Timor Hybrid' (HdT — Híbrido de Timor), has resistance to coffee leaf rust (Hemileia vastatrix) that its arabica parent completely lacks. Beginning in the 1950s, Portuguese colonial botanical researchers identified and propagated the Timor Hybrid. It has since been used to breed virtually every major rust-resistant arabica variety now grown globally: Catimor, Sarchimor, Castillo (Colombia), Ruiru 11 (Kenya), Lempira (Honduras). The majority of coffee grown at altitude today contains Timor Hybrid genetics. Timor-Leste's Ermera district (central highlands, 1,000–1,800m altitude) produces washed, natural, and honey-process coffees from the original Timor Hybrid and its descendants. The PCT connection: Portugal colonised Timor-Leste in 1515 and maintained colonial control until 1975 — one of the longest continuous colonial relationships in history. Portuguese missionaries and colonial farmers introduced coffee cultivation to Ermera in the 19th century, initially growing Typica arabica before the spontaneous Timor Hybrid appeared. After Indonesian occupation (1975–1999) and independence (2002), Timor-Leste's coffee industry was rebuilt with NGO and international specialty buyer support as the country's primary export commodity.",
+      "production_technique": "Timor-Leste coffee is produced primarily by smallholder farmers on plots of 0.5–3 hectares in the central mountain highlands. Varieties: Timor Hybrid (HdT) and its Timorese selections; Typica (remaining original Portuguese introduction); some Catimor (a Timor Hybrid × Caturra cross). Processing: both washed (wet) and natural (dry) processing are practiced, with washed dominant for quality-focused production. Cooperativa Café Timor (CCT), founded 1994, is the primary organised producer group — a farmer cooperative with 24,000+ member households. CCT certifications: USDA Organic, Fairtrade. Wet-process stations: CCT operates centralised washing stations in Ermera, Aileu, and Ainaro districts; cherries pulped same day as harvest; fermented 24–48 hours in water; washed; dried on raised beds 12–20 days. Natural process: small-scale, farm-level; whole cherries dried on patios; producing fruit-forward, wine-like cup character. Harvest: May–August (dry season). Single-origin specialty lots from CCT are sourced by Intelligentsia Coffee (US), Specialty Coffee (UK), and multiple specialty roasters globally.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "coffee",
+          "beverage": "Ethiopian Heirloom Varieties (Yirgacheffe, Sidama)",
+          "connection": "Ethiopia is the birthplace of arabica coffee; Timor-Leste is the birthplace of the rust-resistant hybrid that preserved arabica globally. Both are origin stories without which modern coffee could not exist: Ethiopia provides the genetic foundation; Timor provides the disease resistance that kept that foundation from being destroyed by leaf rust. A flight including both origins tells the complete story of arabica coffee's botanical survival"
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Colombian Castillo (Cenicafé cultivar)",
+          "connection": "Colombia's Castillo variety — the commercial standard for most of Colombia's 6 million coffee-growing households — contains Timor Hybrid genetics in its parentage (Timor Hybrid × Caturra → Catimor × Colombia → Castillo). Every cup of Colombian Castillo is genetically linked to a spontaneous cross on a Timorese hillside in 1927. Tasting Timor-Leste alongside Castillo is tasting botanical ancestry"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Medium brown; clarity varies by processing; washed: cleaner, brighter; natural: slightly deeper with dried-fruit oils; crema moderate in espresso",
+        "nose": "Washed Timor-Leste (CCT): earthy baseline characteristic of Timor Hybrid genetics — brown spice, cedar, dried herbs, mild tobacco; moderate brightness; dark chocolate; some brown sugar. Natural process: additional dried cherry, fig, winey complexity layered over the earthy base. The Timor Hybrid character is identifiable: heavier, earthier, more structured than pure Typica but less aggressive than robusta.",
+        "palate": "Medium-to-full body (heavier than Ethiopian or Colombian heirloom arabica — the robusta genetics give weight); moderate acidity; long, earthy finish; dark chocolate and brown spice persistence; washed: cleaner fruit definition; natural: winey and dried-fruit layering. Best as espresso or Moka pot — the body structure responds well to pressure extraction. Filter brewing reveals the cedar-herbal complexity characteristic of HdT parentage.",
+        "conclusion": "Timor-Leste coffee will never be the most delicate or florally complex cup in a flight — that is not what it is. It is the most historically important coffee in a flight, and a skilled presentation makes that value tangible. Pair it with Colombia's Castillo in a cupping: origins 13,000km apart, botanically inseparable."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "CCT Single Origin Micro-Lot / Natural Process",
+          "criteria": "Cooperativa Café Timor named-district micro-lot; natural or honey process; current crop; specialty roaster sourced; SCA score 84+",
+          "markers": "CCT Ermera Single District Natural; Intelligentsia Direct Trade lots; specialty roasters with direct CCT sourcing; BC/US ~$20–32 per 250g"
+        },
+        {
+          "tier": 3,
+          "tier_name": "CCT Organic Fairtrade Standard",
+          "criteria": "CCT Fairtrade + USDA Organic certified; washed process; Ermera or Aileu origin",
+          "markers": "Cooperativa Café Timor standard certified bags; available at organic retailers; BC/US ~$14–20 per 250g"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Timor Coffee Company / Blended Timor",
+          "criteria": "Commercial scale; Timor-Leste origin; correct Timor Hybrid character; accessible pricing",
+          "markers": "Timor Coffee Company blends; commercial Timor-origin bags; BC/US ~$10–14 per 250g"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Timor-Leste Commodity Grade",
+          "criteria": "Origin certified; commercial grade; espresso blend component",
+          "markers": "Commodity Timor in commercial blends; not typically single-origin at this tier"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "93–96°C; slightly higher than Ethiopian for filter (the Timor Hybrid body benefits from higher extraction temperature)",
+        "vessel": "Cupping bowls for comparative tasting; V60 or Chemex for filter; Moka pot or espresso for pressure extraction",
+        "technique": "Espresso: 18g in, 36g out, 28–32 second extraction at 93°C — the body structure of Timor Hybrid produces excellent espresso crema. Cupping/comparison: brew Timor-Leste alongside Ethiopian Yirgacheffe and Colombian Castillo — three origins representing the botanical triangle of arabica coffee. The provenance story drives the experience. Natural process: brew at slightly lower temperature (91°C) to preserve the fruit character without amplifying the earthy base.",
+        "programme_position": "Coffee education anchor; PCT provenance narrative; most powerful in a comparative flight with CCT Organic direct trade story",
+        "verbal_presentation": "Cooperativa Café Timor — Ermera, Timor-Leste. Origin of the Timor Hybrid. The cross-pollination in 1927 that gave resistance to every rust-susceptible coffee farm in the world. 500 years of Portuguese colonial history in a cup."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Cooperativa Café Timor (CCT) — 24,000 smallholder member households",
+        "producer_location": "Ermera, Aileu, and Ainaro districts, Timor-Leste",
+        "key_person": "CCT management (cooperative structure); Intelligentsia Coffee (key US specialty buyer)",
+        "production_volume": "~10,000–15,000 metric tonnes annually (Timor-Leste national total); specialty micro-lot: small allocation through Intelligentsia and specialty buyers",
+        "certifications": [
+          "USDA Organic (CCT)",
+          "Fairtrade International (CCT)",
+          "Rainforest Alliance (partial)"
+        ],
+        "bc_distributor": "No dedicated BC commercial importer; Kicking Horse Coffee (Invermere, BC) sources Timor-Leste for blends; Salt Spring Coffee (BC) has sourced directly from CCT; specialty roasters via Royal Coffee (Vancouver warehouse, Pacific importer)",
+        "us_distributor": "Intelligentsia Coffee (Chicago — confirmed direct trade CCT partnership); Royal Coffee (Oakland + Vancouver warehouse — confirmed Pacific importer); Sustainable Harvest (Portland, OR — Fair Trade specialty importer)",
+        "uk_distributor": "Union Hand-Roasted Coffee (London); Hasbean (Staffordshire); Extract Coffee (Bristol); multiple specialty UK roasters source CCT directly",
+        "price_tier": "Market (CCT standard ~$10–14/250g; micro-lot specialty ~$22–32/250g)",
+        "availability_notes": "In BC: Salt Spring Coffee and Kicking Horse both carry or have carried Timor-Leste. Royal Coffee's Vancouver warehouse is the most practical BC access route for green bean purchasing. US: Intelligentsia Café locations carry Timor-Leste single origin seasonally."
+      },
+      "trail_connection": "PCT-11",
+      "trail_note": "Timor-Leste's coffee history spans the full Portuguese colonial arc: Portuguese missionaries introduced Typica coffee cultivation to Ermera in the 1800s; Portuguese colonial botanists documented and began propagating the spontaneous Timor Hybrid in the 1950s; Indonesian occupation (1975–1999) disrupted but did not destroy the coffee infrastructure. Post-independence, coffee is Timor-Leste's largest export earner and the CCT cooperative — supported by USAID and Fair Trade networks — has rebuilt the industry from the ground up. The Timor Hybrid's global importance was not fully understood until the 1970s–1980s: the genetics that protect most of the world's coffee from leaf rust are on every farm in Timor-Leste, waiting to be understood.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Batar daan (Timorese corn and bean stew with coconut milk)",
+          "pairing_type": "complement",
+          "rationale": "Timor-Leste's staple dish — dried corn, pumpkin, black-eyed peas, coconut — shares the earthy, warm, starchy register of Timor Hybrid coffee. The coffee's brown-spice and cedar character bridges with the coconut and corn sweetness; the moderate acidity lifts the dish's starchy weight"
+        },
+        {
+          "technique_id": "",
+          "dish": "Dark chocolate (70–80% cacao, Santo Tomé or Peruvian origin)",
+          "pairing_type": "complement",
+          "rationale": "The Timor Hybrid's body-and-dark-chocolate character mirrors high-cacao dark chocolate directly — the same earthy-bitter-dried-fruit register. CCT espresso and 75% dark chocolate is a flavour doubling, not a contrast; both are expressing the same tropical-origin weight through different forms"
+        }
+      ],
+      "source": "Cooperativa Café Timor official documentation (ccttimor.com); World Coffee Research Timor Hybrid botanical documentation; Cenicafé (Colombia) Timor Hybrid genetics research; Intelligentsia Coffee direct trade documentation; Timor-Leste coffee industry reports (ITC Geneva 2019–2022); UNESCO Portuguese colonial Timor documentation",
+      "entry_id": "COF-TIMLES-001",
+      "extracted_at": "2026-04-11T15:42:17.567538+00:00",
+      "batch_number": 3
+    }
+  ]
+}

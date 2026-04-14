@@ -1,0 +1,102 @@
+{
+  "tradition": "spirits",
+  "region": "Caribbean — Haiti (Rhum Barbancourt)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T16:04:59.351925+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "haitian rhum agricole cognac method",
+      "region": "Caribbean — Haiti (Port-au-Prince; sugarcane from Plaine du Cul-de-Sac)",
+      "name": "Rhum Barbancourt — Haiti, Double-Distilled Sugarcane Juice, Cognac Method",
+      "terroir_origin": "Haiti occupies the western third of the island of Hispaniola — the first Caribbean island colonised by Columbus (1492) and, for a century and a half, the most economically significant colonial territory in the Western Hemisphere. The French colony of Saint-Domingue (Haiti) produced approximately 40% of Europe's sugar and 60% of its coffee by 1789 — making it the most profitable colonial territory on earth. This agricultural wealth was built entirely on enslaved West African labour: the WADT's most extreme example. The Haitian Revolution (1791–1804) — led by Toussaint Louverture, Jean-Jacques Dessalines, and Henri Christophe — was the only successful slave revolution in history and created the first Black republic. The sugarcane varieties that produced this colonial wealth arrived via the same Portuguese Atlantic chain that defines the PCT. Rhum Barbancourt: founded 1862 by Dupré Barbancourt, a French immigrant from the Charente — the same region that produces Cognac. Barbancourt brought the Cognac double-distillation method to Haiti, combined with the rhum agricole tradition (fresh sugarcane juice, not molasses). The result: a rum that is technically a hybrid of rhum agricole (Martinique) and Cognac (France) production philosophy, produced in the most historically charged rum territory in the Caribbean.",
+      "production_technique": "Rhum Barbancourt production is a deliberate transplant of Cognac methodology to the Caribbean: Raw material: fresh sugarcane juice (vesou) from the Plaine du Cul-de-Sac, a flat agricultural plain east of Port-au-Prince. Fermentation: 72 hours using Barbancourt's own yeast strain; the tropical heat drives fast, complete fermentation. First distillation: low-wine distillation in copper column still to approximately 50% ABV — similar to the first distillation ('première chauffe') in Cognac. Second distillation: pot still (alembic) to final spirit at 85–90% ABV — the 'bonne chauffe' in Cognac terminology. This double distillation using both column and pot still is unique in Caribbean rum and was brought directly from Charente by Dupré Barbancourt. Reduction: reduced to 45% ABV with demineralised water. Ageing: in Limousin French oak barrels (the same oak used for Cognac ageing). Reserve du Domaine: 15 years in Limousin oak; the prestige expression. Estate Reserve 8yr: 8 years; the standard premium expression. The Thierry Gardère family has managed Barbancourt since 1946 — the same family continuity through the Duvalier dictatorship, the 1994 UN sanctions, and the 2010 earthquake.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Armagnac (Bas-Armagnac, column + pot still)",
+          "connection": "Rhum Barbancourt's double-distillation combining column and pot still is structurally identical to Bas-Armagnac's single-distillation in the Armagnac alembic (a continuous still that operates similarly to a combined column + pot process). Both achieve complexity through the preservation of secondary congeners from the raw material; both age in French oak (Limousin for Barbancourt, Gascon oak for Armagnac). Barbancourt Reserve du Domaine and a 15-year Armagnac side by side demonstrates the Cognac winemaker's philosophy applied to two different agricultural raw materials"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Rhum Agricole AOC Martinique (Clément)",
+          "connection": "Both Barbancourt and Martinique agricole use fresh sugarcane juice rather than molasses. The difference: Martinique AOC uses column stills exclusively; Barbancourt adds the pot-still second distillation from the Cognac method. Martinique's AOC framework is rigorous and French-controlled; Haiti has no equivalent appellation structure — Barbancourt's quality depends entirely on the Gardère family's maintained production standard rather than external regulation"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Barbancourt Estate Reserve 8yr: bright amber-gold; clear; medium legs from the 43% ABV. Reserve du Domaine 15yr: deeper amber, more gold in the centre; the Limousin oak shows in the colour.",
+        "nose": "Estate Reserve 8yr: fresh cane juice character (the agricole base) combined with Cognac-wood complexity — vanilla, dried stone fruit, light floral, fresh tropical fruit (guava, mango), warm spice. The double distillation creates a cleaner, more refined character than single-distilled agricole; the Limousin oak adds a distinctly French register absent in American-oak-aged Caribbean rum. Reserve du Domaine 15yr: extraordinary depth — walnut, dried apricot, orange peel, espresso, vanilla cream, the subtle Haitian terroir of the Plaine du Cul-de-Sac minerality.",
+        "palate": "8yr (43% ABV): medium body; balanced fresh cane / wood complexity; the Limousin oak gives a different tannin character from American oak — finer, less vanilla-dominant, more tannic. 15yr (43% ABV): full body; extraordinary complexity; the French double-distillation method and the 15yr Limousin oak create a spirit that crosses the sensory boundary between rum and Cognac. The most historically layered rum: the Haitian Revolution in a glass with a French winemaker's method.",
+        "conclusion": "Rhum Barbancourt Reserve du Domaine is the most historically freighted spirit in the PCT×WADT intersection. The Cognac method applied to Haitian sugarcane on the plantation land of the world's most significant slave revolution creates a beverage with narrative weight that no other spirit in the world carries. For a programme: serve alongside the history. The rum stands alone; the story is extraordinary."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Barbancourt Reserve du Domaine (15yr)",
+          "criteria": "15 years Limousin oak; double-distillation method; Gardère family estate production; the pinnacle of Barbancourt",
+          "markers": "Barbancourt Reserve du Domaine 15yr; BC ~$65–80; US ~$55–70"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Barbancourt Estate Reserve 8yr",
+          "criteria": "8 years Limousin French oak; double-distillation; the accessible premium expression; Cognac-method quality",
+          "markers": "Barbancourt Estate Reserve 8yr (the blue label); BC ~$35–45; US ~$28–38"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Barbancourt 5 Stars Rum",
+          "criteria": "5 years Limousin oak; the standard range; accessible; correct Haitian agricole-Cognac character",
+          "markers": "Barbancourt 5 Stars; BC ~$25–32; US ~$20–28"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Barbancourt 3 Stars / White",
+          "criteria": "Young rum; 3 stars designation; cocktail grade; introduction to Barbancourt character",
+          "markers": "Barbancourt 3 Stars; 2yr; BC ~$18–22; US ~$15–18"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "15yr: room temperature neat. 8yr: room temperature or single ice cube.",
+        "vessel": "Cognac-style snifter or Glencairn for 15yr; rocks glass for 8yr cocktail use",
+        "technique": "Reserve du Domaine 15yr: 45mL, room temperature, 5 minutes — treat identically to a 15-year Armagnac. Haitian Punch: 8yr 60mL + lime juice 20mL + cane sugar 15mL + Angostura 2 dashes + nutmeg grated — the traditional Caribbean punch with Haitian rhum and Grenadian nutmeg. Side-by-side education: Barbancourt 8yr alongside Clément VSOP — both fresh cane juice; column + pot vs. column only; Limousin oak vs. American oak.",
+        "programme_position": "Most historically significant rum in the programme narrative; PCT×WADT intersection at its most concentrated; premium spirits discovery experience",
+        "verbal_presentation": "Barbancourt Reserve du Domaine — Port-au-Prince, Haiti. Fifteen years in Limousin oak. Double-distilled like Cognac. Dupré Barbancourt came from the Charente in 1862. He brought the only method he knew to the site of the only successful slave revolution in history."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Distillerie Rhum Barbancourt (Port-au-Prince, Haiti) — Thierry Gardère family",
+        "producer_location": "Portail Léogâne, Port-au-Prince, Haiti (distillery); Plaine du Cul-de-Sac (sugarcane cultivation)",
+        "key_person": "Thierry Gardère (current managing director; family ownership since 1946)",
+        "production_volume": "Haiti's only internationally distributed rum brand; medium commercial scale; distributed in 30+ countries",
+        "certifications": [
+          "Rhum Barbancourt has no current AOC or GI but maintains consistent family-quality standard since 1862"
+        ],
+        "bc_distributor": "Barbancourt available at BC Liquor stores (BCLDB — confirmed); 5 Stars and Estate Reserve 8yr most consistently stocked",
+        "us_distributor": "Heavenly Rum (national US distribution for Barbancourt — confirmed); widely available at Total Wine, BevMo, specialty spirits retailers",
+        "uk_distributor": "Widely available UK: The Whisky Exchange; Master of Malt; Berry Bros. & Rudd (carries 15yr); specialist Caribbean rum merchants",
+        "price_tier": "Market to Reserve (5 Stars US ~$22; Estate Reserve 8yr US ~$32; Reserve du Domaine 15yr US ~$60)",
+        "availability_notes": "In BC: BC Liquor stores carry 5 Stars and 8yr reliably. 15yr: BC Liquor select locations or special order. US: Heavenly Rum national; Total Wine carries 5 Stars through 8yr; 15yr at specialty spirits retailers and online (Total Wine, ReserveBar). UK: very accessible — The Whisky Exchange and Berry Bros. both carry all tiers."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "Haiti is the PCT×WADT's most historically dense point of convergence: the island where Columbus arrived in 1492 built the Atlantic colonial economy using Portuguese-chain sugarcane; the wealth extracted through enslaved West African labour (WADT) funded European empire for 300 years; the Haitian Revolution (1791–1804) destroyed that economy and created the first free Black republic. Dupré Barbancourt arrived 58 years after the Revolution and built a rum distillery on the same plantation-economy infrastructure using a French technique — the post-colonial appropriation of colonial tools for independent national production. The Gardère family's 1946 continuity through the Duvalier years, the 1994 sanctions, and the 2010 earthquake is the most resilient production story in Caribbean rum.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Griot (Haitian slow-braised then fried pork shoulder)",
+          "pairing_type": "complement",
+          "rationale": "Griot — pork shoulder marinated in sour orange, herbs, and Scotch bonnet, slow-braised then deep-fried to a crispy-tender result — is Haiti's most celebrated national dish. Barbancourt Estate Reserve 8yr alongside griot is the canonical Haitian food-spirit pairing: the rum's fresh cane acidity cuts the pork fat while the Limousin oak's tannin manages the crispy-rendered texture"
+        },
+        {
+          "technique_id": "",
+          "dish": "Pain patate (Haitian sweet potato pudding cake)",
+          "pairing_type": "complement",
+          "rationale": "Pain patate — steamed sweet potato, coconut, cinnamon, rum, banana pudding — is baked with Barbancourt in the recipe and served alongside it as a digestif pairing. The rum in the pudding and the rum in the glass is the most direct example of spirit-and-food unity in the PCT: the same bottle flavours both"
+        }
+      ],
+      "source": "Distillerie Rhum Barbancourt official history and production documentation; Thierry Gardère interview archives; C.L.R. James 'The Black Jacobins' (Haitian Revolution history); Heavenly Rum US distribution confirmation; Dave Broom 'Rum' (Haiti section)",
+      "entry_id": "SPR-CARHAI-001",
+      "extracted_at": "2026-04-11T16:04:59.351607+00:00",
+      "batch_number": 2
+    }
+  ]
+}

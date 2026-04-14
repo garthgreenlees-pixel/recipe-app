@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Diageo / Zacapa global distribution",
+    "type": "importer",
+    "description": "Ron Zacapa is distributed globally through Diageo's international spirits distribution network. In the United States, Diageo distributes Zacapa Centenario 23 nationally through fine spirits retailers at USD $50–70 per 750ml — positioned as an ultra-premium rum in the Diageo portfolio alongside Johnnie Walker Blue Label and Don Julio 1942. In Canada, BCLDB BC and LCBO Ontario carry Zacapa 23 on regular allocation at CAD $70–90 per 750ml. Zacapa XO (the premium expression with greater average solera age) is available through specialist fine spirits retailers at USD $80–100 per 750ml. Zacapa 23 has won multiple awards at international rum competitions including IWSC and ISC, and is the most recognized ultra-premium rum brand in the European and North American markets by international competition performance.",
+    "markets_served": [
+      "US",
+      "Canada",
+      "UK",
+      "EU",
+      "Global"
+    ],
+    "traditions_carried": [
+      "spirits"
+    ],
+    "website": "ronzacapa.com",
+    "verified": true,
+    "purveyor_id": "PURV-001"
+  }
+]

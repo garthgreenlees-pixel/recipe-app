@@ -1,0 +1,81 @@
+import sys
+sys.path.insert(0, '/Users/garthgreenlees/Desktop/provenance-tester-1')
+from beverage_extractor import BeverageSession
+
+# Fix: 'elevate' was in service_intelligence programme_position. Resume Príncipe cacao session.
+session = BeverageSession(
+    tradition='food',
+    region='São Tomé and Príncipe — Cacao (Forastero Single-Origin, Equatorial Volcanic, Roça Terreiro Velho)',
+    output_dir='.',
+    starting_entry=1,
+    session_number=48,
+    running_total=0
+)
+
+session.add_beverage({
+    'name': "Claudio Corallo Príncipe Forastero 80% — Equatorial Single-Origin Cacao Reference, Volcanic Forest Terroir, Minimal Intervention",
+    'category': 'food',
+    'subcategory': 'single_origin_chocolate',
+    'origin': 'São Tomé and Príncipe',
+    'region': 'São Tomé and Príncipe — Cacao (Forastero Single-Origin, Equatorial Volcanic, Roça Terreiro Velho)',
+    'producer': 'Claudio Corallo — Príncipe Island Single-Origin 70% Cacao',
+    'alcohol_content': 0.0,
+    'price_tier': 'premium',
+    'terroir_origin': (
+        "Príncipe Island (UNESCO Biosphere Reserve since 2012) is the smaller, more remote twin to São Tomé in the Gulf of Guinea — at 1°N, even more directly equatorial than São Tomé, covered primarily by equatorial rainforest at 80-90% forest cover, with the Roça Ramadas estate occupying one of the few agroforestry zones on the island. The Forastero cacao cultivated on Príncipe is among the oldest continuously cultivated cacao strains in Africa, introduced from Brazil in the 18th century and adapted to the equatorial volcanic conditions over 200+ years without significant genetic intervention — creating a genetically distinct Príncipe Forastero with different aromatic character from the same variety grown in West Africa, South America, or Southeast Asia. The volcanic soils at 200-400m on Príncipe are extremely rich in minerals from the ancient basaltic lava flows that built the island, and the equatorial forest canopy provides natural shade for the cacao, replicating the wild shade-grown conditions of cacao's origin in the Mesoamerican rainforest understory. Annual rainfall of 7,000-10,000mm (among the highest in Africa) creates the humidity conditions that allow the fermentation of cacao pulp to produce the complex flavor precursors that distinguish Corallo's chocolate from any other African single-origin."
+    ),
+    'production_technique': (
+        "Corallo harvests Forastero cacao pods by hand at precise ripeness from the Roça Ramadas estate, assessing each pod individually for color change from green to yellow-orange (the external indicator of internal pulp fermentation readiness). The cacao beans are extracted from pods, pulped, and fermented in wooden boxes on the estate for 4-6 days — the equatorial heat (26-30°C year-round) drives the fermentation at higher intensity than Caribbean or South American production, producing the complex aldehyde and ester precursors that develop into the final flavor during roasting. After fermentation, the beans are sun-dried on raised drying racks for 7-10 days in the equatorial sun before being shipped to Corallo's processing facility in São Tomé for roasting, winnowing, and grinding. Corallo uses very low roasting temperatures (below 100°C in most stages) to preserve the fragile floral and fruity volatile compounds developed during fermentation. The resulting 80% chocolate (cacao, cacao butter, no additional ingredients) is conched for 48-72 hours to develop smoothness without destroying the fermentation-derived complexity. The extraordinary result is a dark chocolate where the terroir of Príncipe's equatorial volcanic forest is the only flavor — no vanilla to mask, no sugar to sweeten, no lecithin to smooth: pure Forastero from one of the world's most remote and unspoiled cacao terroirs."
+    ),
+    'cross_tradition_parallels': [
+        {
+            'tradition': 'Ethiopia Yirgacheffe natural-process (equatorial, fermented agricultural product, minimal intervention)',
+            'connection': "Corallo Príncipe 80% and Ethiopia Yirgacheffe natural-process coffee share the category of single-origin fermented agricultural products where the production process minimizes intervention to let the equatorial terroir express directly — both rely on natural fermentation (cacao pulp fermentation, coffee cherry fermentation during natural processing) as the primary flavor development mechanism, and both achieve their distinctive character by allowing the equatorial microflora to transform the raw agricultural product with minimal control or addition"
+        },
+        {
+            'tradition': 'São Tomé Aguardente de Cana (same island, same roça agricultural heritage)',
+            'connection': "Corallo Príncipe cacao and São Tomé aguardente represent the two products of the same equatorial colonial plantation system — sugarcane and cacao were cultivated side by side on the roças using the same labor and in the same volcanic soils; pairing the cane spirit with the dark chocolate creates the complete São Tomé colonial agricultural narrative that is both historically authentic and gastronomically compelling"
+        }
+    ],
+    'sensory_profile': {
+        'appearance': 'Very dark brown with reddish undertones; matte surface from pure cacao butter; snaps cleanly with a sharp crack indicating proper temper',
+        'nose': 'Dry assessment: fermented fruit (ripe fig, dark cherry, dried plum), slightly smoky, volcanic mineral, tropical flower undertone — the Forastero variety shows more dark fruit and earthy character than Trinitario or Criollo, but the Príncipe terroir adds floral complexity not typical of West African Forastero',
+        'palate': 'Very high intensity at 80% cacao; bitter entry from the Forastero variety immediately followed by dark fruit (black cherry, dried fig), volcanic mineral mid-palate, floral element (frangipani, jasmine) in the mid-finish, very long finish with bitter dark chocolate and mineral persistence; the complexity develops over 2-3 minutes in the mouth as the cacao butter melts and releases the volatile compounds; no artificial sweetness or vanilla'
+    },
+    'quality_hierarchy': [
+        {
+            'tier': 1,
+            'tier_name': 'Commodity São Tomé Cacao (70% industrial blend)',
+            'criteria': "Mass-produced 70% São Tomé chocolate using commodity-grade cacao with vanilla and lecithin additions; available from major European chocolate manufacturers who source São Tomé cacao; adequate as a category reference but lacking the terroir precision of Corallo's production"
+        },
+        {
+            'tier': 2,
+            'tier_name': "Corallo São Tomé 75% (island blend, not Príncipe single estate)",
+            'criteria': "Corallo's accessible island expression using São Tomé (not Príncipe) cacao; the entry to Corallo's range with the volcanic mineral character of the island without the extreme intensity of the Príncipe estate"
+        },
+        {
+            'tier': 3,
+            'tier_name': "Corallo Príncipe 80% (single estate, minimal intervention)",
+            'criteria': "The benchmark Corallo expression from Príncipe Island Roça Ramadas; 80% cacao with no additions; the highest expression of equatorial volcanic Forastero cacao currently in commercial production"
+        },
+        {
+            'tier': 4,
+            'tier_name': "Corallo Príncipe Cacao Nibs with Coffee (terroir combination)",
+            'criteria': "Corallo's unique expression combining Príncipe cacao with São Tomé coffee — the complete equatorial island terroir in a single product; available only directly from Corallo or specialist import"
+        }
+    ],
+    'service_intelligence': {
+        'temperature': 'Serve at room temperature (20-22°C) for tasting assessment; cold from refrigerator will suppress the volatile floral-fruity compounds; warm hands during handling will melt the pure cacao butter and release the full aroma profile',
+        'vessel': 'Break into 3-5g pieces for tasting; allow to melt slowly in the mouth rather than chewing to allow the full time-released flavor development across 2-3 minutes',
+        'programme_position': "Final course of a PCT tasting menu — pair with Madeira Malmsey or a 10-year Bual (the Madeira-chocolate pairing is historically documented in 19th-century colonial Portuguese dining records) or with the São Tomé aguardente for the complete equatorial island narrative"
+    },
+    'purveyor_intelligence': {
+        'benchmark_producer': "Claudio Corallo — the reference producer; Menakao (Madagascar) for comparison of Forastero from a different Indian Ocean volcanic island; Pacari (Ecuador) for comparison of South American Forastero heritage",
+        'north_america_access': 'Bittersweet (Toronto) carries Corallo; specialty chocolate retailers in US occasionally stock; direct order from corallo.st ships to North America',
+        'culinary_application': "The PCT chocolate service narrative: São Tomé was the source of the cacao that supplied the Portuguese and Spanish colonial courts in Lisbon and Madrid; pairing Corallo Príncipe 80% with a Bual Madeira and describing the 16th-century colonial trade route creates one of the most substantive food history narratives possible in a tasting menu context"
+    },
+    'price_trajectory': 'rising'
+})
+
+session.commit_batch()
+session.finish()

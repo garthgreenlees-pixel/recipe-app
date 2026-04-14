@@ -1,0 +1,103 @@
+{
+  "tradition": "coffee",
+  "region": "Angola — Huíla Plateau, Benguela Plateau",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:46:39.158592+00:00",
+  "entries": [
+    {
+      "tradition": "coffee",
+      "sub_tradition": "angolan arabica highland specialty",
+      "region": "Angola — Huíla Plateau / Central Highlands (Benguela, Malanje)",
+      "name": "Angola Coffee — Post-War Specialty Rebuild, Huíla Plateau Arabica",
+      "terroir_origin": "Angola was the Portuguese Empire's most significant African coffee colony and, by the 1970s, the world's fourth-largest coffee exporter. The central highlands — Huíla Plateau (1,400–2,000m), Benguela Plateau, and the Malanje region — grow both arabica (highland) and robusta (northern lowlands) in conditions comparable to Ethiopia's Kaffa province or Colombia's Huila department: high altitude, distinct wet and dry seasons, rich volcanic-sedimentary soils. Portuguese colonial agricultural administrators introduced commercial coffee cultivation to Angola in the 1830s, initially transplanting Brazilian coffee variety material — closing the PCT loop (Brazil → Portugal → Angola) in reverse. By 1972, Angola produced 200,000 metric tonnes annually, largely from peasant smallholders and roça-style estates in the central highlands. The 27-year civil war (1975–2002) destroyed this entirely: farms abandoned, processing infrastructure destroyed, distribution networks severed. By 2002, Angola produced fewer than 2,000 metric tonnes. Since 2010, the Angolan government and international NGOs have systematically rebuilt the coffee sector. The first Angolan lot entered the Cup of Excellence programme in 2021 — a historically significant event signalling that Angolan specialty coffee is re-entering the global market after 50 years of absence. The primary arabica varieties: Ambriz (an old Angolan landrace, related to the Bourbon group); Novo Redondo; Amboim (from Amboim district, Cuanza Sul) — all genetically distinct Angolan selections developed during colonial cultivation.",
+      "production_technique": "Angola's rebuilding specialty sector focuses on wet-process (washed) production in the highland arabica zones. Primary growing regions: Huíla Plateau (Lubango area, 1,400–1,800m); Cuanza Sul (Amboim district); Uíge (northern robusta region). Processing: washing stations rebuilt with NGO support (USAID Angola Coffee Initiative and similar programmes). Traditional wet process: same-day pulping, 12–24 hour fermentation in concrete tanks, multi-stage washing, raised-bed or patio drying 12–18 days. Key producer: Fazenda Camocuio (Huíla Plateau) — the most-cited quality producer in current international specialty literature. Amorim Cork's Fazenda Capanga is the most internationally prominent commercial-scale operation. Certified buyers: Mercon Coffee Group, Swiss Water (green coffee importers); specialty buyers include Onyx Coffee Lab (Rogers, AR), Chromatic Coffee (San Jose). Angola Cup of Excellence programme: first edition 2021; scores ranged 84–89.75; winning lots attracted international buyer attention not seen since the 1970s.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "coffee",
+          "beverage": "Ethiopia Heirloom Arabica (Kaffa Forest, wild)",
+          "connection": "Both Angola highland arabica and Ethiopian wild-forest arabica represent African arabica's genetic diversity — the species' continent of origin has more variety than all cultivation elsewhere combined. Angolan landraces (Ambriz, Amboim) developed in complete genetic isolation from Ethiopian varieties during 150 years of colonial cultivation. The sensory comparison between Angolan and Ethiopian arabica is the contrast between Atlantic-climate African highland and East African Rift Valley highland — same species, entirely different flavour evolution"
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Colombian Nariño Department Washed Arabica",
+          "connection": "Angola and Colombia's Nariño share the altitude-driven, high-acidity, washed arabica profile: both grow at 1,400–2,000m; both produce clean, structured cups with bright acidity and stone fruit character. Colombian Nariño has the advantage of 50 more years of uninterrupted specialty development; Angolan Huíla has the advantage of completely unspoiled landrace genetics. The Cup of Excellence comparison in 5 years will be the most interesting case study in specialty coffee provenance"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Washed Huíla: clear, medium amber brew; bright; clean. Robusta (Uíge): darker, more opaque; higher solids",
+        "nose": "Angolan highland arabica (Amboim washed): stone fruit (peach, apricot), floral (jasmine, light rose), caramel-brown sugar, clean citrus backbone. The Ambriz variety: more chocolate-heavy, lower floral, reminiscent of a clean Brazilian natural but with higher acidity. Both: a minerality characteristic of volcanic highland soils; relatively low fermentation complexity compared to natural-process origins.",
+        "palate": "Bright, structured acidity (unusual for African coffees outside Ethiopia/Kenya — the highland altitude drives acid development distinctly); medium body; clean, sweet finish; stone fruit lingering; Amboim at its best: extraordinary — scores above 87 SCA in top lots. For a programme: the story of return is as important as the flavour — the world's oldest African coffee industry, 50 years absent, now back.",
+        "conclusion": "Angola is the most historically important underdog in specialty coffee. The 2021 Cup of Excellence debut signals a quality-origin return that the specialty industry will be watching for the next decade. For an early-adopter programme: serving Angola alongside Brazil and Ethiopia maps the full Atlantic Portuguese coffee triangle."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Cup of Excellence Angola / Fazenda Camocuio Named Lot",
+          "criteria": "CoE programme winner (2021+); named estate, Huíla or Amboim district; washed process; SCA 86+; specialty buyer direct trade",
+          "markers": "Angola Cup of Excellence 2021 lots; Fazenda Camocuio; Fazenda Capanga Select; US specialty roasters: Onyx Coffee Lab, Chromatic Coffee; ~$28–45 per 250g"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Specialty Washed Huíla / Amboim",
+          "criteria": "Named region; washed process; NGO-certified or fair trade; SCA 83+",
+          "markers": "Amboim District washed; Huíla Plateau certified; specialty importers Mercon/Swiss Water; US/BC specialty roasters; ~$18–28 per 250g"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Commercial Angola (Ambriz grade)",
+          "criteria": "Angola origin certified; commercial washed; Ambriz or standard grade",
+          "markers": "Commercial Angola green; commercial specialty bags; ~$10–16 per 250g"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Angola Robusta (Uíge/Northern)",
+          "criteria": "Robusta origin; espresso blend component; commercial grade",
+          "markers": "Angola robusta in commercial espresso blends; correct earthy-robust character"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "93–96°C for filter; 93°C for espresso — treat as medium-altitude origin",
+        "vessel": "V60 or Chemex for filter; espresso for robusta-blend use",
+        "technique": "Washed Huíla arabica: V60 pour-over at 93°C, 60g/L, 2.5–3 minute brew — the acidity and stone fruit character is clearest in filter. Comparative cupping approach: Angola alongside Brazil Sul de Minas and Ethiopia Sidama — the complete Atlantic African triangle. Espresso: washed Amboim 18g/36g/30s at 93°C — the high-acid highland character makes an unusual, bright espresso.",
+        "programme_position": "Specialty discovery and PCT provenance narrative; best used as part of a comparative flight with other African origins",
+        "verbal_presentation": "Fazenda Camocuio — Huíla Plateau, Angola. The world's fourth-largest coffee origin in 1972. Fifty years of civil war. First Cup of Excellence in 2021. The cup that came back."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Fazenda Camocuio (Huíla Plateau, Angola) and Fazenda Capanga (Amboim)",
+        "producer_location": "Huíla Plateau, Lubango area, Angola; Amboim District, Cuanza Sul, Angola",
+        "key_person": "ANACAFÉ (Angola National Coffee Agency, government body); Onyx Coffee Lab (Rogers, AR — US early buyer of CoE Angola lots)",
+        "production_volume": "National: rebuilding to 10,000–20,000 metric tonnes annually by 2025; specialty lots: extremely small (<100 metric tonnes currently)",
+        "certifications": [
+          "Cup of Excellence (Angola 2021)",
+          "Rainforest Alliance (select farms)"
+        ],
+        "bc_distributor": "No dedicated BC importer confirmed; Royal Coffee (Oakland + Vancouver warehouse) is best available route for green bean buyers; no retail specialty bags confirmed in BC as of 2026",
+        "us_distributor": "Onyx Coffee Lab (Rogers, AR — direct buyer of CoE lots); Chromatic Coffee (San Jose, CA); Mercon Coffee Group (green importer); Royal Coffee (Oakland)",
+        "uk_distributor": "Squaremile Coffee (London — has sourced Angola early); Hasbean (Staffordshire); limited UK specialty availability",
+        "price_tier": "Reserve (specialty lots only currently; ~$28–45 per 250g; commercial blends ~$10–16)",
+        "availability_notes": "Angola specialty coffee is not yet available at retail in BC or mainstream US. Find via: Onyx Coffee Lab online (onyx.coffee) — ships to Canada; Chromatic Coffee online (chromaticcoffee.com). Will become more available 2026–2028 as infrastructure scales."
+      },
+      "trail_connection": "PCT-5",
+      "trail_note": "Angola's coffee history runs the full PCT narrative arc: Portuguese colonial agricultural introduction (1830s, seeds from Brazil) → peak colonial production (1970s, 200,000 MT) → liberation war and independence (1975, MPLA/FNLA/UNITA) → civil war destruction (1975–2002) → post-war agricultural reconstruction (2002–present) → Cup of Excellence debut (2021). Angolan coffee is the PCT's most complete historical story: colonial exploitation, independence, destruction, and resurrection in a single origin.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Calulu (Angolan stew — dried fish, palm oil, okra, tomato)",
+          "pairing_type": "complement",
+          "rationale": "Angola's most iconic dish — dried fish braised in palm oil with leafy greens, tomato, and okra — has a savoury-smoky-palm depth that bridges with the Amboim washed arabica's clean stone fruit. The coffee's acidity cuts the palm oil richness while the fruit character bridges with the tomato. The PCT pairing: the Portuguese introduced the dish format; the Angolan ingredients recomposed it"
+        },
+        {
+          "technique_id": "",
+          "dish": "Dark chocolate (São Tomé Claudio Corallo 75%)",
+          "pairing_type": "complement",
+          "rationale": "The Atlantic Portuguese triangle: Angola coffee alongside São Tomé chocolate. Two Gulf of Guinea Portuguese colonial origins — the coffee's high-acid stone fruit character bridges with the cacao's dried-cherry fermentation complexity. Historically: São Tomé and Angola were the Portuguese Empire's two primary West African colonial agricultural sites, operating within 300km of each other across the Gulf of Guinea"
+        }
+      ],
+      "source": "ANACAFÉ (Angola National Coffee Agency) production documentation; Cup of Excellence Angola 2021 official results; World Coffee Research Angola origin documentation; Onyx Coffee Lab Angola sourcing notes; Carlos Amado 'Café em Angola' (2015, MINAGRI Angola publication)",
+      "entry_id": "COF-ANGHUÍ-001",
+      "extracted_at": "2026-04-11T15:46:39.158143+00:00",
+      "batch_number": 1
+    }
+  ]
+}

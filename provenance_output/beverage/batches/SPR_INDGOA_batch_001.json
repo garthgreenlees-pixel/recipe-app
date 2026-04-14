@@ -1,0 +1,110 @@
+{
+  "tradition": "spirits",
+  "region": "India — Goa (Feni, Cashew and Coconut Traditional Spirits)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T00:52:41.172888+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "goa feni cashew pot still clay bhaati single distillation gi",
+      "region": "India — Goa (Cashew Feni, North Goa Laterite Orchards)",
+      "name": "Cashew Feni GI — Goa's Portuguese-Origin Clay Pot Still Spirit, GI Protected",
+      "terroir_origin": "Cashew Feni (from the Hindi feni, meaning 'froth') is the most direct Portuguese colonial beverage legacy in India. The Portuguese introduced the cashew tree (Anacardium occidentale) to Goa from Brazil in the 16th century — the cashew is native to coastal Brazil and was brought to Goa as part of the Portuguese global botanical exchange. This is the PCT loop: Brazil (cashew native) → Portugal (colonial botanical transfer) → Goa (cashew planted) → Feni (distillation of cashew apple juice using Portuguese alembic methods) → GI-protected Indian spirit. The cashew apple: the fruit surrounds the cashew nut; in Goa, the apple (not the nut) is the raw material for Feni. The cashew apple juice ferments rapidly in the Goa monsoon heat and is then distilled. North Goa terroir: laterite (ferricrete) soil — the iron-rich red soils that underlie most of Goa's coastal terrain. Laterite is extremely well-drained; cashew trees thrive in these mineral-rich, low-fertility conditions that other crops cannot tolerate. The 40-year-old cashew orchards at Cazulo's Siolim source: older trees produce less yield but more concentrated juice. GI Protection (2009): Feni was the first Indian alcoholic beverage to receive Geographical Indication protection — the Indian legal equivalent of the Portuguese DOP or French AOC.",
+      "production_technique": "Traditional Cashew Feni production: Harvest: manual picking of ripe cashew apples in March-May (the hot, dry pre-monsoon season); the cashew nut is removed; only the apple is used for Feni. Pressing: traditional foot-treading in stone troughs (identical to Port wine lagare foot-treading — the Portuguese production method transplanted directly to Goa). Fermentation: 2-3 days at ambient temperature (30-35 degrees C); wild yeast from the laterite orchard soil. The first distillation (Urrac): cashew apple wash distilled in a clay pot still (bhaati) on a wood fire; produces a spirit at approximately 15% ABV. The second distillation (Feni): the Urrac is redistilled for the final Cashew Feni at 40-45% ABV; the clay pot still adds a distinctive clay-mineral character. Cazulo production: the traditional bhaati still from Siolim village, 60+ year old clay pot still in continuous use; single-village sourcing; no additives; vintage-dated bottles. Coconut Feni (separate tradition): derived from the toddy of the coconut palm flower — an entirely different raw material and process.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Mezcal Espadin (Oaxaca, Mexico — agave clay pot distillation)",
+          "connection": "Both are clay pot still spirits from pre-industrial traditions. Both use the clay vessel as an active participant in the distillation — the clay imparts mineral character to the spirit. Both have GI or DO protection as indigenous regional spirits. The comparison teaches that clay pot distillation is a global pre-industrial technology, not an exoticism."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Grogue Fogo (Cape Verde, fresh cane juice copper pot still)",
+          "connection": "Both are Portuguese colonial pot still spirits from tropical territories where the Portuguese alembic tradition was transplanted. Grogue uses copper; Feni uses clay. Both produce fresh-agricultural spirits from local raw materials using the same inherited pot still logic."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Calvados Pays d'Auge AOC (apple brandy, Normandy)",
+          "connection": "Both are fruit distillates — Calvados from apple, Feni from cashew apple. Both are GI-protected regional spirit traditions whose raw material is an agricultural fruit that requires no added sugar for fermentation. The apple-cashew apple comparison opens the 'fruit spirit' category to tropical and non-European raw materials."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Soju (Korean rice spirit, modern column distillation)",
+          "connection": "Both are the dominant traditional spirit of their respective countries (Feni in Goa; Soju in Korea) consumed in a culture-specific social context. The comparison shows how two completely different raw materials (cashew apple vs rice/sweet potato) fill the same cultural role of the 'national spirit' in two different Asian drinking cultures."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Crystal clear at bottling; faint ivory tinge in older expressions; some unfiltered examples show a slight haze from the clay still contact",
+        "nose": "Fresh cashew apple (tropical, lightly fermenty, faint funk), clay mineral from the bhaati still, citrus-skin dryness, faint cooked apple, earthy-tropical ferment",
+        "palate": "Entry: dry, light to medium body; the cashew character is distinct from any other fruit spirit — tropical without sweetness. Mid-palate: the clay mineral character from the bhaati still adds a dry stone note. Finish: clean and short, with a light cashew-nut oil aftertaste",
+        "texture": "Light body; the cashew apple juice produces a lighter spirit than molasses or grain bases; the clay still adds a dry mineral mid-palate instead of oiliness",
+        "finish": "25-40 seconds; clean and mineral; the cashew apple dryness is the defining final note; no sweetness residual",
+        "conclusion": "The PCT's most explicit agricultural circuit: cashew from Brazil, planted in Goa by Portugal, distilled in a clay pot — 500 years of colonial botany in one glass"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Cazulo Cashew Feni Reserve (vintage dated, 40yr orchard)",
+          "criteria": "Single village (Siolim); vintage dated; 40-year cashew orchard; bhaati clay pot still in continuous use; GI certified; the reference expression for export-quality Feni",
+          "markers": "Cazulo Reserve; US ~$45-65; UK ~$40-60; India ~$15-20 equivalent; limited export"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Cazulo Standard Cashew Feni (GI certified)",
+          "criteria": "GI certified; Siolim village sourcing; traditional bhaati; the accessible premium expression of the tradition",
+          "markers": "Cazulo Standard; US ~$35-50; India ~$8-12 equivalent"
+        },
+        {
+          "tier": 2,
+          "tier_name": "XL Velho Feni or Old Goa Cashew Feni (local brand, GI certified)",
+          "criteria": "GI certified local brands; traditional production; widely available in Goa; standard quality benchmark",
+          "markers": "XL Velho; Goa only ~$5-8 equivalent; not exported"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Coconut Feni (separate tradition, lower price tier)",
+          "criteria": "Coconut palm flower toddy distillate; different raw material; lower status than Cashew Feni traditionally; introduction to the Feni category at lowest accessible price",
+          "markers": "Coconut Feni; Goa only; not exported; educational substitute only outside India"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at room temperature or with a single ice sphere; the cashew character is most distinct at 20-22 degrees C",
+        "vessel": "Short tumbler or shot glass for traditional Goa service; tulip for professional tasting; clay cup if available",
+        "technique": "Cazulo Feni as a cocktail base: Feni Caipirinha — 50mL Cazulo + 15mL lime juice + 10mL sugar + muddled lime. The Caipirinha format works because the cashew-apple and lime share tropical-dry citrus character that the Brazilian original uses cachaca for. The PCT circuit demonstration: Caipirinha made with Feni instead of cachaca is the PCT beverage metaphor in a glass — a Brazilian cocktail format using a Goan spirit made from a Brazilian fruit. The education narrative: 'The cashew is native to Brazil. The Portuguese brought it to Goa in 1560. In Goa, they distilled it using their own alembic technology. This spirit has been made in this village since the 16th century.'",
+        "programme_position": "PCT education flagship; India origin spirits; international cocktail menu using non-standard bases",
+        "verbal_presentation": "Cazulo Cashew Feni — Siolim, North Goa. The cashew tree arrived here from Brazil in 1560, brought by the Portuguese. It has been distilled in this clay pot ever since. GI-protected. The first Indian spirit with geographic protection."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Cazulo Premium Feni — the internationally recognised quality benchmark",
+        "producer_location": "Siolim, North Goa, India",
+        "key_person": "Nikhil Sikchi (founder, Cazulo; pioneer of premium Feni export)",
+        "bc_distributor": "Not available in BC. No BCLDB listing.",
+        "us_distributor": "Santra Beverages and specialty Indian spirits importers; limited distribution in Indian restaurant markets (New York, New Jersey)",
+        "uk_distributor": "Cazulo has UK distribution through Indian specialty drinks importers",
+        "price_tier": "Entry: $35-50 (Cazulo standard). Premium: $45-65 (Cazulo Reserve). Ultra: N/A — the category ceiling is still developing.",
+        "availability_notes": "Cazulo Feni is available in the US and UK through specialty Indian spirits importers. Not available in BC at time of writing. India price is significantly lower ($8-20 equivalent)."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Prawn Balchao (Goa fermented prawn pickle with vinegar and dried chillies)",
+          "pairing_type": "complement",
+          "rationale": "Balchao is Goa's most distinctively Portuguese-Indian dish — a fermented prawn pickle with vinegar that reflects the Portuguese use of wine vinegar in tropical preservation. The cashew mineral dryness of Feni cuts through the fermented shrimp funk and vinegar acidity — the canonical Goa table where both are present simultaneously."
+        },
+        {
+          "technique_id": "",
+          "dish": "Bebinca (Goan layered coconut-egg custard cake)",
+          "pairing_type": "bridge",
+          "rationale": "Bebinca is Goa's most celebrated dessert — a layered coconut milk and egg yolk cake baked layer by layer. The coconut richness bridges the cashew-tropical character of the Feni through the shared tropical-fruit register. Both are Goan products; both carry the Portuguese-Indian synthesis."
+        }
+      ],
+      "source": "Cazulo Premium Feni production documentation; GI certificate for Goa Feni (GI Application No. 155, 2009); BEVQ (Goa Beverages Corporation) technical specifications; Santra Beverages US distribution portfolio",
+      "trail_connection": "PCT-8",
+      "trail_note": "PCT Region 8: Goa — the most intact Portuguese colonial cultural territory outside Portugal itself. Cashew Feni is the PCT's most explicit agricultural loop: cashew native to Brazil (PCT-12/13) → transplanted to Goa by Portugal (PCT-8) → distilled using Portuguese alembic technology → GI-protected in 2009 by the Indian government. The entire Portuguese colonial botanical exchange in one spirit.",
+      "entry_id": "SPR-INDGOA-001",
+      "extracted_at": "2026-04-12T00:52:41.172419+00:00",
+      "batch_number": 1
+    }
+  ]
+}

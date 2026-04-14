@@ -1,0 +1,102 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Dão DOC (White Wines)",
+  "batch_number": 3,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T16:04:59.352804+00:00",
+  "entries": [
+    {
+      "tradition": "wine",
+      "sub_tradition": "dao white wine encruzado",
+      "region": "Portugal — Dão DOC (Beira Interior, granite highlands)",
+      "name": "Dão White — Encruzado, Portugal's Most Distinctive White Wine Variety",
+      "terroir_origin": "The Dão region (central Portugal, Beira Interior) is better known internationally for red Touriga Nacional than for white wine, but Encruzado — the Dão's signature white variety — is increasingly recognised as one of the most distinctive white wine grapes in Europe. Encruzado means 'crossroads' in Portuguese — the vine is at the crossroads of the Dão's two defining characteristics: the granite-schist highland soils (500–800m altitude) and the extreme continental climate (cold winters, hot dry summers). The terroir: the Dão Valley is enclosed by mountain ranges on three sides (Serra da Estrela, Serra da Lapa, Serra do Caramulo) that block maritime influence from both the Atlantic and the Mediterranean. This creates one of the most extreme continental microclimates in Portugal: temperatures range from -5°C in winter to 40°C in summer; the granite and schist soils retain heat and drain well; the altitude moderates summer extremes to preserve acid in the grapes. Encruzado is only found in the Dão — it is a true place-variety, not transplanted elsewhere in commercial quantity. Benchmark producers: Quinta dos Roques (Toninha Mesquita, the 'queen of Dão white'); Alvaro Castro (Casa de Saima, the most internationally visible Dão producer); Rui Reguinga (independent winemaker consulting at multiple Dão estates).",
+      "production_technique": "Encruzado's extraordinary complexity comes from its natural chemistry: very high natural acidity; moderate sugar accumulation (controlled by the altitude); rich precursor compounds that develop into complex aromas through winemaking. Harvest: late September to mid-October (one of Portugal's latest white wine harvests); the extended ripening season on granite soils builds complexity without sacrificing acid. Traditional whole-cluster pressing (the standard for premium Encruzado): maintains freshness and avoids extracting bitter grape skin phenolics. Fermentation: skin contact (maceration pelliculaire) practiced by some producers for 8–24 hours pre-fermentation — the granite terroir's phenolic character is extracted without over-extraction in the brief contact. Oak fermentation and ageing: premium Encruzado is fermented and aged in French oak barrels (225L, mostly 2nd and 3rd fill to minimise new-oak dominance); lees stirring (bâtonnage) for 6–12 months adds creaminess and texture. The result: a white wine with the complexity of a grand cru white Burgundy, the mineral freshness of Chablis, and an aromatic profile entirely its own. Quinta dos Roques Encruzado: consistently rated among Portugal's finest white wines; US importer Golden Ram Imports (confirmed from previous research).",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "White Burgundy Grand Cru (Meursault, Puligny-Montrachet)",
+          "connection": "Encruzado is Portugal's answer to Meursault: both are the defining white wine variety of a red wine-dominated region; both achieve the counterintuitive result of white wine supremacy in a landscape planted primarily to red varieties. Encruzado's granite-schist mineral precision compares to Meursault's Kimmeridgian chalk precision; both wines develop extraordinary complexity through lees ageing; both are best at 5–10 years. Encruzado is currently priced at 30–40% of equivalent quality Meursault — this gap will likely close as the variety gains international recognition"
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Grüner Veltliner Smaragd (Wachau, Austria)",
+          "connection": "Both Encruzado and Grüner Veltliner Smaragd are continental-climate white wines with electric acidity, distinctive mineral identities, and medium-to-full body from the warm, dry growing seasons. Both age beautifully: 10+ years in each case produces wines of extraordinary complexity. Both are found almost exclusively in their home region; both are the 'insider secret' of their respective national wine cultures"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale gold to medium gold; greenish rim in youth; bright and clear with slow legs from medium alcohol (13–13.5%); aged examples develop a deeper gold with a honey tint",
+        "nose": "Young Encruzado (1–3 years): white peach, nectarine, citrus zest, white flower (jasmine, acacia), fresh almond, the distinctive granite mineral note — a dry, crushed-stone precision on the back of the nose absent from any limestone or chalk terroir. Oak-aged: additional creaminess, light toast, vanilla undertone; the oak should integrate completely — the fruit and mineral are primary. Aged (5–8 years): white truffle, roasted nuts, dried apricot, honeycomb, complex mineral evolution — the most complex expression.",
+        "palate": "Full body (unusual for a white wine of this acidity level — the granite soil and lees ageing create texture); electric acidity drives linear freshness; long, mineral finish; the oak-aged expressions develop a Meursault-like creaminess that bridges the body and the acid. Quinta dos Roques Encruzado at 8 years: one of Portugal's greatest white wine moments.",
+        "conclusion": "Encruzado is Portugal's most undervalued white grape variety. For a programme: serve alongside Meursault at the same price point and let the comparison make the case. The PCT narrative: the granite-schist terroir of the Dão has produced this variety for centuries; the world outside Portugal is only just discovering it."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Quinta dos Roques Encruzado Reserve / Alvaro Castro Claro",
+          "criteria": "Named single vineyard; 100% Encruzado; French oak fermented and aged 12+ months; minimum 5 years for peak expression",
+          "markers": "Quinta dos Roques Encruzado Reserve; Alvaro Castro Claro; Caves São João Encruzado; BC ~$35–50; US ~$28–40"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Quinta dos Roques Encruzado Standard / Dão DOC White",
+          "criteria": "Dão DOC white; 100% or majority Encruzado; partial barrel fermentation or full stainless",
+          "markers": "Quinta dos Roques Encruzado; Sogrape Dão White; BC ~$22–35; US ~$18–28"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Dão DOC White Blend",
+          "criteria": "Dão DOC; Encruzado-dominant blend with Bical, Malvasia Fina; correct granite mineral character",
+          "markers": "Standard Dão white blends; Duque de Viseu Branco; BC ~$14–22; US ~$12–18"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Beiras IGP White",
+          "criteria": "Regional white; Encruzado component; accessible entry",
+          "markers": "Beiras IGP; commercial Portuguese white blends; BC ~$10–14; US ~$8–12"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "10–12°C (young); 12–14°C (5+ year aged) — barrel-aged Encruzado benefits from slightly warmer serving to open the texture",
+        "vessel": "White Burgundy glass (the wider bowl opens the creaminess and mineral); standard white glass for unoaked versions",
+        "technique": "Oak-aged Encruzado: open 15 minutes before service; the Meursault-style creaminess opens slowly. Aged Encruzado (5+ years): decant briefly (15 minutes) — it is one of the few white wines that benefits from brief decanting. Comparative: Encruzado alongside Meursault Village and Grüner Veltliner Smaragd for a European continental white wine flight.",
+        "programme_position": "Premium white wine discovery experience; Portuguese white wine anchor for PCT programme; Meursault comparison centrepiece for wine education",
+        "verbal_presentation": "Quinta dos Roques Encruzado — Dão Valley, Portugal. The 'crossroads' variety. Granite and schist at 600 metres. Portugal's answer to Meursault. The white wine the region kept for itself until the 1990s."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Quinta dos Roques (Toninha Mesquita, Dão — the reference Encruzado producer)",
+        "producer_location": "Abrunhosa do Ladário, Mangualde, Dão DOC, Portugal",
+        "key_person": "Toninha Mesquita (owner and winemaker; known internationally as 'the queen of Dão white'); Alvaro Castro (Quinta da Pellada; the other key Dão white reference)",
+        "production_volume": "Small family estate; Quinta dos Roques: medium production for the region; international distribution via Golden Ram Imports (US)",
+        "certifications": [
+          "Dão DOC"
+        ],
+        "bc_distributor": "Quinta dos Roques: no confirmed dedicated BC distributor; Liberty Wine Merchants and Marquis Wine Cellars (Vancouver) carry on occasion; BCLDB special order available; Sogrape Dão whites more reliably available through regular BCLDB listings",
+        "us_distributor": "Quinta dos Roques: Golden Ram Imports (national US — confirmed from earlier research); Alvaro Castro: Skurnik Wines & Spirits (national — confirmed)",
+        "uk_distributor": "Quinta dos Roques: Yapp Brothers (Wiltshire — specialist Portuguese); Armit Wines (London); Wines of Portugal (UK)",
+        "price_tier": "Market to Reserve (Quinta dos Roques standard US ~$22; Reserve US ~$35–45; Alvaro Castro Claro US ~$35–50)",
+        "availability_notes": "In BC: Sogrape Dão wines available at BC Liquor; Quinta dos Roques available through Liberty Wine or private import. US: Golden Ram Imports for Quinta dos Roques nationally; Skurnik for Alvaro Castro nationally. UK: Yapp Brothers is the most established UK Dão source."
+      },
+      "trail_connection": "PCT-1",
+      "trail_note": "The Dão region sits at the geographical centre of Portugal, at the crossroads of the Roman road network that connected Lisbon to the northern ports. The granite-enclosed valley's isolation preserved both indigenous varieties (Encruzado, Touriga Nacional, Jaen) and traditional winemaking practices longer than any other Portuguese region. The 1989 reversal of the cooperativa monopoly (until that date, all Dão wine was required to pass through cooperatives, destroying quality) allowed estates like Quinta dos Roques to bottle their own production — the modern Dão quality revolution is just 35 years old.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Chanterelle mushroom and Dão olive oil bruschetta",
+          "pairing_type": "complement",
+          "rationale": "The aged Encruzado's white truffle and toasted almond character bridges directly with chanterelle mushrooms' own earthy-nutty-floral aromatic. The granite mineral in the wine and the woodland floor character of the mushroom create a feedback loop. Dão olive oil on the bruschetta adds the regional identity — the same valley's produce on the same palate"
+        },
+        {
+          "technique_id": "",
+          "dish": "Bacalhau com natas (salt cod with cream sauce and potato gratin)",
+          "pairing_type": "bridge",
+          "rationale": "Bacalhau com natas — salt cod baked with cream sauce, caramelised onions, and potato — is the richest Portuguese bacalhau preparation. The oak-aged Encruzado's full body and acid structure manages the cream richness while the granite mineral character bridges with the salt cod's cured-sea depth. Portugal's finest white wine meets its most beloved national ingredient"
+        }
+      ],
+      "source": "CVR Dão (Comissão Vitivinícola da Região Dão) DOC regulations; Quinta dos Roques official estate documentation; Golden Ram Imports US portfolio; Wines of Portugal Dão regional guide; Jancis Robinson 'Wine Grapes' (Encruzado entry)",
+      "entry_id": "WIN-PORDÃO-001",
+      "extracted_at": "2026-04-11T16:04:59.352503+00:00",
+      "batch_number": 3
+    }
+  ]
+}

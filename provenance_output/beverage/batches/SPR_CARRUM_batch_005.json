@@ -1,0 +1,290 @@
+{
+  "tradition": "spirits",
+  "region": "Caribbean — Rum (PCT×WADT Intersection)",
+  "batch_number": 5,
+  "entry_count": 3,
+  "extracted_at": "2026-04-11T15:32:05.556181+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "pot still jamaican rum",
+      "region": "Caribbean — Jamaica",
+      "name": "Jamaican Rum — Pot Still, High-Ester (Appleton, Worthy Park, Hampden)",
+      "terroir_origin": "Rum is the spirit category that most directly embodies the PCT×WADT intersection — the convergence of Portuguese sugarcane cultivation (PCT) and West/Central African enslaved labour (WADT) in the Atlantic colonial economy. Sugarcane (Saccharum officinarum) originated in Southeast Asia, was cultivated in Portugal's Atlantic islands (Madeira, São Tomé — PCT-2 and PCT-5), transported to the Caribbean by Spanish and Portuguese colonists, and then produced into rum on Barbados (c. 1620s) using sugarcane that was almost certainly descendant of the Portuguese Atlantic variety. Jamaica's rum tradition: the island was colonised by Spain (1494), captured by England (1655), and developed by British planters who systematically created the pot-still, high-ester Jamaican style. The Nassau Valley of St. Elizabeth Parish, and the parishes of Westmoreland and St. James contain the major distilleries. Jamaica's unique climate (wet limestone soil, tropical humidity) creates the Dunder fermentation tradition: dunder (the residue from the previous distillation) is added to fresh fermentation vats as a bacterial inoculant, creating the high-ester 'Jamaican funk' — the defining aromatic characteristic of high-ester pot-still rum.",
+      "production_technique": "Jamaican pot-still rum production: freshly harvested cane is crushed; juice fermented with wild yeasts and bacterial cultures (including dunder addition) for 2–5 weeks for high-ester marks (vs. 24–48 hours for light industrial rum). The long, warm fermentation produces butyric esters, ethyl acetate, and the signature compound: ethyl butyrate (pineapple character) at concentrations 10–50× higher than other rum styles. Pot still distillation (double distillation in traditional copper pot stills at Hampden, Worthy Park) produces a raw spirit of extraordinary complexity at 65–86% ABV. Jamaica's Rum Producers Association defines 'marks' (flavour profiles): DOK, HLCF (wild ferment, maximum ester), EOE, etc. — a classification system unique to Jamaica. Ageing typically in ex-bourbon American white oak barrels. Appleton Estate (Nassau Valley) ages in ex-bourbon for 8, 12, 15, 21 years; Hampden Estate uses a still-active 18th-century wooden pot still for some marks.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Cachaça (Brazil — PCT-13)",
+          "connection": "The most direct parallel: both are fresh-cane spirits from Portuguese/colonial Atlantic sugarcane cultivation. Cachaça uses fresh juice (not molasses) and single distillation; Jamaican rum uses blackstrap molasses (the residue after sugar crystallisation) and double pot distillation. Both trace their agricultural origin to the same Portuguese Atlantic island sugarcane. The WADT dimension is more explicit in Jamaican rum: the entire Jamaican sugar plantation system was built on enslaved African labour"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Rhum Agricole Martinique (PCT×French colonial)",
+          "connection": "Rhum Agricole is the French colonial equivalent: fresh sugarcane juice (not molasses), AOC-protected, from Martinique. Martinique's cane is a different colonial tradition (French, not Portuguese/British) but from the same Atlantic sugarcane genealogy. The comparison demonstrates how the same base material (Atlantic sugarcane) produces entirely different spirits under different colonial distillation philosophies"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Unaged: clear. Lightly aged: pale gold. Aged 12yr+: deep amber to mahogany. High-ester unaged: the funkiest-nosed clear spirit in any category",
+        "nose": "High-ester Jamaican (Hampden DOK/HLCF, Worthy Park WPL): overripe banana, ripe pineapple, mango, petrol/acetone (from ethyl butyrate at high concentrations), tobacco, leather, tropical fruit punch. An acquired and extraordinary nose. Appleton 12yr: dried fruit, dark chocolate, toffee, banana bread, warm spice — the ester complexity tamed and integrated by oak ageing",
+        "palate": "High-ester unaged: intensely fruity, challenging, pungent — bartender ingredient. Appleton 12yr: rich, full-bodied, spiced, long finish with tropical fruit and wood. Appleton 21yr: extraordinary complexity — dried mango, leather, tobacco, spice, dark honey; comparable to aged Cognac in sipping quality",
+        "conclusion": "Jamaican pot-still rum spans the entire quality range from cocktail ingredient (unaged high-ester) to prestige sipping spirit (Appleton 21yr, Hampden Rum Fire aged). Essential for any complete spirits programme: the Atlantic rum narrative is the PCT×WADT story told in a glass."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "21yr+ Aged Single Estate / Cask Strength",
+          "criteria": "Single estate, named still/mark, 21+ years ex-bourbon cask; Appleton 21yr or Hampden 8yr HLCF as benchmarks",
+          "markers": "Appleton 21yr 'Nassau Valley'; Hampden aged expressions; Joy Spence (winemaker equivalent) designation; £80–200+ per bottle"
+        },
+        {
+          "tier": 3,
+          "tier_name": "12–15yr Aged Blended Estate",
+          "criteria": "Single estate, 12–15yr ageing, consistent quality; the premium cocktail/sipping segment",
+          "markers": "Appleton 12yr; Worthy Park 'Rum Bar' aged; £35–60 per bottle"
+        },
+        {
+          "tier": 2,
+          "tier_name": "White/Gold Aged Blend",
+          "criteria": "3–7yr ageing; estate-sourced; cocktail-grade with character; Appleton Signature as benchmark",
+          "markers": "Appleton Signature; Coruba; £20–35 per bottle"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Column-Still Light Rum",
+          "criteria": "Commercial production; column still; light flavour for volume cocktail use; no estate attribution",
+          "markers": "Wray & Nephew overproof (exception — unaged pot still Jamaican white at 63% ABV); generic blended white rum"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature for sipping; ice for cocktails",
+        "vessel": "Tulip glass or Glencairn for neat; rocks glass with single ice cube for premium sipping; Collins glass for daiquiri or rum punch",
+        "technique": "Classic Daiquiri: 60mL Appleton 8yr, 30mL fresh lime, 15mL simple syrup, shaken over ice. High-ester in cocktails: 10–15mL Hampden HLCF in a Zombie or blended with lighter rum — the ester intensity works as a modifier. Appleton 21yr: neat with a splash of water to open",
+        "programme_position": "Cocktail bar foundation (Caribbean classics); premium spirits section for aged expressions; PCT×WADT narrative spirits flight",
+        "verbal_presentation": "Appleton Estate, Nassau Valley — Jamaican rum since 1749. The sugarcane came to the Caribbean from Portugal's Atlantic islands; the pot still came from the same Portuguese-English colonial trade. Twenty-one years in ex-bourbon oak. The PCT and the Atlantic slave trade in a single glass — the history you should know when you drink it."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Appleton Estate (Nassau Valley, St. Elizabeth, Jamaica)",
+        "producer_location": "Nassau Valley, St. Elizabeth Parish, Jamaica",
+        "key_person": "Joy Spence (Master Blender, first female Master Blender in the spirits industry); Campari Group (owner)",
+        "production_volume": "Appleton: ~500,000 cases annually; Campari Group distribution worldwide",
+        "certifications": [
+          "Jamaica Rum Producers Association member",
+          "GI — Rum of Jamaica (2016)"
+        ],
+        "bc_distributor": "Southern Glazer's Wine & Spirits of Canada (national distribution agreement, effective April 1, 2025 — confirmed via BusinessWire); Appleton widely available at BC Liquor",
+        "us_distributor": "Campari America (Appleton USA — confirmed national distribution); widely available Total Wine, BevMo, national chains",
+        "uk_distributor": "Campari UK; widely available at Waitrose, Sainsbury's, specialist off-licences",
+        "price_tier": "Market (Signature ~$28 BC; 12yr ~$45 BC; 21yr ~$110 BC)",
+        "availability_notes": "Appleton Estate: among the most widely available premium rums in BC and US. BC Liquor stocks multiple expressions. Hampden Estate and Worthy Park: more limited — specialist spirits merchants; Velier Hampden through European importers (US: check Skurnik or Domaine Select). Rum Bar (Worthy Park): BC limited but available."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "Appleton Estate was established 1749 — 94 years after Britain captured Jamaica from Spain. The Nassau Valley sugarcane is descended from the Atlantic colonial cane that Portugal first commercialised on Madeira (PCT-2) in the 15th century. The rum's history IS the Atlantic colonial economy: Portuguese cane, British colonial infrastructure, West African enslaved labour (WADT), American oak ageing barrels. Joy Spence, the first female Master Blender in the spirits industry (appointed 1997), represents the post-colonial redemption of the tradition she inherited.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Jerk chicken (allspice-scotch bonnet dry rub, coal fire)",
+          "pairing_type": "complement",
+          "rationale": "The canonical Jamaican pairing: the char and allspice of jerk chicken and the tropical fruit-spice of Appleton rum share the same warm, smoky register"
+        },
+        {
+          "technique_id": "",
+          "dish": "Dark chocolate rum cake (Jamaican Christmas cake)",
+          "pairing_type": "complement",
+          "rationale": "Jamaican black cake — dried fruit soaked in rum for weeks, then baked — is made WITH Appleton rum, so the pairing is literally the same ingredient twice"
+        }
+      ],
+      "source": "Jamaica Rum Producers Association; Appleton Estate official documentation; Campari Group annual report 2024; GI — Rum of Jamaica 2016 registration; Joy Spence biography and master blender documentation",
+      "entry_id": "SPR-CARJAM-001",
+      "extracted_at": "2026-04-11T15:32:05.555519+00:00",
+      "batch_number": 5
+    },
+    {
+      "tradition": "spirits",
+      "sub_tradition": "rhum agricole martinique",
+      "region": "Caribbean — Martinique (AOC Rhum Agricole)",
+      "name": "Rhum Agricole AOC Martinique — Clément, J.M., Neisson",
+      "terroir_origin": "Martinique's Rhum Agricole is the most terroir-specific rum in the world — the only rum protected by a French AOC (Appellation d'Origine Contrôlée, granted 1996). While Martinique was a French colony (not Portuguese), the sugarcane itself traces directly to the Portuguese Atlantic island cultivation system. The PCT node: the same sugarcane brought to Madeira (1420s) and Cape Verde (1450s) by Portuguese colonists spread through the Atlantic to the French and British Caribbean. Martinique's northern slopes (Mount Pelée volcano, 1,397m) produce the most complex cane — volcanic andesite soils, Atlantic trade winds, moderate altitude. The southern plains produce higher volume, lighter character. AOC Martinique mandates specific cane varieties (limited to approved list), minimum sugarcane freshness (cane must be pressed within 24 hours of harvest), column still parameters (minimum 65° GL), and ageing requirements for VSOP and XO designations.",
+      "production_technique": "Rhum Agricole production: freshly cut sugarcane is pressed immediately; the resulting vesou (sugarcane juice) is fermented with selected or wild yeasts for 24–36 hours — significantly shorter than Jamaican pot-still rum (2–5 weeks) and producing a cleaner, more precise fermentation with fewer congeners. Column still distillation at 65–75% ABV preserves the cane terroir while removing harsh compounds. The crucial distinction from industrial rum: no molasses, no column-still stripping to neutral, no flavour additives. Unaged Rhum Agricole Blanc: the purest expression, bottled at 50–60% ABV. Rhum Vieux (aged): minimum 3 years in 650L or smaller oak barrels; AOC requires specific parameters. Clément VSOP: 4yr minimum; J.M. XO: 6–8yr; Neisson L'Esprit: cask strength. The tropical ageing environment (30°C average, high humidity) produces ~8–10% evaporation annually — twice European cellar rates — accelerating complexity development.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Condrieu (Northern Rhône, France — Viognier)",
+          "connection": "Both are AOC-protected, single-variety expressions from volcanic terroir (Condrieu: granite; Martinique: andesite) where the variety expresses terroir without technological intervention. Both are defined by fragrant, tropical-floral character that no other terroir replicates. Both reward single-origin obsession over blended-for-consistency production philosophy"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Cachaça Artisanal — Minas Gerais (PCT-13)",
+          "connection": "The direct Atlantic comparison: both are fresh sugarcane juice, single-terroir spirits from the same Portuguese Atlantic cane genealogy expressed in different colonial contexts. Cachaça is Brazilian/Portuguese-colonial; Rhum Agricole is French-colonial. Fresh juice + terroir + limited intervention = the philosophy shared across both"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Blanc (unaged): crystal clear. Vieux (aged): pale gold to deep amber depending on time",
+        "nose": "Blanc: intense fresh sugarcane, cut grass, tropical fruit (green banana, pineapple, papaya), volcanic mineral, white pepper — one of the most distinctive noses in spirits. Vieux VSOP: banana foster, vanilla, dried tropical fruit, light oak, cane sweetness. XO: complex vanilla-toffee-dried fruit-aged character approaching Armagnac territory",
+        "palate": "Blanc: bold, herbaceous, sugarcane intensity, clean finish — the terroir in full cry. VSOP: rounded, tropical fruit preserved in vanilla-oak framework, long sweet finish. XO: full, complex, incredibly long — the tropical ageing cycle in 40 seconds of finish",
+        "conclusion": "Martinique Blanc is the world's best argument for terroir in spirits — a single-origin beverage as distinctive as a Grand Cru Burgundy. Every serious spirits programme should include a Rhum Agricole expression as the premium rum reference point."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "XO / Hors d'Âge (6yr+) Single Distillery",
+          "criteria": "Minimum 6yr tropical ageing; single distillery; cask-specific; AOC-certified",
+          "markers": "Clément XO; J.M. XO; Neisson Parcellaire; Rhum J.M. Cuvée 1845; £80–200+"
+        },
+        {
+          "tier": 3,
+          "tier_name": "VSOP (4yr+)",
+          "criteria": "Minimum 4yr tropical ageing; AOC-certified; consistent house style",
+          "markers": "Clément VSOP; J.M. VSOP; Trois Rivières VSOP; £40–65"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Élevé Sous Bois / Rhum Vieux (3yr)",
+          "criteria": "Minimum 3yr; AOC; entry into aged Rhum Agricole",
+          "markers": "La Favorite Cœur de Canne; Trois Rivières; £30–45"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Rhum Blanc (Unaged)",
+          "criteria": "AOC-certified; minimum parameters for fresh cane, column still; 50–60% ABV",
+          "markers": "Clément Blanc; J.M. Blanc; Neisson Blanc; £25–35; the cocktail and terroir baseline"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Blanc: room temperature or lightly chilled; Vieux: room temperature for sipping",
+        "vessel": "Blanc: rocks glass or coupe for cocktails; Vieux VSOP/XO: tulip glass or Glencairn",
+        "technique": "Ti' Punch (Martinique's national cocktail): 50mL Rhum Agricole Blanc + 10mL cane syrup + squeeze of lime (the whole lime squeezed, not juiced) — no ice. Stir in the glass. The ratio is personal; in Martinique, the ingredients are served separately (chacun prépare sa propre mort — 'each person prepares their own death'). Agricole Daiquiri: 60mL Blanc, 22mL lime, 15mL agricane syrup. XO neat: room temperature, 45mL, single large ice cube added after 2 minutes",
+        "programme_position": "Premium cocktail programme foundation; prestige spirits section for XO; terroir education flight; PCT×WADT narrative",
+        "verbal_presentation": "Rhum Agricole from Martinique — the only rum with a French AOC. The sugarcane came from Portugal's Atlantic islands; the French applied their appellation system to it. Fresh-pressed cane juice, distilled without molasses, aged in the Caribbean heat. The closest rum comes to speaking of a specific place."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Clément (Martinique) and Rhum J.M. (Macouba, northern Martinique)",
+        "producer_location": "Clément: Le François, Martinique; J.M.: Macouba, Martinique (Mt. Pelée foothills)",
+        "key_person": "Charles Clément (founder); J.M.'s terroir position near Mt. Pelée is the brand identity",
+        "production_volume": "Clément: major commercial volume; J.M.: boutique volcanic terroir focus",
+        "certifications": [
+          "AOC Martinique (1996)",
+          "French Ministry of Agriculture certification"
+        ],
+        "bc_distributor": "Clément: available at BCLDB (confirmed); J.M.: limited BC — specialty spirits merchants",
+        "us_distributor": "Clément: Spiribam USA (owner) + Skurnik (regional distributor) — confirmed; J.M.: Spiribam USA (owner) + Skurnik (regional distributor) — confirmed",
+        "uk_distributor": "Clément: Berry Bros. & Rudd; Masters of Malt; Waitrose",
+        "price_tier": "Blanc: BC ~$38–45; VSOP: ~$65–80; XO: ~$120–180",
+        "availability_notes": "Clément Blanc and VSOP: available at BC Liquor stores and private wine/spirits shops. J.M. and Neisson: limited BC distribution — specialty spirits merchants. US: Clément at Total Wine, BevMo nationally. J.M. through specialty accounts."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "Martinique's rhum agricole tradition uses sugarcane descended from the same Portuguese Atlantic island cultivation that defined the PCT. The French AOC framework for rum is the most sophisticated quality protection applied to any sugar spirit globally — the French brought their wine-region appellation philosophy to the same raw material the Portuguese commercialised 500 years earlier. PCT and French colonial trails share the same sugarcane botanical origin.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Accras de morue (salt cod fritters, Martinique/Guadeloupe)",
+          "pairing_type": "complement",
+          "rationale": "Salt cod fritters are the bridge between Martinique's Creole food culture and the Portuguese bacalhau tradition (PCT). Ti' Punch alongside accras is the canonical Martinique aperitif pairing"
+        },
+        {
+          "technique_id": "",
+          "dish": "Poulet boucané (smoked Creole chicken)",
+          "pairing_type": "bridge",
+          "rationale": "The agricole rhum's herbaceous-tropical character bridges with the allspice-smoked chicken — the same terroir in food and spirit form"
+        }
+      ],
+      "source": "AOC Martinique official documentation (INAO, 1996); Clément official history; J.M. Rhum production documentation; Dave Broom 'Rum' (reference text); Luca Gargano Velier rhum agricole research",
+      "entry_id": "SPR-CARMAR-002",
+      "extracted_at": "2026-04-11T15:32:05.555742+00:00",
+      "batch_number": 5
+    },
+    {
+      "tradition": "spirits",
+      "sub_tradition": "demerara rum guyana",
+      "region": "Caribbean — Guyana (Demerara)",
+      "name": "El Dorado — Demerara Rum (Guyana)",
+      "terroir_origin": "The Demerara River delta of Guyana (formerly British Guiana) is one of the Atlantic world's most historically significant rum terroirs. The name 'Demerara' now designates a style of rum rather than just a place — deep, rich, ester-forward, molasses-based dark rum. The Demerara Distillers Ltd. (DDL) facility at Enmore, on the Demerara River, is the world's only distillery using every historic still type in continuous operation: a wooden double pot still from 1732 (built on the former Enmore plantation), a metal two-column Coffey still, a single wooden Coffey still, a four-column Savalle still, and multiple pot stills. The colonial history is inseparable: the Demerara region was settled by the Dutch, then contested between British and French, before becoming British Guiana in 1814. The plantation system used West African enslaved labour (WADT) to produce rum for the British market. DDL today is 100% Guyanese-owned — post-colonial redemption of the same plantation infrastructure.",
+      "production_technique": "Demerara rum uses blackstrap molasses from sugarcane grown in the mineral-rich alluvial soils of the Demerara and Berbice river deltas. The wooden pot stills at Enmore are among the world's most historically significant production vessels — their wooden walls harbour 290-year-old yeast and bacterial populations that cannot be replicated elsewhere. Fermentation: 24–72 hours depending on still type and target mark. Distillation: the different still types produce different marks — the wooden pot still produces the heaviest, funkiest 'Versailles' character; the Coffey still produces lighter, more commercial grades. DDL blends marks from all stills into El Dorado expressions. Ageing: in ex-bourbon casks in Guyana's hot tropical climate (similar evaporation to Martinique: 8–10% annually). El Dorado 15yr: blend aged minimum 15 years, multiple marks; El Dorado 21yr: the prestige expression.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Armagnac from pre-war stocks (Gascony, France)",
+          "connection": "Both are deeply flavoured, terroir-specific, historically significant spirits aged in the same barrels for exceptional periods. Both use distinctive still types that are no longer manufactured anywhere else. Demerara's wooden pot stills and Armagnac's alambic armagnacais are the spirits world's most historically irreplaceable production vessels"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Jamaican High-Ester Pot Still Rum (PCT×WADT)",
+          "connection": "The direct Jamaican comparison: both are Caribbean rum produced with extended fermentation and pot/hybrid stills for maximum flavour complexity. Jamaican rum is fruit-ester forward (butyric); Demerara is more complex blended-style from multiple still types. Both are WADT-intersected: both plantation systems used enslaved West/Central African labour"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep mahogany to dark amber; viscous; Demerara sugars give warmth of hue even in lighter expressions",
+        "nose": "El Dorado 15yr: dried plum, raisin, dark toffee, molasses, vanilla, cinnamon, tobacco, leather. Wooden pot still character: distinctive earthy-woody depth impossible in stainless-fermented column rum. El Dorado 21yr: extraordinary — coffee, leather, dried mango, dark chocolate, aged oak, burnt sugar, exotic wood",
+        "palate": "Full body (fullest of any rum category); high natural sugar (Demerara's residual molasses sweetness persists through ageing); long, complex, warm finish. El Dorado 15yr: 43% ABV; accessible; one of the most complex rums at its price. El Dorado 21yr: 43% ABV; the prestige benchmark of the Demerara style",
+        "conclusion": "El Dorado 15yr is the rum world's greatest value expression — the depth-to-price ratio is unmatched. Essential on any serious spirits programme and the most compelling argument that rum deserves the same sipping respect as aged Scotch or Cognac."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "El Dorado 21yr / Rare Cask Series",
+          "criteria": "21+ years tropical ageing; DDL rare cask or vintage release; multiple still marks blended",
+          "markers": "El Dorado 21yr; Velier Demerara releases (PM, Enmore, Versailles marks); £80–200+"
+        },
+        {
+          "tier": 3,
+          "tier_name": "El Dorado 15yr",
+          "criteria": "15+ years; multiple marks; consistent premium quality; the value benchmark",
+          "markers": "El Dorado 15yr; Rum Nation Demerara 15yr; £45–60"
+        },
+        {
+          "tier": 2,
+          "tier_name": "El Dorado 12yr",
+          "criteria": "12 years; accessible premium; correct Demerara character",
+          "markers": "El Dorado 12yr; Pusser's British Navy Rum; £30–40"
+        },
+        {
+          "tier": 1,
+          "tier_name": "El Dorado 5yr / Commercial Blends",
+          "criteria": "Younger age; correct molasses-caramel character; cocktail grade",
+          "markers": "El Dorado 5yr; commercial dark rum blends at accessible pricing"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature for sipping; over ice for cocktails",
+        "vessel": "Glencairn or tulip glass for sipping; rocks glass for cocktails",
+        "technique": "El Dorado 15yr neat: room temperature, 45mL, allow 5 minutes to open. El Dorado in cocktails: excellent in Dark & Stormy (60mL + ginger beer + lime), Old Fashioned (50mL + 2 dashes Angostura + sugar cube). Rum punch: El Dorado 12yr base, lime, sugar, Angostura bitters, nutmeg",
+        "programme_position": "Premium spirits sipping section; rum cocktail foundation; WADT narrative spirit for Atlantic history programme",
+        "verbal_presentation": "El Dorado 15 Years — Demerara, Guyana. The world's only distillery running wooden pot stills from 1732. Fifteen years in Caribbean heat. The rum that put Guyana back on the spirits world map."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Demerara Distillers Ltd. (DDL) — El Dorado",
+        "producer_location": "Enmore, East Coast Demerara, Guyana",
+        "key_person": "Yesu Persaud (founder); DDL is 100% Guyanese-owned",
+        "production_volume": "Large commercial scale; El Dorado distributed in 50+ countries",
+        "certifications": [
+          "Demerara Rum GI (Guyana)"
+        ],
+        "bc_distributor": "BCLDB direct import; El Dorado available at BC Liquor stores (confirmed)",
+        "us_distributor": "Skurnik Wines & Spirits + DDL USA (own US subsidiary) — both confirmed",
+        "uk_distributor": "El Dorado widely available: Waitrose, Sainsbury's, specialist rum merchants; Speciality Drinks London (Velier Demerara marks)",
+        "price_tier": "Market to Reserve (El Dorado 15yr BC ~$50–60; 21yr ~$110–130)",
+        "availability_notes": "El Dorado 12yr and 15yr: BC Liquor stores. El Dorado 21yr: specialist spirits merchants or BCLDB special order. US: widely available at Total Wine, BevMo, and premium spirits retailers nationally."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "Demerara rum's history is inseparable from the Atlantic slave trade — the WADT. The Enmore plantation's wooden pot still was built by enslaved Guyanese workers in 1732 and is still running today, now under Guyanese ownership (DDL). The PCT connection: the sugarcane processed at Enmore is descended from the Portuguese Atlantic island varieties that Portugal commercialised 300 years before Enmore's first distillate. DDL's 100% Guyanese ownership is the post-colonial reclamation of a 290-year-old colonial infrastructure asset.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Pepperpot (Guyanese Christmas stew — casareep, beef/pork, cassava pepper)",
+          "pairing_type": "complement",
+          "rationale": "Guyana's national Christmas dish paired with its national spirit. Pepperpot's casareep (concentrated cassava juice) bitterness and the rum's molasses-caramel sweetness create a push-pull tension that is the defining Guyanese festive pairing"
+        },
+        {
+          "technique_id": "",
+          "dish": "Black fruitcake (Caribbean Christmas cake, rum-soaked)",
+          "pairing_type": "complement",
+          "rationale": "Rum-soaked dried fruit baked into black fruitcake and then served with the same rum — the most literal example of pairing in any food tradition"
+        }
+      ],
+      "source": "Demerara Distillers Ltd. official documentation; El Dorado production history; Dave Broom 'Rum'; Luca Gargano Velier documentation on Demerara marks; GI Demerara Rum registration (Guyana)",
+      "entry_id": "SPR-CARGUY-003",
+      "extracted_at": "2026-04-11T15:32:05.555948+00:00",
+      "batch_number": 5
+    }
+  ]
+}

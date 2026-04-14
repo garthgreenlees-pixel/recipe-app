@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ recipe.title }} — Technique Analysis | Provenance</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
+  --text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);
+  --border:rgba(201,168,76,0.20);--bg:#08080A;--surface:#131210;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
+.nav-links a:hover{color:#C9A84C}
+.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
+.nav-p:hover{border-color:#C9A84C}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+.container{max-width:900px;margin:0 auto;padding:48px 32px 80px}
+.result-header{margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+.result-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.result-title{font-family:var(--serif);font-size:clamp(24px,4vw,38px);font-weight:700;letter-spacing:-0.5px;margin-bottom:10px}
+.result-meta{font-size:12px;color:var(--text-light)}
+.result-meta a{color:rgba(201,168,76,0.5);text-decoration:none;font-family:var(--mono)}
+.result-meta a:hover{color:var(--gold)}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--gold-border)}
+.techniques-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:40px}
+.technique-card{background:#131210;border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:20px;transition:all 0.18s}
+.technique-card:hover{border-color:var(--gold-border);box-shadow:0 4px 16px rgba(201,168,76,0.08)}
+.technique-card-origin{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.technique-card-name{font-family:var(--serif);font-size:17px;font-weight:600;margin-bottom:8px;line-height:1.2;color:var(--text)}
+.technique-card-desc{font-size:12px;color:var(--text-secondary);line-height:1.55;margin-bottom:14px}
+.technique-card-relevance{font-size:11px;color:rgba(245,241,233,0.3);font-style:italic;margin-bottom:14px;font-family:var(--mono)}
+.technique-card-links{display:flex;gap:12px}
+.technique-card-link{font-size:12px;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.2);padding-bottom:1px;transition:border-color 0.15s}
+.technique-card-link:hover{border-color:var(--gold)}
+.ingredients-list{list-style:none;padding:0;columns:2;gap:24px;margin-bottom:32px}
+.ingredients-list li{font-size:13px;color:var(--text-secondary);padding:4px 0 4px 14px;position:relative;break-inside:avoid}
+.ingredients-list li::before{content:'·';position:absolute;left:0;color:var(--gold)}
+.empty-state{text-align:center;padding:48px 32px;background:#131210;border:1px solid rgba(201,168,76,0.08);border-radius:8px}
+.empty-state-title{font-family:var(--serif);font-size:20px;margin-bottom:8px;color:var(--text-secondary)}
+.empty-state-text{font-size:13px;color:var(--text-light);margin-bottom:16px}
+.try-again-link{font-size:13px;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3)}
+.try-again-link:hover{border-color:var(--gold)}
+@media(max-width:640px){.container{padding:32px 16px 60px}.techniques-grid{grid-template-columns:1fr}.ingredients-list{columns:1}}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+  </div>
+  <a href="/auth/account" class="nav-p" aria-label="My Kitchen"><span>P</span></a>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/auth/account">My Kitchen</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+<div class="container">
+
+  <div class="result-header">
+    <div class="result-eyebrow">Recipe Analysis</div>
+    <h1 class="result-title">{{ recipe.title }}</h1>
+    <p class="result-meta">
+      Sourced from <a href="{{ source_url }}" target="_blank" rel="noopener noreferrer">{{ source_url[:60] }}{% if source_url|length > 60 %}…{% endif %}</a>
+      {% if recipe.cuisine %} · {{ recipe.cuisine }}{% endif %}
+    </p>
+  </div>
+
+  {% if techniques %}
+  <div class="section-label">Matched Technique Entries ({{ techniques|length }})</div>
+  <div class="techniques-grid">
+    {% for t in techniques %}
+    <div class="technique-card">
+      {% if t.origin %}
+      <div class="technique-card-origin">{{ t.origin }}</div>
+      {% endif %}
+      <div class="technique-card-name">{{ t.name }}</div>
+      {% if t.description %}
+      <div class="technique-card-desc">{{ t.description }}{% if t.description|length >= 180 %}…{% endif %}</div>
+      {% endif %}
+      <div class="technique-card-relevance">{{ t.relevance }}</div>
+      <div class="technique-card-links">
+        {% if t.slug %}
+        <a href="/technique/{{ t.slug }}" class="technique-card-link">Full technique →</a>
+        <a href="/why/{{ t.slug }}" class="technique-card-link">Why it works →</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-state-title">No direct technique matches found</div>
+    <p class="empty-state-text">The recipe was parsed but no strong technique matches were found. Try browsing techniques by cuisine instead.</p>
+    <a href="/techniques/browse{% if recipe.cuisine %}?cuisine={{ recipe.cuisine | urlencode }}{% endif %}" class="try-again-link">Browse techniques{% if recipe.cuisine %} · {{ recipe.cuisine }}{% endif %} →</a>
+  </div>
+  {% endif %}
+
+  {% if recipe.ingredients and recipe.ingredients|length > 0 %}
+  <div class="section-label" style="margin-top:48px">Ingredients Parsed</div>
+  <ul class="ingredients-list">
+    {% for ing in recipe.ingredients[:24] %}
+    <li>{{ ing }}</li>
+    {% endfor %}
+    {% if recipe.ingredients|length > 24 %}
+    <li style="color:var(--text-light);font-style:italic">+{{ recipe.ingredients|length - 24 }} more</li>
+    {% endif %}
+  </ul>
+  {% endif %}
+
+  <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(201,168,76,0.08);display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+    <a href="/enhance" style="font-size:13px;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3);padding-bottom:1px">← Enhance another recipe</a>
+    <a href="/techniques/browse" style="font-size:13px;color:rgba(245,241,233,0.4);text-decoration:none">Browse all techniques →</a>
+  </div>
+
+</div>
+
+<script>
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+</script>
+
+<div class="about-footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/suppliers">Suppliers</a>
+    <a href="/for-professionals">For Professionals</a>
+    <a href="/methodology">Methodology</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="mailto:info@provenance.kitchen">Contact</a>
+  </div>
+  <span class="footer-wm">Provenance</span>
+</div>
+</body>
+</html>

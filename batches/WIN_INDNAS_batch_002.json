@@ -1,0 +1,77 @@
+{
+  "tradition": "wine",
+  "region": "India — Nashik Dindori Sub-Region (York Winery Reserve Chenin Blanc, Basalt Loam, Tropical Monsoon Viticulture)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:59:34.714184+00:00",
+  "entries": [
+    {
+      "name": "York Winery Reserve Chenin Blanc — Nashik Dindori Basalt-Loam, Diurnal Swing Acid Preservation, Tropical Monsoon Viticulture",
+      "category": "wine",
+      "subcategory": "wine_still",
+      "origin": "India",
+      "region": "India — Nashik Dindori Sub-Region (York Winery Reserve Chenin Blanc, Basalt Loam, Tropical Monsoon Viticulture)",
+      "producer": "York Winery — Nashik Dindori Sub-Region",
+      "alcohol_content": 12.5,
+      "price_tier": "premium",
+      "terroir_origin": "Nashik's Dindori sub-region at 600–650m elevation represents the highest and coolest growing zone within the Nashik District viticultural area, sitting on the eastern slope of the Sahyadri Ghats where the black Deccan basalt (Deccan Traps, Cretaceous-Paleogene era) is covered with shallow lateritic loam of 25–40cm depth over fractured basalt rock. This thin soil depth forces vine roots to penetrate fractured basalt for water and mineral access — a root system architecture comparable to the schist root penetration in the Douro Valley. The Dindori plateau sits within the rain shadow of the Sahyadri Ghats: the southwest monsoon (June–September) delivers 350–450mm concentrated rainfall at Dindori versus 600–800mm on the windward western slopes, creating the drier growing conditions that reduce disease pressure and concentrate fruit. The Nashik District Geographical Indication (GI) for wine was formally recognized by the Government of India in 2020, codifying the basalt terroir claim that York and Sula producers had been asserting informally since 2005. The Chenin Blanc variety was first planted experimentally in Nashik in the early 2000s and proved uniquely well-suited to the 15–18°C diurnal temperature swing of the October harvest season at Dindori elevation — the cool nights preserve the natural malic acid that Chenin Blanc requires for structural longevity while the warm days achieve phenolic ripeness at 20–22 Brix.",
+      "production_technique": "York Reserve Chenin Blanc is harvested from the highest Dindori plateau sites (630–650m) in mid-October, when natural acidity (7.5–9.0 g/L total acidity as tartaric) and potential alcohol (20–22 Brix) intersect for the optimal balance specific to York's winemaking style. Hand-harvest at dawn maintains fruit temperature below 20°C for transport to the winery in insulated bins. Whole-cluster pressing in a pneumatic press at 0.5–0.8 bar maximum pressure extracts free-run juice without skin tannin or phenolic extraction; the free-run fraction (typically 60–65% of total press volume) is settled cold at 4–6°C for 18–24 hours to clarify. Fermentation takes place in a combination of stainless steel temperature-controlled tanks (at 16–18°C) and 228L French oak pièces (20–30% new) for the Reserve tier. The partial barrel fermentation adds textural complexity without the heavy oak character that would overwhelm Chenin's natural quince-and-citrus aromatic profile. The Reserve tier undergoes 4–5 months sur lie aging with weekly bâtonnage (lees stirring) to build the characteristic creamy mid-palate texture. Malolactic conversion is blocked to preserve the high natural acidity that defines Nashik Dindori Chenin Blanc and gives the wine its structural backbone for 3–5 year aging. Total production: approximately 15,000–20,000 bottles of Reserve tier annually.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Loire Valley Vouvray (Chenin Blanc, Touraine, tuffeau limestone)",
+          "connection": "York Reserve Nashik Chenin Blanc and Vouvray sec share the Chenin Blanc variety's characteristic tension between high natural acidity and full phenolic ripeness — the variety preserves acidity in cool Loire nights and in Nashik's diurnal 15–18°C swing equally. Both express the quince, green apple, and lanolin character that defines the Chenin Blanc aromatic profile independent of terroir, while demonstrating how dramatically the same grape adapts: Vouvray's honeyed wax and wet stone versus Nashik's tropical mango-citrus and volcanic mineral register."
+        },
+        {
+          "tradition": "South African Chenin Blanc (Swartland and Stellenbosch, old-vine)",
+          "connection": "Both Nashik and South African Chenin Blanc represent warm-climate expressions of a grape more commonly associated with cool Loire origins. South Africa has the world's oldest-vine Chenin Blanc plantings (some exceeding 40 years), and the Cape wine industry's warm-climate Chenin expertise — particularly in Swartland bush-vine Chenin — provides the closest technical parallel to Nashik's monsoon-viticulture approach: both manage heat-stress with elevated altitude or maritime cooling, both produce Chenin with tropical fruit character absent in Loire, and both have driven the variety's international rehabilitation from workhorse to benchmark white grape."
+        },
+        {
+          "tradition": "Douro Valley White (Rabigato and Gouveio, granite and schist)",
+          "connection": "Both Nashik Dindori Chenin Blanc and Douro white wines are produced from vineyards where shallow hard-rock soils (basalt at Dindori; schist and granite at Douro) force root penetration into fractured bedrock for water and mineral access — the same terroir mechanism producing concentrated, mineral-inflected white wines in both contexts. The Portuguese colonial connection is also direct: the Douro viticultural tradition that produced Port for the British market is the same colonial wine culture that created Indian administrative demand for European-style wine in Maharashtra."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale gold with green tints typical of Chenin Blanc from cool-harvested high-altitude sites; brilliant clarity after cold settling and filtration; no oxidative browning — the preserved natural acidity at Dindori elevation protects color integrity; light-bodied appearance at 12.5% ABV consistent with the high-acid, moderate-alcohol Nashik Dindori white wine style.",
+        "nose": "Chenin Blanc's characteristic tension between citrus freshness and ripe stone fruit: green apple, fresh quince, kaffir lime zest from the high natural acidity; beneath the citrus, tropical mango and lychee from the warm Nashik growing days; sur lie aging contributing fresh bread dough and a subtle lanolin-waxy note characteristic of the variety; the partial barrel fermentation adding a light vanilla and cream undertone without dominating the fruit character; clean and precise, with no heavy oak or reductive character.",
+        "palate": "Medium body with textural richness from 4–5 months bâtonnage; the high natural acidity (7.5–9.0 g/L) arrives immediately and structures the entire palate experience; ripe quince and tropical citrus through the mid-palate; the partial barrel fermentation adds cream and brioche texture that integrates with the acidity rather than softening it; long, clean finish with the defining Chenin Blanc combination of acidity and phenolic grip; the Indian tropical character (mango, lychee) distinguishes the finish from Loire Chenin without compromising the variety's structural integrity."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "York Classic Chenin Blanc",
+          "criteria": "Nashik plains alluvial-soil fruit, stainless steel fermentation only, no lees contact, early bottling at 3–4 months — fresh, clean, no structural complexity; the entry-level reference for Nashik Chenin Blanc character at accessible pricing."
+        },
+        {
+          "tier": 2,
+          "tier_name": "York Estate Chenin Blanc",
+          "criteria": "Dindori basalt-site fruit, full stainless steel fermentation with 3 months sur lie, no oak — more mineral structure and lees texture than Classic but without the barrel-fermentation complexity of the Reserve tier; the competent mid-range expression."
+        },
+        {
+          "tier": 3,
+          "tier_name": "York Reserve Chenin Blanc",
+          "criteria": "Highest Dindori plateau sites (630–650m), 20–30% new French oak barrel fermentation, 4–5 months bâtonnage, malolactic blocked — the benchmark for Indian Chenin Blanc at international estate-quality level, demonstrating Nashik basalt terroir's capacity for structured white wine aging potential."
+        },
+        {
+          "tier": 4,
+          "tier_name": "York Reserve Chenin Blanc Aged 3+ Years",
+          "criteria": "The Reserve tier with 3–5 years of bottle aging: Chenin Blanc's capacity for secondary development (honey, beeswax, yellow stone fruit) begins to emerge at 3 years in bottle; the high natural acidity of Nashik Dindori Chenin Blanc provides the structural framework for this development, distinguishing it from warm-climate white wines that collapse within 2–3 years. The aged Reserve represents the apex demonstration of Indian Chenin Blanc quality."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "York Reserve Chenin Blanc at 10–12°C to preserve the high natural acidity character that defines the wine — too cold (under 8°C) suppresses the tropical fruit aromatics; too warm (above 14°C) makes the 12.5% ABV and the oak component both more prominent. One hour in a standard wine refrigerator or 20 minutes in an ice bucket achieves the optimal 10–12°C window for service. The wine shows significantly better at 12°C versus 8°C in terms of aromatic expression — the tropical mango-lychee character needs slight warmth to volatilize.",
+        "vessel": "White Burgundy or Chardonnay-style glass with moderate bowl to concentrate the complex aromatic layers — Chenin's acid-driven structure benefits from a narrower rim than Chardonnay to retain volatile acidity aromatics; a 150ml pour for table service; in a tasting flight context, 80ml allows the full aromatic evolution across 10 minutes in the glass as temperature rises from 10°C to the natural ambient. The Reserve benefits from 15 minutes in the glass before tasting as the barrel fermentation notes integrate.",
+        "programme_position": "In a PCT colonial India / Nashik wine programme: serve as the first wine after the Kerala kallu palate-opener — the high Chenin acidity resets the palate for the Sula Rasa Shiraz richness that follows; the white-then-red sequence mirrors traditional European service while demonstrating the full range of Nashik terroir expression."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "York Winery — Dindori sub-region, Nashik (India's benchmark Chenin Blanc producer; Reserve tier is the reference expression for Indian white wine at international quality standards). Sula The Founder's Reserve Sauvignon Blanc as secondary white wine reference from the same Nashik GI zone.",
+        "north_america_access": "York Winery has limited North American distribution — specialty Indian wine importers in Ontario and select US states carry the Reserve tier. Availability is improving as Indian restaurant sector demand for Indian wine grows in Toronto, Vancouver, and New York. Estimated USD $20–30 for Reserve Chenin Blanc in US specialty retail.",
+        "culinary_application": "York Reserve Chenin Blanc's high natural acidity and tropical fruit character make it the most versatile Indian wine for South Asian cuisine pairing: the acidity cuts through coconut milk richness, the quince-mango character bridges with tamarind and curry leaf, and the lees texture handles the fat content of Malabar seafood preparations without the oak weight of Chardonnay overriding the food."
+      },
+      "price_trajectory": "rising",
+      "entry_id": "WIN-INDNAS-001",
+      "tradition": "wine",
+      "extracted_at": "2026-04-12T19:59:34.713795+00:00",
+      "batch_number": 2
+    }
+  ]
+}

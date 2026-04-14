@@ -1,0 +1,77 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Vinho Verde (Lima Sub-Region, Loureiro Variety, Aromatic Florality)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T05:01:01.164275+00:00",
+  "entries": [
+    {
+      "name": "Quinta de Ameal Loureiro — Lima Sub-Region Vinho Verde, Single Variety Aromatic Floral White",
+      "category": "wine",
+      "subcategory": "white_wine",
+      "origin": "Portugal",
+      "region": "Lima Sub-Region, Vinho Verde DOC, Portugal",
+      "producer": "Quinta de Ameal — Lima Sub-Region, Vinho Verde",
+      "alcohol_content": 12.0,
+      "price_tier": "premium",
+      "terroir_origin": "The Lima sub-region occupies the Lima River valley in the northwestern corner of Portugal, where the river flows south from the Spanish Galician border through a deeply incised granite valley before reaching Ponte de Lima — one of the oldest continuously inhabited towns in Portugal, famous for its Roman bridge. The Lima valley's climate is the wettest and most Atlantic-influenced within Vinho Verde: annual rainfall of 1,600–1,900mm (compared to 1,200–1,400mm for the southern Braga sub-region and 1,000–1,200mm for the Monção e Melgaço sub-region in the northwest). The granite soils of the Lima valley have a specific mineralogy: coarse-grained granite with high quartz and feldspar content, naturally acidic (pH 5.0–5.8), with excellent drainage that prevents waterlogging despite the high rainfall. The Loureiro grape variety — genetically distinct from Laurel (Laurus nobilis) but sharing a common aromatic compound profile dominated by linalool and geraniol terpenoids — produces dramatically different wine depending on where it is grown within the Vinho Verde DOC. In the Lima sub-region, the combination of cooler temperatures, higher humidity, and weathered granite soils produces Loureiro of exceptional floral intensity: rose petal, jasmine, lime blossom, and white peach aromatics at concentrations that make it one of the most recognizable aromatic varieties in Portugal. The Lima granite contributes a saline mineral structure that prevents the high aromatic intensity from becoming heavy or cloying — the same granite mineral freshness that makes Albariño from neighboring Galicia (across the border) so vivid.",
+      "production_technique": "Quinta de Ameal harvests Loureiro manually in early-to-mid September — early for Vinho Verde — to capture the aromatic compounds at peak expression before they degrade with advancing sugar accumulation. Pedro Araujo's harvest timing targets 12–12.5% potential alcohol with 7–8 g/L natural acidity — unusually high for a southern European white wine but necessary for the varietal's characteristic aromatic-mineral balance. After destemming and gentle pressing (whole cluster pressed without crushing to minimize phenolic extraction from the thick Loureiro skins), the juice is cold-settled at 6–8°C for 12–16 hours to remove gross lees. Fermentation in stainless steel at 14–16°C with selected Portuguese aromatic yeast strains (chosen to preserve linalool and geraniol rather than modify them) for 15–20 days. No malolactic fermentation — the natural malic acid of the Lima granite Loureiro is a structural element rather than a fault to be converted. Sur lies aging for 3–4 months with bi-weekly bâtonnage to build textural weight that balances the aromatic intensity. Minimal SO2 addition (25 mg/L free SO2 at bottling) preserves the floral profile without antioxidant addition that could muffle the aromatic delicacy. Bottled without filtration in Portuguese tradition, requiring slight chilling to settle any light turbidity before service. Annual production of the standard Loureiro is approximately 50,000 bottles; the single-vineyard \"Loureiro Escolha\" from the oldest estate vines (40–60 years) is approximately 5,000 bottles.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Galician Albariño DO Rías Baixas (same granite terroir, across the border)",
+          "connection": "Quinta de Ameal Loureiro and Rías Baixas Albariño are the closest terroir siblings in the wine world: both grow in granite soils of the same geological formation (the Galician-Minho granite massif), both use related Atlantic-influenced grape varieties, both produce wines of saline mineral freshness with floral aromatic intensity — the Spanish-Portuguese border creates regulatory separation between two expressions of the same geological identity"
+        },
+        {
+          "tradition": "Alsace Riesling Grand Cru (aromatic white with granite mineral structure)",
+          "connection": "The combination of intense aromatics and firm acidic-mineral structure in Quinta de Ameal Loureiro parallels Alsace Riesling from granite Grand Cru sites like Brand or Sommerberg — both show how granite soils produce aromatic white wines of precision and longevity rather than the fat, generous style associated with clay-limestone white wines"
+        },
+        {
+          "tradition": "Condrieu Viognier (aromatic white, floral intensity)",
+          "connection": "Loureiro and Condrieu Viognier share a similar aromatic register (rose, jasmine, white peach, lime) but Loureiro maintains the granite mineral structure and higher acidity that Viognier often lacks in warm southern Rhône conditions — making Loureiro a more food-versatile expression of the same aromatic white wine aesthetic"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale lemon-gold with faint green tint; brilliantly clear; very light viscosity at 12% ABV; the color signals freshness rather than concentration — appropriate to the variety's aromatic-rather-than-extract character",
+        "nose": "Intense and immediately identifiable: rose petal, jasmine, lime blossom, white peach, grapefruit zest, granite mineral freshness underneath — the Loureiro aromatic signature is distinct enough to be recognized in blind tasting by experienced Portugal specialists; 30 minutes in glass reveals secondary flavors of wet stone and crushed limestone under the floral intensity",
+        "palate": "Light-medium body, vibrant malic acidity (the malolactic fermentation-free character is evident), floral mid-palate that mirrors the nose, saline granite mineral finish, clean and direct — the wine's transparency of expression is its defining quality; no new oak, no malolactic, no filtration masking the Lima River valley granite character"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Vinho Verde Loureiro Commercial",
+          "criteria": "Co-operative or industrial production Loureiro at high yields (10,000+ kg/ha), minimal floral character, residual CO2 added artificially — the thin, neutral baseline that Quinta de Ameal was established to transcend"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Quinta de Ameal Loureiro Standard",
+          "criteria": "Estate fruit, 50,000 bottles annual, 4 months sur lies, no malolactic — the reference expression of Lima sub-region Loureiro character at the premium price point"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Quinta de Ameal Loureiro Escolha",
+          "criteria": "Single-vineyard selection from the oldest estate Loureiro vines (40–60 years), 6 months extended sur lies, no fining or filtration, 5,000 bottles — the deepest expression of the Lima granite terroir available commercially"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Quinta de Ameal Loureiro Reserva Especial",
+          "criteria": "Micro-selections from centenary parcels (80+ year vines), vinified in used acacia or chestnut wood for a further aromatic dimension, under 1,000 bottles when produced — the frontier of Loureiro's aging and complexity potential in the Lima sub-region"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 10–12°C — slightly warmer than most Vinho Verde to allow the complex Loureiro aromatics to express fully; the light body makes it vulnerable to over-chilling which flattens the floral profile; pour only small measures initially and allow to warm in glass",
+        "vessel": "White wine tulip or white Burgundy glass to concentrate the floral aromatics; do not use a narrow champagne flute which disperses the aromatic intensity upward without allowing olfactory concentration; the Loureiro character rewards generous nosing before tasting",
+        "aging_potential": "Quinta de Ameal Loureiro rewards 2–3 years of bottle age for the Escolha tier: the primary floral aromatics integrate with developing honey and waxy secondary notes, and the granite mineral becomes more prominent as the aromatic intensity softens — an underappreciated aging candidate in a region known for young consumption"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Quinta de Ameal — the international benchmark for Lima sub-region single-variety Loureiro and the wine that established Loureiro's international reputation",
+        "north_america_access": "Quinta de Ameal imported by Skurnik Wines (US national) — widely available in New York, California, and major US wine markets; in Canada through LCBO and private import; BC Liquor does not typically list but available through private import to restaurants",
+        "culinary_application": "Loureiro's floral-saline character creates a distinctive pairing with Pacific halibut ceviche where the lime and floral notes mirror the citrus marinade; outstanding with chèvre and Dungeness crab where the granite mineral and floral combination resonates with the ocean-mineral character of the shellfish; the PCT provenance story (same granite formation as neighboring Galicia, the Atlantic wine culture that shaped Portuguese maritime exploration) makes it compelling for restaurants with Portuguese culinary focus"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "WIN-LIMSUB-001",
+      "tradition": "wine",
+      "extracted_at": "2026-04-12T05:01:01.163775+00:00",
+      "batch_number": 2
+    }
+  ]
+}

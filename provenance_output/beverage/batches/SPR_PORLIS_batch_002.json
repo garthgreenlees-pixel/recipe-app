@@ -1,0 +1,195 @@
+{
+  "tradition": "spirits",
+  "region": "Portugal — Lisbon / Ginjinha and Portuguese Liqueurs",
+  "batch_number": 2,
+  "entry_count": 2,
+  "extracted_at": "2026-04-11T15:19:07.577961+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "ginjinha cherry liqueur",
+      "region": "Portugal — Lisbon / Óbidos",
+      "name": "Ginjinha (Ginja)",
+      "terroir_origin": "Ginjinha is a Portuguese sour cherry liqueur with deep cultural roots in Lisbon's Rossio neighbourhood and the medieval town of Óbidos. The ginja sour cherry (Prunus cerasus — related to morello and amarena cherries) is grown across central Portugal, particularly in the highlands of Óbidos, Alcobaça, and the Serra da Lousã. The cherry's natural tartness and almond-like stone character define the liqueur's flavour profile. The ritual of ginjinha in Lisbon is as much cultural as culinary: the tiny bar 'A Ginjinha' on Largo de São Domingos (opened 1840 by Espinheiro) serves nothing but ginjinha in shot glasses for €1.50, either 'com ela' (with the pickled cherry inside) or 'sem ela' (without). The queue at this bar is one of Lisbon's great daily rituals.",
+      "production_technique": "Ginjinha is produced by macerating sour cherries in aguardente (Portuguese grape spirit, typically 35–40% ABV neutral) with sugar and spices — most commonly a cinnamon stick, occasionally cloves or vanilla. The maceration lasts several weeks to months, extracting the cherry's colour, acid, and almond-kernel oils from the stones. The resulting liquid is sweetened with sugar syrup to the producer's style (typically 50–200 g/L residual sugar). The final ABV ranges 20–25%. Most ginjinha is not aged after maceration — it is bottled fresh with cherries included or strained out depending on the house style. Óbidos ginja has its own regional character, served in chocolate cups (the cup melts with the liqueur, consumed together). Commercial production: Ginjinha Espinheiro, Beirão, and Super Bock's Ginjinha are the major brands. The liqueur has been DOP protected in Óbidos since 2016.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Amaretto (Italy)",
+          "connection": "Both are stone-fruit liqueurs derived from cherries/almonds sharing the benzaldehyde aromatic compound that creates the almond-marzipan character; both are sweet, low-alcohol digestifs; the Italian amaretto uses apricot/almond kernels while ginjinha uses the cherry stone for the same compound. Both serve in small portions post-meal"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Maraschino (Luxardo, Dalmatia/Italy)",
+          "connection": "Both are sour cherry liqueurs (Marasca cherry for Luxardo; ginja for Portuguese style); Maraschino is drier, more complex, and higher ABV (32%); ginjinha is sweeter, simpler, and primarily a Portuguese domestic/cultural product. Both are produced by cherry maceration in neutral spirit"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep ruby-red to dark crimson; viscous; the pickled cherry in the glass adds visual drama",
+        "nose": "Sour cherry, wild cherry jam, almonds, cinnamon, light vanilla; sweet rather than complex; intensely fruity; the almond-from-cherry-stones is distinctive",
+        "palate": "Sweet (50–200 g/L sugar); full cherry fruit; low-moderate bitterness from cherry stones; warm spirit backbone (20–25% ABV); medium-short finish with cherry-almond persistence. The cherry inside adds texture and concentrated fruit to the final moments",
+        "conclusion": "Ginjinha is not a complex spirit — it is a cultural object. The pleasure is the ritual: the tiny bar, the 1.50€ shot, the choice of cherry or no cherry. On a cocktail programme, it functions as a cherry liqueur with genuine Portuguese provenance story."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Artisanal Single-Source",
+          "criteria": "Named ginja cherry variety and origin; longer maceration; minimal added sugar; small production",
+          "markers": "Producers in Óbidos using DOP cherries; artisanal labels; limited distribution"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Traditional House",
+          "criteria": "Established producer with consistent recipe; 'com ela' (with cherry); correct bittersweet balance",
+          "markers": "Ginjinha Espinheiro; A Ginjinha bar recipe; historic Lisbon recipes"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Commercial Standard",
+          "criteria": "Major brand production; consistent but standardised sweetness; widespread distribution",
+          "markers": "Ginja Sem Rival; commercial labels; bar and cocktail use"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Industrial Production",
+          "criteria": "Mass market; artificial cherry flavouring possible; no stone maceration; simplest expression",
+          "markers": "Lowest price tier; supermarket own-brand; not genuine ginja culture"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature (18–20°C) for traditional Portuguese service; or slightly chilled (12°C) for cocktail use",
+        "vessel": "Traditional: tiny shot glass (30–40mL) or chocolate cup (Óbidos style). Cocktail: coupe or Nick and Nora glass",
+        "technique": "Traditional Portuguese service: pour 30mL into shot glass; add or omit the cherry. Cocktail use: ginjinha as cherry modifier in sours (Ginja Sour: ginjinha + lemon + egg white); or as topping for champagne. Chocolate cup service: pour ginjinha into small chocolate cup — guest eats cup after drinking",
+        "programme_position": "Post-dinner digestif; cocktail ingredient; cultural moment on a Portuguese menu. The educational pause for a sommelier to explain Rossio Square and A Ginjinha bar",
+        "verbal_presentation": "Ginjinha — the sour cherry liqueur of Lisbon's oldest neighbourhood. Since 1840, served from a tiny bar that sells nothing else. Sour ginja cherries, grape spirit, cinnamon. Drink it the Lisbon way: standing up, one shot, cherry inside."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Ginjinha Espinheiro (the original Rossio bar recipe)",
+        "producer_location": "Largo de São Domingos, Lisbon (A Ginjinha bar); production in Alcobaça/Óbidos region",
+        "key_person": "The Espinheiro family (descendants of founder Francisco Espinheiro, 1840)",
+        "production_volume": "Small; primarily sold at the Rossio bar; commercial versions by larger producers",
+        "certifications": [
+          "Ginja de Óbidos DOP (2016)"
+        ],
+        "bc_distributor": "[NEEDS VERIFICATION — Portuguese spirits rarely distributed in BC; check BCLDB special imports]",
+        "us_distributor": "[NEEDS VERIFICATION — limited US distribution; check Portuguese wine importers for spirits portfolios]",
+        "uk_distributor": "Widely available in specialist Portuguese delis and wine merchants; also sold at duty-free and airport shops from Portugal",
+        "price_tier": "Market (€1.50 at A Ginjinha; €8–15 per bottle commercial)",
+        "availability_notes": "BC: very limited — specialty Portuguese/European delis or BCLDB special import. US: better availability through Portuguese wine/spirits importers; some online. For programme use: the cultural story is the selling point — any commercial ginjinha works."
+      },
+      "trail_connection": "PCT-1",
+      "trail_note": "Ginjinha is one of the great unexported Portuguese cultural products — almost unknown outside Portugal except in Portuguese diaspora communities in Newark, Toronto, and parts of Brazil. The PCT trail note: the ginja cherry tree spread along Portuguese colonial routes to Brazil and Africa where the fruit is used in local distillation traditions. The Rossio bar is essentially unchanged since 1840 — a PCT terminus in the physical heart of Lisbon.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Dark chocolate truffle (70% cacao)",
+          "pairing_type": "complement",
+          "rationale": "The almond-cherry of ginjinha echoes dark chocolate's own cherry-almond terroir notes (the same benzaldehyde compound appears in both cherry and high-cacao chocolate)"
+        },
+        {
+          "technique_id": "",
+          "dish": "Pastel de nata (Portuguese custard tart)",
+          "pairing_type": "bridge",
+          "rationale": "The custard's eggy richness and the pastry's flaky caramel meet ginjinha's cherry sweetness in a classically Portuguese dessert pairing"
+        }
+      ],
+      "source": "A Ginjinha bar history (Espinheiro family); Ginja de Óbidos DOP documentation; Portuguese food writer Edite Vieira writings on Lisbon drinks culture",
+      "entry_id": "SPR-PORLIS-001",
+      "extracted_at": "2026-04-11T15:19:07.577478+00:00",
+      "batch_number": 2
+    },
+    {
+      "tradition": "spirits",
+      "sub_tradition": "medronho arbutus spirit",
+      "region": "Portugal — Algarve / Serra de Monchique",
+      "name": "Medronho (Arbutus Berry Spirit)",
+      "terroir_origin": "Medronho is a Portuguese aguardente (brandy/eau-de-vie) distilled from the fruit of the arbutus tree (Arbutus unedo — the strawberry tree), a wild Mediterranean shrub that grows throughout southern Portugal, particularly in the Serra de Monchique in the Algarve and parts of the Alentejo and Trás-os-Montes. The arbutus berry (medronho) ripens to red-orange in October–November and contains 15–20% sugar — sufficient for natural fermentation. The fruit has a sandy, slightly astringent texture with strawberry-like flavour when fully ripe. Medronho is one of Portugal's most traditional distilled spirits — produced artisanally in small copper pot stills (alambiques) by farmers for domestic use for centuries, though commercial production remains limited.",
+      "production_technique": "Arbutus berries are harvested by hand in October–November when fully red-ripe. Fermentation occurs in open clay pots or stone tanks — the fruit's natural wild yeasts ferment the pulp for 3–6 weeks to produce a 6–8% ABV wash. Single distillation in small copper pot stills produces medronho at 40–55% ABV. Premium medronho undergoes double distillation for greater aromatic refinement. Unlike most European fruit spirits, medronho is rarely aged in wood — it is typically presented unaged or with brief rest in stainless steel, preserving the arbutus berry's wild, floral character. The arbutus tree is not cultivated for commercial production — all medronho comes from wild-harvested fruit, severely limiting production volume. Lagoa in the Algarve is the centre of the industry's small commercial sector.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Eau-de-Vie de Framboise (Alsace/Switzerland)",
+          "connection": "Both are unaged fruit eaux-de-vie distilled from wild or semi-wild berries; both express the raw essence of the fruit without wood transformation; both are produced in small pot stills at artisanal scale; both are regional specialities rarely exported"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Pisco (Peru/Chile)",
+          "connection": "Both are grape-free spirit categories from their respective national traditions; both are unaged (or minimally aged); both face the challenge of export market awareness. The PCT connection: pisco's grapevine was brought by Spanish colonists (who learned viticulture from Portuguese Moors); medronho represents the pre-wine Portuguese distillation tradition that preceded the aguardente grape spirit"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Crystal clear; colourless; full transparency",
+        "nose": "Wild strawberry, arbutus berry (distinctive sandy-sweet fruit), light floral notes, honey, mild wildness; uniquely Portuguese — nothing else smells quite like this in the spirits world",
+        "palate": "Clean, direct fruit hit; medium body; warming alcohol (40–55% ABV); slightly astringent tannic finish from arbutus skin contact; short-to-medium length; fresh and pure",
+        "conclusion": "Medronho is a spirits education piece rather than a commercial staple. Its scarcity, artisanal production, and uniquely Portuguese character make it a culturally irreplaceable item on any serious spirits programme covering Iberia."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Double-Distilled Artisanal",
+          "criteria": "Wild-harvested fruit; double distillation; named producer; Monchique origin",
+          "markers": "Hand-labeled bottles; farm name; Serra de Monchique; limited release"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Single-Distilled Premium",
+          "criteria": "Wild-harvested; single distillation; consistent commercial quality; Algarve DOP if applicable",
+          "markers": "Commercial artisanal bottle; Lagoa or Monchique origin"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Standard Commercial",
+          "criteria": "Commercially produced; consistent; correct arbutus character",
+          "markers": "National distribution in Portugal; tourist retail"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Industrial / Blended",
+          "criteria": "Blended with neutral spirit; reduced arbutus character; filler production",
+          "markers": "Lowest price; tourist souvenir market; possibly with added colouring"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature (18–20°C) or very lightly chilled (14°C) to preserve arbutus aromatics",
+        "vessel": "Grappa glass or small tulip glass (30–45mL pour)",
+        "technique": "Serve neat post-dinner as a digestif. Cocktail use: medronho as the base spirit in a Sour (medronho + citrus + sugar) or as an exotic modification in Iberian cocktail programmes",
+        "programme_position": "Post-dinner digestif; spirits education piece; bar programme curiosity item for a Portuguese or Iberian-themed programme",
+        "verbal_presentation": "Medronho — from the arbutus trees of the Serra de Monchique in the Algarve. Wild strawberry trees, harvested by hand, distilled in copper pot stills. This has been made in the hills above the sea since before Portugal existed as a country."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Quinta dos Poços (Lagoa, Algarve) and artisanal Monchique producers",
+        "producer_location": "Serra de Monchique, Faro district, Algarve, Portugal",
+        "key_person": "[NEEDS VERIFICATION — no single nationally prominent producer]",
+        "production_volume": "Very small total production; wild harvest limits volume",
+        "certifications": [
+          "Aguardente de Medronho do Algarve — IGP protected"
+        ],
+        "bc_distributor": "[NEEDS VERIFICATION — essentially unavailable commercially in BC]",
+        "us_distributor": "[NEEDS VERIFICATION — extremely limited US availability; Portuguese food importers occasionally stock]",
+        "uk_distributor": "[NEEDS VERIFICATION — Portugal-specialist wine merchants occasionally stock medronho]",
+        "price_tier": "Reserve (€15–35 in Portugal; if available internationally, £30–60 premium for scarcity)",
+        "availability_notes": "Essentially unavailable commercially in BC and US. For a professional programme: source through direct import from Portugal, a Portuguese food importer, or personal procurement on travel to the Algarve. The cultural story justifies the effort on a serious Iberian programme."
+      },
+      "trail_connection": "PCT-1",
+      "trail_note": "Medronho represents the pre-colonial layer of Portuguese distillation — the tradition that existed before the grape-spirit (aguardente vinica) that defines Port production. The arbutus tree grows wild along the entire Portuguese coast and was carried to the Azores and Madeira by early Portuguese settlers. It is the original Portuguese spirit.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Presunto (Portuguese dry-cured ham) with fresh figs",
+          "pairing_type": "bridge",
+          "rationale": "The wild-fruit character of medronho bridges with fig sweetness; ham's salt amplifies the spirit's clean finish"
+        },
+        {
+          "technique_id": "",
+          "dish": "Aged sheep's milk cheese (queijo de Évora)",
+          "pairing_type": "complement",
+          "rationale": "The cheese's lanolin-funk and the spirit's wild-fruit purity create a traditional Algarve countryside pairing"
+        }
+      ],
+      "source": "Aguardente de Medronho do Algarve IGP dossier; Portuguese Spirits Association documentation; Jancis Robinson Oxford Companion to Wine — Portugal spirits entry",
+      "entry_id": "SPR-PORALG-002",
+      "extracted_at": "2026-04-11T15:19:07.577705+00:00",
+      "batch_number": 2
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Ramos Pinto / Champagne Louis Roederer group distribution",
+    "type": "importer",
+    "description": "Ramos Pinto has been owned by Champagne Louis Roederer since 1990 — the Roederer group using the same philosophy of quality and estate ownership that defines Roederer Champagne to transform Ramos Pinto into one of the leading estate-focused Port houses. Ramos Pinto is distributed in the United States through the Roederer group import network, available through fine wine retailers nationally. In Canada, BCLDB BC and LCBO Ontario carry the 10-year and 20-year Tawny expressions on regular allocation. The Quinta dos Bons Aires 10-year is widely available in BC specialty wine shops at CAD $35–50 per 750ml, making it one of the most accessible benchmark Tawny Port expressions in the Canadian market.",
+    "markets_served": [
+      "US",
+      "Canada",
+      "UK",
+      "EU",
+      "Global"
+    ],
+    "traditions_carried": [
+      "fortified"
+    ],
+    "website": "ramospinto.pt",
+    "verified": true,
+    "purveyor_id": "PURV-001"
+  }
+]

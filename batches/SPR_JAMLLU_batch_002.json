@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Jamaica — Lluidas Vale St Elizabeth (Worthy Park Estate, Altitude Pot Still, Single Mark)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T04:37:13.333317+00:00",
+  "entries": [
+    {
+      "name": "Worthy Park Estate WPE Single Estate — Altitude Pot Still, 350m Lluidas Vale Jamaica",
+      "category": "spirits",
+      "subcategory": "rum_pot_still",
+      "origin": "Jamaica",
+      "region": "Lluidas Vale, St Elizabeth Parish, Jamaica",
+      "producer": "Worthy Park Estate",
+      "alcohol_content": 45.0,
+      "price_tier": "premium",
+      "terroir_origin": "Worthy Park Estate sits at 350m elevation in Lluidas Vale — a highland agricultural basin in the interior of St Elizabeth Parish, hemmed in by the Nassau Mountains to the north and the Dry Harbour Mountains to the south. This altitude is exceptional for Caribbean sugar cane cultivation: the Jamaican coast averages 27–32°C year-round, but Lluidas Vale at 350m reaches only 22–26°C during the day and 16–18°C at night — a diurnal range that fundamentally alters cane physiology. Slower maturation at altitude produces higher sucrose concentration per unit of cane at harvest, greater phenolic complexity from the cane's extended growing season, and a different ester precursor profile than coastal cane. Worthy Park grows all its own cane on 1,200 acres of the valley, controlling the full supply chain from field to bottle — an agricultural self-sufficiency almost unheard of in Caribbean rum production, where most distilleries purchase molasses from external sugar refineries. The estate's terroir specificity is further defined by the unique Lluidas Vale ecology: the valley floor is a flat alluvial plain of dark brown clay loam over limestone bedrock, while the valley walls rise steeply to forest reserve. The microclimate is drier than Trelawny (Hampden's parish) and cooler, producing a cane character that is less tropical-exuberant and more structured — evident in the Worthy Park rum's restrained fruit character compared to Hampden's explosive high-ester profile.",
+      "production_technique": "Worthy Park's cane is cut by a combination of mechanical and manual harvesting on the valley floor, transported to the on-site milling facility where it is crushed to extract juice. The juice is clarified and concentrated to molasses (approximately 80 Brix) in the estate's own evaporators, rather than purchasing external molasses — a choice that maintains full traceability from field to fermenter. Fermentation occurs in stainless steel closed vats for 5–7 days using a mix of indigenous wild yeast and a house Saccharomyces cerevisiae culture — a hybrid approach between the fully spontaneous fermentation of the highest-ester Jamaican producers and the fully commercial-yeast production of Caribbean industrial rum. The dunder recycling system at Worthy Park operates at moderate intensity: dunder is returned to fermentations at 15–20% of wash volume (compared to Hampden's more aggressive 40–60% additions). This produces ester levels in the moderate range — 200–600 g/hL AA for the WPE expression — creating a Jamaican pot still rum that is recognizably funky without the extremity of the Hampden marks. Double distillation occurs in Worthy Park's copper pot stills (a pair of 5,000-litre wash stills and a 2,500-litre spirit still), with hearts cut taken conservatively to preserve the house character. Aging occurs in ex-bourbon American oak barrels (mainly Jim Beam cooperage) in a single aging warehouse on the estate at ambient altitude temperature — the cooler Lluidas Vale climate produces slower but more even barrel interaction than low-altitude Caribbean aging, contributing to a more restrained oak integration.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Armagnac single estate (Domaine Tariquet style)",
+          "connection": "Worthy Park's single-estate philosophy — all cane grown on property, full supply-chain control from field to bottle — directly parallels the single-estate Armagnac model where all grapes are grown, distilled, and aged on the property; both produce spirits of identifiable terroir specificity rather than blended consistency"
+        },
+        {
+          "tradition": "Japanese single malt (altitude production, restrained character)",
+          "connection": "Worthy Park's altitude cooling and restrained dunder intensity producing a moderate-ester, structured rum mirrors the character of Japanese highland single malts (Hakushu, Yoichi) — both represent how altitude modifies spirit character toward greater structure and restraint compared to tropical/coastal productions of the same category"
+        },
+        {
+          "tradition": "Barbados pot still rum (Mount Gay XO, Foursquare Exceptional Cask)",
+          "connection": "Worthy Park and the great Barbados pot still houses (Foursquare, Mount Gay) represent the \"terroir-expressive traditional Caribbean\" tier against Hampden's \"maximum ester intensity\" tier — Worthy Park occupies the same quality register as Foursquare but through Jamaican rather than Barbadian production philosophy, with higher ester and more funk than Barbados but more restraint than Hampden"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Warm amber gold, clear, medium viscosity, good legs from 45% ABV natural dilution",
+        "nose": "Ripe banana, baking spices, vanilla from ex-bourbon oak, moderate Jamaican funk (butyric, fruity esters at manageable intensity), dried fruit, brown sugar cane — welcoming rather than challenging, the Jamaican character present but not dominating; more structured than coastal Jamaican rum with the Lluidas Vale altitude evident as a cooler, more restrained fruit register",
+        "palate": "Medium-full body, balanced sweetness from molasses concentration, warm spice mid-palate, moderate ester intensity that builds in the middle, clean finish with lingering cane sugar and dried fruit — a rum that communicates its Jamaican heritage without demanding specialist knowledge to appreciate"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Worthy Park Single Estate (White Unaged)",
+          "criteria": "Pot still distillate bottled at 63% without aging — the naked terroir expression used by cocktail bartenders for Ti' Punch and Daiquiri applications requiring Jamaican character without oak influence"
+        },
+        {
+          "tier": 2,
+          "tier_name": "WPE Single Estate (3-5 year)",
+          "criteria": "Standard bottling at 45% with 3–5 years ex-bourbon aging — the internationally distributed reference expression balancing Jamaican character with accessible oak integration"
+        },
+        {
+          "tier": 3,
+          "tier_name": "WPE Cask Collection (8-15 year)",
+          "criteria": "Selected casks at extended age, variable bottling strength (often 54–58% cask strength), limited quantities — each release shows how altitude aging transforms the moderate-ester base spirit over time into something of genuine complexity"
+        },
+        {
+          "tier": 4,
+          "tier_name": "WPE Special Releases (Mark-Specific)",
+          "criteria": "Identified mark expressions (using Jamaican rum mark coding system for ester level), independent bottler collaboration, cask strength — the specialist tier connecting Worthy Park to the connoisseur Jamaican rum market alongside Hampden and Clarendon"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature to slightly warmed — 20–23°C — to open the moderate ester character; WPE is more versatile than Hampden HLCF and performs well both neat and in cocktails without the overwhelming intensity management required for high-ester marks",
+        "vessel": "Glencairn or tulip for neat service; wide-mouthed rocks glass for on-the-rocks service; works well in a wide range of cocktail glassware given its moderate intensity",
+        "cocktail_applications": "WPE is the most versatile Jamaican pot still rum for cocktail use: authentic Jamaican Daiquiri character without overpowering delicate citrus; backbone for rum old fashioned with Angostura and orange; the altitude-cooled structure holds up in Jungle Bird (Campari, pineapple) without being overwhelmed by sweet-bitter modifiers"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Worthy Park Estate — WPE Single Estate bottling (self-produced, distributed through independent spirits importers)",
+        "north_america_access": "Widely distributed in US through Total Beverage Solution (national importer); in Canada through both LCBO (Ontario) and BC Liquor (limited listing); Longitude 122 in Vancouver and The Rum House in NYC carry full range",
+        "culinary_application": "WPE at moderate intensity works as a marinade base for Caribbean-influenced fish preparations (escovitch, jerk-spiced Pacific salmon); the moderate ester character complements rather than competes with Pacific Northwest cold-smoked salmon in a rum-smoked preparation; outstanding in rum cake and rum raisin applications where the altitude-structured character adds depth without the aggression of high-ester marks"
+      },
+      "price_trajectory": "stable",
+      "entry_id": "SPR-LLUVAL-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T04:37:13.332984+00:00",
+      "batch_number": 2
+    }
+  ]
+}

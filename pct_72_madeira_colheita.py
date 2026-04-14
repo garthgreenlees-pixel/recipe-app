@@ -1,0 +1,348 @@
+import sys
+sys.path.insert(0, '/Users/garthgreenlees/Desktop/provenance-tester-1')
+from beverage_extractor import BeverageSession
+
+session = BeverageSession(
+    tradition='fortified',
+    region="Portugal — Madeira (Colheita Single-Vintage, D'Oliveiras 2000 Boal, Extended Canteiro Canteiro Aging, Precision Tier)",
+    output_dir='.',
+    starting_entry=1,
+    session_number=76,
+    running_total=0
+)
+
+session.add_producer({
+    'tradition': 'fortified',
+    'name': "Pereira d'Oliveira — Funchal, Madeira",
+    'location': 'Funchal, Madeira, Portugal',
+    'description': (
+        'Pereira d\'Oliveira (often referred to as D\'Oliveiras) is the oldest '
+        'of the surviving Madeira shippers and the most important archive '
+        'Madeira house in the island\'s wine history. Founded in 1820 in '
+        'Funchal, the company has maintained continuous production through '
+        'the phylloxera crisis (1872–1900), the oídium epidemic, the '
+        'collapse of the Brazilian export market, and the 20th-century '
+        'decline in Madeira\'s global prestige — surviving all disruptions '
+        'with an archive of single-vintage Madeira in barrel and bottle '
+        'going back to the 1850s. The D\'Oliveiras archive is the most '
+        'extraordinary fortified wine collection in continuous commercial '
+        'production anywhere in the world: single-vintage Boal, Verdelho, '
+        'Sercial, and Terrantez colheita expressions from the late 19th '
+        'and early 20th century remain in their Funchal lodge cellars as '
+        'commercial product available for purchase. The 2000 Boal colheita '
+        'is the current-release precision tier expression — a single-vintage '
+        'Bual (Boal) from the year 2000 aged in canteiro since harvest, '
+        'representing the D\'Oliveiras house approach of single-vintage '
+        'precision over blended age-indicated production.'
+    ),
+    'founded': '1820',
+    'region': 'Funchal, Madeira, Portugal',
+    'website': 'oliveiras.com',
+    'verified': True
+})
+
+session.add_purveyor({
+    'name': "D'Oliveiras / specialist Madeira importers (US and Canada)",
+    'type': 'importer',
+    'description': (
+        'Pereira d\'Oliveira Madeira is distributed in the United States through '
+        'specialist Madeira importers including Mannie\'s Wines and Spirits '
+        'and through direct-import fine wine retailers. In Canada, BCLDB BC '
+        'Vintages and LCBO Ontario Vintages carry selected D\'Oliveiras '
+        'colheita expressions on special allocation. The 2000 Boal colheita '
+        'is available in the USD $60–90 range at specialist Madeira retailers; '
+        'older D\'Oliveiras colheita expressions from the 1950s–1980s are '
+        'available through the house directly and at specialist auction '
+        'at USD $150–800+ per 500ml depending on vintage and variety. '
+        'D\'Oliveiras is the primary reference for the Madeira colheita '
+        'collector market internationally.'
+    ),
+    'markets_served': ['US', 'Canada', 'UK', 'EU', 'Portugal'],
+    'traditions_carried': ['fortified'],
+    'website': 'oliveiras.com',
+    'verified': False
+})
+
+session.add_beverage({
+    'name': (
+        "Pereira d'Oliveira Colheita 2000 Boal Madeira — Single-Vintage, "
+        'Canteiro Natural Aging, Medium-Rich Style, Funchal Lodge'
+    ),
+    'category': 'fortified',
+    'subcategory': 'madeira',
+    'origin': 'Portugal',
+    'region': "Portugal — Madeira (Colheita Single-Vintage, D'Oliveiras 2000 Boal, Extended Canteiro Canteiro Aging, Precision Tier)",
+    'producer': "Pereira d'Oliveira — Funchal, Madeira",
+    'alcohol_content': 19.5,
+    'price_tier': 'premium',
+    'terroir_origin': (
+        'Boal (Bual) is grown on Madeira\'s southern coastal slopes at '
+        '150–400m elevation — lower and warmer than the northern-slope '
+        'Sercial terraces, capturing more direct Atlantic sunlight and '
+        'accumulating greater natural sugar concentration. The volcanic '
+        'basalt and tuff soils of the southern Madeira slopes at Boal '
+        'altitude retain daytime heat and release it slowly at night, '
+        'creating the warm, diurnally stable growing conditions that '
+        'allow Boal to achieve 11–12% potential alcohol before harvest '
+        '(higher than Sercial\'s 10–11%, lower than Malmsey\'s 12–13%). '
+        'The Boal variety is one of Madeira\'s four classic noble grape '
+        'varieties (alongside Sercial, Verdelho, and Malmsey) and occupies '
+        'the medium-rich tier of the Madeira sugar spectrum — above '
+        'the bone-dry Sercial and the off-dry Verdelho, below the sweet '
+        'Malmsey. The D\'Oliveiras 2000 Boal colheita fruit would have '
+        'been sourced from contracted growers on the southern coastal '
+        'terraces — specifically the Câmara de Lobos and Jardim da Serra '
+        'sub-zones that historically produced the finest Boal material '
+        'due to their combination of altitude (200–400m), southern '
+        'exposure, and volcanic basalt soil depth. The 2000 vintage in '
+        'Madeira was a year of good weather conditions — warm, dry summer '
+        'with Atlantic rain arriving after harvest — producing Boal '
+        'of above-average concentration and natural acidity balance.'
+    ),
+    'production_technique': (
+        'D\'Oliveiras produces all colheita Madeira exclusively through the '
+        'canteiro natural aging method — the traditional approach of placing '
+        'barrels in the top-floor lodge rooms (armazéns de canteiro) where '
+        'Madeira\'s subtropical climate creates natural heat cycling of '
+        '20–35°C year-round. The 2000 Boal harvest was pressed immediately '
+        'after hand-picking on the southern-slope terraces, fermenting in '
+        'small lagares or stainless steel at 20–22°C until 8–9% ABV '
+        'was achieved — the target pre-fortification alcohol for Boal '
+        'medium-rich style, leaving 65–90 g/L residual sugar preserved '
+        'by fortification with 96% ABV neutral spirit to 19–20% ABV final. '
+        'The fortified young Boal entered the D\'Oliveiras canteiro lodge '
+        'in 2001 in 600L American or French oak barrels on the top floor '
+        'of the Funchal lodge. The canteiro aging process for the 2000 '
+        'Boal colheita has proceeded continuously since 2001: the subtropical '
+        'heat drives the Maillard reactions (caramelization of residual '
+        'sugar) and the Strecker degradation (development of dried fruit '
+        'and caramel character) at a rate calibrated to the natural '
+        'Madeira climate rather than the 3-month industrial acceleration '
+        'of estufagem. The wine evaporates through the porous oak at '
+        '2–3% annually (approximately 3–4% of volume lost per decade '
+        'to the Madeira equivalent of the "angel\'s share"), concentrating '
+        'the remaining wine in sugar, extract, and aromatic complexity. '
+        'At the D\'Oliveiras philosophy level, the 2000 Boal colheita is '
+        'not bottled to a fixed release schedule — it is assessed annually '
+        'by the D\'Oliveiras winemaking team (the Pereira family, fourth '
+        'generation) and bottled only when the winemaker determines that '
+        'the wine has reached optimal complexity, which for Boal colheita '
+        'is typically 15–25 years of canteiro aging. The colheita label '
+        'carries both the 2000 harvest year and the bottling date — '
+        'the two temporal markers that together define the complete '
+        'aging biography of the wine.'
+    ),
+    'cross_tradition_parallels': [
+        {
+            'tradition': 'Sandeman Colheita 1977 Port (single-vintage, wood-aged, bottling date)',
+            'connection': (
+                'D\'Oliveiras 2000 Boal Colheita and Sandeman 1977 Colheita Port '
+                'are direct structural parallels as the two forms of the Portuguese '
+                'single-vintage extended wood-aged fortified wine tradition: both '
+                'are single-vintage expressions aged in wood for extended periods '
+                'before bottling; both carry mandatory bottling-date labeling as '
+                'a legal requirement; and both differ from their respective blended '
+                'age-indicated counterparts (Madeira 20-year; Tawny 20-year) '
+                'in offering single-vintage traceability. The fundamental sensory '
+                'distinction is the Maillard heating in Madeira (subtropical '
+                'canteiro versus temperate Gaia lodge) that produces a more '
+                'caramel-intensive register in the D\'Oliveiras Boal compared '
+                'to the purely oxidative rancio of the Sandeman Port Colheita.'
+            )
+        },
+        {
+            'tradition': 'Armagnac Millésimé (French brandy, single-vintage, bottled to order)',
+            'connection': (
+                'D\'Oliveiras 2000 Boal Colheita and Armagnac Millésimé share '
+                'the single-vintage philosophy of bottling individual-year '
+                'productions to order from a continuously aging archive — '
+                'the producer holding the vintage in barrel and releasing it '
+                'when the winemaker or distiller determines optimal complexity. '
+                'Both traditions maintain archives of historic vintages: '
+                'D\'Oliveiras holds Madeira colheita going back to the 1850s; '
+                'Armagnac houses (Darroze, Castarede) hold millésimé vintages '
+                'from the late 19th century. Both represent the precision '
+                'tier of their respective traditions — the single-vintage '
+                'expression revealing the character of a specific year and '
+                'place rather than the consistency of a blended average.'
+            )
+        }
+    ],
+    'sensory_profile': {
+        'appearance': (
+            'Rich amber-gold with orange highlights — the characteristic '
+            'color of a Boal colheita from 20+ years of canteiro natural '
+            'aging; deeper and more amber than the pale gold of Sercial '
+            'colheita due to the higher residual sugar (65–90 g/L) driving '
+            'greater Maillard browning intensity; brilliant clarity; '
+            'viscous, slow legs from the residual sugar and 19–20% ABV; '
+            'the amber-orange color communicates the medium-rich Boal '
+            'tier — between the pale gold of Sercial and the deep '
+            'amber-brown of Malmsey.'
+        ),
+        'nose': (
+            'Dried apricot, mango, and tropical fruit as the primary '
+            'register — the Boal variety\'s tropical fruit character '
+            'transformed and concentrated by 20+ years of canteiro '
+            'natural heat aging; caramel and burnt caramel from the '
+            'Maillard sugar transformation; orange marmalade and '
+            'preserved citrus peel from the concentrated citrus '
+            'character of Boal; rancio (walnut, hazelnut) from '
+            'the oxidative component of canteiro aging; honey and '
+            'beeswax from the high residual sugar in the warm '
+            'canteiro environment; a smoky, volcanic mineral note '
+            'from the Madeira basalt and tuff terroir that '
+            'persists beneath the dominant fruit and caramel; '
+            'the D\'Oliveiras canteiro complexity is more nuanced '
+            'and layered than estufagem Boal at equivalent '
+            'age due to the slower, natural heat transformation.'
+        ),
+        'palate': (
+            'Medium-rich sweetness (65–90 g/L residual sugar) with '
+            'the characteristic Madeira acidity balancing the '
+            'sugar concentration — the Boal style at 20+ years '
+            'achieves a perfect balance between sweetness and '
+            'acidity that neither the drier Sercial-Verdelho '
+            'nor the sweeter Malmsey can claim; dried apricot '
+            'and tropical fruit through the entry; caramel and '
+            'orange marmalade through the mid-palate; the rancio '
+            'and volcanic mineral building on the very long '
+            'finish (75–90+ seconds) from the combination of '
+            'residual sugar, natural acidity, and the concentrated '
+            'aromatic complexity of 20+ years of canteiro aging; '
+            'the balance of the Boal palate is the defining '
+            'quality characteristic of D\'Oliveiras colheita '
+            'production — precision in maintaining the midpoint '
+            'between the demanding Sercial structure and the '
+            'generous Malmsey sweetness.'
+        )
+    },
+    'quality_hierarchy': [
+        {
+            'tier': 1,
+            'tier_name': 'Commercial Boal / Bual (estufagem, age-indicated blend)',
+            'criteria': (
+                'Boal produced through estufagem commercial heating and blended '
+                'into age-indicated expressions (5-year, 10-year) by the major '
+                'commercial Madeira houses (Blandy\'s, Henriques & Henriques); '
+                'the burnt caramel and dried fruit character is present but '
+                'without the nuanced mineral and rancio complexity of canteiro '
+                'aging; reliable commercial expressions suitable for '
+                'introductory Madeira education.'
+            )
+        },
+        {
+            'tier': 2,
+            'tier_name': 'Blandy\'s 10-Year Bual (commercial canteiro blend)',
+            'criteria': (
+                'Ten-year average canteiro aging from Blandy\'s (the largest '
+                'Madeira shipper and the most widely distributed commercial '
+                'house in North America); the 10-year canteiro expression '
+                'shows genuine complexity relative to estufagem production '
+                'at the same age; Blandy\'s 10-year Bual is the '
+                'benchmark commercial comparison for D\'Oliveiras '
+                'colheita quality assessment.'
+            )
+        },
+        {
+            'tier': 3,
+            'tier_name': "D'Oliveiras Colheita 2000 Boal (single-vintage canteiro, precision tier)",
+            'criteria': (
+                'Single-vintage Boal from D\'Oliveiras with 20+ years of '
+                'canteiro natural aging; the precision tier of Madeira '
+                'production where vintage traceability, single-cask '
+                'assessment, and the D\'Oliveiras archive philosophy '
+                'distinguish the expression from commercial age-indicated '
+                'blended production; the reference expression for the '
+                'Boal medium-rich style at single-vintage precision level.'
+            )
+        },
+        {
+            'tier': 4,
+            'tier_name': "D'Oliveiras Historic Boal Colheita (pre-1970s, archive tier)",
+            'criteria': (
+                'Historic Boal colheita from D\'Oliveiras archive — vintages '
+                'from the 1930s–1960s with 50–80+ years of canteiro aging; '
+                'the apex of Madeira Boal production at maximum concentration '
+                'and rancio complexity; available directly from D\'Oliveiras '
+                'and at specialist auction; pricing USD $200–600+ per '
+                '500ml for mid-20th century Boal colheita; one of the '
+                'rarest and most historically significant wine categories '
+                'available in commercial trade anywhere in the world.'
+            )
+        }
+    ],
+    'service_intelligence': {
+        'temperature': (
+            'Serve D\'Oliveiras 2000 Boal Colheita at 12–14°C — the '
+            'medium-rich sugar concentration (65–90 g/L) is most '
+            'balanced at this temperature, allowing the dried apricot '
+            'and tropical fruit to express fully without the sweetness '
+            'becoming dominant; above 16°C the residual sugar perception '
+            'increases and the mineral-acid structure recedes; '
+            'serve in the Madeira tasting arc between Verdelho '
+            'and Malmsey — the Boal medium-rich tier is the '
+            'pivot point of the Madeira flavour spectrum and '
+            'functions as both a dessert wine and a digestif '
+            'depending on the food context; stable after opening '
+            'for 6–10 weeks recorked and refrigerated.'
+        ),
+        'vessel': (
+            'Serve in a white wine tulip or small dessert wine glass '
+            '(150–175ml format) with 60–80ml pour; the medium-rich '
+            'Boal style benefits from a slightly wider glass than '
+            'the copita used for Tawny Port — the tropical fruit '
+            'and dried apricot aromatics require more surface area '
+            'to develop than the denser rancio aromas of Port; '
+            'present the colheita label showing both the 2000 '
+            'harvest year and the bottling date — the two dates '
+            'are the complete biography of the wine and merit '
+            'the full contextual explanation of canteiro natural '
+            'aging, the D\'Oliveiras archive philosophy, and the '
+            'distinction between colheita single-vintage and '
+            'blended age-indicated Madeira.'
+        )
+    },
+    'purveyor_intelligence': {
+        'benchmark_producer': (
+            'Pereira d\'Oliveira — Funchal, Madeira (1820; the most important '
+            'archive Madeira house with colheita going back to the 1850s; '
+            'the 2000 Boal colheita is the current-release precision tier '
+            'expression; D\'Oliveiras is essential alongside Barbeito '
+            'for any serious professional Madeira education programme '
+            'covering the distinction between commercial and single-vintage '
+            'colheita production).'
+        ),
+        'north_america_access': (
+            'D\'Oliveiras Madeira is available through specialist Madeira '
+            'importers in the United States at USD $60–90 for the 2000 '
+            'Boal colheita per 500ml. BCLDB BC Vintages and LCBO Ontario '
+            'Vintages carry selected D\'Oliveiras expressions on special '
+            'allocation. For professional buyers seeking the complete '
+            'Madeira quality spectrum, the three essential house '
+            'selections are: Blandy\'s (commercial estufagem reference), '
+            'Barbeito (canteiro specialist, single varieties), '
+            'D\'Oliveiras (archive colheita, precision single-vintage).'
+        ),
+        'culinary_application': (
+            'D\'Oliveiras 2000 Boal Colheita is the Madeira style with '
+            'the widest food application range — the medium-rich '
+            'sugar and extreme natural acidity bridge both savoury '
+            'and sweet contexts. Classic pairings: with Madeiran '
+            'espetada (beef skewers) on the traditional service '
+            'wire hanger; with egg custard pastry (pastel de nata); '
+            'with aged Cheddar or Comté where the dried fruit and '
+            'caramel of the Boal mirrors the crystallized amino '
+            'acid and aged dairy complexity of the hard cheese. '
+            'The 2000 Boal colheita is the sommelier choice for '
+            'a formal foie gras course wine where Sauternes is '
+            'the conventional option but the Madeira\'s volcanic '
+            'mineral backbone provides a structural alternative '
+            'to the pure sweetness of botrytized Sauternes.'
+        )
+    },
+    'price_trajectory': 'rising'
+})
+
+session.commit_batch()
+session.finish()

@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Provenance — Culinary Lineage</title>
+<meta name="description" content="Professional culinary lineage — 12,106 techniques across 50 cuisines, recipe sourcing, HACCP guidance, and beverage pairing. For chefs, sommeliers, and culinary institutions.">
+<link rel="canonical" href="https://provenance.kitchen/">
+<meta property="og:title" content="Provenance — Culinary Lineage">
+<meta property="og:description" content="Professional culinary lineage — 12,106 techniques across 50 cuisines, recipe sourcing, HACCP guidance, and beverage pairing.">
+<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<meta property="og:url" content="https://provenance.kitchen/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Provenance — Culinary Lineage">
+<meta name="twitter:description" content="Professional culinary lineage — 12,106 techniques across 50 cuisines, recipe sourcing, HACCP guidance, and beverage pairing.">
+<meta name="twitter:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Provenance",
+  "url": "https://provenance.kitchen",
+  "description": "Culinary lineage — technique, origin, pairing, and craft for professional kitchens.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://provenance.kitchen/recipes?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Provenance",
+  "url": "https://provenance.kitchen",
+  "logo": "https://provenance.kitchen/static/img/og-default.jpg",
+  "description": "Culinary lineage for professional kitchens — technique, origin, pairing, and craft.",
+  "address": { "@type": "PostalAddress", "addressLocality": "Vancouver", "addressRegion": "BC", "addressCountry": "CA" }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A09;--surface:#141413;
+  --cream:#F4F1E8;--smoke:#9C9A93;--stone:#6B6962;--ash:#6B6962;
+  --gold:#C9A84C;--bronze:#8B6914;--sage:#7A8F6F;--copper:#A0674B;
+  --border:rgba(74,72,64,0.3);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--cream);
+  font-family:'DM Sans',-apple-system,sans-serif;font-weight:300;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+
+/* ─── Reveal ─── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.9s ease,transform 0.9s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ─── Header ─── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:60px;
+  background:rgba(10,10,9,0.94);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.wordmark{
+  font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:400;
+  color:var(--cream);text-decoration:none;
+}
+.header-nav{display:flex;align-items:center;gap:2rem}
+.header-nav a{
+  font-family:'DM Sans',sans-serif;font-weight:300;font-size:11px;
+  color:var(--smoke);text-decoration:none;letter-spacing:0.04em;transition:color 200ms;
+}
+.header-nav a:hover{color:var(--gold)}
+.header-nav .nav-prem{color:rgba(201,168,76,0.55)}
+.header-nav .nav-prem:hover{color:var(--gold)}
+@media(max-width:768px){.header-nav{display:none}}
+.p-mono{
+  width:30px;height:30px;border-radius:50%;
+  border:1px solid rgba(201,168,76,0.45);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;background:transparent;transition:border-color 200ms;
+  flex-shrink:0;outline:none;appearance:none;
+}
+.p-mono:hover{border-color:var(--gold)}
+.p-mono span{
+  font-family:'Playfair Display',serif;font-size:12px;font-weight:400;
+  color:var(--gold);line-height:1;pointer-events:none;
+}
+
+/* ─── Nav Overlay ─── */
+#navOverlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(10,10,9,0.97);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 280ms cubic-bezier(0.4,0,0.2,1);
+}
+#navOverlay.open{opacity:1;pointer-events:all}
+.ov-close{
+  position:absolute;top:1.5rem;right:2rem;
+  background:none;border:none;color:var(--stone);font-size:20px;
+  cursor:pointer;transition:color 200ms;padding:4px 8px;
+}
+.ov-close:hover{color:var(--cream)}
+.ov-brand{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--stone);margin-bottom:3rem;
+}
+.ov-nav{list-style:none;text-align:center;display:flex;flex-direction:column;align-items:center}
+.ov-nav li a{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Playfair Display',serif;font-size:24px;font-weight:400;
+  color:rgba(244,241,232,0.65);text-decoration:none;
+  padding:0.5rem 1.5rem;transition:color 200ms;
+}
+.ov-nav li a:hover{color:var(--cream)}
+.ov-nav .nd{font-size:8px;color:var(--gold);opacity:0.7}
+.ov-rule{width:1px;height:20px;background:var(--border);margin:0.4rem auto;display:block}
+
+/* ─── Layout ─── */
+main{padding-top:60px}
+.wrap{max-width:900px;margin:0 auto;padding:0 2rem}
+.sep{height:1px;background:rgba(201,168,76,0.15);width:60%;margin:0 auto}
+
+/* ─── Section header ─── */
+.s-num{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--stone);margin-bottom:4px;
+}
+.s-title{
+  font-family:'DM Mono',monospace;font-weight:400;
+  font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2.5rem;
+  display:flex;align-items:center;gap:10px;
+}
+.s-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ─── OPENING ─── */
+#opening{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:2rem;
+  background:var(--bg);position:relative;
+}
+.open-eye{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--stone);margin-bottom:2.5rem;
+}
+.open-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(30px,5vw,56px);font-weight:400;
+  color:var(--cream);line-height:1.2;letter-spacing:-0.01em;
+  margin-bottom:1.25rem;max-width:600px;
+}
+.open-title em{color:var(--gold);font-style:italic}
+.open-sub{
+  font-family:'DM Sans',sans-serif;font-weight:300;
+  font-size:14px;color:var(--stone);
+  letter-spacing:0.01em;line-height:1.7;max-width:360px;
+}
+.scroll-ind{
+  position:absolute;bottom:2.5rem;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.mouse-body{
+  width:18px;height:28px;border:1px solid rgba(107,105,98,0.4);
+  border-radius:4px;display:flex;justify-content:center;padding-top:5px;
+}
+.mouse-dot{
+  width:2px;height:5px;background:var(--gold);
+  border-radius:1px;animation:mdot 1.8s ease-in-out infinite;opacity:0.8;
+}
+@keyframes mdot{
+  0%,100%{transform:translateY(0);opacity:0.8}
+  50%{transform:translateY(5px);opacity:0.25}
+}
+.mouse-lbl{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(107,105,98,0.5);
+}
+
+/* ─── Cards grid ─── */
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+@media(max-width:860px){.cards-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.cards-grid{grid-template-columns:1fr}}
+
+/* ─── Recipe card ─── */
+.rec-card{
+  display:block;text-decoration:none;color:inherit;
+  overflow:hidden;border-bottom:1px solid transparent;transition:border-color 250ms;
+}
+.rec-card:hover{border-bottom-color:var(--gold)}
+.rec-img,.rec-grad{width:100%;aspect-ratio:3/2;object-fit:cover;display:block}
+.rec-grad{display:none}
+.rec-body{padding:0.75rem 0 0.35rem}
+.rec-name{font-size:13px;font-weight:400;color:var(--cream);margin-bottom:3px}
+.rec-cuis{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:300;
+  text-transform:uppercase;letter-spacing:0.1em;color:var(--stone);
+}
+
+/* ─── Drink card ─── */
+.drk-card{
+  display:block;text-decoration:none;color:inherit;
+  overflow:hidden;border-bottom:1px solid transparent;transition:border-color 250ms;
+}
+.drk-card:hover{border-bottom-color:var(--gold)}
+.drk-face{width:100%;aspect-ratio:3/2;display:block}
+.drk-body{padding:0.75rem 0 0.35rem}
+.drk-name{font-size:13px;font-weight:400;color:var(--cream);margin-bottom:3px}
+.drk-type{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:300;
+  text-transform:uppercase;letter-spacing:0.1em;color:var(--stone);
+}
+
+/* ─── Browse link ─── */
+.browse-link{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:10px;font-weight:300;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--gold);text-decoration:none;transition:opacity 200ms;
+}
+.browse-link:hover{opacity:0.6}
+
+/* ─── 003 CUISINES — dropdown ─── */
+.cuisine-select-wrap{position:relative;display:inline-block;margin-top:1.5rem;}
+.cuisine-dropdown{
+  appearance:none;-webkit-appearance:none;
+  background:transparent;border:1px solid rgba(201,168,76,0.35);
+  color:#C9A84C;font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:0.15em;text-transform:uppercase;
+  padding:0.85rem 3rem 0.85rem 1.25rem;
+  cursor:pointer;outline:none;min-width:260px;transition:border-color 200ms;
+}
+.cuisine-dropdown:hover,.cuisine-dropdown:focus{border-color:#C9A84C;}
+.cuisine-dropdown option{background:#0B0A09;color:#C9A84C;}
+.cuisine-select-wrap::after{
+  content:'→';position:absolute;right:1.1rem;top:50%;transform:translateY(-50%);
+  font-family:'DM Mono',monospace;font-size:11px;color:#C9A84C;pointer-events:none;
+}
+
+/* ─── ORIGINALS ─── */
+#originals{
+  min-height:70vh;background:#000000;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:4rem 2rem;
+  position:relative;overflow:hidden;
+}
+.orig-line{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:40%;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4) 50%,transparent);
+}
+.orig-lbl{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:9px;text-transform:uppercase;letter-spacing:4px;
+  color:rgba(201,168,76,0.5);margin-bottom:2.5rem;
+  opacity:0;transform:translateY(12px);
+  transition:opacity 1.5s ease,transform 1.5s ease;
+}
+.orig-hl{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(22px,3.5vw,34px);font-weight:400;font-style:italic;
+  color:var(--cream);margin-bottom:1.25rem;
+  opacity:0;transform:translateY(12px);
+  transition:opacity 1.5s ease 0.3s,transform 1.5s ease 0.3s;
+}
+.orig-sub{
+  font-family:'DM Sans',sans-serif;font-weight:300;
+  font-size:13px;color:rgba(244,241,232,0.28);margin-bottom:3.5rem;
+  opacity:0;transform:translateY(12px);
+  transition:opacity 1.5s ease 0.6s,transform 1.5s ease 0.6s;
+}
+.orig-yr{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:8px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(201,168,76,0.2);
+  opacity:0;transition:opacity 1.5s ease 0.9s;
+}
+#originals.visible .orig-lbl,
+#originals.visible .orig-hl,
+#originals.visible .orig-sub{opacity:1;transform:translateY(0)}
+#originals.visible .orig-yr{opacity:1}
+.orig-readmore{
+  display:inline-block;margin-top:2rem;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(201,168,76,0.5);
+  text-decoration:none;transition:color 200ms;
+  opacity:0;transition:opacity 1.5s ease 1.2s,color 200ms;
+}
+.orig-readmore:hover{color:#C9A84C;}
+#originals.visible .orig-readmore{opacity:1;}
+
+/* ─── 004 ENHANCEMENT ─── */
+.enh-split{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+@media(max-width:680px){.enh-split{grid-template-columns:1fr}}
+.enh-col-lbl{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:8px;text-transform:uppercase;letter-spacing:0.14em;
+  color:var(--gold);margin-bottom:0.85rem;
+}
+.rec-plain{background:var(--surface);border:1px solid var(--border);padding:1.5rem}
+.rec-enh{background:var(--surface);border:1px solid rgba(201,168,76,0.2);padding:1.5rem}
+.pl-title{font-size:13px;font-weight:400;color:var(--smoke);margin-bottom:0.9rem}
+.pl-sec{font-size:8px;text-transform:uppercase;letter-spacing:0.12em;
+  color:rgba(244,241,232,0.2);margin:0.85rem 0 0.35rem}
+.pl-item{font-size:11px;color:rgba(244,241,232,0.27);padding:3px 0;
+  border-bottom:1px solid rgba(255,255,255,0.03)}
+.enh-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:400;
+  color:var(--cream);margin-bottom:3px}
+.enh-orig{font-family:'DM Mono',monospace;font-size:9px;font-weight:300;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:rgba(201,168,76,0.6);margin-bottom:1rem}
+.enh-step{display:flex;gap:8px;align-items:flex-start;
+  font-size:11px;color:var(--smoke);
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);line-height:1.6}
+.enh-tag{flex-shrink:0;font-family:'DM Mono',monospace;font-size:7px;
+  text-transform:uppercase;letter-spacing:0.06em;
+  padding:2px 5px;background:rgba(201,168,76,0.1);color:var(--gold);margin-top:2px}
+.enh-callout{margin:0.85rem 0;padding:0.7rem 1rem;
+  border-left:2px solid rgba(201,168,76,0.3);
+  background:rgba(201,168,76,0.04);
+  font-size:11px;color:var(--stone);font-style:italic;line-height:1.55}
+.enh-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:0.85rem}
+.enh-badge{font-family:'DM Mono',monospace;font-size:7.5px;
+  text-transform:uppercase;letter-spacing:0.05em;padding:3px 7px}
+.badge-h{background:rgba(122,143,111,0.15);color:var(--sage);border:1px solid rgba(122,143,111,0.25)}
+.badge-p{background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid rgba(201,168,76,0.2)}
+.badge-o{background:rgba(255,255,255,0.03);color:var(--stone);border:1px solid var(--border)}
+.enh-kitchen-cta{
+  font-family:'Playfair Display',serif;font-style:italic;
+  color:#C9A84C;opacity:0.7;text-decoration:none;
+  font-size:15px;transition:opacity 200ms;
+}
+.enh-kitchen-cta:hover{opacity:1}
+.enh-tagline{margin-top:2.5rem;text-align:center;
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:9px;text-transform:uppercase;letter-spacing:0.14em;
+  color:rgba(201,168,76,0.35)}
+
+/* ─── 005 FOR THE PROFESSION ─── */
+.prof-list{list-style:none}
+.prof-item{border-bottom:1px solid var(--border)}
+.prof-item:first-child{border-top:1px solid var(--border)}
+.prof-link{
+  display:flex;align-items:center;gap:1.5rem;
+  padding:1.75rem 0;text-decoration:none;color:inherit;transition:color 200ms;
+}
+.prof-link:hover .prof-title{color:var(--gold)}
+.prof-link:hover .prof-dia{opacity:1}
+.prof-link:hover .prof-arr{color:var(--gold)}
+.prof-dia{flex-shrink:0;font-size:8px;color:var(--gold);opacity:0.5;transition:opacity 200ms}
+.prof-body{flex:1}
+.prof-title{
+  font-family:'Playfair Display',serif;font-size:19px;font-weight:400;
+  color:var(--cream);margin-bottom:4px;transition:color 200ms;
+}
+.prof-desc{
+  font-family:'DM Sans',sans-serif;font-weight:300;
+  font-size:12px;color:var(--stone);line-height:1.5;
+}
+.prof-arr{
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:var(--stone);flex-shrink:0;transition:color 200ms;
+}
+
+/* ─── CLOSING ─── */
+#closing{
+  padding:6rem 2rem 3.5rem;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;border-top:1px solid var(--border);
+}
+.closing-wm{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(48px,8vw,80px);font-weight:400;
+  color:var(--cream);letter-spacing:-0.02em;margin-bottom:1.5rem;
+}
+.closing-lbl{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--stone);margin-bottom:2.5rem;
+}
+.closing-rule{width:80px;height:1px;background:rgba(201,168,76,0.3);margin-bottom:2.5rem}
+.closing-quote{
+  font-family:'Playfair Display',serif;font-size:15px;font-weight:400;font-style:italic;
+  color:var(--smoke);line-height:1.75;max-width:420px;margin-bottom:4rem;
+}
+.footer-line{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:6px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(107,105,98,0.2);
+}
+
+/* ─── Paper grain overlay ─── */
+body::before{
+  content:'';
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.025;pointer-events:none;z-index:9999;mix-blend-mode:overlay;
+}
+
+/* ─── Proof strip ─── */
+.proof-strip{display:flex;justify-content:center;align-items:center;gap:1rem;padding:1.25rem 0;border-top:1px solid rgba(201,168,76,0.12);border-bottom:1px solid rgba(201,168,76,0.12);font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:rgba(245,241,233,0.45);text-transform:uppercase;flex-wrap:wrap}
+.proof-strip .sep{color:rgba(201,168,76,0.4);background:none;height:auto;width:auto;margin:0}
+/* ─── Homepage CTA ─── */
+.homepage-cta{text-align:center;padding:2.5rem 0}
+.cta-primary{display:inline-block;padding:1rem 2.5rem;border:1px solid #C9A84C;color:#C9A84C;font-family:'DM Mono',monospace;font-size:0.8rem;letter-spacing:0.25em;text-transform:uppercase;text-decoration:none;transition:all 0.2s}
+.cta-primary:hover{background:rgba(201,168,76,0.1)}
+.cta-sub{margin-top:1rem;font-size:0.85rem;color:rgba(245,241,233,0.45);font-weight:300}
+.stats-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:0.4rem 1rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,0.12)}
+.stats-strip-item{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(156,154,147,0.65)}
+.stats-strip-sep{color:rgba(201,168,76,0.3);font-size:9px}
+/* ─── Footer ─── */
+.app-footer{background:#0E0D0B;border-top:1px solid rgba(201,168,76,0.12);padding:4rem 4rem 2rem;margin-top:auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-brand{font-family:'Playfair Display',serif;font-size:1.3rem;color:#F5F1E9;margin-bottom:0.5rem}
+.footer-tagline{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:rgba(245,241,233,0.35);text-transform:uppercase}
+.footer-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.25em;color:#C9A84C;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(245,241,233,0.55);font-size:0.85rem;font-weight:300;text-decoration:none;padding:0.3rem 0;transition:color 0.2s}
+.footer-col a:hover{color:#F5F1E9}
+.footer-bottom{display:flex;justify-content:space-between;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08);font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(245,241,233,0.2);text-transform:uppercase}
+@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}.app-footer{padding:3rem 1.5rem 2rem}.footer-bottom{flex-direction:column;gap:0.5rem}}
+/* ─── Embossed gold text ─── */
+.embossed{text-shadow:0 1px 0 rgba(201,168,76,0.4),0 -1px 0 rgba(0,0,0,0.8)}
+
+/* ─── Section edge accents ─── */
+#recipes{border-left:2px solid rgba(201,168,76,0.12);position:relative}
+#drinks{border-left:2px solid rgba(160,103,75,0.12);position:relative}
+#cuisines{border-left:2px solid rgba(122,143,111,0.12);position:relative}
+#originals{border-left:2px solid rgba(201,168,76,0.06)}
+#enhancement{border-left:2px solid rgba(244,241,232,0.08);position:relative}
+#profession{border-left:2px solid rgba(139,105,20,0.12);position:relative}
+
+/* ─── Page numbers ─── */
+.page-num{
+  position:absolute;bottom:1.5rem;right:2rem;
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:7px;letter-spacing:2px;
+  color:var(--stone);opacity:0.15;pointer-events:none;
+}
+
+/* ─── Cinematic recipe images ─── */
+.rec-img,.rec-grad{aspect-ratio:21/9}
+.rec-img{transition:transform 0.8s ease}
+.rec-card:hover .rec-img{transform:scale(1.03)}
+
+/* ─── Updated animation timing ─── */
+.reveal{transition:opacity 1.0s ease,transform 1.0s ease}
+.orig-lbl{transition:opacity 1.8s ease,transform 1.8s ease}
+.orig-hl{transition:opacity 1.8s ease 0.3s,transform 1.8s ease 0.3s}
+.orig-sub{transition:opacity 1.8s ease 0.6s,transform 1.8s ease 0.6s}
+.orig-yr{transition:opacity 1.8s ease 0.9s}
+
+/* ─── Closing section redesign ─── */
+#closing{padding:8rem 2rem 6rem}
+.closing-cul{
+  font-family:'DM Mono',monospace;font-weight:300;
+  font-size:7px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(201,168,76,0.4);margin-bottom:2.5rem;
+}
+.closing-quote{color:rgba(156,154,147,0.5)}
+
+/* ─── Sound button ─── */
+.sound-btn{
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:150;
+  background:rgba(10,10,9,0.85);
+  border:1px solid var(--border);
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--stone);
+  transition:color 200ms,border-color 200ms;
+  border-radius:4px;outline:none;appearance:none;
+  backdrop-filter:blur(8px);
+}
+.sound-btn:hover,.sound-btn.active{color:var(--gold);border-color:rgba(201,168,76,0.3)}
+
+/* ─── Mobile Nav ─── */
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.main-nav{display:none}.mobile-menu-btn{display:flex}}
+</style>
+<!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4G21HCX2D0');
+</script>
+<!-- PWA -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Provenance">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+</head>
+<body>
+
+<!-- ─── Sound button ─── -->
+<button id="soundBtn" class="sound-btn" onclick="toggleSound()" aria-label="Toggle ambient sound">
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+    <g id="snd-off">
+      <path d="M4.5 4.5H3L1.5 6.5 3 8.5h1.5l2.5 2V2.5l-2.5 2z" stroke="currentColor" stroke-width="0.8" stroke-linejoin="round"/>
+      <line x1="9" y1="4" x2="11" y2="6" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+      <line x1="11" y1="4" x2="9" y2="6" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+    </g>
+    <g id="snd-on" style="display:none">
+      <path d="M4.5 4.5H3L1.5 6.5 3 8.5h1.5l2.5 2V2.5l-2.5 2z" stroke="currentColor" stroke-width="0.8" stroke-linejoin="round"/>
+      <path d="M8.5 4.8c.7.4.9.9.9 1.7s-.2 1.3-.9 1.7" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+      <path d="M10 3.2c1.2.8 1.5 2 1.5 3.3s-.3 2.5-1.5 3.3" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+    </g>
+  </svg>
+</button>
+
+<!-- ─── Nav Overlay ─── -->
+<div id="navOverlay" role="dialog" aria-label="Navigation">
+  <button class="ov-close" onclick="closeMenu()" aria-label="Close">&#x2715;</button>
+  <div class="ov-brand">Provenance</div>
+  <ul class="ov-nav">
+    <li><a href="/recipes" onclick="closeMenu()">Recipes</a></li>
+    <li><a href="/drinks" onclick="closeMenu()">Drinks</a></li>
+    <li><a href="/cuisines" onclick="closeMenu()">Cuisines</a></li>
+    <li><span class="ov-rule"></span></li>
+    <li><a href="/techniques/browse" onclick="closeMenu()">Techniques <span class="nd">◆</span></a></li>
+    <li><a href="/beverage" onclick="closeMenu()">Beverage Terroir <span class="nd">◆</span></a></li>
+    <li><span class="ov-rule"></span></li>
+    <li><a href="/auth/account" onclick="closeMenu()">My Kitchen</a></li>
+  </ul>
+</div>
+
+<!-- ─── Header ─── -->
+<header>
+  <a href="/" class="wordmark embossed">Provenance</a>
+  <nav class="header-nav main-nav" aria-label="Primary">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse" class="nav-prem">Techniques ◆</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="/about" style="font-size:10px;opacity:0.6">About</a>
+    <a href="/suppliers" style="font-size:10px;opacity:0.6">Suppliers</a>
+  </nav>
+  <a href="/auth/account" class="p-mono" aria-label="My Kitchen"><span>P</span></a>
+  <button class="mobile-menu-btn" aria-label="Open navigation" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()" aria-label="Close navigation">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/auth/account">My Kitchen</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+<main>
+
+<!-- ─── OPENING ─── -->
+<section id="opening">
+  <div class="open-eye reveal">Culinary Lineage</div>
+  <h1 class="open-title reveal">Some recipes survive centuries. Some survive in a single kitchen.</h1>
+  <p class="open-sub reveal">Traced to the source — from the hands that still make it.</p>
+  <div class="scroll-ind">
+    <div class="mouse-body"><div class="mouse-dot"></div></div>
+    <span class="mouse-lbl">Explore</span>
+  </div>
+</section>
+
+<div class="proof-strip">
+  <span>12,106 techniques</span><span class="sep">·</span>
+  <span>50+ cuisine traditions</span><span class="sep">·</span>
+  <span>686 recipes</span><span class="sep">·</span>
+  <span>500 drinks</span><span class="sep">·</span>
+  <span>Vancouver, BC</span>
+</div>
+
+<div class="sep"></div>
+
+<!-- ─── 003 CUISINES ─── -->
+<section id="cuisines">
+  <div class="wrap" style="padding-top:5rem;padding-bottom:5rem">
+    <div class="s-num">003</div>
+    <div class="s-title embossed">Cuisines</div>
+    <div class="cuisine-select-wrap">
+      <select class="cuisine-dropdown" onchange="if(this.value)window.location='/techniques/browse?cuisine='+encodeURIComponent(this.value)">
+        <option value="">Select a cuisine…</option>
+        <option>Italian</option><option>Japanese</option><option>Thai</option>
+        <option>French</option><option>Korean</option><option>Indian</option>
+        <option>Chinese</option><option>Mexican</option><option>Vietnamese</option>
+        <option>American</option><option>Peruvian</option><option>Ethiopian</option>
+        <option>Brazilian</option><option>Turkish</option><option>Georgian</option>
+        <option>Spanish</option><option>Lebanese</option><option>Moroccan</option>
+        <option>Greek</option><option>Indonesian</option><option>West African</option>
+        <option>Scandinavian</option><option>Russian</option><option>Filipino</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ─── 004 FROM ANY RECIPE ─── -->
+<section id="enhancement">
+  <div class="wrap" style="padding-top:5rem;padding-bottom:5rem">
+    <div class="s-num">004</div>
+    <div class="s-title embossed">From Any Recipe</div>
+    <div class="enh-split">
+      <div class="reveal">
+        <div class="enh-col-lbl">Before</div>
+        <div class="rec-plain">
+          <div class="pl-title">Spaghetti Carbonara</div>
+          <div class="pl-sec">Ingredients</div>
+          <div class="pl-item">200g spaghetti</div>
+          <div class="pl-item">100g pancetta</div>
+          <div class="pl-item">2 eggs</div>
+          <div class="pl-item">50g Pecorino Romano</div>
+          <div class="pl-item">Black pepper</div>
+          <div class="pl-sec">Method</div>
+          <div class="pl-item">1. Cook pasta in salted water until done.</div>
+          <div class="pl-item">2. Fry pancetta until crispy.</div>
+          <div class="pl-item">3. Mix eggs and cheese together.</div>
+          <div class="pl-item">4. Combine everything. Season.</div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:0.15s">
+        <div class="enh-col-lbl">With Provenance</div>
+        <div class="rec-enh">
+          <div class="enh-title">Spaghetti Carbonara</div>
+          <div class="enh-orig">Rome, Lazio · Il Primo Piatto Romano</div>
+          <div class="enh-step">
+            <span class="enh-tag">Al Dente</span>
+            Cook spaghetti in aggressively salted water. Pull 2 minutes early — it finishes in the pan.
+          </div>
+          <div class="enh-callout">Where the dish lives or dies: temperature at the moment of emulsification. Too hot and you have scrambled eggs.</div>
+          <div class="enh-step">
+            <span class="enh-tag">Render</span>
+            Render guanciale (not pancetta) over medium-low. Fat runs clear, not brown. Reserve all fat.
+          </div>
+          <div class="enh-step">
+            <span class="enh-tag">Emulsify</span>
+            Off heat entirely. Add pasta, toss. Add egg-Pecorino mixture slowly, loosening with pasta water.
+          </div>
+          <div class="enh-badges">
+            <span class="enh-badge badge-h">HACCP</span>
+            <span class="enh-badge badge-p">Frascati Superiore</span>
+            <span class="enh-badge badge-o">Lazio, Italy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="enh-tagline">Scan. Import. Write. Compose.</div>
+    <div class="homepage-cta">
+      <a href="/recipes" class="cta-primary">Try it with your recipe →</a>
+      <p class="cta-sub">Scan a cookbook. Import any URL. Or start from scratch.</p>
+      <div class="stats-strip">
+        <span class="stats-strip-item">12,106 Techniques</span>
+        <span class="stats-strip-sep">·</span>
+        <span class="stats-strip-item">50+ Cuisine Traditions</span>
+        <span class="stats-strip-sep">·</span>
+        <span class="stats-strip-item">686 Recipes</span>
+        <span class="stats-strip-sep">·</span>
+        <span class="stats-strip-item">500 Drinks</span>
+        <span class="stats-strip-sep">·</span>
+        <span class="stats-strip-item">Vancouver, BC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ORIGINALS ─── -->
+<section id="originals">
+  <div class="orig-line"></div>
+  <div class="orig-lbl">Provenance Originals</div>
+  <div class="orig-hl embossed">We're going to the source.</div>
+  <div class="orig-sub">Twenty-four traditions. Every continent. One table.</div>
+  <div class="orig-yr">2027</div>
+  <a href="/provenance-originals" class="orig-readmore">Read more →</a>
+</section>
+
+<div class="sep"></div>
+
+<!-- ─── 005 FOR THE PROFESSION ─── -->
+<section id="profession">
+  <div class="wrap" style="padding-top:5rem;padding-bottom:5rem">
+    <div class="s-num">005</div>
+    <div class="s-title embossed">For the Profession</div>
+    <ul class="prof-list">
+      <li class="prof-item">
+        <a href="/techniques/browse" class="prof-link">
+          <span class="prof-dia">◆</span>
+          <div class="prof-body">
+            <div class="prof-title">Technique Library</div>
+            <div class="prof-desc">Over twelve thousand professional techniques, categorised by cuisine and method.</div>
+          </div>
+          <span class="prof-arr">→</span>
+        </a>
+      </li>
+      <li class="prof-item">
+        <a href="/beverage" class="prof-link">
+          <span class="prof-dia">◆</span>
+          <div class="prof-body">
+            <div class="prof-title">Beverage Terroir</div>
+            <div class="prof-desc">Wine, spirits, sake, tea, coffee, and ceremonial beverages — every tradition traced to its terroir.</div>
+          </div>
+          <span class="prof-arr">→</span>
+        </a>
+      </li>
+      <li class="prof-item">
+        <a href="/auth/account" class="prof-link">
+          <span class="prof-dia">◆</span>
+          <div class="prof-body">
+            <div class="prof-title">My Kitchen</div>
+            <div class="prof-desc">Scan, import, write, and compose recipes. Your personal kitchen workspace.</div>
+          </div>
+          <span class="prof-arr">→</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ─── 001 RECIPES ─── -->
+<section id="recipes">
+  <div class="wrap" style="padding-top:5rem;padding-bottom:5rem">
+    <div class="s-num">001</div>
+    <div class="s-title embossed">Recipes</div>
+    <div class="cards-grid" id="recipesGrid"></div>
+    <a href="/recipes" class="browse-link">Browse all recipes →</a>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ─── 002 DRINKS ─── -->
+<section id="drinks">
+  <div class="wrap" style="padding-top:5rem;padding-bottom:5rem">
+    <div class="s-num">002</div>
+    <div class="s-title embossed">Drinks</div>
+    <div class="cards-grid" id="drinksGrid"></div>
+    <a href="/drinks" class="browse-link">Browse all drinks →</a>
+  </div>
+</section>
+
+<!-- ─── CLOSING ─── -->
+<footer class="app-footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <div class="footer-brand">Provenance</div>
+      <div class="footer-tagline">Culinary Lineage · Vancouver, BC</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-label">PLATFORM</div>
+      <a href="/recipes">Recipes</a>
+      <a href="/drinks">Drinks</a>
+      <a href="/cuisines">Cuisines</a>
+      <a href="/techniques/browse">Techniques</a>
+      <a href="/auth/account">My Kitchen</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-label">COMPANY</div>
+      <a href="/about">About</a>
+      <a href="/methodology">Our Standard</a>
+      <a href="/for-professionals">For Professionals</a>
+      <a href="/suppliers">Verified Suppliers</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-label">CONTACT</div>
+      <a href="mailto:info@provenance.kitchen">info@provenance.kitchen</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Provenance Culinary Lineage</span>
+    <span>The discipline of simplicity. The patience of craft.</span>
+  </div>
+</footer>
+
+</main>
+
+<script>
+window.scrollTo(0,0);
+// ─── Menu ──────────────────────────────────────────────────────────────────
+function openMenu(){document.getElementById('navOverlay').classList.add('open');document.body.style.overflow='hidden'}
+function closeMenu(){document.getElementById('navOverlay').classList.remove('open');document.body.style.overflow=''}
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
+document.getElementById('navOverlay').addEventListener('click',function(e){if(e.target===this)closeMenu()});
+
+// ─── Data ──────────────────────────────────────────────────────────────────
+var RECIPES=[
+  {name:'Rendang',cuisine:'Indonesian',slug:'rendang',
+   img:'https://v3b.fal.media/files/b/0a95b553/V6MVnqOaKQHiMc77uJE5P_219521c5929e49ea8b446554bafa5e1d.jpg',
+   grad:'linear-gradient(135deg,#1A0800,#4A1A05)'},
+  {name:'Mole Negro',cuisine:'Oaxacan',slug:'mole-negro-oaxacan-full-30-ingredient-method-charring-and-grinding',
+   img:'https://v3b.fal.media/files/b/0a95b554/fQN4_n2yMfruIcEzROs9R_22b680aa047148608fb4e9135deee98d.jpg',
+   grad:'linear-gradient(135deg,#0A0505,#2A0808)'},
+  {name:'Dashi',cuisine:'Japanese',slug:'dashi',
+   img:'https://v3b.fal.media/files/b/0a95b554/RWJ3rFYCB_Eltql3Y6cM5_51ff527142c944a9aaa4d2bffb9e5624.jpg',
+   grad:'linear-gradient(135deg,#101510,#253020)'},
+  {name:'Bouillabaisse',cuisine:'French',slug:'bouillabaisse',
+   img:'https://v3b.fal.media/files/b/0a95b555/LAq8JdMRbckkqluTQq_HZ_3444239ee7184d178399a16703ac50c3.jpg',
+   grad:'linear-gradient(135deg,#1A0800,#5A2010)'},
+  {name:'Injera',cuisine:'Ethiopian',slug:'ethiopian-injera-the-3000-year-old-fermented-flatbread',
+   img:'https://v3b.fal.media/files/b/0a95b555/MKFe2Avv6JjptBZA20R8F_f3df7438b0ef4b42aec049187f43f312.jpg',
+   grad:'linear-gradient(135deg,#1A1005,#4A2A10)'},
+  {name:'Ceviche',cuisine:'Peruvian',slug:'ceviche',
+   img:'https://v3b.fal.media/files/b/0a95b59f/wHpeUutuKehvW5tjlHMdH_b7164442f6aa4b7bb9739e4892ffca89.jpg',
+   grad:'linear-gradient(135deg,#051A10,#0A4028)'}
+];
+
+var DRINKS=[
+  {name:'Negroni',         type:'Cocktail', img:'https://v3b.fal.media/files/b/0a95b556/YRLGWBFHzgFbb8AxuAR-J_9cecdf3a9cbf4136a8f8a856d53d4e8e.jpg', grad:'linear-gradient(135deg,#2A0A00,#8A2A00)'},
+  {name:'Espresso Martini',type:'Cocktail', img:'https://v3b.fal.media/files/b/0a95b556/VJzsjbcjzRCPNtAPmsV_Y_c9e4e302f67541d3b54de09b4bc541a1.jpg', grad:'linear-gradient(135deg,#1A0800,#4A2000)'},
+  {name:'Champagne',       type:'Sparkling',img:'https://v3b.fal.media/files/b/0a95b556/jc41bTo_oAU8i9R0i9yuk_7fa6e799024247be933760814d4cf770.jpg', grad:'linear-gradient(135deg,#2A2000,#8A7030)'},
+  {name:'Flat White',      type:'Coffee',   img:'https://v3b.fal.media/files/b/0a95b557/FYHVGr6R6Mhg05K6AHDTg_c3d41df83f3641fdbda6a96e75ea8403.jpg', grad:'linear-gradient(135deg,#1A1200,#5A4020)'},
+  {name:'Masala Chai',     type:'Tea',      img:'https://v3b.fal.media/files/b/0a95b557/7sptOPepHzCSQIDhldOKo_30c3e177014c4f4da25630414e594381.jpg', grad:'linear-gradient(135deg,#2A1500,#7A4500)'},
+  {name:'Margarita',       type:'Cocktail', img:'https://v3b.fal.media/files/b/0a95b558/mmiuixnOqbJMAnYdiArWJ_41ba7ba926a24778967e45af6595b658.jpg', grad:'linear-gradient(135deg,#002A1A,#006A48)'}
+];
+
+var CUISINES=['Italian','Japanese','Thai','French','Korean','Indian',
+              'Chinese','Mexican','Vietnamese','American','Peruvian',
+              'Ethiopian','Brazilian','Turkish','Georgian',
+              'Spanish','Lebanese','Moroccan','Greek','Indonesian',
+              'West African','Scandinavian','Russian','Filipino'];
+
+// ─── Recipe cards ──────────────────────────────────────────────────────────
+(function(){
+  var g=document.getElementById('recipesGrid');
+  RECIPES.forEach(function(r,i){
+    var a=document.createElement('a');
+    a.className='rec-card reveal';
+    a.style.transitionDelay=(i*0.08)+'s';
+    a.href='/technique/'+r.slug;
+    var img=document.createElement('img');
+    img.className='rec-img';img.alt=r.name;img.loading='lazy';img.src=r.img;
+    var grd=document.createElement('div');
+    grd.className='rec-grad';grd.style.background=r.grad;
+    img.onerror=function(){this.style.display='none';grd.style.display='block'};
+    var bd=document.createElement('div');
+    bd.className='rec-body';
+    bd.innerHTML='<div class="rec-name">'+r.name+'</div><div class="rec-cuis">'+r.cuisine+'</div>';
+    a.appendChild(img);a.appendChild(grd);a.appendChild(bd);
+    g.appendChild(a);
+  });
+})();
+
+// ─── Drink cards ───────────────────────────────────────────────────────────
+(function(){
+  var g=document.getElementById('drinksGrid');
+  DRINKS.forEach(function(d,i){
+    var a=document.createElement('a');
+    a.className='drk-card reveal';
+    a.style.transitionDelay=(i*0.08)+'s';
+    a.href='/drinks';
+    var f=document.createElement('div');
+    f.className='drk-face';f.style.background=d.grad;
+    if(d.img){
+      var img=document.createElement('img');
+      img.className='rec-img';img.alt=d.name;img.loading='lazy';img.src=d.img;
+      img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.7)';
+      img.onerror=function(){this.style.display='none'};
+      f.style.position='relative';f.style.overflow='hidden';
+      f.appendChild(img);
+    }
+    var bd=document.createElement('div');
+    bd.className='drk-body';
+    bd.innerHTML='<div class="drk-name">'+d.name+'</div><div class="drk-type">'+d.type+'</div>';
+    a.appendChild(f);a.appendChild(bd);
+    g.appendChild(a);
+  });
+})();
+
+
+// ─── Scroll reveal ─────────────────────────────────────────────────────────
+(function(){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}
+    });
+  },{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
+
+  // Opening: stagger 0.2s apart
+  document.querySelectorAll('#opening .reveal').forEach(function(el,i){
+    el.style.transitionDelay=(i*0.2)+'s';
+    io.observe(el);
+  });
+
+  // All other .reveal elements
+  document.querySelectorAll('.reveal:not(#opening .reveal)').forEach(function(el){
+    io.observe(el);
+  });
+})();
+
+// ─── Originals ─────────────────────────────────────────────────────────────
+(function(){
+  var sec=document.getElementById('originals');
+  if(!sec)return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){sec.classList.add('visible');io.unobserve(sec)}});
+  },{threshold:0.2});
+  io.observe(sec);
+})();
+
+// ─── 3D card tilt ──────────────────────────────────────────────────────────
+(function(){
+  function tilt(card){
+    card.addEventListener('mousemove',function(e){
+      var r=card.getBoundingClientRect();
+      var dx=(e.clientX-(r.left+r.width/2))/(r.width/2);
+      var dy=(e.clientY-(r.top+r.height/2))/(r.height/2);
+      var rx=dy*3,ry=-dx*3;
+      card.style.transform='perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-3px)';
+      card.style.transition='transform 0.05s ease,border-color 250ms';
+    });
+    card.addEventListener('mouseleave',function(){
+      card.style.transform='';
+      card.style.transition='transform 0.4s ease,border-color 250ms';
+      setTimeout(function(){card.style.transition=''},450);
+    });
+  }
+  document.querySelectorAll('.rec-card,.drk-card').forEach(tilt);
+})();
+
+// ─── Page numbers ──────────────────────────────────────────────────────────
+(function(){
+  [['recipes','01'],['drinks','02'],['cuisines','03'],
+   ['enhancement','04'],['profession','05']].forEach(function(p){
+    var el=document.getElementById(p[0]);
+    if(!el)return;
+    var span=document.createElement('span');
+    span.className='page-num';
+    span.textContent=p[1];
+    el.appendChild(span);
+  });
+})();
+
+// ─── Parallax depth ────────────────────────────────────────────────────────
+(function(){
+  var items=[];
+  ['recipes','drinks','cuisines','enhancement','profession'].forEach(function(id){
+    var w=document.querySelector('#'+id+' .wrap');
+    if(w)items.push(w);
+  });
+  function tick(){
+    var vh=window.innerHeight;
+    items.forEach(function(w){
+      var r=w.getBoundingClientRect();
+      var mid=r.top+r.height/2;
+      var offset=(mid-vh/2)*0.05;
+      w.style.transform='translateY('+offset+'px)';
+    });
+  }
+  window.addEventListener('scroll',tick,{passive:true});
+  tick();
+})();
+
+// ─── Ambient audio ─────────────────────────────────────────────────────────
+var _actx=null,_mgain=null,soundActive=false;
+function _initAudio(){
+  if(_actx)return;
+  _actx=new(window.AudioContext||window.webkitAudioContext)();
+  _mgain=_actx.createGain();
+  _mgain.gain.setValueAtTime(0,_actx.currentTime);
+  _mgain.connect(_actx.destination);
+  // Low-pass filter with slow LFO modulation
+  var filt=_actx.createBiquadFilter();
+  filt.type='lowpass';
+  filt.frequency.setValueAtTime(180,_actx.currentTime);
+  filt.connect(_mgain);
+  var lfo=_actx.createOscillator(),lfog=_actx.createGain();
+  lfo.frequency.setValueAtTime(0.08,_actx.currentTime);
+  lfog.gain.setValueAtTime(35,_actx.currentTime);
+  lfo.connect(lfog);lfog.connect(filt.frequency);lfo.start();
+  // Warm drone: four oscillators slightly detuned
+  [[55,0.4],[55.6,0.35],[82.5,0.12],[110,0.08]].forEach(function(p){
+    var o=_actx.createOscillator(),g=_actx.createGain();
+    o.type='sine';
+    o.frequency.setValueAtTime(p[0],_actx.currentTime);
+    g.gain.setValueAtTime(p[1],_actx.currentTime);
+    o.connect(g);g.connect(filt);o.start();
+  });
+}
+function toggleSound(){
+  soundActive=!soundActive;
+  if(soundActive&&!_actx)_initAudio();
+  if(_actx){
+    var t=soundActive?0.04:0;
+    _mgain.gain.linearRampToValueAtTime(t,_actx.currentTime+2);
+  }
+  var btn=document.getElementById('soundBtn');
+  if(btn){
+    document.getElementById('snd-off').style.display=soundActive?'none':'block';
+    document.getElementById('snd-on').style.display=soundActive?'block':'none';
+    btn.classList.toggle('active',soundActive);
+  }
+}
+</script>
+<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
+  <span>Add Provenance to your home screen</span>
+  <div>
+    <button onclick="installPWA()" style="background:rgba(201,168,76,0.12);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-right:8px">Install</button>
+    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(245,241,233,0.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
+  </div>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .catch(err => console.log('SW:', err));
+}
+let _pwaPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  if (!localStorage.getItem('pwa-dismissed')) {
+    document.getElementById('pwa-prompt').style.display = 'flex';
+  }
+});
+function installPWA() {
+  if (_pwaPrompt) {
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(() => {
+      document.getElementById('pwa-prompt').style.display = 'none';
+      _pwaPrompt = null;
+    });
+  }
+}
+function dismissPWA() {
+  document.getElementById('pwa-prompt').style.display = 'none';
+  localStorage.setItem('pwa-dismissed', 'true');
+}
+</script>
+</body>
+</html>

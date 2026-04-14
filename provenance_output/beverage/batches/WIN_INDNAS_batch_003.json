@@ -1,0 +1,104 @@
+{
+  "tradition": "wine",
+  "region": "India — Nashik Valley (Maharashtra)",
+  "batch_number": 3,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:55:18.620955+00:00",
+  "entries": [
+    {
+      "tradition": "wine",
+      "sub_tradition": "indian wine nashik valley",
+      "region": "India — Nashik Valley, Maharashtra (Western Ghats foothills)",
+      "name": "Sula Vineyards — Indian Wine Pioneer, Nashik Valley",
+      "terroir_origin": "The Nashik Valley, 180km northeast of Mumbai in Maharashtra state, has become the centre of India's commercial wine industry — a development that was essentially non-existent before 1997 and is now a 15-million-bottle annual industry. The PCT connection is indirect but real: Goa's 450-year Portuguese wine culture created the Indian subcontinent's first sustained encounter with wine consumption as a daily cultural practice. The Goan-Catholic community in western India — centred in Goa but with significant presence in Mumbai — maintained a wine-consuming culture through Portuguese colonial contact. When Rajeev Samant (Stanford-educated, returning to family land in Nashik) founded Sula Vineyards in 1997 with California winemaker Kerry Damskey, the western India market's familiarity with wine through Goa made the initial commercial case. Nashik's terroir: 560–600m altitude on the Western Ghats foothills; black cotton soil (basalt-derived); monsoon-dry season cycle (June–October monsoon, October–March harvest season — India grows grapes in its 'winter' harvest rather than the European summer-autumn). Primary varieties: Sauvignon Blanc, Riesling, Chenin Blanc (Sula's signature); Shiraz, Cabernet Sauvignon for reds; Zinfandel (planted by Samant, a reference to Damskey's California background). Sula is now India's largest single winery brand by volume and has been listed on the Bombay Stock Exchange since 2022.",
+      "production_technique": "Sula's winemaking team has evolved from California-trained (Kerry Damskey) to Australian (multiple winemakers through 2000s–2010s) to Indian-trained. The technical challenge: India's subtropical climate creates dramatic ripening curves — Nashik's harvest October–March uses the natural cool-dry season. Harvest: hand-picked (extensive casual labour pool from local agricultural workforce); night harvest to preserve aromatics and acidity in the warm daytime temperatures. Vinification: temperature-controlled stainless steel tanks standard across all wines. Sauvignon Blanc: crisp, light, tropical citrus character from quick, cool fermentation. Chenin Blanc (Sula's most awarded variety): semi-sweet through dry expressions; the best Sula Chenin Blanc shows tropical fruit, good acidity, and genuine complexity. Riesling: late harvest expressions are the most critically acclaimed Sula whites — the combination of Nashik black cotton soil and Riesling's natural acidity produces a semi-sweet Riesling style unlike any European expression. Red wine production: Shiraz and Cabernet Sauvignon; warm-climate extraction tends toward riper fruit and softer tannin than European equivalents; 12 months in French and American oak standard for Sula Reserve expressions.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Marlborough Sauvignon Blanc (New Zealand)",
+          "connection": "Sula Sauvignon Blanc and Marlborough Sauvignon Blanc are both warm-to-moderate climate expressions of the same variety with a tropical citrus profile (passionfruit, lime, grapefruit). The difference: Nashik's black cotton soil produces a slightly earthier, less pungent character than Marlborough's greywacke. Both are commercial entry-level wine successes driven by accessible aromatic variety selection — the international wine trade's two most successful 'gateway variety' stories from the Southern Hemisphere"
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Goa Portuguese wines (PCT-8 context)",
+          "connection": "Sula's existence is partly predicated on the wine-familiarity created by Goa's Portuguese colonial wine culture in western India. The Goa Catholic community's 450-year wine tradition created a culturally literate wine consumer in the Mumbai-Pune-Nashik corridor that Sula's first vintages could serve. A flight of Sula Chenin Blanc and a Portuguese Douro white tells the story of how wine culture moved from the Portuguese colonial Goa coast to India's first commercial wine region"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Sula Sauvignon Blanc: pale lemon-green; clear; medium viscosity. Chenin Blanc (off-dry): medium gold; slight residual sugar body. Late Harvest Chenin/Riesling: deeper gold; viscous from concentration.",
+        "nose": "Sauvignon Blanc: green mango, passionfruit, lime zest, fresh cut grass, light tropical floral. Distinctly Indian-tropical rather than the Loire's mineral grass or Marlborough's pungency. Chenin Blanc (Sula Late Harvest): honeyed lychee, dried apricot, orange blossom, preserved ginger — the Nashik black cotton soil gives an unusual grounded quality to the aromatic sweetness. Reserve Shiraz: ripe mulberry, black plum, warm spice, mocha from American oak, medium tannin.",
+        "palate": "Sauvignon Blanc: dry, light-to-medium body; crisp acidity; short-to-medium finish; 12% ABV; accessible entry-level white. Late Harvest Chenin/Riesling: significant residual sweetness (60–100g/L); medium acidity balancing; tropical fruit persistence; the most interesting Sula expression. Reserve Shiraz: medium-full body; ripe fruit; softer tannin than European Shiraz; the oak is prominent; good for India's own cuisine pairings.",
+        "conclusion": "Sula represents the commercial success story of Indian wine — from zero to a publicly listed company in 25 years. For a PCT programme: serve Sula as the demonstration of how wine culture migrates through Portuguese colonial contact. The Late Harvest Chenin Blanc and Riesling are the most distinctive expressions and worth including on a premium list as a conversation piece."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Sula Late Harvest Chenin Blanc / Dia Reserve White",
+          "criteria": "Late harvest; residual sugar 60–100g/L; complex tropical-sweet; Nashik single origin; Sula's premium expressions",
+          "markers": "Sula Late Harvest Chenin Blanc; Sula Dia Reserve; international availability: US ~$22–32; BC ~$28–38"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Sula Rasa Reserve / Sula Dindori Reserve Shiraz",
+          "criteria": "Reserve designation; French or American oak; single region Nashik; varietal purity",
+          "markers": "Sula Dindori Reserve Shiraz; Sula Rasa; US ~$16–22; BC ~$20–28"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Sula Sauvignon Blanc / Sula Chenin Blanc Standard",
+          "criteria": "Standard range; varietal correct; accessible; the most widely distributed Indian wine internationally",
+          "markers": "Sula Sauvignon Blanc; Sula Chenin Blanc; US ~$12–16; BC ~$14–18"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Sula Brut / Sula Zinfandel Rosé",
+          "criteria": "Entry Charmat sparkling or rosé; accessible; introduction to Sula/Indian wine category",
+          "markers": "Sula Brut; Sula Shiraz Rosé; US ~$10–13; BC ~$12–15"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Whites: 10–12°C. Late Harvest: 10°C. Reserve Shiraz: 16–18°C.",
+        "vessel": "Standard white wine glass; ISO glass for Late Harvest tasting. Reserve Shiraz in a standard Bordeaux glass.",
+        "technique": "Sauvignon Blanc: serve cold, short pour (100mL), no decanting. Late Harvest Chenin: 75mL as a dessert wine; pair with the provenance story for maximum effect. Reserve Shiraz: open 20 minutes before service; serve slightly below room temperature at 17°C.",
+        "programme_position": "Indian wine education; PCT Goa-India cultural bridge; discovery wine for guests exploring non-European wine regions",
+        "verbal_presentation": "Sula Late Harvest Chenin Blanc — Nashik Valley, India. India's first commercial wine estate, founded 1997. Harvested in December, when the rest of the world's vines are dormant. The monsoon shaped it; the black cotton soil of the Deccan holds it."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Sula Vineyards (Nashik Valley, Maharashtra)",
+        "producer_location": "Gat No. 36/2, Govardhan, Near Gangapur Dam, Nashik, Maharashtra, India",
+        "key_person": "Rajeev Samant (founder, CEO — Stanford-educated, returned to Nashik family land); Kerry Damskey (founding winemaker, California — no longer at Sula); Kiran Ambwani (current Chief Winemaker)",
+        "production_volume": "India's largest single winery brand: ~15 million bottles annually; BSE-listed since 2022; exported to 30+ countries",
+        "certifications": [
+          "FSSAI India",
+          "Organic (select ranges)",
+          "BSE-listed (2022)"
+        ],
+        "bc_distributor": "Sula available at BC Liquor stores (confirmed BCLDB listing); Sauvignon Blanc and Chenin Blanc most reliably stocked",
+        "us_distributor": "Sula imported nationally by Epic Wines & Spirits (Stockton, CA — confirmed); available at Total Wine, Whole Foods, and Indian specialty grocery stores nationally",
+        "uk_distributor": "Sula available at Waitrose, M&S, and Indian specialty retailers UK; one of India's most internationally distributed wine brands",
+        "price_tier": "Market (standard range US ~$12–16; Reserve ~$18–25; Late Harvest ~$25–35)",
+        "availability_notes": "In BC: BC Liquor stores (BCLDB) carry Sula standard range. Specialty: Liberty Wine Merchants and Marquis Wine Cellars may carry Late Harvest and Reserve expressions. US: Epic Wines national; Total Wine and Whole Foods carry standard range. India: Sula is the default wine of choice in most Indian hotels and restaurants."
+      },
+      "trail_connection": "PCT-8",
+      "trail_note": "Sula is a PCT-adjacent story: the Portuguese colonial wine culture in Goa created the only pre-existing wine-consumption tradition in western India. When Rajeev Samant founded Sula in 1997, the wine market he was entering had been partially shaped by 450 years of Goan-Catholic wine familiarity in the Mumbai-Pune-Nashik corridor. India's wine industry could not have achieved its current scale in the western India market without the cultural groundwork laid by the Portuguese colonial presence in Goa 60km to the south.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Tandoori chicken (marinated yogurt-spice, charcoal grill)",
+          "pairing_type": "complement",
+          "rationale": "Sula Sauvignon Blanc alongside tandoori chicken is the most commercially successful India food-wine pairing in restaurants globally. The Sauvignon Blanc's citrus-tropical acidity cuts the yogurt-fat and char of the marinade while the wine's light body doesn't overwhelm the spice. India's most persuasive wine-with-food moment"
+        },
+        {
+          "technique_id": "",
+          "dish": "Fish curry (Goa Konkan style — coconut, kokum, chilli)",
+          "pairing_type": "complement",
+          "rationale": "A Goa fish curry paired with a Sula Late Harvest Chenin Blanc creates a resonant PCT bridge: Portuguese-influenced Goan food culture paired with Indian wine from the Nashik Valley, 200km north. The Chenin Blanc's off-dry sweetness manages the kokum-sourness and coconut richness while the wine's acidity lifts the chilli heat"
+        }
+      ],
+      "source": "Sula Vineyards official documentation (sulawines.com); Sula IPO prospectus (BSE, 2022) production and distribution data; Epic Wines & Spirits US distribution confirmation; APEDA (Agricultural & Processed Food Products Export Development Authority) India wine export statistics",
+      "entry_id": "WIN-INDNAS-001",
+      "extracted_at": "2026-04-11T15:55:18.620642+00:00",
+      "batch_number": 3
+    }
+  ]
+}

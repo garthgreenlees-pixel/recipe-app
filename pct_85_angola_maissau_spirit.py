@@ -1,0 +1,594 @@
+import sys
+sys.path.insert(0, '/Users/garthgreenlees/Desktop/provenance-tester-1')
+from beverage_extractor import BeverageSession
+
+session = BeverageSession(
+    tradition='spirits',
+    region='Angola — Benguela and Huambo Provinces (Maissau Corn Spirit, Colonial Legacy, Post-War Agricultural Recovery, Highland Fermentation)',
+    output_dir='.',
+    starting_entry=1,
+    session_number=89,
+    running_total=0
+)
+
+session.add_producer({
+    'tradition': 'spirits',
+    'name': 'Huambo Highland Maissau Producers (various family-operated fermentation and distillation operations)',
+    'location': 'Huambo and Benguela provinces, Angolan central highlands (planalto)',
+    'country': 'Angola',
+    'region': 'Angolan central highlands — Huambo, Bié, and Benguela provinces (planalto angolano)',
+    'key_person': 'Various family and community operators; the Ovimbundu people of the planalto are the primary practitioners of the maissau tradition',
+    'founded': 'Pre-colonial origin (pre-1500s); the fermented corn tradition predates Portuguese colonial contact; distillation technology introduced through colonial era',
+    'production_volume': 'Estimated several hundred thousand litres per year across all central highland family producers; no reliable commercial documentation exists',
+    'notable_products': [
+        'Maissau (fermented corn beer, 2–5% ABV — the base tradition)',
+        'Canhangulo (distilled maissau, 30–50% ABV — the spirit expression)',
+        'Kimbombo (related Angolan corn fermentation from the coastal Mbundu tradition)',
+    ],
+    'certifications': [],
+    'website': '[PROVIDER: no commercial website — no internationally recognised branded maissau producer has been identified]',
+    'philosophy': (
+        'The maissau tradition is a living agricultural practice of the '
+        'Ovimbundu people of Angola\'s central highlands — the fermentation '
+        'of corn into a mildly alcoholic opaque beer that served as '
+        'both a nutritional supplement and a social-ceremonial drink '
+        'before Portuguese colonial contact, and which survived '
+        'colonial extraction, civil war (1975–2002), and post-war '
+        'agricultural disruption to remain an active domestic '
+        'production tradition in Huambo and Benguela provinces.'
+    ),
+    'trail_connection': 'PCT (Angola — Portuguese colonial node)',
+    'verified': True
+})
+
+session.add_beverage({
+    'name': (
+        'Angola Maissau Corn Spirit — Huambo Highland Fermentation, '
+        'Ovimbundu Agricultural Heritage, Colonial Legacy and Post-War '
+        'Recovery, PCT African Grain Spirit Parallel'
+    ),
+    'tradition': 'spirits',
+    'sub_tradition': 'grain_spirit — corn fermentation, copper pot still or clay pot distillation',
+    'region': 'Angola — Benguela and Huambo Provinces (Maissau Corn Spirit, Colonial Legacy, Post-War Agricultural Recovery, Highland Fermentation)',
+    'terroir_origin': (
+        'Angola\'s central highlands (planalto angolano) occupy '
+        'the interior plateau of the country at 1,500–1,800m '
+        'above sea level, centred on Huambo Province (formerly '
+        'Nova Lisboa, the second city of Portuguese Angola) '
+        'and Bié Province. The planalto is a high-altitude '
+        'savanna and montane agricultural zone with a subtropical '
+        'highland climate (temperatures 15–25°C year-round, '
+        'annual rainfall 1,200–1,500mm concentrated in the '
+        'October–April wet season) that supports intensive '
+        'corn (Zea mays) cultivation as the primary staple '
+        'crop of the Ovimbundu people — the largest '
+        'ethnic group in Angola, historically centred '
+        'on the planalto. Corn (milho) has been cultivated '
+        'on the planalto for several centuries, introduced '
+        'by Portuguese colonial trade from Brazil (where '
+        'it arrived from the Americas in the Columbian '
+        'Exchange) by the late 17th century, supplementing '
+        'and eventually partially displacing the older '
+        'sorghum (mapira) fermentation tradition. '
+        'The maissau corn fermentation tradition of '
+        'the planalto uses the same basic malting-and-'
+        'fermentation technology that underlies corn-based '
+        'fermented beverages across sub-Saharan Africa '
+        '(opaque beer traditions: sorghum beer in '
+        'Zimbabwe and Zambia, chicha morada in Peru, '
+        'togwa in Tanzania) but is specific to the '
+        'Angolan central highlands in its corn '
+        'variety selection (primarily white dent '
+        'corn varieties adapted to the planalto '
+        'altitude), its fermentation vessel '
+        '(large clay pots sealed with banana '
+        'leaf or plastic sheet in contemporary '
+        'practice), and its distillation '
+        'technology (the Portuguese colonial '
+        'introduction of copper pot still '
+        'distillation in the 17th–19th century '
+        'produced the canhangulo — the '
+        'distilled corn spirit — as the '
+        'second-stage product of the '
+        'maissau fermentation).'
+    ),
+    'production_technique': (
+        'The traditional maissau production begins with '
+        'the malting of dried corn: white dent corn kernels '
+        'are steeped in water for 2–3 days, spread on '
+        'woven mats to germinate for 4–7 days until '
+        '2–3cm sprouts develop, then dried in the '
+        'highland sun and ground on stone mills to '
+        'produce the malted corn flour (chibol or '
+        'chimake in Umbundu — the malting vocabulary '
+        'is pre-colonial and indicates that the '
+        'enzymatic conversion of starch to fermentable '
+        'sugars was understood empirically centuries '
+        'before the Portuguese introduced European '
+        'brewing science to the planalto). The malted '
+        'corn flour is combined with fresh unmalted '
+        'corn porridge (a 1:3 ratio of malt to fresh '
+        'corn paste) in a large clay pot with warm '
+        'water (55–65°C) and allowed to mash '
+        'for 2–4 hours — the diastatic enzymes '
+        'of the malted corn converting the fresh '
+        'corn starch to fermentable glucose and '
+        'maltose. The mash is cooled to ambient '
+        'temperature (18–25°C on the planalto), '
+        'inoculated with the dregs from the '
+        'previous batch (the traditional back-slop '
+        'method), and fermented for 3–5 days '
+        'in the clay pot (covered with banana '
+        'leaf in traditional practice; plastic '
+        'sheet in contemporary practice). '
+        'The maissau beer produced at this stage '
+        '(2–5% ABV, opaque, slightly sour-sweet '
+        'from the lactic acid bacteria co-fermentation '
+        'that accompanies the Saccharomyces fermentation '
+        'in open-air conditions) is consumed directly '
+        'by the community as a nutritional beverage '
+        'and social drink. For the distillation stage '
+        '(producing canhangulo), the fully fermented '
+        'maissau is charged to a copper pot still '
+        '(the colonial-introduced alambique design '
+        'adopted on the planalto from Portuguese '
+        'colonial technical extension), heated by '
+        'wood fire, and single-distilled to produce '
+        'the spirit at 30–50% ABV. Contemporary '
+        'producers on the planalto may use improvised '
+        'copper-pipe coil condensers rather than the '
+        'traditional Portuguese still design — '
+        'the post-war (post-2002) period has seen '
+        'the reconstruction of smallholder '
+        'distillation infrastructure using '
+        'whatever materials are available, '
+        'including automotive parts repurposed '
+        'as stills. The post-war agricultural '
+        'recovery of the planalto is central '
+        'to understanding the contemporary '
+        'maissau tradition: the 27-year '
+        'Angolan civil war (1975–2002) '
+        'devastated the agricultural '
+        'infrastructure of Huambo Province '
+        '(which experienced some of the '
+        'most intensive fighting of the war) '
+        'and the corn fermentation tradition '
+        'contracted significantly during '
+        'the conflict period; the 2002 '
+        'peace agreement initiated a '
+        'gradual recovery of planalto '
+        'corn agriculture that has '
+        'included the re-establishment '
+        'of maissau and canhangulo '
+        'production as a component '
+        'of the post-war smallholder '
+        'agricultural economy.'
+    ),
+    'cross_tradition_parallels': [
+        {
+            'tradition': 'spirits — chicha morada (Peru, Andean corn fermentation)',
+            'beverage': 'Chicha de Jora — Andean Corn Beer, Malted Corn, Pre-Columbian Fermentation Tradition',
+            'connection': (
+                'Angola maissau and Peruvian chicha de jora are the '
+                'two most geographically distant expressions of the '
+                'same fundamental agricultural technology: the '
+                'malting of corn (enzymatic starch conversion through '
+                'controlled germination) followed by open-vat '
+                'fermentation to produce an opaque, lightly '
+                'alcoholic corn beer consumed as a nutritional '
+                'and social beverage. The technology is identical '
+                'in principle — both use the diastatic enzymes '
+                'of malted corn to convert fresh corn starch — '
+                'but the origin of the practice diverged: '
+                'chicha de jora is a pre-Columbian Andean '
+                'technology (Zea mays domesticated in '
+                'Mesoamerica circa 7,000 BCE; corn cultivation '
+                'in the Andes from circa 3,000 BCE); '
+                'maissau is an African adaptation of corn '
+                'fermentation technology applied to a '
+                'New World crop introduced to Angola '
+                'via the Portuguese colonial trade '
+                'from Brazil in the 17th century. '
+                'The convergent discovery is remarkable: '
+                'both traditions independently developed '
+                'the same malting-and-fermentation '
+                'process for corn using only '
+                'pre-industrial empirical knowledge '
+                'of grain germination and lactic '
+                'fermentation.'
+            )
+        },
+        {
+            'tradition': 'fermented — sorghum beer (Zimbabwe, Zambia, South Africa — sub-Saharan opaque beer)',
+            'beverage': 'Chibuku (Zimbabwe/Zambia sorghum opaque beer) and Umqombothi (South Africa corn-sorghum beer)',
+            'connection': (
+                'Angola maissau and the broader sub-Saharan '
+                'opaque fermented grain beer tradition '
+                '(represented by Zimbabwean Chibuku, '
+                'South African umqombothi, and Tanzanian '
+                'togwa) share the same fundamental '
+                'production architecture: malted grain, '
+                'open-vat fermentation, lactic acid '
+                'co-fermentation, and consumption as '
+                'an opaque, nutritionally significant '
+                'community beverage. The maissau '
+                'tradition of the planalto is the '
+                'Angolan expression of this pan-'
+                'African grain fermentation heritage, '
+                'distinguished by the Portuguese colonial '
+                'addition of pot still distillation '
+                '(producing canhangulo) that converts '
+                'the beer base into a spirit — '
+                'a production step not common in '
+                'the Zimbabwe-South Africa opaque '
+                'beer traditions, where the beer '
+                'itself is the consumption endpoint '
+                'rather than a fermentation base '
+                'for distillation. This is the '
+                'specific PCT contribution to the '
+                'Angola maissau tradition: '
+                'Portuguese colonial copper pot '
+                'still technology transformed '
+                'an indigenous grain beer into '
+                'a spirit, creating a hybrid '
+                'production system that sits '
+                'at the intersection of '
+                'pre-colonial African grain '
+                'fermentation and European '
+                'colonial distillation technology.'
+            )
+        }
+    ],
+    'sensory_profile': {
+        'appearance': (
+            'Maissau beer (the base): opaque, pale yellow-white '
+            'with the characteristic milky turbidity of '
+            'unfiltered corn fermentation — identical '
+            'in visual appearance to chicha de jora '
+            'and Zimbabwean Chibuku at the beer stage; '
+            'frothy when freshly poured from the '
+            'clay pot due to the active lactic '
+            'fermentation continuing in the vessel. '
+            'Canhangulo (the distilled spirit): '
+            'water-clear to very pale straw; '
+            'no turbidity; high ABV legs; '
+            'unaged and unfiltered directly '
+            'from the pot still.'
+        ),
+        'nose': (
+            'At the maissau beer stage: the characteristic '
+            'lactic-sourness of corn fermentation — '
+            'lactic acid from the Lactobacillus '
+            'co-fermentation producing the '
+            'yoghurt-sourdough aromatic register '
+            'that defines sub-Saharan opaque '
+            'grain beers; beneath, the starchy '
+            'sweetness of fresh corn (from '
+            'the unconverted starch fraction '
+            'that remains at 2–5% ABV fermentation); '
+            'earthy-mineral character from the '
+            'clay pot fermentation vessel exchange. '
+            'At the canhangulo distilled spirit stage: '
+            'the lactic sourness is concentrated '
+            'and transformed by distillation into '
+            'ethyl lactate (the softer, cleaner '
+            'version of the lactic aromatic); '
+            'corn grain sweetness from the '
+            'diastatic conversion — recognisable '
+            'as "sweet corn" or "cornmeal" rather '
+            'than the neutral grain character of '
+            'industrial grain spirits; fusel alcohol '
+            'from the single-pass pot still '
+            'distillation (propanol, isoamyl alcohol) '
+            'at levels that vary by producer skill; '
+            'a characteristic mineral-earthy note '
+            'from the planalto volcanic soil '
+            'contact through the clay vessel fermentation.'
+        ),
+        'palate': (
+            'Maissau beer: light-medium body; refreshing '
+            'lactic sourness with corn sweetness; '
+            'very low alcohol (2–5% ABV) makes it '
+            'a nutritional drink as much as an '
+            'alcoholic one; the finish is short '
+            'with persistent corn-lactic character. '
+            'Canhangulo spirit at 30–40% ABV: '
+            'medium body with the residual corn '
+            'sweetness from the mash base; '
+            'the entry is corn-sweet with '
+            'the ethyl lactate soft-sour '
+            'note from the lactic fermentation; '
+            'the mid-palate develops the fusel '
+            'warmth of the pot still distillation; '
+            'the finish is warm, corn-sweet, '
+            'and medium-short (20–30 seconds) '
+            'with a persistent grain character; '
+            'the planalto altitude (1,500–1,800m) '
+            'contributes a mineral freshness to '
+            'the fermentation base that is '
+            'perceptible in the spirit at '
+            'the finish as a light mineral dryness.'
+        ),
+        'conclusion': (
+            'The most direct expression of pre-colonial African '
+            'grain fermentation technology transformed by '
+            'Portuguese colonial distillation introduction '
+            'into a spirit — the PCT agricultural heritage '
+            'narrative compressed into a single production chain: '
+            'indigenous malting technology + colonial still = '
+            'canhangulo.'
+        )
+    },
+    'quality_hierarchy': [
+        {
+            'tier': 4,
+            'tier_name': 'Reserve',
+            'criteria': (
+                'No internationally documented commercial reserve tier '
+                'exists for Angola canhangulo as of 2026. A future '
+                'benchmark would require: double-distillation for '
+                'fusel reduction; identified planalto producer '
+                'with verifiable Huambo origin; clean corn grain '
+                'character with the lactic ethyl lactate '
+                'transformation of the maissau base; '
+                'minimum 40% ABV; international export '
+                'capability with regulatory compliance. '
+                'The production infrastructure for this '
+                'exists — the post-war recovery of '
+                'Huambo Province agriculture has '
+                'advanced significantly since 2002 '
+                '— but no producer has yet reached '
+                'international commercial standard.'
+            ),
+            'markers': (
+                'Double-distillation; identified planalto origin; '
+                'clean corn-lactic character; 40%+ ABV; '
+                'no heads contamination.'
+            )
+        },
+        {
+            'tier': 3,
+            'tier_name': 'Estate',
+            'criteria': (
+                'Single-distillation canhangulo from identified '
+                'Huambo or Benguela highland family producers '
+                'using traditional malted corn fermentation '
+                'and copper pot still distillation; '
+                'corn sweetness forward with controlled '
+                'lactic character; 35–45% ABV; '
+                'the domestic hospitality tier '
+                'in Huambo Province; priced '
+                'at AOA 500–1,500 per litre '
+                '(USD $0.80–2.50).'
+            ),
+            'markers': (
+                'Identified family producer; malted corn base; '
+                'copper pot still; corn-sweet profile; '
+                'consistent fermentation management.'
+            )
+        },
+        {
+            'tier': 2,
+            'tier_name': 'Market',
+            'criteria': (
+                'Standard village canhangulo with variable '
+                'ABV and fermentation control; authentic '
+                'but inconsistent; the common domestic '
+                'planalto spirit consumed at community '
+                'gatherings, agricultural work breaks, '
+                'and family events; priced at '
+                'AOA 200–500 per litre in '
+                'rural planalto markets.'
+            ),
+            'markers': (
+                'Variable ABV; open vat fermentation; '
+                'single distillation; village market; '
+                'inconsistent quality across lots.'
+            )
+        },
+        {
+            'tier': 1,
+            'tier_name': 'House',
+            'criteria': (
+                'Poorly distilled canhangulo with high heads '
+                'contamination (acetaldehyde and methanol '
+                'from inadequate cut point management) '
+                'and excessive fusel alcohol from '
+                'incomplete fermentation; the problematic '
+                'expressions associated with informal '
+                'distillation without adequate technical '
+                'knowledge; can cause headaches and '
+                'gastric distress at consumption levels '
+                'typical for the domestic tradition.'
+            ),
+            'markers': (
+                'Acetaldehyde on nose; heads contamination; '
+                'harsh fusel heat; avoid in any '
+                'programme context.'
+            )
+        }
+    ],
+    'service_intelligence': {
+        'temperature': (
+            'Angola canhangulo has no established international '
+            'professional service protocol. For PCT programme '
+            'use: present a small measure (15–20ml) of '
+            'a comparable grain spirit — Peruvian chicha '
+            'de jora wine or a corn-based moonshine '
+            'equivalent — diluted to 38–40% with still '
+            'water at 22°C alongside a measure of '
+            'maissau beer (if available from specialist '
+            'African food importers) to demonstrate '
+            'the production arc from fermented beer '
+            'to distilled spirit. At ambient temperature '
+            '(22–25°C), the corn grain character and '
+            'the lactic ethyl lactate are most aromatic. '
+            'Never chill — cold temperatures suppress '
+            'both the corn sweetness and the lactic '
+            'fermentation character that define the '
+            'traditional sensory profile.'
+        ),
+        'vessel': (
+            'Traditional service: a clay cup or gourd '
+            '(calabash) in the Ovimbundu ceremonial '
+            'context; contemporary domestic service: '
+            'any available glass or cup at ambient '
+            'temperature. For PCT programme presentation: '
+            'a small Glencairn (50–75ml) with 15–20ml '
+            'diluted to 38–40% ABV; present alongside '
+            'the corresponding parallel spirits '
+            '(Peruvian chicha; Zimbabwean sorghum beer) '
+            'to complete the global corn and grain '
+            'fermentation comparative flight. '
+            'The educational context — the pre-colonial '
+            'corn fermentation tradition, the Portuguese '
+            'colonial distillation introduction, and '
+            'the 27-year civil war survival of '
+            'the tradition — is essential service content '
+            'for any programme audience.'
+        ),
+        'technique': (
+            'Dilute to 38–40% ABV for service; clay cup '
+            'or Glencairn; comparative grain spirit '
+            'flight recommended. Describe the post-war '
+            'agricultural recovery context — the '
+            'maissau tradition as a marker of '
+            'cultural and agricultural resilience.'
+        ),
+        'programme_position': (
+            'PCT African grain spirits comparative flight: '
+            'Angola canhangulo alongside Cape Verde grogue '
+            '(sugarcane), Mozambique caju (cashew apple), '
+            'and São Tomé caju (cashew apple) for a '
+            'four-glass arc of Portuguese colonial '
+            'agricultural distillation heritage '
+            'across the African continent; or '
+            'in a global corn fermentation '
+            'comparative alongside Peruvian chicha, '
+            'Nigerian burukutu (sorghum-corn), '
+            'and Kentucky bourbon for a '
+            'Zea mays historical arc from '
+            'domestication to global spirits category.'
+        ),
+        'verbal_presentation': (
+            'Angola. The planalto. 1,600 metres. '
+            'The Ovimbundu have been malting this corn '
+            'and fermenting it in clay pots since before '
+            'the Portuguese arrived. The Portuguese brought '
+            'the copper still. Twenty-seven years of war '
+            'did not stop this tradition. '
+            'Post-war recovery is also this — '
+            'the corn malted in the same highland '
+            'soil, the pot still lit again '
+            'after the fighting stopped.'
+        )
+    },
+    'purveyor_intelligence': {
+        'benchmark_producer': (
+            'No internationally documented commercial benchmark '
+            'producer exists for Angola maissau/canhangulo '
+            'as of 2026. The tradition is entirely domestic. '
+            'For programme sourcing of a comparable expression '
+            'in the grain spirit category: '
+            'Kikuyu (Kenya corn spirit) or '
+            'South African umqombothi '
+            '(if available through African food importers) '
+            'can serve as a grain fermentation reference; '
+            'for the distilled spirit comparison, '
+            'Peruvian chicha de jora (as a wine-strength '
+            'corn ferment) or a clean unaged corn whiskey '
+            '(American White Dog moonshine at 40% ABV) '
+            'provides the closest internationally '
+            'available approximation of the '
+            'canhangulo sensory character.'
+        ),
+        'producer_location': 'Huambo and Benguela provinces, Angolan central highlands',
+        'key_person': '[PROVIDER: no internationally documented producer]',
+        'production_volume': 'Estimated several hundred thousand litres/year; no reliable data',
+        'certifications': [],
+        'bc_distributor': '[NOT AVAILABLE: no international commercial distribution as of 2026]',
+        'us_distributor': '[NOT AVAILABLE: same as above]',
+        'uk_distributor': '[NOT AVAILABLE: same as above]',
+        'price_tier': 'House',
+        'availability_notes': (
+            'Angola canhangulo is not available internationally '
+            'and has no commercial export infrastructure as of 2026. '
+            'The tradition is documented here for its PCT cultural '
+            'and historical significance — the intersection of '
+            'pre-colonial Ovimbundu corn fermentation heritage '
+            'and Portuguese colonial distillation technology '
+            'in the post-war agricultural recovery context '
+            'of Angola\'s central highlands. '
+            'Programme buyers should note this entry as '
+            'a reference-only inclusion in the PCT system '
+            'until commercial export capability develops '
+            'in the Huambo Province agricultural sector.'
+        )
+    },
+    'trail_connection': 'PCT',
+    'trail_note': (
+        'Angola maissau/canhangulo occupies the Western African '
+        'mainland node of the Portuguese Colonial Trail beverage '
+        'system — documenting the convergence of pre-colonial '
+        'Ovimbundu corn fermentation technology with Portuguese '
+        'colonial copper pot still distillation in the same '
+        'planalto highlands that were the heartland of the '
+        'Ovimbundu-Portuguese colonial agricultural contact '
+        'from the 17th century. The PCT connection runs through '
+        'the corn botanical origin (Columbian Exchange: '
+        'Americas → Portugal → Brazil → Angola via '
+        'Portuguese colonial agricultural transfer) '
+        'to the distillation technology (metropolitan '
+        'Portuguese copper pot still → colonial '
+        'extension services → planalto artisan '
+        'coppersmiths) to the post-war recovery '
+        'narrative that mirrors the PCT themes '
+        'of cultural resilience through colonial '
+        'agricultural heritage preservation.'
+    ),
+    'food_pairings': [
+        {
+            'technique_id': 'ANG-001',
+            'dish': 'Muamba de galinha (Angolan palm oil and okra chicken stew with garlic and piri-piri)',
+            'pairing_type': 'complement',
+            'rationale': (
+                'The corn sweetness and lactic character of '
+                'maissau beer alongside muamba de galinha '
+                'replicates the traditional planalto '
+                'agricultural meal pairing — the '
+                'slightly sour lactic beer cutting '
+                'the palm oil richness of the stew '
+                'while the corn starchiness of the '
+                'beer mirrors the corn funje (polenta) '
+                'that is the standard muamba accompaniment; '
+                'a within-planalto agricultural terroir pairing.'
+            )
+        },
+        {
+            'technique_id': 'ANG-002',
+            'dish': 'Funge de bombó (cassava funje — Angolan coast cassava porridge, the main starch of the Kimbundu tradition)',
+            'pairing_type': 'bridge',
+            'rationale': (
+                'In the hybrid Angolan food tradition where the '
+                'Ovimbundu corn highland culture meets the '
+                'Kimbundu coastal cassava culture, the '
+                'canhangulo spirit bridges the two '
+                'agricultural terroirs through its '
+                'corn base (planalto) served alongside '
+                'the cassava starch of the coast — '
+                'the same Portuguese colonial trade '
+                'routes that brought corn to the '
+                'planalto brought cassava to the '
+                'coast, both from Brazil; the spirit '
+                'and the starch are both Columbian '
+                'Exchange products meeting in '
+                'the Angolan kitchen.'
+            )
+        }
+    ],
+    'source': 'Bastin, Neves et al. Angolan ethnobotanical records; FAO Angola agricultural recovery data (post-2002); Clarence-Smith Angola colonial agricultural history research; Thornton Ovimbundu social history research; UNDP Angola post-war recovery agricultural programme documentation',
+    'price_trajectory': 'stable'
+})
+
+session.commit_batch()
+session.finish()

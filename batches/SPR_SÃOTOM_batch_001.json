@@ -1,0 +1,74 @@
+{
+  "tradition": "spirits",
+  "region": "São Tomé and Príncipe — São Tomé Island (Cane Spirit and Cocoa Liqueur, Equatorial Terroir)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:13:49.262428+00:00",
+  "entries": [
+    {
+      "name": "São Tomé Aguardente de Cana — Equatorial Roça Cane Spirit, Colonial Atlantic Heritage, Zero-Degree Volcanic Terroir",
+      "category": "spirits",
+      "subcategory": "cane_spirit",
+      "origin": "São Tomé and Príncipe",
+      "region": "São Tomé and Príncipe — São Tomé Island (Cane Spirit and Cocoa Liqueur, Equatorial Terroir)",
+      "producer": "ROC — Roça Agostinho Neto Cane Distillery",
+      "alcohol_content": 45.0,
+      "price_tier": "premium",
+      "terroir_origin": "São Tomé Island sits at 0°20'N — essentially on the Equator — in the Gulf of Guinea, 250km off the coast of Gabon in the Atlantic Ocean. The island was uninhabited when Portuguese sailors arrived in 1470 and was immediately established as the first sugar-producing colony in sub-Saharan Africa, using enslaved West and Central African agricultural labor to create what became the model for the plantation agricultural system later exported to Brazil and the Caribbean. The volcanic island's extraordinary fertility — equatorial rainfall of 3,000-10,000mm per year on the southern slopes, volcanic basalt and alluvial soils enriched by the Congo River discharge that creates the Gulf of Guinea's unusual oceanographic conditions, and year-round growing temperatures of 24-28°C — made São Tomé one of the most productive agricultural territories in the Portuguese colonial system. Sugarcane cultivation on the island's northern, drier plateau (800-1,200mm annual rainfall) and the plantation roças (estates) created the social and agricultural structure that defines the island to this day. The roça-produced cane spirit is made from fresh-pressed cane juice in the same tradition as Cape Verde's grogue and Martinique's rhum agricole, but on an Equatorial volcanic island that produces the most extreme terroir conditions of any cane spirit producing territory.",
+      "production_technique": "São Tomé aguardente de cana is produced by direct pressing of fresh sugarcane cultivated in the roça plantations, fermented with native equatorial yeast (the fermentation character at Equatorial temperatures, 26-30°C year-round, is distinct from temperate or subtropical fermentation — faster completion, higher ester production, more complex fruity character) in open fermentation vessels for 3-5 days. Single pot still distillation at 60-70% ABV final cut; proofed with rainwater (São Tomé's abundant precipitation) to 45% for bottling. The equatorial climate drives extremely rapid ester development during even short rest periods — unaged São Tomé cane spirit has more complex ester character than 2-3 year aged Caribbean rum because the equatorial temperature drives esterification at twice the rate of subtropical production. No systematic aging operation exists on São Tomé currently; the spirit is primarily consumed locally, with small artisanal quantities reaching the EU through specialty channels. The roças operate with rebuilt colonial-era pot stills in some cases, adding to the historical authenticity of the production.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Cape Verde Santiago Grogue (Atlantic island cane spirit, colonial Portuguese heritage)",
+          "connection": "São Tomé aguardente and Cape Verde grogue represent the two poles of the Portuguese Atlantic island cane spirit tradition — Cape Verde at 15°N (subtropical) and São Tomé at 0°N (equatorial) — both established under the same colonial agricultural framework, both producing fresh-cane-juice spirits using single pot still distillation, but with dramatically different fermentation and terroir character driven by the extreme difference in temperature and rainfall between the subtropical Atlantic and the equatorial Gulf of Guinea"
+        },
+        {
+          "tradition": "Martinique Rhum Agricole AOC (French Caribbean, fresh cane, volcanic terroir)",
+          "connection": "São Tomé aguardente and Martinique rhum agricole share the fresh-cane-juice distillation tradition and volcanic island terroir, but São Tomé's equatorial location produces fermentation at 6-8°C higher temperature than Martinique's tropical climate — the faster, hotter fermentation produces more complex ester development without the structured floral character of the cooler Martinique fermentation; both are expressions of how volcanic island terroir is transformed by the geography of the trade wind belt"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Clear to very pale yellow (slight natural color from equatorial heat and brief cask contact even in unaged expressions); moderate legs at 45% ABV",
+        "nose": "Intense fresh cane and tropical fruit: ripe plantain, fermented sugarcane juice, tropical flower (frangipani), burnt caramel, volcanic mineral note from the basaltic soils — the equatorial fermentation produces an ester intensity that surpasses more recognized cane spirits at comparable ages; distinctive Gulf of Guinea maritime quality from the Atlantic equatorial breeze",
+        "palate": "Full body from the high-ester equatorial fermentation; tropical fruit and fresh cane dominate mid-palate; warm and slightly raw finish at 45% ABV without oak integration; mineral-mineral undertone from the volcanic basalt soils; the finish is shorter than aged expressions but the initial impact is intense",
+        "conclusion": "Raw but complex cane spirit of genuine equatorial terroir character; the reference expression of São Tomé colonial Portuguese agricultural heritage; serves as cultural context entry for PCT programming"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Standard São Tomé Aguardente (unaged, local consumption)",
+          "criteria": "Unaged, roughly distilled cane spirit consumed locally; the baseline category expression; ester-rich but rough and unrefined"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Roça Production Aguardente (artisan pot still)",
+          "criteria": "Single roça production from fresh-pressed cane juice; cleaner distillation than local consumption grade; the benchmark for export-quality São Tomé cane spirit"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Short-Aged São Tomé Aguardente (6-12 months tropical)",
+          "criteria": "Brief cask rest (6-12 months) in tropical equatorial climate; the equivalent of 3-5 years of temperate aging in terms of wood-spirit interaction; shows vanilla and caramel integration while preserving the equatorial ester character"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Roça Reserve (18+ months, collector)",
+          "criteria": "Extended equatorial aging; essentially a curiosity category given the tiny production volume; comparison to 5-7 year Caribbean aged rum in sensory complexity while at 18 months age"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Neat at room temperature (20-22°C); the tropical ester complexity opens with warmth; no ice for the premium expressions as dilution suppresses the volcanic terroir character",
+        "vessel": "Small tulip or grappa glass to concentrate the intense equatorial ester aromatics",
+        "programme_position": "Spirits course in a PCT-themed tasting menu; exceptional as a pairing digestif with São Tomé dark chocolate (Claudio Corallo's 73% single-origin from the same island), creating the complete equatorial agricultural narrative — cane spirit and cacao from the same roça soil"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "ROC Roça Agostinho Neto (artisan, limited); Claudio Corallo for the chocolate accompaniment that makes São Tomé accessible in North American restaurant programming",
+        "north_america_access": "São Tomé cane spirit: effectively unavailable; Claudio Corallo chocolate: available in Toronto (Bittersweet) and some specialty chocolate shops in US; the chocolate is the practical São Tomé connection for menu programming",
+        "culinary_application": "The São Tomé narrative is the most important cacao origin story in the PCT: the island's cacao was among the first cultivated cacao in Africa, and São Tomé single-origin chocolate is now recognized internationally. Pairing São Tomé 73% dark chocolate (Claudio Corallo) with a comparison of Cape Verde grogue and Caribbean rum creates a complete 'Equatorial Atlantic cane and cacao' tasting experience that is unique in the world"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "SPR-SÃOTOM-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T19:13:49.261852+00:00",
+      "batch_number": 1
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "tradition": "spirits",
+  "region": "Brazil — Cachaça",
+  "batch_number": 4,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:19:07.581687+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "artisanal cachaça",
+      "region": "Brazil — Minas Gerais / Paraty / São Paulo",
+      "name": "Cachaça — Artisanal and Aged",
+      "terroir_origin": "Cachaça (pronounced kah-SHA-sah) is Brazil's national spirit and the world's third most-consumed spirit by volume (after Chinese baijiu and Indian whisky). It is distilled from fresh sugarcane juice (not molasses — this is the critical distinction from rum). Sugarcane (Saccharum officinarum) was brought to Brazil by Portuguese colonists in the early 16th century, with the first commercial plantations established in Pernambuco and Bahia around 1532. The PCT/WADT intersection: sugarcane was cultivated using enslaved African labour — the most brutal economic extraction of the colonial era — and cachaça emerged as the drink made FOR and BY enslaved Africans working the cane before it became the national drink of the free Brazilian republic. Three principal cachaça regions: Minas Gerais (highland plateau, clay soils, complex local wood ageing culture), São Paulo / Paraty (coastal climate, more delicate style), and Pernambuco/Nordeste (industrial scale, where the largest producers operate). Minas Gerais has the highest density of artisanal distilleries and is considered the spiritual home of quality cachaça.",
+      "production_technique": "Fresh sugarcane juice (garapa) is pressed and fermented immediately — within hours of pressing — as the juice begins to oxidise rapidly. Natural fermentation uses wild yeasts or cultivated strains in open wooden fermentation vats (sometimes the same ancient wood maintained for decades as a yeast source). Fermentation to ~8% ABV takes 24–48 hours. Distillation in pot stills (alembics — Portuguese copper pot technology; column stills for industrial production). Artisanal cachaça is distilled once in copper alembic at 38–48% ABV. Industrial production uses continuous column stills at 96% ABV and diluted to 38–40%. The critical distinction from rum: molasses-based rum uses the residue after sugar extraction; cachaça uses fresh-pressed juice, which means the harvest window is narrow (18–24 weeks annually) and the spirit reflects the cane's terroir directly. Barrel ageing: artisanal cachaça is aged in native Brazilian woods — amburana (Torresea cearensis, gives vanilla/cinnamon/coumarin character), bálsamo (Myroxylon balsamum, rich and aromatic), jequitibá (Cariniana legalis, clean, integrative), ipê (Handroanthus spp.), umburana — not just French or American oak. This native wood ageing programme is cachaça's unique signature and the source of its most complex aged expressions.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Rhum Agricole (Martinique, AOC)",
+          "connection": "The most direct parallel: both are fresh sugarcane juice spirits (not molasses), both reflect cane terroir, both are AOC/GI-protected in their respective territories. Rhum Agricole is French-colonially framed (Martinique AOC); cachaça is Portuguese/Brazilian. The PCT and the broader Atlantic colonial sugar trade converge here: both were produced on sugar plantations using enslaved labour"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Armagnac aged in Gascon oak (Gascony, France)",
+          "connection": "The comparison of regional native-wood ageing: Armagnac's use of black Monlezun oak parallels cachaça's amburana and bálsamo ageing — both spirits develop unique character impossible with standard French or American oak. Both represent the argument that indigenous wood species produce spirits unavailable from commodity cooperage"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Unaged: crystal clear. Aged: light gold (amburana, 1–2yr) to deep amber (bálsamo, 5yr+). Amburana gives faster colour development than oak",
+        "nose": "Fresh (unaged): sugarcane juice, grassy, slight ferment note, fresh tropical fruit. Amburana-aged: extraordinary — vanilla, cinnamon, coconut cream, coumarin (sweet hay), dried fruit, marzipan. Bálsamo: resinous, complex, spiced, exotic wood. Oak-aged: more conventional whisky/brandy notes; less distinctive",
+        "palate": "Unaged: clean, fresh, grassy-tropical; short finish. Amburana-aged (2yr): remarkably complex for the age — spice, tropical fruit, long warm finish; unlike any other aged spirit. Bálsamo: rich, resinous, lengthy. ABV typically 38–40%",
+        "conclusion": "Amburana-aged artisanal cachaça is one of the world's great undiscovered aged spirits. It competes with premium aged rum and single malt Scotch in complexity at lower price. Novo Fogo Barrel-Aged and Avuá Amburana are North American benchmark expressions."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Single-Harvest Native Wood Aged (3yr+)",
+          "criteria": "Single harvest, named producer, amburana/bálsamo/umburana aged 3+ years, copper alembic distillation, export quality",
+          "markers": "Avuá Amburana 3yr; Novo Fogo Single Barrel; named cane source; premium international pricing"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Artisanal Aged (1–3yr)",
+          "criteria": "Copper alembic, fresh juice, native wood or oak aged 1–3yr; artisanal Minas Gerais production",
+          "markers": "Novo Fogo Silver/Gold; Leblon Reserva Especial; artisanal label; consistent quality"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Artisanal Unaged (Prata)",
+          "criteria": "Copper alembic, fresh juice, unaged or brief stainless rest; the standard for caipirinha",
+          "markers": "Leblon; Novo Fogo Silver; Avuá Prata; the caipirinha standard"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Industrial Cachaça",
+          "criteria": "Column still, molasses possible, bulk production; correct but without artisanal character",
+          "markers": "Ypioca; 51 (Pirassununga 51); supermarket pricing; caipirinha cocktail bars"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature for neat; chilled for caipirinha",
+        "vessel": "Rocks glass for neat; tumbler/rocks glass for caipirinha",
+        "technique": "The Caipirinha (Brazil's national cocktail): 60mL cachaça + 1 lime quartered and muddled with 15g caster sugar + ice (crushed or cubed). Aged cachaça neat: rocks glass, 45mL, single large ice cube, 5 minutes to open before drinking. Premium sipping: amburana-aged, neat at room temperature, treated as a premium aged spirit (small pour, nose, palate, finish)",
+        "programme_position": "Cocktail programme anchor (caipirinha); premium spirits section for aged expressions; Brazilian-focused tasting menus; WADT/PCT intersection conversation piece",
+        "verbal_presentation": "Novo Fogo cachaça — from the cane fields of Paraná, Brazil. Distilled from fresh-pressed sugarcane juice in a copper alembic, then aged in amburana wood — a native Brazilian tree that gives a flavour impossible with any other spirit. Not rum. Never rum."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Novo Fogo (Morretes, Paraná) and Avuá (Rio de Janeiro state)",
+        "producer_location": "Novo Fogo: Morretes, Paraná (organic, Atlantic Forest-adjacent). Avuá: Rio de Janeiro state / Minas Gerais sourcing",
+        "key_person": "Dragos Axinte (Novo Fogo CEO); Kit Clancy / Chad Solomon (Avuá founders)",
+        "production_volume": "Novo Fogo: ~100,000 bottles annually (organic certified); Avuá: ~50,000 bottles annually",
+        "certifications": [
+          "Brazilian GI — Cachaça (GI since 2012)",
+          "Novo Fogo: Certified Organic (IBD/IFOAM)"
+        ],
+        "bc_distributor": "Avuá: Sovereign Canada (confirmed); Leblon: available at BC retail (Bacardi Canada or agent; name NEEDS VERIFICATION); Novo Fogo: limited BC availability, likely private import",
+        "us_distributor": "Novo Fogo: Skurnik Wines NY/NJ (confirmed) + state-by-state distributors; Leblon: Bacardi USA (confirmed — Bacardi acquired full ownership 2015); Avuá: national US importer name NEEDS VERIFICATION (available at Total Wine nationally); Ypióca: Diageo North America (confirmed — Diageo acquired Ypióca 2012)",
+        "uk_distributor": "Novo Fogo through Masters of Malt; Leblon through various spirits merchants",
+        "price_tier": "Market to Reserve (unaged BC ~$35–45; amburana aged BC ~$55–85; US ~$30–75)",
+        "availability_notes": "Leblon: widely available BC Liquor and US national through Moët Hennessy. Novo Fogo: BC limited — specialty spirits stores; US through Domaine Select. Avuá: US specialist distribution; rare in BC."
+      },
+      "trail_connection": "PCT-13",
+      "trail_note": "Cachaça is the PCT/WADT intersection in a glass. Portuguese colonialism brought sugarcane to Brazil from Madeira and the Azores (the Portuguese Atlantic island chain where sugar was first commercially cultivated). Enslaved West and Central African people (WADT) worked the cane and first fermented and distilled the sugarcane juice — cachaça was initially forbidden to the enslaved by colonial law (they were forced to drink the inferior molasses rum while masters drank Portuguese wine), then became the drink of resistance, community, and celebration. The caipirinha's lime is also a PCT artifact (citrus arrived via Portuguese trade routes from Asia).",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Feijoada (black bean and pork stew)",
+          "pairing_type": "complement",
+          "rationale": "Brazil's national dish with Brazil's national spirit. The caipirinha's acidity cuts through feijoada's richness; the cachaça's sugarcane character bridges with the dish's pork-and-bean depth"
+        },
+        {
+          "technique_id": "",
+          "dish": "Ceviche (PCT/WADT crossover dish)",
+          "pairing_type": "bridge",
+          "rationale": "Amburana-aged cachaça's vanilla-spice character bridges with ceviche's citrus-ají amarillo complexity; the spirit's cane character echoes the sugarcane history in the same Atlantic trade routes that brought the techniques for both"
+        }
+      ],
+      "source": "Brazilian GI documentation for Cachaça; Instituto Brasileiro da Cachaça (IBRAC) data; Novo Fogo official documentation; Avuá winery notes; Oxford Companion to Spirits — Cachaça entry",
+      "entry_id": "SPR-BRAMIN-001",
+      "extracted_at": "2026-04-11T15:19:07.581329+00:00",
+      "batch_number": 4
+    }
+  ]
+}

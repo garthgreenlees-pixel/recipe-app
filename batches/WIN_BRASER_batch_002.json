@@ -1,0 +1,77 @@
+{
+  "tradition": "wine",
+  "region": "Brazil — Serra Gaúcha (Cave Geisse Brut Nature, Chardonnay-Pinot Noir Sparkling, Italian Immigrant Method Traditionnelle)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T20:01:45.030294+00:00",
+  "entries": [
+    {
+      "name": "Cave Geisse Brut Nature — Serra Gaúcha Pinto Bandeira, Chardonnay-Pinot Noir Méthode Traditionnelle, Italian Immigrant Sparkling Heritage",
+      "category": "wine",
+      "subcategory": "wine_sparkling",
+      "origin": "Brazil",
+      "region": "Brazil — Serra Gaúcha (Cave Geisse Brut Nature, Chardonnay-Pinot Noir Sparkling, Italian Immigrant Method Traditionnelle)",
+      "producer": "Cave Geisse — Pinto Bandeira, Serra Gaúcha, Rio Grande do Sul",
+      "alcohol_content": 12.0,
+      "price_tier": "premium",
+      "terroir_origin": "Pinto Bandeira is a sub-zone of the Serra Gaúcha wine region in Rio Grande do Sul, situated at 700–800m in the Serra Gaúcha mountains approximately 20km northwest of Bento Gonçalves — the center of Italian immigrant settlement in southern Brazil. The Serra Gaúcha was settled primarily by northern Italian immigrants (Veneto, Trentino, Lombardy) from 1875–1914, who brought Vitis vinifera vine cuttings (primarily Isabel/Isabella hybrid initially, later Chardonnay, Pinot Noir, and Trebbiano) and the cultural tradition of sparkling wine production from their native Prosecco, Franciacorta, and Trento DOC backgrounds. Pinto Bandeira was raised to a separate sub-appellação (sub-appellation) within the Indicação Geográfica Vale dos Vinhedos in 2010, recognizing its distinct topographic and climatic conditions versus the main valley floor: Pinto Bandeira sites receive more direct Atlantic Maritime air influence from the easterly trade winds than the main Serra Gaúcha valley, moderating summer temperatures and extending the growing season by 2–3 weeks compared to the valley floor. This extended growing season is the critical factor for Chardonnay and Pinot Noir quality: the 700–800m elevation combined with Atlantic air influence creates a temperature range of 12–25°C during October–January ripening that preserves natural acidity (7.5–9.5 g/L total acidity as tartaric) at the high-Brix levels (19–21°) required for sparkling wine base quality. The Serra Gaúcha granite and basalt subsoils at Pinto Bandeira contribute the mineral complexity that distinguishes Cave Geisse from Charmat-method (Prosecco-style) Brazilian sparkling.",
+      "production_technique": "Cave Geisse Brut Nature is produced by the méthode traditionnelle (second fermentation in bottle) from a base wine of Chardonnay and Pinot Noir harvested from Pinto Bandeira vineyards at 19–21 Brix with 7.5–9.5 g/L total acidity. The base wine undergoes alcoholic fermentation in stainless steel at 16–18°C and partial malolactic conversion (40–60% for Brut Nature to preserve acidity freshness). The base wine is assembled (assemblage) from Chardonnay and Pinot Noir in proportions that vary by vintage but typically target 60–65% Chardonnay for structure and 35–40% Pinot Noir for body and red fruit character. Tirage (bottling with yeast and sugar for second fermentation) takes place in heavy sparkling wine bottles sealed with crown caps. The second fermentation in bottle takes place at 12–14°C over 6–8 weeks, producing the carbon dioxide dissolved in the wine and the dead yeast cells that will form the lees during aging. Cave Geisse Brut Nature is aged on lees for a minimum of 36 months — considerably longer than the Champagne NV minimum of 15 months — allowing extended autolysis (yeast cell self-digestion) to develop the characteristic bread dough, brioche, and toasted almond character of extended-lees sparkling wine. The Brut Nature (zero dosage) receives no liqueur d'expédition (sugar addition) at disgorgement — the residual sweetness is entirely from the natural grape sugar retained through fermentation and the 36+ month autolysis process, typically reaching 4–6 g/L residual sugar naturally from the incomplete third fermentation. The pressure in the finished Brut Nature is 5.5–6.0 atm, comparable to Champagne NV. Production: approximately 80,000–120,000 bottles annually for the Brut Nature, with very limited Blanc de Blancs and Rosé Brut Nature expressions produced from the best vintage lots.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Champagne NV Blanc de Blancs (Côte des Blancs, Chardonnay, méthode champenoise)",
+          "connection": "Cave Geisse Brut Nature and Champagne Blanc de Blancs NV share the méthode traditionnelle production architecture: second fermentation in bottle, extended lees aging, disgorgement, and zero dosage philosophy at the Brut Nature tier. The critical difference is terroir: Champagne's chalk soils (Belemnite chalk, Cretaceous formation) provide the unique mineral substrate that imparts the specific Champagne character; Cave Geisse's granite and basalt at Pinto Bandeira provide a different mineral foundation that produces a wine of comparable structural complexity and autolytic depth but with a distinctly Brazilian tropical character beneath the brioche and mineral sparkling wine architecture — demonstrating that méthode traditionnelle mastery is fully achievable outside Champagne when the elevation and climate conditions support it."
+        },
+        {
+          "tradition": "Trento DOC (Northern Italy, méthode classique, granite terroir)",
+          "connection": "Cave Geisse and Trento DOC are the most direct parallel in the global sparkling wine landscape: both produce méthode traditionnelle Chardonnay-Pinot Noir sparkling wines from granite-based mountain terroir at 700–900m elevation with Atlantic/Alpine air influence that extends the growing season and preserves natural acidity. The parallel is not coincidental — Serra Gaúcha was settled by Trentino-Alto Adige Italian immigrants who brought their sparkling wine methodology from the same Trento Alpine zone that produces Ferrari and Rotari Trento DOC today. Cave Geisse's founder Mario Geisse explicitly acknowledges the Trento DOC reference model as the structural template for his Pinto Bandeira production."
+        },
+        {
+          "tradition": "Portugal — Espumante Brut from Vinho Verde (Atlantic influence, high-acidity sparkling)",
+          "connection": "Both Cave Geisse Brut Nature and high-quality Vinho Verde Espumante (Alvarinho-based méthode traditionnelle from producers like Soalheiro and Quinta de Soalheiro) use extended lees aging to build autolytic complexity in high-acid sparkling base wines from granite-terroir Atlantic-influenced growing regions. The Portuguese colonial connection to Brazilian sparkling wine is through the Italian immigrant channel: Portuguese colonial agricultural transfer brought European vine culture to Brazil, which the subsequent Italian immigrant wave (1875–1914) transformed into the Serra Gaúcha wine tradition that Cave Geisse now leads in sparkling quality."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale gold with green tints from high natural acidity of Pinto Bandeira Chardonnay-Pinot Noir base; fine, persistent bead from the 36+ month lees aging that produces fine CO2 bubbles rather than the coarse bead of short-lees production; brilliant clarity after disgorgement and post-disgorgement bottle rest; foam that rises fine, white, and persistent in the flute; color slightly deeper than Champagne NV Blanc de Blancs from the Pinot Noir component and the tropical light intensity at 700–800m Serra Gaúcha latitude (29°S, more solar intensity than Champagne).",
+        "nose": "The 36+ month autolysis defines the aromatic identity: fresh brioche, toasted bread crust, and dried yeast character from extended lees contact; beneath the autolytic character, the Chardonnay contributes citrus (lemon zest, green apple) and the Pinot Noir adds a light red fruit undertone (strawberry, raspberry) from the Pinto Bandeira granite character; stone fruit (apricot, white peach) from the tropical latitude ripening; zero dosage ensures no caramel or honey sweetness obscures the mineral and autolytic complexity.",
+        "palate": "Fine persistent mousse from the 36-month in-bottle secondary fermentation; high natural acidity (7.5–9.5 g/L) creates the backbone for the zero-dosage balance — the wine achieves apparent dryness from the acid structure without any residual sugar manipulation; medium body from the Pinot Noir component; brioche and mineral from the autolysis and granite terroir through the mid-palate; long mineral-and-citrus finish demonstrating that 36 months of extended lees aging at Pinto Bandeira elevation produces autolytic complexity competitive with Champagne at equivalent aging duration; clean, precise, with no tropical fruit heaviness overwhelming the sparkling wine structure."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Brazilian Charmat (Prosecco-method sparkling)",
+          "criteria": "Charmat secondary fermentation in pressurized tanks, 30–90 day lees contact — the majority of Brazilian espumante production; fresh, fruit-forward, no autolytic complexity; the high-volume Brazilian sparkling wine category from Isabel hybrid and Moscatel varieties rather than Chardonnay-Pinot Noir."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Serra Gaúcha Méthode Traditionnelle (12–18 months lees)",
+          "criteria": "Bottle fermentation with 12–18 months lees aging — early autolytic development but without the complexity of 24–36 month extended lees; achieves Cava-comparable quality at Serra Gaúcha competitive pricing; the competent but not distinguished tier of Brazilian méthode traditionnelle."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Cave Geisse Brut Nature (36+ months lees)",
+          "criteria": "The benchmark: Pinto Bandeira Chardonnay-Pinot Noir, 36+ months lees, zero dosage — the South American sparkling wine that most directly challenges Champagne structural standards within the méthode traditionnelle category; Decanter Gold and Champagne-competitive international recognition."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Cave Geisse Millésime / Ultra Brut (vintage apex)",
+          "criteria": "Vintage-dated single-harvest expressions from the best Pinto Bandeira years (cooler, slower ripening) with 48–60 months extended lees aging and ultra-brut (below 3 g/L residual sugar) zero-dosage philosophy; the apex demonstration of Serra Gaúcha's capacity for extended-lees sparkling wine aging and the reference for South American sparkling wine quality at its highest expression."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Cave Geisse Brut Nature at 7–9°C for service — slightly warmer than the standard Champagne service temperature of 6–8°C because the Serra Gaúcha base wine's tropical character and the autolytic complexity both express better with marginal additional warmth that opens the brioche-and-stone-fruit aromatic register. Ice bucket service from a standard 10°C refrigerator temperature to 7–9°C takes approximately 20–25 minutes. The Brut Nature's high natural acidity means it tolerates up to 11°C service without losing structural balance — a wider service window than zero-dosage Champagne, which tightens rapidly above 10°C.",
+        "vessel": "Standard Champagne tulip or white wine tulip (not the flat coupe) to concentrate the fine bead and the autolytic brioche-mineral aromatics; avoid the champagne flute — the narrow flute inhibits aromatic development and is inappropriate for a Brut Nature of 36-month complexity; 100ml pour to allow the mousse to settle and the aromas to develop in the first 30 seconds after pouring. At a Cave Geisse programme tasting, compare the aroma and bead character between the 36-month Brut Nature and a 15-month commercial espumante to demonstrate how extended lees aging transforms sparkling wine character.",
+        "programme_position": "In a PCT Brazil programme: serve as the opening wine — Cave Geisse Brut Nature's Italian immigrant heritage, méthode traditionnelle mastery, and Serra Gaúcha granite terroir establish the Brazilian wine narrative at a quality level that immediately signals the programme's ambition before the Campanha Meridional red wine and cachaça expressions follow."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Cave Geisse — Pinto Bandeira, Serra Gaúcha, Rio Grande do Sul (benchmark for South American méthode traditionnelle sparkling; Brut Nature 36+ months is the reference expression; founder Mario Geisse is the leading practitioner of extended-lees Brazilian sparkling wine methodology).",
+        "north_america_access": "Cave Geisse available through specialty Brazilian wine importers in New York, Florida, and California; BCLDB BC and LCBO Ontario on special order; approximately USD $25–40 for Brut Nature in US specialty retail. Growing international recognition at Champagne-comparison tastings is improving North American distribution annually.",
+        "culinary_application": "Cave Geisse Brut Nature's high acidity and brioche character pairs with fresh-water fish preparations from Rio Grande do Sul (pintado, dourado from the Paraná River basin) and with Nyonya-influenced seafood at Malacca-themed programmes — the sparkling wine's mineral acidity bridges both the European-method heritage and the Brazilian coastal seafood tradition simultaneously."
+      },
+      "price_trajectory": "rising",
+      "entry_id": "WIN-BRASER-002",
+      "tradition": "wine",
+      "extracted_at": "2026-04-12T20:01:45.029412+00:00",
+      "batch_number": 2
+    }
+  ]
+}

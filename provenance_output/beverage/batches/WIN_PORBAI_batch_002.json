@@ -1,0 +1,102 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Bairrada DOC (Baga)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:51:01.975767+00:00",
+  "entries": [
+    {
+      "tradition": "wine",
+      "sub_tradition": "bairrada baga red wine",
+      "region": "Portugal — Bairrada DOC (Beira Litoral, Atlantic)",
+      "name": "Bairrada Baga — Portugal's Most Atlantic Red, the Barraida Iron Lady",
+      "terroir_origin": "Bairrada ('land of clay') is Portugal's most Atlantic red wine region — located 20km from the coast of Beira Litoral, between the Serra do Buçaco hills and the Atlantic coast. This proximity to the ocean creates the coolest and wettest growing conditions for any Portuguese DOC: average annual temperatures of 15°C vs. Douro's 18°C; 1,000–1,200mm annual rainfall vs. Douro's 500–600mm. The result: wines of extraordinary tension, structure, and longevity from a single dominant variety — Baga (Casta Baga de Bairrada). Baga is found almost nowhere outside Bairrada in commercial quantity. It is Portugal's most challenging and most rewarding indigenous variety: late ripening (the latest harvest in Portugal, often October); very thick skins producing massive tannin; naturally high acidity; requires 20+ years of bottle age to fully integrate in top expressions. Luís Pato is the transformative figure: since the 1980s, he has demonstrated that Baga, when harvested at precise maturity and vinified with care, produces wines comparable to the greatest Burgundy in structure and longevity. His daughter Filipa Pato now runs her own estate and represents the next generation of Bairrada's international positioning. Sidónio de Sousa (since 1927, the oldest Bairrada estate in continuous family operation) and Quinta das Bágeiras (Mário Sérgio Nuno) are the other reference producers.",
+      "production_technique": "Baga production has undergone significant technical evolution since the 1980s. The pre-1980 approach: early harvest, aggressive extraction, massive tannin without fruit counterbalance — producing wines that took decades to integrate and drink. Luís Pato's revolution: later harvest for full phenolic ripeness; whole-cluster inclusion for aromatic complexity; destemming for tannin control; longer cold maceration pre-fermentation for colour and aromatics without hard tannin extraction; shorter warm maceration. The result: wines with Baga's structural DNA but balanced fruit expression. Filipa Pato's approach: even more Burgundian — whole-cluster fermentation; gravity-flow cellar; minimal sulphur; light extraction. Ageing: traditional producers use large old Portuguese oak vats (lagares); modern producers use a combination of French barrique and old oak for 12–18 months. Bairrada also produces Portugal's second-most important sparkling wine: méthode traditionnelle using Baga (Luís Pato, Sidónio de Sousa) — one of the world's most unusual sparkling wines due to Baga's extreme tannin.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Barolo (Nebbiolo, Piedmont)",
+          "connection": "The single-variety, high-acid, high-tannin, profound-longevity model: Baga and Nebbiolo are structurally identical problems — both require correct harvest timing and careful extraction to manage tannin, both produce wines of extraordinary longevity (20–40 years for top expressions), both are found almost exclusively in a single region. Luís Pato's Baga is to Portugal what Giacomo Conterno's Barolo is to Italy: the uncompromising expression of a difficult variety at its greatest height"
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Gevrey-Chambertin Premier Cru (Pinot Noir, Burgundy)",
+          "connection": "Filipa Pato's style specifically invites the Burgundy comparison: whole-cluster fermentation, gravity flow, minimal intervention. Where Luís Pato argues that Baga is Portugal's Barolo, Filipa Pato argues it can be Bairrada's Burgundy — not by imitation but by applying the same winemaking philosophy to a completely different terroir. The resulting wines share Burgundy's transparency to place while remaining unmistakably Bairrada"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep ruby to purple-ruby in youth; significant colour depth from Baga's thick skins; develops garnet-bricking after 10+ years; slow legs from moderate alcohol (12.5–13.5%)",
+        "nose": "Young Baga (2–5 years): tightly wound; red cherry, dried blackcurrant, leather, eucalyptus, dark earthy mineral; Baga's famous iron/graphite mineral note emerges from the clay soils — a distinctive metallic-mineral character absent in schist or limestone wines. 10+ years: extraordinary transformation — dried rose petals, tobacco, leather, dark chocolate, forest floor, wet clay, iron. Luís Pato Vinha Pan (old vine, single vineyard): the fullest expression of the Bairrada iron-and-rose character at 10 years.",
+        "palate": "Youth: massive tannin (the Baga signature — fine but abundant, requiring food or time); bright acidity (Atlantic proximity); dark cherry and plum fruit. 10+ years: the tannin integrates into a silky-firm structure; the acidity drives freshness that Douro reds cannot maintain. Filipa Pato Nossa Calcário: more delicate from the limestone soil expression; the most Burgundy-like of Bairrada's current generation. The wine that requires patience but rewards it utterly.",
+        "conclusion": "Bairrada Baga is the most undervalued great wine of Europe. At 10–15 years, top Luís Pato and Filipa Pato Baga outpoints Barolo at twice the price and Côte de Nuits at three times the price. For a programme: position as the discovery wine for guests who understand Burgundy or Barolo and want the next frontier."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Luís Pato Vinha Pan / Filipa Pato Nossa Calcário — Single Vineyard",
+          "criteria": "Single vineyard; old vine Baga (60+ years); minimal-intervention vinification; 8–15 years bottle age for full expression; top critical recognition",
+          "markers": "Luís Pato Vinha Pan; Filipa Pato Nossa Calcário; Sidónio de Sousa Garrafeira; BC ~$45–65; US ~$35–55"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Luís Pato Vinha Formal / Quinta das Bágeiras Garrafeira",
+          "criteria": "Estate selection; old vine Baga; 15–18 months oak; Bairrada DOC; 5+ year aging recommended",
+          "markers": "Luís Pato Vinha Formal; Quinta das Bágeiras Garrafeira; Campolargo Baga Reserve; BC ~$28–45; US ~$22–35"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Bairrada DOC Standard / Luís Pato Entry",
+          "criteria": "Bairrada DOC; Baga-dominant; correct iron-mineral character; commercial quality",
+          "markers": "Luís Pato Baga; Filipa Pato Bical Branco (white companion); BC ~$18–28; US ~$14–22"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Beiras IGP / Entry Baga",
+          "criteria": "Beiras regional; Baga component; entry to the character; more accessible than full Bairrada DOC tannin",
+          "markers": "Beiras IGP Baga blends; commercial Bairrada; BC ~$12–18; US ~$10–14"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "16–17°C; slightly cooler than Douro reds to preserve the Atlantic freshness. Young Baga: do not serve too warm — tannin becomes hard at 20°C+.",
+        "vessel": "Burgundy glass (the wider bowl opens Baga's aromatics better than Bordeaux glass). Young Baga in a Riedel Pinot Noir glass will open faster than in a standard glass.",
+        "technique": "Young Baga (under 8 years): mandatory decant 60–90 minutes; serve with food — the tannin requires protein fat to integrate. Aged Baga (10+ years): open the bottle 30 minutes early, pour gently; the wine has already opened in the bottle — decanting is optional. Guest recommendation: 'Come back to this in 10 years' is the correct framing for a new Baga vintage; explain the Barolo parallel.",
+        "programme_position": "Discovery wine for Barolo and Burgundy enthusiasts; value proposition anchor for the premium wine list; PCT-1 Portugal heritage wine alongside Port",
+        "verbal_presentation": "Luís Pato Vinha Pan — Bairrada, Portugal. Old vine Baga from the Atlantic coast. Portugal's answer to Barolo. Twenty years of patience, then a wine that outlasts everything else on the list."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Luís Pato (Bairrada, Óis do Bairro) and Filipa Pato (Bairrada)",
+        "producer_location": "Óis do Bairro, Bairrada DOC, Beira Litoral, Portugal",
+        "key_person": "Luís Pato (the defining figure of modern Bairrada); Filipa Pato (daughter; next-generation Bairrada benchmark; Burgundy-trained)",
+        "production_volume": "Luís Pato: small-to-medium family estate; Filipa Pato: micro-winery; both critically acclaimed internationally",
+        "certifications": [
+          "Bairrada DOC"
+        ],
+        "bc_distributor": "Luís Pato: Marquis Wine Cellars and Liberty Wine Merchants (Vancouver) carry on occasion; no dedicated BC distributor confirmed; check BCLDB special order catalogue",
+        "us_distributor": "Luís Pato: Skurnik Wines & Spirits (national — confirmed); Filipa Pato: Small Vineyards (NYC, specialty importer)",
+        "uk_distributor": "Luís Pato: Lay & Wheeler (Suffolk); Armit Wines (London); Majestic Wine occasionally. Filipa Pato: specialist Portuguese importers",
+        "price_tier": "Market to Reserve (Luís Pato entry US ~$18; Vinha Formal US ~$28; Vinha Pan US ~$45–55; Filipa Pato Nossa Calcário US ~$38–45)",
+        "availability_notes": "In BC: most accessible via private import request through Marquis or Liberty. US: Skurnik national for Luís Pato — major cities well covered. UK: the best-served market globally for Bairrada outside Portugal."
+      },
+      "trail_connection": "PCT-1",
+      "trail_note": "Bairrada's roast suckling pig (leitão) and sparkling Baga wine are as deeply embedded in Portuguese coastal culture as Port is in the Douro's interior. The monastery of Santa Cruz in Coimbra (30km south of Bairrada) was founded in 1131 by Crusaders who were partly funded by early Bairrada wine trade. The Atlantic climate that shapes Baga is the same climate that drove Portuguese navigators to seek calmer latitudes — the wet, grey Atlantic winter that makes Bairrada both challenging and irreplaceable.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Leitão da Bairrada (Bairrada roast suckling pig)",
+          "pairing_type": "complement",
+          "rationale": "The canonical regional pairing: Bairrada suckling pig is slow-roasted until the skin is lacquered and crisp; the fat-rendered flesh requires the Baga's firm tannin and bright Atlantic acidity to cut and refresh. This is one of Europe's most perfectly calibrated regional food-wine pairings — the pig and the Baga evolved alongside each other in the same Atlantic clay"
+        },
+        {
+          "technique_id": "",
+          "dish": "Chanfana (Bairrada slow-braised kid goat in red wine)",
+          "pairing_type": "bridge",
+          "rationale": "Chanfana — kid goat marinated in red wine, garlic, paprika, bay, then slow-braised in a black clay pot — is the braised-wine bridge: the same Baga used to cook the dish creates a register match between the wine-braised meat and the wine-in-the-glass. The iron-mineral character of both Baga and the clay cooking pot creates a flavour unity unique to Bairrada"
+        }
+      ],
+      "source": "CVB (Comissão Vitivinícola da Bairrada) DOC regulations; Luís Pato official estate documentation; Filipa Pato official estate documentation; Wines of Portugal Bairrada regional guide; Jancis Robinson 'Wine Grapes' (Baga entry)",
+      "entry_id": "WIN-PORBAI-001",
+      "extracted_at": "2026-04-11T15:51:01.975408+00:00",
+      "batch_number": 2
+    }
+  ]
+}

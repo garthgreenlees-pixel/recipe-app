@@ -1,0 +1,110 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Alentejo (Vinho Alentejano DOC)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T17:19:03.596550+00:00",
+  "entries": [
+    {
+      "tradition": "wine",
+      "sub_tradition": "vinho alentejano tinto blend old vine",
+      "region": "Portugal — Alentejo (Vinho Alentejano DOC)",
+      "name": "Alentejo Red Blend — Touriga-Aragonez Continental Mediterranean Style",
+      "terroir_origin": "The Alentejo — meaning 'across the Tagus' — is the largest wine region in Portugal by area and arguably the most dramatically different from the Atlantic-influenced north. The Alentejo is a flat, hot, semi-arid plain with a strongly continental climate: summer temperatures reach 40+ degrees C, annual rainfall drops to 500-700mm, and the daily temperature range between summer day and night can exceed 20 degrees C. Soils: schist and marble-limestone alternating across the sub-regions; Borba, Redondo, Reguengos de Monsaraz, Evora, and Portalegre are the key sub-DOCs. The Alentejo was historically a grain-producing region — cork oaks and olive groves interrupted by vast wheat fields. Wine was the secondary agricultural product. The quality revolution: in the 1990s, with EU subsidies and temperature-controlled stainless steel winemaking arriving simultaneously, the Alentejo transformed from bulk production (cooperatives sold at 1.50 euros per litre) to a leading premium DOC producing wines competitive with Rioja and Priorat. The varieties: Aragonez (Tempranillo) + Touriga Nacional + Trincadeira + Alicante Bouschet. Alicante Bouschet is a teinturier variety (red flesh as well as skin) — grown across the Mediterranean but reaching its highest expression in the Alentejo's heat.",
+      "production_technique": "Harvest: manual, late August to early October depending on sub-region altitude. Portalegre (high-altitude 400-700m): latest harvest, most acid retention, most freshness. Reguengos de Monsaraz (low-altitude, hottest): earliest harvest, most fruit concentration. Fermentation: temperature-controlled stainless steel (the key modernisation of the 1990s); extended maceration (15-25 days for premium) to extract Alicante's deep tannin and colour. Oak regime: French 225L barriques for premium; 12-18 months for mid-tier; Portuguese 500L balseiro for artisan production (Esporao Reserva, Jose de Sousa). The modern Alentejo style: full-bodied (13.5-15% ABV), dark fruit, Mediterranean herb (dried thyme, rosemary, cistus), warm mineral, 18+ months oak for premium releases. Jose de Sousa (Jose Maria da Fonseca): terracotta amphora fermentation — the pre-Roman production method revived; creates textural wines without oak influence. Esporao Reserva: benchmark large-estate expression; consistent house style in two decades.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Priorat DOCa (Garnacha-Carinena blend, Catalonia)",
+          "connection": "Both are warm-climate, schist-dominant Mediterranean reds with high concentration and extract. Priorat is steeper and more mineral-driven; Alentejo is flatter and more Mediterranean-herbal. The comparison demonstrates the granite-limestone vs schist influence on identical warm-climate winemaking."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Chateau Musar (Bekaa Valley, Lebanon)",
+          "connection": "Both are Mediterranean-influenced blended reds from non-canonical European wine regions that achieved international recognition through character rather than appellation prestige. Both feature Carignan/Cinsault (Musar) or Alicante Bouschet (Alentejo) as the defining secondary variety."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Rioja Reserva (Tempranillo-dominant, aged in American oak)",
+          "connection": "Both are Tempranillo/Aragonez dominant blends with 12-18 months oak ageing. Rioja uses American oak creating vanilla-coconut register; Alentejo uses French oak creating darker fruit and spice. The oak nationality comparison is the key structural teaching point."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Mourvedre-dominant Bandol Rouge (Domaine Tempier)",
+          "connection": "Both are densely-structured Mediterranean reds requiring 5-10 years from vintage. Both carry a garrigue-herb character (dried Mediterranean herbs) that marks continental sun-exposed viticulture across the Mediterranean basin."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep ruby-garnet with purple rim in youth; garnet with brick edge at 8-10yr; the Alicante Bouschet contributes unusual colour depth even at mid-price",
+        "nose": "Dark plum, blackberry, dried Mediterranean herbs (thyme, rosemary, cistus), warm leather, vanilla from French oak, black olive mineral",
+        "palate": "Full body; concentrated dark fruit; firm but ripe tannins; the heat of the Alentejo summer is present as a warm texture rather than harsh alcohol; finish extends through the herb-mineral register",
+        "texture": "Structured and dense in youth; opens considerably at 5-8 years; the ripe tannins from low-yield old vine Aragonez are the structural foundation",
+        "finish": "60-75 seconds; dark fruit yields to dried herb and mineral; the Alicante Bouschet adds a purple fruit persistence unusual for Tempranillo-based blends",
+        "conclusion": "The Alentejo red challenges the northern Portugal dominance in premium wine — a Mediterranean character entirely distinct from the Douro or Alentejo coast"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Jose de Sousa Maior (terracotta amphora, old vine)",
+          "criteria": "Terracotta amphora fermentation; Grand Noir de la Calmette and Aragonez from 80-100yr vines; the most intellectually demanding and age-worthy Alentejo expression; no oak influence — pure terroir and variety character",
+          "markers": "Jose de Sousa Maior; BC ~$80-120; US ~$75-100; limited availability"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Esporao Reserva Tinto or Herdade do Mouchao Tinto",
+          "criteria": "Estate-grown; French oak 12-18 months; old vine sourcing; consistent benchmark expression for the modern Alentejo premium tier",
+          "markers": "Esporao Reserva; BC ~$30-40; US ~$28-38; BCLDB listed"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Quinta da Malho Tinto or Monte da Ravasqueira Seleccao",
+          "criteria": "Mid-tier estate production; correct Alentejo character; accessible introduction to the regional style at by-the-glass pricing",
+          "markers": "Various mid-tier; BC ~$18-28; US ~$16-24; BCLDB listed"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Loios Tinto or Herdade do Esporao Dois Polvos",
+          "criteria": "Entry production; cooperative or large estate sourcing; fruit-forward, drinking young; introduction to Alentejo at entry price",
+          "markers": "Loios Tinto; BC ~$12-16; US ~$10-14; BCLDB widely available"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 16-18 degrees C — the Alentejo tannin structure needs warmth to open fully; too cold makes the tannins grippy and the fruit hidden",
+        "vessel": "Large Bordeaux glass — the full-bodied structure needs the widest bowl available to release the dark fruit and dried herb nose",
+        "technique": "Premium Alentejo red requires 1 hour decanting minimum before service. At table: the Mediterranean herb character of Alentejo reds is the natural match for grilled meats (lamb with rosemary, Iberian pork, beef with thyme), hard aged cheeses, and slow-braised preparations. The service narrative: the continental Portuguese hinterland vs the Atlantic coast — guests who know Douro wines are immediately challenged by the Alentejo's different character.",
+        "programme_position": "House red alternative to Rioja; grilled meat pairing; red wine programme depth-coverage for Portuguese wine identity",
+        "verbal_presentation": "Alentejo — the inland plain south of the Tagus. Hot, flat, ancient. Touriga, Aragonez, and Alicante. The red wine of continental Portugal."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Jose Maria da Fonseca (Jose de Sousa) and Esporao — the two defining estates for different Alentejo philosophies",
+        "producer_location": "Reguengos de Monsaraz / Evora, Alentejo, Portugal",
+        "key_person": "Joao Portugal Ramos (the most influential consulting winemaker in Alentejo)",
+        "bc_distributor": "BCLDB stocks Esporao Reserva and several Alentejo mid-tier wines; Jose de Sousa through private import",
+        "us_distributor": "Kermit Lynch (Jose de Sousa); Jorge Ordonez Selections (Esporao); Wide national distribution for Esporao",
+        "uk_distributor": "Bibendum (Esporao); Caves de Pyrene; widely available in Waitrose and Majestic",
+        "price_tier": "Entry: $12-16. Mid: $18-28. Premium: $30-40 (Esporao Reserva). Ultra: $80-120 (Jose de Sousa Maior).",
+        "availability_notes": "Esporao Reserva is the most widely available premium Alentejo red in North America. BCLDB stocks consistently. Jose de Sousa Maior requires private order."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Lamb shoulder slow-roasted with rosemary, garlic, and Alentejo olive oil",
+          "pairing_type": "complement",
+          "rationale": "The dried rosemary and thyme character of Alentejo red mirrors the herb profile of slow-roasted lamb — both reflecting the same Mediterranean garrigue landscape, one in the glass, one on the plate."
+        },
+        {
+          "technique_id": "",
+          "dish": "Aged Manchego (18 months) or Pecorino Sardo with quince",
+          "pairing_type": "bridge",
+          "rationale": "The ripe dark fruit of Alentejo bridges aged sheep cheese and quince through a Mediterranean fruit-fat-acid triangle — the same pairing logic that works for Rioja and Spanish sheep cheese but with the Alentejo's darker fruit register."
+        }
+      ],
+      "source": "CVA (Comissao Vitivinicola do Alentejo) technical specifications; Esporao and Jose Maria da Fonseca production documentation; BCLDB product listings verified April 2026",
+      "trail_connection": "PCT-1",
+      "trail_note": "PCT Region 1: Portugal (Alentejo extension). The Alentejo's Roman-era wine and olive culture predates the Portuguese nation itself. The cork oak forests of the Alentejo also supply virtually all of the world's natural wine corks — meaning every Madeira, Port, Vinho Verde, and fortified wine in the PCT is sealed with a product from this same region.",
+      "entry_id": "WIN-PORALE-001",
+      "extracted_at": "2026-04-11T17:19:03.596204+00:00",
+      "batch_number": 2
+    }
+  ]
+}

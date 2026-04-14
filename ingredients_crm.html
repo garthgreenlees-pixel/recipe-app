@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingredient Intelligence</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f0; color: #1a1a1a; line-height: 1.5; }
+  a { color: inherit; }
+  .header { background: #1a1a1a; color: #fff; padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 20px; font-weight: 600; }
+  .header .count { font-size: 14px; opacity: 0.6; display: block; margin-top: 2px; }
+  .header .back { color: #fff; opacity: 0.6; text-decoration: none; font-size: 14px; }
+  .header .back:hover { opacity: 1; }
+  .tabs { display: flex; background: #fff; border-bottom: 1px solid #e0e0e0; }
+  .tab { padding: 12px 24px; font-size: 14px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; color: #666; }
+  .tab:hover { color: #1a1a1a; }
+  .tab.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
+  .toolbar { padding: 16px 32px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #fff; border-bottom: 1px solid #e0e0e0; }
+  .toolbar input[type="text"] { flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+  .toolbar select { padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; }
+  .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 500; }
+  .btn-primary { background: #1a1a1a; color: #fff; }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary { background: #e8e8e8; color: #1a1a1a; }
+  .btn-secondary:hover { background: #ddd; }
+  .list { padding: 16px 32px; }
+  .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+  .card-header { padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 12px; }
+  .card-header:hover { background: #fafafa; }
+  .card-title { font-weight: 600; font-size: 16px; }
+  .card-meta { display: flex; gap: 8px; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
+  .badge { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+  .badge-category { background: #e3f2fd; color: #1565c0; }
+  .badge-country { background: #e8f5e9; color: #2e7d32; }
+  .badge-type { background: #f3e5f5; color: #7b1fa2; }
+  .badge-brand { background: #fff3e0; color: #e65100; }
+  .badge-role-origin { background: #e3f2fd; color: #1565c0; }
+  .badge-role-provider { background: #fce4ec; color: #c62828; }
+  .card-body { padding: 0 20px 16px; display: none; }
+  .card.open .card-body { display: block; }
+  .card.open .card-header { border-bottom: 1px solid #eee; }
+  .field { margin-top: 12px; }
+  .field label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: #666; display: block; margin-bottom: 4px; }
+  .field p { font-size: 14px; white-space: pre-wrap; }
+  .pills { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pill { background: #f0f0f0; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+  .supplier-link { background: #fafafa; border: 1px solid #eee; border-radius: 6px; padding: 10px 14px; margin-top: 8px; }
+  .supplier-link .sl-name { font-weight: 600; font-size: 14px; }
+  .supplier-link .sl-meta { font-size: 12px; color: #666; margin-top: 2px; }
+  .load-more { text-align: center; padding: 16px 32px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .empty { text-align: center; padding: 60px 20px; color: #999; }
+  .toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a1a; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 200; display: none; }
+  .toast.show { display: block; }
+  /* Pat's Rule chain */
+  .chain { max-width: 600px; margin: 0 auto; padding: 24px 16px; }
+  .chain-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px 20px; position: relative; }
+  .chain-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .chain-card .cc-meta { font-size: 13px; color: #666; }
+  .chain-card .cc-contact { font-size: 13px; margin-top: 6px; }
+  .chain-card .cc-contact a { color: #1565c0; }
+  .chain-connector { display: flex; flex-direction: column; align-items: center; padding: 4px 0; }
+  .chain-connector .line { width: 2px; height: 24px; background: #ccc; }
+  .chain-connector .role-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #999; padding: 2px 8px; background: #f5f5f0; border-radius: 4px; }
+  .search-hero { max-width: 500px; margin: 40px auto 0; padding: 0 16px; text-align: center; }
+  .search-hero p { color: #666; font-size: 14px; margin-bottom: 16px; }
+  .search-hero input { width: 100%; padding: 12px 16px; border: 2px solid #1a1a1a; border-radius: 8px; font-size: 16px; }
+  .loading { text-align: center; padding: 40px; color: #999; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <a href="/" class="back">&larr; Back</a>
+    <h1>Ingredient Intelligence</h1>
+    <span class="count" id="statsCount">Loading...</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('products')">Products</div>
+  <div class="tab" onclick="switchTab('suppliers')">Suppliers</div>
+  <div class="tab" onclick="switchTab('patsrule')">Pat's Rule</div>
+</div>
+
+<!-- Products Tab -->
+<div class="tab-panel active" id="panel-products">
+  <div class="toolbar">
+    <input type="text" id="prodSearch" placeholder="Search products..." oninput="debounceProducts()">
+    <select id="prodCategory" onchange="loadProducts(true)">
+      <option value="">All categories</option>
+      <option value="seafood_sashimi">Seafood Sashimi</option>
+      <option value="seafood_general">Seafood General</option>
+      <option value="wagyu_premium_protein">Wagyu / Premium Protein</option>
+      <option value="spices_seasonings">Spices / Seasonings</option>
+      <option value="rice_grains">Rice / Grains</option>
+      <option value="oils_vinegars">Oils / Vinegars</option>
+      <option value="dairy_fermented">Dairy / Fermented</option>
+      <option value="produce_specialty">Produce Specialty</option>
+      <option value="charcuterie_cured">Charcuterie / Cured</option>
+      <option value="chocolate_confection">Chocolate / Confection</option>
+      <option value="flour_baking">Flour / Baking</option>
+      <option value="preserved_pickled">Preserved / Pickled</option>
+      <option value="stock_base">Stock / Base</option>
+    </select>
+    <select id="prodCountry" onchange="loadProducts(true)">
+      <option value="">All countries</option>
+    </select>
+  </div>
+  <div class="list" id="productList"></div>
+  <div class="load-more" id="productLoadMore" style="display:none;">
+    <button class="btn btn-secondary" onclick="loadProducts(false)">Load more</button>
+  </div>
+</div>
+
+<!-- Suppliers Tab -->
+<div class="tab-panel" id="panel-suppliers">
+  <div class="toolbar">
+    <input type="text" id="supSearch" placeholder="Search suppliers..." oninput="filterSuppliers()">
+    <select id="supCountry" onchange="loadSuppliers()">
+      <option value="">All countries</option>
+    </select>
+    <select id="supType" onchange="loadSuppliers()">
+      <option value="">All types</option>
+      <option value="producer">Producer</option>
+      <option value="importer">Importer</option>
+      <option value="distributor">Distributor</option>
+      <option value="retailer">Retailer</option>
+      <option value="direct_to_chef">Direct to Chef</option>
+    </select>
+  </div>
+  <div class="list" id="supplierList"></div>
+</div>
+
+<!-- Pat's Rule Tab -->
+<div class="tab-panel" id="panel-patsrule">
+  <div class="search-hero">
+    <p>Search a product to trace its supply chain: Origin &rarr; Provider</p>
+    <input type="text" id="patSearch" placeholder="e.g. Freeze-Dried Raspberry Whole" onkeydown="if(event.key==='Enter')patSearch()">
+  </div>
+  <div id="patResults"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const FLAGS = {Japan:'🇯🇵',Australia:'🇦🇺','New Zealand':'🇳🇿',Italy:'🇮🇹',Spain:'🇪🇸',France:'🇫🇷',USA:'🇺🇸','United States':'🇺🇸',India:'🇮🇳',China:'🇨🇳',Thailand:'🇹🇭',Vietnam:'🇻🇳',Korea:'🇰🇷','South Korea':'🇰🇷',Mexico:'🇲🇽',Peru:'🇵🇪',UK:'🇬🇧',Germany:'🇩🇪',Belgium:'🇧🇪',Switzerland:'🇨🇭',Greece:'🇬🇷',Turkey:'🇹🇷',Iran:'🇮🇷',Indonesia:'🇮🇩',Philippines:'🇵🇭',Canada:'🇨🇦',Argentina:'🇦🇷',Brazil:'🇧🇷',Chile:'🇨🇱',Norway:'🇳🇴',Iceland:'🇮🇸',Denmark:'🇩🇰',Sweden:'🇸🇪',Portugal:'🇵🇹',Morocco:'🇲🇦',Egypt:'🇪🇬',Colombia:'🇨🇴',Taiwan:'🇹🇼',Malaysia:'🇲🇾',Singapore:'🇸🇬',Netherlands:'🇳🇱',Austria:'🇦🇹',Poland:'🇵🇱',Hungary:'🇭🇺',Ireland:'🇮🇪',Scotland:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',Israel:'🇮🇱',Lebanon:'🇱🇧',Various:'🌍'};
+function flag(c) { return FLAGS[c] || ''; }
+
+let productOffset = 0;
+let productTotal = 0;
+let allSuppliers = [];
+let prodSearchTimer = null;
+
+// --- Init ---
+async function init() {
+  const res = await fetch('/api/ingredients/stats');
+  if (res.ok) {
+    const s = await res.json();
+    document.getElementById('statsCount').textContent =
+      s.products + ' products \u00b7 ' + s.suppliers + ' suppliers \u00b7 ' + s.links + ' links';
+  }
+  loadProducts(true);
+  loadCountryOptions();
+}
+
+async function loadCountryOptions() {
+  // Fetch a big chunk of products to extract unique countries
+  const res = await fetch('/api/ingredients/products?limit=200&offset=0');
+  if (!res.ok) return;
+  const data = await res.json();
+  const countries = [...new Set(data.products.map(p => p.origin_country).filter(Boolean))].sort();
+  const sel = document.getElementById('prodCountry');
+  countries.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = flag(c) + ' ' + c;
+    sel.appendChild(o);
+  });
+  // Also populate supplier country dropdown from supplier data
+  const sres = await fetch('/api/ingredients/suppliers/list');
+  if (!sres.ok) return;
+  const sdata = await sres.json();
+  const scountries = [...new Set(sdata.suppliers.map(s => s.country).filter(Boolean))].sort();
+  const ssel = document.getElementById('supCountry');
+  scountries.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = flag(c) + ' ' + c;
+    ssel.appendChild(o);
+  });
+}
+
+// --- Tab switching ---
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const panels = ['products', 'suppliers', 'patsrule'];
+    t.classList.toggle('active', panels[i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'suppliers' && allSuppliers.length === 0) loadSuppliers();
+}
+
+// --- Products ---
+function debounceProducts() {
+  clearTimeout(prodSearchTimer);
+  prodSearchTimer = setTimeout(() => loadProducts(true), 300);
+}
+
+async function loadProducts(reset) {
+  if (reset) productOffset = 0;
+  const q = document.getElementById('prodSearch').value.trim();
+  const cat = document.getElementById('prodCategory').value;
+  const country = document.getElementById('prodCountry').value;
+  const params = new URLSearchParams({limit: 50, offset: productOffset});
+  if (q) params.set('q', q);
+  if (cat) params.set('category', cat);
+  if (country) params.set('country', country);
+
+  const res = await fetch('/api/ingredients/products?' + params);
+  if (!res.ok) return;
+  const data = await res.json();
+  productTotal = data.total;
+
+  const list = document.getElementById('productList');
+  const html = data.products.map(p => `
+    <div class="card" id="prod-${p.id}">
+      <div class="card-header" onclick="toggleProd(${p.id})">
+        <span class="card-title">${esc(p.name)}</span>
+        <div class="card-meta">
+          <span class="badge badge-category">${esc(fmtCat(p.category))}</span>
+          ${p.origin_country ? `<span class="badge badge-country">${flag(p.origin_country)} ${esc(p.origin_country)}</span>` : ''}
+          ${p.origin_brand ? `<span class="badge badge-brand">${esc(p.origin_brand)}</span>` : ''}
+        </div>
+      </div>
+      <div class="card-body" id="prod-body-${p.id}">
+        <div class="loading">Loading details...</div>
+      </div>
+    </div>
+  `).join('');
+
+  if (reset) {
+    list.innerHTML = html || '<div class="empty">No products found</div>';
+  } else {
+    list.insertAdjacentHTML('beforeend', html);
+  }
+  productOffset += data.products.length;
+  document.getElementById('productLoadMore').style.display =
+    productOffset < productTotal ? '' : 'none';
+}
+
+async function toggleProd(id) {
+  const card = document.getElementById('prod-' + id);
+  const wasOpen = card.classList.contains('open');
+  card.classList.toggle('open');
+  if (wasOpen) return;
+
+  const body = document.getElementById('prod-body-' + id);
+  if (body.dataset.loaded) return;
+
+  // Fetch suppliers for this product
+  try {
+    const res = await fetch('/api/ingredients/suppliers?product_id=' + id);
+    if (!res.ok) {
+      body.innerHTML = '<p style="color:#999">No supplier data available</p>';
+      body.dataset.loaded = '1';
+      return;
+    }
+    const data = await res.json();
+    const p = data.product;
+    let html = '';
+    if (p.description) html += `<div class="field"><label>Description</label><p>${esc(p.description)}</p></div>`;
+    if (p.region_tags && p.region_tags.length) {
+      html += `<div class="field"><label>Region Tags</label><div class="pills">${p.region_tags.map(t => `<span class="pill">${esc(t)}</span>`).join('')}</div></div>`;
+    }
+    if (data.origin) {
+      html += `<div class="field"><label>Origin Supplier</label>`;
+      html += supplierLinkHtml(data.origin, 'ORIGIN');
+      html += `</div>`;
+    }
+    if (data.providers && data.providers.length) {
+      html += `<div class="field"><label>Providers</label>`;
+      data.providers.forEach(s => { html += supplierLinkHtml(s, 'PROVIDER'); });
+      html += `</div>`;
+    }
+    if (!data.origin && (!data.providers || !data.providers.length)) {
+      html += '<p style="color:#999;margin-top:12px">No linked suppliers</p>';
+    }
+    body.innerHTML = html || '<p style="color:#999">No additional details</p>';
+  } catch(e) {
+    body.innerHTML = '<p style="color:#999">Failed to load details</p>';
+  }
+  body.dataset.loaded = '1';
+}
+
+function supplierLinkHtml(s, role) {
+  const loc = [s.city, s.state_province, s.country].filter(Boolean).join(', ');
+  return `<div class="supplier-link">
+    <span class="badge badge-role-${role.toLowerCase()}">${role}</span>
+    <span class="sl-name"> ${esc(s.name)}</span>
+    <div class="sl-meta">${esc(loc)}${s.website ? ' &middot; <a href="'+esc(s.website)+'" target="_blank">website</a>' : ''}</div>
+    ${s.contact_email ? '<div class="sl-meta">' + esc(s.contact_email) + '</div>' : ''}
+  </div>`;
+}
+
+// --- Suppliers ---
+async function loadSuppliers() {
+  const country = document.getElementById('supCountry').value;
+  const type = document.getElementById('supType').value;
+  const params = new URLSearchParams();
+  if (country) params.set('country', country);
+  if (type) params.set('type', type);
+
+  const res = await fetch('/api/ingredients/suppliers/list?' + params);
+  if (!res.ok) return;
+  const data = await res.json();
+  allSuppliers = data.suppliers;
+  filterSuppliers();
+}
+
+function filterSuppliers() {
+  const q = document.getElementById('supSearch').value.trim().toLowerCase();
+  let filtered = allSuppliers;
+  if (q) {
+    filtered = allSuppliers.filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      (s.city||'').toLowerCase().includes(q) ||
+      (s.country||'').toLowerCase().includes(q)
+    );
+  }
+  const list = document.getElementById('supplierList');
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty">No suppliers found</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(s => {
+    const loc = [s.city, s.state_province, s.country].filter(Boolean).join(', ');
+    const cats = (s.categories_served || []);
+    const regions = (s.service_region || []);
+    return `
+    <div class="card" id="sup-${s.id}">
+      <div class="card-header" onclick="document.getElementById('sup-${s.id}').classList.toggle('open')">
+        <span class="card-title">${flag(s.country)} ${esc(s.name)}</span>
+        <div class="card-meta">
+          <span class="badge badge-type">${esc(fmtType(s.supplier_type))}</span>
+          <span class="badge badge-country">${esc(loc)}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        ${s.website ? `<div class="field"><label>Website</label><p><a href="${esc(s.website)}" target="_blank">${esc(s.website)}</a></p></div>` : ''}
+        ${s.contact_email ? `<div class="field"><label>Email</label><p>${esc(s.contact_email)}</p></div>` : ''}
+        ${regions.length ? `<div class="field"><label>Service Regions</label><div class="pills">${regions.map(r => `<span class="pill">${esc(r)}</span>`).join('')}</div></div>` : ''}
+        ${cats.length ? `<div class="field"><label>Categories Served</label><div class="pills">${cats.map(c => `<span class="pill">${esc(fmtCat(c))}</span>`).join('')}</div></div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// --- Pat's Rule ---
+async function patSearch() {
+  const q = document.getElementById('patSearch').value.trim();
+  if (!q) return;
+  const results = document.getElementById('patResults');
+  results.innerHTML = '<div class="loading">Searching supply chain...</div>';
+
+  const res = await fetch('/api/ingredients/suppliers?product_name=' + encodeURIComponent(q));
+  if (!res.ok) {
+    if (res.status === 404) {
+      results.innerHTML = '<div class="empty">Product not found. Try an exact product name.</div>';
+    } else {
+      results.innerHTML = '<div class="empty">Error searching. Please try again.</div>';
+    }
+    return;
+  }
+  const data = await res.json();
+  const p = data.product;
+
+  let html = '<div class="chain">';
+  // Product card
+  html += `<div class="chain-card">
+    <span class="badge badge-category">${esc(fmtCat(p.category))}</span>
+    <h3>${esc(p.name)}</h3>
+    <div class="cc-meta">${p.origin_country ? flag(p.origin_country) + ' ' + esc(p.origin_country) : ''}${p.origin_brand ? ' &middot; ' + esc(p.origin_brand) : ''}</div>
+    ${p.description ? '<div class="cc-meta" style="margin-top:6px">' + esc(p.description) + '</div>' : ''}
+  </div>`;
+
+  if (data.origin) {
+    html += chainConnector('ORIGIN');
+    html += chainSupplierCard(data.origin, 'origin');
+  }
+
+  if (data.providers && data.providers.length) {
+    data.providers.forEach(prov => {
+      html += chainConnector('PROVIDER');
+      html += chainSupplierCard(prov, 'provider');
+    });
+  }
+
+  if (!data.origin && (!data.providers || !data.providers.length)) {
+    html += '<div class="empty" style="padding:24px">No linked suppliers found for this product</div>';
+  }
+
+  html += '</div>';
+  results.innerHTML = html;
+}
+
+function chainConnector(label) {
+  return `<div class="chain-connector">
+    <div class="line"></div>
+    <span class="role-label">${label}</span>
+    <div class="line"></div>
+  </div>`;
+}
+
+function chainSupplierCard(s, role) {
+  const loc = [s.city, s.state_province, s.country].filter(Boolean).join(', ');
+  return `<div class="chain-card">
+    <span class="badge badge-role-${role}">${esc(fmtType(s.supplier_type))}</span>
+    <h3>${flag(s.country)} ${esc(s.name)}</h3>
+    <div class="cc-meta">${esc(loc)}</div>
+    ${s.website ? '<div class="cc-contact"><a href="'+esc(s.website)+'" target="_blank">'+esc(s.website)+'</a></div>' : ''}
+    ${s.contact_email ? '<div class="cc-contact">'+esc(s.contact_email)+'</div>' : ''}
+    ${s.contact_phone ? '<div class="cc-contact">'+esc(s.contact_phone)+'</div>' : ''}
+    ${s.region && s.region.length ? '<div class="cc-meta" style="margin-top:6px"><strong>Regions:</strong> '+s.region.map(r => esc(r)).join(', ')+'</div>' : ''}
+  </div>`;
+}
+
+// --- Helpers ---
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+function fmtCat(c) {
+  if (!c) return '';
+  return c.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+
+function fmtType(t) {
+  if (!t) return '';
+  return t.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+init();
+</script>
+</body>
+</html>

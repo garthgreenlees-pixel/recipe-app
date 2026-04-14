@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ recipe.name }} — Provenance</title>
+<meta name="description" content="How to make {{ recipe.name }}. {{ (recipe.description or '')[:155] }}">
+<link rel="canonical" href="https://provenance.kitchen/recipe/{{ recipe.slug }}">
+<meta property="og:title" content="{{ recipe.name }} — Provenance">
+<meta property="og:description" content="{{ (recipe.description or '')[:160] }}">
+<meta property="og:image" content="{{ recipe.image_url or 'https://provenance.kitchen/static/img/og-default.jpg' }}">
+<meta property="og:url" content="https://provenance.kitchen/recipe/{{ recipe.slug }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ recipe.name }} — Provenance">
+<meta name="twitter:description" content="{{ (recipe.description or '')[:160] }}">
+<meta name="twitter:image" content="{{ recipe.image_url or 'https://provenance.kitchen/static/img/og-default.jpg' }}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": {{ recipe.name | tojson }},
+  "description": {{ (recipe.description or '')[:300] | tojson }},
+  "author": { "@type": "Organization", "name": "Provenance" },
+  "url": "https://provenance.kitchen/recipe/{{ recipe.slug }}"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A09;--surface:#111110;--surface2:#181817;
+  --cream:#F4F1E8;--smoke:#9C9A93;--stone:#6B6962;--dim:#3A3835;
+  --gold:#C9A84C;--gold-faint:rgba(201,168,76,0.12);--gold-border:rgba(201,168,76,0.25);
+  --border:rgba(74,72,64,0.35);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.65;
+     padding-bottom:80px} /* space for fixed action bar */
+
+/* ── Top Bar ─────────────────────────────────────────── */
+.top-bar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:56px;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(10,10,9,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.top-bar-back{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--stone);text-decoration:none;
+  transition:color 180ms;
+}
+.top-bar-back:hover{color:var(--gold)}
+.top-bar-wordmark{
+  font-family:var(--serif);font-size:1.05rem;font-weight:400;
+  color:var(--cream);text-decoration:none;
+}
+.top-bar-type{
+  font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--stone);
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.15em;color:rgba(245,241,233,0.35);text-transform:uppercase;padding:0.75rem 2rem;margin-top:56px;border-bottom:1px solid var(--border);background:var(--bg)}
+.breadcrumb a{color:rgba(245,241,233,0.35);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb span{margin:0 0.5rem}
+
+/* ── Hero ────────────────────────────────────────────── */
+.hero{
+  position:relative;width:100%;height:65vh;min-height:420px;max-height:700px;
+  overflow:hidden;
+}
+.hero-img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:brightness(0.65);
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(10,10,9,0.1) 0%,rgba(10,10,9,0.15) 40%,rgba(10,10,9,0.7) 75%,rgba(10,10,9,0.92) 100%);
+}
+.hero-content{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:3rem 2rem 2.5rem;max-width:820px;margin:0 auto;
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:rgba(201,168,76,0.75);margin-bottom:0.85rem;
+}
+.hero-title{
+  font-family:var(--serif);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;
+  color:#fff;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem;
+}
+.hero-desc{
+  font-family:var(--sans);font-weight:300;font-size:15px;
+  color:rgba(244,241,232,0.65);line-height:1.65;max-width:560px;
+}
+
+/* ── Meta bar ────────────────────────────────────────── */
+.meta-bar{
+  max-width:760px;margin:0 auto;
+  padding:1.5rem 2rem;
+  display:flex;align-items:center;gap:2rem;flex-wrap:wrap;
+  border-bottom:1px solid var(--border);
+}
+.meta-item{display:flex;flex-direction:column;gap:3px}
+.meta-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--stone);
+}
+.meta-value{font-family:var(--sans);font-size:14px;font-weight:400;color:var(--cream)}
+.servings-adjuster{display:flex;align-items:center;gap:8px}
+.servings-btn{
+  width:24px;height:24px;border-radius:50%;border:1px solid var(--gold-border);
+  background:transparent;color:var(--gold);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 150ms,border-color 150ms;line-height:1;
+}
+.servings-btn:hover{background:var(--gold-faint);border-color:var(--gold)}
+.servings-count{font-family:var(--mono);font-size:13px;color:var(--cream);min-width:1.5rem;text-align:center}
+
+/* ── Content ─────────────────────────────────────────── */
+.content{max-width:760px;margin:0 auto;padding:3rem 2rem 2rem}
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--gold);opacity:0.75;
+  margin-bottom:1.25rem;display:flex;align-items:center;gap:12px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--gold-border)}
+
+/* ── Origin / body ───────────────────────────────────── */
+.origin-block{border-left:2px solid var(--gold-border);padding-left:1.5rem}
+.origin-text{font-family:var(--serif);font-size:1.05rem;font-style:italic;font-weight:400;color:var(--smoke);line-height:1.8}
+.body-text{font-size:15px;color:var(--smoke);font-weight:300;line-height:1.8}
+
+/* ── Quality list ────────────────────────────────────── */
+.quality-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:1rem}
+.quality-item{display:flex;gap:1rem;align-items:flex-start;font-size:14px;color:var(--smoke);font-weight:300;line-height:1.7}
+.quality-bullet{flex-shrink:0;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:8px}
+
+/* ── Lives panel ─────────────────────────────────────── */
+.lives-panel{
+  border:1px solid var(--gold-border);border-left:3px solid var(--gold);
+  background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0;
+  padding:1.5rem 1.75rem;
+}
+.lives-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:0.75;margin-bottom:0.85rem}
+.lives-text{font-family:var(--serif);font-size:1.05rem;font-weight:400;font-style:italic;color:var(--cream);line-height:1.75}
+
+/* ── Item list ───────────────────────────────────────── */
+.item-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:0.9rem}
+.item-entry{font-size:14px;color:var(--smoke);font-weight:300;line-height:1.7;padding-left:1.25rem;position:relative}
+.item-entry::before{content:'—';position:absolute;left:0;color:var(--gold);opacity:0.6;font-size:12px;top:3px}
+
+/* ── Ingredients ─────────────────────────────────────── */
+.ing-list{list-style:none;padding:0;display:flex;flex-direction:column}
+.ing-item{
+  display:grid;grid-template-columns:90px 1fr;gap:12px;
+  padding:0.7rem 0;border-bottom:1px solid rgba(74,72,64,0.2);align-items:start;
+}
+.ing-item:last-child{border-bottom:none}
+.ing-amount{font-family:var(--mono);font-size:12px;color:var(--gold);opacity:0.85;padding-top:1px;white-space:nowrap}
+.ing-detail{display:flex;flex-direction:column;gap:2px}
+.ing-name{font-size:14px;color:var(--cream);font-weight:300;line-height:1.5}
+.ing-info{font-size:12px;color:var(--stone);font-weight:300;line-height:1.4}
+.ing-source{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--gold);opacity:0.7;text-transform:uppercase;margin-top:3px}
+
+/* ── Method steps ────────────────────────────────────── */
+.step-list{display:flex;flex-direction:column;gap:0}
+.recipe-step{
+  padding:1.25rem 0;border-bottom:1px solid rgba(74,72,64,0.2);
+}
+.recipe-step:last-child{border-bottom:none}
+.step-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:0.6rem}
+.step-num{
+  font-family:var(--mono);font-size:11px;color:var(--gold);opacity:0.6;
+  padding-top:3px;flex-shrink:0;min-width:20px;
+}
+.step-text{font-size:14px;color:var(--smoke);font-weight:300;line-height:1.8;flex:1}
+.technique-toggle{
+  flex-shrink:0;margin-left:auto;margin-top:2px;
+  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(201,168,76,0.55);
+  background:transparent;border:1px solid rgba(201,168,76,0.2);
+  border-radius:3px;padding:3px 8px;cursor:pointer;
+  white-space:nowrap;transition:color 150ms,border-color 150ms,background 150ms;
+}
+.technique-toggle:hover{color:var(--gold);border-color:rgba(201,168,76,0.5);background:var(--gold-faint)}
+.technique-note{
+  margin:0.75rem 0 0 34px;
+  background:rgba(201,168,76,0.06);
+  border-left:2px solid var(--gold);
+  border-radius:0 4px 4px 0;
+  padding:1rem 1.25rem;
+}
+.technique-note-label{
+  font-family:var(--mono);font-size:8px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--gold);opacity:0.7;
+  margin-bottom:0.6rem;
+}
+.technique-note-body{
+  font-size:13px;color:var(--smoke);font-weight:300;line-height:1.75;
+}
+
+/* ── Divider ─────────────────────────────────────────── */
+.divider{width:60%;height:1px;background:var(--border);margin:0 auto 3.5rem}
+
+/* ── Sourced by Provenance (FIX 1) ──────────────────── */
+.suppliers-section{
+  border-top:1px solid var(--border);
+  padding:2.5rem 2rem 3rem;max-width:760px;margin:0 auto;
+}
+.suppliers-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--gold);opacity:0.75;
+  margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;
+}
+.suppliers-eyebrow::after{content:'';flex:1;height:1px;background:var(--gold-border)}
+.suppliers-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;
+  border:1px solid var(--gold-border);border-left:3px solid var(--gold);
+}
+.supplier-card{
+  padding:1.25rem 1.4rem;
+  background:rgba(201,168,76,0.08);
+  color:rgba(245,241,233,0.85);
+  border-right:1px solid rgba(201,168,76,0.15);
+  border-bottom:1px solid rgba(201,168,76,0.15);
+}
+.supplier-card:hover{background:rgba(201,168,76,0.13)}
+.supplier-name{
+  font-family:var(--serif);font-size:1rem;font-weight:400;
+  color:rgba(245,241,233,0.85);margin-bottom:0.3rem;
+}
+.supplier-loc{
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  text-transform:uppercase;color:rgba(245,241,233,0.85);
+  opacity:0.6;margin-bottom:0.75rem;
+}
+.supplier-for-recipe{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(201,168,76,0.6);margin-bottom:0.4rem}
+.supplier-products{list-style:none;padding:0;margin-bottom:0.75rem}
+.supplier-product{font-size:11px;color:var(--smoke);font-weight:300;line-height:1.5;padding:0.25rem 0;border-top:1px solid rgba(201,168,76,0.08)}
+.supplier-product-name{color:var(--gold);opacity:0.85}
+.supplier-link{
+  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(245,241,233,0.85);
+  text-decoration:none;transition:color 150ms;
+}
+.supplier-link:hover{color:var(--gold)}
+
+/* ── Fixed action bar (FIX 2) ───────────────────────── */
+.action-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:150;
+  height:64px;padding:0 2rem;
+  display:flex;align-items:center;justify-content:flex-end;gap:10px;
+  background:rgba(10,10,9,0.95);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+}
+.recipe-btn{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;cursor:pointer;
+  padding:0 1.25rem;height:36px;border-radius:4px;
+  transition:all 180ms;display:flex;align-items:center;gap:6px;
+}
+.btn-kitchen{
+  color:var(--stone);background:transparent;
+  border:1px solid rgba(74,72,64,0.5);
+  text-decoration:none;
+}
+.btn-kitchen:hover{color:var(--cream);border-color:rgba(74,72,64,0.9)}
+.btn-haccp{
+  color:var(--gold);background:transparent;
+  border:1px solid var(--gold-border);
+}
+.btn-haccp:hover{background:var(--gold-faint);border-color:var(--gold)}
+.btn-haccp:disabled{opacity:0.45;cursor:not-allowed}
+
+/* ── Safety slide panel (FIX 2) ─────────────────────── */
+.safety-panel{
+  position:fixed;bottom:64px;right:0;z-index:140;
+  width:min(540px,100vw);height:calc(100vh - 120px);
+  background:var(--surface);border-left:1px solid var(--border);
+  border-top:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform 280ms cubic-bezier(0.4,0,0.2,1);
+}
+.safety-panel.open{transform:translateX(0)}
+.safety-panel-head{
+  padding:1rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.safety-panel-title{
+  font-family:var(--mono);font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--gold);
+}
+.safety-panel-close{
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;
+  color:var(--stone);background:transparent;border:none;cursor:pointer;
+  transition:color 150ms;padding:4px 8px;
+}
+.safety-panel-close:hover{color:var(--cream)}
+.safety-panel-body{
+  flex:1;overflow-y:auto;padding:1.5rem;
+  font-size:13px;color:var(--smoke);font-weight:300;line-height:1.8;
+  white-space:pre-wrap;
+}
+.safety-panel-allergens{
+  padding:1rem 1.5rem;border-top:1px solid var(--border);flex-shrink:0;
+}
+.allergen-label{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--stone);margin-bottom:0.5rem}
+.allergen-tags{display:flex;flex-wrap:wrap;gap:6px}
+.allergen-tag{
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--gold);border:1px solid var(--gold-border);
+  padding:2px 8px;border-radius:3px;
+}
+.safety-loading{
+  display:flex;align-items:center;justify-content:center;
+  height:100%;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--stone);
+}
+
+/* ── Photo Panel ── */
+.change-photo-btn{position:absolute;bottom:1rem;right:1rem;background:rgba(8,8,10,0.75);border:1px solid rgba(201,168,76,0.45);color:rgba(201,168,76,0.85);font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.45rem 1rem;cursor:pointer;transition:all 0.2s;z-index:20}
+.change-photo-btn:hover{border-color:#C9A84C;color:#C9A84C;background:rgba(8,8,10,0.9)}
+.photo-panel{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:600;align-items:center;justify-content:center}
+.photo-panel-inner{background:#1A1816;border:1px solid rgba(201,168,76,0.2);padding:2rem;width:360px;max-width:92vw}
+.pp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.pp-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.3em;color:#C9A84C;text-transform:uppercase}
+.pp-close{background:none;border:none;color:rgba(245,241,233,0.35);font-size:1.1rem;cursor:pointer;padding:0;line-height:1}
+.pp-option-title{font-size:0.875rem;color:#F5F1E9;font-weight:400;margin-bottom:0.3rem}
+.pp-option-desc{font-size:0.75rem;color:rgba(245,241,233,0.4);line-height:1.55;margin-bottom:0.85rem}
+.pp-btn{background:none;border:1px solid rgba(201,168,76,0.4);color:#C9A84C;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.5rem 1.2rem;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.pp-btn:hover{background:rgba(201,168,76,0.08);border-color:#C9A84C}
+.pp-divider{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;color:rgba(245,241,233,0.18);text-transform:uppercase;text-align:center;margin:1.25rem 0;border-top:1px solid rgba(201,168,76,0.07);border-bottom:1px solid rgba(201,168,76,0.07);padding:0.5rem 0}
+.pp-generating{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:rgba(245,241,233,0.4);margin-top:0.75rem}
+.pp-spinner{display:inline-block;animation:pp-spin 1s linear infinite}
+@keyframes pp-spin{to{transform:rotate(360deg)}}
+.pp-url-row{display:flex;gap:0.5rem}
+.pp-url-input{flex:1;min-width:0;background:#131210;border:1px solid rgba(201,168,76,0.18);color:#F5F1E9;font-size:0.75rem;padding:0.45rem 0.7rem;font-family:'DM Sans',sans-serif}
+.pp-url-input::placeholder{color:rgba(245,241,233,0.18)}
+.pp-url-input:focus{outline:none;border-color:rgba(201,168,76,0.4)}
+.pp-preview{margin-top:1.25rem;border-top:1px solid rgba(201,168,76,0.1);padding-top:1.25rem}
+.pp-preview img{width:100%;height:180px;object-fit:cover;display:block}
+.pp-preview-actions{display:flex;gap:0.5rem;margin-top:0.75rem}
+.pp-keep{flex:1;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.4);color:#C9A84C;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.5rem;cursor:pointer;transition:all 0.2s}
+.pp-keep:hover{background:rgba(201,168,76,0.18)}
+.pp-discard{background:none;border:1px solid rgba(245,241,233,0.08);color:rgba(245,241,233,0.3);font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.5rem 0.85rem;cursor:pointer}
+
+/* ── Footer ──────────────────────────────────────────── */
+.recipe-footer{
+  border-top:1px solid var(--border);
+  padding:1.5rem 2rem 2rem;max-width:760px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.footer-back{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--stone);text-decoration:none;transition:color 180ms;
+}
+.footer-back:hover{color:var(--gold)}
+.footer-wordmark{font-family:var(--serif);font-size:13px;font-weight:400;color:var(--dim)}
+/* ── App Footer ──────────────────────────────────────── */
+.app-footer{background:#0E0D0B;border-top:1px solid rgba(201,168,76,0.12);padding:4rem 4rem 2rem;margin-top:auto}
+.app-footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.app-footer-brand{font-family:var(--serif);font-size:1.3rem;color:#F5F1E9;margin-bottom:0.5rem}
+.app-footer-tagline{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;color:rgba(245,241,233,0.35);text-transform:uppercase}
+.app-footer-label{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.25em;color:#C9A84C;text-transform:uppercase;margin-bottom:1rem}
+.app-footer-col a{display:block;color:rgba(245,241,233,0.55);font-size:0.85rem;font-weight:300;text-decoration:none;padding:0.3rem 0;transition:color 0.2s}
+.app-footer-col a:hover{color:#F5F1E9}
+.app-footer-bottom{display:flex;justify-content:space-between;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08);font-family:var(--mono);font-size:0.5rem;letter-spacing:0.15em;color:rgba(245,241,233,0.2);text-transform:uppercase}
+@media(max-width:768px){.app-footer-grid{grid-template-columns:1fr 1fr}.app-footer{padding:3rem 1.5rem 2rem}.app-footer-bottom{flex-direction:column;gap:0.5rem}}
+
+@media(max-width:640px){
+  .hero-content{padding:2rem 1.25rem 2rem}
+  .meta-bar{padding:1.25rem;gap:1.25rem}
+  .content{padding:2.5rem 1.25rem 2rem}
+  .suppliers-section{padding:2rem 1.25rem 2.5rem}
+  .action-bar{padding:0 1.25rem;justify-content:space-between}
+  .safety-panel{width:100vw}
+  .ing-item{grid-template-columns:75px 1fr}
+}
+</style>
+<!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4G21HCX2D0');
+</script>
+<!-- PWA -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Provenance">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+</head>
+<body>
+
+<!-- ── Top Bar ──────────────────────────────────────────────────── -->
+<div class="top-bar">
+  <a href="/auth/account" class="top-bar-back">← My Kitchen</a>
+  <a href="/" class="top-bar-wordmark">Provenance</a>
+  <span class="top-bar-type">{{ recipe.recipe_type | upper }}</span>
+</div>
+
+<!-- ── Breadcrumb ───────────────────────────────────────────────── -->
+<nav class="breadcrumb" aria-label="breadcrumb">
+  <a href="/">Provenance</a><span>/</span>
+  <a href="/recipes">Recipes</a><span>/</span>
+  {% if recipe.cuisine %}<a href="/recipes?cuisine={{ recipe.cuisine | urlencode }}">{{ recipe.cuisine }}</a><span>/</span>{% endif %}
+  <span>{{ recipe.name }}</span>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────────── -->
+<div class="hero">
+  {% if recipe.image_url %}
+  <img class="hero-img" src="{{ recipe.image_url }}" alt="{{ recipe.name }}">
+  {% else %}
+  <div class="hero-img" style="background:linear-gradient(135deg,#141413,#2A2018)"></div>
+  {% endif %}
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">{{ recipe.cuisine or '' }}</div>
+    <h1 class="hero-title">{{ recipe.name }}</h1>
+    {% if recipe.description %}
+    <p class="hero-desc">{{ recipe.description }}</p>
+    {% endif %}
+  </div>
+  <button class="change-photo-btn" onclick="document.getElementById('photoPanel').style.display='flex'" title="Change photo">⊕ Photo</button>
+</div>
+
+<!-- ── Meta bar ──────────────────────────────────────────────────── -->
+{% if recipe.servings or recipe.prep_time_mins or recipe.cook_time_mins %}
+<div class="meta-bar">
+  {% if recipe.servings %}
+  <div class="meta-item">
+    <span class="meta-label">Serves</span>
+    <div class="servings-adjuster">
+      <button class="servings-btn" id="btn-minus" aria-label="Reduce servings">−</button>
+      <span class="servings-count" id="servings-display">{{ recipe.servings }}</span>
+      <button class="servings-btn" id="btn-plus" aria-label="Increase servings">+</button>
+    </div>
+  </div>
+  {% endif %}
+  {% if recipe.prep_time_mins %}
+  <div class="meta-item">
+    <span class="meta-label">Prep</span>
+    <span class="meta-value">{{ recipe.prep_time_mins }} min</span>
+  </div>
+  {% endif %}
+  {% if recipe.cook_time_mins is not none %}
+  <div class="meta-item">
+    <span class="meta-label">Cook</span>
+    <span class="meta-value">
+      {%- if recipe.cook_time_mins == 0 -%}No cook
+      {%- elif recipe.cook_time_mins >= 60 -%}{{ (recipe.cook_time_mins // 60) }}h{% if recipe.cook_time_mins % 60 %} {{ recipe.cook_time_mins % 60 }}min{% endif %}
+      {%- else -%}{{ recipe.cook_time_mins }} min{%- endif -%}
+    </span>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- ── Content ───────────────────────────────────────────────────── -->
+<div class="content">
+
+  {% if recipe.full_content and recipe.full_content.origin %}
+  <div class="section">
+    <div class="section-label">Origin</div>
+    <div class="origin-block">
+      <p class="origin-text">{{ recipe.full_content.origin }}</p>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if recipe.ingredients %}
+  <div class="section">
+    <div class="section-label">Ingredients</div>
+    <ul class="ing-list" id="ing-list">
+      {% for ing in recipe.ingredients %}
+      <li class="ing-item"
+          data-base-count="{{ ing.count or '' }}"
+          data-product-name="{{ ing.name | lower }}">
+        <span class="ing-amount">
+          {%- if ing.count and ing.unit -%}{{ ing.count }} {{ ing.unit }}
+          {%- elif ing.count -%}{{ ing.count }}
+          {%- elif ing.unit -%}{{ ing.unit }}
+          {%- else -%}—{%- endif -%}
+        </span>
+        <div class="ing-detail">
+          <span class="ing-name">{{ ing.name }}</span>
+          {% if ing.info %}<span class="ing-info">{{ ing.info }}</span>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if recipe.steps %}
+  <div class="section">
+    <div class="section-label">Method</div>
+    <ol class="step-list">
+      {% for step in recipe.steps %}
+      <li class="recipe-step">
+        {% if step is mapping %}
+          <div class="step-header">
+            <span class="step-num">{{ loop.index }}</span>
+            <p class="step-text">{{ step.instruction }}</p>
+            {% if step.technique_note %}
+            <button class="technique-toggle" onclick="toggleNote(this)">Technique Note ↓</button>
+            {% endif %}
+          </div>
+          {% if step.technique_note %}
+          <div class="technique-note" style="display:none">
+            <div class="technique-note-label">Technique Depth</div>
+            <div class="technique-note-body">{{ step.technique_note }}</div>
+          </div>
+          {% endif %}
+        {% else %}
+          <div class="step-header">
+            <span class="step-num">{{ loop.index }}</span>
+            <p class="step-text">{{ step }}</p>
+          </div>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  {% if recipe.full_content and recipe.full_content.technique %}
+  <div class="section">
+    <div class="section-label">The Technique</div>
+    <p class="body-text">{{ recipe.full_content.technique }}</p>
+  </div>
+  {% endif %}
+
+  {% if recipe.full_content and recipe.full_content.quality_hierarchy %}
+  <div class="section">
+    <div class="section-label">Quality Hierarchy</div>
+    <ul class="quality-list">
+      {% for item in recipe.full_content.quality_hierarchy %}
+      <li class="quality-item">
+        <span class="quality-bullet"></span>
+        <span>{{ item }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if recipe.full_content and recipe.full_content.where_it_lives_or_dies %}
+  <div class="section">
+    <div class="lives-panel">
+      <div class="lives-label">Where It Lives or Dies</div>
+      <p class="lives-text">{{ recipe.full_content.where_it_lives_or_dies }}</p>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if recipe.full_content and recipe.full_content.sensory_tests %}
+  <div class="section">
+    <div class="section-label">Sensory Tests</div>
+    <ul class="item-list">
+      {% for item in recipe.full_content.sensory_tests %}
+      <li class="item-entry">{{ item }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if recipe.full_content and recipe.full_content.cross_cuisine_parallels %}
+  <div class="divider"></div>
+  <div class="section">
+    <div class="section-label">Cross-Cuisine Parallels</div>
+    <ul class="item-list">
+      {% for item in recipe.full_content.cross_cuisine_parallels %}
+      <li class="item-entry">{{ item }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- ── Sourced by Provenance (FIX 1) ─────────────────────────────── -->
+{% if recipe_suppliers %}
+<div class="suppliers-section">
+  <div class="suppliers-eyebrow">Sourced by Provenance — Pat's Rule</div>
+  <div class="suppliers-grid">
+    {% for s in recipe_suppliers %}
+    <div class="supplier-card">
+      <div class="supplier-name">{{ s.name }}</div>
+      <div class="supplier-loc">
+        {%- if s.city %}{{ s.city }}{% if s.state_province %}, {% endif %}{% endif -%}
+        {%- if s.state_province %}{{ s.state_province }}{% endif -%}
+        {%- if s.country %} · {{ s.country }}{% endif -%}
+      </div>
+      {% if s.products %}
+      <div class="supplier-for-recipe">For this recipe:</div>
+      <ul class="supplier-products">
+        {% for p in s.products[:3] %}
+        <li class="supplier-product">
+          <span class="supplier-product-name">→ {{ p.name }}</span>
+          {%- if p.desc %} — {{ p.desc.split('.')[0] }}{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if s.website %}
+      <a href="{{ s.website if s.website.startswith('http') else 'https://' + s.website }}"
+         class="supplier-link" target="_blank" rel="noopener">View Supplier →</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- ── Costing Panel ─────────────────────────────────────────────── -->
+{% if is_authenticated %}
+<div class="costing-panel" id="costingPanel" style="margin:1.5rem 2rem;border:1px solid rgba(201,168,76,0.08);border-radius:8px;background:rgba(14,34,51,0.4);overflow:hidden">
+  <button onclick="toggleCostingPanel()" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:none;border:none;cursor:pointer;color:#F5F1E9">
+    <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(201,168,76,0.5)">RECIPE COSTING</span>
+    <span id="costingToggle" style="color:rgba(201,168,76,0.4);font-size:0.8rem;transition:transform 0.3s">▼</span>
+  </button>
+  <div id="costingContent" style="display:none;padding:0 20px 20px">
+    <div id="costingLoading" style="color:rgba(245,241,233,0.4);font-size:0.8rem;font-style:italic">Loading cost data…</div>
+    <div id="costingData" style="display:none">
+      <!-- Summary -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1.5rem;text-align:center">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-bottom:4px">COST/PLATE</div>
+          <div id="costPerPlate" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#C9A84C">—</div>
+        </div>
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-bottom:4px">FOOD COST %</div>
+          <div id="foodCostPct" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#C9A84C">—</div>
+        </div>
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-bottom:4px">TARGET</div>
+          <div id="targetPct" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:rgba(245,241,233,0.5)">30%</div>
+        </div>
+      </div>
+      <!-- Breakdown table -->
+      <table id="costBreakdown" style="width:100%;border-collapse:collapse;font-size:0.75rem;color:rgba(245,241,233,0.6)">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(201,168,76,0.1)">
+            <th style="text-align:left;padding:6px 0;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3);text-transform:uppercase">Ingredient</th>
+            <th style="text-align:right;padding:6px 0;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3)">Qty</th>
+            <th style="text-align:right;padding:6px 0;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3)">Unit Cost</th>
+            <th style="text-align:right;padding:6px 0;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3)">Line</th>
+          </tr>
+        </thead>
+        <tbody id="costRows"></tbody>
+      </table>
+      <!-- Unpriced warning -->
+      <div id="unpricedWarning" style="display:none;margin-top:1rem;padding:10px 14px;background:rgba(245,180,80,0.08);border:1px solid rgba(245,180,80,0.15);border-radius:4px;font-size:0.75rem;color:rgba(245,180,80,0.7)">
+        <span id="unpricedCount">0</span> ingredients without price data. Scan an invoice to update prices.
+      </div>
+      <!-- Menu price input -->
+      <div style="margin-top:1.25rem;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <label style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3);text-transform:uppercase;white-space:nowrap">MENU PRICE $</label>
+        <input type="number" id="menuPriceInput" step="0.50" min="0" placeholder="0.00"
+          style="width:80px;background:rgba(245,241,233,0.05);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:6px 10px;color:#F5F1E9;font-family:'DM Sans',sans-serif;font-size:0.85rem"
+          onchange="updateMenuPrice()">
+        <label style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3);text-transform:uppercase;white-space:nowrap">TARGET %</label>
+        <input type="number" id="targetInput" step="1" min="1" max="100" value="30"
+          style="width:60px;background:rgba(245,241,233,0.05);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:6px 10px;color:#F5F1E9;font-family:'DM Sans',sans-serif;font-size:0.85rem"
+          onchange="updateMenuPrice()">
+      </div>
+      <!-- Invoice scan -->
+      <div style="margin-top:1.5rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:4px;color:#C9A84C;font-family:'DM Sans',sans-serif;font-size:0.75rem;cursor:pointer;letter-spacing:0.03em">
+          📷 Update prices from invoice
+          <input type="file" accept="image/*" capture="environment" onchange="scanInvoice(this)" style="display:none">
+        </label>
+        <div id="scanStatus" style="display:none;font-size:0.75rem;color:rgba(201,168,76,0.5);font-style:italic"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function() {
+  var _costLoaded = false;
+
+  window.toggleCostingPanel = function() {
+    var content = document.getElementById('costingContent');
+    var toggle = document.getElementById('costingToggle');
+    if (content.style.display === 'none') {
+      content.style.display = 'block';
+      toggle.style.transform = 'rotate(180deg)';
+      if (!_costLoaded) { loadCostingData(); _costLoaded = true; }
+    } else {
+      content.style.display = 'none';
+      toggle.style.transform = 'rotate(0deg)';
+    }
+  };
+
+  function loadCostingData() {
+    var slug = {{ recipe.slug | tojson }};
+    fetch('/api/costing/recipe/' + slug)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        document.getElementById('costingLoading').style.display = 'none';
+        document.getElementById('costingData').style.display = 'block';
+
+        document.getElementById('costPerPlate').textContent =
+          data.cost_per_portion != null ? '$' + data.cost_per_portion.toFixed(2) : '—';
+
+        var pctEl = document.getElementById('foodCostPct');
+        if (data.actual_food_cost_pct != null) {
+          pctEl.textContent = data.actual_food_cost_pct + '%';
+          pctEl.style.color = data.over_target ? '#E8786A' : '#6ECB63';
+        }
+
+        document.getElementById('targetPct').textContent = (data.target_food_cost_pct || 30) + '%';
+        if (data.menu_price) document.getElementById('menuPriceInput').value = data.menu_price;
+        document.getElementById('targetInput').value = data.target_food_cost_pct || 30;
+
+        var tbody = document.getElementById('costRows');
+        tbody.innerHTML = '';
+        (data.breakdown || []).forEach(function(item) {
+          var tr = document.createElement('tr');
+          tr.style.borderBottom = '1px solid rgba(201,168,76,0.04)';
+          var priceStr = item.unit_price != null ? '$' + item.unit_price.toFixed(2) + '/' + item.price_unit : '—';
+          var lineStr = item.line_cost > 0 ? '$' + item.line_cost.toFixed(2) : '—';
+          var nameStyle = item.status === 'no_price_data' ? 'color:rgba(245,180,80,0.5)' : '';
+          var yieldNote = (item.yield_factor && item.yield_factor < 1)
+            ? ' <span style="color:rgba(201,168,76,0.3);font-size:0.65rem">(' + Math.round(item.yield_factor * 100) + '% yield)</span>'
+            : '';
+          tr.innerHTML =
+            '<td style="padding:5px 0;' + nameStyle + '">' + (item.ingredient || '') + yieldNote + '</td>' +
+            '<td style="text-align:right;padding:5px 0">' + (item.quantity || '') + ' ' + (item.unit || '') + '</td>' +
+            '<td style="text-align:right;padding:5px 0">' + priceStr + '</td>' +
+            '<td style="text-align:right;padding:5px 0;font-weight:500">' + lineStr + '</td>';
+          tbody.appendChild(tr);
+        });
+
+        var totalTr = document.createElement('tr');
+        totalTr.style.borderTop = '1px solid rgba(201,168,76,0.15)';
+        totalTr.innerHTML =
+          '<td colspan="3" style="padding:8px 0;font-family:\'DM Mono\',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.4);text-transform:uppercase">TOTAL (' + (data.portions || 4) + ' portions)</td>' +
+          '<td style="text-align:right;padding:8px 0;color:#C9A84C;font-weight:600">$' + (data.total_cost || 0).toFixed(2) + '</td>';
+        tbody.appendChild(totalTr);
+
+        if (data.unpriced_count > 0) {
+          document.getElementById('unpricedWarning').style.display = 'block';
+          document.getElementById('unpricedCount').textContent = data.unpriced_count;
+        }
+      })
+      .catch(function() {
+        document.getElementById('costingLoading').textContent = 'Unable to load cost data.';
+      });
+  }
+
+  window.updateMenuPrice = function() {
+    var slug = {{ recipe.slug | tojson }};
+    var menuPrice = parseFloat(document.getElementById('menuPriceInput').value) || 0;
+    var target = parseFloat(document.getElementById('targetInput').value) || 30;
+    fetch('/api/costing/recipe/' + slug + '/set-target', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({menu_price: menuPrice, target_food_cost_pct: target})
+    }).then(function() { _costLoaded = false; loadCostingData(); });
+  };
+
+  window.scanInvoice = function(input) {
+    if (!input.files || !input.files[0]) return;
+    var statusEl = document.getElementById('scanStatus');
+    statusEl.style.display = 'block';
+    statusEl.textContent = 'Scanning invoice…';
+    statusEl.style.color = 'rgba(201,168,76,0.5)';
+    var formData = new FormData();
+    formData.append('invoice', input.files[0]);
+    fetch('/api/costing/scan-invoice', {method: 'POST', body: formData})
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.success) {
+          statusEl.textContent = '✓ ' + data.items_extracted + ' items, ' + data.prices_updated + ' prices updated from ' + (data.supplier || 'invoice');
+          statusEl.style.color = '#6ECB63';
+          _costLoaded = false;
+          setTimeout(loadCostingData, 600);
+        } else {
+          statusEl.textContent = '✗ ' + (data.error || 'Scan failed');
+          statusEl.style.color = '#E8786A';
+        }
+      })
+      .catch(function(e) {
+        statusEl.textContent = '✗ Upload failed';
+        statusEl.style.color = '#E8786A';
+      });
+    input.value = '';
+  };
+})();
+</script>
+{% else %}
+<div style="margin:1.5rem 2rem;padding:1.5rem 20px;border:1px solid rgba(201,168,76,0.06);border-radius:8px;background:rgba(14,34,51,0.2);opacity:0.5">
+  <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.25em;color:rgba(201,168,76,0.3);text-transform:uppercase">RECIPE COSTING</div>
+  <p style="font-size:0.8rem;color:rgba(245,241,233,0.3);margin-top:0.5rem;line-height:1.5">Cost per plate · Food cost percentage · Invoice scanning</p>
+</div>
+{% endif %}
+
+<!-- ── Footer ────────────────────────────────────────────────────── -->
+<div class="recipe-footer">
+  <a href="/auth/account" class="footer-back">← My Kitchen</a>
+  <span class="footer-wordmark">Provenance</span>
+</div>
+
+<footer class="app-footer">
+  <div class="app-footer-grid">
+    <div class="app-footer-col">
+      <div class="app-footer-brand">Provenance</div>
+      <div class="app-footer-tagline">Culinary Lineage · Vancouver, BC</div>
+    </div>
+    <div class="app-footer-col">
+      <div class="app-footer-label">PLATFORM</div>
+      <a href="/recipes">Recipes</a>
+      <a href="/drinks">Drinks</a>
+      <a href="/cuisines">Cuisines</a>
+      <a href="/techniques/browse">Techniques</a>
+      <a href="/auth/account">My Kitchen</a>
+    </div>
+    <div class="app-footer-col">
+      <div class="app-footer-label">COMPANY</div>
+      <a href="/about">About</a>
+      <a href="/methodology">Our Standard</a>
+      <a href="/for-professionals">For Professionals</a>
+      <a href="/suppliers">Verified Suppliers</a>
+    </div>
+    <div class="app-footer-col">
+      <div class="app-footer-label">CONTACT</div>
+      <a href="mailto:info@provenance.kitchen">info@provenance.kitchen</a>
+    </div>
+  </div>
+  <div class="app-footer-bottom">
+    <span>© 2026 Provenance Culinary Lineage</span>
+    <span>The discipline of simplicity. The patience of craft.</span>
+  </div>
+</footer>
+
+<!-- ── Fixed Action Bar (FIX 2) ─────────────────────────────────── -->
+<div class="action-bar">
+  <a href="/auth/account" class="recipe-btn btn-kitchen">← My Kitchen</a>
+  <button class="recipe-btn btn-haccp" id="btn-kitchen-notes" onclick="openSafetyPanel('kitchen-notes')">
+    Kitchen Notes
+  </button>
+  <button class="recipe-btn btn-haccp" id="btn-haccp" onclick="openSafetyPanel('haccp')">
+    Food Safety / HACCP
+  </button>
+  <a href="/api/haccp/{{ recipe.slug }}/pdf" class="recipe-btn btn-haccp" target="_blank" rel="noopener" title="Download HACCP PDF">↓ PDF</a>
+</div>
+
+<!-- ── Safety Slide Panel (FIX 2) ───────────────────────────────── -->
+<div class="safety-panel" id="safety-panel">
+  <div class="safety-panel-head">
+    <span class="safety-panel-title" id="safety-panel-title">Food Safety</span>
+    <button class="safety-panel-close" onclick="closeSafetyPanel()">✕ Close</button>
+  </div>
+  <div class="safety-panel-body" id="safety-panel-body">
+    <div class="safety-loading">Loading…</div>
+  </div>
+  <div class="safety-panel-allergens" id="safety-panel-allergens" style="display:none">
+    <div class="allergen-label">Allergens</div>
+    <div class="allergen-tags" id="allergen-tags"></div>
+  </div>
+</div>
+
+<script>
+// ── Injected recipe data for API calls ──────────────────────────
+var RECIPE_TITLE = {{ recipe.name | tojson }};
+var RECIPE_INGREDIENTS = (function() {
+  var raw = {{ (recipe.ingredients or []) | tojson }};
+  return raw.map(function(i) { return i.name || ''; }).filter(Boolean);
+})();
+var RECIPE_STEPS = (function() {
+  var raw = {{ (recipe.steps or []) | tojson }};
+  return raw.map(function(s) {
+    if (typeof s === 'string') return s;
+    return s.instruction || '';
+  }).filter(Boolean);
+})();
+
+// ── Servings adjuster ──────────────────────────────────────────
+var baseServings = {{ recipe.servings or 4 }};
+var currentServings = baseServings;
+var displayEl = document.getElementById('servings-display');
+var btnMinus = document.getElementById('btn-minus');
+var btnPlus = document.getElementById('btn-plus');
+
+document.querySelectorAll('#ing-list .ing-item').forEach(function(item) {
+  var amountEl = item.querySelector('.ing-amount');
+  if (!amountEl) return;
+  var base = item.getAttribute('data-base-count');
+  if (!base) return;
+  var unit = amountEl.textContent.trim().replace(base, '').trim();
+  item.setAttribute('data-unit', unit);
+});
+
+function updateAmounts() {
+  if (!displayEl) return;
+  displayEl.textContent = currentServings;
+  var ratio = currentServings / baseServings;
+  document.querySelectorAll('#ing-list .ing-item').forEach(function(item) {
+    var base = item.getAttribute('data-base-count');
+    var amountEl = item.querySelector('.ing-amount');
+    if (!amountEl || !base) return;
+    var num = parseFloat(base);
+    if (isNaN(num)) return;
+    var unit = item.getAttribute('data-unit') || '';
+    var scaled = parseFloat((num * ratio).toFixed(2));
+    var formatted = scaled % 1 === 0 ? scaled.toString() : scaled.toString();
+    amountEl.textContent = unit ? (formatted + ' ' + unit) : formatted;
+  });
+}
+if (btnMinus) btnMinus.addEventListener('click', function() {
+  if (currentServings > 1) { currentServings--; updateAmounts(); }
+});
+if (btnPlus) btnPlus.addEventListener('click', function() {
+  if (currentServings < 20) { currentServings++; updateAmounts(); }
+});
+
+// ── Pat's Rule supplier enrichment (non-blocking) ──────────────
+document.querySelectorAll('#ing-list .ing-item[data-product-name]').forEach(function(item) {
+  var name = item.getAttribute('data-product-name');
+  if (!name) return;
+  fetch('/api/ingredients/suppliers?product_name=' + encodeURIComponent(name))
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(data) {
+      if (!data) return;
+      var supplier = data.origin || (data.providers && data.providers[0]);
+      if (!supplier) return;
+      var detail = item.querySelector('.ing-detail');
+      if (!detail) return;
+      var tag = document.createElement('span');
+      tag.className = 'ing-source';
+      var role = data.origin ? 'Origin' : 'Source';
+      var loc = [supplier.city, supplier.state_province].filter(Boolean).join(', ');
+      tag.textContent = role + ' · ' + supplier.name + (loc ? ' — ' + loc : '');
+      detail.appendChild(tag);
+    })
+    .catch(function() {});
+});
+
+// ── FIX 3: Technique note toggle ───────────────────────────────
+function toggleNote(btn) {
+  var step = btn.closest('.recipe-step');
+  var note = step ? step.querySelector('.technique-note') : null;
+  if (!note) return;
+  var isOpen = note.style.display !== 'none';
+  note.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? 'Technique Note ↓' : 'Technique Note ↑';
+}
+
+// ── FIX 2: Safety panel ────────────────────────────────────────
+var safetyPanel = document.getElementById('safety-panel');
+var safetyBody = document.getElementById('safety-panel-body');
+var safetyTitle = document.getElementById('safety-panel-title');
+var safetyAllergens = document.getElementById('safety-panel-allergens');
+var allergenTags = document.getElementById('allergen-tags');
+var currentMode = null;
+
+function openSafetyPanel(mode) {
+  currentMode = mode;
+  var isHaccp = mode === 'haccp';
+
+  safetyTitle.textContent = isHaccp ? 'Food Safety / HACCP' : 'Kitchen Notes';
+  safetyBody.innerHTML = '<div class="safety-loading">Analysing recipe…</div>';
+  safetyAllergens.style.display = 'none';
+  allergenTags.innerHTML = '';
+
+  safetyPanel.classList.add('open');
+
+  var endpoint = isHaccp ? '/api/haccp' : '/api/kitchen-notes';
+  var payload = { title: RECIPE_TITLE, ingredients: RECIPE_INGREDIENTS, method_steps: RECIPE_STEPS };
+
+  var btn = document.getElementById(isHaccp ? 'btn-haccp' : 'btn-kitchen-notes');
+  if (btn) btn.disabled = true;
+
+  fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.error) {
+        safetyBody.textContent = 'Error: ' + data.error;
+        return;
+      }
+      var text = isHaccp ? (data.haccp || '') : (data.notes || '');
+      // Style section headers (lines ending with " —" or "—")
+      var formatted = text.replace(/^([A-Z][^\n]+?)\s*—/gm, function(m, label) {
+        return '◆ ' + label.trim() + ' —';
+      });
+      safetyBody.textContent = formatted;
+      if (isHaccp && data.allergens && data.allergens.length) {
+        allergenTags.innerHTML = data.allergens.map(function(a) {
+          return '<span class="allergen-tag">' + a + '</span>';
+        }).join('');
+        safetyAllergens.style.display = 'block';
+      }
+    })
+    .catch(function(err) {
+      safetyBody.textContent = 'Failed to load. Please try again.';
+    })
+    .finally(function() {
+      if (btn) btn.disabled = false;
+    });
+}
+
+function closeSafetyPanel() {
+  safetyPanel.classList.remove('open');
+  currentMode = null;
+}
+
+// Close panel on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && safetyPanel.classList.contains('open')) closeSafetyPanel();
+});
+</script>
+
+<!-- ── Photo Panel ─────────────────────────────────────────────── -->
+<div class="photo-panel" id="photoPanel" style="display:none">
+  <div class="photo-panel-inner">
+    <div class="pp-header">
+      <span class="pp-label">CHANGE PHOTO</span>
+      <button class="pp-close" onclick="document.getElementById('photoPanel').style.display='none'">✕</button>
+    </div>
+
+    <div class="pp-option">
+      <div class="pp-option-title">Generate with AI</div>
+      <div class="pp-option-desc">Flux creates a dark editorial photo matched to this recipe. Takes about 10 seconds.</div>
+      <button class="pp-btn" id="genBtn" onclick="ppGenerate()">Generate →</button>
+      <div class="pp-generating" id="ppGenerating" style="display:none">
+        <span class="pp-spinner">◌</span> Generating...
+      </div>
+    </div>
+
+    <div class="pp-divider">— or —</div>
+
+    <div class="pp-option">
+      <div class="pp-option-title">Use your own photo</div>
+      <div class="pp-option-desc">Paste any image URL from the web.</div>
+      <div class="pp-url-row">
+        <input type="url" id="ppUrlInput" class="pp-url-input" placeholder="https://..." autocomplete="off">
+        <button class="pp-btn" onclick="ppPreviewUrl()">Preview</button>
+      </div>
+    </div>
+
+    <div class="pp-preview" id="ppPreview" style="display:none">
+      <img id="ppPreviewImg" src="" alt="Preview">
+      <div class="pp-preview-actions">
+        <button class="pp-keep" onclick="ppKeep()">Use this photo ✓</button>
+        <button class="pp-discard" onclick="ppDiscard()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var _slug = '{{ recipe.slug }}';
+  var _pendingUrl = null;
+  var _fromGenerate = false;
+
+  window.ppGenerate = function(){
+    var btn = document.getElementById('genBtn');
+    var gen = document.getElementById('ppGenerating');
+    var preview = document.getElementById('ppPreview');
+    btn.style.display = 'none';
+    gen.style.display = 'block';
+    preview.style.display = 'none';
+    _fromGenerate = true;
+
+    fetch('/api/recipe/' + _slug + '/generate-image', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      gen.style.display = 'none';
+      btn.style.display = 'inline-block';
+      if(d.error){ alert('Generation failed: ' + d.error); return; }
+      _pendingUrl = d.image_url;
+      document.getElementById('ppPreviewImg').src = d.image_url;
+      preview.style.display = 'block';
+    })
+    .catch(function(){
+      gen.style.display = 'none';
+      btn.style.display = 'inline-block';
+      alert('Something went wrong. Please try again.');
+    });
+  };
+
+  window.ppPreviewUrl = function(){
+    var url = document.getElementById('ppUrlInput').value.trim();
+    if(!url || !url.startsWith('http')){ alert('Please enter a valid URL'); return; }
+    _fromGenerate = false;
+    _pendingUrl = url;
+    document.getElementById('ppPreviewImg').src = url;
+    document.getElementById('ppPreview').style.display = 'block';
+  };
+
+  window.ppKeep = function(){
+    if(!_pendingUrl) return;
+    if(_fromGenerate){
+      ppApplyHero(_pendingUrl);
+      document.getElementById('photoPanel').style.display = 'none';
+      return;
+    }
+    fetch('/api/recipe/' + _slug + '/upload-image', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({image_url: _pendingUrl})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if(d.saved){ ppApplyHero(_pendingUrl); }
+      document.getElementById('photoPanel').style.display = 'none';
+    });
+  };
+
+  window.ppDiscard = function(){
+    _pendingUrl = null;
+    document.getElementById('ppPreview').style.display = 'none';
+    document.getElementById('ppUrlInput').value = '';
+  };
+
+  function ppApplyHero(url){
+    var hero = document.querySelector('.hero-img');
+    if(hero && hero.tagName === 'IMG'){
+      hero.src = url;
+    } else if(hero){
+      hero.style.backgroundImage = 'url(' + url + ')';
+    } else {
+      var heroDiv = document.querySelector('.hero');
+      if(heroDiv){
+        var img = document.createElement('img');
+        img.className = 'hero-img';
+        img.src = url;
+        img.alt = '';
+        heroDiv.insertBefore(img, heroDiv.firstChild);
+      }
+    }
+  }
+})();
+</script>
+
+<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
+  <span>Add Provenance to your home screen</span>
+  <div>
+    <button onclick="installPWA()" style="background:rgba(201,168,76,0.12);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-right:8px">Install</button>
+    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(245,241,233,0.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
+  </div>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .catch(err => console.log('SW:', err));
+}
+let _pwaPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  if (!localStorage.getItem('pwa-dismissed')) {
+    document.getElementById('pwa-prompt').style.display = 'flex';
+  }
+});
+function installPWA() {
+  if (_pwaPrompt) {
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(() => {
+      document.getElementById('pwa-prompt').style.display = 'none';
+      _pwaPrompt = null;
+    });
+  }
+}
+function dismissPWA() {
+  document.getElementById('pwa-prompt').style.display = 'none';
+  localStorage.setItem('pwa-dismissed', 'true');
+}
+</script>
+</body>
+</html>

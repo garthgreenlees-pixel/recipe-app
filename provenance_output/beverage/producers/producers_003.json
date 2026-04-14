@@ -1,0 +1,24 @@
+[
+  {
+    "tradition": "fortified",
+    "name": "Ramos Pinto",
+    "location": "Vila Nova de Gaia, Porto, Portugal",
+    "description": "Founded 1880 by Adriano Ramos Pinto. Known for pioneering Quinta do Bom Retiro as a single-quinta Tawny producer. LVMH acquisition in 1990 brought investment while maintaining production autonomy. The Adriano 30yr and 40yr Tawny are among the finest in the category.",
+    "founded": "1880",
+    "region": "Douro DOC / Port",
+    "website": "https://www.ramospinto.pt",
+    "verified": true,
+    "producer_id": "PROD-FOR-001"
+  },
+  {
+    "tradition": "fortified",
+    "name": "Niepoort",
+    "location": "Vila Nova de Gaia, Porto, Portugal",
+    "description": "Dutch family house founded 1842; now led by Dirk Niepoort. Produces the definitive Colheita range (single-harvest Tawny) and the legendary Garrafeira Port — wood ageing combined with extended bottle maturation. Holds Colheita stocks from 1934 to the present.",
+    "founded": "1842",
+    "region": "Douro DOC / Port",
+    "website": "https://www.niepoort-vinhos.com",
+    "verified": true,
+    "producer_id": "PROD-FOR-002"
+  }
+]

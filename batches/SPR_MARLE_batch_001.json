@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Martinique — Le Marigot, Macouba (Rhum JM AOC, Northern Atlantic Coast, Volcanic Basalt)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T04:50:25.714909+00:00",
+  "entries": [
+    {
+      "name": "Rhum J.M. AOC Martinique VO — Northern Volcanic Basalt, Atlantic Macouba Cane Spirit",
+      "category": "spirits",
+      "subcategory": "rum_agricole",
+      "origin": "France",
+      "region": "Macouba, northern Martinique, French West Indies",
+      "producer": "Distillerie J.M.",
+      "alcohol_content": 50.0,
+      "price_tier": "premium",
+      "terroir_origin": "The J.M. estate occupies the slopes immediately below Mount Pelée — the active stratovolcano at the northern tip of Martinique whose 1902 eruption (the deadliest volcanic event of the 20th century) destroyed the city of Saint-Pierre and killed 30,000 people, preserving the rum barrels in Guérin's Distillery (predecessor to Depaz) under ash that protected them for decades. The agricultural terroir surrounding J.M.'s Macouba distillery sits on young basaltic volcanic soils derived from Pelée's most recent geological activity — soils that are mineralogically richer in iron, magnesium, and potassium than the older, more weathered sedimentary soils of central and southern Martinique. Annual rainfall at Macouba averages 2,500–3,500mm — among the highest in Martinique — from the persistent northeastern Atlantic trade winds that dump moisture on the windward northern slopes before descending drier onto the Leeward coast. This combination of mineral-rich volcanic basalt, high rainfall, and cool Atlantic wind exposure produces cane of unusual aromatic complexity: the stress of wind exposure and high moisture drives the plant to concentrate secondary metabolites in the stalk, which translate directly to the rum's flavor profile. J.M.'s cane varieties include both the dominant POJ 2878 and several heirloom cultivars maintained on the estate specifically for their aromatic contribution — the northern basalt terroir is perceptible as a distinct mineral-volcanic signature in the finished rhum, differentiating it from the cleaner, fresher profiles of southern Martinique producers like Clément.",
+      "production_technique": "J.M. harvests fresh sugar cane by hand and machine on its northern Macouba slopes from February to June, crushing within 4 hours of harvest to preserve the volatile aromatic compounds that degrade rapidly after cutting — the fundamental discipline of rhum agricole that distinguishes it from molasses-based rum. Fresh cane juice is analyzed for Brix (targeting 14–18° depending on cane variety and harvest date) and transferred to stainless steel fermentation tanks at 30–32°C. A domesticated Saccharomyces cerevisiae culture descended from J.M.'s 1845 house yeast is added to initiate fermentation, which runs 24–36 hours — the standard AOC maximum fermentation time for rhum agricole white and short-aged expressions. The fast fermentation preserves the fresh cane aromatics while allowing sufficient ester development from yeast metabolism. Distillation occurs in a Créole column still (a single-column continuous still specific to AOC Martinique, with 7–15 plates depending on the house style) at 65–75% ABV — the AOC minimum for column distillation. J.M. takes a more concentrated cut than some Martinique houses, retaining more heads aromatics to build the volcanic mineral complexity that defines the house style. The VO (Vieux Orange — meaning \"aged 3 years or more\") is aged in 180-litre ex-bourbon American oak barrels in a tropical warehouse on the Macouba property, where the hot-humid aging environment accelerates barrel interaction and angel's share (8–12% per year in tropical Martinique vs 2% in Scotland). Diluted to 50% ABV before bottling with Macouba spring water.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Neisson AOC Martinique (same island, different terroir expression)",
+          "connection": "J.M. and Neisson are the most direct within-AOC contrast: J.M. from volcanic northern basalt in the Pelée shadow at 2,500+ mm rainfall, Neisson from western Leeward coast in drier conditions — the same AOC production rules applied to fundamentally different volcanic microclimates produce dramatically different rhum character: J.M.'s mineral volcanic depth versus Neisson's tropical fruity brightness"
+        },
+        {
+          "tradition": "Armagnac Bas-Armagnac (black sand volcanic terroir, direct terroir expression)",
+          "connection": "J.M.'s terroir-specificity — the volcanic basalt of Macouba embedded in the VO's mineral character — mirrors the way Bas-Armagnac's specific sand-and-clay black soil (boulbènes) imprints directly on the Armagnac's flavor; both represent agricultural spirits where the geological substrate is legible in the glass rather than obscured by production technique"
+        },
+        {
+          "tradition": "Islay single malt whisky (volcanic island, maritime extreme)",
+          "connection": "J.M. in Macouba and Laphroaig on Islay both represent island spirit production in the shadow of geological and maritime extremity — the volcanic presence of Pelée for J.M., the peat bogs and Atlantic gales for Islay — both producing spirits of distinctive character that derive as much from the island's physical nature as from the production recipe"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Warm golden amber from tropical aging in ex-bourbon oak; clear and brilliant; medium viscosity at 50%; the color is a deeper, more saturated amber than southern Martinique producers at the same age from the higher-density tropical barrel interaction",
+        "nose": "Complex and layered: banana flambé, vanilla from American oak, volcanic mineral (iron, wet basalt), roasted coconut, dried tropical fruit (mango, papaya), light caramel — the northern volcanic terroir is unmistakable as a mineral depth underlying the fruit richness; more structured and mineral than southern Martinique producers",
+        "palate": "Full body, powerful at 50%, balanced tropical fruit and mineral-volcanic mid-palate, American oak vanilla integration without woodiness, long finish with basalt mineral and dried mango — the northern Martinique character shows as a firmer, more mineral-structured framework compared to the rounder, fruitier southern house styles"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "J.M. Blanc (Unaged, 50%)",
+          "criteria": "The white rhum agricole expression — the base spirit immediately after distillation, showing the raw northern basalt cane character without oak modification; used in Ti' Punch and Daiquiri applications"
+        },
+        {
+          "tier": 2,
+          "tier_name": "J.M. VO (3-year Tropical Aged)",
+          "criteria": "The benchmark J.M. expression: 3 years minimum in ex-bourbon oak, 50% bottling strength — the most internationally distributed J.M. product and the signature demonstration of northern volcanic Martinique character"
+        },
+        {
+          "tier": 3,
+          "tier_name": "J.M. XO (6+ year)",
+          "criteria": "Extended tropical aging showing how the basalt mineral complexity integrates with oak tannin over time; 45% bottling strength for broader accessibility; the house signature at its most refined pre-vintage expression"
+        },
+        {
+          "tier": 4,
+          "tier_name": "J.M. Millésime (Single Vintage, Cask Strength)",
+          "criteria": "Specific harvest year bottlings at cask strength (typically 42–58% depending on vintage and aging duration), showing the annual variation in northern Martinique cane character — available through allocation to specialist retailers and premium restaurants"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Neat at 20–22°C for full aromatic expression; Ti' Punch service at room temperature with a single lime disk and small cane syrup addition — the classic Martinique serving tradition that respects the rhum's terroir character; avoid diluting too much which masks the mineral volcanic signature",
+        "vessel": "Ti' Punch: small rock glass with a single lime peel disk; Neat: tulip glass or white wine glass to capture the layered aromatics; Old Fashioned: wide rocks glass with single large ice block; the mineral character benefits from a clean, neutral-taste glass",
+        "ti_punch_philosophy": "The Ti' Punch protocol for J.M. VO: squeeze a small disk of lime rind (not juice) into a small glass, add 5ml cane syrup, add 45ml J.M. VO at room temperature — the acid, sugar, and rhum reach equilibrium without dilution from ice; each person adjusts the balance at table (\"chacun prépare sa mort\" — each prepares their own death)"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Distillerie J.M. — VO expression is the benchmark for northern volcanic Martinique rhum agricole character",
+        "north_america_access": "J.M. widely distributed through Plantation Rum network in US: Total Wine, BevMo (CA), Total Beverage (mid-Atlantic); in Canada through select LCBO and BCLDB listings plus private import; The Cocktail Kingdom (NYC) stocks full J.M. range",
+        "culinary_application": "J.M. VO's basalt mineral character creates an exceptional pairing with dark chocolate preparations where the volcanic mineral note resonates with the cacao's iron character; outstanding in banana foster where the banana note in the rhum merges with the caramelized banana preparation; used as a Ti' Punch at the table in Caribbean restaurants where the rhum is part of the dining ritual rather than a separate bar program"
+      },
+      "price_trajectory": "stable",
+      "entry_id": "SPR-MACNOR-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T04:50:25.714475+00:00",
+      "batch_number": 1
+    }
+  ]
+}

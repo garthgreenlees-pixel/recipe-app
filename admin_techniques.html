@@ -151,6 +151,14 @@
         <label>Cross-cuisine parallels (comma-separated)</label>
         <textarea id="f_cross_cuisine_parallels" rows="1" placeholder="French roux, Japanese dashi"></textarea>
       </div>
+      <div class="form-group">
+        <label>Origin <span style="font-weight:400;color:#999">— Cultural/geographic context, 1-2 sentences</span></label>
+        <input type="text" id="f_origin" placeholder="e.g. Classical French, originating in Escoffier's brigade system">
+      </div>
+      <div class="form-group">
+        <label>Flavour context <span style="font-weight:400;color:#999">— What completes the plate and why</span></label>
+        <textarea id="f_flavour_context" rows="3" placeholder="e.g. The Maillard crust provides savoury depth that pairs with acid (wine reduction) and richness (butter mount) to create a complete flavour arc"></textarea>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
@@ -217,6 +225,8 @@ function renderList() {
         <div class="field"><label>Related techniques</label><div class="keywords">${(t.related_techniques||[]).map(k => `<span class="kw">${esc(k)}</span>`).join('')}</div></div>
         ${t.source_book ? `<div class="field"><label>Source book</label><p>${esc(t.source_book)}</p></div>` : ''}
         ${(t.cross_cuisine_parallels||[]).length ? `<div class="field"><label>Cross-cuisine parallels</label><div class="keywords">${t.cross_cuisine_parallels.map(k => `<span class="kw">${esc(k)}</span>`).join('')}</div></div>` : ''}
+        ${t.origin ? `<div class="field"><label>Origin</label><p>${esc(t.origin)}</p></div>` : ''}
+        ${t.flavour_context ? `<div class="field"><label>Flavour context</label><p>${esc(t.flavour_context)}</p></div>` : ''}
         <div class="card-actions">
           <button class="btn btn-secondary btn-sm" onclick="openEdit(${t.id})">Edit</button>
           ${t.tier_level === 'standard' ? `<button class="btn btn-success btn-sm" onclick="setTier(${t.id},'professional')">Promote to professional</button>` : `<button class="btn btn-secondary btn-sm" onclick="setTier(${t.id},'standard')">Revert to standard</button>`}
@@ -253,7 +263,7 @@ function fmtText(val) {
 function openNew() {
   document.getElementById('editId').value = '';
   document.getElementById('modalTitle').textContent = 'Add technique';
-  ['f_name','f_category','f_description','f_key_principles','f_common_mistakes','f_pro_tips','f_trigger_keywords','f_related_techniques','f_source_book','f_cross_cuisine_parallels'].forEach(id => document.getElementById(id).value = '');
+  ['f_name','f_category','f_description','f_key_principles','f_common_mistakes','f_pro_tips','f_trigger_keywords','f_related_techniques','f_source_book','f_cross_cuisine_parallels','f_origin','f_flavour_context'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f_authority_tier').value = '1';
   document.getElementById('f_tier_level').value = 'standard';
   document.getElementById('modal').classList.add('active');
@@ -274,6 +284,8 @@ function openEdit(id) {
   document.getElementById('f_related_techniques').value = (t.related_techniques || []).join(', ');
   document.getElementById('f_source_book').value = t.source_book || '';
   document.getElementById('f_cross_cuisine_parallels').value = (t.cross_cuisine_parallels || []).join(', ');
+  document.getElementById('f_origin').value = t.origin || '';
+  document.getElementById('f_flavour_context').value = t.flavour_context || '';
   document.getElementById('f_authority_tier').value = t.authority_tier;
   document.getElementById('f_tier_level').value = t.tier_level;
   document.getElementById('modal').classList.add('active');
@@ -295,6 +307,8 @@ function getFormData() {
     related_techniques: document.getElementById('f_related_techniques').value.split(',').map(s => s.trim()).filter(Boolean),
     source_book: document.getElementById('f_source_book').value.trim() || null,
     cross_cuisine_parallels: document.getElementById('f_cross_cuisine_parallels').value.split(',').map(s => s.trim()).filter(Boolean),
+    origin: document.getElementById('f_origin').value.trim() || null,
+    flavour_context: document.getElementById('f_flavour_context').value.trim() || null,
     authority_tier: parseInt(document.getElementById('f_authority_tier').value) || 1,
     tier_level: document.getElementById('f_tier_level').value,
   };

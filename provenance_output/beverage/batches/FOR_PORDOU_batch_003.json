@@ -1,0 +1,110 @@
+{
+  "tradition": "fortified",
+  "region": "Portugal — Douro (Colheita Port, Single Vintage Tawny)",
+  "batch_number": 3,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T17:09:34.935244+00:00",
+  "entries": [
+    {
+      "tradition": "fortified",
+      "sub_tradition": "port colheita single vintage tawny",
+      "region": "Portugal — Douro (Colheita Port Category)",
+      "name": "Colheita Port — Niepoort, Single-Harvest Tawny Wood-Aged to Order",
+      "terroir_origin": "Colheita (Portuguese: harvest) Port is the single-vintage version of Tawny Port — the same production method (wood ageing in Gaia lodges, oxidative evolution) but from a single harvest year rather than a blend averaged across decades. The IVDP requires minimum 7 years wood ageing for Colheita designation; the finest examples are aged 20-40+ years before bottling. Niepoort's Colheita programme is the most outstanding in the category — the house holds vintage stocks from 1934 onward in the Gaia lodge. Douro terroir for Colheita: Cima Corgo sub-region; Quinta da Napoles and Quinta do Passadouro provide the primary vineyard source. Old vine Touriga Nacional and Tinta Roriz (average age 40-60 years) are preferred — the concentration from low-yield old vines creates the residual sugar needed to support four decades of wood ageing. The vintage year on a Colheita label has emotional resonance for guests in ways that blended Tawny cannot — guests connect personal dates (birth year, wedding year) to a wine with genuine provenance from that year.",
+      "production_technique": "Colheita production: Harvest: same as Tawny — manual harvest, foot treading in granite lagares for premium lots; fortification at 5-6 Baume. Single-harvest segregation: all Colheita barrels are maintained under vintage tracking from first year of wood to bottling — the provenance chain is unbroken. Wood ageing: 550L pipes; the same Gaia lodge system as blended Tawny. At Niepoort: 7 to 30+ years in wood before bottling on demand. Bottling to order: unlike blended Tawny (bottled in advance), Colheita is bottled to order — a bottle from the 1967 vintage may have been resting in wood until 2026. The final wood age is on the back label. This means two bottles of the same Colheita vintage can have different flavour profiles depending on when they were bottled — younger bottlings are more primary; older bottlings are more rancio and concentrated. The legal requirement: bottling date must appear on the Colheita label alongside the vintage.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "fortified",
+          "beverage": "40yr Tawny Port (same category, blended version)",
+          "connection": "Colheita vs 40yr Tawny is the internal Port comparison revealing the tension between consistency (blended Tawny) and individuality (Colheita). The 40yr Tawny is always consistent across years; the Colheita 1985 and Colheita 1994 taste distinctly different based on the growing season of each year."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Vintage Armagnac (single year, Armagnac AOC)",
+          "connection": "Both are single-year expressions of traditions typically sold as age-averaged blends. The vintage Armagnac and Colheita Port communicate the same message: that the individual year carries provenance, weather, and terroir that no blend can replicate."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Garrafeira Port (same house)",
+          "connection": "Colheita (wood only, bottled when ready) vs Garrafeira (wood then glass) — the Niepoort house comparison illuminating how the maturation path after the wood phase defines the final character. Colheita is fully oxidative; Garrafeira is oxidative-then-reductive."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Vintage Champagne (Dom Perignon, late disgorgement 20yr+)",
+          "connection": "Both communicate a single year held in the cellar as a deliberate act of patience. The luxury positioning is identical; the production logic (single harvest, extended maturation, release when ready) is the same premium philosophy applied to different traditions."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Warm amber-tawny at 20yr; deeper mahogany-amber at 40yr; colour shifts with each additional decade of wood maturation",
+        "nose": "Vintage-specific: 1985 Colheita shows more tobacco and dried fig; 1967 shows more rancio and volatile dried citrus. The year is in the nose.",
+        "palate": "Higher acid backbone than blended Tawny — the vintage year preserves year-specific structural character that blending averages out; sweetness calibrated to the vintage",
+        "texture": "Comparable to blended 40yr Tawny in glycerous structure, but vintage character creates individual inflection points in the flavour development",
+        "finish": "90-120 seconds; the finish carries the vintage year's character — mineral-driven years produce saline finishes; riper years produce more caramel and dried fruit",
+        "conclusion": "The Tawny Port category's most communicable wine — the vintage date is the most powerful service conversation starter in the fortified category"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Niepoort Colheita 1967 or pre-1970",
+          "criteria": "50+ year wood age; rancio at maximum development; volatile dried-floral at full expression; most profound Colheita expression; bottled to order from surviving barrels",
+          "markers": "Niepoort Colheita 1967; US ~$200-300+ via Broadbent; BC: private import required"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Niepoort Colheita 1985-1995 (30yr+ wood)",
+          "criteria": "30+ year wood; rancio well established; vintage character fully integrated; the practical premium expression for fine dining programme use",
+          "markers": "Niepoort Colheita 1985-1995 vintage; US ~$120-180; BC: private order"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Niepoort Colheita 2000-2010 (15-25yr wood)",
+          "criteria": "15-25 year wood; rancio developing; primary fruit still visible; the expression that teaches guests how the style evolves over time",
+          "markers": "Niepoort Colheita 2000s vintage; US ~$80-120 via Broadbent; BC: private order"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Ramos Pinto Quinta do Bom Retiro Colheita (7-10yr)",
+          "criteria": "Minimum designation age (7yr); rancio beginning; fresh fruit still dominant; introduction to Colheita category at accessible price",
+          "markers": "Ramos Pinto Colheita (recent vintage); BC ~$45-65; US ~$40-55; BCLDB listed"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 14-16 degrees C — slightly warmer than blended Tawny to open the vintage-specific volatile character",
+        "vessel": "White wine glass (not Port glass) — the wider bowl essential for the vintage-specific nose to develop fully",
+        "technique": "The Colheita service script: 'This is the harvest of [year]. The wine has been in barrel in the Niepoort lodge since that year. This bottle was filled [X months] ago — it has spent [X] years in wood.' The year as guest hook: offer to serve a vintage from the guest's birth year, graduation, or anniversary year when available — the personalisation is the most powerful service moment in the fortified category.",
+        "programme_position": "Birth year gift programme; milestone anniversary pairing; fine Port vertical anchor; cellar programme signature",
+        "verbal_presentation": "Niepoort Colheita [year] — bottled from single harvest. The wood has been adding its work since [year]. This is what that year tastes like now."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Niepoort — the definitive Colheita house; holds stocks from 1934 onward",
+        "producer_location": "Vila Nova de Gaia, Porto, Portugal",
+        "key_person": "Dirk Niepoort; cellarmaster maintains vintage inventory from pre-war stocks",
+        "bc_distributor": "No current BCLDB listing for Niepoort Colheita; private import required",
+        "us_distributor": "Broadbent Selections (New York) — primary US importer for Niepoort portfolio",
+        "uk_distributor": "Les Caves de Pyrene, Fine and Rare (London), Berry Bros. and Rudd",
+        "price_tier": "Entry: $45-65 (Ramos Pinto Colheita recent). Mid: $80-120 (Niepoort 2000s). Premium: $120-180 (Niepoort 1985-95). Ultra: $200-300+ (Niepoort pre-1970).",
+        "availability_notes": "Niepoort Colheita availability shifts annually as stocks are bottled to order. Contact Broadbent Selections for current vintage availability. Some vintages permanently sold out — 1934 stock confirmed exhausted."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Pasteis de nata (Portuguese custard tart, fresh from oven)",
+          "pairing_type": "complement",
+          "rationale": "The caramelised custard of a fresh pasteis de nata mirrors the dried apricot and caramel character of 20yr Colheita — the canonical Portuguese bakery-and-fortified pairing that communicates PCT heritage directly through flavour."
+        },
+        {
+          "technique_id": "",
+          "dish": "Roquefort with quince paste (marmelo)",
+          "pairing_type": "contrast",
+          "rationale": "The salt and fat of Roquefort find contrast in Colheita's acid and sweetness — the quince paste bridges the two by sharing the dried fruit register with the wine while amplifying the blue cheese salt intensity."
+        }
+      ],
+      "source": "IVDP Colheita category technical specifications; Niepoort vintage inventory documentation; Broadbent Selections US allocation catalogue 2024; BCLDB product listings verified April 2026",
+      "trail_connection": "PCT-1",
+      "trail_note": "PCT Region 1: Portugal (Douro). Colheita Port is the individual vintage expression of the Portuguese fortified tradition that British-Portuguese trade created. The oldest surviving Niepoort Colheita stocks (1934) pre-date WWII — evidence that even the catastrophes of the 20th century could not interrupt the four-century continuity of Port wine production.",
+      "entry_id": "FOR-PORDOU-001",
+      "extracted_at": "2026-04-11T17:09:34.934790+00:00",
+      "batch_number": 3
+    }
+  ]
+}

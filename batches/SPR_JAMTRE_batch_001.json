@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Jamaica — Trelawny and St Elizabeth Parishes (Hampden Estate, Worthy Park, High-Ester Rum)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T04:37:13.331837+00:00",
+  "entries": [
+    {
+      "name": "Hampden Estate HLCF Classic — High-Ester Continental Flavoured, Trelawny Jamaica Pot Still",
+      "category": "spirits",
+      "subcategory": "rum_pot_still",
+      "origin": "Jamaica",
+      "region": "Trelawny Parish, Jamaica",
+      "producer": "Hampden Estate Distillery",
+      "alcohol_content": 46.0,
+      "price_tier": "super_premium",
+      "terroir_origin": "Hampden Estate occupies 3,000 acres of the Trelawny hills in central Jamaica — a parish known historically as \"the breadbasket of Jamaica\" for its combination of rich red clay soils overlying limestone karst, adequate highland rainfall (1,400–1,800mm annually), and altitude (150–300m) that moderates the tropical heat to allow slower cane maturation than coastal estates. The Trelawny terroir produces cane with particularly high sucrose concentration and a mineral-rich character from the limestone aquifer irrigation. The critical terroir element for Hampden's HLCF mark, however, is not the cane itself but the distillery's microbial ecosystem: the open wooden fermenting vessels (called \"puncheons\" or vats) and the dunder pits that recirculate dead wash — the acidic, bacteria-rich stillage from previous distillations — have been accumulating microbial diversity for 270+ years of continuous operation. The dunder pit at Hampden is one of the most complex microbial environments in artisan spirits production: it contains live cultures of Clostridium bacteria, wild Schizosaccharomyces pombe yeast strains, Lactobacillus species, and multiple Acetobacter cultures that convert alcohol precursors into the esters that give Jamaican high-ester rum its defining character. The HLCF mark targets 1,600–1,800 g/hL AA (grams of ester per hectoliter of pure alcohol) — approximately 80–100 times higher ester concentration than standard Caribbean rum.",
+      "production_technique": "HLCF production begins with molasses from the Hampden Estate's own sugar milling — the same cane grown on the property provides both sugar and molasses substrate. Molasses is diluted with water in the puncheon vats to approximately 15–20 Brix and inoculated with a mixture of dunder (dead wash from previous distillation, seething with Clostridium and Lactobacillus bacteria) and muck (the bottom residue of the dunder pits, containing the most concentrated microbial culture). The addition of muck and dunder begins the esterification chemistry before yeast even begins alcoholic fermentation: the Clostridium bacteria produce butyric acid from molasses carbohydrates; Lactobacillus produces lactic acid; these short-chain organic acids combine with ethanol produced by Saccharomyces pombe in the subsequent fermentation to form esters — principally ethyl acetate, ethyl butyrate, and isoamyl acetate — at concentrations determined by the length of dunder fermentation (7–21 days for HLCF vs 3–5 days for lower-mark expressions). The fully fermented wash (10–12% ABV) is distilled in Hampden's copper pot stills in a double distillation: first in the wash still (producing \"low wines\" at 25–30% ABV) then redistillation in the spirit still to the final cut at 78–86% ABV. The high-ester character concentrates through distillation rather than being diminished by it. HLCF is then diluted to bottling strength and aged minimally (often 1–3 years in ex-bourbon barrels) to soften the raw distillate intensity while preserving the funky ester profile. The classic \"HLCF Continental\" style was historically aged in Europe (in Hamburg or Amsterdam bonded warehouses) under the British-era \"rum trade\" system — the \"Continental\" designation refers to this European aging rather than Caribbean tropical aging.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Rhum agricole AOC Martinique (Neisson, JM)",
+          "connection": "Both Hampden HLCF and rhum agricole represent the highest-ester, most terroir-expressive tier of Caribbean rum production — but they achieve this through opposite philosophies: Hampden through extended dunder fermentation that builds ester through bacterial chemistry, Martinique through fresh cane juice that preserves the vegetal ester precursors present in the cane itself before yeast contact"
+        },
+        {
+          "tradition": "Clairin Haiti (Barbancourt opposite: unaged pot still)",
+          "connection": "Hampden HLCF and Clairin represent the two extremes of Caribbean artisan rum production — Hampden maximizing ester through extended bacterial dunder fermentation in a 270-year-old microbial culture, Clairin maximizing terroir transparency through immediate bottling of unaged Haitian regional cane juice distillates — both defying the industrial blended rum paradigm from opposite directions"
+        },
+        {
+          "tradition": "Islay Scotch whisky (Laphroaig, Ardbeg peat character)",
+          "connection": "Hampden HLCF's extreme flavor intensity — the \"Hogo\" character (likely from \"haut goût,\" French for \"high taste/gamey\") — occupies the same radical flavor territory as heavily peated Islay malt: both are acquired-taste, producer-terroir-expressive spirits beloved by connoisseurs and challenging to newcomers, both require context to understand as the apex of their tradition rather than flaws to be corrected"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Golden amber to deep gold depending on aging duration; clear; the color tells little — the ester intensity is the primary story",
+        "nose": "Explosive: overripe banana, nail polish remover (ethyl acetate), pineapple, passion fruit, rotting mango, furniture polish, rum-soaked raisin, tropical funk that hits immediately and fills the room — the \"Hogo\" is not subtle; 15 minutes in glass reveals the more structured fruit underneath the firework display",
+        "palate": "Full body, surprising sweetness from concentrated cane molasses base, massive fruit ester intensity, volcanic pineapple-banana-tropical mid-palate, long finish with waves of butyric and lactic acid complexity, residual warmth that is more comfortable than the nose suggests — the spirit's intensity integrates better on palate than nose implies"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Lower-Mark Hampden (LFCH, OWH)",
+          "criteria": "Ester level 500–800 g/hL AA, shorter dunder fermentation, more accessible flavor intensity — gateway into Hampden's production hierarchy; available at lower price points through Velier and independent bottlers"
+        },
+        {
+          "tier": 2,
+          "tier_name": "HLCF Classic (Bottled at Strength)",
+          "criteria": "The signature 1,600+ g/hL AA mark, standardized recipe, released at 46% ABV in the Velier Classic series — the internationally available reference expression"
+        },
+        {
+          "tier": 3,
+          "tier_name": "HLCF Single Vintage / Cask",
+          "criteria": "Identified vintage year and cask selection, variable ABV (often cask strength 58–70%), limited release through Velier and specialist independent bottlers — each vintage shows how dunder culture and harvest character interact in specific production years"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Grand Arôme Vintage Reserve (Limited)",
+          "criteria": "The rarest Hampden expressions: identified mark, single cask or micro-batch, extended aging (8–15 years), cask strength — allocated exclusively to top-tier spirits programs globally; Clairin Saccharin and Hampden Grand Arôme occupy the same rarefied tier as the world's most sought-after single malt expressions"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature (20–22°C) or slight warming in palm — never chilled; the ester compounds that define HLCF's character volatilize most expressively at 20–25°C; a single small ice block (5–10g) can reduce nose intensity for those finding it overwhelming without destroying the palate character",
+        "vessel": "Tulip glass or Glencairn to concentrate and focus the explosive ester aromatics; nosing in wide-open wine glass disperses the intensity too fast; allow 5 full minutes of nose contact before tasting — the \"Hogo\" character separates into its component fruits over time",
+        "cocktail_philosophy": "The Mai Tai (Trader Vic's 1944 original recipe) calls for aged Jamaican rum as one component specifically because the high-ester character of Hampden-style rum provides the backbone that makes the drink work; HLCF at 25% of the rum blend (mixed with a lighter aged Caribbean rum) delivers authentic Mai Tai character"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Hampden Estate Distillery — HLCF mark; Velier SpA official bottler for international markets",
+        "north_america_access": "Velier Hampden range through Spec's (Texas), K&L Wine Merchants (CA), Astor Wines (NYC); Canada through private import; exceptional sommelier wine lists in Vancouver (The Botanist Hotel bar program) and Seattle (Rob Roy) carry Hampden expressions",
+        "culinary_application": "HLCF used in reduction-based sauces adds an extraordinary tropical depth to Caribbean-influenced preparations; the ester chemistry that makes it intense neat becomes complex background note when heat-reduced by 80% in a sauce; works in dark chocolate ganache as a counter-intuitive pairing where the butyric acid characters merge into a truffled dark chocolate note"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "SPR-TREPAR-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T04:37:13.331290+00:00",
+      "batch_number": 1
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "tradition": "fortified",
+  "region": "Portugal — Madeira (Verdelho Variety)",
+  "batch_number": 3,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T16:38:49.061257+00:00",
+  "entries": [
+    {
+      "tradition": "fortified",
+      "sub_tradition": "madeira canteiro verdelho",
+      "region": "Portugal — Madeira (Verdelho Variety)",
+      "name": "Madeira Verdelho 10yr — Medium-Dry Smoky Atlantic Style",
+      "terroir_origin": "Verdelho is Madeira's most food-flexible variety — medium-dry, with a signature smoked citrus peel and volcanic mineral character that no other fortified wine replicates. Historically, Verdelho was the dominant export style to Brazil and the Baltic states — the wine of choice for Portuguese colonial trade vessels making the Atlantic crossing. The variety thrives at mid-elevation (300-500m) on the island's south-facing slopes, producing wines with more body than Sercial and more freshness than Bual. The 10-year category represents the minimum age at which Verdelho fully expresses its canteiro-derived depth. Under 10 years the smoky mineral character is underdeveloped. Verdelho: native Madeira variety (distinct from mainland Verdellho/Gouveio); mid-elevation cultivar thriving at 300-500m. South coast mid-elevation belt: warmer than north-face plots; phenolic development vs acid retention balance. Palheiro and Campanario parcels: volcanic clay-basalt, moderate water retention — key for the oily texture. Ocean influence: prevailing SW Atlantic winds carry salinity embedded in every Madeira grown within 5km of coast.",
+      "production_technique": "Harvest: mid-September — earlier than Sercial, later than Malvasia; balanced sugar-acid window. Crushing and pressing: whole-cluster pneumatic press; no skin maceration for white grape varieties. Fermentation: stainless steel, temperature-controlled; ferments to 6-8% natural alcohol before fortification. Fortification: neutral 96% grape spirit; target 4-6% residual sugar (medium-dry classification). Estufagem vs canteiro: commercial 10yr uses hybrid — 6 months estufagem + 9.5yr canteiro; H&H 15yr uses full canteiro for the complete style expression. Canteiro: 600L American oak barrels stacked in Funchal waterfront lodges; summer peak 35-40C. Blending: H&H 15yr blended across multiple years to maintain consistent house style; single-vintage for Colheita releases. Oxidative ageing: ullage maintained intentionally — maderisation is the desired outcome, not a defect.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "fortified",
+          "beverage": "Manzanilla Pasada Sherry (Barbadillo)",
+          "connection": "Closest saline-mineral parallel in the fortified world; both sea-air aged, both mineral-driven — but Verdelho adds canteiro rancio and Atlantic acid that aged Manzanilla at the solera level cannot match."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Palo Cortado Sherry (Gonzalez Byass Apostoles)",
+          "connection": "Rare, positioned between Amontillado and Oloroso — closest Sherry parallel to Verdelho's tension between fresh and oxidative character. But Verdelho's Atlantic volcanic acid is more pronounced than Jerez's warm flatland."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Sercial Madeira",
+          "connection": "Sercial is drier, higher acid, more lemon-mineral; Verdelho adds body and stone-fruit mid-palate that Sercial lacks — the definitive internal Madeira style comparison."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Dry Tokaji Furmint (Disznoko or Royal Tokaji)",
+          "connection": "Volcanic mineral character and oxidative ageing parallels — Hungary's volcanic Furmint and Madeira's volcanic Verdelho both carry the mountain-sea mineral axis through to their finish."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Clear amber-gold, lighter than Bual; olive-green rim highlights in 10yr expressions; darker caramel at 15yr+",
+        "nose": "Smoked lemon peel, dried apricot kernel, salted caramel, iodine mineral, burnt orange zest; more saline than any other fortified wine from this latitude",
+        "palate": "Entry: off-dry, perceptible sweetness. Rapid acid shift mid-palate. Finish: volcanic mineral-saline persistence; the salt stays after the fruit resolves",
+        "texture": "Medium-bodied; slight oiliness at 10yr; more glycerous at 15yr+; clean and defined — no softness or flab",
+        "finish": "60-75 seconds; smoked citrus and saline mineral; acid provides freshness unusual for a 10yr fortified wine of any tradition",
+        "conclusion": "The sommelier's Madeira — bridges aperitif, cheese, and dessert roles simultaneously without losing identity"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Barbeito Ricardo Freitas Verdelho Colheita (single vintage) or pre-1950",
+          "criteria": "Single vintage release; full canteiro; minimum 30yr; unfined and unfiltered; maximum individual year expression",
+          "markers": "The Rare Wine Co. (when available); US $200+; extremely limited allocation"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Barbeito Verdelho 20yr Single-Cask",
+          "criteria": "Full canteiro 20yr minimum; single cask selection; more rancio and volatile depth than H&H; unfined; the reference for what Verdelho becomes at maximum expression",
+          "markers": "Barbeito 20yr; US ~$100-150 via Rare Wine Co.; BC: private order only"
+        },
+        {
+          "tier": 2,
+          "tier_name": "H&H 15yr Verdelho (Henriques and Henriques)",
+          "criteria": "The benchmark 15yr expression; full canteiro; smoked citrus-mineral at most expressive form; consistent house style",
+          "markers": "H&H 15yr Verdelho; BC ~$65-80; US ~$55-70; BCLDB special order"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Blandy's Verdelho 5yr",
+          "criteria": "Estufagem-dominant; simpler caramel-citrus profile; introduction to the variety style",
+          "markers": "Blandy's Verdelho 5yr; BC ~$28-35; US ~$22-30; BCLDB listed"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 12-14 degrees C for maximum mineral and acid expression — the most food-flexible serving temperature in the fortified category",
+        "vessel": "Medium white wine glass (not a Port Dock glass) — the wider bowl opens the smoked citrus and saline mineral nose",
+        "technique": "At table: with ceviche or crudo (acid and saline mineral work against seafood acidity), with aged Manchego or Comte, with ham-based preparations (Jamon Iberico, prosciutto), and with light tarte tatin or citrus pastries. Offer a 1.5 oz pour at 13 degrees C with three cheeses and watch the table's perception of Madeira transform in a single service.",
+        "programme_position": "By-the-glass premium fortified; Madeira introduction tasting; cheese course anchor; aperitif program for guests resistant to sweet fortified wine",
+        "verbal_presentation": "Madeira Verdelho 15 Years — Henriques and Henriques. Medium-dry. Atlantic volcanic. Smoked citrus and sea salt. The wine Portuguese trade ships carried to every continent."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Henriques and Henriques — H&H 15yr Verdelho is the definitive commercial benchmark",
+        "producer_location": "Camara de Lobos, Madeira, Portugal",
+        "key_person": "H&H family management; one of the few houses with significant vineyard ownership (60 ha)",
+        "bc_distributor": "BCLDB stocks Blandy's Verdelho 5yr and 10yr; H&H 15yr requires private order through agent",
+        "us_distributor": "The Rare Wine Co. (Napa) — H&H 15yr and Barbeito 20yr; National Wine and Spirits (wider distribution)",
+        "uk_distributor": "Waitrose (Blandy's), Berry Bros. and Rudd (premium stocks), The Wine Society",
+        "price_tier": "Entry: $28-35 (Blandy's 5yr). Mid: $65-80 (H&H 15yr). Premium: $100-150 (Barbeito 20yr).",
+        "availability_notes": "H&H 15yr is the most accessible premium Verdelho in North America. Blandy's widely available across BCLDB, LCBO, and US national distribution."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Cured salmon gravlax with dill and citrus",
+          "pairing_type": "complement",
+          "rationale": "Verdelho's smoked citrus peel and saline mineral profile finds its exact food counterpart in cured salmon — the salt cure of the fish mirrors the sea-air salt in the wine, while the citrus and dill of the gravlax extend the lemon-mineral finish."
+        },
+        {
+          "technique_id": "",
+          "dish": "Jamon Iberico de Bellota with Manchego Curado",
+          "pairing_type": "bridge",
+          "rationale": "The bridge pairing: Verdelho's medium-dry mineral character sits between the fat richness of Jamon and the crystalline lactic sharpness of aged Manchego — a three-way bridge that demonstrates why Verdelho is the most food-flexible Madeira style in a professional service context."
+        }
+      ],
+      "source": "Henriques and Henriques production documentation; IVBAM technical specifications; The Rare Wine Co. Madeira catalogue 2024; BCLDB product listings verified April 2026",
+      "trail_connection": "PCT-2",
+      "trail_note": "PCT Region 2: Madeira — Verdelho was the primary wine of Portuguese Atlantic trade, carried to Brazil (PCT-12/13), the Cape Verde islands (PCT-4), Mozambique (PCT-7), and Goa (PCT-8) on every major Portuguese vessel from the 16th century. The medium-dry mineral style was deliberately suited to the Atlantic crossing — acid and oxidative resistance made it the only wine that improved during the voyage.",
+      "entry_id": "FOR-PORMAD-002",
+      "extracted_at": "2026-04-11T16:38:49.060748+00:00",
+      "batch_number": 3
+    }
+  ]
+}

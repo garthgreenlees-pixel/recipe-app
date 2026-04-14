@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Mozambique — Maputo and Zambezia (Matope, Chibuku, Colonial-Era Sugar Cane Spirits)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T02:23:17.679070+00:00",
+  "entries": [
+    {
+      "name": "Mozambique Aguardente de Cana — Maputo Province Colonial-Legacy Sugar Cane Spirit",
+      "category": "spirits",
+      "subcategory": "cane_spirit",
+      "origin": "Mozambique",
+      "region": "Maputo Province, Mozambique",
+      "producer": "Companhia Industrial da Matola (CIM) — Fábrica de Aguardente",
+      "alcohol_content": 40.0,
+      "price_tier": "everyday",
+      "terroir_origin": "Mozambique's cane spirit tradition is rooted in the colonial-era sugar estates of Zambezia Province (Luabo and Marromeu) and the Maputo Province lowlands — both areas of intensive Portuguese agricultural development from the 1890s onward. Sugar cane (Saccharum officinarum) was introduced to Mozambique by Portuguese colonizers who brought Madeira and São Tomé estate management techniques to East Africa, creating plantations along the Zambezi River delta and the Limpopo lowlands. The Maputo-Matola industrial corridor developed as the processing hub: cane was cut by hand-labor on the coastal plains (sea-level to 100m elevation), transported to Matola by narrow-gauge rail, and processed in colonial-era mills whose copper pot still aguardente infrastructure was established by Portuguese technicians trained in Madeira aguardente production. The resulting spirit carries a directness that reflects the flat lowland cane character — no altitude cooling that slows tropical sugar concentration, no volcanic mineral complexity, but a raw tropical-sweet cane identity that is distinctly Mozambican in its heat and directness. The production territory sits within the Portuguese colonial trade arc connecting Lisbon → Madeira → Cape Verde → São Tomé → Mozambique → Goa → Macau, completing the aguardente technical transfer that seeded cane spirit production across the Lusophone world.",
+      "production_technique": "The Matola distillery processes cane juice from contracted sugar estates in Maputo Province, using direct juice extraction rather than molasses-based fermentation — a colonial-era technical choice that maintains the fresh cane character preferred in the Mozambican domestic market over the darker, more structured molasses rums of the Caribbean. Extracted cane juice is clarified by brief settling, then inoculated with a domesticated Saccharomyces cerevisiae culture maintained at the distillery since its colonial-era founding. Fermentation proceeds in open concrete or steel vats for 24–36 hours at ambient tropical temperature (28–35°C) — a rapid fermentation cycle that produces a high-congener wine at 8–12% ABV. Distillation occurs in a single-pass column still at 85–90% ABV, followed by dilution to 40% with filtered water. No oak aging, no filtering beyond basic centrifugation. The resulting aguardente is bottled immediately for domestic market distribution, or held in large steel tanks for informal redistribution as bulk spirit to artisanal blenders and market vendors. In rural Mozambique, artisanal versions (locally called matope or ntombo depending on region) are produced by informal distillers using simple pot still configurations made from repurposed oil drums and copper tubing — a direct technical descendant of the colonial alembic introduced by Portuguese settlers in the 16th–17th century.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Brazilian cachaça (industrial grade)",
+          "connection": "Mozambique aguardente de cana and industrial Brazilian cachaça share direct juice fermentation over molasses, rapid high-temperature tropical fermentation, column still distillation to high ABV, immediate bottling without oak aging — both representing the industrial expression of a technical tradition rooted in the same Portuguese colonial sugar estate architecture"
+        },
+        {
+          "tradition": "Cape Verde grogue",
+          "connection": "Both Mozambique aguardente and Cape Verde grogue are direct technical descendants of Portuguese colonial cane spirit production, but grogue retained pot still distillation and artisanal production context while Mozambique industrialized — the contrast illustrates how colonial-era technical choices diverge post-independence based on local economic conditions"
+        },
+        {
+          "tradition": "Timor-Leste palm spirits (tuak arak)",
+          "connection": "Both Mozambique and Timor-Leste inherited Portuguese colonial distillation knowledge but applied it to locally available agricultural substrates — sugar cane in Mozambique, palm sap and rice wine in Timor-Leste — demonstrating how the same technical tradition adapts to different tropical agricultural contexts across the Lusophone world"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Clear, water-white; no color from aging; slight oiliness visible when swirled; bottled at 40% without dilution variations",
+        "nose": "Raw tropical cane sweetness, cooked sugar, light acetone from high-congener column still production, faint green cane herbaceousness, alcohol warmth predominant — direct and simple rather than complex",
+        "palate": "Immediate alcohol heat on entry, sweet tropical cane mid-palate, thin body from column still dilution, short finish — the domestic Mozambican preference for immediate heat and sweetness over complexity; artisanal matope versions show more congener richness and longer finish from pot still concentration"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Informal Matope (Artisanal)",
+          "criteria": "Illegal or semi-legal village-scale pot still production from fermented cane juice or sugar water; variable ABV 30–70%; consumed directly in rural areas; the base layer of Mozambican cane spirit culture with highest risk of methanol contamination from improper still operation"
+        },
+        {
+          "tier": 2,
+          "tier_name": "CIM Industrial Aguardente",
+          "criteria": "Regulated column still production, tested ABV at 40%, domestic bottling — the standard commercial product widely available in Maputo and provincial centers"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Artisanal Registered Distillers",
+          "criteria": "Small licensed distillers using copper pot stills, fresh cane juice, longer fermentation — emerging as a quality tier with support from Mozambican spirits associations and some EU development aid programs"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Export-Grade Aged Cane Spirit",
+          "criteria": "The aspirational tier: oak-aged Mozambique cane spirit has not yet achieved consistent production — isolated producers experiment with ex-bourbon barrels — representing the frontier of the tradition's development toward international specialty spirits markets"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Served at ambient tropical room temperature (28–32°C) in traditional context — Mozambican drinking culture does not typically chill spirits; for international service, 18–20°C with one large ice block to dilute without over-chilling",
+        "vessel": "Traditional: small shot glass or repurposed glass; Modern: rocks glass with one ice block; Cocktail context: works as a high-proof base spirit in tropical preparations where the raw cane character acts as the aggressive backbone",
+        "cocktail_notes": "In Maputo bar culture, aguardente de cana is mixed with citrus (local lime or passion fruit juice) and sugar syrup in a preparation analogous to the Brazilian caipirinha — a direct parallel that reflects the shared Portuguese colonial cane spirit architecture across the Lusophone Atlantic"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Companhia Industrial da Matola (CIM) for the industrial-regulated baseline; artisanal Beira district producers for the pot still craft tier",
+        "north_america_access": "Not commercially exported to North America; accessible through Mozambican diaspora communities; specialty spirits importers with Lusophone focus (e.g., Liquid Amber, which carries Cape Verde grogue) have expressed interest in Mozambique products as of 2024–2025",
+        "culinary_application": "PNW culinary application: raw cane character works as a caipirinha-style cocktail base with Okanagan peaches; high congener content makes it useful as a flambé spirit in tableside preparations; the Lusophone cane spirit narrative pairs naturally with menus exploring Portuguese colonial food history"
+      },
+      "price_trajectory": "stable",
+      "entry_id": "SPR-MAPPRO-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T02:23:17.678774+00:00",
+      "batch_number": 2
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "tradition": "coffee",
+  "region": "Angola — Uige and Malanje Provinces (Robusta Revival, Colonial-Era Arabica Estates)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T02:23:17.677093+00:00",
+  "entries": [
+    {
+      "name": "Angola Uige Plateau Robusta — COCACUL Washed, Post-War Revival Specialty Tier",
+      "category": "coffee",
+      "subcategory": "robusta_specialty",
+      "origin": "Angola",
+      "region": "Uige Province, Angola",
+      "producer": "COCACUL — Cooperativa de Cafeicultores do Uige",
+      "alcohol_content": 0.0,
+      "price_tier": "premium",
+      "terroir_origin": "The Uige plateau in northern Angola sits at 900–1,400m elevation within the Congo Basin transition zone — the ecological border between equatorial rainforest and savanna woodland. Annual rainfall averages 1,400–1,800mm, arriving in a bimodal pattern (March–May, October–December) that separates cherry ripening into two annual harvests. The soils are red-brown lateritic clay over weathered basement rock, with naturally occurring manganese deposits that contribute to a distinctive mineral quality documented in pre-war Angolan export-grade Robusta. The Coffea canephora var. robusta trees on the Uige plateau are predominantly naturalized forest-edge populations — semi-wild in character — growing under partial canopy of native Milicia excelsa (iroko) and Pericopsis elata (afromosia) timber trees. This semi-wild character creates genotypic diversity absent in monoculture plantation Robusta: individual trees show divergent cup profiles ranging from standard chocolate-earthy to berry-inflected outliers that cup above 80 points — the threshold of specialty classification that most Robusta globally cannot achieve. Angola was the world's fourth-largest coffee exporter by 1973, predominantly Robusta. Civil war (1975–2002) destroyed 90% of production infrastructure; the current revival represents both agricultural and cultural reconstruction.",
+      "production_technique": "COCACUL members harvest ripe red cherries by selective hand-picking on staggered schedules across the extended Uige plateau ripening window (October–January primary, April–June secondary). Cherries are delivered to wet-processing stations — partial reconstructions of Portuguese colonial wet-mill infrastructure — within 6 hours of harvest. Processing follows the washed (fully washed) method: cherries are de-pulped on Colombian-style drum pulpers within 12 hours, then fermented in cement tanks for 24–36 hours. The tank fermentation duration varies by ambient temperature; higher elevation farms (above 1,200m) extend fermentation to 36+ hours for fuller mucilage breakdown. After fermentation, parchment coffee is washed in consecutive clean water channels and then sun-dried on raised African raised beds for 15–21 days, turned every 2 hours during peak sun hours (10am–3pm). The resulting green beans are hulled and graded by hand, with INCA-certified quality inspectors providing export-grade sorting. Specialty-tier Robusta lots scoring 80+ points are separated for export to EU and North American specialty roasters; below-80 lots remain in domestic or commodity export channels. The cup profile of the specialty tier shows an unusually clean Robusta character — less of the harsh rubbery notes typical of commodity Robusta, with prominent cocoa mass, forest floor, and dried black fruit character that reflects the semi-wild terroir.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Vietnam Da Lat Arabica",
+          "connection": "Both Angola and Da Lat Vietnam represent post-war coffee revival projects where commodity infrastructure (Robusta in both cases) is being upgraded through specialty processing methods and genotypic diversity research — and both highlight how war disruption can paradoxically preserve traditional growing systems that intensive modernization would have erased"
+        },
+        {
+          "tradition": "Ethiopian Jimma Robusta (wild collected)",
+          "connection": "Angola Uige plateau's semi-wild Coffea canephora parallels the Ethiopian wild Robusta populations in Jimma and Kaffa zones — both representing the species in naturalized, genotypically diverse forest-edge contexts that produce specialty-capable cup profiles distinct from cultivated plantation Robusta"
+        },
+        {
+          "tradition": "Port wine revival (Douro replanting post-phylloxera)",
+          "connection": "Angola's post-civil-war coffee revival mirrors Portugal's own post-phylloxera Douro replanting of the 1880s–1910s: both involve rebuilding a destroyed agricultural export system from heritage rootstock on land that retained terroir character despite production collapse — agricultural memory encoded in soil and wild genetics rather than in institutions"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Dark brown to black brew with mahogany rim; full-bodied crema in espresso applications; medium-heavy viscosity in filter preparation",
+        "nose": "Dark cocoa mass, forest floor, dried black cherry, roasted peanut, faint tobacco leaf — more structured than commodity Robusta with less of the harsh rubber-petroleum character typical of the species",
+        "palate": "Full body, low-moderate acidity, bitter-cocoa core, dried black fruit mid-palate, clean finish without harshness — the hallmark of the specialty tier that separates Uige plateau Robusta from commodity Vietnamese or Indian Robusta"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Commodity Robusta Export",
+          "criteria": "Below-80 point lots, strip-picked or machine-harvested, natural or semi-washed processing, destined for espresso blends or instant coffee — represents 80%+ of current Angola production"
+        },
+        {
+          "tier": 2,
+          "tier_name": "INCA Certified Grade A",
+          "criteria": "Angolan government quality certification for export-grade Robusta meeting minimum moisture, defect count, and screen size standards — improved commercial quality but not specialty tier"
+        },
+        {
+          "tier": 3,
+          "tier_name": "COCACUL Specialty Tier (80–83 points)",
+          "criteria": "Selective hand-picking, 24–36 hour tank fermentation, raised-bed drying, cupper-verified — the current ceiling of Angola's revival production, available through Sucafina African desk"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Single-Garden Reserve",
+          "criteria": "Individual smallholder lots from identified semi-wild tree populations, micro-processed separately, 85+ point target — aspirational tier currently being developed by COCACUL with SCA (Specialty Coffee Association) technical assistance as of 2024–2025"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Espresso: 93–94°C extraction; Filter: 95–96°C pour-over or 92°C immersion (AeroPress); Serve at 65–70°C — the full-bodied Robusta character is best expressed at higher drinking temperature than delicate Arabica",
+        "vessel": "Espresso: standard demitasse (60–90ml) or lungo glass to observe crema thickness; Filter: ceramic cup or Chemex — the body benefits from a vessel that retains heat; the bitter-cocoa character is best in unglazed ceramic that does not add metallic interference",
+        "barista_notes": "Uige specialty Robusta responds well to shorter roast profiles than conventional Robusta wisdom suggests — medium-dark is optimal; avoid dark roast that destroys the fruit-forward outlier character; works exceptionally in flat white or cortado where the cocoa depth integrates with milk fat"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "COCACUL Cooperativa de Cafeicultores do Uige — INCA certified specialty lots via Sucafina African Origins",
+        "north_america_access": "Limited — Sucafina exports green lots to specialty importers; Onyx Coffee Lab (Rogers AR) and Passenger Coffee (Lancaster PA) have trialed Angola revival lots; DreamCoffee (Vancouver BC) has expressed sourcing interest as of 2024",
+        "culinary_application": "High-caffeine Robusta character makes concentrated Angola extract ideal for cocktail applications: espresso martini with Angolan Robusta produces a more bitter-forward, structured cocktail than Arabica; cold brew concentrate works in savory applications — meat glazes, mushroom sauces — where the cocoa depth pairs with umami"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "COF-UIGPRO-001",
+      "tradition": "coffee",
+      "extracted_at": "2026-04-12T02:23:17.676722+00:00",
+      "batch_number": 1
+    }
+  ]
+}

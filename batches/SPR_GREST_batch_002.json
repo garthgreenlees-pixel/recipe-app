@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Grenada — St Patrick Parish (River Antoine Rum Estate, 18th Century Pot Still, Oldest Working Rum Distillery)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T16:54:38.393018+00:00",
+  "entries": [
+    {
+      "name": "River Antoine Royale Grenadian Rum — 1785 Water-Wheel Estate, 75% ABV, Caribbean's Oldest Distillery",
+      "category": "spirits",
+      "subcategory": "rum_pot_still",
+      "origin": "Grenada",
+      "region": "St Patrick Parish, Grenada",
+      "producer": "River Antoine Rum Estate",
+      "alcohol_content": 75.0,
+      "price_tier": "premium",
+      "terroir_origin": "The River Antoine Estate sits on Grenada's northeastern coast in the parish of St Patrick — the most rugged and least developed part of the island, where the volcanic mountains of the interior drop steeply to the Atlantic coast through a narrow coastal valley. The Antonio River that powers the estate flows from the northern slopes of Mount St Catherine (Grenada's highest peak at 840m) through volcanic basalt geology to the coastal estate at near sea level. The cane grown on the estate's 36 acres is a heritage variety maintained without introduction of commercial hybrid canes — the same or similar genetic stock to the 18th-century plantation canes that were cultivated during the British colonial period when River Antoine was established. The northeastern coastal terroir produces cane with a distinctive briny quality from Atlantic sea spray exposure and volcanic basalt mineral absorption — a terroir character that is directly legible in the finished rum. Grenada itself is geologically young — the island emerged from volcanic activity approximately 2–3 million years ago — and its dark basalt soils, rich in iron and magnesium, contribute mineral compounds through root uptake that appear in the fresh cane juice fermented at River Antoine. The estate's terroir extends beyond the soil and water: the open wooden fermentation vats that have been in continuous use since the 18th century harbor a unique microbial culture accumulated over 240+ years of continuous production — an ecosystem of wild Saccharomyces, Pichia, Candida, and Lactobacillus species that have evolved specifically to the River Antoine environment and contribute to the rum's wild, complex character.",
+      "production_technique": "River Antoine's production process has remained essentially unchanged since 1785 — a genuine living museum of 18th-century Caribbean rum production. The 10-foot overshot water wheel (one of only two such operating cane mills remaining in the Caribbean) drives a three-roller horizontal cane press that crushes freshly cut estate cane within hours of harvesting. Fresh cane juice flows by gravity from the press through limestone filter channels into open wooden vats — the same wooden fermentation vessels used since the 18th century, seasoned with 240 years of accumulated microbial culture. Wild fermentation begins spontaneously within 2–4 hours from the wild yeast population on the cane and in the wooden vats; no commercial yeast addition, no temperature control, no nutrient addition. The 5–7 day wild fermentation at ambient Grenada temperatures (28–34°C) produces a wash at 8–12% ABV of extraordinary wild complexity. Distillation occurs in the estate's copper pot still in a single distillation run, taking a wide hearts cut at 70–80% ABV. The spirit is not diluted before bottling — River Antoine Royale is bottled at 75% ABV (150 proof) as required by Grenada's National Heritage Product designation. No aging, no filtration, no additives. The 75% ABV is legal in Grenada for this specific heritage product classification; export restrictions apply to certain markets that prohibit spirits above 65% ABV. The entire production process from cane cutting to bottling occurs on the 36-acre estate using 18th-century technology powered by renewable water energy — carbon footprint approaches zero for the production process itself.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Clairin Sajous Haiti (wild fermentation, unaged, maximum terroir transparency)",
+          "connection": "River Antoine and Clairin Sajous are the two purest expressions of the Caribbean artisan cane spirit tradition — both using wild fermentation in wooden vessels from heritage cane varieties without commercial yeast or temperature control, both bottled immediately without aging — but River Antoine at 75% ABV represents the most extreme preservation of the distillate's raw power, while Sajous at 48.8% represents the accessible diluted version of the same philosophy"
+        },
+        {
+          "tradition": "Mezcal Papalometl (wild agave fermentation, open-air roasting, traditional equipment)",
+          "connection": "River Antoine's 240-year-old water wheel and wooden vat technology parallels the most traditional mezcal producers who use tahona stone wheels (ox-powered) to crush roasted agave hearts — both represent the living preservation of 18th-century agricultural distillation technology that survives in geographic isolation from modernization pressure, both producing spirits of irreplaceable historical character"
+        },
+        {
+          "tradition": "George T. Stagg Barrel Proof Bourbon (extreme high ABV, uncut distillate character)",
+          "connection": "River Antoine at 75% ABV and Stagg at 65+ ABV share the category of \"extreme ABV by design\" spirits where the distiller deliberately preserves the full distillate proof to communicate maximum raw spirit character — both require water addition at service (River Antoine is typically diluted to 45–50% before drinking, bringing out the wild fermentation aromatic complexity)"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Crystal clear water-white at full 75% ABV; extreme spirit viscosity at this proof — significant oiliness on glass walls; the high ABV is immediately evident from evaporation at the glass surface",
+        "nose": "At full strength: intensely aromatic, overripe tropical fruit, raw fermented cane, wild yeast character, volcanic mineral, acetaldehyde freshness — overwhelming at full proof; diluted to 50% with water: fresh pineapple, ripe banana, wild fermentation complexity, sea salt mineral, Atlantic coastal character — one of the most complex unaged rum noses available commercially",
+        "palate": "At full strength: immediate extreme alcohol heat; at 45–50% (recommended): full-bodied, tropical fruit intensity, wild yeast-ester character, volcanic mineral mid-palate, long finish with coastal mineral and dried tropical fruit — the 240-year wooden vat microbial culture is unmistakably present as a \"funky\" complexity that no commercial yeast can replicate"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "River Antoine Royale (Standard, 75% ABV)",
+          "criteria": "The single expression: unaged, undiluted, heritage production — no tiers in the traditional sense as River Antoine produces only one product from one process; the quality is absolute, not comparative"
+        },
+        {
+          "tier": 2,
+          "tier_name": "River Antoine Overproof (diluted, export markets)",
+          "criteria": "For export markets prohibiting >65% ABV, River Antoine is diluted to 63% — slightly more accessible than 75% but less expressive; the 75% ABV original is the definitive version"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Estate Reserve (theoretically possible, not currently produced)",
+          "criteria": "If River Antoine ever produced an aged version — placing the wild-fermented pot still distillate in the estate's original 18th-century wooden casks for aging — the result would be one of the most historically significant Caribbean rum expressions possible; not currently commercially available"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Heritage Status (240-Year Continuous Production)",
+          "criteria": "The ultimate expression of River Antoine's value is not product tiers but the continuity of 240 years of identical production — every bottle of River Antoine contains rum produced by the same water wheel, same wooden vats, same copper still, same wild yeast culture as bottles produced in 1800; the historical continuity is itself the highest-quality attribute"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Full 75% should be diluted to 45–50% with still water before service — add the water first, then smell the transition; the dilution point where the aromatic complexity peaks is typically at 50% (adding 30ml water per 50ml rum); serve at 22–24°C room temperature after dilution",
+        "vessel": "Wide tulip or rocks glass after dilution; at full proof, any glass is acceptable as the ABV intensity dominates the aromatic experience regardless of vessel; the typical Grenadian service is a small shot of River Antoine with an equal amount of water chased separately",
+        "cultural_context": "River Antoine is a Grenada National Heritage Product and visiting the estate is one of the most historically authentic distillery experiences in the Caribbean; the working water wheel, 18th-century copper still, and open wooden vats operating by gravity are a living demonstration of how rum was produced across the colonial Caribbean before industrialization — the definitive PCT answer to what Portuguese colonial cane spirit production looked like in its original form"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "River Antoine Rum Estate — the definitive single expression, single estate, single price point Caribbean heritage rum",
+        "north_america_access": "Available through Grenada directly (on-island purchases); limited export through specialty spirits retailers in US and Canada; Potomac Imports handles limited US distribution; in Canada through private import; the Caribbean specialty spirits market (Prime Rum, Whisky Exchange) carries online for international shipping",
+        "culinary_application": "River Antoine at 50% diluted makes an outstanding cocktail base for heritage-focused cocktail programs where the provenance narrative is as important as the flavor: a River Antoine Ti' Punch diluted to 50% with lime and cane syrup creates the most historically authentic Caribbean cocktail possible; the rum's wild complexity also works in reduction sauces for island-spice preparations where the fermentation character adds depth that commercial rum cannot provide"
+      },
+      "price_trajectory": "stable",
+      "entry_id": "SPR-STPAT-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T16:54:38.392665+00:00",
+      "batch_number": 2
+    }
+  ]
+}

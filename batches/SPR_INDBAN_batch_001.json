@@ -1,0 +1,98 @@
+{
+  "tradition": "spirits",
+  "region": "India — Bangalore Karnataka (Amrut Intermediate Sherry Single Malt, Oloroso Cask Finish, 920m Deccan Plateau)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T21:27:41.547660+00:00",
+  "entries": [
+    {
+      "name": "Amrut Intermediate Sherry Single Malt — Oloroso Cask Maturation, 920m Bangalore Deccan Plateau, Tropical Aging Compression, PCT India Whisky Depth",
+      "tradition": "spirits",
+      "sub_tradition": "indian_single_malt — Oloroso sherry cask, tropical aging",
+      "region": "India — Bangalore Karnataka (Amrut Intermediate Sherry Single Malt, Oloroso Cask Finish, 920m Deccan Plateau)",
+      "terroir_origin": "Amrut Distilleries operates from Bangalore at 920m above sea level on the Deccan Plateau of Karnataka — a semi-arid tropical highland with a distinctive bimodal climate: two monsoon seasons (southwest June–September, northeast October–December) separated by warm dry periods at 18–35°C. This climate profile produces the most scientifically documented \"tropical aging effect\" in the world: at Bangalore's elevation and temperature, the whisky in cask loses 12–16% of its volume per year to evaporation (the \"angel's share\"), compared to 1–3% per year in Scotland and 5–8% per year in lowland tropical aging environments. The consequence is a 3x–5x acceleration of the barrel extraction process compared to Scottish maturation conditions — a 3-year Amrut cask has undergone approximately the same wood-surface-area-to-spirit-volume interaction as a 9–15 year Scottish malt at equivalent fill strength. The Intermediate Sherry expression adds the Oloroso sherry cask dimension to this accelerated extraction: the spent Oloroso sherry cask contributes ellagitannins, oxidised Palomino grape residue (the source of the dried fig, raisin, and walnut character), and the colour-contributing anthocyanin-tannin complex of the Pedro Ximénez or Oloroso residue. The barley is sourced from the Rajasthan and UP six-row barley cultivars with higher protein content than Scottish two-row barley — the protein difference is a significant terroir factor in the spirit character, producing a richer, more cereal-forward new-make spirit.",
+      "production_technique": "Amrut Intermediate Sherry production begins with Indian six-row barley (primarily from Rajasthan) that is malted in India (Amrut operates its own malting floor) and mashed at Bangalore. The mash tun operates on a standard infusion mash protocol (65°C single-temperature infusion) producing a wort at 1.056–1.060 original gravity. Fermentation uses Amrut's house yeast strain (undisclosed; a Scotch distillery-type S. cerevisiae strain) for 72–96 hours at 28–32°C — warmer than Scottish distillery fermentation (18–22°C) but deliberately managed to develop the higher ester profile that contributes to the Amrut tropical fruit character. The wash (8–9% ABV) is double-distilled in copper pot stills — the traditional Scotch whisky distillation protocol adopted by Amrut — with the spirit still producing a new-make spirit at approximately 67–70% ABV. The new-make spirit is filled into the first-fill Oloroso sherry butts (500L Spanish oak, Jerez-seasoned) at 63.5% ABV — the standard Scottish barrel entry proof adopted by Amrut. The critical production distinction of Intermediate Sherry: the whisky is first matured in ex-bourbon American white oak barrels for approximately 1.5–2 years (the \"intermediate\" aging phase), then transferred to the Oloroso sherry butts for a final 0.5–1 year of finishing. This \"interrupted\" maturation protocol — bourbon base, sherry finish — is designed to develop the clean cereal-and-fruit character of the bourbon maturation while adding the dried fruit, walnut, and oxidised-wine tannin of the Oloroso cask without over-extracting the sulphur compounds that can result from full-term sherry butt maturation. At Bangalore's 12–16% annual evaporation rate, a total maturation of 2–3 years in the tropical highland climate produces a spirit with the flavour development equivalent to 6–15 years in Scotland.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits — Scotch single malt, GlenDronach 15 Year Oloroso (Highland, Speyside)",
+          "beverage": "GlenDronach 15 Year — Oloroso Sherry Cask Maturation, Highland, Scotland",
+          "connection": "Amrut Intermediate Sherry and GlenDronach 15 Year share the defining production decision of full Oloroso sherry cask maturation — both use the same Jerez Oloroso butts (500L Spanish oak) to develop the dried fruit, walnut, and oxidised wine tannin character that defines the sherry-matured single malt style. The divergence is the aging duration and climate: GlenDronach achieves its sherry character in 15 years of Scottish highland maturation (2–3% annual loss); Amrut achieves a comparable sherry character in 2.5–3.5 years of Bangalore tropical plateau maturation (12–16% annual loss). This is the central technical demonstration of the Amrut Intermediate Sherry expression: that tropical accelerated maturation can replicate the qualitative output of extended cool-climate maturation in a fraction of the calendar time, challenging the assumption that \"age\" is a quality proxy in whisky."
+        },
+        {
+          "tradition": "spirits — rum (Jamaica pot still, high-ester tropical aging)",
+          "beverage": "Appleton Estate 15 Year — Jamaica Tropical Aging, Pot Still, High Ester Rum",
+          "connection": "The tropical aging compression effect documented at Amrut Bangalore has a direct parallel in Jamaica's long tradition of high-ester tropical rum maturation, where the combination of pot still distillation and Caribbean tropical climate aging (6–8% annual evaporation) produces a spirit depth and complexity per calendar year that exceeds temperate-climate aging. Appleton Estate's 15-year expressions and Amrut's 3-year expressions occupy similar quality registers not despite their different ages but because both are calibrated to the maximum wood extraction the tropical climate makes possible — both are \"fully matured\" in the technical sense of complete barrel integration at their respective ages; the calendar difference is the climate, not the spirit."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep amber with red-mahogany highlights from the Oloroso sherry cask contribution — the characteristic colour of sherry-matured Indian single malt after 2.5–3 years in 500L Oloroso butts under tropical acceleration; significantly darker than bourbon-only Indian single malt at equivalent age; brilliant clarity (light chill filtration at 46–48% ABV bottling strength for the Intermediate Sherry); pronounced legs from the full body of the Oloroso-enriched spirit.",
+        "nose": "Rich dried fruit (raisins, dried fig, Medjool dates) as the immediate sherry cask signature — the Oloroso residue anthocyanin-tannin complex contributing the characteristic dark fruit register; beneath, the Indian six-row barley cereal character (richer and more biscuity than Scottish two-row malt) persists through the sherry overlay; dark chocolate and walnut from the Oloroso oxidised wine tannin; cinnamon and clove from the Spanish oak ellagitannin extraction; the characteristic Amrut tropical fruit freshness (mango, dried tropical fruit) from the Bangalore plateau ester development; very little sulphur (the intermediate protocol was designed to avoid the \"match stick\" sulphur compound that can afflict full-term poorly vented sherry butt maturation); at 46–48% ABV, the aromatic concentration is substantial without the burning heat that obscures aroma at cask strength.",
+        "palate": "Full body with notable viscosity from the Oloroso tannin-glycerol contribution; the entry is immediately dominated by the dried fruit and dark chocolate of the sherry cask, transitioning through the mid-palate to the rich Indian barley cereal sweetness; the Bangalore tropical fruit ester register (mango, dried apricot) emerges at mid-palate as a distinctive signature that has no parallel in Scottish sherry-matured malt — a \"tropical sherry\" hybrid character unique to Indian single malt; the tannin from the Oloroso cask provides gentle drying structure at the finish without astringency; very long finish (50–70 seconds) with dried fruit, dark chocolate, and the lingering warmth of the well-integrated alcohol at 46% ABV.",
+        "conclusion": "The technical reference for tropical accelerated sherry cask maturation: demonstrating that Oloroso cask character of equivalent complexity to Scottish 12–15 year sherry maturation can be achieved in 2.5–3.5 years at Bangalore's 920m Deccan plateau climate."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Reserve",
+          "criteria": "Amrut Intermediate Sherry Single Malt (46% ABV, limited release) — the benchmark tropical Oloroso cask expression; or Amrut Cask Strength (61–63% ABV) from a single exceptional Oloroso butt; consistent gold and platinum recognition at IWSC, ISC, and Jim Murray's Whisky Bible (scored 97.5/100 for Amrut Fusion in 2010, establishing the distillery's international credibility); priced at USD $50–80 per 750ml internationally.",
+          "markers": "Oloroso cask intermediate protocol; 46%+ ABV; tropical fruit-sherry hybrid aromatic; award recognition; no chill filtration."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Estate",
+          "criteria": "Amrut Single Malt (46% ABV, ex-bourbon only) or Amrut Fusion (Indian + Scottish barley blend) — the distillery's entry-level single malt expressions that established Indian single malt in international fine spirits retail; demonstrates the Bangalore tropical aging character without the sherry cask overlay; priced at USD $35–50 per 750ml.",
+          "markers": "Ex-bourbon maturation; 46% ABV; tropical fruit forward; Indian barley cereal base; consistent international distribution."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Market",
+          "criteria": "Other Indian single malt expressions in the professional retail range — Rampur Select (Allied Blenders), Indri Trini (Piccadily Distilleries) — competent single malt distillation from Indian barley with tropical aging character but without the specific Bangalore plateau altitude terroir of Amrut; priced at USD $30–45 per 750ml.",
+          "markers": "Indian barley; tropical aging; professional quality level; growing international distribution; without Amrut's altitude terroir."
+        },
+        {
+          "tier": 1,
+          "tier_name": "House",
+          "criteria": "Blended Indian whisky labelled as Indian malt or Indian whisky — McDowell's No. 1, Royal Stag, Officer's Choice — which uses a small percentage of malt spirit blended with high-proportion neutral grain spirit (typically from sugarcane molasses); the dominant Indian domestic whisky market segment by volume but not related in production or quality to the Amrut single malt tradition; the entry-level Indian spirits category.",
+          "markers": "High neutral grain spirit proportion; molasses base; domestic Indian market; no altitude or terroir character; priced under USD $5 domestically."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve Amrut Intermediate Sherry at room temperature (18–22°C) in a Glencairn without ice; the full aromatic complexity of the Oloroso cask-tropical aging combination requires room temperature to express — cold temperatures suppress the dried fruit volatiles and the Indian barley tropical fruit esters that define the Bangalore single malt character; a small water addition (2–4ml to a 45ml pour) can open the nose significantly if the spirit was just opened; never serve over ice as dilution destroys the carefully balanced Oloroso-sherry aromatic architecture.",
+        "vessel": "Glencairn glass exclusively for evaluation and programme service; 40–45ml pour; the Glencairn's chimney concentrates the dried fruit-tropical fruit aromatic complex for evaluation while preventing the high-ester volatiles from dispersing too rapidly. In a programme context, the verbal presentation of the tropical aging acceleration is the essential service element: \"this three-year-old whisky from 920 metres above sea level in Bangalore has lost more than a third of its original volume to the angel's share — there is no other distillery in the world where the wood works this fast.\"",
+        "technique": "Neat; Glencairn; tropical aging explanation is the verbal centrepiece.",
+        "programme_position": "Indian single malt comparison flight alongside Paul John Brilliance (Goa coastal climate, unpeated) — same category, different Indian terroirs; or in a global single malt climate comparison alongside Kavalan (Taiwan sub-tropical), Starward (Melbourne maritime), and Glenfarclas 15 (Scottish highland) to demonstrate how climate shapes whisky character.",
+        "verbal_presentation": "Bangalore, 920 metres. The air here takes 12 to 16 percent of the barrel every year. This three-year-old malt has been through what a Scottish whisky would take fifteen years to achieve. The sherry cask is from Jerez. The barley is from Rajasthan. Nothing about this is Scottish except the still."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Amrut Distilleries, Bangalore, Karnataka, India (est. 1948; single malt launched internationally 2004 — the benchmark for Indian single malt and the first to document the tropical aging acceleration at Bangalore altitude; Intermediate Sherry is the definitive sherry cask expression of the Amrut range).",
+        "producer_location": "Bangalore, Karnataka, India — 920m Deccan Plateau",
+        "key_person": "Rakshit Jagdale (Managing Director)",
+        "production_volume": "Boutique single malt fraction of larger Amrut group production",
+        "certifications": [
+          "IWSC multiple Gold",
+          "Jim Murray Whisky Bible top 10"
+        ],
+        "bc_distributor": "Amrut has been distributed in BC through private agents; verify current status with BCLDB specialty spirits or private import",
+        "us_distributor": "Amrut is distributed in the US by Prestige Beverage Group (national); available at major fine spirits retailers in key markets",
+        "uk_distributor": "Amrut is available at The Whisky Exchange, Master of Malt, and Harvey Nichols in the UK",
+        "price_tier": "Reserve",
+        "availability_notes": "Amrut single malt expressions are consistently available through international fine spirits retailers and online merchants; Intermediate Sherry is a limited-production allocation release, not always in stock; Amrut Single Malt and Fusion are the most widely available expressions. India retail pricing: INR 4,000–6,000 per 750ml (USD $48–72); international retail: USD $50–75."
+      },
+      "trail_connection": "PCT-8",
+      "trail_note": "Amrut Intermediate Sherry positions the Indian single malt tradition within the PCT Indian Ocean spirits corridor — the Bangalore Deccan Plateau altitude and the Rajasthan six-row barley are distinctly Indian raw material and terroir, while the Oloroso cask and the double copper pot still distillation protocol reflect the Portuguese colonial era exchange of European distillation technology into the Indian subcontinent that also produced Goa feni.",
+      "food_pairings": [
+        {
+          "technique_id": "IND-004",
+          "dish": "Malabar prawn curry with coconut, tamarind, and curry leaf (Kerala-Karnataka coast)",
+          "pairing_type": "bridge",
+          "rationale": "The tropical fruit ester character of Amrut Bangalore maturation (mango, dried apricot) bridges directly to the coconut-tamarind sweet-sour balance of Malabar coast curry — both express the tropical Karnataka-Kerala terroir through entirely different production paths; the dried fruit from the Oloroso cask echoes the tamarind acidity of the curry."
+        }
+      ],
+      "source": "Amrut Distilleries technical sheets; IWSC competition records; Jim Murray Whisky Bible 2010; Charles MacLean tropical aging documentation; Milk & Honey distillery comparative aging research",
+      "price_trajectory": "rising",
+      "entry_id": "SPR-INDBAN-001",
+      "extracted_at": "2026-04-12T21:27:41.546770+00:00",
+      "batch_number": 1
+    }
+  ]
+}

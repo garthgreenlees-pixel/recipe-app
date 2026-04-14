@@ -1,0 +1,102 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Douro Valley (DOC Table Wine)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:51:01.974379+00:00",
+  "entries": [
+    {
+      "tradition": "wine",
+      "sub_tradition": "douro valley red table wine",
+      "region": "Portugal — Douro Valley (DOC)",
+      "name": "Douro DOC Red — Touriga Nacional, Touriga Franca, Tinta Roriz",
+      "terroir_origin": "The Douro Valley's transformation from the world's greatest fortified wine region into a source of exceptional table wines is one of the past 40 years' most significant developments in European wine. The same schist soils, extreme terraced slopes, and continental heat that build Port's intensity also produce red table wines of extraordinary concentration when yields are controlled and harvest timing is precise. The Douro Superior (upstream section, east of Pinhão) and Baixo Corgo (downstream, cooler, more Atlantic-influenced) each produce distinct table wine characters. The primary varieties for Douro red table wine: Touriga Nacional — the 'Cabernet Sauvignon of Portugal'; dark-fruited, tannic, floral (violets), full-bodied; the backbone of Douro reds. Touriga Franca — more aromatic, lighter in colour, less tannic than Touriga Nacional; the blending partner that adds perfume and freshness. Tinta Roriz (identical to Tempranillo/Aragonês) — structure, body, dried fruit; the Spanish variety that crossed into Portugal through the Douro's inland corridor. Benchmark producers: Quinta do Crasto (since 1615; 'LBV' level table wines); Quinta do Vale Meão (Ramos Pinto origin; Francisco Olazabal; one of Portugal's most respected table wine estates since the 1990s); Ramos Pinto's Duas Quintas (the commercial face of their table wine programme). Niepoort's 'Redoma' and 'Charme' are considered Portugal's reference Douro table wines — Dirk Niepoort was among the first to prove the Douro's table wine potential in the 1990s.",
+      "production_technique": "Douro table wine production represents a deliberate departure from the Port winemaking model. Where Port requires fortification to arrest fermentation (preserving sweetness and raising ABV), table wine production completes fermentation fully to dryness. The challenge: Douro's extreme heat (routinely 40°C+ at harvest) risks over-extraction and loss of freshness if not carefully managed. Modern Douro table wine techniques: lagares (traditional granite foot-treading troughs) used by premium producers for extraction — gentler than mechanical alternatives; whole-cluster fermentation by some producers to add structure and herbaceous lift; temperature-controlled stainless steel for freshness preservation. Ageing: French and Portuguese oak (small barrel 225L) for 12–18 months at reserve tier. Quinta do Vale Meão's Meandro do Vale Meão is the benchmark value tier; the Vale Meão flagship is the reference premium Douro red. Niepoort Redoma Tinto: foot-trodden in lagar; old vine Touriga Franca dominant; Burgundian winemaking sensibility applied to Douro terroir — the most individually distinctive Douro table wine approach.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Côtes du Rhône Villages / Gigondas (Southern Rhône)",
+          "connection": "Douro table wines and Southern Rhône reds share the warm-continental terroir model: both work in extreme heat; both blend multiple varieties (Grenache-Syrah-Mourvèdre vs. Touriga Nacional-Touriga Franca-Tinta Roriz); both produce big, structured reds that require bottle age for integration. Quinta do Crasto Reserve and a Gigondas occupy the same quality tier at comparable price; the winemaking philosophy is essentially identical across the two regions, separated only by the schist vs. limestone terroir"
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Vintage Port (same grapes, same valley)",
+          "connection": "The Douro table wine is the most instructive beverage parallel in all of wine — the same grape varieties, the same terraced schist vineyards, the same harvest, but two completely different wines based solely on whether fermentation is arrested (Port) or completed (table wine). A side-by-side tasting of Niepoort Redoma Tinto and Niepoort Vintage Port from the same estate is the most condensed explanation of what fortification actually does to a wine"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep ruby to garnet; moderate to intense colour density; rim purple-red in youth, bricking with 8+ years of age",
+        "nose": "Quinta do Vale Meão: blackberry, black cherry, dried violet, pencil shavings, schist mineral (a distinctive dry-stone character absent in limestone-grown reds), warm spice, leather with age. Niepoort Redoma: more Burgundian register — perfumed, red fruit dominant, less extract, greater delicacy; the Touriga Franca's floral character at the centre; the Douro's mineral signature underneath. Both: a warm-stone minerality that identifies the schist terroir as clearly as Chablis identifies chalk.",
+        "palate": "Touriga Nacional-dominant (Vale Meão, Crasto): full body, firm tannin, 13.5–14.5% ABV; requires 5–8 years of bottle age for integration; extraordinary aging potential (20+ years at top estates). Niepoort Redoma: more linear, lower extraction; 13–13.5% ABV; can be drunk earlier but rewards 5–10 years. Both converge on a shared character: the dry-stone schist mineral finish that is the Douro's most distinctive table wine signature.",
+        "conclusion": "The Douro produces some of Portugal's finest table wines at price points that remain substantially below equivalent quality from Burgundy, Tuscany, or Napa. For a programme: position Douro table wine as the PCT's most commercially accessible premium red — the Fort has the heritage; the table wine has the food versatility."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Niepoort Redoma / Quinta do Vale Meão Flagship",
+          "criteria": "Estate-level; single quinta; foot-trodden or minimal-intervention extraction; 18+ months French oak; 10+ year aging potential",
+          "markers": "Niepoort Redoma Tinto; Quinta do Vale Meão; Quinta do Crasto Reserva Especial; Quinta do Noval Nacional (Port estate table wine); BC ~$50–80; US ~$40–70"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Quinta do Crasto Reserve / Meandro do Vale Meão",
+          "criteria": "Named estate; Touriga Nacional dominant; 12–18 months French oak; Douro DOC; reserve classification",
+          "markers": "Quinta do Crasto Reserva; Meandro do Vale Meão; Ramos Pinto Duas Quintas Reserve; BC ~$30–50; US ~$25–40"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Douro DOC Standard / Duas Quintas",
+          "criteria": "Douro DOC; varietal blend correct; 12 months oak; commercial quality",
+          "markers": "Ramos Pinto Duas Quintas; Ferreira Esteva; Esporão Douro; BC ~$18–30; US ~$15–25"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Douro Entry / Regional Blend",
+          "criteria": "Douro DOC or IGP Duriense; accessible; correct variety character",
+          "markers": "Commercial Douro blends; supermarket tier Portugal; BC ~$12–18; US ~$10–15"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "16–18°C; younger Touriga Nacional-dominant wines benefit from the upper range. Decant reserve tier 30–45 minutes; flagship tier 60 minutes.",
+        "vessel": "Bordeaux glass (standard; the tannin structure benefits from the wider bowl). Niepoort Redoma: Burgundy glass would also work given the Touriga Franca lightness.",
+        "technique": "Douro table wine requires time: open 1 hour before service for reserve tier. Best served slightly warmer than other reds (17–18°C) — the schist mineral character opens at temperature. Douro-Port comparative: serve Douro red alongside the same estate's LBV Port to demonstrate the fortification decision. Cellar recommendations: top Douro reds drink well at 8–15 years; Niepoort Redoma at 10 years is a transformed wine.",
+        "programme_position": "Premium red anchor for PCT programme; Port comparison pairing; heritage narrative for the Douro valley",
+        "verbal_presentation": "Quinta do Vale Meão — Douro Superior. The same schist terraces that build Vintage Port. Fermented to dryness instead. The wine Portugal kept for itself until the 1990s."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Quinta do Vale Meão (Francisco Olazabal, Douro Superior) and Niepoort (Dirk Niepoort, Cima Corgo)",
+        "producer_location": "Quinta do Vale Meão: Vale de Figueira, Douro Superior, Portugal; Niepoort: Cima Corgo, Douro Valley",
+        "key_person": "Francisco Olazabal (Quinta do Vale Meão; Ramos Pinto founding family descendant); Dirk Niepoort (Niepoort — benchmark for Douro table wine philosophy)",
+        "production_volume": "Vale Meão: boutique to premium; Niepoort: small to medium; Quinta do Crasto: large (widest international distribution)",
+        "certifications": [
+          "Douro DOC"
+        ],
+        "bc_distributor": "Quinta do Crasto and Ramos Pinto Duas Quintas: available at BC Liquor (Evaton Inc.); Niepoort Redoma: Polaner Selections (US); Galleon/Dandurand (BC — Folio Wine Partners importer)",
+        "us_distributor": "Niepoort table wines: Polaner Selections (national — confirmed, separate from Martine's Wines which handles Niepoort Port); Quinta do Crasto: Folio Wine Partners (national); Quinta do Vale Meão: Domaine Select (national)",
+        "uk_distributor": "Douro table wines widely available: Lea & Sandeman; Theatre of Wine; Armit Wines; Wines of Portugal (UK); major supermarkets",
+        "price_tier": "Market to Reserve (Duas Quintas US ~$18; Crasto Reserva US ~$35; Vale Meão US ~$55; Niepoort Redoma US ~$45–55)",
+        "availability_notes": "In BC: Ramos Pinto Duas Quintas and Quinta do Crasto standard available at BC Liquor stores. Niepoort Redoma: Marquis Wine Cellars or Liberty Wine Vancouver. US: Polaner, Folio, Domaine Select national."
+      },
+      "trail_connection": "PCT-1",
+      "trail_note": "The Douro Valley is the PCT's geographical origin — the same valley whose wine wealth funded Portugal's 15th-century maritime expansion. Henry the Navigator's funding for the Atlantic voyages drew on Douro wine revenues. The table wine tradition is the Douro's newest chapter: 500 years of fortification monopoly, then 40 years of table wine ambition, producing a category that has only begun to reach its ceiling.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Bacalhau à Brás (salt cod with eggs, potato, olives)",
+          "pairing_type": "bridge",
+          "rationale": "The PCT's most canonical food pairing on its home territory: bacalhau à Brás is Portugal's most consumed dish and the direct expression of the same Atlantic cod trade that Port wine funded. A Douro table wine's schist mineral and dried herb character bridges with the salt cod's cured-sea character while the egg richness finds the wine's fruit depth — the Douro valley in food and wine form"
+        },
+        {
+          "technique_id": "",
+          "dish": "Leitão da Bairrada (roast suckling pig, Bairrada region)",
+          "pairing_type": "complement",
+          "rationale": "Portugal's most celebrated roasted meat preparation — the crispy-skinned suckling pig of Bairrada — demands a structured red with enough tannin to cut the fat. Douro Touriga Nacional's firm tannin and dark-fruit depth provides exactly that structure. Historically: this pairing is the Portuguese table wine's greatest national argument"
+        }
+      ],
+      "source": "IVDP (Instituto dos Vinhos do Douro e do Porto) DOC regulations; Niepoort official production documentation; Quinta do Vale Meão official estate documentation; Quinta do Crasto production history; Jancis Robinson 'Wine Grapes' (Touriga Nacional entry); Wines of Portugal official regional guide",
+      "entry_id": "WIN-PORDOU-001",
+      "extracted_at": "2026-04-11T15:51:01.973926+00:00",
+      "batch_number": 1
+    }
+  ]
+}

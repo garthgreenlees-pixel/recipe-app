@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Broadbent Selections",
+    "type": "importer",
+    "description": "New York-based importer of Port and fortified wines. Holds primary US allocation for Niepoort and Ramos Pinto.",
+    "markets_served": [
+      "US",
+      "nationwide_US"
+    ],
+    "traditions_carried": [
+      "fortified"
+    ],
+    "website": "https://www.broadbent.com",
+    "verified": true,
+    "purveyor_id": "PURV-001"
+  }
+]

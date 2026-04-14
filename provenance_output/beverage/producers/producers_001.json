@@ -1,0 +1,24 @@
+[
+  {
+    "tradition": "spirits",
+    "name": "Cazulo Premium Feni",
+    "location": "Siolim, North Goa, India",
+    "description": "The leading artisan Cashew Feni producer in Goa. Cazulo (founded 2017) was the first Goa Feni producer to pursue GI-quality standards, single-village sourcing, and premium positioning. The production: traditional bhaati still (clay pot) from Siolim village, with 40-year-old cashew orchards in laterite-soil North Goa. Cazulo markets internationally as the 'Champagne of India' — a claim based on the GI status awarded to Goa Feni in 2009.",
+    "founded": "2017",
+    "region": "North Goa, India",
+    "website": "https://www.cazulo.com",
+    "verified": true,
+    "producer_id": "PROD-SPR-001"
+  },
+  {
+    "tradition": "wine",
+    "name": "Sula Vineyards",
+    "location": "Nashik Valley, Maharashtra, India",
+    "description": "Founded 1999 by Rajeev Samant (Stanford MBA, ex-Oracle). The largest and most internationally recognised Indian wine producer. The Nashik Valley winery is the destination wine tourism site in India. Sula produces Chenin Blanc (the dominant variety), Shiraz, Riesling, Sauvignon Blanc, and sparkling wine. The 2023 IPO makes Sula the first publicly traded Indian wine company.",
+    "founded": "1999",
+    "region": "Nashik Valley, Maharashtra, India",
+    "website": "https://www.sulawines.com",
+    "verified": true,
+    "producer_id": "PROD-WIN-002"
+  }
+]

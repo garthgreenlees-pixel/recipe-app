@@ -1,0 +1,110 @@
+{
+  "tradition": "spirits",
+  "region": "Southeast Asia — Malacca (Kristang Heritage Beverages)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T17:22:18.716068+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "kristang fermented rice tapai communal heritage",
+      "region": "Southeast Asia — Malacca (Kristang Heritage Beverages)",
+      "name": "Kristang Tapai — Portuguese-Eurasian Fermented Rice Wine, Malacca Heritage",
+      "terroir_origin": "The Kristang (from Portuguese 'Cristao' — Christian) are the direct descendants of Portuguese soldiers, traders, and enslaved Africans and Asians who settled Malacca after the Portuguese conquest of 1511. Malacca sits at the narrowest point of the Malacca Strait — the most strategically critical chokepoint in Asian maritime trade. The Portuguese controlled Malacca from 1511 to 1641 (130 years), long enough to create a creolised culture that absorbed Malay, Tamil, Chinese, and Portuguese cultural elements. The Kristang language (Papia Kristang) is a Portuguese-Malay creole — still spoken by approximately 2,000 people in the Portuguese Settlement in Malacca. Tapai is the fermented rice wine produced by the Kristang community for religious festivals (particularly Easter), community gatherings, and family ceremonies. It is the beverage trace of the Portuguese-Malay cultural synthesis: Portuguese wine-drinking tradition expressed through the locally available fermented grain material (rice, not grape). The rice: locally grown glutinous rice (beras pulut) from the Malaysian interior; the white and black varieties are used depending on the occasion. The yeast: a traditional cake yeast (ragi) made from dried rice, herbs, and wood ash — the fermentation agent is itself a cultural artifact.",
+      "production_technique": "Tapai production in the Kristang community: Rice preparation: glutinous rice is washed, soaked overnight, and steamed in a traditional bamboo steamer over a wood fire. The cooking process is identical to Japanese mochi rice preparation — but the Portuguese-Malaccan cultural context gives it entirely different meaning. Ragi application: the cooked rice is cooled to body temperature and the powdered ragi (yeast cake) is applied by hand, mixing thoroughly so every grain is coated. The ragi contains Saccharomyces cerevisiae and Rhizopus mould strains that break down the rice starch to glucose before the yeast ferments to alcohol. Fermentation vessel: traditionally clay pot (periuk tanah) lined with banana leaves; contemporary production uses glass or plastic containers. Fermentation: 3-7 days at ambient temperature (28-32 degrees C); the tropicl heat drives rapid fermentation. Straining: the solids are pressed and the liquid strained — the result is a milky white, slightly sweet, low-alcohol (4-8% ABV) rice wine. Service: consumed fresh, within 2-3 days of straining; does not keep. The black glutinous rice version (tapai pulut hitam) has a distinctive purple colour from anthocyanins in the black rice — served at Christmas and Easter.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Makgeolli (Korean rice wine, unfiltered)",
+          "connection": "Both are unfiltered, low-alcohol, milky rice wines produced through mould-and-yeast dual fermentation from glutinous or non-glutinous rice. The comparison demonstrates that fermented rice wine is not a single tradition but a production logic that appears independently across Asian cultures wherever rice agriculture developed."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Sake (Japanese fermented rice, filtered)",
+          "connection": "Tapai and sake both use a mould starter (ragi vs koji) to saccharify rice starch before yeast fermentation. The crucial difference: sake filters and clarifies completely; tapai remains turbid. The comparison teaches the role of filtration in transforming a primal fermented rice wine into a premium beverage category."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Tuak (Dayak rice wine, Sarawak/Borneo)",
+          "connection": "Both are Malaysian indigenous fermented rice wines — Tapai (Kristang-Portuguese) vs Tuak (Dayak/Iban indigenous). The comparison within Malaysian culture shows how the same base ingredient (fermented glutinous rice) produces culturally distinct beverages depending on the community's traditions."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Vinho Verde (mainland Portugal, light and fresh)",
+          "connection": "The PCT connection made explicit: Tapai is the Kristang community's lived memory of wine-drinking culture from mainland Portugal, re-expressed in the only locally available fermented material. Both are low-alcohol, fresh, slightly effervescent, and consumed within weeks of production — the production philosophy is inherited, the raw material is localised."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Milky white (unfiltered); translucent in the liquid with rice solids; the black glutinous rice version is deep purple from anthocyanins",
+        "nose": "Lactic sweetness, fresh rice steam, faint floral from the ragi herbs, mild acetone (the alcohol signature of rapid tropical fermentation)",
+        "palate": "Entry: slightly sweet, lactic, with a fresh acidity from organic acids in the fermentation. Mid-palate: the rice grain texture is present in the mouthfeel. Finish: clean, short, slightly tannic from the rice solids",
+        "texture": "Thin-to-medium body; the unfiltered solids create a mild grain texture on the palate; carbonation from active fermentation gives a light prickle",
+        "finish": "20-30 seconds; lactic and grain; the low alcohol means no warmth on the finish; the ragi herb signature provides a faint grassy note",
+        "conclusion": "The most historically charged low-alcohol beverage in the PCT — a 500-year living cultural artefact in a fermentation vessel"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Kristang elder household production (festival tapai)",
+          "criteria": "Black glutinous rice; elder-family ragi recipe (generational; not commercially available); produced for Easter or Christmas in the Portuguese Settlement; the most culturally authentic expression",
+          "markers": "Not commercially available; experience only through the Portuguese Settlement community"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Handmade tapai from Portuguese Settlement market stalls",
+          "criteria": "Fresh production; sold at the Medan Portugis market; standard glutinous rice; the most accessible authentic version",
+          "markers": "Medan Portugis (Portuguese Settlement market), Malacca; MYR 8-15 per bottle; not exported"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Commercial Malaysian tapai (supermarket bottles)",
+          "criteria": "Pasteurised for shelf life; less lactic freshness; ragi character reduced; introduction to the category character at scale",
+          "markers": "Cold Storage or Giant supermarkets, Malaysia; MYR 5-8"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Jarred Korean makgeolli as analogous substitute (outside Malaysia)",
+          "criteria": "Different tradition but closest available proxy for the milky rice wine character; available in Korean grocery stores internationally as a reference point",
+          "markers": "Korean grocery stores; BC ~$8-12 per bottle; educational substitute only"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve chilled at 8-10 degrees C — the lactic freshness degrades rapidly at room temperature in tropical climates; consume within 2-3 days of straining",
+        "vessel": "Small clay cup or simple glass — the visual milky-white appearance is part of the experience; do not serve in a wine glass that implies clarification",
+        "technique": "Tapai in a professional beverage education context: serve as an introduction to the PCT's Southeast Asian chapter, explaining the Kristang community's 500-year survival in Malacca and how a wine-drinking culture expressed itself through local rice fermentation. The educational narrative: 'Portuguese soldiers arrived in Malacca in 1511 with a wine-drinking culture from Vinho Verde country. No grapes grow in Malaysia. This is what they made instead — and their descendants still make it today.'",
+        "programme_position": "PCT heritage education; cross-cultural fermentation comparison; rare beverage storytelling session",
+        "verbal_presentation": "Tapai — Kristang community, Malacca. Five hundred years of Portuguese wine culture expressed through Malaysian rice."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Kristang community households — Portuguese Settlement (Padrao), Malacca",
+        "producer_location": "Jalan Portugis, Portuguese Settlement, Malacca, Malaysia",
+        "key_person": "Kristang Community Association; Regedor (community leader)",
+        "bc_distributor": "Not commercially available outside Malaysia. Educational reference only for North American contexts.",
+        "us_distributor": "Not commercially available in the US",
+        "uk_distributor": "Not commercially available in the UK",
+        "price_tier": "Not applicable for commercial purposes. Educational/experiential category only.",
+        "availability_notes": "Only available in person at the Portuguese Settlement in Malacca, Malaysia. The closest available commercial analogue is Korean makgeolli (unfiltered rice wine) for professional tasting contexts outside Malaysia."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Debal curry (Kristang devil's curry — pork, vinegar, dried chillies, turmeric)",
+          "pairing_type": "complement",
+          "rationale": "Debal is the most recognised Kristang dish — pork in a fiery vinegar-based curry that reflects the Portuguese use of vinegar preservation combined with Malay chilli heat. The lactic sweetness of tapai cuts through the chilli acid and cools the residual heat of the debal in the same way a light rice wine cuts spiced fermented food across all of Asian cuisine."
+        },
+        {
+          "technique_id": "",
+          "dish": "Sugee cake (Kristang semolina-almond cake with brandy)",
+          "pairing_type": "bridge",
+          "rationale": "Sugee cake is the Kristang Christmas centrepiece — semolina, almond, egg yolk, and brandy, baked golden. The lactic grain freshness of tapai bridges the buttery semolina and brandy sweetness of the cake — a cultural bridge pairing that serves both at a Kristang festival meal."
+        }
+      ],
+      "source": "Kristang community documentation; Malacca Portuguese Settlement cultural records; University of Malaya Kristang language and culture research (Maria Marta Matthias); Malaysian Heritage Commission gazetted records",
+      "trail_connection": "PCT-9",
+      "trail_note": "PCT Region 9: Kristang Malacca — the most direct descendant community of the Portuguese Atlantic expansion still producing food and beverage traditions directly traceable to 16th-century Portugal. The Tapai is the PCT's most extraordinary beverage artefact: a wine-drinking tradition re-expressed in rice fermentation and maintained continuously for 500 years in a Muslim-majority country.",
+      "entry_id": "SPR-SOUASI-001",
+      "extracted_at": "2026-04-11T17:22:18.715577+00:00",
+      "batch_number": 2
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "tradition": "coffee",
+  "region": "Brazil — Santos, Cerrado, Sul de Minas",
+  "batch_number": 1,
+  "entry_count": 2,
+  "extracted_at": "2026-04-11T15:32:05.552537+00:00",
+  "entries": [
+    {
+      "tradition": "coffee",
+      "sub_tradition": "natural processed specialty",
+      "region": "Brazil — Sul de Minas / Minas Gerais",
+      "name": "Brazil Sul de Minas — Natural and Pulped Natural",
+      "terroir_origin": "Brazil is the world's largest coffee producer — 40% of global supply — and the PCT's most significant agricultural legacy in the Americas. Coffee (Coffea arabica) was introduced to Brazil in 1727 by Francisco de Melo Palheta, a Portuguese officer who smuggled seeds from French Guiana by charming the Governor's wife into gifting him clippings. Within a century, Brazil had become the world's dominant coffee power. Sul de Minas (Southern Minas Gerais) is the heartland of Brazilian specialty coffee: the mountainous southern region of Minas Gerais state, 800–1,200m altitude, with distinct wet and dry seasons. The altitude moderates tropical heat to create the slow cherry ripening necessary for sugar development and complexity. Sul de Minas coffees are typically softer, sweeter, and lower in acidity than Ethiopian or Colombian alternatives — reflecting Brazil's geological character (old, flat, weathered soils vs. Ethiopia's volcanic highlands). Fazenda Santa Inês (near Carmo de Minas) is the benchmark Sul de Minas estate: their Yellow Bourbon variety on red-clay soil at 1,100m produces consistently top-rated scores at Cup of Excellence.",
+      "production_technique": "Brazil's primary processing method is natural (dry process) — the most ancient method globally and still dominant because Brazil's dry harvest season (June–September) provides the low humidity required for slow cherry drying on raised beds or patios. Natural process: whole cherries dried in the sun for 3–5 weeks; the fruit pulp ferments against the bean, imparting fruit-forward, wine-like, chocolatey complexity. Pulped natural (honey process): the cherry skin is removed mechanically but varying amounts of mucilage (the sticky fruit layer) are left on the bean during drying. Yellow honey: minimal mucilage, 10–14 days; Red honey: more mucilage, 14–21 days; Black honey: maximum mucilage, 21–30+ days — approaching natural process complexity. Brazil's Bourbon variety (Yellow Bourbon, Red Bourbon) and Mundo Novo are the primary heritage arabica varieties at Sul de Minas specialty estates. Catuaí and Acaiá are the commercially dominant processed varieties. Roast profile: medium to medium-dark for espresso use; light-medium for filter/pour-over specialty consumption. The Cup of Excellence programme (Brazil, annual) has raised Brazilian specialty coffee's global profile since 1999.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Australian Shiraz (McLaren Vale / Barossa)",
+          "connection": "Both express warm-climate, sun-ripened terroir through fruit-forward, low-acid profiles with chocolate and dark fruit character. Brazilian natural process coffee and Australian Shiraz occupy the same sensory register: ripe, generous, low-tension beverages that reward casual enjoyment over analytical dissection. Both challenge the Northern Hemisphere assumption that complexity requires high acidity"
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Ethiopian Yirgacheffe (washed process)",
+          "connection": "The defining contrast within specialty coffee: Ethiopian washed Yirgacheffe (floral, jasmine, citrus, bright acidity) vs. Brazilian natural Sul de Minas (chocolate, dried cherry, nuts, low acidity). Both are essential to any serious coffee programme — they represent opposite poles of arabica expression and demonstrate that terroir in coffee is as profound as in wine"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Brewed: medium brown to deep brown depending on roast; crema-dense in espresso; clear in filter brew at lighter roasts",
+        "nose": "Natural process: dark chocolate, dried cherry, blueberry, dried fig, wine-like fermentation notes, hazelnut. Pulped natural: milk chocolate, caramel, stone fruit without the full fermented character of natural. Both: warm, sweet, inviting",
+        "palate": "Low-to-medium acidity (the hallmark of Brazilian coffee); full body; long sweet finish; chocolate and nut persistence; Natural: additional dried fruit and slight winey complexity; Pulped natural: cleaner, more caramel-milk chocolate. Excellent cold brew base: low acidity reads as smoothness at cold temperature",
+        "conclusion": "Brazil is the world's coffee default — the base blend in most commercial espresso. Single-origin Sul de Minas specialty demonstrates what that default looks like when executed with precision. Essential on any serious coffee programme as the sweet, chocolate anchor in a cupping flight."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Cup of Excellence Winner / Single Farm Natural",
+          "criteria": "Cup of Excellence scored 87+; named estate and lot; Yellow/Red Bourbon or Mundo Novo variety; natural or black honey process",
+          "markers": "Fazenda Santa Inês; Daterra; Cup of Excellence auction lot; micro-lot packaging; roasters: Intelligentsia, Counter Culture, George Howell"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Specialty Single Origin",
+          "criteria": "Named farm or co-op; traceable lot; SCA score 84+; specialty roaster sourced",
+          "markers": "Carmo de Minas or Sul de Minas origin; specialty roaster label; farm name prominent"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Commercial Specialty",
+          "criteria": "Region-labelled; consistent quality; SCA score 80–84; widely distributed specialty",
+          "markers": "Brazil Sul de Minas origin; specialty roaster mid-range; espresso blend base quality"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Santos Commercial",
+          "criteria": "Santos grading system (export quality grade); Santos 2/3 (screen size grading); the conventional trade standard",
+          "markers": "Santos port designation; commercial blend component; not traceable to farm"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Espresso: 90–93°C extraction; filter/pour-over: 93–96°C; cold brew: 4°C/12–24hr steep",
+        "vessel": "Espresso: demitasse (60–90mL); filter: ceramic pour-over or Chemex; cold brew: tall glass over ice",
+        "technique": "Espresso: 1:2 ratio (18g in : 36g out), 26–30 seconds. Light-roast filter: Hario V60, 16:1 water:coffee ratio, 3-minute total brew time. Cold brew: coarse grind, 12:1 ratio, cold immersion 12 hours — Brazil naturals are ideal cold brew bases due to low acidity. Milk pairing: Brazil's chocolate-caramel notes are the ideal espresso base for flat whites and cortados — milk amplifies the sweetness without fighting the acidity",
+        "programme_position": "Espresso blend foundation; single origin filter option; cold brew base. The most versatile and commercially important origin on any café programme",
+        "verbal_presentation": "Brazil Sul de Minas — natural process from the hillsides of Minas Gerais. Dried in the sun on raised beds; the cherry fruit ferments against the bean for four weeks. Dark chocolate, dried cherry, hazelnut. The coffee that runs the world's espresso machines."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Fazenda Santa Inês (Carmo de Minas, Sul de Minas)",
+        "producer_location": "Carmo de Minas, Sul de Minas, Minas Gerais, Brazil",
+        "key_person": "Renzo Carvalho Dias (owner, Fazenda Santa Inês)",
+        "production_volume": "~100,000kg green coffee annually; among Brazil's most awarded specialty estates",
+        "certifications": [
+          "Rainforest Alliance (multiple Sul de Minas producers)",
+          "Cup of Excellence winner multiple years",
+          "BSCA (Brazilian Specialty Coffee Association) member"
+        ],
+        "bc_distributor": "Alpha Coffee (Vancouver specialty importer) [NEEDS VERIFICATION]; 49th Parallel Coffee (Vancouver roaster, sources Brazilian specialty) [NEEDS VERIFICATION]",
+        "us_distributor": "Intelligentsia Coffee (direct trade partner, sourcing Sul de Minas); Counter Culture Coffee (direct trade Sul de Minas); Daterra coffee (direct export): daterra.com.br",
+        "uk_distributor": "Has Bean Coffee; Workshop Coffee; Monmouth Coffee (all source Brazilian specialty)",
+        "price_tier": "Specialty (green): US$4–8/lb; roasted retail: $18–35 per 250g; Cup of Excellence lots: $10–25/lb green at auction",
+        "availability_notes": "Brazilian specialty widely available through specialty roasters in BC and US. Fazenda Santa Inês specifically: look for it on café menus as a featured single origin. For commercial programme use: 49th Parallel (BC), Intelligentsia (US national), Counter Culture (US national) all source traceable Sul de Minas lots."
+      },
+      "trail_connection": "PCT-13",
+      "trail_note": "Coffee in Brazil is the PCT's largest agricultural legacy by volume. Palheta's 1727 smuggling of French Guiana coffee seeds (the African-origin arabica brought to the Americas by the French) gave Brazil what became the world's most important coffee industry within 100 years. The Portuguese colonial plantation system — using enslaved African labour (the WADT intersection) — built the infrastructure that still shapes Brazilian coffee geography today. Sul de Minas's small-farm specialty revolution (1990s–present) is the post-colonial redemption arc: individual fazendas winning Cup of Excellence on quality rather than volume.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Brigadeiro (Brazilian chocolate truffle)",
+          "pairing_type": "complement",
+          "rationale": "Brazil's iconic confection and its coffee are made from the same flavour register: dark chocolate and condensed milk in the brigadeiro mirror the coffee's chocolate-caramel body"
+        },
+        {
+          "technique_id": "",
+          "dish": "Canelé de Bordeaux",
+          "pairing_type": "complement",
+          "rationale": "The caramelised beeswax crust and custard interior of the canelé echo the natural-process coffee's caramel-fruit complexity exactly"
+        }
+      ],
+      "source": "Brazilian Specialty Coffee Association (BSCA) data; Cup of Excellence Brazil results 1999–2025; Fazenda Santa Inês farm documentation; Intelligentsia direct trade sourcing notes",
+      "entry_id": "COF-BRASUL-002",
+      "extracted_at": "2026-04-11T15:32:05.551797+00:00",
+      "batch_number": 1
+    },
+    {
+      "tradition": "coffee",
+      "sub_tradition": "cerrado specialty",
+      "region": "Brazil — Cerrado Mineiro",
+      "name": "Brazil Cerrado Mineiro — The Savanna Coffee",
+      "terroir_origin": "The Cerrado Mineiro (Cerrado of Minas Gerais) is the first Brazilian coffee region to receive Geographical Indication (GI) status — awarded in 2005. The Cerrado is a vast tropical savanna biome covering central Brazil; the coffee-growing portion sits at 800–1,300m on the western plateau of Minas Gerais, with a dramatically different climate than Sul de Minas: the Cerrado has a very defined dry season (April–September) with 0mm rainfall, followed by a wet season with concentrated rainfall. This extreme seasonality — shared with few other coffee regions — produces uniform cherry ripening, enabling mechanical harvesting on flat terrain (unlike the steep hillsides of Sul de Minas). The result: large-scale, highly mechanised production with the consistency and traceability that specialty buyers require. Patrocínio, Araxá, and Patos de Minas are the main municipalities. The flat savanna terrain and mechanisation make Cerrado the most technologically advanced coffee production system in the world, combining scale with speciality quality.",
+      "production_technique": "Cerrado's dry season enables precision control of the natural and pulped natural processes. Mechanical harvesting (stripping) is standard: tractor-mounted or manual strippers remove all cherries simultaneously. Because Cerrado's climate ensures uniform ripening, mechanical harvesting does not significantly compromise quality (unlike regions where ripening is staggered). After harvest: natural, pulped natural, or washed processing depending on estate. Daterra Estate (Patrocínio, Cerrado) pioneered precision specialty in the Cerrado: varietal separation (Icatu, Bourbon, Catuaí), controlled fermentation tanks, moisture-controlled drying rooms, and block-by-block traceability. Daterra's Masterpiece Series achieves SCA scores above 90 — extraordinary for mechanically-harvested coffee. The Cerrado's high altitude combined with UV-intense savanna sun contributes to high sugar concentration in the cherry — translating to sweetness and body in the cup.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Marlborough Sauvignon Blanc (New Zealand)",
+          "connection": "Both are defined by their distinct continental climate (cold/dry vs wet/warm alternation) producing flavour-consistent, commercially reliable, technology-enabled quality products. Marlborough SB and Cerrado coffee both democratised specialty production through scale-friendly mechanisation that delivers consistent flavour at volume"
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Colombian Huila Washed Arabica",
+          "connection": "Direct comparison: Cerrado natural (low acidity, chocolate, caramel, full body) vs. Colombian Huila washed (bright acidity, stone fruit, tea-like clarity). Both are benchmark quality in their respective styles. Huila shows what washed process achieves; Cerrado natural shows what sun-drying adds. Both are essential programme references"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Medium-deep brown in filter brew; dense espresso crema in medium-dark roast",
+        "nose": "Milk chocolate, caramel, toffee, Brazil nut, dried plum; cleaner and less winey than Sul de Minas natural; the Cerrado's dry climate reduces over-fermentation risk",
+        "palate": "Full body (fuller than Sul de Minas due to higher density cherry); low-to-medium acidity; long sweet caramel-chocolate finish; excellent base for espresso and milk drinks; Daterra Masterpiece expressions add layered complexity from varietal separation",
+        "conclusion": "Cerrado Mineiro demonstrates that scale and quality are not opposites. Daterra Estate is the world's benchmark for precision large-scale specialty coffee production. Their GI and Cup of Excellence wins have permanently advanced Brazilian coffee's reputation beyond commodity."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Daterra Masterpiece / Cup of Excellence Reserve",
+          "criteria": "SCA 90+; varietal-specific lot; block traceability; precision fermentation; Daterra Patrocínio benchmark",
+          "markers": "Daterra Masterpiece Series; Cup of Excellence Cerrado winner; £30–50 per 250g roasted"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Cerrado GI Specialty",
+          "criteria": "GI-certified Cerrado Mineiro origin; SCA 84+; traceable farm; specialty roaster sourced",
+          "markers": "GI designation on bag; Patrocínio or Araxá origin; specialty roaster purchase"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Cerrado Commercial Specialty",
+          "criteria": "Cerrado region; SCA 80–84; consistent; widely traded by specialty importers",
+          "markers": "Cerrado label; commercial specialty green import; mid-range roaster sourcing"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Cerrado Commercial Grade",
+          "criteria": "Santos export grading; bulk mechanically harvested; commodity market price",
+          "markers": "Santos 2 or 3 grading; blend component; no farm traceability"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Espresso: 91–93°C; filter: 93–95°C; cold brew: 4°C",
+        "vessel": "Espresso or filter as required by programme",
+        "technique": "Cerrado naturals excel as espresso blends and as single-origin filter at medium roast. Daterra Masterpiece expressions warrant single-origin treatment: Hario V60 or Kalita Wave, medium-coarse grind, 15:1 water:coffee ratio. Cold brew: excellent — full body, sweetness, low acidity, 16:1 ratio, 14hr cold steep",
+        "programme_position": "Espresso blend anchor or single origin filter feature; cold brew base. The most cost-effective specialty origin for high-volume espresso programmes",
+        "verbal_presentation": "Cerrado Mineiro — Brazil's first GI-protected coffee region. Savanna plateau, uniform harvest, dried in the intense Cerrado sun. The world's most precise large-scale specialty coffee production: milk chocolate, caramel, full body."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Daterra Estate (Patrocínio, Cerrado Mineiro)",
+        "producer_location": "Patrocínio, Cerrado Mineiro, Minas Gerais, Brazil",
+        "key_person": "Luis Paulo Dias Pereira Filho (Daterra owner)",
+        "production_volume": "~1.5 million kg green coffee annually; largest premium single-estate in Brazil",
+        "certifications": [
+          "Cerrado Mineiro GI (first Brazilian coffee GI, 2005)",
+          "Rainforest Alliance",
+          "BSCA member",
+          "Multiple Cup of Excellence awards"
+        ],
+        "bc_distributor": "49th Parallel Coffee (Vancouver — sources Cerrado specialty) [NEEDS VERIFICATION for Daterra specifically]; Nemesis Coffee [NEEDS VERIFICATION]",
+        "us_distributor": "Intelligentsia Coffee (direct trade Daterra); Stumptown Coffee (Portland, sources Cerrado); direct green import: daterra.com.br/exportacao",
+        "uk_distributor": "Has Bean; Origin Coffee; Round Hill Roastery",
+        "price_tier": "Specialty green: $4–9/lb; Masterpiece auction lots: $15–35/lb; roasted retail: $20–45 per 250g",
+        "availability_notes": "Daterra available through specialty roasters globally. BC: 49th Parallel, Prototype Coffee, and small batch roasters source Cerrado. US: Intelligentsia (Chicago/LA/NY), Stumptown (national) carry Cerrado-origin lots."
+      },
+      "trail_connection": "PCT-13",
+      "trail_note": "The Cerrado's coffee history is inseparable from Brazil's 20th-century agricultural modernisation — a post-colonial effort to turn the 'empty' savanna into productive farmland using government-funded Embrapa research stations. The PCT connection: the original coffee brought by Palheta (1727) was Ethiopian-origin arabica propagated through French Guiana, carried on the same Atlantic trade routes that defined Portuguese colonial navigation. The Cerrado's arabica are direct botanical descendants of that 18th-century Portuguese smuggling mission.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Pain au chocolat (croissant pastry with dark chocolate)",
+          "pairing_type": "complement",
+          "rationale": "Cerrado's milk chocolate and caramel profile mirror the pastry's butter-chocolate richness — the most natural espresso-pastry pairing on any café programme"
+        },
+        {
+          "technique_id": "",
+          "dish": "Pão de queijo (Brazilian cheese bread)",
+          "pairing_type": "complement",
+          "rationale": "Brazil's iconic cheese-tapioca roll pairs with Brazilian coffee by terroir logic: the warm savanna character of the Cerrado coffee echoes the manioc starch and queijo minas of the same region"
+        }
+      ],
+      "source": "Cerrado Mineiro GI documentation (EMBRAPA); Daterra Estate official documentation; Cup of Excellence Brazil annual results; BSCA membership records",
+      "entry_id": "COF-BRACER-003",
+      "extracted_at": "2026-04-11T15:32:05.552107+00:00",
+      "batch_number": 1
+    }
+  ]
+}

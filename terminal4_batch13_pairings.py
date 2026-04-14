@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+"""terminal4_batch13_pairings.py — pairings for products 447-464 (PNW wines)"""
+import psycopg2
+
+CONN = "postgres://provenance_tester_1:GBN1MbQJMbe_7Ze2Is6dZQSK4hGwXkbW@localhost:15432/provenance_tester_1?sslmode=disable"
+
+SQL = """
+INSERT INTO pairing_intelligence
+  (beverage_product_id, food_flavour_profile, pairing_type, flavour_logic, meal_context, confidence)
+VALUES
+  (%(beverage_product_id)s, %(food_flavour_profile)s, %(pairing_type)s, %(flavour_logic)s, %(meal_context)s, %(confidence)s)
+"""
+
+PAIRINGS = [
+    # 447 — Garry Oaks Gewurztraminer (BC, Gulf Islands)
+    {"beverage_product_id": 447, "food_flavour_profile": "dungeness crab cakes with ginger aioli and pickled daikon", "pairing_type": "complement", "flavour_logic": "BC Gewurztraminer's lychee and rose petal aromatics complement delicate crab; ginger bridges the wine's spice while the crisp acidity cuts through the fried coating.", "meal_context": "starter", "confidence": "classic"},
+    {"beverage_product_id": 447, "food_flavour_profile": "Thai red curry with coconut milk, kaffir lime and jasmine rice", "pairing_type": "bridge", "flavour_logic": "Gewurztraminer's floral intensity and residual sweetness bridge the aromatic spice of Thai curry; the wine's body handles the coconut milk richness.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 447, "food_flavour_profile": "fresh chèvre with honey, toasted walnuts and thyme", "pairing_type": "complement", "flavour_logic": "The wine's floral and spiced character complements soft goat's cheese; honey and thyme amplify Gewurztraminer's aromatic generosity.", "meal_context": "cheese", "confidence": "established"},
+    {"beverage_product_id": 447, "food_flavour_profile": "BC spot prawns with chilli butter and grilled sourdough", "pairing_type": "elevate", "flavour_logic": "Garry Oaks' terroir-expressive Gewurztraminer elevates the sweetness of Pacific spot prawns; chilli heat is tempered by the wine's aromatic lift.", "meal_context": "main", "confidence": "established"},
+
+    # 448 — Fort Berens Riesling (BC, Lillooet)
+    {"beverage_product_id": 448, "food_flavour_profile": "Pacific halibut with lemon butter, capers and dill", "pairing_type": "complement", "flavour_logic": "Lillooet Riesling's citrus precision and mineral edge complement the clean, flaky texture of Pacific halibut; lemon and dill echo the wine's aromatic profile.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 448, "food_flavour_profile": "pork schnitzel with potato salad and apple slaw", "pairing_type": "complement", "flavour_logic": "Riesling and pork is a classic pairing; Fort Berens' off-dry style balances the fat of schnitzel while apple slaw mirrors the wine's fruit character.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 448, "food_flavour_profile": "smoked salmon with crème fraîche, capers and pickled cucumber", "pairing_type": "bridge", "flavour_logic": "Riesling's acidity and petrol minerality bridge naturally to cold-smoked Pacific salmon; the wine's slight sweetness balances the salt and smoke.", "meal_context": "starter", "confidence": "classic"},
+    {"beverage_product_id": 448, "food_flavour_profile": "BC apple and cheddar flatbread with caramelised onion", "pairing_type": "bridge", "flavour_logic": "Off-dry Riesling bridges sweet-savoury combinations beautifully; BC apples echo the wine's fruit while cheddar's acidity mirrors the wine's structure.", "meal_context": "casual", "confidence": "established"},
+
+    # 449 — Recline Ridge Bacchus (BC)
+    {"beverage_product_id": 449, "food_flavour_profile": "steamed BC spot prawns with garlic butter", "pairing_type": "complement", "flavour_logic": "Bacchus's Muscat-like aromatics and lively acidity complement the natural sweetness of BC spot prawns; garlic butter bridges the wine's savoury undertone.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 449, "food_flavour_profile": "cucumber and cream cheese finger sandwiches with fresh dill", "pairing_type": "complement", "flavour_logic": "Bacchus's floral, green apple and herbal notes complement delicate cucumber sandwiches; the wine's crisp finish keeps the pairing light and fresh.", "meal_context": "amuse", "confidence": "classic"},
+    {"beverage_product_id": 449, "food_flavour_profile": "Vietnamese spring rolls with peanut dipping sauce and fresh herbs", "pairing_type": "bridge", "flavour_logic": "Bacchus's aromatic expressiveness bridges the fragrant herb and peanut elements of spring rolls; the wine's acidity cuts through the oil.", "meal_context": "starter", "confidence": "suggested"},
+    {"beverage_product_id": 449, "food_flavour_profile": "local brie with fig jam and toasted hazelnuts", "pairing_type": "complement", "flavour_logic": "Bacchus's floral and stone-fruit character complements soft ripened brie; fig jam bridges the wine's sweetness and the cheese's creamy paste.", "meal_context": "cheese", "confidence": "established"},
+
+    # 450 — Hillside Estate Muscat Ottonel (BC, Naramata)
+    {"beverage_product_id": 450, "food_flavour_profile": "BC stone fruit pavlova with peach compote and passion fruit curd", "pairing_type": "complement", "flavour_logic": "Muscat Ottonel's intensely floral, grapey character complements stone fruit desserts naturally; the wine's sweetness and acidity balance the meringue and fruit.", "meal_context": "dessert", "confidence": "classic"},
+    {"beverage_product_id": 450, "food_flavour_profile": "foie gras terrine with brioche, sauternes jelly and pickled grapes", "pairing_type": "contrast", "flavour_logic": "Sweet, aromatic Muscat Ottonel contrasts the savoury richness of foie gras; the wine's freshness cuts through the fat while its floral notes add elegance.", "meal_context": "starter", "confidence": "established"},
+    {"beverage_product_id": 450, "food_flavour_profile": "almond tart with apricot glaze and vanilla crème anglaise", "pairing_type": "complement", "flavour_logic": "Muscat Ottonel's honey, apricot and almond notes mirror the tart's core flavours; the wine's aromatic intensity complements without overwhelming the pastry.", "meal_context": "dessert", "confidence": "established"},
+    {"beverage_product_id": 450, "food_flavour_profile": "spiced duck liver pâté with apple chutney and walnut bread", "pairing_type": "bridge", "flavour_logic": "An aromatic white's sweetness and spice bridge to duck liver's rich flavour; apple chutney provides the acidity that the pairing needs.", "meal_context": "starter", "confidence": "suggested"},
+
+    # 451 — Moon Curser Tannat (BC, Osoyoos)
+    {"beverage_product_id": 451, "food_flavour_profile": "slow-braised short rib with bone marrow crust and root vegetable purée", "pairing_type": "complement", "flavour_logic": "Tannat's massive tannin structure is built for fatty, rich cuts; the bone marrow fat integrates the tannins while the root vegetable bridges the wine's dark fruit.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 451, "food_flavour_profile": "aged mimolette and manchego with membrillo and Marcona almonds", "pairing_type": "complement", "flavour_logic": "Tannat's robust structure handles aged hard cheeses exceptionally well; the wine's firm tannins are softened by the cheese's fat and nutty intensity.", "meal_context": "cheese", "confidence": "established"},
+    {"beverage_product_id": 451, "food_flavour_profile": "venison burger with aged gouda, caramelised onion and truffle mayo", "pairing_type": "complement", "flavour_logic": "BC Tannat's intensity demands game meat's depth; gouda fat and truffle integrate the wine's considerable tannins.", "meal_context": "casual", "confidence": "established"},
+    {"beverage_product_id": 451, "food_flavour_profile": "Basque-style txuleton ribeye with fleur de sel and Piquillo peppers", "pairing_type": "elevate", "flavour_logic": "The Basque origins of Tannat resonate with Basque beef preparations; the wine's structure and blackberry fruit elevate premium ribeye to a celebratory experience.", "meal_context": "main", "confidence": "adventurous"},
+
+    # 452 — Thornhaven Gewurztraminer (BC, Summerland)
+    {"beverage_product_id": 452, "food_flavour_profile": "Indian spiced lamb samosas with mint chutney and tamarind sauce", "pairing_type": "bridge", "flavour_logic": "Gewurztraminer's spice and aromatic richness bridge the warm spice of lamb samosas; mint chutney echoes the wine's herbal freshness.", "meal_context": "aperitif", "confidence": "established"},
+    {"beverage_product_id": 452, "food_flavour_profile": "BC asparagus with Hollandaise and crispy shallots", "pairing_type": "complement", "flavour_logic": "Thornhaven's Gewurztraminer handles asparagus's wine-difficult character with its aromatic power; Hollandaise's richness is balanced by the wine's acidity.", "meal_context": "starter", "confidence": "suggested"},
+    {"beverage_product_id": 452, "food_flavour_profile": "miso-glazed black cod with pickled ginger and spring onion", "pairing_type": "bridge", "flavour_logic": "Gewurztraminer's lychee and ginger notes bridge umami-rich black cod; the wine's body matches the buttery fish without overwhelming it.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 452, "food_flavour_profile": "fresh lychee, rose petal and raspberry parfait", "pairing_type": "complement", "flavour_logic": "The wine's defining fruit mirrors this dessert directly — a floral, aromatic partnership where the wine's aromatics and the dessert's profile are in complete harmony.", "meal_context": "dessert", "confidence": "established"},
+
+    # 453 — Wilridge Rattlesnake Hills Syrah (Washington)
+    {"beverage_product_id": 453, "food_flavour_profile": "smoked lamb shoulder with za'atar crust and pomegranate molasses", "pairing_type": "complement", "flavour_logic": "Washington Syrah's smoky, meaty character and pepper notes complement slow-smoked lamb; za'atar and pomegranate amplify the wine's spice and dark fruit profile.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 453, "food_flavour_profile": "elk medallions with huckleberry reduction and wild mushroom ragout", "pairing_type": "elevate", "flavour_logic": "Pacific Northwest Syrah elevates local game; huckleberry's tart-sweet echo of the wine's dark fruit, and mushroom's earthiness bridge the wine's complexity.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 453, "food_flavour_profile": "grilled Italian sausages with roasted red peppers and polenta", "pairing_type": "complement", "flavour_logic": "Syrah's pepper and spice align with fennel sausage; roasted red pepper bridges the wine's savoury depth and polenta's richness integrates the tannins.", "meal_context": "casual", "confidence": "established"},
+    {"beverage_product_id": 453, "food_flavour_profile": "duck à l'orange with charred scallion and green peppercorn jus", "pairing_type": "bridge", "flavour_logic": "Rattlesnake Hills Syrah's pepper and dark fruit bridge between duck's richness and the citrus in the sauce; a Northern Rhône-inspired pairing applied to PNW terroir.", "meal_context": "main", "confidence": "suggested"},
+
+    # 454 — Destiny Ridge Wahluke Slope Cabernet Sauvignon (Washington)
+    {"beverage_product_id": 454, "food_flavour_profile": "prime Washington beef ribeye with truffle butter and grilled asparagus", "pairing_type": "complement", "flavour_logic": "Wahluke Slope Cabernet's density and black-fruit depth are matched to the richness of prime ribeye; truffle butter elevates both the beef and the wine.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 454, "food_flavour_profile": "cedar-planked king salmon with dill and lemon caper sauce", "pairing_type": "contrast", "flavour_logic": "An adventurous contrast: the smoke from cedar plank bridges Cabernet's oak character while the wine's structure cuts through the salmon's rich fat.", "meal_context": "main", "confidence": "adventurous"},
+    {"beverage_product_id": 454, "food_flavour_profile": "lamb kofta with roasted garlic hummus and grilled flatbread", "pairing_type": "complement", "flavour_logic": "Washington Cab's cassis and herb notes complement spiced ground lamb; hummus's garlic-tahini richness softens the wine's structure.", "meal_context": "casual", "confidence": "established"},
+    {"beverage_product_id": 454, "food_flavour_profile": "aged Washington cheddar with blackberry preserves and walnut crackers", "pairing_type": "complement", "flavour_logic": "The wine's dark berry fruit mirrors blackberry preserves while aged cheddar's intensity stands up to the Cab's structure; walnuts bridge the oak.", "meal_context": "cheese", "confidence": "established"},
+
+    # 455 — Ancient Lakes of Columbia Valley Riesling (Washington)
+    {"beverage_product_id": 455, "food_flavour_profile": "Columbia River steelhead with dill crème fraîche and cucumber ribbon", "pairing_type": "complement", "flavour_logic": "Columbia Valley Riesling's mineral precision complements local steelhead trout; dill and cucumber echo the wine's herbal freshness and the river's cool-climate terroir.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 455, "food_flavour_profile": "Korean bibimbap with gochujang, sesame and assorted banchan", "pairing_type": "bridge", "flavour_logic": "Riesling's off-dry sweetness bridges gochujang's fermented heat; the wine's acidity cleanses between bites of the varied banchan flavours.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 455, "food_flavour_profile": "Dungeness crab with drawn butter and lemon", "pairing_type": "complement", "flavour_logic": "Classic PNW pairing — Ancient Lakes Riesling's citrus and mineral notes complement Dungeness crab's sweet, briney flesh while the wine's acidity cuts through drawn butter.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 455, "food_flavour_profile": "fresh peach and ricotta crostini with honey and black pepper", "pairing_type": "complement", "flavour_logic": "Off-dry Riesling's peach and apricot notes are amplified by fresh peach; ricotta's creaminess bridges the wine's structure and honey echoes its sweetness.", "meal_context": "amuse", "confidence": "established"},
+
+    # 456 — Fielding Hills Lake Chelan Syrah (Washington)
+    {"beverage_product_id": 456, "food_flavour_profile": "roast pork belly with apple and fennel slaw and crackling", "pairing_type": "complement", "flavour_logic": "Lake Chelan Syrah's pepper, smoke and dark fruit complement pork belly's richness; fennel echoes the wine's anise note while crackling's salt heightens fruit.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 456, "food_flavour_profile": "duck prosciutto with fig jam and truffle honey", "pairing_type": "complement", "flavour_logic": "Syrah's meaty depth and smoke pair naturally with cured duck; fig and truffle honey echo the wine's dark fruit and earthy complexity.", "meal_context": "amuse", "confidence": "established"},
+    {"beverage_product_id": 456, "food_flavour_profile": "local Okanagan lamb with lavender jus and grilled courgette", "pairing_type": "bridge", "flavour_logic": "The Chelan terroir's Syrah bridges to lamb's savoury richness; lavender bridges the wine's floral garrigue while courgette adds a fresh counterpoint.", "meal_context": "main", "confidence": "suggested"},
+    {"beverage_product_id": 456, "food_flavour_profile": "smoked beef brisket with pickled jalapeño and corn tortillas", "pairing_type": "complement", "flavour_logic": "Syrah's smoke and spice are amplified by smoked brisket; jalapeño heat is tamed by the wine's fruit concentration and the tortilla's starchiness.", "meal_context": "casual", "confidence": "established"},
+
+    # 457 — Naches Heights Cabernet Franc (Washington)
+    {"beverage_product_id": 457, "food_flavour_profile": "roasted bell pepper and goat cheese tart with fresh thyme", "pairing_type": "complement", "flavour_logic": "Cabernet Franc's green bell pepper aromatic complements roasted pepper tart; goat cheese's tang matches the wine's brisk acidity and fresh herb note.", "meal_context": "starter", "confidence": "classic"},
+    {"beverage_product_id": 457, "food_flavour_profile": "grilled lamb chops with herb chimichurri and roasted garlic", "pairing_type": "complement", "flavour_logic": "Naches Heights Cab Franc's cassis and herbaceous quality complement lamb; chimichurri's herb acidity brightens both the meat and the wine's fruit.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 457, "food_flavour_profile": "duck rillettes with cornichons, Dijon mustard and sourdough", "pairing_type": "bridge", "flavour_logic": "Cab Franc's savoury depth and forest berry notes bridge to duck rillettes' richness; mustard's acidity cuts through the fat and echoes the wine's herbaceous edge.", "meal_context": "starter", "confidence": "established"},
+    {"beverage_product_id": 457, "food_flavour_profile": "eggplant caponata with pine nuts, raisins and fresh basil on crostini", "pairing_type": "complement", "flavour_logic": "Cab Franc's medium body and herbal character complement the sweet-sour of caponata; pine nuts and raisin mirror the wine's complexity.", "meal_context": "aperitif", "confidence": "suggested"},
+
+    # 458 — Snipes Family Winery Old Vine Grenache (Washington)
+    {"beverage_product_id": 458, "food_flavour_profile": "Spanish-style chorizo and potato stew with smoked paprika and saffron", "pairing_type": "complement", "flavour_logic": "Old vine Grenache's spiced cherry and dried herb character aligns with Spanish chorizo; smoked paprika bridges the wine's garrigue notes.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 458, "food_flavour_profile": "Moroccan lamb tagine with preserved lemon, olives and couscous", "pairing_type": "bridge", "flavour_logic": "Grenache's warm fruit and spice profile bridges the aromatic complexity of lamb tagine; preserved lemon's acidity keeps the rich stew bright on the palate.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 458, "food_flavour_profile": "burrata with heirloom tomatoes, basil oil and fleur de sel", "pairing_type": "complement", "flavour_logic": "Old vine Grenache's vibrant fruit and lower tannin complement the simplicity of burrata and tomato; the wine's acidity mirrors the tomato's brightness.", "meal_context": "starter", "confidence": "established"},
+    {"beverage_product_id": 458, "food_flavour_profile": "grilled portobello mushroom with blue cheese and roasted walnut stuffing", "pairing_type": "complement", "flavour_logic": "Grenache's earthy, fruit-forward character complements the meaty mushroom; blue cheese and walnut add savouriness that the wine's fruit balances.", "meal_context": "main", "confidence": "suggested"},
+
+    # 459 — Ledger David Southern Oregon Merlot (Oregon)
+    {"beverage_product_id": 459, "food_flavour_profile": "herb-crusted lamb rack with flageolet beans and jus", "pairing_type": "complement", "flavour_logic": "Southern Oregon Merlot's plum, herb and soft tannins make a natural partner for herb-crusted lamb; flageolet beans add earthiness that bridges the wine.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 459, "food_flavour_profile": "wild mushroom and Brie grilled sandwich with truffle butter", "pairing_type": "bridge", "flavour_logic": "Merlot's earthy plum character bridges wild mushroom and Brie; truffle butter amplifies the wine's secondary earthiness.", "meal_context": "casual", "confidence": "established"},
+    {"beverage_product_id": 459, "food_flavour_profile": "tomato-braised pork cheeks with creamy polenta and gremolata", "pairing_type": "complement", "flavour_logic": "Merlot's supple texture and dark fruit complement the yielding texture of braised pork cheeks; tomato base bridges the wine's acidity.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 459, "food_flavour_profile": "aged cheddar and local charcuterie with quince paste", "pairing_type": "complement", "flavour_logic": "Southern Oregon Merlot's approachable fruit and medium structure work harmoniously with a casual cheese and charcuterie spread; quince echoes the wine's fruit.", "meal_context": "casual", "confidence": "established"},
+
+    # 460 — Eyrie Vineyards Original Vines Pinot Gris (Oregon)
+    {"beverage_product_id": 460, "food_flavour_profile": "Dungeness crab bisque with tarragon crème and sourdough croutons", "pairing_type": "complement", "flavour_logic": "Eyrie's historic Pinot Gris with its weight and richness complements Dungeness bisque naturally; tarragon's anise note echoes the wine's herbal quality.", "meal_context": "starter", "confidence": "classic"},
+    {"beverage_product_id": 460, "food_flavour_profile": "sautéed chanterelle mushrooms on brioche with soft scrambled eggs", "pairing_type": "bridge", "flavour_logic": "Original Vines Pinot Gris's rich, smoky depth bridges earthly chanterelles and egg; the wine's texture matches the brioche's buttery softness.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 460, "food_flavour_profile": "Oregon albacore tuna crudo with yuzu, ginger and micro herbs", "pairing_type": "complement", "flavour_logic": "Willamette Pinot Gris's citrus and subtle smoke complement Pacific albacore; yuzu bridges the wine's citrus dimension and ginger echoes its textural richness.", "meal_context": "starter", "confidence": "established"},
+    {"beverage_product_id": 460, "food_flavour_profile": "Alsatian-style onion tart with crème fraîche and caraway", "pairing_type": "complement", "flavour_logic": "A nod to Alsace origins: rich Pinot Gris is the canonical companion to onion tart; caraway's warmth and crème fraîche's richness both complement the wine.", "meal_context": "starter", "confidence": "classic"},
+
+    # 461 — Cristom Mt. Jefferson Cuvée Pinot Noir (Oregon, Willamette Valley)
+    {"beverage_product_id": 461, "food_flavour_profile": "pan-roasted wild salmon with Oregon pinot noir reduction and hazelnut butter", "pairing_type": "complement", "flavour_logic": "The classic Willamette Valley pairing — Pinot Noir and Pacific salmon; the wine's red cherry, spice and silky tannins complement the salmon's richness.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 461, "food_flavour_profile": "roasted duck breast with Pinot-braised cherries and potato gratin", "pairing_type": "complement", "flavour_logic": "Cristom's Pinot Noir's red fruit and earthy complexity are the natural partners for duck; cherry reduction echoes the wine while potato gratin softens the tannins.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 461, "food_flavour_profile": "Oregon truffle and celeriac risotto with aged Willamette Valley cheese", "pairing_type": "elevate", "flavour_logic": "A showcase of Willamette Valley terroir — Mt. Jefferson Cuvée's earthy Pinot elevates the local truffle and regional cheese; the wine's complexity deepens the entire dish.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 461, "food_flavour_profile": "mushroom duxelles in puff pastry with tarragon cream sauce", "pairing_type": "bridge", "flavour_logic": "Pinot Noir's affinity for mushroom is legendary; the duxelles' earthy intensity bridges the wine's complexity and tarragon adds herbal freshness.", "meal_context": "main", "confidence": "established"},
+
+    # 462 — Bradley Vineyards Elkton Pinot Gris (Oregon)
+    {"beverage_product_id": 462, "food_flavour_profile": "pan-seared Pacific halibut with lemon beurre blanc and fried capers", "pairing_type": "complement", "flavour_logic": "Elkton's cool-climate Pinot Gris has the weight to complement halibut while its bright acidity cuts through beurre blanc richness; capers add saline that bridges the wine's mineral edge.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 462, "food_flavour_profile": "Oregon bay shrimp salad with avocado, grapefruit and herb vinaigrette", "pairing_type": "complement", "flavour_logic": "Pinot Gris's citrus and tropical notes complement bay shrimp's sweetness; grapefruit bridges the wine's acidity and avocado's fat softens the crisp finish.", "meal_context": "starter", "confidence": "established"},
+    {"beverage_product_id": 462, "food_flavour_profile": "Alsatian flammkuchen with crème fraîche, bacon lardons and onion", "pairing_type": "complement", "flavour_logic": "Elkton Pinot Gris handles the Alsatian-style tart naturally; crème fraîche's richness is balanced by the wine's acidity and the bacon salt heightens the fruit.", "meal_context": "casual", "confidence": "established"},
+    {"beverage_product_id": 462, "food_flavour_profile": "butternut squash soup with sage brown butter and toasted pumpkin seeds", "pairing_type": "bridge", "flavour_logic": "Pinot Gris's rounded body and gentle spice bridge autumnal squash flavours; brown butter sage echoes the wine's nutty richness.", "meal_context": "starter", "confidence": "suggested"},
+
+    # 463 — Abacela Tempranillo Estate (Oregon, Umpqua Valley)
+    {"beverage_product_id": 463, "food_flavour_profile": "cochinillo asado (Castilian roast suckling pig) with roasted potatoes", "pairing_type": "complement", "flavour_logic": "The Spanish-heritage of Tempranillo and the classic Castilian suckling pig makes this a natural transatlantic pairing; the wine's cherry fruit and savoury depth complement the crispy pork.", "meal_context": "main", "confidence": "classic"},
+    {"beverage_product_id": 463, "food_flavour_profile": "jamón ibérico with pan tumaca and Manchego cheese", "pairing_type": "complement", "flavour_logic": "Oregon Tempranillo's Spanish identity pairs naturally with Iberian cured ham and Manchego; tomato bread's acidity bridges the wine's fruit and the ham's intense umami.", "meal_context": "aperitif", "confidence": "classic"},
+    {"beverage_product_id": 463, "food_flavour_profile": "grilled Oregon lamb chops with romesco sauce and patatas bravas", "pairing_type": "bridge", "flavour_logic": "Abacela's Tempranillo bridges Spanish flavour traditions to Oregon terroir; romesco's smoky pepper complexity amplifies the wine's spice while patatas bravas add satisfying comfort.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 463, "food_flavour_profile": "aged Manchego, membrillo and smoked paprika almonds", "pairing_type": "complement", "flavour_logic": "Tempranillo and Manchego are the defining Spanish cheese pairing; membrillo's quince sweetness bridges the wine's dried cherry fruit.", "meal_context": "cheese", "confidence": "classic"},
+
+    # 464 — Cowhorn Spiral 36 Rhône Blend (Oregon, Applegate Valley)
+    {"beverage_product_id": 464, "food_flavour_profile": "herb-roasted leg of lamb with tapenade crust and flageolet beans", "pairing_type": "complement", "flavour_logic": "Cowhorn's Rhône-style blend with its olive, lavender and dark fruit character complements the herbal tapenade crust on lamb; the wine's Southern Rhône character bridges across to Oregon terroir.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 464, "food_flavour_profile": "grilled lamb merguez with harissa, charred aubergine and mint yoghurt", "pairing_type": "bridge", "flavour_logic": "The garrigue and spice of the Rhône blend bridges North African spice in merguez; harissa heat is tempered by the wine's fruit while aubergine's earthiness echoes the blend's depth.", "meal_context": "main", "confidence": "established"},
+    {"beverage_product_id": 464, "food_flavour_profile": "biodynamic farm charcuterie board with dried fruit and seeded crackers", "pairing_type": "complement", "flavour_logic": "Cowhorn's biodynamic ethos resonates in this producer-driven pairing; the Rhône blend's generous dark fruit and savoury notes complement the range of flavours on a well-curated board.", "meal_context": "aperitif", "confidence": "established"},
+    {"beverage_product_id": 464, "food_flavour_profile": "Provençal ratatouille with grilled polenta and fresh basil", "pairing_type": "complement", "flavour_logic": "The Southern Rhône inspiration of Spiral 36 is met directly by Provençal ratatouille; the wine's herb, olive and fruit notes are perfectly mirrored in the slow-cooked vegetable dish.", "meal_context": "main", "confidence": "classic"},
+]
+
+def main():
+    conn = psycopg2.connect(CONN)
+    inserted = 0
+    skipped = 0
+    failed = 0
+    for p in PAIRINGS:
+        try:
+            with conn.cursor() as cur:
+                cur.execute(SQL, p)
+                conn.commit()
+                inserted += 1
+                print(f"  OK pid={p['beverage_product_id']} ctx={p['meal_context']} food={p['food_flavour_profile'][:55]}")
+        except psycopg2.errors.UniqueViolation:
+            conn.rollback()
+            skipped += 1
+            print(f"  SKIP pid={p['beverage_product_id']}")
+        except Exception as e:
+            conn.rollback()
+            failed += 1
+            print(f"  FAIL pid={p['beverage_product_id']}: {e}")
+    conn.close()
+    print(f"\nDone: inserted={inserted}, skipped={skipped}, failed={failed}")
+
+if __name__ == "__main__":
+    main()

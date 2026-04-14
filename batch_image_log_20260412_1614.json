@@ -1,0 +1,364 @@
+{
+  "started": "2026-04-12T16:14:31.877385",
+  "recipes": {
+    "generated": [],
+    "skipped": [],
+    "failed": [
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Adobo Sauce",
+        "slug": "adobo-sauce"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Aglio e Olio",
+        "slug": "aglio-e-olio"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Agua de Jamaica (Hibiscus Concentrate \u2014 Extraction Method)",
+        "slug": "agua-de-jamaica-hibiscus-concentrate-extraction-method"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Aioli",
+        "slug": "aioli"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Air Fryer Chicken (Why It Works \u2014 Convection Science and Rapid Crisping)",
+        "slug": "air-fryer-chicken-why-it-works-convection-science-and-rapid-crisping"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Aloo Gobi",
+        "slug": "aloo-gobi"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Aloo Gobi (Naturally Vegan)",
+        "slug": "aloo-gobi-naturally-vegan"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":10}\n",
+        "name": "Anchovies as Pantry Ingredient",
+        "slug": "anchovies-as-pantry-ingredient"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":7}\n",
+        "name": "Andhra Gongura Mutton",
+        "slug": "andhra-gongura-mutton"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":4}\n",
+        "name": "Andhra Pesarattu",
+        "slug": "andhra-pesarattu"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":0}\n",
+        "name": "Apple Pie",
+        "slug": "apple-pie"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Arancini",
+        "slug": "arancini"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Arancini (Sicilian \u2014 Saffron Rag\u00f9 Rice Balls \u2014 Frying Method)",
+        "slug": "arancini-sicilian-saffron-rag-rice-balls-frying-method"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":15}\n",
+        "name": "Arroz con Leche (Naturally Gluten-Free \u2014 Rice Pudding)",
+        "slug": "arroz-con-leche-naturally-gluten-free-rice-pudding"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":12}\n",
+        "name": "Avadhi Kakori Kebab",
+        "slug": "avadhi-kakori-kebab"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":8}\n",
+        "name": "Avocado Toast (Brunch Viral \u2014 Sourdough, Lemon, Chilli, Egg Variations)",
+        "slug": "avocado-toast-brunch-viral-sourdough-lemon-chilli-egg-variations"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":5}\n",
+        "name": "Bacalhau \u00e0 Br\u00e1s (Christmas Eve \u2014 Portuguese Tradition)",
+        "slug": "bacalhau-brs-christmas-eve-portuguese-tradition"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":2}\n",
+        "name": "Baccal\u00e0 Mantecato (Venetian Whipped Salt Cod)",
+        "slug": "baccal-mantecato-venetian-whipped-salt-cod"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Bagna C\u00e0uda (Piedmontese \u2014 Anchovy and Garlic Hot Dip)",
+        "slug": "bagna-cuda-piedmontese-anchovy-and-garlic-hot-dip"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Baguette",
+        "slug": "baguette"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Baharat",
+        "slug": "baharat"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Baked Feta Pasta (Finnish TikTok Viral \u2014 Oven Method and Acid Balance)",
+        "slug": "baked-feta-pasta-finnish-tiktok-viral-oven-method-and-acid-balance"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Baked Oats (Overnight into Oven \u2014 Texture and Sweetness Balance)",
+        "slug": "baked-oats-overnight-into-oven-texture-and-sweetness-balance"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Baklava",
+        "slug": "baklava"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Banana Bread",
+        "slug": "banana-bread"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Banh Mi",
+        "slug": "banh-mi"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":9}\n",
+        "name": "Banh Xeo",
+        "slug": "banh-xeo"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":5}\n",
+        "name": "Barbacoa (Central \u2014 Slow-Cooked Lamb Cheek in Maguey Leaves)",
+        "slug": "barbacoa-central-slow-cooked-lamb-cheek-in-maguey-leaves"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":2}\n",
+        "name": "Bastilla (Moroccan Pigeon Pie \u2014 Celebration)",
+        "slug": "bastilla-moroccan-pigeon-pie-celebration"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Battuto",
+        "slug": "battuto"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "BBQ Ribs",
+        "slug": "bbq-ribs"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":16}\n",
+        "name": "B\u00e9arnaise \u2014 Reduction, Sabayon, Mounting",
+        "slug": "barnaise-reduction-sabayon-mounting"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":12}\n",
+        "name": "Bearnaise Sauce",
+        "slug": "bearnaise-sauce"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":9}\n",
+        "name": "B\u00e9chamel (Mother Sauce \u2014 Roux Ratio, Nutmeg, Milk Temperature)",
+        "slug": "bchamel-mother-sauce-roux-ratio-nutmeg-milk-temperature"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":6}\n",
+        "name": "Bechamel Sauce",
+        "slug": "bechamel-sauce"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":2}\n",
+        "name": "Beef Bourguignon",
+        "slug": "beef-bourguignon"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Beef Pho (Traditional \u2014 Naturally Gluten-Free with Tamari)",
+        "slug": "beef-pho-traditional-naturally-gluten-free-with-tamari"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Bengali Chingri Malai Curry (Prawn in Coconut Cream)",
+        "slug": "bengali-chingri-malai-curry-prawn-in-coconut-cream"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Bengali Machher Jhol (Mustard-Oil Fish Curry \u2014 Technique)",
+        "slug": "bengali-machher-jhol-mustard-oil-fish-curry-technique"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Bengali Shorshe Ilish (Hilsa in Mustard Paste \u2014 Steam Method)",
+        "slug": "bengali-shorshe-ilish-hilsa-in-mustard-paste-steam-method"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Beurre Blanc (Emulsified Butter Sauce \u2014 Reduction Base)",
+        "slug": "beurre-blanc-emulsified-butter-sauce-reduction-base"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Beurre Blanc \u2014 Emulsified Butter Sauce Technique",
+        "slug": "beurre-blanc-emulsified-butter-sauce-technique"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Beurre Noisette (Brown Butter \u2014 Milk Solids, Nutty Point)",
+        "slug": "beurre-noisette-brown-butter-milk-solids-nutty-point"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Bibimbap",
+        "slug": "bibimbap"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":10}\n",
+        "name": "Bibimbap (Naturally Gluten-Free with Tamari)",
+        "slug": "bibimbap-naturally-gluten-free-with-tamari"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":7}\n",
+        "name": "Bigoli in Salsa (Venetian \u2014 Whole Wheat Pasta, Anchovy, Onion)",
+        "slug": "bigoli-in-salsa-venetian-whole-wheat-pasta-anchovy-onion"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":3}\n",
+        "name": "Bigos (Polish Christmas Eve and Hunter's Stew)",
+        "slug": "bigos-polish-christmas-eve-and-hunters-stew"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Birria (Full Jalisco Dum Method \u2014 Chilli Consomm\u00e9, Goat or Beef)",
+        "slug": "birria-full-jalisco-dum-method-chilli-consomm-goat-or-beef"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Birria Ramen (Fusion Viral \u2014 Consomm\u00e9 Broth with Ramen Noodle)",
+        "slug": "birria-ramen-fusion-viral-consomm-broth-with-ramen-noodle"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":16}\n",
+        "name": "Birria Tacos",
+        "slug": "birria-tacos"
+      }
+    ]
+  },
+  "beverages": {
+    "generated": [],
+    "skipped": [],
+    "failed": []
+  }
+}

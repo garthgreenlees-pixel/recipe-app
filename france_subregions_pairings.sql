@@ -1,0 +1,405 @@
+BEGIN;
+
+INSERT INTO pairing_intelligence
+  (beverage_product_id, beverage_category, beverage_style, beverage_description,
+   food_category, food_flavour_profile, food_description,
+   pairing_type, flavour_logic, meal_context, confidence, authority_tier, is_published)
+VALUES
+
+-- 417: Ponsot Clos de la Roche VV Grand Cru
+(417, 'wine_still', 'Morey-Saint-Denis Grand Cru Pinot Noir',
+ 'Iron, red cherry, wild mushroom, spice, truffle; century-old vines, zero new oak.',
+ 'mushroom', 'wild truffle',
+ 'Périgord truffle on scrambled eggs or truffle risotto; the wine''s truffle-mineral depth finds an unmistakable partner in fresh truffle preparations.',
+ 'complement', 'Truffle marker in wine aligns directly with fresh truffle in the dish; iron-mineral structure amplifies the earthy umami.',
+ 'main', 'classic', 1, true),
+
+(417, 'wine_still', 'Morey-Saint-Denis Grand Cru Pinot Noir',
+ 'Iron, red cherry, wild mushroom, spice, truffle; century-old vines, zero new oak.',
+ 'meat', 'game birds roasted',
+ 'Roasted pheasant or partridge with wild mushroom sauce; the wine''s earthy-game complexity pairs perfectly with aged game birds.',
+ 'complement', 'Wild mushroom in wine mirrors the sauce; iron mineral resonates with game''s mineral richness.',
+ 'main', 'established', 1, true),
+
+(417, 'wine_still', 'Morey-Saint-Denis Grand Cru Pinot Noir',
+ 'Iron, red cherry, wild mushroom, spice, truffle; century-old vines, zero new oak.',
+ 'cheese', 'aged soft-ripened epoisses',
+ 'Époisses de Bourgogne; the wine''s Burgundian iron mineral and cherry fruit are the natural partner for the region''s iconic washed-rind cheese.',
+ 'complement', 'Burgundy wine and Burgundy cheese create sense-of-place coherence; the wine''s iron structure cuts through the rich washed rind.',
+ 'cheese', 'classic', 1, true),
+
+-- 418: Clos de Tart Grand Cru
+(418, 'wine_still', 'Morey-Saint-Denis Grand Cru Monopole Pinot Noir',
+ 'Dark cherry, iron, forest floor, fine tannin, mineral spice; sole Grand Cru monopole.',
+ 'meat', 'venison loin',
+ 'Loin of venison with celeriac purée and cherry jus; the wine''s iron-dark cherry depth finds a natural match in lean game meat.',
+ 'complement', 'Dark cherry in wine echoed in cherry jus; iron-mineral resonates with game''s wild mineral character.',
+ 'main', 'classic', 1, true),
+
+(418, 'wine_still', 'Morey-Saint-Denis Grand Cru Monopole Pinot Noir',
+ 'Dark cherry, iron, forest floor, fine tannin, mineral spice; sole Grand Cru monopole.',
+ 'cheese', 'aged semi-firm',
+ 'Comté 24-month or aged Emmental; the wine''s iron and forest floor character finds a complementary match in mineral alpine cheese.',
+ 'complement', 'Mineral iron core of Clos de Tart echoes the stony mineral of aged Comté; forest floor aligns with the cheese''s mushroom notes.',
+ 'cheese', 'established', 1, true),
+
+(418, 'wine_still', 'Morey-Saint-Denis Grand Cru Monopole Pinot Noir',
+ 'Dark cherry, iron, forest floor, fine tannin, mineral spice; sole Grand Cru monopole.',
+ 'mushroom', 'forest mushroom',
+ 'Pan-roasted ceps or porcini with thyme butter; the wine''s forest floor and wild mushroom registers resonate directly with foraged fungi.',
+ 'complement', 'Forest floor in wine mirrors wild mushroom earthiness; iron mineral bridges the earthy umami of ceps.',
+ 'starter', 'established', 1, true),
+
+-- 419: Leroy Clos de Vougeot Grand Cru
+(419, 'wine_still', 'Vougeot Grand Cru Biodynamic Pinot Noir',
+ 'Dark berry, rose, iron mineral, truffle, dark spice, graphite; biodynamic tiny yields.',
+ 'meat', 'beef filet en croûte',
+ 'Beef Wellington or filet with truffle sauce; the wine''s graphite-truffle complexity and dark berry depth demand luxurious treatment at the table.',
+ 'complement', 'Truffle in wine finds exact expression in truffle sauce; graphite tannin integrates with the pastry and beef fat of Wellington.',
+ 'main', 'classic', 1, true),
+
+(419, 'wine_still', 'Vougeot Grand Cru Biodynamic Pinot Noir',
+ 'Dark berry, rose, iron mineral, truffle, dark spice, graphite; biodynamic tiny yields.',
+ 'mushroom', 'truffle porcini',
+ 'Truffle and porcini risotto with aged Parmesan; the wine''s extraordinary mineral and truffle depth find a worthy partner in luxury fungal preparation.',
+ 'complement', 'Truffle and mineral in wine are amplified by fresh truffle in dish; graphite structure supported by Parmesan umami.',
+ 'main', 'classic', 1, true),
+
+(419, 'wine_still', 'Vougeot Grand Cru Biodynamic Pinot Noir',
+ 'Dark berry, rose, iron mineral, truffle, dark spice, graphite; biodynamic tiny yields.',
+ 'cheese', 'aged washed-rind',
+ 'Époisses or Langres; the great Burgundy wine demands the great Burgundy cheese — washed-rind intensity met by iron-mineral depth.',
+ 'complement', 'Classic Burgundy wine-cheese affinity; iron and dark spice cut through the washed-rind richness while rose florality lifts the pairing.',
+ 'cheese', 'classic', 1, true),
+
+-- 420: Henri Gouges Nuits-Saint-Georges Les Saint-Georges
+(420, 'wine_still', 'Nuits-Saint-Georges Premier Cru Pinot Noir',
+ 'Dark cherry, iron, dried herbs, earth, game, fine tannin; earthy appellation character.',
+ 'meat', 'beef braised',
+ 'Boeuf bourguignon or braised short rib; the wine''s earthy, structured character is ideal for Burgundy''s classic braised beef preparation.',
+ 'complement', 'Earthy iron and herb notes in wine create the definitive Burgundy-braised beef affinity; wine''s tannin structure integrates with slow-cooked collagen.',
+ 'main', 'classic', 1, true),
+
+(420, 'wine_still', 'Nuits-Saint-Georges Premier Cru Pinot Noir',
+ 'Dark cherry, iron, dried herbs, earth, game, fine tannin; earthy appellation character.',
+ 'cheese', 'aged hard',
+ 'Époisses or aged Comté; Nuits-Saint-Georges rustic earthiness finds resolution in the region''s washed-rind cheese or aged mountain alternatives.',
+ 'complement', 'Earthy, game-like character of Nuits-Saint-Georges requires a cheese with assertive personality; Époisses'' washed-rind cuts through the wine''s tannin.',
+ 'cheese', 'established', 1, true),
+
+(420, 'wine_still', 'Nuits-Saint-Georges Premier Cru Pinot Noir',
+ 'Dark cherry, iron, dried herbs, earth, game, fine tannin; earthy appellation character.',
+ 'meat', 'duck confit',
+ 'Duck confit with lentils and dried herbs; the wine''s dried herb and iron character mirrors this classic French preparation perfectly.',
+ 'complement', 'Dried herbs appear in both wine and dish; duck fat softens iron tannin; earthy lentils extend the wine''s earthen mineral.',
+ 'main', 'established', 1, true),
+
+-- 421: Louis Jadot Beaune Clos des Ursules
+(421, 'wine_still', 'Beaune Premier Cru Monopole Pinot Noir',
+ 'Red cherry, raspberry, light earth, gentle spice, silk tannin; classic Côte de Beaune.',
+ 'meat', 'chicken roasted',
+ 'Roast chicken with herbs de Provence and mushroom jus; the wine''s gentle tannin and cherry-raspberry freshness pair beautifully with roasted poultry.',
+ 'complement', 'Raspberry and red cherry in wine complement roasted chicken''s natural sweetness; silk tannin mirrors the wine''s approachable Beaune character.',
+ 'main', 'classic', 1, true),
+
+(421, 'wine_still', 'Beaune Premier Cru Monopole Pinot Noir',
+ 'Red cherry, raspberry, light earth, gentle spice, silk tannin; classic Côte de Beaune.',
+ 'mushroom', 'wild mushroom',
+ 'Wild mushroom risotto or mushroom and herb tart; the wine''s earthy lightness and red fruit pair naturally with umami-rich mushroom preparations.',
+ 'complement', 'Light earth in wine mirrors the mushroom''s umami depth; red cherry provides a brightening fruit contrast.',
+ 'main', 'established', 1, true),
+
+(421, 'wine_still', 'Beaune Premier Cru Monopole Pinot Noir',
+ 'Red cherry, raspberry, light earth, gentle spice, silk tannin; classic Côte de Beaune.',
+ 'charcuterie', 'jambon persillé',
+ 'Jambon persillé (Burgundy ham terrine with parsley) or country pâté; the wine''s gentle Beaune character matches the classic Burgundy charcuterie.',
+ 'complement', 'Sense-of-place pairing: Beaune wine and Burgundy jambon persillé share regional identity; the wine''s gentle spice bridges the parsley and pork.',
+ 'starter', 'classic', 1, true),
+
+-- 422: Comte Armand Pommard Clos des Epeneaux
+(422, 'wine_still', 'Pommard Premier Cru Monopole Pinot Noir',
+ 'Dark cherry, iron, leather, dark spice, earthy mineral; structured 15-25 year wine.',
+ 'meat', 'beef aged roasted',
+ 'Côte de boeuf or dry-aged rib roast; the wine''s iron-mineral structure and dark cherry demand a substantial cut of aged beef at the table.',
+ 'complement', 'Iron mineral in wine aligns with aged beef''s iron-rich myoglobin; dark cherry provides a fruit counterpoint to the roasted crust.',
+ 'main', 'classic', 1, true),
+
+(422, 'wine_still', 'Pommard Premier Cru Monopole Pinot Noir',
+ 'Dark cherry, iron, leather, dark spice, earthy mineral; structured 15-25 year wine.',
+ 'cheese', 'aged hard assertive',
+ 'Aged Époisses (affinage stage) or Langres; the wine''s tannic power and leather-iron complexity require an assertive cheese to hold its own.',
+ 'complement', 'Iron structure in Pommard cuts through washed-rind richness; dark spice and leather create a complex savoury dialogue.',
+ 'cheese', 'established', 1, true),
+
+(422, 'wine_still', 'Pommard Premier Cru Monopole Pinot Noir',
+ 'Dark cherry, iron, leather, dark spice, earthy mineral; structured 15-25 year wine.',
+ 'meat', 'game venison',
+ 'Braised venison haunch with red wine and root vegetables; the wine''s iron-leather depth is the definitive partner for red game meat.',
+ 'complement', 'Leather and iron in wine align with venison''s mineral game character; dark cherry fruit echoes the red wine reduction.',
+ 'main', 'adventurous', 1, true),
+
+-- 423: Marquis d'Angerville Volnay Clos des Ducs
+(423, 'wine_still', 'Volnay Premier Cru Monopole Pinot Noir',
+ 'Red cherry, violet, raspberry, silk tannin, mineral, dried rose; feminine Volnay apex.',
+ 'meat', 'duck breast pan-roasted',
+ 'Pan-roasted duck breast with cherry compote and lavender; the wine''s violet and cherry delicacy finds the most refined pairing in this preparation.',
+ 'complement', 'Cherry compote echoes the wine''s primary fruit; lavender bridges violet florality; duck fat provides richness without overwhelming elegance.',
+ 'main', 'classic', 1, true),
+
+(423, 'wine_still', 'Volnay Premier Cru Monopole Pinot Noir',
+ 'Red cherry, violet, raspberry, silk tannin, mineral, dried rose; feminine Volnay apex.',
+ 'fish', 'salmon fine',
+ 'Salmon en papillote with tarragon and a pink peppercorn beurre rouge; the wine''s silky acidity and delicacy are ideally suited to fine salmon preparations.',
+ 'complement', 'Silky texture of wine echoes the delicacy of en-papillote salmon; mineral acidity cuts through salmon fat without overpowering.',
+ 'main', 'adventurous', 1, true),
+
+(423, 'wine_still', 'Volnay Premier Cru Monopole Pinot Noir',
+ 'Red cherry, violet, raspberry, silk tannin, mineral, dried rose; feminine Volnay apex.',
+ 'cheese', 'soft-ripened triple cream',
+ 'Brillat-Savarin or Saint-Marcellin; the wine''s silk texture and floral delicacy pair beautifully with high-fat, luscious soft-ripened cheese.',
+ 'complement', 'Silk tannin mirrors triple cream richness; dried rose florality lifts the pairing above simple fat-acid balance.',
+ 'cheese', 'established', 1, true),
+
+-- 424: Marc Colin Chassagne-Montrachet Les Caillerets
+(424, 'wine_still', 'Chassagne-Montrachet Premier Cru Chardonnay',
+ 'Grilled almond, white peach, hazelnut, flint, limestone mineral, lemon cream.',
+ 'shellfish', 'crab lobster',
+ 'Crab bisque or cold lobster with lemon mayonnaise; the wine''s mineral-stone-fruit structure and hazelnut richness are an ideal partner for sweet crustacean.',
+ 'complement', 'Hazelnut and lemon cream in wine mirror bisque''s richness and citrus finish; flint mineral amplifies the briny shellfish character.',
+ 'main', 'classic', 1, true),
+
+(424, 'wine_still', 'Chassagne-Montrachet Premier Cru Chardonnay',
+ 'Grilled almond, white peach, hazelnut, flint, limestone mineral, lemon cream.',
+ 'fish', 'turbot sole meunière',
+ 'Sole meunière or turbot with brown butter and capers; the wine''s grilled almond and hazelnut notes find an exact mirror in the meunière preparation.',
+ 'complement', 'Grilled almond in wine mirrors beurre noisette in meunière; capers'' acidity echoes the wine''s lemon-flint backbone.',
+ 'main', 'classic', 1, true),
+
+(424, 'wine_still', 'Chassagne-Montrachet Premier Cru Chardonnay',
+ 'Grilled almond, white peach, hazelnut, flint, limestone mineral, lemon cream.',
+ 'cheese', 'aged goat chèvre',
+ 'Aged Crottin de Chavignol or Selles-sur-Cher; the wine''s mineral-lemon axis finds a natural Loire Valley counterpart in aged goat''s cheese.',
+ 'complement', 'Lemon cream in wine echoes the bright lactic acidity of aged chèvre; limestone mineral mirrors the chalk terroir that shapes both.',
+ 'cheese', 'established', 1, true),
+
+-- 425: Pierre Gonon Saint-Joseph Rouge
+(425, 'wine_still', 'Saint-Joseph Northern Rhône Syrah',
+ 'Violet, smoked olive, white pepper, dark berry, iron, granite mineral; biodynamic.',
+ 'meat', 'lamb roasted herbs',
+ 'Slow-roasted leg of lamb with thyme, rosemary and olive; the wine''s smoked olive and pepper find natural partners in herb-roasted lamb.',
+ 'complement', 'Smoked olive in wine directly mirrors olive condiment; white pepper bridges the herb-spiced lamb; iron supports lamb''s mineral richness.',
+ 'main', 'classic', 1, true),
+
+(425, 'wine_still', 'Saint-Joseph Northern Rhône Syrah',
+ 'Violet, smoked olive, white pepper, dark berry, iron, granite mineral; biodynamic.',
+ 'cheese', 'aged hard',
+ 'Aged Tomme de Savoie or Comté; the wine''s granite mineral and iron depth find a natural Alpine cheese partner.',
+ 'complement', 'Granite mineral in wine echoes the mountain terroir of Savoie cheeses; iron structure matches aged Comté''s crystalline depth.',
+ 'cheese', 'established', 1, true),
+
+(425, 'wine_still', 'Saint-Joseph Northern Rhône Syrah',
+ 'Violet, smoked olive, white pepper, dark berry, iron, granite mineral; biodynamic.',
+ 'meat', 'sausage merguez',
+ 'Merguez sausage with harissa and flatbread; the wine''s pepper and smoked olive character harmonise with North African spiced lamb sausage.',
+ 'complement', 'White pepper and smoked olive in wine echo the spice profile of merguez; iron mineral bridges the charred meat character.',
+ 'casual', 'adventurous', 1, true),
+
+-- 426: Domaine Gonon Saint-Joseph Blanc
+(426, 'wine_still', 'Saint-Joseph Northern Rhône Marsanne',
+ 'White blossom, peach stone, lanolin, beeswax, mineral, dried apricot; ages 10+ years.',
+ 'fish', 'white fish roasted',
+ 'Roasted monkfish or cod with a beurre blanc and herbs; the wine''s lanolin texture and peach stone mineral create an elegant match for robust white fish.',
+ 'complement', 'Lanolin texture of Marsanne mirrors the firm flesh of monkfish; peach stone mineral bridges beurre blanc''s citrus richness.',
+ 'main', 'established', 1, true),
+
+(426, 'wine_still', 'Saint-Joseph Northern Rhône Marsanne',
+ 'White blossom, peach stone, lanolin, beeswax, mineral, dried apricot; ages 10+ years.',
+ 'shellfish', 'scallops',
+ 'Pan-seared scallops with cauliflower purée and brown butter; the wine''s beeswax and dried apricot complement the natural sweetness of scallop.',
+ 'complement', 'Beeswax in wine mirrors brown butter''s Maillard richness; dried apricot sweetness echoes the natural sweetness of seared scallop.',
+ 'starter', 'classic', 1, true),
+
+(426, 'wine_still', 'Saint-Joseph Northern Rhône Marsanne',
+ 'White blossom, peach stone, lanolin, beeswax, mineral, dried apricot; ages 10+ years.',
+ 'cheese', 'aged sheep hard',
+ 'Aged Ossau-Iraty or Manchego; the wine''s lanolin and dried stone-fruit character aligns with the nutty richness of aged sheep''s milk cheese.',
+ 'complement', 'Lanolin in wine mirrors the sheep''s milk fat character; dried apricot echoes the cheese''s fruity complexity.',
+ 'cheese', 'established', 1, true),
+
+-- 427: Santa Duc Gigondas Aux Grandes Vignes
+(427, 'wine_still', 'Gigondas Southern Rhône Grenache Blend',
+ 'Kirsch, garrigue, leather, warm spice, black olive, dark fruit; 80-year-old vines.',
+ 'meat', 'lamb daubed',
+ 'Daube d''agneau provençale or slow-braised lamb with olives and herbes de Provence; the wine''s garrigue and kirsch warmth are made for Provençal lamb.',
+ 'complement', 'Garrigue in wine mirrors herbes de Provence in the dish; kirsch echoes the lamb''s sweet braised character; black olive bridges both.',
+ 'main', 'classic', 2, true),
+
+(427, 'wine_still', 'Gigondas Southern Rhône Grenache Blend',
+ 'Kirsch, garrigue, leather, warm spice, black olive, dark fruit; 80-year-old vines.',
+ 'cheese', 'aged hard sheep',
+ 'Aged Pecorino or Ossau-Iraty; the wine''s warm spice and leather depth find a natural partner in sheep''s milk aged cheese.',
+ 'complement', 'Leather and warm spice in wine align with aged Pecorino''s savoury complexity; kirsch fruit provides a brightening contrast.',
+ 'cheese', 'established', 2, true),
+
+(427, 'wine_still', 'Gigondas Southern Rhône Grenache Blend',
+ 'Kirsch, garrigue, leather, warm spice, black olive, dark fruit; 80-year-old vines.',
+ 'meat', 'wild boar',
+ 'Slow-braised wild boar with juniper and dark berry; the wine''s leather-garrigue intensity and dark fruit meet their match in rustic game preparation.',
+ 'complement', 'Leather and garrigue in wine align with wild boar''s rustic mineral character; dark fruit echoes in berry reduction; juniper bridges herbal registers.',
+ 'main', 'adventurous', 2, true),
+
+-- 428: Le Sang des Cailloux Vacqueyras
+(428, 'wine_still', 'Vacqueyras Southern Rhône GSM',
+ 'Dark berry, dried thyme, garrigue, black pepper, iron, savoury earth; old-vine blend.',
+ 'meat', 'lamb herb roasted',
+ 'Rack of lamb with herbes de Provence and ratatouille; the wine''s thyme-garrigue warmth mirrors the Provençal lamb preparation.',
+ 'complement', 'Dried thyme in wine echoes herbes de Provence on lamb; garrigue bridges the ratatouille''s vegetable aromatics.',
+ 'main', 'classic', 2, true),
+
+(428, 'wine_still', 'Vacqueyras Southern Rhône GSM',
+ 'Dark berry, dried thyme, garrigue, black pepper, iron, savoury earth; old-vine blend.',
+ 'charcuterie', 'terrine provençale',
+ 'Provençal terrine with black olives and herbes or tapenade on toast; the wine''s savoury earth and garrigue are ideal for Provençal charcuterie.',
+ 'complement', 'Garrigue note in wine mirrors the black olive and herb character of Provençal terrine; savoury earth creates sense-of-place coherence.',
+ 'starter', 'established', 2, true),
+
+(428, 'wine_still', 'Vacqueyras Southern Rhône GSM',
+ 'Dark berry, dried thyme, garrigue, black pepper, iron, savoury earth; old-vine blend.',
+ 'cheese', 'aged sheep',
+ 'Picodon or aged Banon; the wine''s iron and earthy character pair well with the pungent aromatic complexity of Provençal aged goat/sheep cheeses.',
+ 'complement', 'Provençal cheese and Vacqueyras share regional heritage; iron mineral in wine cuts through the earthy richness of aged Picodon.',
+ 'cheese', 'adventurous', 2, true),
+
+-- 429: Château d'Aquéria Tavel Rosé
+(429, 'wine_still', 'Tavel Rosé Grenache Blend',
+ 'Red cherry, strawberry, garrigue, fresh herb, savoury mineral; France''s most structured rosé.',
+ 'meat', 'grilled lamb chops',
+ 'Grilled lamb cutlets with tapenade and aioli; Tavel''s savoury mineral structure handles the richness of grilled lamb — rare for a rosé.',
+ 'complement', 'Garrigue in wine mirrors the herb and olive character of tapenade; savoury mineral of Tavel holds up to the richness of charred lamb.',
+ 'main', 'classic', 2, true),
+
+(429, 'wine_still', 'Tavel Rosé Grenache Blend',
+ 'Red cherry, strawberry, garrigue, fresh herb, savoury mineral; France''s most structured rosé.',
+ 'seafood', 'bouillabaisse',
+ 'Bouillabaisse or grilled Mediterranean fish with rouille; Tavel''s structure and garrigue character make it one of France''s few rosés suited to full fish soup.',
+ 'complement', 'Garrigue mirrors the saffron-herb aromatics of bouillabaisse; mineral acidity cuts through the oily fish richness; cherry fruit brightens the rouille.',
+ 'main', 'established', 2, true),
+
+(429, 'wine_still', 'Tavel Rosé Grenache Blend',
+ 'Red cherry, strawberry, garrigue, fresh herb, savoury mineral; France''s most structured rosé.',
+ 'charcuterie', 'cured meats provençal',
+ 'Provençal charcuterie board with saucisson and tapenade; Tavel''s red-fruit freshness and savoury mineral structure handle a charcuterie board with rare grace for a rosé.',
+ 'complement', 'Red cherry and strawberry brightness contrast with cured meat salt; savoury mineral mirrors the tapenade''s olive depth.',
+ 'starter', 'established', 2, true),
+
+-- 430: Charles Joguet Chinon Clos de la Dioterie
+(430, 'wine_still', 'Chinon Loire Cabernet Franc',
+ 'Cassis, graphite, violet, fresh herb, red pepper, earthy mineral; tuffeau limestone.',
+ 'meat', 'pork rillettes',
+ 'Rillettes de Tours or confit pork; the wine''s graphite-cassis structure and herbal lift are the classic match for the Loire''s signature charcuterie.',
+ 'complement', 'Sense-of-place pairing: Chinon and Tours rillettes share Loire Valley heritage; the wine''s acidity cuts through the confit fat while graphite provides structure.',
+ 'starter', 'classic', 1, true),
+
+(430, 'wine_still', 'Chinon Loire Cabernet Franc',
+ 'Cassis, graphite, violet, fresh herb, red pepper, earthy mineral; tuffeau limestone.',
+ 'meat', 'beef steak grilled',
+ 'Entrecôte with sauce bordelaise or grilled rib-eye; the wine''s graphite tannin and dark fruit handle grilled beef with the elegance that only Loire Cabernet Franc can offer.',
+ 'complement', 'Graphite tannin integrates with beef fat; cassis mirrors the bordelaise sauce''s red wine reduction; violet adds a floral lift.',
+ 'main', 'established', 1, true),
+
+(430, 'wine_still', 'Chinon Loire Cabernet Franc',
+ 'Cassis, graphite, violet, fresh herb, red pepper, earthy mineral; tuffeau limestone.',
+ 'cheese', 'aged chèvre',
+ 'Sainte-Maure de Touraine or Crottin de Chavignol; Loire Cabernet Franc is the textbook pairing for Loire goat''s cheese — a sense-of-place classic.',
+ 'complement', 'Loire wine and Loire cheese: the regional affinity is absolute. Graphite acidity cuts lactic fat; violet florality contrasts the cheese''s earthy tang.',
+ 'cheese', 'classic', 1, true),
+
+-- 431: Pierre Breton Bourgueil Franc de Pied
+(431, 'wine_still', 'Bourgueil Loire Cabernet Franc',
+ 'Cranberry, violet, graphite, green herb, red berry, sandy mineral; ungrafted biodynamic.',
+ 'meat', 'pork loin',
+ 'Roast pork loin with herb sauce and apple compote; the wine''s cranberry and herbal character pair beautifully with Loire''s classic pork preparation.',
+ 'complement', 'Cranberry acidity cuts pork fat; green herb note in wine bridges the herb sauce; apple compote echoes Loire''s fruit character.',
+ 'main', 'classic', 1, true),
+
+(431, 'wine_still', 'Bourgueil Loire Cabernet Franc',
+ 'Cranberry, violet, graphite, green herb, red berry, sandy mineral; ungrafted biodynamic.',
+ 'cheese', 'goat fresh',
+ 'Chèvre frais or Crottin; classic Loire Cabernet Franc and goat''s cheese pairing — the region''s most iconic combination.',
+ 'complement', 'Classic Loire affinity: cranberry acidity lifts fresh chèvre; graphite provides structure; the shared sandy mineral terroir creates sense-of-place unity.',
+ 'cheese', 'classic', 1, true),
+
+(431, 'wine_still', 'Bourgueil Loire Cabernet Franc',
+ 'Cranberry, violet, graphite, green herb, red berry, sandy mineral; ungrafted biodynamic.',
+ 'charcuterie', 'rillettes pâté',
+ 'Pork rillettes or terrine with cornichons; Bourgueil is the natural pairing wine for the charcuterie of Touraine.',
+ 'complement', 'Red berry acidity cuts through confit fat; green herb note bridges the terrine''s seasoning; sandy mineral provides a clean finish.',
+ 'starter', 'established', 1, true),
+
+-- 432: Chartogne-Taillet Cuvée Sainte-Anne
+(432, 'wine_sparkling', 'Vallée de la Marne Grower Champagne',
+ 'Wild strawberry, red apple, pastry cream, chalk mineral, brioche; Meunier-dominant.',
+ 'shellfish', 'oysters',
+ 'Oysters on the half shell; the wine''s chalk mineral and red apple freshness are a precise match for cold North Sea oysters.',
+ 'complement', 'Chalk mineral in Champagne mirrors oyster shell brine; red apple acidity lifts the oyster''s saline character.',
+ 'aperitif', 'classic', 2, true),
+
+(432, 'wine_sparkling', 'Vallée de la Marne Grower Champagne',
+ 'Wild strawberry, red apple, pastry cream, chalk mineral, brioche; Meunier-dominant.',
+ 'pastry_dessert', 'berry tart',
+ 'Wild strawberry tart or fraisier; the wine''s wild strawberry and pastry cream character finds direct expression in berry-cream French patisserie.',
+ 'complement', 'Wild strawberry in wine echoed in the tart''s primary fruit; pastry cream note bridges the brioche richness of the Champagne.',
+ 'dessert', 'established', 2, true),
+
+(432, 'wine_sparkling', 'Vallée de la Marne Grower Champagne',
+ 'Wild strawberry, red apple, pastry cream, chalk mineral, brioche; Meunier-dominant.',
+ 'charcuterie', 'smoked salmon blinis',
+ 'Blinis with smoked salmon, crème fraîche and dill; the wine''s brioche-mineral character is a natural match for the classic Champagne canapé.',
+ 'complement', 'Brioche note in wine mirrors the yeasted richness of blinis; chalk mineral cuts through smoked salmon''s fat and dill''s herbal acidity.',
+ 'amuse', 'classic', 2, true),
+
+-- 433: DRC Bourgogne Rouge
+(433, 'wine_still', 'Bourgogne AOC DRC House-Style Pinot Noir',
+ 'Red cherry, spice, mineral, violet, forest floor, silk tannin; world''s most sought-after Bourgogne.',
+ 'mushroom', 'forest earthen',
+ 'Wild mushroom consommé or mushroom on toast with Burgundy butter; the wine''s forest floor character finds its most elegant expression alongside simple mushroom preparations.',
+ 'complement', 'Forest floor in wine mirrors mushroom earthiness; silk tannin suits the lightness of mushroom preparations; mineral purity amplifies the umami.',
+ 'starter', 'classic', 1, true),
+
+(433, 'wine_still', 'Bourgogne AOC DRC House-Style Pinot Noir',
+ 'Red cherry, spice, mineral, violet, forest floor, silk tannin; world''s most sought-after Bourgogne.',
+ 'meat', 'chicken Bresse',
+ 'Poulet de Bresse roasted with tarragon; the world''s finest chicken meets the world''s most celebrated Bourgogne — a pairing of peerless regional pedigree.',
+ 'complement', 'Bresse chicken and DRC Bourgogne represent the pinnacle of their respective categories; silk tannin matches the chicken''s delicate fat; violet lifts.',
+ 'main', 'classic', 1, true),
+
+(433, 'wine_still', 'Bourgogne AOC DRC House-Style Pinot Noir',
+ 'Red cherry, spice, mineral, violet, forest floor, silk tannin; world''s most sought-after Bourgogne.',
+ 'cheese', 'washed-rind local',
+ 'Époisses de Bourgogne or Langres; DRC Bourgogne and Époisses is the great Burgundian pairing — regional, cultural and gastronomic alignment.',
+ 'complement', 'Burgundy wine and Burgundy cheese: sense-of-place perfection. Red cherry and mineral cut through the Epoisses richness; spice bridges the washed rind.',
+ 'cheese', 'classic', 1, true),
+
+-- 434: Château Moulin Haut-Laroque Fronsac
+(434, 'wine_still', 'Fronsac Right Bank Merlot Blend',
+ 'Dark plum, cedar, dried herbs, limestone mineral, dark cherry, iron; Pomerol-quality at accessible price.',
+ 'meat', 'duck confit',
+ 'Duck confit with lentils du Puy and red wine reduction; the wine''s cedar-plum character and iron mineral are perfectly suited to confit duck.',
+ 'complement', 'Cedar and plum in Fronsac mirror the red wine reduction; iron mineral resonates with the duck''s richness; lentils'' earthiness echoes the wine''s mineral character.',
+ 'main', 'classic', 2, true),
+
+(434, 'wine_still', 'Fronsac Right Bank Merlot Blend',
+ 'Dark plum, cedar, dried herbs, limestone mineral, dark cherry, iron; Pomerol-quality at accessible price.',
+ 'meat', 'beef pot-au-feu',
+ 'Pot-au-feu or braised beef cheeks with root vegetables; the wine''s herbaceous-mineral character and medium tannin find resolution in slow-braised beef.',
+ 'complement', 'Dried herbs in wine echo the bouquet garni of pot-au-feu; iron mineral bridges the marrow and collagen richness of slow-braised beef.',
+ 'main', 'established', 2, true),
+
+(434, 'wine_still', 'Fronsac Right Bank Merlot Blend',
+ 'Dark plum, cedar, dried herbs, limestone mineral, dark cherry, iron; Pomerol-quality at accessible price.',
+ 'cheese', 'aged semi-firm',
+ 'Aged Tomme de Bordeaux or aged Cantal; the wine''s cedar and dark plum depth find a regional and flavour match in aged French hard cheese.',
+ 'complement', 'Cedar and mineral in Fronsac echo the complex nutty depth of aged Cantal; dark plum provides fruit contrast to the cheese''s savoury lactic character.',
+ 'cheese', 'established', 2, true);
+
+COMMIT;

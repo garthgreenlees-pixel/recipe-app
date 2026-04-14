@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuisines — Provenance Technique Library</title>
+<meta name="description" content="Browse {{ total_techniques }} culinary techniques by cuisine — French, Japanese, Thai, Italian and more. Provenance Technique Library.">
+<link rel="canonical" href="https://provenance.kitchen/cuisines">
+<meta property="og:title" content="Cuisines — Provenance Technique Library">
+<meta property="og:description" content="Browse culinary techniques by cuisine origin.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://provenance.kitchen/cuisines">
+<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cuisines — Provenance Technique Library">
+<meta name="twitter:description" content="Browse culinary techniques by cuisine origin — French, Japanese, Thai, Italian and more.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Cuisine Technique Index",
+  "description": "Browse culinary techniques by cuisine origin",
+  "url": "https://provenance.kitchen/cuisines"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#8B6914;--gold-light:#C49B2A;--gold-bg:rgba(139,105,20,0.10);--gold-border:rgba(139,105,20,0.25);
+  --dark:#0F0E0C;--dark-2:#1A1612;--dark-3:#241E18;--dark-card:#1E1B15;
+  --cream:#FDFCF9;--cream-dark:#F5F0E8;
+  --text-on-dark:rgba(253,252,249,0.92);--text-dim:rgba(253,252,249,0.5);--text-muted:rgba(253,252,249,0.3);
+  --text:#1A1A1A;--text-secondary:#6B6B6B;
+  --border-dark:rgba(255,255,255,0.07);--border-gold:rgba(196,155,42,0.2);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--dark);color:var(--text-on-dark);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
+
+/* ─── NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
+.nav-links a:hover{color:#C9A84C}
+.nav-links .nav-active{color:rgba(201,168,76,0.75)}
+.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
+.nav-p:hover{border-color:#C9A84C}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+
+/* ─── HERO ─── */
+.hero{
+  background:linear-gradient(160deg,var(--dark) 0%,var(--dark-2) 40%,var(--dark-3) 100%);
+  padding:80px 32px 64px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 15% 70%,rgba(139,105,20,0.20) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 20%,rgba(139,105,20,0.10) 0%,transparent 50%),
+    radial-gradient(ellipse at 50% 100%,rgba(196,155,42,0.06) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero-inner{max-width:900px;margin:0 auto;position:relative}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(196,155,42,0.65);margin-bottom:20px;
+}
+.hero-title{
+  font-family:var(--serif);font-size:clamp(42px,6vw,72px);font-weight:700;
+  color:var(--text-on-dark);line-height:1.05;letter-spacing:-1.5px;margin-bottom:20px;
+}
+.hero-title em{font-style:italic;color:var(--gold-light)}
+.hero-subtitle{font-size:17px;color:var(--text-dim);font-weight:300;line-height:1.65;max-width:520px;margin-bottom:40px}
+.hero-meta{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid var(--border-gold);border-radius:24px;
+  padding:8px 20px;font-family:var(--mono);font-size:12px;color:var(--gold-light);
+}
+.hero-meta span{opacity:0.5}
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb{
+  padding:14px 32px;font-size:13px;color:var(--text-muted);
+  border-bottom:1px solid var(--border-dark);background:rgba(15,14,12,0.5);
+}
+.breadcrumb a{color:var(--text-dim);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold-light)}
+.breadcrumb sep{margin:0 8px;opacity:0.3}
+
+/* ─── BROWSE CONTAINER ─── */
+.browse-container{max-width:1100px;margin:0 auto;padding:56px 32px 100px}
+
+/* ─── SECTION LABEL ─── */
+.section-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(196,155,42,0.65);margin-bottom:28px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border-gold)}
+
+/* ─── CUISINE GRID ─── */
+.cuisine-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.cuisine-card{
+  background:var(--dark-card);border:1px solid var(--border-dark);border-radius:10px;
+  padding:28px 28px 24px;text-decoration:none;color:var(--text-on-dark);
+  transition:all 0.22s;display:block;position:relative;overflow:hidden;
+}
+.cuisine-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(196,155,42,0.05) 0%,transparent 60%);
+  opacity:0;transition:opacity 0.22s;
+}
+.cuisine-card:hover{
+  border-color:var(--border-gold);
+  box-shadow:0 8px 32px rgba(139,105,20,0.15),0 2px 8px rgba(0,0,0,0.4);
+  transform:translateY(-2px);
+}
+.cuisine-card:hover::before{opacity:1}
+.cuisine-name{
+  font-family:var(--serif);font-size:26px;font-weight:600;
+  color:var(--text-on-dark);margin-bottom:10px;letter-spacing:-0.5px;
+}
+.cuisine-count{
+  font-family:var(--mono);font-size:12px;color:var(--gold-light);
+  margin-bottom:16px;
+}
+.cuisine-arrow{
+  font-size:18px;color:rgba(196,155,42,0.4);transition:all 0.18s;
+  display:block;
+}
+.cuisine-card:hover .cuisine-arrow{color:var(--gold-light);transform:translateX(4px)}
+
+@media(max-width:640px){
+  .hero{padding:52px 20px 44px}
+  .browse-container{padding:40px 20px 72px}
+  .breadcrumb{padding:12px 16px}
+}
+</style>
+<!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4G21HCX2D0');
+</script>
+<!-- PWA -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Provenance">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines" class="nav-active">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+    {% if is_authenticated %}
+    <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
+    {% else %}
+    <a href="/auth/login">Sign In</a>
+    {% endif %}
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/auth/account">My Kitchen</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+<div class="breadcrumb">
+  <a href="/">Home</a><sep>/</sep>Cuisines
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Provenance Technique Library</div>
+    <h1 class="hero-title">Browse by<br><em>Cuisine</em></h1>
+    <p class="hero-subtitle">Every technique rooted in its culinary tradition — from the high heat of a Cantonese wok to the low-and-slow patience of French braisage.</p>
+    <div class="hero-meta">
+      <span>{{ total_techniques }}</span> techniques
+      <span>·</span>
+      {{ cuisines | length }} cuisines
+    </div>
+  </div>
+</section>
+
+<div class="browse-container">
+  {% if cuisines %}
+  <div class="section-label">All Cuisine Categories</div>
+  <div class="cuisine-grid">
+    {% for c in cuisines %}
+    <a href="/techniques/browse?cuisine={{ c.cuisine | urlencode }}" class="cuisine-card">
+      <div class="cuisine-name">{{ c.cuisine }}</div>
+      <div class="cuisine-count">{{ c.count }} technique{% if c.count != 1 %}s{% endif %}</div>
+      <span class="cuisine-arrow">→</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:80px 0;color:var(--text-muted)">
+    <div style="font-family:var(--serif);font-size:24px;margin-bottom:12px">No cuisines yet</div>
+    <p style="font-size:14px">Techniques with cuisine origins will appear here.</p>
+  </div>
+  {% endif %}
+</div>
+
+<div class="about-footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/suppliers">Suppliers</a>
+    <a href="/for-professionals">For Professionals</a>
+    <a href="/methodology">Methodology</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="mailto:info@provenance.kitchen">Contact</a>
+  </div>
+  <span class="footer-wm">Provenance</span>
+</div>
+
+<script>
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+</script>
+<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
+  <span>Add Provenance to your home screen</span>
+  <div>
+    <button onclick="installPWA()" style="background:rgba(201,168,76,0.12);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-right:8px">Install</button>
+    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(245,241,233,0.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
+  </div>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .catch(err => console.log('SW:', err));
+}
+let _pwaPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  if (!localStorage.getItem('pwa-dismissed')) {
+    document.getElementById('pwa-prompt').style.display = 'flex';
+  }
+});
+function installPWA() {
+  if (_pwaPrompt) {
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(() => {
+      document.getElementById('pwa-prompt').style.display = 'none';
+      _pwaPrompt = null;
+    });
+  }
+}
+function dismissPWA() {
+  document.getElementById('pwa-prompt').style.display = 'none';
+  localStorage.setItem('pwa-dismissed', 'true');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+{
+  "tradition": "fortified",
+  "region": "Portugal — Douro Valley (White Port, Dry to Extra-Dry Style, Churchill Estates Dry White Port, Cocktail Culture)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T21:03:03.479630+00:00",
+  "entries": [
+    {
+      "name": "Churchill Estates Dry White Port — Douro Valley, White Douro Grape Varieties, Extra-Dry Fortified, Cocktail and Aperitif Register",
+      "category": "fortified",
+      "subcategory": "white_port",
+      "origin": "Portugal",
+      "region": "Portugal — Douro Valley (White Port, Dry to Extra-Dry Style, Churchill Estates Dry White Port, Cocktail Culture)",
+      "producer": "Churchill Estates — Pinhão Valley, Douro Superior",
+      "alcohol_content": 19.5,
+      "price_tier": "mid_range",
+      "terroir_origin": "White Port is produced from white grape varieties grown within the Douro Valley DOC — the same steep schist terraces that produce the red Port varieties, but using white Douro grapes: Malvasia Fina (Boal de Alicante), Rabigato, Viosinho, Gouveio (Verdelho), Códega do Larinho, and Donzelinho. Churchill Estates sources White Port fruit primarily from Quinta da Gricha in the Cima Corgo Pinhão Valley at 100–350m elevation on south-facing schist terraces. The white Douro varieties ripen slightly earlier than the red Port varieties in the same extreme Douro heat (35–40°C maximum summer temperatures), achieving 13–14% potential alcohol in late September before the red variety harvest in October. The schist terroir contributes the characteristic dry, mineral, saline quality to White Port that distinguishes Douro white from white Muscat-based fortified wines — the schist mineral does not produce floral aromatic richness but instead a structural, dry, stone-mineral quality that is the defining terroir marker of Douro White Port and that makes it function as a genuinely dry aperitif rather than a sweet dessert fortified wine.",
+      "production_technique": "Dry White Port production at Churchill Estates begins with cold-soak maceration of the white Douro varieties at 12–15°C for 12–24 hours to extract the mineral and aromatic compounds from the white grape skins before pressing — the cold maceration adding textural complexity without colour extraction from the white skins. After gentle pneumatic pressing, the white juice ferments at 16–18°C in temperature-controlled stainless steel tanks for 5–7 days, achieving a higher pre-fortification alcohol level (8–10% ABV) than red Port base wines (6–8% ABV) — the higher pre-fortification alcohol resulting in a drier White Port with 30–65 g/L residual sugar (Extra Dry designation: under 40 g/L; Dry designation: 40–65 g/L) versus sweet White Port (over 80 g/L residual sugar). Churchill's Dry White Port specifically ferments to 9–10% ABV before fortification with 77% ABV aguardente vínica, producing a final wine of 19–20% ABV with 30–40 g/L residual sugar — the extra-dry tier that functions as a genuine aperitif wine rather than a dessert fortified. Limited aging in old, neutral 300L toneis for 6–12 months adds structural complexity without oxidative tawny development — the White Port retains its pale gold colour and fresh aromatic character rather than developing the amber-oxidative register of Tawny Port. The Churchill Dry White Port was among the first expressions specifically designed for the \"Porto Tónico\" serve — 60ml Dry White Port over ice in a Copa glass with 150ml tonic water and a slice of lemon, which became the signature aperitif serve of Porto's waterfront terrace cafés and subsequently exported as the defining cocktail of the Portuguese aperitivo culture.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Fino Sherry (dry fortified, aperitif service, saline mineral)",
+          "connection": "Churchill Dry White Port and Fino Sherry occupy the same functional position in the aperitif fortified wine register: both are dry or extra-dry fortified wines at 15–20% ABV served chilled as pre-dinner aperitifs rather than as dessert accompaniments. The sensory parallel is in the saline, mineral, dry character that both develop from their respective terroirs — the Douro schist minerality in White Port and the Albariza chalk and flor yeast autolysis saline character in Fino. Both are significantly more food-versatile than their sweet counterparts (sweet White Port; Oloroso Sherry), and both function in the Porto Tónico and Rebujito cocktail tradition as the dry fortified wine base for a citrus and carbonation serve."
+        },
+        {
+          "tradition": "Pineau des Charentes Blanc (French VDN aperitif, grape spirit + fresh juice)",
+          "connection": "Churchill Dry White Port and Pineau des Charentes Blanc are both fortified white wine aperitifs where fermentation is arrested by grape spirit addition — the technical mutage method producing similar residual sugar levels (30–80 g/L) and similar 17–20% ABV aperitif serving parameters. The distinction is the production philosophy: Pineau adds Cognac to unfermented Charente grape juice (no prior fermentation), while White Port adds aguardente to partially fermented Douro must. The Cognac spirit addition gives Pineau a brandy character absent from White Port's clean neutral-spirit base; the Douro schist mineral in White Port gives it a structural dryness absent from Pineau's rounder, fruit-forward register."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale gold with green highlights — the characteristic colour of a White Port with limited wood contact; no amber or tawny development from the 6–12 month neutral oak aging; brilliant clarity; lighter viscosity than Tawny Port due to the lower residual sugar (30–40 g/L versus 80–110 g/L in Tawny) and the dry-style fortification approach; the pale gold colour communicates the dry aperitif character of the Churchill expression versus the amber of sweet or aged White Port styles.",
+        "nose": "Douro schist mineral as the primary character — a dry, stone-chalk quality that defines extra-dry White Port and distinguishes it from sweet or Muscat-based fortified whites; beneath the mineral, fresh citrus peel (lemon zest, white grapefruit) from the Viosinho and Rabigato varieties; white peach and nectarine from the Malvasia Fina component; the aguardente spirit contributes a clean warming note without raw alcohol harshness; the floral character of the white Douro varieties at low yield — jasmine and acacia — at the top of the aromatic register above the mineral base.",
+        "palate": "Extra-dry entry with immediate mineral-saline character; 30–40 g/L residual sugar perceptible but not sweet — the schist minerality and the 19–20% ABV create a dry, structured palate impression despite the residual sugar; fresh citrus and white peach through the mid-palate; clean, dry, mineral finish with the fortification spirit providing warmth but not heat; medium length finish from the clean neutral spirit base and the straightforward mineral-fruit framework; the structured dryness functions as a genuine palate-cleansing aperitif rather than a dessert partner — the White Port is demanding in the positive sense of a wine that stimulates rather than satisfies the palate."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Sweet White Port (generic, over 80 g/L residual sugar)",
+          "criteria": "White Port with over 80 g/L residual sugar from early fortification at low pre-fortification alcohol (4–6% ABV); sweet and fruity without the dry mineral character of the extra-dry style; primarily consumed in Portugal as an inexpensive aperitif; lacks the structural complexity of extra-dry White Port and has limited application in serious wine programme or cocktail contexts."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Dry White Port (40-65 g/L residual sugar)",
+          "criteria": "White Port in the Dry designation (40–65 g/L residual sugar) — the standard Churchill style; dry enough for aperitif service and Porto Tónico cocktail; the mineral and citrus character present; most widely distributed dry White Port tier in international markets."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Extra-Dry White Port / Churchill Dry White Port (under 40 g/L)",
+          "criteria": "Extra-dry White Port with under 40 g/L residual sugar from fermentation to 9–10% ABV before fortification; the closest in structure to a dry Fino Sherry in the fortified wine aperitif category; Churchill Estates Dry White Port is the benchmark expression; the most demanding and food-flexible White Port style."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Aged Dry White Port / Lagrima or Reserva White Port",
+          "criteria": "Aged dry White Port with 2–5 years wood contact in old oak toneis, producing a pale amber color and additional oxidative complexity beyond the standard 6–12 month aging; rare category with limited commercial production; the Niepoort and Ramos Pinto reserved White Port expressions represent this tier; combines the dry aperitif mineral character of extra-dry White Port with early oxidative complexity from wood aging."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve Churchill Dry White Port at 8–10°C — the same service temperature as Fino Sherry; the dry mineral and citrus character is best expressed at the cooler aperitif temperature; serve in the Porto Tónico format (60ml Dry White Port, 150ml premium tonic water, ice, lemon slice in a Copa glass) or neat in a small white wine tulip as an aperitif before a formal dinner programme; do not serve warm or at room temperature as the 19–20% ABV fortification becomes dominant in the aromatic register above 14°C.",
+        "vessel": "Copa glass (200–250ml) over ice for the Porto Tónico cocktail serve — the Douro tradition of drinking dry White Port over ice with tonic water in a large Copa glass garnished with lemon or mint has become the definitive outdoor aperitif culture of Porto and the Douro Valley; serve neat in a small white wine tulip (120–150ml) for a formal programme comparison tasting against Fino Sherry or Pineau des Charentes; present with the explanation that dry White Port is the aperitif tier of the Port spectrum — the opposite end from Vintage Port in both sweetness and service context."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Churchill Estates — Pinhão Valley, Cima Corgo (1981; the pioneer of dry White Port as a commercial category and the benchmark expression for the Porto Tónico serve; Churchill Dry White Port created the international awareness of White Port as a cocktail ingredient that subsequently established the category in UK and North American markets). Also: Niepoort White Port (the sommelier benchmark for structured dry White Port in the independent house tier).",
+        "north_america_access": "Churchill Dry White Port is distributed through Quintessential Wines in the United States at USD $20–35 per 750ml. Dry White Port is a small but growing category in North American specialty retail — the Porto Tónico serve has gained traction in cocktail-focused wine bars in Vancouver, Toronto, and New York following the growth of the Portuguese food culture trend. BCLDB BC and LCBO Ontario carry limited selections of dry White Port.",
+        "culinary_application": "Dry White Port functions as the aperitif fortified wine in a formal Portuguese dinner programme — served with amuse-bouche of bacalhau croquettes, salted almonds, or charcuterie, where the dry mineral-saline character of the wine stimulates the appetite and cleanses the palate. The Porto Tónico serves the same aperitivo function as the Italian Aperol Spritz — a light, low-bitter fortified wine and carbonation serve at 8–10% effective ABV that marks the transition from cocktail culture to table wine service."
+      },
+      "price_trajectory": "rising",
+      "entry_id": "FOR-PORDOU-001",
+      "tradition": "fortified",
+      "extracted_at": "2026-04-12T21:03:03.479182+00:00",
+      "batch_number": 1
+    }
+  ]
+}

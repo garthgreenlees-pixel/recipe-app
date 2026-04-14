@@ -1,0 +1,291 @@
+import sys
+sys.path.insert(0, '/Users/garthgreenlees/Desktop/provenance-tester-1')
+from beverage_extractor import BeverageSession
+
+session = BeverageSession(
+    tradition='fermented',
+    region='India — Kerala (Toddy Tapping, Coconut Palm Kallu, Malabar Coast Fermented Tradition)',
+    output_dir='.',
+    starting_entry=1,
+    session_number=60,
+    running_total=0
+)
+
+session.add_producer({
+    'tradition': 'fermented',
+    'name': 'Traditional Kerala Kallu Tappers — Alappuzha and Thrissur Districts',
+    'location': 'Alappuzha (Alleppey) and Thrissur Districts, Kerala, India',
+    'description': (
+        'Traditional kallu (coconut toddy) tappers, known as Ilavars or Shanar/Nadar community members, '
+        'practice the ancient Malabar Coast palm tapping tradition along the Kerala backwater network '
+        'and coastal strips of Alappuzha and Thrissur districts. The practice of tapping Cocos nucifera '
+        'inflorescences is documented in the Sangam literature (300 BCE–300 CE) as a cornerstone of '
+        'Dravidian coastal culture. In Alappuzha, tappers work the coconut groves of the backwater '
+        'islands and Kuttanad lowlands — the lowest elevation agricultural zone in India, at 0.6–2.2m '
+        'below sea level — where the saline soil stress on the palms concentrates fermentable sap sugars. '
+        'Thrissur District tappers supply the toddy shops (shaap) of the district capital, where toddy '
+        'consumption culture is the most formalized in Kerala. The Ilavar community holds hereditary '
+        'tapping rights under Kerala toddy tapper cooperatives regulated by the Kerala State Beverages '
+        'Corporation, which licenses commercial toddy shops across the state.'
+    ),
+    'founded': 'Pre-300 BCE (Sangam period documentation); current cooperative structure: post-1960',
+    'region': 'Kerala, India',
+    'website': None,
+    'verified': False
+})
+
+session.add_purveyor({
+    'name': 'Kerala State Beverages Corporation (KSBC) Licensed Toddy Shops (Shaap)',
+    'type': 'state_licensed_distributor',
+    'description': (
+        'The Kerala State Beverages Corporation licenses toddy shops (locally called shaap or kallu '
+        'shaap) across Kerala\'s 14 districts. Fresh kallu is distributed through this network daily: '
+        'tappers deliver morning-tapped sap to toddy shops by 8–9 AM, where it is consumed through '
+        'the afternoon. State licensing ensures controlled distribution and revenue collection from '
+        'toddy consumption, which remains a major rural beverage category in Kerala. North American '
+        'access is zero for fresh toddy (it cannot be exported); however, fermented coconut water '
+        'and coconut vinegar products from Kerala producers reach North America through specialty '
+        'Indian grocery importers in Toronto, Vancouver, and New York.'
+    ),
+    'markets_served': ['India (Kerala only)'],
+    'traditions_carried': ['fermented'],
+    'website': 'ksbc.kerala.gov.in',
+    'verified': False
+})
+
+session.add_beverage({
+    'name': (
+        'Kallu (Kerala Coconut Toddy) — Malabar Coast Cocos nucifera Inflorescence Sap, '
+        'Fresh-Tapped and Naturally Fermented, Alappuzha Backwater Tradition'
+    ),
+    'category': 'fermented',
+    'subcategory': 'coconut_toddy',
+    'origin': 'India',
+    'region': 'India — Kerala (Toddy Tapping, Coconut Palm Kallu, Malabar Coast Fermented Tradition)',
+    'producer': 'Traditional Kerala Kallu Tappers — Alappuzha and Thrissur Districts',
+    'alcohol_content': 4.0,
+    'price_tier': 'everyday',
+    'terroir_origin': (
+        'Kerala kallu (coconut toddy) originates from the coastal and backwater zones of Kerala, '
+        'a narrow state on India\'s southwestern Malabar Coast between the Western Ghats mountain '
+        'range (peaking at 2,695m at Anamudi) and the Arabian Sea. The coconut palm ecology that '
+        'produces kallu sap is shaped by Kerala\'s humid tropical monsoon climate — 3,000–4,000mm '
+        'annual rainfall, minimum temperature of 23°C year-round, and the intense lateral root '
+        'systems that palms develop in the laterite soils of the coastal strip. Alappuzha District '
+        'produces particularly sugar-rich sap from palms growing in the Kuttanad backwater zone, '
+        'where the 0.6–2.2m below sea-level saline soil stress increases osmotic pressure in the '
+        'palm\'s vascular system and concentrates sap sugars. The Malabar Coast\'s documented role '
+        'in the Portuguese Colonial Trade (PCT) is foundational: Vasco da Gama landed at Kozhikode '
+        '(Calicut) in 1498 specifically to access the spice trade that Kerala controlled, and the '
+        'Portuguese colonial presence at Cochin (Kochi) from 1503 to 1663 placed them within '
+        'kilometers of the toddy-producing backwater communities of Alappuzha. The Goa feni parallel '
+        'is direct: both are fermented/distilled from coastal palms tapped by hereditary caste '
+        'communities within the Portuguese colonial trade zone; feni is distilled coconut toddy '
+        'from Goa (formerly Portuguese India), making Kerala kallu the undistilled precursor in '
+        'the same coastal Indian palm fermentation tradition. The PCT connection extends east to '
+        'Mozambique\'s nipa palm spirit (nipa wine), tapped from Nypa fruticans mangrove palms '
+        'along the Zambezi delta — the same Portuguese maritime routes that brought Malabar spices '
+        'to Lisbon also transported coconut palm cultivation knowledge from Kerala to East Africa.'
+    ),
+    'production_technique': (
+        'Kerala kallu production begins before sunrise each day. The tapper (Ilawar caste) climbs '
+        'the Cocos nucifera palm using a knotted rope harness looped around both feet, ascending '
+        '10–20m to the crown where the inflorescences (flower spikes) are located. The current '
+        'flower spike is prepared 3–5 days before tapping begins: the tapper beats the spike '
+        'gently with a wooden mallet twice daily to stimulate sap flow, then binds the tip with '
+        'cloth to prevent opening. When the tip is excised with a curved knife (kathi), the cut '
+        'surface immediately exudes Cocos nucifera inflorescence sap — a clear, faintly sweet '
+        'liquid containing sucrose at 10–17% by weight, along with amino acids, minerals (potassium, '
+        'calcium), and indigenous wild yeast populations resident on the palm surface. The tapper '
+        'attaches a clay pot (matkha) or plastic container below the cut surface; the pot is first '
+        'rinsed with toddy from the previous day\'s tapping to inoculate the new sap with active '
+        'Saccharomyces cerevisiae, Torulaspora delbrueckii, and Lactobacillus sp. cultures. Fresh '
+        'sap collected in the morning (neera) contains 0.0–0.5% alcohol and 10–15g/L sugar; '
+        'within 2 hours of tapping at Kerala ambient temperatures of 28–33°C, active fermentation '
+        'begins. By the time the tapper descends and delivers the morning sap to the toddy shop '
+        '(typically 6–9 AM delivery), the kallu contains 1–3% alcohol. By afternoon (noon–3 PM), '
+        'the same sap has fermented to 4–6% alcohol and carries the characteristic sharp lactic '
+        'and acetic character of advanced fermentation. Toddy consumed in the evening (after 4 PM) '
+        'from the same morning tapping may reach 6–8% alcohol with vinegar character developing. '
+        'The entire production chain — from tree to consumption — takes under 12 hours. No '
+        'stabilization, pasteurization, or sulfite addition is used. The tapper repeats the '
+        'process from each productive inflorescence twice daily (morning and evening tapping '
+        'cycles) for 2–3 months per inflorescence before allowing the flower to develop into '
+        'a coconut. A productive adult palm yields 2–4 liters of sap per day across two tapping '
+        'cycles during peak production periods. The spent toddy is also used to produce '
+        'coconut vinegar (the natural endpoint of uncontrolled fermentation) and, in Goa, '
+        'further distilled into feni — the PCT direct link between Kerala kallu and Goan feni.'
+    ),
+    'cross_tradition_parallels': [
+        {
+            'tradition': 'Goa Feni (coconut palm distillate, formerly Portuguese India)',
+            'connection': (
+                'Kerala kallu and Goa feni represent successive stages of the same Malabar Coast '
+                'coconut palm fermentation tradition within the Portuguese Colonial Trade zone: '
+                'kallu is the fresh-fermented sap (2–8% ABV); feni is the double-distilled '
+                'spirit from kallu (40–45% ABV) produced in clay pots just 450km north in '
+                'Portuguese Goa. The hereditary tapping castes (Ilawar in Kerala, Gaud Saraswat '
+                'in Goa) share ancient coastal South Indian origins, and the Portuguese colonial '
+                'administration formalized feni production in Goa while leaving kallu as a '
+                'state-regulated toddy category in Kerala — the colonial administrative divide '
+                'between Portuguese Goa and British India splitting a single pre-colonial '
+                'palm fermentation tradition into two legally distinct beverage categories.'
+            )
+        },
+        {
+            'tradition': 'Mozambique Nipa Palm Wine (Nypa fruticans, Zambezi delta)',
+            'connection': (
+                'Portuguese maritime trade routes connected Kerala\'s coconut palm toddy tradition '
+                'to East Africa\'s mangrove palm fermentation: Mozambique nipa wine is tapped from '
+                'Nypa fruticans inflorescences along the Zambezi River delta using identical tap-and-pot '
+                'methods documented in Kerala, with the same short fermentation window of 6–12 hours '
+                'before vinegar development. The parallel is not coincidental — Portuguese traders '
+                'who knew Kerala toddy tapping from the Cochin factory (1503–1663) carried '
+                'knowledge of inflorescence tapping techniques along the Mozambique Channel '
+                'trade route, where indigenous communities adopted the practice applied to '
+                'the native nipa palm that grows in coastal mangrove systems.'
+            )
+        },
+        {
+            'tradition': 'Mexican pulque (Agave fermented sap)',
+            'connection': (
+                'Kerala kallu and Mexican pulque are structural analogues across opposite sides '
+                'of the global tropics: both are produced by tapping the inflorescence or heart '
+                'of a monocotyledonous plant (Cocos nucifera versus Agave spp.), collecting '
+                'the high-sugar sap, and fermenting with indigenous wild yeast and bacterial '
+                'cultures in clay vessels within hours of collection. Both produce 4–8% ABV '
+                'milky-to-clear, short-shelf-life beverages that are consumed the same day '
+                'of tapping, and both represent ancient pre-colonial fermentation traditions '
+                'that the colonial powers (Portuguese in Kerala; Spanish in Mexico) found '
+                'already highly developed and attempted to regulate rather than replace.'
+            )
+        }
+    ],
+    'sensory_profile': {
+        'appearance': (
+            'Fresh-tapped neera (0–2 hours): water-clear to faintly hazy, pale straw; '
+            'midday kallu (4–6 hours): opaque white-cream from yeast turbidity and CO2, '
+            'developing visible fine bubble activity; afternoon kallu (8–12 hours): '
+            'milky white, dense yeast cloud, slight acetic haze; color deepens from '
+            'clear to ivory to cream as fermentation progresses through the day.'
+        ),
+        'nose': (
+            'Fresh morning kallu: green coconut water, honeysuckle, ripe tropical fruit '
+            'from early ester formation, delicate floral sweetness, clean yeast bread. '
+            'Afternoon kallu: sharp lactic yogurt-sourness dominates, acetic edge building, '
+            'the coconut-fruit character retreating behind fermentation volatiles; '
+            'warm bread yeast, mild vinegariness. The aromatic window for optimal '
+            'consumption is 2–6 hours post-tapping, when ester fruit and lactic '
+            'freshness coexist before acetic acid overwhelms.'
+        ),
+        'palate': (
+            'Light-to-medium body; morning: sweet, clean, low alcohol, gentle effervescence '
+            'from active CO2 production, natural coconut sweetness from residual sucrose, '
+            'no tannin, gentle tropical fruit mid-palate. Afternoon: tartness sharp and '
+            'forward from lactic and acetic acid accumulation, sweetness largely consumed '
+            'by yeast, warming 4–6% ABV, persistent yeast character, dry finish with '
+            'lingering coconut-vinegar edge. Texture is always silky-smooth from '
+            'yeast-derived glycerol production.'
+        )
+    },
+    'quality_hierarchy': [
+        {
+            'tier': 1,
+            'tier_name': 'Commercial Shaap (Evening Stale)',
+            'criteria': (
+                'Morning-tapped sap sold past 3 PM in licensed toddy shops; acetic and '
+                'vinegar character dominant; sweetness fully consumed; approaching 7–8% '
+                'ABV with harsh finish — the lowest register of the tradition, consumed '
+                'primarily for alcohol content rather than flavor complexity.'
+            )
+        },
+        {
+            'tier': 2,
+            'tier_name': 'Licensed Shaap (Midday Standard)',
+            'criteria': (
+                'Morning-tapped sap consumed at 10 AM–1 PM in standard Kerala toddy shops; '
+                '3–5% ABV; lactic freshness and coconut-fruit balance intact; the daily '
+                'functional tier of the tradition representing authentic kallu character '
+                'at the accessible everyday register.'
+            )
+        },
+        {
+            'tier': 3,
+            'tier_name': 'Premium Neera (Fresh Dawn Tapping)',
+            'criteria': (
+                'Sap consumed within 1–2 hours of morning tapping, 0.5–2% ABV; maximum '
+                'coconut sweetness and green floral aromatics; served by specialist tappers '
+                'at heritage resorts and toddy-tourism operations in Alappuzha and Thrissur; '
+                'the sweet, clean register that connects kallu to Cocos nucifera horticulture '
+                'rather than fermented beverage tradition.'
+            )
+        },
+        {
+            'tier': 4,
+            'tier_name': 'Kuttanad Backwater Reserve (Below-Sea-Level Terroir)',
+            'criteria': (
+                'Kallu from palms growing in the Kuttanad below-sea-level saline paddy system '
+                'of Alappuzha — the highest-sugar sap (15–17% by weight) from osmotic stress '
+                'on the palms, producing kallu with greater body, more concentrated tropical '
+                'fruit aromatics, and slower fermentation rate than coastal counterparts; '
+                'the apex terroir expression of Kerala coconut toddy, available only through '
+                'direct tapper relationships and heritage toddy tourism operations.'
+            )
+        }
+    ],
+    'service_intelligence': {
+        'temperature': (
+            'Served at ambient tropical temperature (28–33°C) in traditional Kerala toddy '
+            'shop culture — never chilled, as cold suppresses active yeast activity and '
+            'flattens the characteristic CO2 effervescence. For premium neera service at '
+            'heritage properties or culinary programmes outside Kerala, 18–22°C preserves '
+            'aromatic integrity while making the beverage comfortable for non-acclimatized '
+            'guests. The time-sensitive nature of kallu means temperature management is '
+            'secondary to timing: a perfectly timed fresh 3-hour-old kallu at 30°C '
+            'outperforms a stale 8-hour-old kallu at 15°C in every sensory dimension.'
+        ),
+        'vessel': (
+            'Traditional: unglazed clay cup (matkha fragment) or banana leaf cup in '
+            'rural settings; modern toddy shop standard is a plain stainless steel '
+            'tumbler (quarter-liter or half-liter); for culinary programme service, '
+            'a clear glass cylinder or wide-mouth ceramic cup showing the white '
+            'turbidity and bubble activity communicates the living fermented character; '
+            'the vessel should be pre-rinsed with fresh water only — no soap residue '
+            'that would interfere with active yeast cultures. Coconut shell half-shells '
+            'are used at heritage presentations connecting kallu service to the plant source.'
+        ),
+        'programme_position': (
+            'In a PCT coastal India beverage programme, kallu anchors the fermented '
+            'foundation tier before Goa feni (distilled coconut) and Paul John whisky '
+            '(Indian single malt): the progression from raw fermented sap to distilled '
+            'spirit to aged grain spirit narrates the full spectrum of Malabar Coast '
+            'fermentation tradition within the Portuguese colonial encounter zone.'
+        )
+    },
+    'purveyor_intelligence': {
+        'benchmark_producer': (
+            'Traditional Ilawar Tapping Communities — Kuttanad, Alappuzha District, Kerala '
+            '(below-sea-level terroir, highest-sugar sap, benchmark for Malabar Coast kallu); '
+            'KSBC licensed shaap in Thrissur and Kochi for accessible commercial reference.'
+        ),
+        'north_america_access': (
+            'Fresh kallu cannot be exported — shelf life under 24 hours at Kerala temperatures. '
+            'The closest North American analogues are: Cocos nucifera coconut water kefir '
+            'from specialty fermentation producers (Vancouver, Portland); packaged Kerala '
+            'coconut vinegar from Indian grocery importers (Laxmi brand via House of Spices '
+            'USA); and Goa feni (available via specialty South Asian spirits importers in '
+            'Ontario and select US states) as the distilled equivalent.'
+        ),
+        'culinary_application': (
+            'In PCT culinary programming, fresh kallu can be replicated by inoculating '
+            'young coconut water (Harmless Harvest or similar) with active sourdough '
+            'starter and fermenting at 30°C for 4–6 hours — producing a 1–3% ABV '
+            'coconut-lactic ferment that approximates morning kallu character for '
+            'beverage pairing demonstrations in North American contexts.'
+        )
+    },
+    'price_trajectory': 'stable'
+})
+
+session.commit_batch()
+session.finish()

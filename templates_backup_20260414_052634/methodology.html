@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methodology — Provenance</title>
+<meta name="description" content="How Provenance curates culinary knowledge — the Sashimi Standard, our classification system, and what it means to meet professional depth.">
+<link rel="canonical" href="https://provenance.kitchen/methodology">
+<meta property="og:title" content="Methodology — Provenance">
+<meta property="og:description" content="How Provenance curates culinary knowledge — the Sashimi Standard, our classification system, and what it means to meet professional depth.">
+<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<meta property="og:url" content="https://provenance.kitchen/methodology">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Methodology — Provenance">
+<meta name="twitter:description" content="How Provenance curates culinary knowledge — the Sashimi Standard, our classification system, and what it means to meet professional depth.">
+<meta name="twitter:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080A;--surface:#111113;--surface2:#18181B;
+  --cream:#F5F1E9;--smoke:#9C9A93;--stone:#6B6962;--dim:#3A3835;
+  --gold:#C9A84C;--gold-faint:rgba(201,168,76,0.1);--gold-border:rgba(201,168,76,0.22);
+  --border:rgba(74,72,64,0.3);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.7}
+
+/* ── Nav ──────────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:60px;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-wordmark{
+  font-family:var(--serif);font-size:1.1rem;font-weight:400;
+  color:var(--cream);text-decoration:none;
+}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{
+  font-family:var(--sans);font-weight:300;font-size:11px;
+  color:var(--smoke);text-decoration:none;letter-spacing:0.04em;transition:color 200ms;
+}
+.nav-links a:hover{color:var(--gold)}
+.nav-p{
+  width:30px;height:30px;border-radius:50%;
+  border:1px solid rgba(201,168,76,0.45);
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;
+}
+.nav-p:hover{border-color:var(--gold)}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:var(--gold);line-height:1}
+
+/* ── Mobile Nav ─── */
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.mobile-menu-btn{display:flex}}
+
+/* ── Layout ───────────────────────────────────────────── */
+main{padding-top:60px}
+.container{max-width:780px;margin:0 auto;padding:5rem 2rem 6rem}
+
+/* ── Hero ─────────────────────────────────────────────── */
+.page-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:rgba(201,168,76,0.6);
+  margin-bottom:1.25rem;
+}
+.page-hero-title{
+  font-family:var(--serif);font-size:clamp(2rem,5vw,3.2rem);
+  font-weight:400;color:var(--cream);letter-spacing:-0.02em;
+  line-height:1.15;margin-bottom:1.75rem;
+}
+.page-hero-rule{
+  width:80px;height:1px;background:var(--gold-border);margin-bottom:4rem;
+}
+
+/* ── Sections ─────────────────────────────────────────── */
+.about-section{margin-bottom:4rem}
+.section-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--gold);opacity:0.7;
+  margin-bottom:1.25rem;display:flex;align-items:center;gap:12px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--gold-border)}
+.about-body{
+  font-size:16px;color:var(--smoke);font-weight:300;line-height:1.85;
+  max-width:660px;
+}
+.about-body strong{color:var(--cream);font-weight:400}
+
+/* ── Standard pillars ─────────────────────────────────── */
+.pillars{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:1px;border:1px solid var(--gold-border);border-left:3px solid var(--gold);
+  margin-top:0.5rem;
+}
+.pillar{
+  padding:1.5rem 1.5rem;
+  background:rgba(201,168,76,0.04);
+}
+.pillar-num{
+  font-family:var(--serif);font-size:1.6rem;font-weight:400;
+  color:rgba(201,168,76,0.35);line-height:1;margin-bottom:0.5rem;
+}
+.pillar-name{
+  font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--cream);margin-bottom:0.5rem;
+}
+.pillar-desc{
+  font-size:13px;color:var(--smoke);line-height:1.6;
+}
+
+/* ── Rule block ───────────────────────────────────────── */
+.rule-block{
+  border-left:2px solid var(--gold-border);padding-left:1.5rem;margin-top:0.5rem;
+}
+.rule-statement{
+  font-family:var(--serif);font-size:1.15rem;font-weight:400;font-style:italic;
+  color:var(--cream);line-height:1.5;
+}
+.rule-sub{
+  font-size:13px;color:var(--stone);margin-top:0.5rem;
+}
+
+/* ── Classification tiers ─────────────────────────────── */
+.tier-list{list-style:none;margin-top:0.5rem}
+.tier-list li{
+  padding:1rem 0;border-bottom:1px solid var(--border);
+  display:flex;gap:1.25rem;align-items:baseline;
+}
+.tier-list li:last-child{border-bottom:none}
+.tier-tag{
+  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--gold);flex-shrink:0;min-width:80px;
+}
+.tier-desc{font-size:14px;color:var(--smoke);line-height:1.65}
+.tier-desc strong{color:var(--cream);font-weight:400}
+
+/* ── Footer ───────────────────────────────────────────── */
+.about-footer{
+  border-top:1px solid var(--border);
+  padding:2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;
+}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{
+  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--stone);text-decoration:none;transition:color 180ms;
+}
+.footer-links a:hover{color:var(--gold)}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:var(--dim)}
+
+@media(max-width:640px){
+  .container{padding:3.5rem 1.25rem 5rem}
+  .pillars{grid-template-columns:1fr 1fr}
+}
+</style>
+<!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4G21HCX2D0');
+</script>
+<!-- PWA -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Provenance">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+</head>
+<body>
+
+<!-- ── Nav ─────────────────────────────────────────────────────────── -->
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+    {% if is_authenticated %}
+    <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
+    {% else %}
+    <a href="/auth/login">Sign In</a>
+    {% endif %}
+  </div>
+  <button class="mobile-menu-btn" aria-label="Open navigation" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()" aria-label="Close navigation">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/auth/account">My Kitchen</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+<main>
+<div class="container">
+
+  <!-- Hero -->
+  <div class="page-eyebrow">Methodology</div>
+  <h1 class="page-hero-title">One standard.<br>No exceptions.</h1>
+  <div class="page-hero-rule"></div>
+
+  <!-- The Standard -->
+  <div class="about-section">
+    <div class="section-label">The Sashimi Standard</div>
+    <p class="about-body">Every entry in Provenance is evaluated against a single benchmark — named for the dish that most clearly exposes the gap between surface knowledge and real understanding. <strong>The Sashimi Standard</strong> asks: can you describe where this comes from, how to identify quality, what makes it exceptional, and where the execution moment is? If an entry cannot answer all four, it does not exist in the platform.</p>
+  </div>
+
+  <!-- Five Pillars -->
+  <div class="about-section">
+    <div class="section-label">Five Pillars of Every Entry</div>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-num">01</div>
+        <div class="pillar-name">Origin</div>
+        <div class="pillar-desc">Where the ingredient, technique, or dish comes from — geographically, culturally, and historically.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">02</div>
+        <div class="pillar-name">Quality Hierarchy</div>
+        <div class="pillar-desc">What separates excellent from adequate — grading systems, seasonal variation, and production methods.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">03</div>
+        <div class="pillar-name">Sensory Identification</div>
+        <div class="pillar-desc">How to recognise quality in the hand, on the palate, and in the finished dish — without a label.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">04</div>
+        <div class="pillar-name">Cross-Cuisine Parallels</div>
+        <div class="pillar-desc">How this ingredient or technique maps across traditions — the structural links that reveal deeper culinary logic.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">05</div>
+        <div class="pillar-name">Execution Moment</div>
+        <div class="pillar-desc">The precise point at which the dish succeeds or fails — the decision or action that a professional must get right.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Rule -->
+  <div class="about-section">
+    <div class="section-label">The Curatorial Rule</div>
+    <div class="rule-block">
+      <div class="rule-statement">"If it cannot be examined, it should not be in the system."</div>
+      <div class="rule-sub">Provenance entries are written to the depth required by professional culinary examination — CCC, WSET, ASI, and equivalent bodies. Entries that cannot meet this threshold are either rebuilt or removed.</div>
+    </div>
+  </div>
+
+  <!-- Classification System -->
+  <div class="about-section">
+    <div class="section-label">Classification System</div>
+    <p class="about-body">Provenance uses a multi-axis classification system built around three primary dimensions:</p>
+    <ul class="tier-list" style="margin-top:1.25rem">
+      <li>
+        <span class="tier-tag">Cuisine</span>
+        <div class="tier-desc">50+ cuisine traditions mapped as nested hierarchies — allowing technique entries to carry both a specific home tradition and a broader culinary family. <strong>French → Classical French</strong>, <strong>Japanese → Kaiseki</strong>.</div>
+      </li>
+      <li>
+        <span class="tier-tag">Technique</span>
+        <div class="tier-desc">12,106 entries classified by method type, heat application, and skill level. Linked bidirectionally to recipes, ingredients, and cross-cuisine analogues.</div>
+      </li>
+      <li>
+        <span class="tier-tag">Provenance</span>
+        <div class="tier-desc">Ingredient entries are linked to <strong>ORIGIN</strong> suppliers (who produce or grow the item) and <strong>PROVIDER</strong> suppliers (who distribute it regionally). Both links must be verified before an entry is promoted to Canon status.</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Beverage -->
+  <div class="about-section">
+    <div class="section-label">Beverage Canon</div>
+    <p class="about-body">The beverage library follows the same five-pillar standard applied to wine, sake, spirits, coffee, tea, and non-alcoholic beverages. Vintage data is maintained for all 44 regions (2015–2024 coverage for the full set; 2011–2024 for the top 10). Pairing intelligence is classified by <strong>pairing type</strong> (complement, contrast, bridge, cleanse, elevate) and <strong>confidence</strong> (classic, established, suggested, adventurous, experimental).</p>
+  </div>
+
+  <!-- What Doesn't Make It -->
+  <div class="about-section">
+    <div class="section-label">What Doesn't Make It</div>
+    <p class="about-body">Provenance does not publish entries that are:</p>
+    <ul class="tier-list" style="margin-top:1.25rem">
+      <li>
+        <span class="tier-tag">Unverified</span>
+        <div class="tier-desc">Sourcing claims without a confirmed ORIGIN supplier link. Technique entries without cross-cuisine validation from at least two independent traditions.</div>
+      </li>
+      <li>
+        <span class="tier-tag">Generic</span>
+        <div class="tier-desc">Entries that describe <em>a category</em> rather than a specific ingredient, technique, or product. "Mushrooms" is not an entry; "Matsutake from the Cascades, September harvest" is.</div>
+      </li>
+      <li>
+        <span class="tier-tag">Redundant</span>
+        <div class="tier-desc">Duplicate techniques with no meaningful distinction in execution, origin, or cultural significance. One canonical entry with variants, not three separate entries for the same thing.</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Ongoing Curation -->
+  <div class="about-section">
+    <div class="section-label">Ongoing Curation</div>
+    <p class="about-body">Provenance is not a snapshot. The canon is actively maintained: vintage data updated annually, supplier status reviewed quarterly, and technique entries revised when primary sources are updated or contradicted. If you find an error — factual, sourcing, or cultural — we want to know.</p>
+    <div style="margin-top:1.5rem">
+      <a href="mailto:info@provenance.kitchen" style="font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-border);padding-bottom:2px;transition:border-color 200ms" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gold-border)'">info@provenance.kitchen</a>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<!-- ── Footer ────────────────────────────────────────────────────── -->
+<div class="about-footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/suppliers">Suppliers</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="mailto:info@provenance.kitchen">Contact</a>
+  </div>
+  <span class="footer-wm">Provenance</span>
+</div>
+
+<script>
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+</script>
+<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
+  <span>Add Provenance to your home screen</span>
+  <div>
+    <button onclick="installPWA()" style="background:rgba(201,168,76,0.12);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-right:8px">Install</button>
+    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(245,241,233,0.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
+  </div>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .catch(err => console.log('SW:', err));
+}
+let _pwaPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  if (!localStorage.getItem('pwa-dismissed')) {
+    document.getElementById('pwa-prompt').style.display = 'flex';
+  }
+});
+function installPWA() {
+  if (_pwaPrompt) {
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(() => {
+      document.getElementById('pwa-prompt').style.display = 'none';
+      _pwaPrompt = null;
+    });
+  }
+}
+function dismissPWA() {
+  document.getElementById('pwa-prompt').style.display = 'none';
+  localStorage.setItem('pwa-dismissed', 'true');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+{
+  "tradition": "spirits",
+  "region": "Central America — Guatemala (Ron Zacapa, Highlands)",
+  "batch_number": 3,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:59:20.732273+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "guatemalan rum sistema solera highland",
+      "region": "Central America — Guatemala (Retalhuleu on Pacific coast; aged 2,300m highlands)",
+      "name": "Ron Zacapa — Guatemala Sistema Solera, the Highest Aged Rum in the World",
+      "terroir_origin": "Ron Zacapa Centenario is produced from sugarcane grown in Guatemala's Pacific coastal lowlands (Retalhuleu) and aged 2,300m above sea level in the Quetzaltenango highlands — the unique 'House Above the Clouds' ageing warehouse. The PCT connection: Central America's Portuguese colonial link is indirect — the region was primarily Spanish colonial territory — but the sugarcane varieties cultivated in Guatemala arrived via the same Portuguese Atlantic chain (Madeira → Caribbean → Spanish mainland colonies). More directly: Zacapa represents the Spanish colonial rum tradition that parallels the Portuguese-influenced Caribbean tradition. The terroir innovation: ageing at 2,300m altitude creates dramatically different conditions from sea-level Caribbean ageing — the thinner air, lower ambient pressure, cooler temperatures (average 15°C vs. Caribbean 28°C), and lower oxygen content slow the evaporation and oak extraction rates. The result: a slower, more nuanced ageing curve. Ron Zacapa 23: average 6–23 years of age using the Sistema Solera method — the Sherry solera system applied to rum, creating blends of multiple vintages in sequence rather than single-year ageing. Zacapa is owned by Diageo (since 2011) and is one of the world's most premium rum expressions by price and critical recognition.",
+      "production_technique": "Ron Zacapa's production uses first-press virgin sugarcane honey (vírgen de caña — the first pressing of the sugarcane) rather than blackstrap molasses. This is unusual: most rum uses molasses, the byproduct of sugar refining. First-press juice contains higher sugar content and different aromatic precursors than molasses — closer to the rhum agricole tradition (fresh juice) than to the standard molasses tradition, but produced differently (condensed and clarified rather than immediately fermented). Fermentation: 3–5 days using specific yeast strains; the first-press honey provides more complex fermentation substrate than blackstrap molasses. Distillation: column still (the American-continental production tradition rather than the pot-still artisanal Caribbean tradition). Sistema Solera ageing: casks arranged in tiers; the oldest rum is at the bottom, the youngest at the top; fractional drawing from the bottom tier (never more than 1/3 of the oldest cask at a time) and refilling with younger spirit. Cask variety: ex-bourbon, ex-sherry, ex-port, ex-Pedro Ximénez; the diversity of cask types is the central complexity driver. Ageing location: the 'House Above the Clouds' at 2,300m in the Quetzaltenango/Huehuetenango highlands of western Guatemala.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "fortified",
+          "beverage": "Amontillado Sherry (Solera ageing, Jerez)",
+          "connection": "Ron Zacapa's Sistema Solera is directly borrowed from Sherry production: the fractional blending across age tiers creates similar complexity to Amontillado or Palo Cortado — you cannot identify a single vintage because every glass contains rum from multiple years. Both Amontillado and Zacapa 23 achieve their complexity through sustained wood contact across multiple age layers; both carry dried fruit, nut, and warm spice as their signature profile"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Foursquare Exceptional Cask Series (Barbados)",
+          "connection": "Zacapa 23 and Foursquare Exceptional Cask represent the two most technically ambitious premium rum approaches: Foursquare's vintage-dated, cask-strength, no-additives transparency vs. Zacapa's solera-blended, high-altitude, multi-cask complexity. Both command premium pricing; both have expanded the category's ceiling. The philosophical contrast is instructive: Foursquare argues for purity and declared vintage; Zacapa argues for complexity and blended continuity"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep mahogany; amber-orange highlights; viscous; slow legs from the high residual sweetness and natural concentration",
+        "nose": "Zacapa 23: extraordinarily rich — vanilla cream, dark toffee, dried plum and fig, orange confit, roasted coffee, dark chocolate, warm spice (cinnamon, cardamom), oak — and underneath it all, the first-press cane honey's own gentle sweetness. The altitude ageing is perceptible: the flavours are concentrated without the heavy tropical-wood extraction of sea-level Caribbean rum. XO (older solera expression): more dried fruit, more coffee, more chocolate; extraordinary length and density.",
+        "palate": "40% ABV (Zacapa 23); the residual sweetness is significant — Zacapa has historically added a small amount of sugar post-distillation (a controversial practice in the rum community, following Richard Seale's campaigning for pure rum standards). The flavour is full, rich, accessible — the most luxuriously textured rum at its price point. Zacapa XO: 40% ABV; deeper; longer finish; the solera's oldest fractions create layers of complexity.",
+        "conclusion": "Zacapa 23 is the rum world's most successful premium gift-category product — widely regarded as the entry into 'serious rum' for consumers who begin with its accessibility and then discover more complex expressions. For a programme: position as the 'gateway premium rum' before Foursquare and El Dorado; its accessibility is a feature, not a limitation."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Ron Zacapa XO / Edición Negra Luxury",
+          "criteria": "Extended solera; older average age; ex-Pedro Ximénez finish; luxury packaging tier",
+          "markers": "Zacapa XO; Zacapa Royal 25yr; limited expressions; BC ~$100–160; US ~$80–130"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Ron Zacapa 23 (Centenario)",
+          "criteria": "Sistema Solera; 6–23 year range; House Above the Clouds ageing; multi-cask complexity; the reference expression",
+          "markers": "Ron Zacapa Centenario 23; BC ~$60–75; US ~$45–60"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Ron Zacapa Edición Negra",
+          "criteria": "Younger solera average; accessible; introduction to the Zacapa profile",
+          "markers": "Zacapa Edición Negra; BC ~$40–50; US ~$30–40"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Guatemala Rum Category (Commercial Reference)",
+          "criteria": "Guatemala origin; correct highland character; commercial accessibility",
+          "markers": "Botran Reserva; Diplomático (Venezuela, similar style); BC/US ~$25–38"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature for Zacapa 23 neat; the solera complexity opens at 18–20°C. Ice optional: a single large cube is acceptable.",
+        "vessel": "Wide-bowl snifter or Glencairn; the rich aromatics fill a larger vessel well",
+        "technique": "Zacapa 23 neat: 45mL, room temperature, 3–5 minutes to open fully. Old Fashioned: Zacapa 23 60mL + 5mL agave syrup + 2 dashes Angostura + orange peel — the solera complexity makes an extraordinarily layered Old Fashioned. XO: digestif only, neat at 30mL. Guest pairing recommendation: offer Zacapa 23 alongside dark chocolate as the natural pairing.",
+        "programme_position": "Premium gift rum; gateway to the serious rum conversation; educational: solera ageing method demonstration",
+        "verbal_presentation": "Ron Zacapa Centenario 23 — Quetzaltenango highlands, Guatemala. Aged 2,300 metres above sea level in the House Above the Clouds. A solera blend: every glass contains rum from up to 23 years of fractional ageing in ex-bourbon, ex-sherry, and Pedro Ximénez casks."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Industrias Licoreras de Guatemala (ILG) — Zacapa",
+        "producer_location": "Retalhuleu (production) / Quetzaltenango (ageing), Guatemala",
+        "key_person": "Lorena Vásquez (Master Blender, Zacapa — one of Latin America's most prominent female master blenders); Diageo (owner since 2011)",
+        "production_volume": "Premium commercial; globally distributed via Diageo; one of the top 5 premium rum brands globally by value",
+        "certifications": [
+          "Guatemala Rum Producers Association"
+        ],
+        "bc_distributor": "Diageo Canada / BCLDB; Ron Zacapa 23 widely available at BC Liquor stores",
+        "us_distributor": "Diageo North America (national); widely available Total Wine, BevMo, national premium retailers",
+        "uk_distributor": "Diageo UK; widely available at Waitrose, Sainsbury's, major retailers",
+        "price_tier": "Reserve to Prestige (Zacapa 23 BC ~$65–75; XO BC ~$130–160)",
+        "availability_notes": "Zacapa 23: BC Liquor stores nationally; one of the most accessible premium rums in BC. US: Diageo national at virtually all premium spirits retailers. The most widely distributed premium-tier rum in North America."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "Guatemala's sugarcane agriculture arrived via the Spanish colonial trade network that used the same Portuguese Atlantic island-sourced cane varieties. The Zacapa story is specifically Central American: a Spanish-colonial agricultural base (sugarcane) combined with a French-inspired ageing technique (solera from Jerez) and a specifically Guatemalan terroir innovation (altitude ageing). Lorena Vásquez's role as Master Blender continues the Latin American female Master Blender tradition established by Joy Spence (Appleton, Jamaica) and continued by Trudiann Branker (Mount Gay, Barbados).",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Mole negro (Oaxacan dried chilli, chocolate, spice sauce on turkey)",
+          "pairing_type": "complement",
+          "rationale": "Mole negro's complexity — 30+ ingredients including dried chillis, chocolate, sesame, cumin, cinnamon, dried fruit — mirrors Zacapa's own multi-layer solera complexity. The chocolate and dried fruit in the mole find the same register in the rum; the chilli heat is cut by the rum's sweetness. The most ambitious Caribbean-Central American food pairing"
+        },
+        {
+          "technique_id": "",
+          "dish": "Dark chocolate truffles (70%+ cacao, single origin)",
+          "pairing_type": "complement",
+          "rationale": "Zacapa 23's vanilla-toffee-dried-fruit complexity mirrors dark chocolate's own bitter-fruit register — the solera's multi-year wood integration provides the same layered complexity as a well-conched single-origin chocolate. The canonical premium rum and dark chocolate pairing"
+        }
+      ],
+      "source": "Ron Zacapa official production documentation; Diageo 2024 annual report (Zacapa acquisition history); Lorena Vásquez Master Blender biography; ILG Guatemala production documentation; The Rum Lab industry analysis (solera rum methodology)",
+      "entry_id": "SPR-CENAME-001",
+      "extracted_at": "2026-04-11T15:59:20.731919+00:00",
+      "batch_number": 3
+    }
+  ]
+}

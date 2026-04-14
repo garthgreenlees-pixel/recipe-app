@@ -1,0 +1,103 @@
+{
+  "tradition": "tea",
+  "region": "Portugal — Azores (São Miguel Island)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:42:17.567143+00:00",
+  "entries": [
+    {
+      "tradition": "tea",
+      "sub_tradition": "atlantic volcanic island tea",
+      "region": "Portugal — Azores (São Miguel Island, Gorreana Estate)",
+      "name": "Gorreana Estate Tea — Europe's Only Remaining Tea Plantation",
+      "terroir_origin": "Gorreana Tea Estate (Maia, São Miguel Island, Azores) is the only remaining tea plantation in Europe and one of the most historically significant agricultural curiosities in the Portuguese colonial world. Tea cultivation in the Azores began in 1874, introduced by Portuguese entrepreneur Jacinto Leite who imported tea plants from the Brazilian state of Rio de Janeiro — themselves descended from seeds obtained via Chinese trade contacts through the Portuguese colonial network in Macau and the Far East. The PCT connection is explicit: Azores tea exists because Portugal's commercial network connected Chinese tea cultivation (via Macau, PCT-10) to Atlantic island agriculture. At its peak in the early 20th century, São Miguel had seven tea estates. Gorreana (founded 1883) is the only survivor. The estate occupies 35 hectares on São Miguel's north coast at 300–450m elevation. The North Atlantic climate — consistent moisture, moderate temperatures (12–20°C), high humidity — is structurally similar to Darjeeling and Assam in the Himalayan foothills: the Atlantic and the monsoon create comparable tea-growing conditions through different mechanisms. The basalt volcanic soil of São Miguel adds a mineral character not found in Himalayan or Chinese tea terroirs.",
+      "production_technique": "Gorreana produces both black and green teas entirely by hand and using Victorian-era machinery that has not been substantially modernised since the early 20th century. This is a deliberate heritage preservation: the estate uses rolling machines, drying ovens, and sorting trays from the 1900–1920 period, creating a production continuity that is unique in European food and beverage culture. Black tea production: withering (24 hours in Atlantic ocean air), rolling (copper drum rollers), fermentation/oxidation (3–4 hours), drying (hot air ovens, 90–95°C), sifting and grading. Grades: Broken Leaf, Orange Pekoe, Pekoe, Hysson (green). Green tea: withering, minimal rolling, steam-fixing to halt oxidation, drying. Harvest: mechanical hand-picking of the two-leaves-and-a-bud standard; three flushes annually (April–September). The Azores maritime climate means Gorreana tea does not produce the sharp seasonal first-flush variation of Darjeeling — instead, consistency across flushes is the hallmark of the Atlantic terroir. No pesticides have ever been used on the estate (certified organic 2001). The hand-sorting process removes stems and yellow leaves at multiple stages.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "tea",
+          "beverage": "Darjeeling Second Flush (Himalayan black tea)",
+          "connection": "Both Gorreana and Darjeeling Second Flush achieve complexity through cool-climate slow maturation — Atlantic moisture versus Himalayan monsoon. Darjeeling's muscatel (2-methylbutyraldehyde ester) character versus Gorreana's mineral-Atlantic character represents the terroir contrast: altitude-mineral Himalayan versus sea-level volcanic Atlantic. Neither has a direct parallel elsewhere. Gorreana is the quieter wine; Darjeeling is the opera"
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Azores Pico Island White (Arinto dos Açores)",
+          "connection": "Gorreana tea and Pico wine are the two most singular expressions of Azores agricultural terroir: both are made on basalt volcanic islands with extreme Atlantic exposure; both carry the island's distinctive mineral-oceanic signature. A Gorreana tea service alongside Pico Island wine creates the complete Azores sensory narrative for a PCT programme — one cold, one hot; both unmistakably of the same volcanic archipelago"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Black tea brew: deep amber to copper-red; clear; no visible tannin clouding. Green tea (Hysson): pale yellow-green; delicate; lighter than Chinese green teas. Both: distinctly brighter colour than Darjeeling equivalents",
+        "nose": "Black (Orange Pekoe): warm bread, light smoke, dried stone fruit, marine minerality (subtle — not present in inland teas), gentle tannin. Broken Leaf: stronger, earthier, more tannic. Green (Hysson): fresh grass, steamed artichoke, Atlantic sea air, lime leaf — the European jade: lighter than Chinese green tea with a distinctive marine note absent in all other tea traditions.",
+        "palate": "Black: medium body; moderate tannin (lower than Assam or Ceylon); clean finish with sustained mineral length. No added milk needed for balance — the Atlantic terroir moderates tannin naturally. Green: delicate; low astringency; the mineral-marine note most pronounced on the mid-palate; clean dry finish. The defining character of Gorreana: a mineral-saline depth that locates the tea geographically — you can taste the ocean surrounding São Miguel.",
+        "conclusion": "Gorreana is the most historically significant tea produced outside Asia. For a serious beverage programme: serve Gorreana as the opening of a tea flight with the provenance story (Portuguese Atlantic colonial trade, Victorian machinery, only European tea estate). The sensory experience is distinctive; the historical context is extraordinary."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Gorreana Orange Pekoe / Hysson Green (Estate Direct)",
+          "criteria": "Certified organic; estate-direct sourcing; current vintage; hand-sorted; Orange Pekoe grade or Hysson green",
+          "markers": "Gorreana Orange Pekoe; Gorreana Hysson Green; estate-direct or European specialty tea merchants; ~€8–15 per 100g"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Gorreana Broken Leaf / Pekoe (Standard Grade)",
+          "criteria": "Certified organic; Gorreana estate; Broken Leaf or standard Pekoe grade",
+          "markers": "Gorreana Broken Leaf; Gorreana Pekoe; specialty tea retailers; ~€6–10 per 100g"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Porto Formoso Estate (the other Azores tea estate)",
+          "criteria": "The second surviving Azores tea operation (less recognised than Gorreana); certified organic; São Miguel terroir",
+          "markers": "Porto Formoso teas; also available direct from São Miguel; ~€8–12 per 100g"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Azores Tea (blended/commercial)",
+          "criteria": "Azores-origin tea in commercial packaging; correct Atlantic character but less provenance specificity",
+          "markers": "Commercial Azores tea gift packs; sold widely in the Azores; ~€4–8 per 100g"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Black tea: 95°C water; 3–4 minutes steep. Green (Hysson): 75–80°C water (do NOT use boiling — Atlantic green tea is delicate and will turn bitter); 2–3 minutes steep.",
+        "vessel": "White porcelain cup (essential for observing colour); traditional Gorreana service uses the estate's own ceramic cups (available from estate). Teapot: ceramic or earthenware; avoid metal which affects the mineral character.",
+        "technique": "Black: steep 3.5 minutes, remove leaves — do not over-steep or tannin becomes dominant. Serve plain first to identify the mineral-saline character before adding milk/sugar. Green (Hysson): 2.5 minutes maximum; serve plain; the maritime note is most evident in the first sip without additions. Programme service: offer a Gorreana Orange Pekoe alongside Azores Pico wine as the PCT Atlantic island flight — hot tea, cold wine, same volcanic terroir.",
+        "programme_position": "Tea service anchor for PCT programme; historical narrative beverage; afternoon service or paired with pastel de nata (Portuguese custard tart)",
+        "verbal_presentation": "Gorreana Orange Pekoe — São Miguel, Azores. 1883. The only tea estate in Europe. The Atlantic volcanic version of Darjeeling. From the same Portuguese colonial trade network that brought tea from Macau to the mid-Atlantic."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Gorreana Tea Estate (Maia, São Miguel Island, Azores, Portugal)",
+        "producer_location": "Maia, São Miguel Island, Azores, Portugal",
+        "key_person": "Ernesto Melo e Azevedo (current estate owner/manager, 5th generation family estate)",
+        "production_volume": "Small — approximately 40,000kg annually from 35 hectares; significantly constrained by hand production and Victorian machinery",
+        "certifications": [
+          "Certified Organic (2001)",
+          "Protected Designation of Origin (European DOP)"
+        ],
+        "bc_distributor": "No confirmed BC commercial distributor; specialty tea shops carry (Lupicia, Silk Road Tea) via European import routes; also available direct shipping from gorreana.pt to Canada",
+        "us_distributor": "Arbor Teas (Ann Arbor, MI — confirmed organic specialty importer); Simpson & Vail (Brookfield, CT — Portuguese specialty teas); available direct from gorreana.pt to US",
+        "uk_distributor": "Fortnum & Mason (London — stocks Gorreana as specialty provenance tea); The Tea Makers of London; widely available via UK online specialty retailers",
+        "price_tier": "Market (~€8–15 / 100g; specialty retail ~$14–22 CAD / 100g)",
+        "availability_notes": "Most accessible via direct order from gorreana.pt (ships internationally). In Vancouver: Murchie's Tea & Coffee (check availability); Lupicia (Pacific Centre, Vancouver) — occasional Azores listing. US: Arbor Teas national delivery. UK: Fortnum & Mason flagship."
+      },
+      "trail_connection": "PCT-3",
+      "trail_note": "Gorreana tea exists because of the Portuguese colonial trade network: Chinese tea cultivation (Macau, PCT-10) → Macanese botanical knowledge → Brazilian colonial agricultural experiments → Azores island introduction (1874). The Victorian-era machinery, hand-sorting processes, and organic certification create a beverage with an unusually complete provenance narrative — from 15th-century Portuguese exploration to the 2001 organic standard, all on the same 35-hectare basalt hillside.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Pastel de nata (Portuguese custard tart)",
+          "pairing_type": "complement",
+          "rationale": "The pastéis de nata + tea pairing is as canonical in Lisbon cafés as croissant + coffee in Paris. Gorreana black tea's moderate tannin cuts the egg-custard richness of the tart while the mineral undertone bridges with the caramelised sugar crust — the PCT's most culturally embedded food-beverage pairing, transported from Lisbon to the Azores and back"
+        },
+        {
+          "technique_id": "",
+          "dish": "Queijo São Jorge (Azores aged cow's milk cheese)",
+          "pairing_type": "bridge",
+          "rationale": "São Jorge DOP cheese (Azores — sharp, nutty, aged 7+ months) and Gorreana black tea share the mineral-dairy register: the tea's Atlantic minerality bridges with the cheese's Azores pasture character. Both are from São Miguel-adjacent islands; both carry the volcanic archipelago in their flavour structure"
+        }
+      ],
+      "source": "Gorreana Tea Estate official history and production documentation (gorreana.pt); Azores DOP certification documentation; organic certification records (2001); UNESCO botanical heritage documentation (Azores colonial agriculture); Ernesto Melo e Azevedo estate interviews (multiple sources, 2015–2022)",
+      "entry_id": "TEA-PORAZO-001",
+      "extracted_at": "2026-04-11T15:42:17.566788+00:00",
+      "batch_number": 2
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "tradition": "spirits",
+  "region": "Caribbean — Grenada (River Antoine Estate)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:59:20.731419+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "grenada river antoine windmill rum",
+      "region": "Caribbean — Grenada (St. Patrick Parish, northeastern coast)",
+      "name": "River Antoine Estate Rum — The Most Traditional Rum in the Caribbean",
+      "terroir_origin": "River Antoine Estate (Grenada) operates the oldest rum distillery in the Windward Islands still using all-original pre-industrial equipment. Founded in the 1780s (during the British colonial period following France's cession of Grenada in 1763), River Antoine has been producing rum continuously using the same waterwheel, the same wooden mill, and the same copper pot stills since the estate was built. The PCT connection is through the full Atlantic colonial chain: Portuguese Atlantic sugarcane cultivation → Spanish/French initial Caribbean colonisation (Grenada was French from 1649 to 1762) → British rum production culture after 1763. The River Antoine estate itself was built during the British period but on French-cleared plantation land, over the original Caribbean indigenous (Kalinago) territory. The rum: single estate, single-still, unaged (white rum) at 75% ABV — the highest-proof commercially produced white rum available anywhere. Overproof: the traditional Caribbean 'overproof rum' tradition dates from the same era as Grenada's founding — high-proof rum was mixed with water on plantations as a daily ration for enslaved workers (the WADT's most direct material legacy). River Antoine continues this production tradition unchanged from the 18th century: the waterwheel turns the mill; fresh-pressed cane juice ferments overnight in wooden vats with wild yeasts; distillation in the original copper pot still the next day.",
+      "production_technique": "River Antoine's production process is the least changed in the Caribbean: Cane harvesting: manual, by machete; sugarcane from the surrounding estate fields and adjacent farms. Milling: a waterwheel powered by the Antoine River drives the original wooden mill and crusher — the same waterwheel that has operated since the 1780s; the water source is the same river that gives the estate its name. Fermentation: fresh-pressed sugarcane juice (vesou) — not molasses — collected in open wooden fermentation vats; wild yeasts from the environment ferment the juice overnight at ambient temperature (28–32°C tropical heat); 12–18 hours fermentation produces a wash of approximately 7–9% ABV. Distillation: original copper pot still (single distillation); heart cut taken at approximately 75% ABV. No ageing: the white rum is bottled at full distillation proof (75% ABV) without dilution or ageing. The overproof character is the product itself. This production is almost identical to the process that produced Caribbean rum in the 18th century — a living museum of pre-industrial rum production that also happens to produce extraordinary rum.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Rhum Agricole AOC Martinique (Clément, J.M.)",
+          "connection": "River Antoine Estate and Martinique Rhum Agricole are both fresh sugarcane juice-based rums rather than molasses-based — the agricultural rum tradition using vesou rather than distillery byproduct. The difference: Martinique's AOC requires specific ageing, controlled production, column still elements; River Antoine is the artisanal pre-AOC version of the same philosophy — fresh juice, pot still only, no ageing, no standardisation. Both express the terroir of the specific Caribbean island through the sugarcane variety and environment rather than through the molasses commodity chain"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Mezcal Ensamble (Agave, Oaxaca)",
+          "connection": "River Antoine Estate rum and artisanal Oaxacan mezcal share the defining character of pre-industrial spirits production that has resisted modernisation: both use wild fermentation with ambient yeasts; both distill in copper or clay pot stills using traditional equipment; both produce spirits at high ABV with raw agricultural character. Both are preserved 18th-century production technologies in active use — the most important living examples of pre-industrial distillation"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Clear to very pale straw; 75% ABV creates a slight viscosity; thin tears from the high alcohol; no colour from absence of ageing",
+        "nose": "Extraordinarily complex for an unaged spirit — the fresh sugarcane juice and wild yeast fermentation create complexity impossible in molasses rum: fresh-cut sugarcane, green grass, tropical flower, light brine from the Antoine River proximity to the coast, sweet raw cane, overripe banana, light fusel from the overproof character. The nose at 75% ABV is intense — approach carefully, do not get too close initially.",
+        "palate": "75% ABV — this is not sipped neat by choice; the tradition is to dilute 1:1 with water, producing a spirit at approximately 37–38% ABV. Diluted: the complexity opens — fresh cane sweetness, tropical fruit, wild fermentation character, the same raw agricultural identity as the nose. The flavour is closer to the original pre-18th century Caribbean rum experience than any other commercially available spirit. For mixing: at full proof, River Antoine is the most powerful rum cocktail ingredient available — a few drops go far.",
+        "conclusion": "River Antoine Estate rum is the PCT×WADT's most historically authentic beverage: the 1780s Caribbean plantation rum, still produced on the same waterwheel. For a programme: serve diluted 1:1 with still water to 37.5% ABV; describe the waterwheel and the wild fermentation. This is the rum that the enslaved workers who built it also drank — the history is immediate."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "River Antoine Estate Overproof (75% ABV) — Bottled Direct",
+          "criteria": "Single estate, full proof, original equipment production; export version (available internationally) vs. local version (sold at estate)",
+          "markers": "River Antoine Estate Rum 75% ABV (export bottle); extremely limited international distribution; UK/US ~$25–35 for 750mL"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Grenada-Produced Rum — Clarke's Court",
+          "criteria": "Grenada origin; produced at Clarke's Court Distillery (Grenada's other major rum producer, more accessible);  correct Grenada terroir character",
+          "markers": "Clarke's Court Special Dark; Clarke's Court Pure White; BC/US ~$20–28"
+        },
+        {
+          "tier": 2,
+          "tier_name": "West Indian Overproof White Rum (Windward Islands)",
+          "criteria": "Caribbean overproof white rum at 65–75% ABV; vesou or heavy molasses base; traditional Caribbean character",
+          "markers": "Wray & Nephew Overproof (Jamaica, 63%); Bacardi 151 (discontinued); Hamilton Pot Still Black (US import); BC/US ~$22–35"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Premium White Rum (Commercial Reference)",
+          "criteria": "High-quality white rum; clean, fresh; cocktail foundation; reference tier for comparison with overproof and aged styles",
+          "markers": "Banks 5 Island; Wray & Nephew White Overproof; Foursquare White; BC/US ~$18–25"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Never serve undiluted; dilute 1:1 with still water before service to reach ~37% ABV. Temperature: room temperature or with single ice cube.",
+        "vessel": "Small rocks glass (diluted) or shot glass (for programme tasting purposes); no stemmed glass",
+        "technique": "Service protocol: dilute 15mL of River Antoine 75% with 15mL still water to create a 30mL tasting portion at ~37.5% ABV. Instruct guests to nose from 15cm distance before tasting — the undiluted vapour at 75% ABV is intense. Caribbean Rum Punch using River Antoine: 1 part (3mL) River Antoine + 6 parts fruit juice (grapefruit, pineapple, lime) + 3 parts coconut water — the overproof makes a punch of normal strength with minimal volume. Historical education: describe the plantation daily ration dilution practice.",
+        "programme_position": "Historical education anchor; most traditional rum production demonstration; PCT×WADT history narrative (waterwheel, original equipment, 1780s)",
+        "verbal_presentation": "River Antoine Estate — Grenada, 1780s. The same waterwheel. The same copper pot still. The same wild yeast from the air. Two hundred and forty years of Caribbean rum production, unchanged."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "River Antoine Estate (Duquesne, St. Patrick Parish, Grenada)",
+        "producer_location": "River Antoine Estate, St. Patrick Parish, northern Grenada",
+        "key_person": "River Antoine family management (family-owned since the estate was built)",
+        "production_volume": "Very small; mostly sold at the estate and local Grenada market; limited export versions available",
+        "certifications": [
+          "Heritage rum classification (Grenada Sugar Factory standards)"
+        ],
+        "bc_distributor": "Not commercially available in BC; extremely limited export distribution; seek via specialist Caribbean rum importers (Hamilton Rum, MiniBar Delivery, Caskers online)",
+        "us_distributor": "Hamilton Spirits Company (Greg Brady, NYC; imports rare Caribbean rums including River Antoine — confirmed); specialist spirits retailers: Astor Wines NYC, K&L Wines SF carry when available",
+        "uk_distributor": "Master of Malt carries limited River Antoine stock; The Whisky Exchange; La Maison du Whisky (UK/FR)",
+        "price_tier": "Market (~$25–35 US for export bottle; negligible at estate in Grenada)",
+        "availability_notes": "River Antoine is one of the most difficult rum expressions to source in North America. US: Hamilton Spirits (hamiltonrum.com) is the most reliable; K&L Wines San Francisco. BC: no reliable retail source; online private import only. UK: Master of Malt most consistent. Alternative: serve Wray & Nephew Overproof (Jamaica, 63% ABV) as the most widely available overproof comparison point."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "River Antoine Estate was built by enslaved West African workers approximately 1785–1800 on what had been French colonial land. The waterwheel, the vats, the stills, and the mill represent the most intact physical legacy of the Atlantic plantation rum economy still in active commercial operation anywhere in the Caribbean. The WADT (West African Diaspora Trail) is not abstract here — the labour that built this equipment was African enslaved labour; the same overproof rum they produced was allocated as their daily ration. River Antoine's continuation is both a heritage achievement and an act of historical memory.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Oil-down (Grenada national dish — breadfruit, callaloo, coconut milk, salt fish)",
+          "pairing_type": "complement",
+          "rationale": "Oil-down — Grenada's national dish, a one-pot stew of breadfruit, callaloo, salted meat and fish, coconut milk, and Caribbean spices — is the most direct River Antoine pairing: both are expressions of Grenada's agricultural bounty. The raw cane character of the rum mirrors the fresh coconut and breadfruit of the dish; the rum diluted with coconut water becomes an extension of the same culinary tradition"
+        },
+        {
+          "technique_id": "",
+          "dish": "Nutmeg ice cream (Grenada is the world's second-largest nutmeg producer)",
+          "pairing_type": "bridge",
+          "rationale": "Grenada produces approximately 20% of the world's nutmeg — the island was known as the 'Spice Isle.' River Antoine rum with fresh-grated Grenadian nutmeg on vanilla ice cream is the most sensory-specific Grenada experience available: the overproof rum's raw cane character is transformed by the nutmeg's warm-spice oils into a flavour combination unique to this island"
+        }
+      ],
+      "source": "River Antoine Estate production documentation; Grenada History Trust heritage distillery documentation; Dave Broom 'Rum' (Grenada section); Hamilton Spirits Company import documentation; WIRSPA Windward Islands rum producers",
+      "entry_id": "SPR-CARGRE-001",
+      "extracted_at": "2026-04-11T15:59:20.731050+00:00",
+      "batch_number": 2
+    }
+  ]
+}

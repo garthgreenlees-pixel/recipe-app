@@ -1,0 +1,110 @@
+{
+  "tradition": "fortified",
+  "region": "Portugal — Madeira (Bastardo Variety)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T16:38:49.059831+00:00",
+  "entries": [
+    {
+      "tradition": "fortified",
+      "sub_tradition": "madeira canteiro bastardo",
+      "region": "Portugal — Madeira (Bastardo Variety)",
+      "name": "Madeira Bastardo — Ghost Variety, Pre-Phylloxera Red-Berried Fortified",
+      "terroir_origin": "Bastardo (identical to Trousseau in Jura, grown across borders under the same name) was once Madeira's second most-planted variety after Malvasia. The 1872 oidium epidemic followed by phylloxera devastated plantings to near-extinction. The variety is red-berried — rare for Madeira where white varieties dominate — producing wines with a distinctive copper-amber colour rather than typical mahogany. Fewer than 2 hectares remain, primarily in Barbeito's supplier network in Sao Vicente and Santana. A 2019 IVBAM-backed replanting programme has added 0.8ha of new Bastardo. Sao Vicente north coast: basalt sea cliffs, maximum Atlantic salinity exposure, highest rainfall zone on island. Santana parish: coolest growing zone, highest acid retention in red-berried varieties. Volcanic tuff soil: darker, more heat-retentive than basalt; encourages phenolic development in red skin varieties.",
+      "production_technique": "Harvest: mid-October — slightly earlier than Terrantez due to thinner skins and rot risk. Vinification: whole-cluster pressing; brief skin contact (4-8 hrs) extracts colour and tannin — no extended maceration. Fortification: at 4-6% residual sugar — drier than Bual, richer than Verdelho; medium-dry classification. Canteiro ageing: all remaining Bastardo uses canteiro only — no estufagem applied. Barrel: 300L American oak, then 500L chestnut; transfers every 5-7 years to fresh wood. Colour evolution: copper-pink in youth to amber-garnet at 10yr to tawny-copper at 20yr+. Oxidative development: faster than white-variety Madeiras — tannins soften within 10yr canteiro. Barbeito releases: 10yr blended and occasional single-vintage (2015 vintage released 2025, limited to approximately 400 bottles).",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Jura Trousseau (Domaine de la Tournelle)",
+          "connection": "Same variety; Jura's version is lighter red table wine — Madeira's canteiro transforms it to oxidative amber. The tannin lineage is recognisable across both styles; Bastardo 20yr shows where Trousseau goes with five decades of oxidation."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Colheita Tawny Port (20yr)",
+          "connection": "Tawny copper colour, dried fruit and rancio similarities — but Port lacks Madeira's volcanic acidity that defines Bastardo's finish. Port is sweeter and heavier; Bastardo is more mineral and tense."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Oloroso Sherry (medium, Lustau)",
+          "connection": "Oxidative amber, dried fruit and walnut are shared — but higher sweetness and lower acid definition in Oloroso vs Bastardo's Atlantic tension shows the Andalusian-Atlantic climate divide."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Sagrantino Passito (Umbria, Arnaldo Caprai)",
+          "connection": "Red-grape fortified/passito style with tannin and dried cherry — tannin structure comparison reveals Bastardo's moderate grip vs Sagrantino's formidable power."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Translucent copper-amber with tawny rim; distinctly lighter in colour than Bual or Malmsey at equivalent age",
+        "nose": "Dried strawberry, Morello cherry compote, roasted hazelnut, volatile acetone edge, sea salt mineral",
+        "palate": "Red-fruit sweetness with grippy fine tannin — unlike any white-variety Madeira; medium-dry with acid lift on finish",
+        "texture": "Less viscous than Bual; fine tannin creates slight astringency that white Madeiras lack entirely; unusually refreshing mouthfeel for a fortified wine",
+        "finish": "Shorter than Terrantez; red-fruit-and-mineral; tannin provides structural grip through the finish and into the aftertaste",
+        "conclusion": "The only Madeira with tannin structure — bridges the aperitif-and-red-wine roles simultaneously"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Pre-phylloxera Bastardo casks (if authenticated)",
+          "criteria": "Museum auction only; authentication through IVBAM or independent MW assessment required; Barbeito has confirmed pre-1870 stocks in deep cellar; extraordinary rarity",
+          "markers": "Auction only; price on request; no regular market availability"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Barbeito Bastardo 20yr Single Cask",
+          "criteria": "Full canteiro 20yr; no estufagem; tannin-softened rancio complexity; limited to single barrel per release; unfined and unfiltered",
+          "markers": "Check vintage availability with The Rare Wine Co.; US ~$150-220; extremely limited"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Barbeito Bastardo 10yr Blended",
+          "criteria": "Best current-availability example; approximately 500 cases per year; 10yr canteiro minimum; the most achievable Bastardo for program use",
+          "markers": "Barbeito Bastardo 10yr; US ~$80-120 via Rare Wine Co.; Canada: private order only"
+        },
+        {
+          "tier": 1,
+          "tier_name": "No entry-level Bastardo",
+          "criteria": "Supply constraints prevent volume commercial production; no producer currently offers a sub-10yr or blended entry-tier Bastardo",
+          "markers": "Category gap — recommend Blandy's Bual 5yr as substitute for entry introduction"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 13-15 degrees C — tannin structure responds to cooler service than white Madeira styles",
+        "vessel": "Medium bordeaux-style glass (wider bowl than Port glass) to give the tannin structure room to breathe",
+        "technique": "Bastardo in a Madeira Cobbler (crushed ice, seasonal berries, mint) is the most visually distinctive serve in the fortified category — the copper colour in a crystal glass creates immediate conversation. At table: with charcuterie boards, aged Gouda, or dark chocolate at 70%+ cacao. Never serve warm — warmth collapses the tannin freshness.",
+        "programme_position": "Fortified wine education sessions; rare variety showcase; charcuterie pairing program",
+        "verbal_presentation": "Madeira Bastardo — fewer than two hectares surviving on the island. Red-berried, canteiro aged, pre-phylloxera lineage. The copper wine of the Atlantic."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Vinhos Barbeito (Ricardo Freitas) — the last house to maintain regular Bastardo production",
+        "producer_location": "Camara de Lobos, Madeira, Portugal",
+        "key_person": "Ricardo Freitas (winemaker; has championed pre-phylloxera variety preservation)",
+        "bc_distributor": "Not available through BCLDB. Private order through a licensed BC agent required.",
+        "us_distributor": "The Rare Wine Co. (Napa) — primary and often sole US source for Barbeito Bastardo",
+        "uk_distributor": "Berry Bros. and Rudd or Handford Wines (London) — occasional allocations only",
+        "price_tier": "No entry tier. Mid: $80-120 (Barbeito 10yr). Premium: $150-220 (Barbeito 20yr).",
+        "availability_notes": "Supply extremely constrained. Barbeito 10yr is the standard commercial release. Pre-ordering via Rare Wine Co. recommended for any allocation."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Jamon Iberico de Bellota (acorn-fed Iberian ham, 36+ months cure)",
+          "pairing_type": "complement",
+          "rationale": "Bastardo's fine red-fruit tannin cuts through the fat of aged Jamon Iberico while the dried cherry and hazelnut mineral dialogue runs through both products — two Iberian Peninsula traditions at peak expression."
+        },
+        {
+          "technique_id": "",
+          "dish": "70% Valrhona dark chocolate (Guanaja)",
+          "pairing_type": "bridge",
+          "rationale": "Bastardo's tannin dialogue with high-cacao chocolate works where Malmsey would be overwhelmed by sweetness — the medium-dry mineral tension of Bastardo bridges the bitter cacao and the dried fruit in a way no white Madeira can achieve."
+        }
+      ],
+      "source": "IVBAM Madeira technical classification documentation; Barbeito vintage release notes and Ricardo Freitas interview documentation; The Rare Wine Co. Madeira allocation catalogue 2024",
+      "trail_connection": "PCT-2",
+      "trail_note": "PCT Region 2: Madeira — Bastardo's near-extinction and slow recovery mirrors the colonial disruption of Madeira's agricultural landscape. The preservation of Bastardo by Barbeito is the clearest example of viticultural archaeology in the Portuguese Atlantic tradition.",
+      "entry_id": "FOR-PORMAD-002",
+      "extracted_at": "2026-04-11T16:38:49.059551+00:00",
+      "batch_number": 2
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Vinho Verde (Moncao e Melgaco, Alvarinho)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T17:19:03.594756+00:00",
+  "entries": [
+    {
+      "tradition": "wine",
+      "sub_tradition": "vinho verde alvarinho premium moncao melgaco",
+      "region": "Portugal — Vinho Verde (Moncao e Melgaco sub-region)",
+      "name": "Alvarinho Moncao e Melgaco — Portugal's Most Mineral and Age-Worthy Vinho Verde",
+      "terroir_origin": "Moncao e Melgaco is the most northerly and most continental of Vinho Verde's nine sub-regions — positioned at the Portuguese-Spanish border where the Minho River creates a natural boundary. The sub-region's continental character (drier, hotter summers than coastal Vinho Verde) fundamentally differentiates Alvarinho from Moncao e Melgaco from the lighter, more neutral versions produced in the coastal sub-regions. Soils: granite decomposed into sandy loam (areia granitica) with occasional schist outcrops — the granite gives Alvarinho its distinctive floral and mineral precision. The Minho River valley channels cool Atlantic air up from the coast but the continental summer allows full phenolic ripeness — a balance point no other Portuguese white wine region achieves with such consistency. Vine training: traditional bordura (vertical trellis) at Anselmo Mendes, replacing the traditional ramada (overhead pergola) to improve air circulation and reduce disease pressure. Average vine age for premium parcels: 30-45 years. The Galicia connection: the identical variety (Albarino in Galicia) is grown on the Spanish side of the same river valley — the most direct PCT cultural-terroir link in the Iberian peninsula.",
+      "production_technique": "Harvest: manual, mid-September for standard; late September for premium parcels (the extra 2 weeks in the continental heat creates the phenolic ripe character that separates Moncao e Melgaco from coastal Alvarinho). Crushing: whole-cluster pressing; no skin contact for standard expressions. Curtimenta (Anselmo Mendes): 24hr skin contact on premium Alvarinho parcels — the skin contact extracts phenolic texture and aromatic oils that create the copper-tinged, textural 'orange wine adjacent' style. Fermentation: indigenous yeasts in stainless steel; no oak contact for fresh style; older 300L French oak for premium expression (Muros Antigos 'Vinhas Velhas'). Sulphur: very low SO2 regime at Anselmo Mendes; natural winemaking philosophy. Ageing on lees: 6-9 months on gross lees with weekly battonage for the Muros Antigos range — this builds the oily texture that makes Alvarinho from Moncao e Melgaco one of the most food-resistant whites in Portugal. The wines age: unlike standard Vinho Verde (drink within 18 months), premium Moncao e Melgaco Alvarinho from low-yield old vine parcels develops for 5-8 years; the 2016 Anselmo Mendes Curtimenta is drinking beautifully in 2026.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Albarino Rias Baixas DO (Galicia, Spain)",
+          "connection": "The identical grape variety from the identical river valley — Alvarinho on the Portuguese side, Albarino on the Spanish. The comparison reveals how IVDP vs DO regulatory frameworks, different winemaker philosophies, and slightly different sub-regional microclimates create divergent expressions from the same genetic material."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "White Burgundy Macon-Villages (Chardonnay, lees-aged)",
+          "connection": "Both are granite-grown whites with lees ageing providing oily texture. The comparison shows how two different varieties (Alvarinho and Chardonnay) can reach a similar textural register through identical winemaking choices (lees ageing, no oak, cool fermentation)."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Gruner Veltliner Smaragd (Wachau, Austria)",
+          "connection": "Both are mineral-driven, food-versatile Central/Western European whites with the ability to age 5-10 years from optimal vintages. The Wachau Gruner and Moncao e Melgaco Alvarinho both carry a distinctive white pepper and mineral saline character."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Vermentino di Gallura DOCG (Sardinia)",
+          "connection": "Both are Atlantic/Mediterranean-influenced granite-grown whites with pronounced mineral salinity and aromatic citrus-floral precision. The Sardinian granite and the Portuguese Minho granite produce a mineral signature more similar than their geographic distance suggests."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale gold with green-gold reflections; medium viscosity; slight spritz in very young examples (CO2 retained during bottling at Vinho Verde tradition)",
+        "nose": "White peach, lemon zest, jasmine, salted sea air, white flowers, faint granite mineral; the aromatic precision of Alvarinho is unlike any other Portuguese white variety",
+        "palate": "Entry: fresh, dry, with citrus-driven acidity. Mid-palate: stone fruit and oily texture from lees ageing. Finish: saline mineral persistence, bone-dry on the palate",
+        "texture": "Medium body; the lees-aged examples are oily and grippy — the textural register of a white Burgundy achieved through lees contact rather than oak",
+        "finish": "45-60 seconds; saline mineral and citrus pith persist; the dryness is complete — no residual sugar in premium Moncao e Melgaco",
+        "conclusion": "The most mineral and food-versatile Portuguese white wine — can replace Burgundy in contexts where Burgundy is too expensive or too heavy"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Anselmo Mendes Alvarinho Curtimenta (Skin Contact)",
+          "criteria": "24hr skin contact; old vine parcels; 6-9 months lees ageing; natural low-SO2; the most demanding and distinctive Alvarinho expression in the sub-region",
+          "markers": "Anselmo Mendes Curtimenta; BC ~$45-60; US ~$40-55; limited distribution"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Anselmo Mendes Muros Antigos Vinhas Velhas (Old Vine)",
+          "criteria": "Old vine Alvarinho (40+ year parcels); no oak; 6 months lees; the benchmark for age-worthy Alvarinho from Moncao e Melgaco",
+          "markers": "Muros Antigos Vinhas Velhas; BC ~$35-45; US ~$30-40"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Soalheiro Alvarinho or Quinta de Santiago Alvarinho",
+          "criteria": "Single-quinta Moncao e Melgaco; 3-5 months lees; clean and mineral; the mid-tier reference for the sub-region character",
+          "markers": "Soalheiro Alvarinho; BC ~$25-35; US ~$22-30; BCLDB listed"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Quinta da Aveleda Alvarinho or Casal Garcia Vinho Verde",
+          "criteria": "Entry Vinho Verde; some Alvarinho content; light and fresh; introduction to the Vinho Verde category for new guests",
+          "markers": "Casal Garcia; BC ~$12-18; US ~$10-15; BCLDB widely available"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 10-12 degrees C for the fresh standard expressions; 12-14 degrees C for premium skin-contact and old-vine versions to show textural depth",
+        "vessel": "Narrow-mouthed white wine glass (Riesling style) to preserve the aromatic precision; a wide-bowled Burgundy glass will dissipate the floral character",
+        "technique": "Premium Moncao e Melgaco Alvarinho as a Burgundy alternative: on a wine-by-the-glass program, position the Anselmo Mendes Muros Antigos as the house white for those who want white Burgundy character at half the price. The sales script: 'Portuguese granite, Atlantic climate — the white wine that gives you the mineral-lees texture of Burgundy from the edge of the Atlantic.' For food: Alvarinho's saline mineral is the most food-friendly match for shellfish, grilled white fish, ceviche, and light poultry in any price category.",
+        "programme_position": "House white alternative to Burgundy; shellfish course pairing; by-the-glass premium white wine program",
+        "verbal_presentation": "Alvarinho, Moncao e Melgaco — the northernmost corner of Portugal, at the Spanish border on the Minho River. Granite soils, Atlantic air, stone fruit and sea salt. The white wine of the Portuguese Atlantic coast."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Anselmo Mendes Vinhos — the reference producer for premium skin-contact and old-vine Alvarinho",
+        "producer_location": "Moncao, Vinho Verde DOC, Portugal",
+        "key_person": "Anselmo Mendes (winemaker; trained Bordeaux and Burgundy)",
+        "bc_distributor": "No direct BCLDB listing for Anselmo Mendes; Soalheiro Alvarinho is BCLDB-listed",
+        "us_distributor": "Kermit Lynch Wine Merchant (Berkeley) for Anselmo Mendes; distributor varies by state for Soalheiro",
+        "uk_distributor": "Caves de Pyrene, Indigo Wine (London)",
+        "price_tier": "Entry: $12-18 (standard Vinho Verde). Mid: $25-35 (Soalheiro). Premium: $35-55 (Anselmo Mendes old vine/skin contact).",
+        "availability_notes": "Anselmo Mendes Curtimenta is limited production — contact Kermit Lynch for allocation. Soalheiro Alvarinho widely available across North America."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Percebes (Galician barnacles, boiled in seawater) or Portuguese crab",
+          "pairing_type": "complement",
+          "rationale": "The saline mineral character of Alvarinho from Moncao e Melgaco is the direct counterpart to percebes — the iodine sea mineral in the shellfish and the granite mineral in the wine create the quintessential Atlantic pairing."
+        },
+        {
+          "technique_id": "",
+          "dish": "Grilled sea bass or turbot with lemon and olive oil",
+          "pairing_type": "bridge",
+          "rationale": "The citrus-mineral axis of Alvarinho bridges the delicate white fish and the brightness of the lemon oil finish — the most effortless white wine-fish pairing on the Atlantic coast."
+        }
+      ],
+      "source": "CVRVV (Comissao de Viticultura da Regiao dos Vinhos Verdes) sub-region specifications; Anselmo Mendes Vinhos production documentation; BCLDB product listings verified April 2026",
+      "trail_connection": "PCT-1",
+      "trail_note": "PCT Region 1 (northern extension): Moncao e Melgaco Alvarinho sits at the linguistic and cultural boundary between Portugal and Galicia. The identical Alvarinho/Albarino grape grown on both sides of the Minho River is one of the clearest examples of how the PCT's Portugal-Atlantic cultural continuity extends into the Iberian peninsula itself.",
+      "entry_id": "WIN-PORVIN-001",
+      "extracted_at": "2026-04-11T17:19:03.594111+00:00",
+      "batch_number": 1
+    }
+  ]
+}

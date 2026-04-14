@@ -1,0 +1,110 @@
+{
+  "tradition": "fortified",
+  "region": "Portugal — Madeira (Rare Varieties)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T16:38:49.058221+00:00",
+  "entries": [
+    {
+      "tradition": "fortified",
+      "sub_tradition": "madeira canteiro terrantez",
+      "region": "Portugal — Madeira (Terrantez Variety)",
+      "name": "Madeira Terrantez — Rarest Native Variety, High-Acid Medium-Rich Style",
+      "terroir_origin": "Terrantez is Madeira's most prized and rarest native white variety — nearly wiped out by the dual phylloxera and oidium epidemics of the 1870s-1880s. Fewer than 5 hectares exist today, concentrated in Sao Jorge and Camara de Lobos. In the pre-phylloxera era Terrantez ranked above Sercial and Verdelho as the wine of choice for the English merchant class in Funchal. The variety demands exceptional cultivation discipline — low yields, disease susceptibility, irregular ripening — so only Barbeito and one or two independent farmers have maintained production. Terrantez sits medium in the Madeira sweetness scale: drier than Bual, richer than Verdelho. Its defining characteristic is the tension between residual sugar and devastating acid — a paradox of texture that no other Madeira variety replicates. Sao Jorge parish: north-facing volcanic basalt slopes, 400-550m elevation, Atlantic wind exposure full. Volcanic basalt and tuff parent material: mineral salinity, high phosphorus, low potassium. Pergola system (latada): overhead vine training allows airflow, critical for humidity control on this Atlantic island.",
+      "production_technique": "Harvest: manual, late October — Terrantez ripens 2-3 weeks after Verdelho and Sercial. Fortification: neutral grape spirit (96% abv) added at approx 9% residual sugar (medium style). Canteiro method only — NO estufagem heat tanks; 20yr+ in attic lodges at Funchal waterfront. Canteiro ageing: barrels stacked in tiers near roof; summer temperatures reach 35-40C naturally. Barrel regime: 500L chestnut then 300L American oak; solera-style topping from younger vintages. Barbeito vintage releases: single barrel, single year — minimum 20yr age; Ricardo Freitas selects by sensory evaluation only. Oxidative ageing: no topping up; ullage intentional — controlled micro-oxygenation creates rancio character over decades. Bottling: no filtration; some batches unfined — haze possible in cold storage.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "fortified",
+          "beverage": "Tokaji Aszu 5-6 Puttonyos (Hungary)",
+          "connection": "Same tension between botrytis sweetness and volcanic acid — different climate, identical paradox of structure. Both demand decades of ageing for full resolution."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Chateau Chalon Vin Jaune (Jura)",
+          "connection": "Solera-influenced oxidative ageing in French Jura parallels Madeira's canteiro philosophy — both demand patience measured in decades, both produce rancio and volatile complexity from controlled oxidation."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Bual Madeira",
+          "connection": "Bual has more stone-fruit density; Terrantez has more citrus-mineral definition — the distinction reveals the internal range within the Madeira DOC."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Pedro Ximenez Sherry (aged)",
+          "connection": "Both use extreme concentration, but Terrantez maintains acid architecture that PX dissolves — two opposite philosophies of fortified sweetness."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep amber-mahogany, slow-rolling viscous legs; green-gold rim in young examples fading to tawny at 20yr",
+        "nose": "Dried orange peel, quince paste, rancio walnut oil, volcanic mineral, old varnish, iodine-sea air",
+        "palate": "Entry: medium-rich sweetness. Mid-palate: volcanic acid cuts through density with precision. Finish: 90+ seconds of citrus mineral and walnut oxidation",
+        "texture": "Oily-glycerous weight paradoxically light on the palate — the high acid provides lift that Bual cannot match",
+        "finish": "Extremely persistent — volatile acidity provides sharp definition; dried citrus peel and rancio last minutes not seconds",
+        "conclusion": "The most intellectually demanding Madeira style — requires context to be understood, rewards patience"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Pre-1970 Vintage Terrantez",
+          "criteria": "Single vintage, pre-phylloxera stock lineage; 50+ years canteiro; museum-quality; authenticated provenance required",
+          "markers": "Barbeito Terrantez 1977 or earlier; auction or direct allocation only; BC and US price on request"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Barbeito Terrantez 20yr Single Cask",
+          "criteria": "Full canteiro 20yr minimum; no estufagem; single barrel selection by Ricardo Freitas; unfined",
+          "markers": "Barbeito Terrantez 20yr; US ~$120-200 via Rare Wine Co.; limited annual production"
+        },
+        {
+          "tier": 2,
+          "tier_name": "H&H Colheita Terrantez 15yr",
+          "criteria": "Single-vintage aged 15yr; more focus than blended versions; better terroir expression",
+          "markers": "H&H 15yr Colheita; BC ~$75-100; US ~$65-85; BCLDB special order"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Blandy's Terrantez 10yr",
+          "criteria": "Blended across years for consistency; estufagem-hybrid ageing; gentler fruit-forward profile",
+          "markers": "Blandy's Terrantez 10yr; BC ~$45-60; US ~$40-55; BCLDB listed"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 14-16 degrees C — too cold suppresses the volatile character; too warm collapses the acid tension",
+        "vessel": "Medium-sized white wine glass or tulip — wide enough to allow the volatile nose to develop; not a Port glass",
+        "technique": "The correct Terrantez sequence at table: serve after Sercial and Verdelho, before Bual and Malmsey. The acid provides a mid-meal reset. At the bar: 20yr Terrantez in a Nick & Nora, single orange peel expression, neat — converts Madeira skeptics on the first pour. Never use Terrantez in cooked applications — the volatile acid dissipates on heat; use Bual or Malmsey for cooking instead.",
+        "programme_position": "Madeira vertical tasting anchor; cheese course partner; by-the-glass premium fortified program",
+        "verbal_presentation": "Madeira Terrantez — fewer than five hectares on the island. Pre-phylloxera variety, canteiro aged twenty years. More acid than sugar. The paradox of Madeira in a glass."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Vinhos Barbeito (Ricardo Freitas) — Camara de Lobos, Madeira",
+        "producer_location": "Camara de Lobos, Madeira, Portugal",
+        "key_person": "Ricardo Freitas (winemaker/owner since 2000s)",
+        "bc_distributor": "BCLDB stocks Blandy's but not Barbeito. Private order required for Barbeito expressions.",
+        "us_distributor": "The Rare Wine Co. (Napa) — dominant Madeira dedicated importer; primary Barbeito allocation holder",
+        "uk_distributor": "Berry Bros. and Rudd (London) — stocks Barbeito 20yr expressions; primary UK fine Madeira source",
+        "price_tier": "Entry: $45-60 (Blandy's 10yr). Premium: $120-200 (Barbeito 20yr). Ultra: market price",
+        "availability_notes": "Supply extremely limited. Barbeito 20yr allocations sell out annually. Pre-order recommended."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Aged Queijo da Serra (Portuguese mountain sheep cheese, 18+ months)",
+          "pairing_type": "complement",
+          "rationale": "The crystalline texture and lactic sharpness of aged Queijo da Serra finds the exact counterpart in Terrantez's rancio walnut oil and citrus acid — two aged Portuguese products at the peak of their respective traditions."
+        },
+        {
+          "technique_id": "",
+          "dish": "Foie gras torchon with citrus gel",
+          "pairing_type": "contrast",
+          "rationale": "Terrantez's volcanic acid and medium-rich sweetness is the only Madeira style that both cuts the fat richness of foie gras and matches its luxury register — the contrast pairing that reveals both products at their most expressive."
+        }
+      ],
+      "source": "IVBAM (Instituto do Vinho, do Bordado e do Artesanato da Madeira) technical documentation; Vinhos Barbeito vintage release notes; The Rare Wine Co. Madeira catalogue 2024",
+      "trail_connection": "PCT-2",
+      "trail_note": "PCT Region 2: Madeira — the island that launched the Portuguese Atlantic trade network. Terrantez is the pre-phylloxera survivor from the era when Madeira was the most traded wine on the Atlantic — carried on every Portuguese and British trade vessel crossing to the Americas, Africa, and the Indian Ocean.",
+      "entry_id": "FOR-PORMAD-002",
+      "extracted_at": "2026-04-11T16:38:49.057648+00:00",
+      "batch_number": 1
+    }
+  ]
+}

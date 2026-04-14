@@ -1,0 +1,77 @@
+{
+  "tradition": "wine",
+  "region": "India — Pondicherry (Puducherry) French Enclave (Auroville Wines, French Colonial Viticulture Heritage, Tamil Nadu Coast)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:59:40.277460+00:00",
+  "entries": [
+    {
+      "name": "Pondicherry French Enclave Wine Culture — Ugni Blanc and Muscat Experimental Vineyards, French Colonial Viticulture Heritage, Tamil Nadu Coastal Plain",
+      "category": "wine",
+      "subcategory": "wine_still",
+      "origin": "India",
+      "region": "India — Pondicherry (Puducherry) French Enclave (Auroville Wines, French Colonial Viticulture Heritage, Tamil Nadu Coast)",
+      "producer": "Auroville Winery / Svaram Community Vineyard — Pondicherry",
+      "alcohol_content": 11.5,
+      "price_tier": "everyday",
+      "terroir_origin": "Pondicherry (Puducherry) Union Territory sits on the Coromandel Coast of southeastern India at 11.9°N latitude, 30m above sea level on the alluvial coastal plain of Tamil Nadu. The territory consists of four non-contiguous enclaves that were French colonial possessions from 1674 until their transfer to India in 1954 — the longest French colonial presence in India, predating British domination and surviving the British East India Company era as a French enclave within British India. The primary Pondicherry enclave (293 sq km) borders the Bay of Bengal and is characterized by flat alluvial coastal plain soils — red ferralitic soils inland and sandy littoral soils within 5km of the coast — at elevations of 5–80m. The climate is humid tropical with the Northeast Monsoon (October–December) delivering 1,200–1,400mm annually from the Bay of Bengal, in contrast to the Kerala Southwest Monsoon pattern. The French colonial town (White Town / Ville Blanche) was laid out on a grid plan with a canal separating it from the Tamil Black Town (Ville Noire), creating a cultural geography that still shapes wine consumption patterns: French Quarter restaurants and cafes maintain wine-forward beverage programmes that are unique in rural Tamil Nadu. The Auroville experimental vineyard zone at Auroville Township sits 8km north of Pondicherry proper in Villupuram District Tamil Nadu, at 30–50m elevation on red laterite soils — the same soil type that underlies much of South Asian peninsula agricultural production but at viticultural conditions considered marginal by international standards due to the combination of high humidity, tropical temperatures (annual mean 28°C), and the concentrated monsoon rainfall pattern that creates disease pressure challenging for European Vitis vinifera varieties.",
+      "production_technique": "Wine production at Pondicherry's Auroville/Svaram collective operates under constraints unique to this location: the tropical coastal climate (mean annual temperature 28°C, relative humidity 70–85% year-round) requires aggressive canopy management and disease control protocols not needed in any European or even Nashik viticultural zone. Vine varieties trialed include Ugni Blanc (Trebbiano Toscano, also the cognac base grape), Muscat Blanc à Petits Grains, and experimental Chenin Blanc plots — all selected for heat and humidity tolerance over flavor maximization. The growing cycle is managed through two pruning interventions annually (January and June) to force fruit-set timing into the relatively drier inter-monsoon periods (January–May and September–November). Harvest takes place February–April when daily maximum temperatures reach 30–33°C and natural sugar accumulation is rapid but acid retention is poor — Pondicherry harvest Brix typically reaches 18–20 but with low natural acidity (5.0–6.5 g/L total acidity as tartaric) compared to Nashik (7.5–9.0 g/L). The winemaking compensates for low natural acidity with tartaric acid addition at crush, fermentation in temperature- controlled stainless steel at 14–16°C to preserve fruit aromatics and delay oxidation, and early bottling to minimize oxidative development. The resulting wines are light (11–12% ABV), aromatic rather than structured, with the Muscat Blanc expressions showing the most coherent varietal character — the Muscat grape's intensity of aromatic compound (linalool, geraniol) survives the tropical conditions better than Ugni Blanc's neutral character. The Auroville production is consumed within the Auroville community and at Pondicherry French Quarter establishments, never reaching commercial distribution.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Languedoc-Roussillon Muscat de Frontignan (French colonial aromatic white)",
+          "connection": "Pondicherry's Muscat Blanc à Petits Grains experimental plantings share both variety and French colonial heritage with the Muscat traditions of southern France — the French East India Company that established Pondicherry in 1674 drew its wine culture from the same southern French Mediterranean viticulture zone that produces Muscat de Frontignan and Muscat de Rivesaltes. The Muscat variety's heat tolerance that makes it viable in Pondicherry's 28°C mean temperature is the same quality that drove its spread across Mediterranean and tropical French colonial territories from Languedoc to Algeria to Pondicherry."
+        },
+        {
+          "tradition": "Goa Portuguese viticulture (colonial vine planting in India)",
+          "connection": "Both Pondicherry French colonial viticulture and Goa Portuguese colonial wine history represent European vine-planting in tropical coastal India as part of colonial settlement culture. The Portuguese planted Vitis vinifera vines in Goa from 1510 onward for communion wine and colonial domestic consumption, exactly as the French introduced European vine varieties in Pondicherry from the 1700s onward. Both traditions produced wines primarily for colonial community consumption rather than commercial export, and both survived decolonization as cultural heritage rather than commercial wine industries — Goa's tradition through the feni distillation industry, Pondicherry's through the Auroville experimental vineyard."
+        },
+        {
+          "tradition": "Réunion Island French DOM wine (Indian Ocean tropical French viticulture)",
+          "connection": "Both Pondicherry and Réunion Island (La Réunion, French overseas department at 21°S in the Indian Ocean) represent French wine culture in the tropical Indian Ocean zone: Réunion produces small quantities of wine from high-altitude sites (600–900m) on the volcanic island, while Pondicherry represents the coastal-plain low-elevation extreme of French Indian Ocean viticulture. Both demonstrate the French colonial compulsion to maintain wine culture in tropical territories regardless of viticultural suitability — a cultural practice distinct from the British colonial pattern in India, which imported rather than planted."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale straw-gold with slight green tints; brilliant to hazy depending on filtration level (Auroville production tends to light filtration leaving slight haze from wild yeast); the Muscat Blanc expressions show a golden depth from the high-linalool aromatic compound concentration; delicate in appearance consistent with 11–12% ABV tropical production.",
+        "nose": "Muscat Blanc expression: highly aromatic immediately, linalool-driven jasmine-rose-orange blossom from the variety's inherent terpene richness; behind the floral intensity, ripe peach and apricot from tropical ripening at 30–33°C harvest temperature; subtle lime zest from the tartaric acid addition that provides the only significant citrus accent; light honey character from rapid sugar accumulation; straightforward, aromatic, without the complexity of structured cool-climate white wines but with genuine varietal character.",
+        "palate": "Light body at 11–12% ABV; low natural acidity (supplemented to 6.0–6.5 g/L tartaric equivalent) gives the palate a soft, round character without the structural tension of Nashik Chenin Blanc; Muscat floral intensity persists through the mid-palate; short-to-medium finish; clean and aromatic rather than complex; the wine is best understood as fresh, floral, and immediate — a tropical Indian Muscat that expresses the French colonial wine heritage of Pondicherry through variety rather than through structural ambition."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Local Pondicherry Production (Ugni Blanc basic)",
+          "criteria": "Ugni Blanc fermented without oak or lees contact at tropical temperatures with minimal acidity correction; thin, neutral, oxidation-prone; the baseline Pondicherry production demonstrating why French colonial wine culture here survived at heritage level rather than commercial scale."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Auroville Community Muscat (temperature-controlled)",
+          "criteria": "Muscat Blanc à Petits Grains fermented at 14–16°C with tartaric acid correction; aromatic and clean if consumed within 6 months; the achievable quality ceiling for coastal Tamil Nadu viticulture and the authentic expression of Pondicherry French heritage wine culture."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Grover Zampa La Reserve (Karnataka benchmark, 90km from Pondicherry)",
+          "criteria": "The nearest commercially available high-quality South Indian wine: Nandi Hills Karnataka at 900m elevation, Cabernet Sauvignon-Shiraz blend with genuine concentration and structure — the reference for what South Indian viticulture achieves at altitude that Pondicherry coastal plain cannot replicate."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Imported French Wine (White Town Restaurant Selection)",
+          "criteria": "The French Quarter establishments of Pondicherry maintain curated French wine lists — Muscadet, Alsace Riesling, Côtes du Rhône Blanc — connecting diners directly to the source tradition that French colonial administration brought to Pondicherry. This tier represents the benchmark reference point that the local Auroville production aspires toward culturally while being unable to replicate technically."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Pondicherry Muscat Blanc at 8–10°C to maximize aromatic expression and compensate for the low natural acidity that makes the wine feel flat at temperatures above 12°C; in the 33°C Pondicherry ambient, even a brief period out of cold storage collapses the aromatic freshness — serve from chilled storage directly into pre-chilled glass with no more than 15 minutes at ambient temperature before consumption. The contrast with Kerala kallu is instructive: kallu loses character when chilled; Pondicherry Muscat loses it when warm — the two Indian beverage traditions demonstrating opposite temperature dependencies.",
+        "vessel": "Aromatic white wine glass (Riedel Veritas Aromatic White or equivalent) with tall chimney to concentrate the linalool-driven jasmine and orange blossom aromatic intensity; 100ml pour to maintain temperature in the tropical ambient; in a French Quarter Pondicherry restaurant context, serve in standard French café wine glasses (tulip form, 250ml capacity, 100ml pour) to connect to the colonial café culture aesthetic of the White Town French Quarter establishments.",
+        "programme_position": "In a PCT French colonial India programme, Pondicherry wine serves as the unique narrative entry point: the only French colonial territory in India with documented Vitis vinifera planting; positioned before Nashik Chenin Blanc to establish the colonial wine heritage baseline and contrast the experimental heritage register with Nashik's commercial wine industry achievement."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Auroville Winery / Svaram Community Vineyard (Pondicherry — heritage reference, not commercially available); Grover Zampa La Reserve (Karnataka — closest commercial South Indian wine benchmark, available in Indian restaurants and specialty wine shops internationally).",
+        "north_america_access": "Pondicherry Auroville production not commercially exported. Grover Zampa wines available through specialty Indian wine importers in Ontario, New York, and California. The Pondicherry narrative is most accessible in North America through heritage storytelling at Indian cultural events and restaurant wine programmes that use imported French Muscat as the reference for what Pondicherry's French colonial wine culture aspired to.",
+        "culinary_application": "The Pondicherry French colonial wine culture is most accurately represented in a culinary programme through pairing imported Alsace Muscat or Loire Muscadet with Tamil Nadu coastal cuisine (Pondicherry fish curry, coconut-tamarind preparations) — demonstrating the cultural encounter of French wine and Tamil cooking that defines Pondicherry's unique culinary identity as both Indian and French simultaneously."
+      },
+      "price_trajectory": "stable",
+      "entry_id": "WIN-INDPON-001",
+      "tradition": "wine",
+      "extracted_at": "2026-04-12T19:59:40.276920+00:00",
+      "batch_number": 1
+    }
+  ]
+}

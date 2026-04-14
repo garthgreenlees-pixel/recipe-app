@@ -1,4 +1,4 @@
-app = 'garth-recipe-browser'
+app = 'provenance-tester-1'
 primary_region = 'sjc'
 
 [build]
@@ -14,3 +14,7 @@ primary_region = 'sjc'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+
+[[mounts]]
+  source = "provenance_data"
+  destination = "/data"

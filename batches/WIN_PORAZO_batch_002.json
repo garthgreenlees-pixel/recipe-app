@@ -1,0 +1,77 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Azores (Terceira Island Biscoitos, Ramisco do Pico, Heritage Red Varieties)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T03:11:39.914987+00:00",
+  "entries": [
+    {
+      "name": "Terceira Island Biscoitos Tinto — Pre-Phylloxera Heritage Red, Azores Volcanic",
+      "category": "wine",
+      "subcategory": "red_wine",
+      "origin": "Portugal",
+      "region": "Terceira Island, Azores",
+      "producer": "Azores Wine Company — António Maçanita",
+      "alcohol_content": 12.0,
+      "price_tier": "super_premium",
+      "terroir_origin": "Terceira Island's Biscoitos wine subregion (the only officially demarcated wine zone on Terceira) sits on the north coast, where volcanic lava flows from the Guilherme Moniz caldera and Serra de Santa Bárbara created the most recent (geological time) viticultural surfaces in the Azores. The key terroir distinction is phylloxera: the Azores archipelago, despite being part of Portugal, was never systematically affected by the phylloxera devastation that swept mainland Europe in the 1860s–1890s. Biscoitos maintains a population of ungrafted pre-phylloxera vines — the same genetic material that produced pre-1860 European wine — growing on their own roots in volcanic basalt soils. These ungrafted Vitis vinifera vines (Rabo de Ovelha, Verdelho Tinto, Arinto dos Açores) are believed to be 80–150+ years old, representing what European viticulture looked like before phylloxera forced the continent to graft European vines onto American rootstock. The phenolic structure of ungrafted vines grown in volcanic soil at Atlantic latitude produces a red wine profile unlike any mainland Portuguese expression: lower alcohol (10.5–12.5%), higher natural acidity, deeper mineral-saline character, and extremely fine tannin from low-sugar slow-ripening in Atlantic conditions.",
+      "production_technique": "Biscoitos red production follows the same currais-landscape manual harvest as Pico, but Terceira's volcanic topography allows slightly more mechanization in transport (donkeys and small tractors on the lava paths between walled plots). AWC vinifies Biscoitos red from multiple heritage variety parcels — Rabo de Ovelha Tinto, Verdelho Tinto, and trace amounts of Barcelo and Agronómica — maintaining varietal separation through harvest and early vinification. Fermentation occurs in open-top stainless tanks with twice-daily punch-down of the cap for 10–14 days at 22–24°C, using indigenous Azorean yeasts. Extended maceration of 20–30 days post-fermentation builds tannin extract from the naturally thin-skinned Atlantic varieties. Malolactic fermentation proceeds naturally, converting the sharp malic acid from Atlantic-cooled grapes into lactic acid. No new oak — aging in large old Portuguese chestnut or neutral French oak vats for 8–12 months preserves the volcanic mineral character rather than superimposing wood aromatics. The resulting wine is structured, medium-bodied, with aggressive natural acidity that requires 3–5 years of bottle aging to integrate.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Jura Poulsard (thin-skinned, high-acid, pre-phylloxera character)",
+          "connection": "Biscoitos Tinto and Jura Poulsard occupy the same register of thin-skinned, high-acid, low-alcohol, finely tannic reds that are challenging to understand without context but reveal profound complexity with time — both represent pre-industrial wine culture preserved in geographic isolation (Atlantic island vs alpine valley) from modern viticulture's obsession with extraction"
+        },
+        {
+          "tradition": "Madeira Bastardo (same pre-phylloxera variety origin)",
+          "connection": "The heritage red varieties of the Azores and Madeira share pre-phylloxera Portuguese genetic heritage — both archipelagos preserved what mainland Portugal lost. While Madeira Bastardo became a fortified oddity, Biscoitos red varieties remained as table wine in their original unfortified form, representing what pre-1860 Portuguese red wine tasted like"
+        },
+        {
+          "tradition": "Alentejo heritage varieties (pre-grafting complexity)",
+          "connection": "Post-phylloxera mainland Portugal lost the nuance of ungrafted vine character in Alentejo and Douro, replaced by American-rootstock vigor that tends toward higher yield and lower concentration. Biscoitos demonstrates what those mainland varieties would still express if ungrafted — a living counter-factual of European wine history"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Medium garnet with violet tint; clear to slightly hazy; lighter color than expected given Atlantic slow ripening; visible fine sediment in aged expressions",
+        "nose": "Red cherry, crushed volcanic rock, Atlantic sea air, dried herbs, light pepper, minimal oak — fresher and more aromatic than the extraction-focused style of modern Portuguese reds; the volcanic mineral signature is the primary identification marker",
+        "palate": "Light-medium body, sharp acidity that dominates youth but integrates beautifully at 5+ years, fine-grained tannin, red fruit mid-palate, long mineral-saline finish — a Burgundian register expressed through Azorean volcanic geology, deeply original and unlike any other Portuguese red wine"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Cooperative Biscoitos Tinto",
+          "criteria": "Blended production from cooperative members, commercial yeast, some new oak contact — accessible Azorean red with volcanic character but without the precision of single-estate production"
+        },
+        {
+          "tier": 2,
+          "tier_name": "AWC Biscoitos Varietal",
+          "criteria": "Indigenous yeast, neutral vessel aging, varietal separation — the current international reference expression at accessible premium pricing"
+        },
+        {
+          "tier": 3,
+          "tier_name": "AWC Old Vine Reserve",
+          "criteria": "Selection from identified 80–150 year ungrafted vines, extended maceration and lees contact, 12 months neutral vessel aging — limited production under 2,000 bottles, available through allocation to specialist importers"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Single-Vine Heritage (Rarissima)",
+          "criteria": "Individual ungrafted centenary vine selection, whole-cluster fermentation, non-interventional aging — fewer than 500 bottles when produced; the ultimate expression of pre-phylloxera Azorean viticulture, priced accordingly and allocated exclusively to top-tier wine programs"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 14–16°C — warmer than most light reds to open the volcanic mineral aromatics; do not chill like Beaujolais, which would suppress the saline Atlantic character; young vintages benefit from 30 minutes decanting",
+        "vessel": "Burgundy glass to concentrate the subtle volcanic aromatics and allow the thin-skinned fruit to express itself without the bowl dominating — these are not extraction-forward wines that need Bordeaux glass size; aged expressions can be served in a slightly larger format",
+        "aging_potential": "Biscoitos Tinto from the AWC Old Vine selection rewards 5–10 year cellaring; the aggressive malic acid of youth transforms into a saline, mineral, tertiary-complexity profile at 8–12 years — one of the most dramatically age-transforming wines in the Portuguese portfolio despite its low alcohol and delicate appearance"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Azores Wine Company (António Maçanita) — AWC Biscoitos Tinto and Rezerva selections are the only internationally distributed Terceira Island red wines as of 2024–2025",
+        "north_america_access": "Available through same AWC import channels as Pico Verdelho; extremely limited allocation; Chambers Street Wines (NYC) and Kermit Lynch Wine Merchant (Berkeley CA) are the primary US retailers carrying AWC Biscoitos Tinto",
+        "culinary_application": "Volcanic red acidity and minerality makes Biscoitos Tinto exceptional with Pacific Northwest mushrooms (chanterelles, porcini, morels) — the volcanic mineral register resonates with the earthy umami of Cascadia foraged fungi; also outstanding with Dungeness crab bisque where the wine's acidity cuts through the richness while the saline character mirrors the ocean"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "WIN-TERISL-001",
+      "tradition": "wine",
+      "extracted_at": "2026-04-12T03:11:39.914730+00:00",
+      "batch_number": 2
+    }
+  ]
+}

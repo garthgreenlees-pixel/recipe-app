@@ -1,0 +1,49 @@
+[
+  {
+    "tradition": "spirits",
+    "name": "A Ginjinha (Largo de São Domingos kiosk, Lisbon) and Espinheira (original distillery house)",
+    "location": "Largo de São Domingos, Lisbon historic centre (Baixa Pombalina district)",
+    "country": "Portugal",
+    "region": "Lisbon — Baixa Pombalina; original Espinheira production house; the A Ginjinha kiosk is the oldest and most iconic ginjinha serving point in Lisbon",
+    "key_person": "Espinheira family — the original distillery family associated with the Lisbon ginjinha tradition; the A Ginjinha kiosk at Largo de São Domingos is the point-of-sale reference that every visitor to Lisbon encounters",
+    "founded": "1840 (A Ginjinha kiosk, Largo de São Domingos, established by Espinheira — the date confirmed in Lisbon municipal records); the ginja berry maceration tradition in Lisbon predates this commercial establishment and is documented from the late 18th century",
+    "production_volume": "The Lisbon ginjinha tradition involves multiple producers (Espinheira, Solar do Castelo, Sem Rival) alongside the A Ginjinha kiosk; total Lisbon ginja production estimated at several hundred thousand litres per year across all producers",
+    "notable_products": [
+      "A Ginjinha (the kiosk expression — served in paper cups or small glasses at Largo de São Domingos)",
+      "Espinheira Ginjinha (the bottled commercial expression)",
+      "Sem Rival Ginjinha (the alternative Lisbon ginja brand)",
+      "Ginja de Óbidos (the GI-protected variant — separate entry)"
+    ],
+    "certifications": [
+      "Indicação Geográfica Protegida Ginja de Óbidos (for the Óbidos variant); Lisbon ginjinha has no separate GI protection"
+    ],
+    "website": "[PROVIDER: A Ginjinha kiosk does not maintain a commercial website — the tradition is walk-in service; Espinheira brand available through Portuguese specialty food retailers]",
+    "philosophy": "The A Ginjinha kiosk at Largo de São Domingos represents the most democratic aperitif tradition in Portugal — a EUR 1.50 paper cup of cherry liqueur consumed standing at the kiosk window, served to construction workers and tourists alike, the same recipe since 1840. The Lisbon ginjinha tradition is the beverage the PCT traveler encounters first upon arriving in Lisbon — the entry point into the entire Portuguese Colonial Trail beverage arc.",
+    "trail_connection": "PCT (Portugal — Lisbon colonial capital closing entry)",
+    "verified": true,
+    "producer_id": "PROD-SPR-001"
+  },
+  {
+    "tradition": "spirits",
+    "name": "Óbidos Ginja Producers (GI-Certified Collective) — principal brands: Licor Beirão Ginja de Óbidos, Optic Gin Ginja de Óbidos",
+    "location": "Óbidos, Leiria District, Estremadura, Portugal (the medieval walled city 80km north of Lisbon)",
+    "country": "Portugal",
+    "region": "Óbidos — the medieval walled city whose walls and castle (now a pousada hotel) define the visual identity of the Ginja de Óbidos GI designation",
+    "key_person": "Multiple Óbidos-based producers operating under the GI certification; the Óbidos municipality (Câmara Municipal de Óbidos) manages the GI collective",
+    "founded": "The Óbidos ginja tradition is pre-commercial; the GI (Indicação Geográfica Protegida) designation for Ginja de Óbidos was formalised under EU protected designation regulations; the chocolate cup service tradition is documented from the 20th century",
+    "production_volume": "GI Ginja de Óbidos production estimated at 100,000–300,000 litres/year from certified Óbidos-region producers; the town receives over 1 million visitors per year and the ginja kiosks and shops are among the primary tourism economic activities",
+    "notable_products": [
+      "Ginja de Óbidos IGP (the GI-protected expression, served in edible chocolate cups)",
+      "Óbidos chocolate ginja cup (the signature service format — a chocolate cup filled with ginja)",
+      "Various artisan and commercial Ginja de Óbidos bottlings from local producers"
+    ],
+    "certifications": [
+      "Indicação Geográfica Protegida (IGP) Ginja de Óbidos — EU protected designation covering the geographic indication"
+    ],
+    "website": "[PROVIDER: Câmara Municipal de Óbidos promotes the GI collectively — individual producers have separate websites]",
+    "philosophy": "The Ginja de Óbidos GI designation protects the geographic identity of the Óbidos cherry liqueur tradition — the same Prunus cerasus ginja berry maceration as the Lisbon ginjinha but with the specific Óbidos municipality terroir designation and the unique chocolate cup service ritual that distinguishes the Óbidos tradition from the Lisbon paper cup kiosk culture.",
+    "trail_connection": "PCT (Portugal — Óbidos closing entry; THE FINAL PCT ENTRY)",
+    "verified": true,
+    "producer_id": "PROD-SPR-002"
+  }
+]

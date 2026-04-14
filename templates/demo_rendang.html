@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rendang — Provenance Reserve</title>
+<meta name="description" content="Dry-braised coconut curry — the patience of the Minangkabau. Professional culinary technique from Provenance.">
+<link rel="canonical" href="https://provenance.kitchen/demo/rendang">
+<meta property="og:title" content="Rendang — Provenance Reserve">
+<meta property="og:description" content="Dry-braised coconut curry — the patience of the Minangkabau. Professional culinary technique from Provenance.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://provenance.kitchen/demo/rendang">
+<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rendang — Provenance Reserve">
+<meta name="twitter:description" content="Dry-braised coconut curry — the patience of the Minangkabau. Professional culinary technique from Provenance.">
+<meta name="twitter:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#8B6914;--gold-light:#C49B2A;--gold-bg:rgba(139,105,20,0.08);--gold-border:rgba(139,105,20,0.2);
+  --green:#2D6B4F;--green-bg:rgba(45,107,79,0.08);
+  --cream:#FDFCF9;--cream-dark:#F5F0E8;
+  --text:#1A1A1A;--text-secondary:#6B6B6B;--text-light:#999;
+  --border:#E8E3D8;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--cream);color:var(--text);font-family:var(--sans);line-height:1.65;padding-top:60px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
+.nav-links a:hover{color:#C9A84C}
+.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
+.nav-p:hover{border-color:#C9A84C}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb{
+  padding:12px 24px;font-size:13px;color:var(--text-light);
+  background:var(--cream-dark);border-bottom:1px solid var(--border);
+}
+.breadcrumb a{color:var(--text-secondary);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb span{margin:0 8px;opacity:0.4}
+
+/* ─── MAIN ─── */
+.container{max-width:720px;margin:0 auto;padding:40px 24px 80px}
+
+/* ─── ENTRY HEADER ─── */
+.entry-title{font-family:var(--serif);font-size:42px;font-weight:700;line-height:1.15;letter-spacing:-1px;margin-bottom:12px}
+.entry-subtitle{font-size:17px;color:var(--text-secondary);line-height:1.55;margin-bottom:20px;font-style:italic}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:4px;font-size:11px;font-weight:600;
+  letter-spacing:0.8px;text-transform:uppercase;
+}
+.badge-reserve{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(139,105,20,0.2)}
+.badge-reserve::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.badge-cuisine{background:#f0eff0;color:#555;border:1px solid #e0dfe0}
+.badge-haccp{background:var(--green-bg);color:var(--green);border:1px solid rgba(45,107,79,0.2)}
+
+/* ─── SECTION ─── */
+.section{margin-bottom:48px}
+.section-label{
+  font-family:var(--serif);font-size:13px;font-weight:600;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--text-light);
+  margin-bottom:20px;
+}
+
+/* ─── QUALITY HIERARCHY ─── */
+.quality-list{list-style:none;counter-reset:quality}
+.quality-item{
+  counter-increment:quality;
+  padding:20px 24px 20px 60px;position:relative;
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  margin-bottom:12px;
+}
+.quality-item::before{
+  content:counter(quality);position:absolute;left:20px;top:20px;
+  font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold);
+}
+.quality-name{font-family:var(--serif);font-size:20px;font-weight:600;margin-bottom:4px}
+.quality-desc{font-size:14px;color:var(--text-secondary);line-height:1.6}
+
+/* ─── QUOTE CARD ─── */
+.quote-card{
+  background:#fff;border:1px solid var(--border);border-left:4px solid var(--gold);
+  border-radius:0 8px 8px 0;padding:28px 32px;margin-bottom:48px;
+}
+.quote-card-label{
+  font-family:var(--serif);font-size:13px;font-weight:600;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:16px;
+}
+.quote-card p{
+  font-family:var(--serif);font-size:19px;font-weight:400;
+  line-height:1.7;color:var(--text);font-style:italic;
+}
+
+/* ─── SENSORY GRID ─── */
+.sensory-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sensory-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:20px}
+.sensory-label{font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:0.8px;color:var(--gold);margin-bottom:8px}
+.sensory-desc{font-size:14px;color:var(--text-secondary);line-height:1.55}
+
+/* ─── PRODUCTS ─── */
+.products-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+.products-header .section-label{margin-bottom:0}
+.pats-rule-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;
+  background:var(--gold-bg);color:var(--gold);border:1px solid rgba(139,105,20,0.15);
+  letter-spacing:0.3px;
+}
+.pats-rule-badge svg{width:14px;height:14px;fill:var(--gold)}
+
+.product-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  margin-bottom:12px;overflow:hidden;cursor:pointer;
+  transition:border-color 0.2s;
+}
+.product-card:hover{border-color:var(--gold-light)}
+.product-top{padding:20px 24px;display:flex;align-items:flex-start;gap:16px}
+.product-info{flex:1;min-width:0}
+.product-name{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:4px}
+.product-desc{font-size:13px;color:var(--text-secondary);line-height:1.5}
+.product-origin-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;
+  background:var(--green-bg);color:var(--green);letter-spacing:0.6px;
+  text-transform:uppercase;margin-top:8px;white-space:nowrap;
+}
+.product-chevron{
+  width:20px;height:20px;flex-shrink:0;margin-top:4px;
+  transition:transform 0.3s;fill:var(--text-light);
+}
+.product-card.open .product-chevron{transform:rotate(180deg)}
+
+/* Supply chain (collapsed by default) */
+.supply-chain{
+  max-height:0;overflow:hidden;
+  transition:max-height 0.4s ease;
+  background:var(--cream);border-top:1px solid var(--border);
+}
+.product-card.open .supply-chain{max-height:400px}
+.chain-inner{padding:20px 24px}
+.chain-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);margin-bottom:14px}
+.chain-node{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;position:relative;padding-left:20px}
+.chain-node:not(:last-child)::after{
+  content:"";position:absolute;left:7px;top:18px;bottom:-12px;
+  width:1px;background:var(--border);
+}
+.chain-dot{
+  width:14px;height:14px;border-radius:50%;flex-shrink:0;
+  position:absolute;left:0;top:3px;border:2px solid #fff;
+}
+.chain-dot.origin{background:var(--green)}
+.chain-dot.provider{background:var(--gold)}
+.chain-name{font-weight:600;font-size:14px}
+.chain-location{font-size:12px;color:var(--text-secondary)}
+.chain-role{
+  display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;
+  font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-top:3px;
+}
+.chain-role.origin{background:var(--green-bg);color:var(--green)}
+.chain-role.provider{background:var(--gold-bg);color:var(--gold)}
+
+/* ─── HACCP ─── */
+.haccp-bar{
+  background:var(--green);color:#fff;border-radius:8px;
+  padding:24px;margin-bottom:48px;
+}
+.haccp-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.haccp-header svg{width:20px;height:20px;fill:#fff}
+.haccp-header span{font-weight:600;font-size:15px}
+.haccp-count{font-size:13px;opacity:0.85;margin-bottom:16px}
+.ccp{
+  background:rgba(255,255,255,0.12);border-radius:6px;
+  padding:14px 18px;margin-bottom:8px;font-size:14px;line-height:1.5;
+}
+.ccp strong{display:block;margin-bottom:2px;font-size:13px;letter-spacing:0.3px}
+
+/* ─── RELATED TECHNIQUES ─── */
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{
+  display:inline-block;padding:8px 16px;border-radius:20px;
+  background:#fff;border:1px solid var(--border);font-size:13px;
+  color:var(--text-secondary);text-decoration:none;
+  transition:all 0.2s;
+}
+.pill:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ─── TIER COMPARISON ─── */
+.tier-strip{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;
+  background:#fff;margin-top:48px;
+}
+.tier{padding:20px;text-align:center;border-right:1px solid var(--border)}
+.tier:last-child{border-right:none}
+.tier-name{
+  font-family:var(--serif);font-size:16px;font-weight:600;margin-bottom:8px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.tier-features{font-size:12px;color:var(--text-secondary);line-height:1.8}
+.tier.active{background:var(--gold-bg);border-color:rgba(139,105,20,0.15)}
+.tier.active .tier-name{color:var(--gold)}
+.tier-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* ─── MOBILE ─── */
+@media(max-width:600px){
+  .entry-title{font-size:32px}
+  .entry-subtitle{font-size:15px}
+  .sensory-grid{grid-template-columns:1fr}
+  .tier-strip{grid-template-columns:1fr;gap:0}
+  .tier{border-right:none;border-bottom:1px solid var(--border)}
+  .tier:last-child{border-bottom:none}
+  .quote-card p{font-size:17px}
+  .product-top{padding:16px}
+  .chain-inner{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+  </div>
+  <a href="/auth/account" class="nav-p" aria-label="My Kitchen"><span>P</span></a>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/auth/account">My Kitchen</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+<!-- ─── BREADCRUMB ─── -->
+<nav class="breadcrumb">
+  <a href="/demo">Demos</a><span>›</span>
+  <a href="#">Techniques</a><span>›</span>
+  <a href="#">Indonesian</a><span>›</span>
+  Rendang
+</nav>
+
+<!-- ─── CONTENT ─── -->
+<main class="container">
+
+  <!-- Entry -->
+  <h1 class="entry-title">Rendang</h1>
+  <p class="entry-subtitle">Dry-braised coconut curry — the patience of the Minangkabau, expressed through heat</p>
+  <div class="badges">
+    <span class="badge badge-reserve">Reserve</span>
+    <span class="badge badge-cuisine">Indonesian — Minangkabau</span>
+    <span class="badge badge-haccp">HACCP Ready</span>
+  </div>
+
+  <!-- Quality Hierarchy -->
+  <div class="section">
+    <div class="section-label">Quality Hierarchy</div>
+    <ol class="quality-list">
+      <li class="quality-item">
+        <div class="quality-name">Kalio</div>
+        <div class="quality-desc">Wet stage, golden, coconut milk visible. Lighter, gentler. Where most restaurants stop.</div>
+      </li>
+      <li class="quality-item">
+        <div class="quality-name">Rendang</div>
+        <div class="quality-desc">Dry stage, dark mahogany, oil separated. Deep, concentrated, complex. Served at celebrations.</div>
+      </li>
+      <li class="quality-item">
+        <div class="quality-name">Rendang tok</div>
+        <div class="quality-desc">Fully dry, almost black. Lasts weeks unrefrigerated. Every molecule of moisture replaced by spice-infused coconut oil. The pinnacle.</div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- Quote Card -->
+  <div class="quote-card">
+    <div class="quote-card-label">Where the dish lives or dies</div>
+    <p>The transition from kalio to rendang. The moment the coconut milk breaks and the oil separates — if you stop stirring, it burns. If you add liquid, you reset. The cook must hold nerve through thirty minutes of constant attention as the sauce darkens from gold to mahogany. Listen for the sound to change from bubbling to crackling. That is the moment.</p>
+  </div>
+
+  <!-- Sensory Tests -->
+  <div class="section">
+    <div class="section-label">Sensory Tests</div>
+    <div class="sensory-grid">
+      <div class="sensory-card">
+        <div class="sensory-label">Sound</div>
+        <div class="sensory-desc">Bubbling → crackling → quiet sizzle</div>
+      </div>
+      <div class="sensory-card">
+        <div class="sensory-label">Visual</div>
+        <div class="sensory-desc">Gold → mahogany → near-black. Oil pools at edges.</div>
+      </div>
+      <div class="sensory-card">
+        <div class="sensory-label">Smell</div>
+        <div class="sensory-desc">Raw spice → toasted coconut → deep caramelised</div>
+      </div>
+      <div class="sensory-card">
+        <div class="sensory-label">Texture</div>
+        <div class="sensory-desc">Meat falls apart under spoon but holds shape. Sauce coats, does not pool.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exquisite Products -->
+  <div class="section">
+    <div class="products-header">
+      <div class="section-label">Exquisite Products</div>
+      <div class="pats-rule-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Pat's Rule — tap to see suppliers
+      </div>
+    </div>
+
+    <!-- Product 1: Coconut Sugar -->
+    <div class="product-card" onclick="this.classList.toggle('open')">
+      <div class="product-top">
+        <div class="product-info">
+          <div class="product-name">Javara Organic Coconut Sugar</div>
+          <div class="product-desc">Arenga palm. Dark, smoky, caramelised. Great Taste Award 2022.</div>
+          <div class="product-origin-badge">🇮🇩 Origin — Indonesia</div>
+        </div>
+        <svg class="product-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="supply-chain">
+        <div class="chain-inner">
+          <div class="chain-label">Supply Chain</div>
+          <div class="chain-node">
+            <div class="chain-dot origin"></div>
+            <div>
+              <div class="chain-name">Javara Indigenous Indonesia</div>
+              <div class="chain-location">Jakarta, Indonesia</div>
+              <span class="chain-role origin">Origin</span>
+            </div>
+          </div>
+          <div class="chain-node">
+            <div class="chain-dot provider"></div>
+            <div>
+              <div class="chain-name">Bosa Foods</div>
+              <div class="chain-location">East Hastings, Vancouver, BC</div>
+              <span class="chain-role provider">Provider</span>
+            </div>
+          </div>
+          <div class="chain-node">
+            <div class="chain-dot provider"></div>
+            <div>
+              <div class="chain-name">Dovre Import &amp; Export</div>
+              <div class="chain-location">Vancouver, BC</div>
+              <span class="chain-role provider">Provider</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 2: Rendang Paste -->
+    <div class="product-card" onclick="this.classList.toggle('open')">
+      <div class="product-top">
+        <div class="product-info">
+          <div class="product-name">Tungsan Rendang Paste</div>
+          <div class="product-desc">Lemongrass, galangal, ginger, turmeric, 12+ spices. 1kg commercial format. Since 1973.</div>
+          <div class="product-origin-badge">🇸🇬 Origin — Singapore</div>
+        </div>
+        <svg class="product-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="supply-chain">
+        <div class="chain-inner">
+          <div class="chain-label">Supply Chain</div>
+          <div class="chain-node">
+            <div class="chain-dot origin"></div>
+            <div>
+              <div class="chain-name">Tungsan Food Industries</div>
+              <div class="chain-location">Senoko Drive, Singapore</div>
+              <span class="chain-role origin">Origin</span>
+            </div>
+          </div>
+          <div class="chain-node">
+            <div class="chain-dot provider"></div>
+            <div>
+              <div class="chain-name">T Amano Trading</div>
+              <div class="chain-location">Richmond, BC</div>
+              <span class="chain-role provider">Provider</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 3: Long Pepper -->
+    <div class="product-card" onclick="this.classList.toggle('open')">
+      <div class="product-top">
+        <div class="product-info">
+          <div class="product-name">Javara Long Pepper <span style="font-weight:400;color:var(--text-light);font-size:14px">(Piper longum)</span></div>
+          <div class="product-desc">Ancient Indonesian spice. Complex heat with cinnamon hints. Used before chili arrived.</div>
+          <div class="product-origin-badge">🇮🇩 Origin — Indonesia</div>
+        </div>
+        <svg class="product-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="supply-chain">
+        <div class="chain-inner">
+          <div class="chain-label">Supply Chain</div>
+          <div class="chain-node">
+            <div class="chain-dot origin"></div>
+            <div>
+              <div class="chain-name">Javara Indigenous Indonesia</div>
+              <div class="chain-location">Jakarta, Indonesia</div>
+              <span class="chain-role origin">Origin</span>
+            </div>
+          </div>
+          <div class="chain-node">
+            <div class="chain-dot provider"></div>
+            <div>
+              <div class="chain-name">SGC Food Distributors</div>
+              <div class="chain-location">Burnaby, BC</div>
+              <span class="chain-role provider">Provider</span>
+            </div>
+          </div>
+          <div class="chain-node">
+            <div class="chain-dot provider"></div>
+            <div>
+              <div class="chain-name">Classic Fine Foods</div>
+              <div class="chain-location">Global — UK / FR / UAE / HK / SG / JP</div>
+              <span class="chain-role provider">Provider</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 4: Cassia Cinnamon -->
+    <div class="product-card" onclick="this.classList.toggle('open')">
+      <div class="product-top">
+        <div class="product-info">
+          <div class="product-name">Javara Cassia Cinnamon</div>
+          <div class="product-desc">Indonesian cassia. More pungent than Ceylon. World's most-used cinnamon.</div>
+          <div class="product-origin-badge">🇮🇩 Origin — Indonesia</div>
+        </div>
+        <svg class="product-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="supply-chain">
+        <div class="chain-inner">
+          <div class="chain-label">Supply Chain</div>
+          <div class="chain-node">
+            <div class="chain-dot origin"></div>
+            <div>
+              <div class="chain-name">Javara Indigenous Indonesia</div>
+              <div class="chain-location">Jakarta, Indonesia</div>
+              <span class="chain-role origin">Origin</span>
+            </div>
+          </div>
+          <div class="chain-node">
+            <div class="chain-dot provider"></div>
+            <div>
+              <div class="chain-name">Bosa Foods</div>
+              <div class="chain-location">Vancouver, BC</div>
+              <span class="chain-role provider">Provider</span>
+            </div>
+          </div>
+          <div class="chain-node">
+            <div class="chain-dot provider"></div>
+            <div>
+              <div class="chain-name">Wismettac</div>
+              <div class="chain-location">Richmond, BC</div>
+              <span class="chain-role provider">Provider</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 5: Nutmeg & Mace -->
+    <div class="product-card" onclick="this.classList.toggle('open')">
+      <div class="product-top">
+        <div class="product-info">
+          <div class="product-name">Javara Nutmeg &amp; Mace <span style="font-weight:400;color:var(--text-light);font-size:14px">(Pala)</span></div>
+          <div class="product-desc">Banda Islands — the original Spice Islands. Two spices from one fruit.</div>
+          <div class="product-origin-badge">🇮🇩 Origin — Indonesia</div>
+        </div>
+        <svg class="product-chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </div>
+      <div class="supply-chain">
+        <div class="chain-inner">
+          <div class="chain-label">Supply Chain</div>
+          <div class="chain-node">
+            <div class="chain-dot origin"></div>
+            <div>
+              <div class="chain-name">Javara Indigenous Indonesia</div>
+              <div class="chain-location">Jakarta, Indonesia</div>
+              <span class="chain-role origin">Origin</span>
+            </div>
+          </div>
+          <div class="chain-node">
+            <div class="chain-dot provider"></div>
+            <div>
+              <div class="chain-name">Bosa Foods</div>
+              <div class="chain-location">Vancouver, BC</div>
+              <span class="chain-role provider">Provider</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HACCP -->
+  <div class="haccp-bar">
+    <div class="haccp-header">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+      <span>HACCP Analysis</span>
+    </div>
+    <div class="haccp-count">2 critical control points identified</div>
+    <div class="ccp">
+      <strong>CCP 1 — Temperature onset</strong>
+      Coconut milk must reach 74°C within first 20 minutes
+    </div>
+    <div class="ccp">
+      <strong>CCP 2 — Internal temperature</strong>
+      Beef internal temperature 74°C during braising
+    </div>
+  </div>
+
+  <!-- Related Techniques -->
+  <div class="section">
+    <div class="section-label">Related Techniques</div>
+    <div class="pills">
+      <a href="#" class="pill">Kalio</a>
+      <a href="#" class="pill">Opor ayam</a>
+      <a href="#" class="pill">Gulai</a>
+      <a href="#" class="pill">Massaman curry</a>
+      <a href="#" class="pill">Panang curry</a>
+      <a href="#" class="pill">Beef suya</a>
+    </div>
+  </div>
+
+  <!-- Tier Comparison -->
+  <div class="tier-strip">
+    <div class="tier">
+      <div class="tier-name"><span class="tier-dot"></span> Market</div>
+      <div class="tier-features">Technique only</div>
+    </div>
+    <div class="tier">
+      <div class="tier-name"><span class="tier-dot"></span> Estate</div>
+      <div class="tier-features">+ Products</div>
+    </div>
+    <div class="tier active">
+      <div class="tier-name"><span class="tier-dot"></span> Reserve</div>
+      <div class="tier-features">+ Suppliers + HACCP</div>
+    </div>
+  </div>
+
+</main>
+
+<div class="about-footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/suppliers">Suppliers</a>
+    <a href="/for-professionals">For Professionals</a>
+    <a href="/methodology">Methodology</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="mailto:info@provenance.kitchen">Contact</a>
+  </div>
+  <span class="footer-wm">Provenance</span>
+</div>
+
+<script>
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+</script>
+</body>
+</html>

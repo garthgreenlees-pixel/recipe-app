@@ -1,0 +1,104 @@
+{
+  "tradition": "wine",
+  "region": "Portugal — Azores (Pico Island, DOC)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:42:17.565989+00:00",
+  "entries": [
+    {
+      "tradition": "wine",
+      "sub_tradition": "volcanic island white wine",
+      "region": "Portugal — Azores (Pico Island DOC)",
+      "name": "Azores Wine — Pico Island Volcanic White (Verdelho, Arinto dos Açores)",
+      "terroir_origin": "The Azores archipelago sits at the mid-Atlantic ridge, 1,400km west of Lisbon — nine volcanic islands that were uninhabited when the Portuguese arrived in 1427. Pico Island's viticultural landscape is a UNESCO World Heritage Site (2004): generations of farmers built a dense network of low black basalt walls (currais) directly on the dark volcanic rock to create thousands of tiny vine enclosures that protect vines from Atlantic winds. The landscape — black basalt, green vine, deep ocean — is one of the most visually distinctive wine regions on earth. The primary varieties: Verdelho (the same grape used in Madeira's semi-sweet style — a direct PCT-1 to PCT-3 connection across 1,000km of Atlantic ocean); Arinto dos Açores (locally adapted mutation of Arinto from the mainland, producing higher natural acidity in the Atlantic climate). The terroir is extreme: Pico rises to 2,351m (Portugal's highest peak); the sea surrounds every vine; the basalt retains daytime heat and releases it slowly at night; the Atlantic humidity means no irrigation is needed and botrytis management is the central challenge. The result is wine with no direct parallel anywhere in Europe: mineral-volcanic, high acid, oceanic salinity, moderate alcohol — the Atlantic encoded in grape form.",
+      "production_technique": "Harvesting: September–October; entirely manual due to the terrain (no machinery can navigate the currais walls); often harvested across weeks as each micro-enclosure ripens at a different rate based on orientation and wind exposure. Vinification: minimal intervention is the norm — the terroir is so dominant that winemakers work to preserve rather than transform. Stainless steel fermentation at low temperature (13–16°C) to retain aromatics. Lagar (stone trough) fermentation still practiced by some traditional producers for limited batches. Key producers: Adega Cooperativa do Pico (largest, founded 1954; the main commercial face of Pico wine); Terras de Lava (premium artisanal, founded 2002); Cabeço do Monte (acclaimed small producer); Curral Atlântis (cooperativa premium tier). DOC regulations: Pico DOC (2002); also Biscoitos DOC (Terceira island) and Graciosa DOC. IGP Açores covers the broader category. Ageing: premium Verdelho can age 5–15 years — the natural high acidity and mineral structure create extraordinary ageing potential, particularly in bottles sealed with quality cork or screwcap.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Chablis Grand Cru (Kimmeridgian limestone)",
+          "connection": "Both Azores volcanic basalt and Chablis Kimmeridgian limestone are mineral-dominant terroirs that impose their geological identity on the wine more forcefully than the grape variety itself. Azores Verdelho and Chablis Chardonnay both produce high-acid, mineral-linear whites where the soil conversation is primary. The distinction: Chablis is ancient seabed; Pico is active volcanic Atlantic — different mineral registers (chalk vs. basalt) but the same principle that geology trumps everything else"
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Rias Baixas Albariño (Galicia, Spain)",
+          "connection": "The Atlantic wine triangle: Vinho Verde, Rias Baixas, and Azores all express the Portuguese-Galician Atlantic climate through high-acid, mineral, lower-alcohol whites. Azores adds the volcanic-saline dimension absent in both Vinho Verde and Albariño. For a programme: all three represent the northern Atlantic coast expression of white wine; the Azores is the most extreme — the open ocean version of the same story"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Pale gold to medium gold; crystalline clarity; some age-worthy examples develop a distinctive greenish tint at youth; slow legs in the glass from the relatively low alcohol (12–13% for Arinto; 12.5–13.5% for Verdelho)",
+        "nose": "Arinto dos Açores: extraordinary mineral-saline opening (crushed basalt, sea air, iodine undertone); white flower, lemon zest, fresh lime, nectarine, green apple; Atlantic oceanic salinity persisting throughout. Verdelho: fuller — honey, melon, apricot — but always with the volcanic mineral base. Both: a quality that wine professionals describe as 'smelling wet basalt in sunshine at the ocean edge'.",
+        "palate": "Arinto: electric acidity (malic-tartaric balance distinctive from mainland Arinto); medium body; laser-precise mineral finish of extraordinary length; flavour development: first citrus, then stone fruit, then sustained mineral-salinity. Verdelho: more roundness; stone fruit more prominent; still high acidity and basalt minerality; ages to develop a golden, nutty complexity with retained freshness. Terras de Lava Arinto: one of the most distinctive white wines produced anywhere in the Portuguese-speaking world.",
+        "conclusion": "Azores wine is the PCT's most compelling argument for geographic specificity in wine: no winemaking technique produces this mineral-volcanic-oceanic character. For a serious wine programme, a Pico Arinto or Verdelho represents a conversation no other wine region on earth can provide."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Terras de Lava / Cabeço do Monte — Premium Single Vineyard",
+          "criteria": "Named estate; 100% basalt terroir; single variety Arinto or Verdelho; aged 12–18 months on fine lees; DOC Pico or equivalent top classification",
+          "markers": "Terras de Lava Arinto; Cabeço do Monte Reserve; Curral Atlântis Grande Escolha; BC/US ~$35–55 (specialist Portuguese importers)"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Adega do Pico — Estate Range",
+          "criteria": "DOC Pico; estate Verdelho or Arinto; basalt terroir confirmed; clean winemaking",
+          "markers": "Adega do Pico Escolha; Curral Atlântis; Lajido; BC/US ~$22–35"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Cooperativa Standard DOC",
+          "criteria": "DOC Pico or IGP Açores; cooperativa production; correct varietal character",
+          "markers": "Adega Cooperativa do Pico standard range; Basalto; BC/US ~$16–22"
+        },
+        {
+          "tier": 1,
+          "tier_name": "IGP Açores / Commercial",
+          "criteria": "Island origin; multi-island blend; entry to Azores character",
+          "markers": "IGP Açores blends; Pico Branco standard; BC/US ~$12–16"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "10–12°C; young Arinto benefits from cold serving; aged Verdelho at 13–14°C",
+        "vessel": "White wine glass (standard; Riedel Veritas or similar); wider bowl for aged Verdelho to capture the honey-floral development",
+        "technique": "Young Arinto: pour cold; allow 5 minutes to open in glass — the aromatic precision unfolds in stages. Aged Verdelho (10+ years): open 30 minutes before serving. Food pairing primary: the wine is built for the table, not solo sipping. Serve alongside cold seafood for the basalt-meets-ocean effect.",
+        "programme_position": "By-the-glass conversation wine: the story drives as much as the flavour. Sommelier pairing feature for Atlantic seafood courses. PCT geographical anchor: the same volcanic island chain that launched Portuguese exploration.",
+        "verbal_presentation": "Terras de Lava Arinto — Pico Island, Azores. UNESCO World Heritage viticulture. Hand-harvested from basalt enclosures in the mid-Atlantic. The most volcanic white wine in Europe."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Terras de Lava (Pico Island, founded 2002) and Adega Cooperativa do Pico",
+        "producer_location": "Pico Island, Azores, Portugal",
+        "key_person": "João Brum (Terras de Lava, winemaker); Luís Melo (Adega do Pico)",
+        "production_volume": "Small: Azores produces fewer than 2,000 hectolitres annually — the smallest DO region in Portugal by volume",
+        "certifications": [
+          "DOC Pico",
+          "IGP Açores",
+          "UNESCO World Heritage viticulture landscape (2004)"
+        ],
+        "bc_distributor": "Private import only; no current BC commercial distributor confirmed; BCLDB special order possible for cooperativa range (IGP Açores)",
+        "us_distributor": "Ferreira Imports (Portuguese specialist, New York — carries Pico wines); Premium Port Wines Inc. (San Francisco) occasionally lists Azores; extremely limited US distribution overall",
+        "uk_distributor": "Lea & Sandeman (London — UK importer for Terras de Lava); The Wine Society; Bat & Bottle",
+        "price_tier": "Market to Reserve (cooperativa standard: ~$18 US; Terras de Lava: ~$35–45 US)",
+        "availability_notes": "Azores wine is among the most difficult Portuguese wines to source in North America. US: Ferreira Imports, NY; Crush Wine & Spirits NY. In BC: private import only through specialist order. UK is the best-served non-European market for Azores wine."
+      },
+      "trail_connection": "PCT-3",
+      "trail_note": "The Azores were the first mid-Atlantic Portuguese colonial settlement (1427) and served as the primary restocking point for all Portuguese Atlantic voyages — Columbus stopped in the Azores on his return from the Americas in 1493. The Verdelho grape variety was cultivated in the Azores before it became the primary Madeira variety — the PCT flows from Azores to Madeira, not the reverse. The UNESCO heritage status (2004) protects the basalt currais wall viticultural landscape that has remained essentially unchanged since the 15th century.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Percebes (goose barnacles) — North Atlantic",
+          "pairing_type": "complement",
+          "rationale": "Percebes from the Atlantic coast carry intense oceanic-mineral iodine character that mirrors the Arinto dos Açores directly — the same ocean in two forms. This is one of the few wine-and-food pairings where the mineral match is so precise it reads as a single flavour system rather than a pairing"
+        },
+        {
+          "technique_id": "",
+          "dish": "Alcatra (Terceira Island slow-braised beef with red wine and allspice)",
+          "pairing_type": "contrast",
+          "rationale": "Azores' most iconic dish — braised beef in terracotta with Açores red wine, allspice, bay, and cloves — pairs as contrast with the white: the Arinto's electric acidity cuts the braised fat while the allspice and clove find the wine's own spice-mineral undertone"
+        }
+      ],
+      "source": "DOC Pico official production documentation; UNESCO World Heritage evaluation report 2004; Terras de Lava producer documentation; Adega Cooperativa do Pico official history; Wines of Portugal (viniportugal.pt) Azores regional guide",
+      "entry_id": "WIN-PORAZO-001",
+      "extracted_at": "2026-04-11T15:42:17.565469+00:00",
+      "batch_number": 1
+    }
+  ]
+}

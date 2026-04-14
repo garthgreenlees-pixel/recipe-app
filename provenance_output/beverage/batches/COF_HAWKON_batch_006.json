@@ -1,0 +1,104 @@
+{
+  "tradition": "coffee",
+  "region": "Hawaii — Kona and Ka'u",
+  "batch_number": 6,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:32:05.556953+00:00",
+  "entries": [
+    {
+      "tradition": "coffee",
+      "sub_tradition": "kona arabica specialty",
+      "region": "USA — Hawaii (Kona, Ka'u, Maui)",
+      "name": "Kona Coffee — The Hawaiian Arabica",
+      "terroir_origin": "Kona coffee is grown on the western slopes of Mauna Loa and Hualalai volcanoes on the Big Island of Hawaii, in the North and South Kona districts. The 'Kona Coffee Belt' runs at 180–900m altitude, with a unique microclimate: sunny mornings, cloud cover and afternoon showers from the mountains, and volcanic basalt soils. The PCT×PMT (Pacific Migration Trail) intersection: coffee arrived in Hawaii in 1825 when Chief Boki brought plants from Brazil to Oahu — a Brazilian-origin arabica (descended from the same Portuguese-smuggled 1727 seedlings via Palheta). Hawaiian-born farmers and later Portuguese immigrant plantation workers (predominantly from the Azores and Madeira — the PCT islands) developed the Kona coffee industry in the late 19th century alongside Japanese, Filipino, and Polynesian communities. The volcanic geology of Hawaii (Pacific hotspot volcano) on porous basalt with excellent drainage and high mineral content creates the richness and low acidity that define Kona's flavour profile. Kona has a Geographical Indication (GI) protected in the US under the Kona Coffee Council — only coffee grown in the Kona District of Hawaii County can be labelled 'Kona Coffee.'",
+      "production_technique": "Kona coffee is hand-harvested — the steep volcanic slopes preclude mechanical harvesting. Selective hand-picking ensures only ripe cherries are collected. The Typica variety dominates Kona production — one of the oldest arabica varieties in continuous cultivation globally, descended directly from the Yemen-to-Amsterdam-to-Caribbean-to-Brazil arabica lineage brought to Hawaii via Chief Boki's 1825 procurement. Wet/washed processing is predominant: pulping on the same day as harvest, fermentation 12–24 hours, sun-drying on raised beds for 5–10 days. The small farm structure of Kona (most farms are 1–5 acres, operated by individual families) creates enormous variation in quality. 'Kona blends' (10% Kona + 90% other origin) are a major issue in the market — legally sold as 'Kona blend' but misleading consumers. For true single-farm Kona: Greenwell Farms (1850, oldest continuously operating Kona farm), Kona Joe (trellis-grown; first trellis coffee farm in North America), and Ka'u Coffee Mill (the newer southern region, gaining Cup of Excellence scores).",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Screaming Eagle / Harlan Estate (Napa Valley Cabernet)",
+          "connection": "Both are the world's most expensive, most faked, and most geographically specific single-origin products from volcanic American terroir. Both are surrounded by lower-quality blends using their names (Kona blend; Napa vs. California label). Both demonstrate that American volcanic terroir can compete with the world's most prestigious origins when production is at the highest level"
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Jamaica Blue Mountain (Blue Mountains, Jamaica)",
+          "connection": "The closest parallel in brand positioning: both are island arabicas with GI protection, premium pricing, and significant fraud/blending issues. Blue Mountain coffee was brought from Martinique in 1728 — adjacent to the PCT Atlantic trade routes. Both command 3–5× the price of equivalent quality Central American specialty coffee"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Medium brown in filter brew; consistent clear extraction with correct grind",
+        "nose": "Bright floral (jasmine, honey), stone fruit (peach, apricot), mild citrus, subtle volcanic minerality; relatively restrained compared to Ethiopian florals; more delicate and gentle than high-ester East African origins",
+        "palate": "Medium body; mild-to-medium acidity (lower than Ethiopian or Colombian); clean, sweet finish; stone fruit and mild chocolate; the volcanic soil contributes a mineral-silica note that differentiates it from mainland US or Central American origins; long gentle finish without astringency",
+        "conclusion": "Kona coffee's reputation exceeds its complexity relative to Ethiopian or Colombian counterparts at equivalent price points. Its value is terroir specificity and cultural narrative: the PCT×PMT convergence, the volcanic island origin, and the history of Pacific migration embedded in the cup."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Extra Fancy / Single Farm Cup of Excellence",
+          "criteria": "USDA Kona Extra Fancy grade (largest screen, no defects); named farm; SCA 87+; Cup of Excellence if entered",
+          "markers": "Greenwell Farms Estate; single-farm micro-lot; £40–80 per 250g; verified 100% Kona"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Fancy Grade Single Farm",
+          "criteria": "USDA Fancy grade; named farm (not region or blend); 100% Kona origin; specialty roaster sourced",
+          "markers": "Farm name on bag; 100% Kona statement; Kona Coffee Farmers Association certified"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Prime Grade / 100% Kona",
+          "criteria": "USDA Prime or standard; 100% Kona; no blend; honest origin",
+          "markers": "100% Kona statement without 'blend'; widely distributed; $35–55 per 250g"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Kona Blend (10% Kona)",
+          "criteria": "10% Kona minimum by Hawaii law; 90% undisclosed origins; misleading marketing",
+          "markers": "'Kona Blend' label; legally permitted but ethically questionable; very low Kona content"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "92–95°C for filter; 90–92°C for espresso (lower acidity requires slightly higher temperature for full extraction)",
+        "vessel": "Pour-over (V60 or Kalita for single origin filter); standard espresso demitasse",
+        "technique": "Kona as pour-over: medium-coarse grind, 15:1 water:coffee, 2.5–3 minute brew. The gentle floral character benefits from slightly slower extraction. As espresso: medium roast, 1:2 ratio, 28 seconds — the lower acidity means a slight under-extraction reads as balance rather than sourness. Cold brew: excellent — the mild acidity and stone fruit work well cold",
+        "programme_position": "Premium single origin feature; Pacific-themed programme anchor; PCT×PMT storytelling piece; highest-priced coffee on any single-origin flight",
+        "verbal_presentation": "Kona coffee from the slopes of Mauna Loa — volcanic basalt, hand-picked by the family that's farmed this land since 1850. The coffee arrived in Hawaii from Brazil in 1825; the Portuguese farmers from the Azores who worked alongside Polynesian communities built the Kona industry. The Pacific and the Atlantic meet in this cup."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Greenwell Farms (est. 1850, North Kona)",
+        "producer_location": "North Kona District, Kealakekua, Hawaii County, Hawaii",
+        "key_person": "Tom Greenwell (5th generation; current operations); Greenwell family continuous since 1850",
+        "production_volume": "~20,000 bags annually; the largest single Kona estate",
+        "certifications": [
+          "100% Kona verified",
+          "Kona Coffee Farmers Association member",
+          "USDA Organic (selected lots)"
+        ],
+        "bc_distributor": "Greenwell Farms: direct online shipping to BC available (greenwellfarms.com); no confirmed BC brick-and-mortar agent [NEEDS VERIFICATION]",
+        "us_distributor": "Greenwell Farms: direct e-commerce nationwide (greenwellfarms.com); retail at Whole Foods Hawaii; limited national specialty retail",
+        "uk_distributor": "Available through UK specialty online retailers; no major chain distribution",
+        "price_tier": "Reserve (100% Kona ground: US$45–65 per 12oz; Extra Fancy: $65–95; Greenwell Farm reserve: up to $120 per 250g)",
+        "availability_notes": "100% single-farm Kona in BC: through Greenwell direct shipping or specialty coffee importers. 'Kona blends' widely available — avoid these for programme use. US: Greenwell direct is the reliable source; Whole Foods Hawaii stores in person. Ka'u Coffee Mill: direct online only."
+      },
+      "trail_connection": "PCT-14×PMT",
+      "trail_note": "Kona coffee's origin is a PCT×PMT double helix: the coffee plant arrived via Brazil (PCT-13 — the same 1727 Portuguese-smuggled seed stock) AND the immigrant workforce that built the Kona industry included Portuguese Azorean and Madeiran workers (PCT-2 — the original Atlantic island coffee cultivation region). The Pacific migration context: Japanese, Filipino, Chinese, and Korean immigrant communities alongside Polynesian native Hawaiians all contributed to Kona's agricultural development. Kona coffee is the Pacific basin's most complex multicultural agricultural product.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Hawaiian honey cake (butter mochi with local honey)",
+          "pairing_type": "complement",
+          "rationale": "Hawaiian honey and Kona coffee are from the same volcanic terroir; the mochi's glutinous rice sweetness echoes the coffee's gentle body without the tension of high-acidity origins"
+        },
+        {
+          "technique_id": "",
+          "dish": "Macadamia nut tart",
+          "pairing_type": "complement",
+          "rationale": "Macadamia (another Hawaiian agricultural legacy) and Kona coffee both express the mild, buttery richness of volcanic soil cultivation"
+        }
+      ],
+      "source": "Kona Coffee Council official documentation; Greenwell Farms production history (est. 1850); USDA grading standards for Kona; Cup of Excellence Hawaii results; Hawaiian Historical Society records of Portuguese immigrant farming communities",
+      "entry_id": "COF-USAHAW-001",
+      "extracted_at": "2026-04-11T15:32:05.556686+00:00",
+      "batch_number": 6
+    }
+  ]
+}

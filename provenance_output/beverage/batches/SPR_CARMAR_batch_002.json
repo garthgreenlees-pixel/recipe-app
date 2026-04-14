@@ -1,0 +1,110 @@
+{
+  "tradition": "spirits",
+  "region": "Caribbean — Martinique (Rhum Neisson, AOC)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T17:26:05.298336+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "martinique rhum agricole aoc estate single domaine",
+      "region": "Caribbean — Martinique (Rhum Agricole AOC, Le Carbet)",
+      "name": "Rhum Neisson AOC Martinique — Single-Estate Agricole, Le Carbet Volcanic Soils",
+      "terroir_origin": "Martinique Rhum Agricole AOC is the only rum appellation with controlled origin designation status — the French Appellation d'Origine Controlee framework applied to Caribbean rum in 1996. Neisson's Le Carbet estate is on the northwest coast of Martinique, at the base of the Piton du Carbet (the island's volcanic mountain chain after the dominant Mont Pelee). The terroir case for Neisson: Sugarcane is grown on volcanic soils (andisols) derived from Mont Pelee eruptions (the 1902 eruption killed 30,000 people — the deadliest volcanic disaster of the 20th century — and covered the island in a mineral-rich ash layer). The northwest coast receives maximum trade wind exposure — the Atlantic air from the east creates a maritime-influenced microclimate that cools the crop and extends the sugarcane maturation. No purchased cane: all Neisson rhum is made from estate-grown Canne Bleue variety — the traditional Martinique cane strain that produces a grassier, more mineral juice than commercial hybrids. Canne Bleue: slower-growing, lower-yield traditional variety; banned in Martinique in the 1970s-80s commercial era but revived by Neisson and a small group of estates in the 1990s. The PCT connection: Martinique's sugarcane arrived via the Portuguese Atlantic chain (Madeira → Caribbean → Martinique) but was transformed by French colonialism into a distinctly French-influenced spirit.",
+      "production_technique": "Neisson rhum agricole production: Harvest: manual cutting of Canne Bleue; immediately pressed on-site within 4 hours of cutting. The 4-hour rule: fresh cane juice (vesou) begins fermenting naturally within hours; the rapid press-to-ferment window is a non-negotiable quality parameter in AOC Martinique. Juice clarification: decanting to remove suspended solids; no centrifuge at Neisson. Fermentation: 24-36 hours using the estate's resident yeast population; Neisson does not use commercial yeast strains. The short fermentation produces a lighter, more floral and grass-forward character than longer-fermented agricoles (Clairin Haiti, for example). Distillation: single column still (the only type permitted under AOC Martinique rules); the column still distills to 65-75% ABV; this is deliberately lower than industrial rum (95%) to retain the volatile esters and grass character from the fresh cane juice. Neisson Blanc: bottled at 52.5% ABV (not diluted to standard 40%) — the higher bottling strength preserves the cane character for bartending. Rhum Vieux: aged in 200L French oak barriques; minimum 3 years for 'vieux' designation. L'Esprit Neisson: barrel-strength bottling; 52.5-60% ABV; no dilution.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Rhum Clement VSOP (Martinique, estate agricole)",
+          "connection": "Both are AOC Martinique single-estate agricoles from volcanic islands. Neisson (Le Carbet northwest coast) vs Clement (Riviere Salee southeast coast) demonstrates how opposite coastal exposures on the same volcanic island create distinguishable terroir differences in an agricultural spirit. Neisson is grassier and more mineral; Clement is rounder and more floral."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Calvados AOC Domfrontais (apple brandy, Normandy)",
+          "connection": "Both are AOC fruit spirits with strictly controlled geographic, varietal, and production parameters. The comparison shows that appellation control for spirits produces the same regional specificity for rum that it produces for apple brandy in Normandy."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Rhum Barbancourt Reserve du Domaine (Haiti, double distilled)",
+          "connection": "Both are fresh cane juice rhums from former French Caribbean territories. Neisson: AOC column still, 24-36hr fermentation, more floral-grass. Barbancourt: Cognac-method double distillation, 72hr fermentation, more structured. The comparison reveals how distillation method determines the final register even when the raw material (fresh cane juice) is identical."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Chablis Premier Cru (unoaked Chardonnay, Kimmeridgian chalk)",
+          "connection": "Both derive a distinctive mineral character from exceptional soil composition. The Kimmeridgian chalk of Chablis and the Mont Pelee volcanic andisols of Neisson's estate are both non-volcanic/volcanic terroir cases for how soil mineralogy transfers into agricultural product character."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Neisson Blanc 52.5%: crystal clear, watery-white; viscous legs at high proof. Neisson Vieux 3yr: pale gold, developing amber",
+        "nose": "Fresh cut grass, sugarcane juice, petrol (high-proof Blanc only), tropical citrus (calamansi, lime peel), volcanic mineral, white pepper",
+        "palate": "Neisson Blanc: high-proof grassiness dominates; the column still separation produces a clean spirit that carries the cane character without heavy congeners. Neisson Vieux: the wood phase adds vanilla and dried tropical fruit while the grass-mineral persists",
+        "texture": "Neisson Blanc at 52.5%: high-proof burn initially but opens to a precise, clean body; the column still removes the heaviness of pot still rums. Neisson Vieux: medium body; the oak adds glycerous texture without dominating",
+        "finish": "Blanc: 45-60 seconds of fresh grass and volcanic mineral; the high proof extends the finish through acidity rather than warmth. Vieux: 60-75 seconds; vanilla-oak and dried cane grass coexist",
+        "conclusion": "The most terroir-specific rum available commercially — a single estate on a single volcanic island with a 500-year agricultural history"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Neisson L'Esprit Barrel Strength (Vieux)",
+          "criteria": "Barrel-strength bottling (52.5-60%); no dilution post-ageing; the uncompromised expression of the estate and the Vieux ageing programme",
+          "markers": "Neisson L'Esprit; US ~$90-120 via Craft Imports; BC: private order; limited"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Neisson Rhum Vieux 3yr (standard aged)",
+          "criteria": "Minimum 3yr ageing in 200L French barriques; AOC designation; estate cane; the accessible premium expression for programme use",
+          "markers": "Neisson Vieux 3yr; US ~$60-75; BC: private import; BCLDB does not list Neisson"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Neisson Blanc 52.5% (unaged, high proof)",
+          "criteria": "Fresh cane juice character; 52.5% bottling strength; no added water; the bartender's reference for Martinique AOC Blanc",
+          "markers": "Neisson Blanc 52.5%; US ~$45-60; BC: private order"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Clement VSOP or Rhum JM VO (accessible AOC Martinique)",
+          "criteria": "Established AOC Martinique brand; 4-6yr ageing; accessible price; introduction to AOC Martinique for guests new to the category",
+          "markers": "Clement VSOP; BC ~$55-70; US ~$50-65; BCLDB listed"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Neisson Blanc: serve neat at room temperature or with a 2cm ice cube; the 52.5% opens with 5 minutes air contact. Neisson Vieux: room temperature neat; or with a single large ice sphere",
+        "vessel": "Glencairn for Blanc (concentrates the volatile grass-mineral); short tumbler for Vieux on ice",
+        "technique": "Neisson Blanc as a cocktail base: Ti' Punch — 50mL Neisson Blanc + 10mL cane syrup + 2 limes squeezed directly in the glass. The Ti' Punch is the canonical AOC Martinique service and the best vehicle for communicating the agricultural character to guests: no dilution water, no ice, lime squeezed at the table. The agricultural narrative: 'Martinique cane cut this morning, pressed within the hour, fermented 24 hours, distilled once, bottled at estate strength.'",
+        "programme_position": "Martinique AOC rum education; Ti Punch cocktail programme; single-estate agricole comparison",
+        "verbal_presentation": "Neisson Blanc — Le Carbet, Martinique. Single estate, estate-grown Canne Bleue. Cut this morning. Pressed within the hour. The taste of volcanic Martinique."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Distillerie Neisson — the smallest major Martinique distillery; the most single-estate-focused",
+        "producer_location": "Le Carbet, Martinique, French Caribbean (DOM)",
+        "key_person": "Grégoire Hayot family (current ownership); Yann Hayot (production)",
+        "bc_distributor": "No BCLDB listing for Neisson. Private import required through a licensed BC agent.",
+        "us_distributor": "Craft Imports (US) — primary US importer for Neisson",
+        "uk_distributor": "La Maison du Whisky (France/UK distribution); The Whisky Exchange (UK)",
+        "price_tier": "Entry: $45-60 (Neisson Blanc 52.5%). Mid: $60-75 (Neisson Vieux). Premium: $90-120 (L'Esprit barrel strength).",
+        "availability_notes": "Neisson is not widely distributed in North America. Craft Imports handles US allocation; BC requires private import. Total annual production is very small — allocation-based for restaurant accounts."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Accras de morue (Martinique salt cod fritters)",
+          "pairing_type": "complement",
+          "rationale": "Accras are the canonical Martinique street food — salt cod, chilli, and herb fried fritters — and the Ti' Punch with Neisson Blanc is the canonical local pairing. The salt cod and cane grass dialogue is the Martinique aperitif moment that defines AOC agricole in its cultural context."
+        },
+        {
+          "technique_id": "",
+          "dish": "Colombo de poulet (Martinique chicken curry with colombo spice blend)",
+          "pairing_type": "bridge",
+          "rationale": "The colombo spice blend (turmeric, cumin, coriander, fenugreek — brought to Martinique by 19th-century Indian indentured workers) bridges the tropical mineral freshness of Neisson Blanc through the shared spice mineral register — a three-way cultural bridge (French, African, Indian) in one pairing."
+        }
+      ],
+      "source": "AOC Martinique technical specifications (INAO documentation); Distillerie Neisson production documentation; Craft Imports US portfolio; BCLDB product listings verified April 2026",
+      "trail_connection": "PCT-WADT",
+      "trail_note": "PCT×WADT: Martinique at the intersection of Portuguese Atlantic cane history (PCT), West African Diaspora rum culture (WADT), and French AOC regulatory philosophy. The AOC Martinique framework creates the only rum in the world with the same legal geographic protection as Champagne or Burgundy — a French colonial administrative legacy that preserved the island's agricultural rum identity against industrial globalisation.",
+      "entry_id": "SPR-CARMAR-001",
+      "extracted_at": "2026-04-11T17:26:05.298002+00:00",
+      "batch_number": 2
+    }
+  ]
+}

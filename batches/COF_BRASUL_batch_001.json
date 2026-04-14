@@ -1,0 +1,77 @@
+{
+  "tradition": "coffee",
+  "region": "Brazil — Sul de Minas (Carmo de Minas, Sitio Santa Ines, Classical Terroir)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T16:52:06.867383+00:00",
+  "entries": [
+    {
+      "name": "Brazil Sul de Minas Yellow Bourbon Natural — Carmo de Minas 1,200m, Sítio Santa Inês Heritage",
+      "category": "coffee",
+      "subcategory": "natural_process",
+      "origin": "Brazil",
+      "region": "Sul de Minas, Minas Gerais, Brazil",
+      "producer": "Sítio Santa Inês — Carmo de Minas",
+      "alcohol_content": 0.0,
+      "price_tier": "premium",
+      "terroir_origin": "Carmo de Minas sits in the southern Minas Gerais highlands at approximately 1,100–1,300m elevation — the highest and coolest production zone in Sul de Minas, and consequently the zone producing the most nuanced, complex Bourbon variety coffees in Brazil. The terroir of Sul de Minas is defined by three geological factors: weathered Precambrian granite and gneiss-derived red latosol soils with naturally acidic pH (5.0–5.8), excellent drainage from the highland topography, and the consistent cloud and mist cover from the Serra da Mantiqueira mountain range to the east (the same mountains that create Espírito Santo's Conillon growing conditions further north, in a different climate zone). Annual rainfall of 1,400–1,800mm arrives in a single wet season (October–March), allowing a dry harvest period (May–September) critical for natural and pulped-natural processing where the whole cherry must dry without excessive moisture. The Yellow Bourbon (Bourbon Amarelo) variety cultivated at Sítio Santa Inês is a Brazilian mutation of the Red Bourbon variety — the yellow fruit characteristic signals a different lycopene-to-xanthophyll ratio in the ripe cherry that correlates with slightly higher sucrose content and a softer, less tannic cup character than red Bourbon at comparable sugar levels. The combination of altitude cooling (slow maturation), granite-latosol mineral absorption, and Yellow Bourbon's natural sugar expression creates the multilayer cup complexity that distinguished the 2006 WBC-winning coffee from all previous Brazilian entries.",
+      "production_technique": "Sítio Santa Inês harvests Yellow Bourbon by selective hand-picking (colheita seletiva) — the most labor-intensive Brazilian harvest method, where pickers make multiple passes through each tree section selecting only ripe yellow cherries while leaving green and overripe cherries for subsequent passes. Natural (dry) processing: whole ripe cherries are spread on raised cement terraces (terreiros) at the farm, turned every 2–4 hours during peak sun hours to ensure even drying, and dried for 20–30 days until the cherry moisture content reaches 11–12%. The extended natural drying at high altitude (cooler temperatures slow drying, allowing longer fermentation within the fruit) enables the development of the fruit-forward natural process character — the cherry mucilage and fruit flesh have extended contact with the parchment and seed during drying, transferring complex sugars and fruit acids that produce the distinctive berry-fruit and chocolate character of premium Brazilian naturals. Quality control: every batch is cupped by the farm's own Q-grader (the Paulo Sílvia family has trained Q-graders on-site) against a 86-point minimum standard for specialty designation. Lots that cup above 90 points are separated for direct export to the specialty trade through Intelligentsia and similar direct-trade roasters; 87–89 point lots are sold through the Brazil specialty export market at premium commodity prices.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Ethiopia Yirgacheffe Natural (African natural process, fruit-forward)",
+          "connection": "Both Sul de Minas Yellow Bourbon Natural and Yirgacheffe Natural represent the gold standard of natural process coffee from their respective continents — both achieve the balance between fruit-forward intensity and clean cup character that distinguishes premium naturals from fermented, uncontrolled naturals; the Brazil expression is chocolate-caramel with berry accent while Yirgacheffe is blueberry-citrus, demonstrating how the same process produces different results from different varieties and terroir"
+        },
+        {
+          "tradition": "Colombia Huila Washed (opposite processing philosophy, complementary quality)",
+          "connection": "Sul de Minas Yellow Bourbon Natural and Colombia Huila Washed represent the definitive New World coffee contrast: Brazilian natural achieves complexity through extended fruit contact and drying, Colombian washed achieves clarity through immediate depulping and fermentation tank removal of fruit — both producing 90+ point coffees but through opposite processing philosophies, ideal as a side-by-side tasting to understand how process shapes cup character"
+        },
+        {
+          "tradition": "Douro Valley Port Wine (same latitude, same heritage narrative)",
+          "connection": "Brazilian Sul de Minas coffee and Douro Valley Port share the same Portuguese colonial agricultural heritage: both were introduced and developed as commercial agricultural products under Portuguese colonial administration, both are now among their respective category's global benchmarks, and both express the volcanic-to-granite mineral terroir character of their specific Portuguese-colonial-era agricultural landscapes"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Dark caramel to mahogany brown brew; natural process translucence slightly lower than washed; medium-full body visible in the cup's surface texture; crema in espresso preparation is richly colored and persistent",
+        "nose": "Ripe tropical fruit (peach, guava), dried cherry, dark chocolate, caramel, very faint wine-grape fermentation undertone from natural processing — the nose is fruity and inviting without the funky fermented note of lower-quality naturals; at espresso extraction: intensified chocolate and caramel with berry top note",
+        "palate": "Full body, low acidity (characteristic of Brazilian altitude naturals), chocolate mid-palate, ripe fruit sweetness from the extended cherry drying, long finish with caramel and dried fruit persistence — the World Barista Championship character: clean enough to show every aromatic layer while complex enough to provide depth across multiple cups"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Brazil Sul de Minas Commercial Grade",
+          "criteria": "Strip-picked or mechanical harvested, dry natural process at high volumes with less turning, 84–86 point range — the standard Brazilian specialty baseline widely available through commercial roasters"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Sul de Minas Direct Trade (87–89 points)",
+          "criteria": "Selective pick, raised-bed or managed terrace drying, cupper-verified 87–89 points — the accessible specialty tier available from direct-trade roasters like 49th Parallel in Vancouver"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Sítio Santa Inês Yellow Bourbon Natural (90+ points)",
+          "criteria": "The 2006 WBC benchmark tier: full selective harvest, controlled natural process, Q-grader cupped 90+, direct export through specialty trade — the internationally recognized pinnacle of Sul de Minas natural-process expression"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Cup of Excellence Lot (91–94 points)",
+          "criteria": "Brazil COE auction lots from Carmo de Minas zone, submitted to international jury cupping, achieving 91+ points — available through online auction to direct roasters globally; the collector tier of Brazilian specialty coffee"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Filter: 94–95°C pour-over (V60 or Kalita Wave optimal for natural process body); Espresso: 92–93°C extraction; serve filter at 70°C, allow to cool to 55–60°C before final assessment — the natural process complexity reveals itself more at lower drinking temperature",
+        "vessel": "Wide ceramic cup or Fellow Stagg pour-over mug for filter to maintain heat and concentrate aromatics; standard espresso demitasse for espresso; avoid glass cups which cool too rapidly for natural-process body appreciation",
+        "roast_profile": "Sul de Minas Yellow Bourbon Natural peaks at medium roast (City+ to Full City): light roast emphasizes green fruit acidity at the expense of the characteristic chocolate-caramel depth; dark roast destroys the fruit character entirely; the medium-roast sweet spot produces the chocolate-fruit integration that defines great Brazilian natural expression"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Sítio Santa Inês (Paulo Sílvia family) — Carmo de Minas — the international benchmark for Sul de Minas natural-process Yellow Bourbon",
+        "north_america_access": "Intelligentsia Coffee (US); 49th Parallel Coffee (Vancouver, BC) — the primary PNW source for premium Sul de Minas lots; Hatch Coffee Roasters (Victoria, BC) also sources Sul de Minas directly",
+        "culinary_application": "Yellow Bourbon natural process espresso creates a distinctive dessert sauce base: espresso reduction with chocolate and caramel notes for churros dipping; filter coffee cold-brew concentrate works in Brazilian-inspired chocolate cake glazes; the PCT Portuguese colonial narrative connects Sul de Minas coffee to the same agricultural legacy as Goa cashew feni, Cape Verde grogue, and São Tomé cacao — all products of the same colonial agricultural transfer system"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "COF-SULDE-001",
+      "tradition": "coffee",
+      "extracted_at": "2026-04-12T16:52:06.866869+00:00",
+      "batch_number": 1
+    }
+  ]
+}

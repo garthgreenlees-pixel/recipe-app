@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Guatemala — Quetzaltenango Highlands (Zacapa XO Solera System, Non-Solera Truth, Elevation Aging)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T16:54:38.391514+00:00",
+  "entries": [
+    {
+      "name": "Ron Zacapa XO — Guatemala Virgin Cane Honey, 2300m Altitude Aging, Solera-Style Fractional Blending",
+      "category": "spirits",
+      "subcategory": "rum_aged",
+      "origin": "Guatemala",
+      "region": "Quetzaltenango and Retalhuleu, Guatemala",
+      "producer": "Ron Zacapa — Industrias Licoreras de Guatemala (ILG)",
+      "alcohol_content": 40.0,
+      "price_tier": "super_premium",
+      "terroir_origin": "Guatemala's Pacific coastal plain in Retalhuleu produces the virgin cane honey (miel virgen) — first-press sugar cane juice concentrated to syrup — that forms Zacapa's base: a sweeter, more complex fermentation substrate than molasses that retains more of the cane's natural volatile aromatics. The ILG distillery extracts cane juice from Guatemala's indigenous sugar cane varieties and concentrates it immediately, producing a fresh-cane-honey fermentable that lies midway between the fresh juice of rhum agricole and the molasses of most Caribbean rum. The critical terroir is the aging environment: after column still distillation at the coastal facility, Zacapa spirit travels to the Casa de las Nubes at 2,300m elevation in the Guatemalan highlands above Quetzaltenango — an altitude where the thin atmosphere and cool temperatures (daily range 12–22°C vs 26–36°C at sea level) dramatically slow barrel extraction. The 2,300m altitude creates several specific effects: reduced air pressure means the barrel wood expands and contracts less dramatically, creating slower but more even extraction; the cool temperatures preserve delicate aromatic compounds that would volatilize in tropical low-altitude aging; the higher UV exposure at altitude may drive some photochemical reactions in the aging rum not present in cellar-aged spirits. The Guatemalan highlands are at the same latitude as Jamaica and Martinique but at 10x the altitude — the resulting \"cool tropical\" aging environment is unique in the rum world, though several Andean spirits producers (Peruvian pisco, Bolivian singani) operate in similar altitude-aging conditions.",
+      "production_technique": "Zacapa's production begins with the miel virgen (virgin cane honey) — a clarified and concentrated cane juice syrup at approximately 65–70 Brix, far sweeter than molasses (85 Brix) but retaining more of the fresh cane aromatics lost during the molasses concentration process. The miel virgen is fermented in stainless steel tanks with a proprietary Saccharomyces cerevisiae strain for 36–48 hours, producing a wine at 12–14% ABV with distinctive fresh-cane and light tropical-fruit aromatics. Distillation occurs on a multi-plate continuous column still at the Retalhuleu facility, producing a clean neutral spirit at approximately 90% ABV. The new make spirit is transported to the Casa de las Nubes and entered into casks at 60–65% ABV for altitude aging. The Zacapa \"solera\" system operates as follows: barrels are organized in four tiers (American white oak ex-bourbon, Pedro Ximénez Sherry casks, Oloroso Sherry casks, and American oak) and aged rums are rotated through these wood types over periods of 6–25 years. When rum is removed from the final barrel for blending, it is replaced with rum from the next barrel down, which is refilled from the barrel below — the fractional blending principle. For Zacapa XO specifically, the blend contains rums aged from 6–25 years in the altitude warehouses, including Pedro Ximénez (dried sweet raisin-plum), Oloroso (nutty oxidative), and ex-bourbon (vanilla-caramel) cask contributions. The notable controversy: Zacapa labels indicate \"between 6 and 23 years\" for Centenario 23 and \"XO\" for the premium expression, but the actual average age of the blend is significantly lower than the maximum age stated — a common rum industry labeling practice that Zacapa employs alongside the solera-style system. Additionally, all major Zacapa expressions contain undisclosed added sugar (dosage) at significant levels (typically 15–30 g/L) that critics argue contributes more to the sweet, smooth character than the aging process itself.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Foursquare Exceptional Cask (opposite transparency philosophy)",
+          "connection": "Zacapa XO and Foursquare Exceptional Cask represent opposite philosophies in the premium rum market: Zacapa achieves sweetness and smoothness through undisclosed added sugar and solera marketing; Foursquare achieves similar sweetness and smoothness through genuine extended aging with zero additives — both produce delicious rum, but only Foursquare's sweetness is from the aging process rather than post-distillation sweetening"
+        },
+        {
+          "tradition": "PX Sherry (sweet, raisin character, Andalucian origin)",
+          "connection": "Zacapa XO's Pedro Ximénez cask aging contribution creates the most direct connection to Spanish Andalucian dessert wine tradition — the PX casks donate concentrated raisin-fig-treacle compounds that are genuinely present in the flavor profile beyond the added sugar base, making the PX cask character the most authentically earned element of the Zacapa XO experience"
+        },
+        {
+          "tradition": "Andean singani and pisco (altitude production, cool tropical aging)",
+          "connection": "Zacapa's 2,300m aging position places it in the same altitude-production category as Bolivian singani (minimum 1,600m production requirement) and Peruvian pisco — all three represent Andean-altitude agricultural spirits where the thin atmosphere and cool temperatures create a unique production environment compared to coastal tropical spirit production"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep amber-mahogany from the PX and Oloroso sherry cask aging; clear and viscous; the added sugar creates significant leg formation on the glass — more viscous than most 40% ABV rum expressions",
+        "nose": "Confectionery rich: dried raisin and fig from PX cask, vanilla from ex-bourbon, walnut-caramel from Oloroso, toffee and dark chocolate, faint fresh cane from the miel virgen base — the PX cask character dominates and creates an immediately identifiable dessert-rum aromatic; the nose reveals the added sugar through a faint crystalline sweetness that analytical tasters identify as separate from the aging-derived sweet compounds",
+        "palate": "Full body (enhanced by added sugar), rich sweet entry, raisin-fig-toffee mid-palate from the multiple cask types, low alcohol heat at 40%, extremely smooth finish — the smoothness is the product of both the altitude-cool aging (which produces gentler tannin integration) and the added sugar (which coats the palate and masks any remaining rough edges)"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Zacapa Centenario 23",
+          "criteria": "The widely distributed Centenario 23 expression: same altitude aging system, blend of 6–23 year rums, Pedro Ximénez and ex-bourbon influence — the accessible super-premium expression that built Zacapa's international reputation"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Zacapa XO",
+          "criteria": "The flagship: additional Oloroso Sherry cask aging and higher average age in the blend; more complex three-wood (PX, Oloroso, ex-bourbon) integration; ultra-premium pricing"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Zacapa Royal",
+          "criteria": "Limited release expression from the oldest barrel selections in the Casa de las Nubes; very small production at ultra-premium price — the collector tier of the ILG portfolio"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Single-Cask Unblended (if ever released)",
+          "criteria": "The aspirational tier: a single identified cask from the 2,300m facility without blending or added sugar would reveal the altitude-aging character of the miel virgen spirit without the added-sugar smoothing — not currently commercially available but theoretically represents the highest transparency expression of the Zacapa terroir"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature 18–20°C; never chill which masks the PX raisin aromatic; works well neat or with one ice sphere that slowly dilutes and reveals additional complexity; the added sugar creates a naturally low-alcohol-burn profile that makes it genuinely consumable straight without ice for most drinkers",
+        "vessel": "Rocks glass or snifter; the full-body sweetness of XO benefits from a wide glass that allows aromatic dispersion rather than concentration; large brandy snifter (warmed in palm) works well to maximize the PX-Oloroso aromatic profile",
+        "cocktail_applications": "Zacapa XO's sweetness means it requires no additional sugar in rum cocktail applications — a Zacapa Old Fashioned uses only bitters and a single ice sphere with no sugar syrup; a Zacapa Negroni variant (substitute XO for vermouth) uses the natural sweetness to replace the sweet vermouth component entirely"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Ron Zacapa — the global benchmark for altitude-aged rum with miel virgen base; the most technically distinctive Central American rum terroir expression despite the additive controversy",
+        "north_america_access": "Diageo distribution through all major US and Canadian spirits retailers; widely available at Total Wine, LCBO, BCLDB; the XO is standard-stocked at premium spirits retailers in Vancouver and Seattle",
+        "culinary_application": "Zacapa XO's natural sweetness makes it an outstanding dessert pairing spirit: dark chocolate preparations where the PX-raisin character resonates with 70%+ cacao; aged cheese with candied walnut where the Oloroso nut character complements both; as a digestive substitute for Armagnac in dessert service contexts where the sweetness level is appreciated rather than avoided"
+      },
+      "price_trajectory": "stable",
+      "entry_id": "SPR-QUEAND-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T16:54:38.390980+00:00",
+      "batch_number": 1
+    }
+  ]
+}

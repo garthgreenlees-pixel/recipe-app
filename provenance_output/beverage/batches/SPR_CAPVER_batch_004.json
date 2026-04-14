@@ -1,0 +1,102 @@
+{
+  "tradition": "spirits",
+  "region": "Cape Verde — Grogue",
+  "batch_number": 4,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:32:05.555032+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "grogue sugarcane spirit",
+      "region": "Cape Verde — Santo Antão",
+      "name": "Grogue — Cape Verde Sugarcane Spirit",
+      "terroir_origin": "Cape Verde is an archipelago of 10 volcanic islands in the Atlantic Ocean, 570km off the West African coast — uninhabited before Portuguese discovery around 1456. The islands became one of the first Portuguese colonial outposts and the primary transit hub for the Atlantic slave trade between Africa and the Americas. Sugarcane was introduced to Cape Verde by the Portuguese in the 15th century — the same sugarcane that became cachaça in Brazil. Cape Verde's sugarcane is cultivated in the lush valleys of Santo Antão island (the most fertile, with cloud-fed ribeiras — river valleys — rising to 1,979m at Pico Cruz). The volcanic basalt soils and altitude variation create distinct terroir for cane cultivation. Grogue is the national spirit of Cape Verde and a cultural cornerstone — consumed daily, used in ceremonies, and the base for ponche (grogue + lime + honey + spices), the archipelago's defining mixed drink.",
+      "production_technique": "Cape Verdean grogue is produced identically to cachaça's traditional method: freshly pressed sugarcane juice fermented with wild yeasts for 24–72 hours, then distilled once in small copper pot stills (trapiche — the wooden or metal sugarcane press, often animal-powered). The artisanal trapiche is pulled by horses or donkeys on Santo Antão and Fogo islands — unchanged technology from the 16th century. Single distillation produces grogue at 38–55% ABV. Some producers age in local wood or repurposed barrels from other spirits. Unaged grogue dominates — it is typically consumed fresh from the still. Ponche is made by macerating lime, honey, and sometimes herbs or vanilla in fresh grogue: essentially an aguardente ponche identical to Portugal's own ponche traditions, showing the direct PCT cultural transmission. GI discussions for Cape Verde grogue are ongoing but no formal protection exists as of 2025.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Cachaça (Brazil)",
+          "connection": "The most direct PCT parallel: both are single-distillation fresh sugarcane juice spirits introduced to their respective territories by Portuguese colonists with the same cane varieties and the same distillation technology. Grogue and cachaça are separated by 3,000 miles of Atlantic Ocean and both express the same colonial sugarcane transfer in different terroirs. Grogue is less refined (higher congeners, more rustic) and less commercially developed than cachaça"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Clairin (Haiti)",
+          "connection": "Clairin — Haiti's artisanal sugarcane spirit — is the Caribbean parallel to grogue: both are fresh-cane, single-pot-distilled spirits from Atlantic colonial contexts; both are consumed primarily domestically; both have recently attracted international specialty spirits attention. The PCT/WADT intersection: Haiti's cane came from the French colonial system; Cape Verde's from Portuguese. Both spirits document the same technology operating in the same Atlantic colonial economy"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Crystal clear (unaged); pale golden (briefly wood-rested); deep amber (aged expressions, rare)",
+        "nose": "Raw sugarcane, slight agricultural funk (higher congeners than premium cachaça), tropical fruit (Cape Verdean sea-island air), light ferment, earth. Less refined than commercial cachaça but more expressive — the volcanic terroir of Santo Antão valley is detectable in quality examples",
+        "palate": "Full, warming, rustic — 40–55% ABV; fresh cane sweetness in finish; higher congener presence than refined cachaça; genuine character rather than commercial smoothness; ponche version is sweeter and more rounded",
+        "conclusion": "Grogue is a spirits curiosity and a PCT cultural document. For a professional programme, its primary value is narrative: the world's smallest commercially available fresh-cane spirit from a culture that has been making it since the 15th century, unchanged. Ponche Grogue is the more accessible version for Western palates."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Aged Single Valley Grogue",
+          "criteria": "Named ribeira (valley) on Santo Antão; brief wood ageing; documented single distillery; export quality",
+          "markers": "Paul ribeira or Janela ribeira designation; artisanal producer name; limited international distribution"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Artisanal Unaged Grogue",
+          "criteria": "Traditional trapiche press; small producer; fresh cane juice; Santo Antão or Fogo origin",
+          "markers": "Named producer; island of origin; traditional bottle labelling"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Ponche Grogue (commercial)",
+          "criteria": "Grogue macerated with lime, honey, and spices; bottled ponche; the accessible Cape Verde export format",
+          "markers": "Ponche Grogue label; commercial Cape Verdean producer; wider distribution than raw grogue"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Industrial Grogue",
+          "criteria": "Column still possible; molasses addition possible; loss of fresh-cane character; lower quality",
+          "markers": "Cheapest available; no artisanal attribution"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature for neat; chilled for ponche",
+        "vessel": "Small glass or shot glass; rocks glass for ponche on ice",
+        "technique": "Cape Verde Ponche: 50mL grogue + juice of 1 lime + 20mL honey + cinnamon stick; stir with ice, serve chilled. Or: macerate for 1 week (honey + grogue + lime zest + vanilla pod) for a bottled ponche. Neat grogue: small pour, acknowledge the rough edges as authenticity markers",
+        "programme_position": "Specialty spirits education; Atlantic trail cocktail; West African/Cape Verdean cultural events",
+        "verbal_presentation": "Grogue from Santo Antão — Cape Verde. The Portuguese brought sugarcane here in the 15th century; the islanders have been distilling it in animal-powered presses ever since. The same cane, the same still, 500 years on. Rough, honest, Atlantic."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Fogo Island Grogue producers (artisanal) and Destilaria Tito (Santo Antão)",
+        "producer_location": "Santo Antão island and Fogo island, Republic of Cape Verde",
+        "key_person": "[NEEDS VERIFICATION — no single nationally prominent commercial producer]",
+        "production_volume": "Very limited export; primarily domestic consumption (~3 million islanders + diaspora)",
+        "certifications": [
+          "No formal GI as of 2025; GI discussions ongoing with INIDA (Cape Verde agricultural institute)"
+        ],
+        "bc_distributor": "[NEEDS VERIFICATION — no confirmed BC commercial availability]",
+        "us_distributor": "[NEEDS VERIFICATION — very limited US commercial availability; Cape Verdean community stores in Providence RI, Boston MA, New Bedford MA may stock]",
+        "uk_distributor": "[NEEDS VERIFICATION — some UK availability through Cape Verdean diaspora community stores and online spirits specialists]",
+        "price_tier": "Market (€8–20 in Cape Verde; £25–40 if available in UK specialist retail)",
+        "availability_notes": "Grogue is essentially unavailable through normal BC or US commercial channels. For programme use: source through direct Cape Verdean diaspora networks or specialty Atlantic spirits importers. The cultural narrative justifies the procurement effort on a PCT-focused programme. Ponche Grogue bottles are more likely to be internationally available than raw grogue."
+      },
+      "trail_connection": "PCT-4",
+      "trail_note": "Cape Verde is the PCT's Atlantic hub — the geographic centre of Portuguese maritime expansion. Ships from Lisbon stopped here on the way to Brazil (PCT-13), West Africa (WADT), India (PCT-8), and Macau (PCT-10). Grogue carries every branch of the Portuguese colonial trail in its cane: the same sugarcane species moved from Madeira (PCT-2) to Cape Verde to Brazil and back through Portuguese ship routes. Grogue is the Atlantic colonial economy distilled to 45% ABV.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Cachupa (Cape Verde national stew — maize, beans, smoked pork, fish)",
+          "pairing_type": "complement",
+          "rationale": "The national dish with the national spirit. Cachupa's smoked meats and corn base are bridged by grogue's raw cane sweetness — the starch and spirit are made for each other"
+        },
+        {
+          "technique_id": "",
+          "dish": "Grilled wahoo (atum) with sweet potato",
+          "pairing_type": "bridge",
+          "rationale": "Cape Verde's Atlantic fishing tradition: wahoo (skipjack tuna family) grilled over charcoal; ponche grogue with lime bridges the fish's firm flesh and charcoal char"
+        }
+      ],
+      "source": "Slow Food Cape Verde documentation; INIDA Cape Verde agricultural institute; Cape Verdean gastronomy research by João Branco; Destilaria Tito production documentation",
+      "entry_id": "SPR-CAPVER-001",
+      "extracted_at": "2026-04-11T15:32:05.554774+00:00",
+      "batch_number": 4
+    }
+  ]
+}

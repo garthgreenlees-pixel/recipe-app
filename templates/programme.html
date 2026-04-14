@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beverage Programme Builder — Design Service from Aperitif to Digestif | Provenance</title>
+<meta name="description" content="Build a complete beverage programme from Provenance's technique and beverage database. Select courses, receive pairing suggestions by logic type, export a formatted programme card.">
+<link rel="canonical" href="https://provenance.kitchen/programme">
+<meta name="robots" content="noindex">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Programme Builder — Provenance">
+<meta name="twitter:description" content="Build a complete beverage programme from aperitif to digestif.">
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
+  --cream:#F5F1E9;
+  --text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);--text-dim:rgba(245,241,233,0.25);
+  --border:rgba(201,168,76,0.20);--border-subtle:rgba(201,168,76,0.10);
+  --bg:#08080A;--surface:#131210;--surface2:#1A1816;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
+
+/* ─── NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
+.nav-links a:hover{color:#C9A84C}
+.nav-links .nav-active{color:rgba(201,168,76,0.75)}
+.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
+.nav-p:hover{border-color:#C9A84C}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:900px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+
+/* ─── LAYOUT ─── */
+.page-wrap{max-width:900px;margin:0 auto;padding:40px 24px 80px}
+.hero{padding:48px 24px 32px;max-width:900px;margin:0 auto}
+.hero-eyebrow{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:rgba(201,168,76,0.55);text-transform:uppercase;margin-bottom:12px}
+.hero-title{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-0.5px;color:var(--cream);margin-bottom:10px}
+.hero-sub{font-size:14px;color:var(--text-light);max-width:540px;line-height:1.7}
+
+/* ─── EVENT META ─── */
+.event-meta{background:rgba(19,18,16,0.8);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-bottom:24px;display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:end}
+@media(max-width:600px){.event-meta{grid-template-columns:1fr}}
+.field-group{display:flex;flex-direction:column;gap:5px}
+.field-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim)}
+.field-input{background:rgba(245,241,233,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:5px;padding:8px 12px;color:var(--cream);font-family:var(--sans);font-size:14px;font-weight:300;outline:none;transition:border-color 180ms;width:100%}
+.field-input:focus{border-color:rgba(201,168,76,0.4);background:rgba(245,241,233,0.06)}
+.field-input::placeholder{color:var(--text-dim)}
+input[type=number].field-input{width:80px}
+
+/* ─── DEMO BANNER ─── */
+.demo-banner{background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:8px;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.demo-banner-text{font-size:13px;color:var(--text-secondary)}
+.demo-banner-text strong{color:var(--gold);font-weight:500}
+.btn-ghost{background:none;border:1px solid rgba(201,168,76,0.3);border-radius:5px;padding:6px 14px;color:var(--gold);font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:border-color 180ms,color 180ms}
+.btn-ghost:hover{border-color:var(--gold);color:var(--cream)}
+
+/* ─── COURSE CARD ─── */
+.courses-list{display:flex;flex-direction:column;gap:14px}
+.course-card{background:rgba(19,18,16,0.7);border:1px solid rgba(201,168,76,0.10);border-radius:10px;padding:20px 22px;position:relative;transition:border-color 200ms}
+.course-card.has-beverage{border-color:rgba(201,168,76,0.25)}
+.course-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.course-card-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:rgba(245,241,233,0.35);text-transform:uppercase}
+.course-card-actions{display:flex;gap:6px;align-items:center}
+.btn-icon{background:none;border:none;color:var(--text-dim);cursor:pointer;padding:3px 6px;border-radius:3px;font-size:12px;transition:color 180ms;font-family:var(--mono)}
+.btn-icon:hover{color:var(--text-secondary)}
+.btn-icon-remove:hover{color:rgba(220,100,100,0.9)}
+
+/* ─── SEARCH ─── */
+.search-wrap{position:relative;margin-bottom:10px}
+.search-input{width:100%;background:rgba(245,241,233,0.04);border:1px solid rgba(201,168,76,0.12);border-radius:6px;padding:10px 14px 10px 34px;color:var(--cream);font-family:var(--sans);font-size:13px;font-weight:300;outline:none;transition:border-color 180ms}
+.search-input:focus{border-color:rgba(201,168,76,0.35);background:rgba(245,241,233,0.06)}
+.search-input::placeholder{color:var(--text-dim)}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-dim);font-size:14px;pointer-events:none}
+.autocomplete-list{position:absolute;top:100%;left:0;right:0;background:#1A1816;border:1px solid rgba(201,168,76,0.2);border-radius:6px;margin-top:3px;z-index:50;max-height:240px;overflow-y:auto;display:none}
+.autocomplete-list.open{display:block}
+.autocomplete-item{padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(201,168,76,0.06);transition:background 150ms}
+.autocomplete-item:last-child{border-bottom:none}
+.autocomplete-item:hover{background:rgba(201,168,76,0.07)}
+.autocomplete-item-name{font-size:13px;color:var(--cream)}
+.autocomplete-item-meta{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:0.5px;margin-top:2px}
+
+/* ─── SELECTED ITEM ─── */
+.selected-item{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:6px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.selected-item-name{font-size:13px;color:var(--cream);font-weight:400}
+.selected-item-meta{font-family:var(--mono);font-size:9px;color:var(--text-light);margin-top:2px;letter-spacing:0.3px}
+.selected-clear{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;line-height:1;padding:0 2px;transition:color 150ms;flex-shrink:0}
+.selected-clear:hover{color:rgba(220,100,100,0.8)}
+
+/* ─── PAIRINGS ─── */
+.pairings-section{margin-top:12px;padding-top:12px;border-top:1px solid rgba(201,168,76,0.07)}
+.pairings-loading{font-family:var(--mono);font-size:10px;color:var(--text-dim);letter-spacing:0.1em;padding:8px 0}
+.pairing-group{margin-bottom:10px}
+.pairing-group-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:6px}
+.pairing-option{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid rgba(201,168,76,0.07);border-radius:6px;cursor:pointer;transition:border-color 150ms,background 150ms;background:rgba(245,241,233,0.015);margin-bottom:5px;user-select:none}
+.pairing-option:hover{border-color:rgba(201,168,76,0.2);background:rgba(201,168,76,0.04)}
+.pairing-option.chosen{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.07)}
+.pairing-radio{width:14px;height:14px;border:1.5px solid rgba(201,168,76,0.3);border-radius:50%;flex-shrink:0;margin-top:3px;position:relative;transition:border-color 150ms}
+.pairing-option.chosen .pairing-radio{border-color:var(--gold)}
+.pairing-option.chosen .pairing-radio::after{content:'';position:absolute;inset:3px;background:var(--gold);border-radius:50%}
+.pairing-bev-name{font-size:13px;color:var(--cream);font-weight:400}
+.pairing-bev-meta{font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-top:2px;letter-spacing:0.3px}
+.pairing-rationale{font-size:12px;color:var(--text-light);font-style:italic;margin-top:4px;line-height:1.55}
+.pairing-general-note{font-family:var(--mono);font-size:8px;letter-spacing:0.5px;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-top:3px}
+.selected-pairing-display{margin-top:2px;margin-bottom:10px}
+.selected-pairing-rationale{font-size:12px;color:var(--text-light);font-style:italic;line-height:1.55;margin-top:6px}
+
+/* ─── SERVICE NOTES ─── */
+.service-notes-input{width:100%;margin-top:10px;background:rgba(245,241,233,0.03);border:1px solid rgba(201,168,76,0.08);border-radius:5px;padding:8px 12px;color:var(--cream);font-family:var(--sans);font-size:12px;font-weight:300;outline:none;transition:border-color 150ms;resize:vertical;min-height:44px}
+.service-notes-input:focus{border-color:rgba(201,168,76,0.3)}
+.service-notes-input::placeholder{color:var(--text-dim)}
+
+/* ─── PAIRING TYPE COLOURS ─── */
+.pt-complement{color:rgba(150,200,150,0.8)}
+.pt-contrast{color:rgba(200,150,100,0.8)}
+.pt-bridge{color:rgba(150,170,220,0.8)}
+.pt-cleanse{color:rgba(200,200,240,0.8)}
+.pt-elevate{color:rgba(220,190,100,0.8)}
+
+/* ─── BUTTONS ─── */
+.add-course-btn{width:100%;background:none;border:1px dashed rgba(201,168,76,0.2);border-radius:8px;padding:14px;color:var(--text-dim);font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:border-color 200ms,color 200ms;margin-top:8px}
+.add-course-btn:hover{border-color:rgba(201,168,76,0.45);color:var(--gold)}
+.actions-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn-primary{background:var(--gold);border:none;border-radius:6px;padding:12px 24px;color:#08080A;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:opacity 180ms;font-weight:500}
+.btn-primary:hover{opacity:0.85}
+.btn-secondary{background:none;border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:12px 24px;color:var(--text-secondary);font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:border-color 180ms,color 180ms}
+.btn-secondary:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.btn-secondary:disabled{opacity:0.35;cursor:not-allowed}
+
+/* ─── NOTES + SAVED ─── */
+.notes-section{margin-top:24px}
+.notes-label{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+.notes-textarea{width:100%;background:rgba(245,241,233,0.03);border:1px solid rgba(201,168,76,0.10);border-radius:6px;padding:12px 14px;color:var(--cream);font-family:var(--sans);font-size:13px;font-weight:300;outline:none;transition:border-color 150ms;resize:vertical;min-height:80px;line-height:1.6}
+.notes-textarea:focus{border-color:rgba(201,168,76,0.3)}
+.notes-textarea::placeholder{color:var(--text-dim)}
+.saved-notice{display:none;background:rgba(50,120,50,0.15);border:1px solid rgba(80,160,80,0.3);border-radius:6px;padding:12px 18px;margin-top:12px;font-size:13px;color:rgba(140,210,140,0.9)}
+.saved-notice.visible{display:block}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+    {% if is_authenticated %}
+    <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
+    {% else %}
+    <a href="/auth/login">Sign In</a>
+    {% endif %}
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="/">Home</a>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+  {% if is_authenticated %}
+  <a href="/auth/account" class="mobile-nav-secondary">{{ current_user.display_name or 'Account' }}</a>
+  {% else %}
+  <a href="/auth/login" class="mobile-nav-secondary">Sign In</a>
+  {% endif %}
+</div>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+    <div class="hero-eyebrow" style="margin-bottom:0">Professional Tool</div>
+    <button onclick="toggleLoadPanel()" style="background:none;border:none;font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,168,76,0.45);cursor:pointer;padding:0;transition:color 180ms" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(201,168,76,0.45)'">Load Saved ↓</button>
+  </div>
+  <h1 class="hero-title">Programme Builder</h1>
+  <p class="hero-sub">Design a complete beverage programme from aperitif to digestif. Search 12,000+ techniques, receive pairing suggestions by logic type, export a formatted programme card.</p>
+</div>
+
+<!-- ─── BUILDER ─── -->
+<div class="page-wrap">
+
+  <!-- Load programme panel -->
+  <div id="load-panel" style="display:none;margin-bottom:16px">
+    <div style="background:rgba(19,18,16,0.8);border:1px solid var(--border-subtle);border-radius:8px;padding:16px 20px">
+      <div style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px">Saved Programmes</div>
+      <div id="saved-programme-list" style="display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+  </div>
+
+  <div id="demo-banner" class="demo-banner" style="display:none">
+    <div class="demo-banner-text"><strong>Demo Programme</strong> — Provenance Table: The Collision. Three trails, four continents, five centuries. One table.</div>
+    <button class="btn-ghost" onclick="clearProgramme()">Start Fresh</button>
+  </div>
+
+  <!-- Event meta -->
+  <div class="event-meta">
+    <div class="field-group" style="min-width:0">
+      <label class="field-label" for="event-name">Event Name</label>
+      <input id="event-name" class="field-input" type="text" placeholder="e.g. Provenance Table — Spring Collision">
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="event-date">Date</label>
+      <input id="event-date" class="field-input" type="date">
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="event-covers">Covers</label>
+      <input id="event-covers" class="field-input" type="number" min="1" max="500" placeholder="12" style="width:80px">
+    </div>
+  </div>
+
+  <!-- Course cards render here -->
+  <div id="courses-list" class="courses-list"></div>
+
+  <button class="add-course-btn" onclick="addCourse()">+ Add Course</button>
+
+  <div class="notes-section">
+    <div class="notes-label">Programme Notes</div>
+    <textarea id="programme-notes" class="notes-textarea" placeholder="Three trails. Four continents. Five centuries. One table."></textarea>
+  </div>
+
+  {% if user_tier in ['profession', 'trade'] %}
+  <div class="actions-row">
+    <button class="btn-primary" onclick="saveProgramme()">Save Programme</button>
+    <button class="btn-secondary" id="export-btn" onclick="exportPDF()" disabled>Export PDF</button>
+    <button class="btn-secondary" onclick="toggleLoadPanel()">Load Saved</button>
+  </div>
+  <div id="saved-notice" class="saved-notice"></div>
+  {% else %}
+  <div style="margin-top:1.5rem;padding:1.5rem;border:1px solid rgba(201,168,76,0.1);border-radius:8px;background:rgba(201,168,76,0.03)">
+    <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.25em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-bottom:0.75rem">Save · Export · Team Access</div>
+    <p style="font-size:0.85rem;color:rgba(245,241,233,0.4);line-height:1.6;margin-bottom:1.25rem">Build complete beverage programmes, save them, export formatted PDF cards, and share with your team — with The Profession.</p>
+    <a href="/subscribe/profession/yearly" style="display:inline-block;padding:8px 20px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:4px;color:#C9A84C;font-family:'DM Sans',sans-serif;font-size:0.8rem;text-decoration:none;letter-spacing:0.05em">Open The Profession — $29.99/month</a>
+  </div>
+  {% endif %}
+
+</div>
+
+<footer>
+  <div class="about-footer">
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/recipes">Recipes</a>
+      <a href="/techniques/browse">Techniques</a>
+      <a href="/suppliers">Suppliers</a>
+      <a href="/for-professionals">For Professionals</a>
+      <a href="/methodology">Methodology</a>
+      <a href="/pricing">Pricing</a>
+      <a href="mailto:info@provenance.kitchen">Contact</a>
+    </div>
+    <div class="footer-wm">Provenance</div>
+  </div>
+</footer>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+let courses = [];
+let savedProgrammeId = null;
+let _idCounter = 1;
+
+const PT_TYPES = ['complement','contrast','bridge','cleanse','elevate'];
+const PT_LABELS = {complement:'Complement',contrast:'Contrast',bridge:'Bridge',cleanse:'Cleanse',elevate:'Elevate'};
+const PT_CLASS  = {complement:'pt-complement',contrast:'pt-contrast',bridge:'pt-bridge',cleanse:'pt-cleanse',elevate:'pt-elevate'};
+
+// ─── Boot ────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  {% if demo %}
+  loadDemo({{ demo | tojson }});
+  {% else %}
+  addAperitif();
+  addCourse();
+  addDigestif();
+  {% endif %}
+});
+
+// ─── Demo ────────────────────────────────────────────────────────────────────
+function loadDemo(demo) {
+  document.getElementById('event-name').value  = demo.name || '';
+  document.getElementById('event-date').value  = (demo.event_date || '').split('T')[0];
+  document.getElementById('event-covers').value = demo.covers || '';
+  document.getElementById('programme-notes').value = demo.notes || '';
+
+  let dc = demo.courses;
+  if (typeof dc === 'string') dc = JSON.parse(dc);
+
+  courses = (dc || []).map(c => ({
+    id: _idCounter++,
+    type: c.type || 'course',
+    techniqueId: c.technique_id || null,
+    techniqueName: c.type === 'course' && c.dish_name ? c.dish_name : null,
+    dishName: c.dish_name || '',
+    beverageId: c.beverage_id || null,
+    beverageName: c.beverage_name || '',
+    pairingType: c.pairing_type || '',
+    pairingRationale: c.pairing_rationale || '',
+    serviceNotes: c.service_notes || '',
+    pairings: null,
+  }));
+
+  renderAll();
+  document.getElementById('demo-banner').style.display = 'flex';
+  // Demo is already in the DB — enable Export PDF immediately
+  savedProgrammeId = demo.id;
+  document.getElementById('export-btn').disabled = false;
+}
+
+function clearProgramme() {
+  courses = [];
+  savedProgrammeId = null;
+  document.getElementById('event-name').value  = '';
+  document.getElementById('event-date').value  = '';
+  document.getElementById('event-covers').value = '';
+  document.getElementById('programme-notes').value = '';
+  document.getElementById('demo-banner').style.display = 'none';
+  document.getElementById('saved-notice').classList.remove('visible');
+  document.getElementById('export-btn').disabled = true;
+  addAperitif();
+  addCourse();
+  addDigestif();
+}
+
+// ─── Course management ───────────────────────────────────────────────────────
+function mk(type) {
+  return {id:_idCounter++, type, techniqueId:null, techniqueName:null,
+          dishName: type==='aperitif'?'Aperitif':type==='digestif'?'Digestif':'',
+          beverageId:null, beverageName:'', pairingType:'', pairingRationale:'',
+          serviceNotes:'', pairings:null};
+}
+
+function addAperitif() {
+  if (courses.some(c=>c.type==='aperitif')) return;
+  courses.unshift(mk('aperitif'));
+  renderAll();
+}
+function addDigestif() {
+  if (courses.some(c=>c.type==='digestif')) return;
+  courses.push(mk('digestif'));
+  renderAll();
+}
+function addCourse() {
+  const nc = mk('course');
+  const di = courses.findIndex(c=>c.type==='digestif');
+  di===-1 ? courses.push(nc) : courses.splice(di,0,nc);
+  renderAll();
+  requestAnimationFrame(()=>{
+    const el = document.getElementById('course-'+nc.id);
+    if (el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+}
+function removeCourse(id) { courses = courses.filter(c=>c.id!==id); renderAll(); }
+function moveCourse(id, dir) {
+  const i = courses.findIndex(c=>c.id===id);
+  if (i<0) return;
+  const ni = i+dir;
+  if (ni<0||ni>=courses.length) return;
+  if (courses[i].type!=='course'||courses[ni].type!=='course') return;
+  [courses[i],courses[ni]]=[courses[ni],courses[i]];
+  renderAll();
+}
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+function renderAll() {
+  const list = document.getElementById('courses-list');
+  list.innerHTML='';
+  let num=0;
+  courses.forEach(c=>{
+    if (c.type==='course') num++;
+    list.appendChild(buildCard(c,num));
+  });
+  // Re-attach search events (they use closures over course ids)
+  attachSearchEvents();
+}
+
+function buildCard(c, num) {
+  const div = document.createElement('div');
+  div.className = 'course-card' + (c.beverageName ? ' has-beverage' : '');
+  div.id = 'course-'+c.id;
+
+  const label = c.type==='aperitif' ? 'Aperitif' : c.type==='digestif' ? 'Digestif' : `Course ${num}`;
+  const canAct = c.type==='course';
+
+  // ── Header
+  let html = `<div class="course-card-header">
+    <div class="course-card-label">${label}</div>
+    <div class="course-card-actions">
+      ${canAct?`<button class="btn-icon" title="Move up" data-action="up" data-id="${c.id}">↑</button>
+                <button class="btn-icon" title="Move down" data-action="down" data-id="${c.id}">↓</button>
+                <button class="btn-icon btn-icon-remove" title="Remove" data-action="remove" data-id="${c.id}">✕</button>`:''}
+    </div>
+  </div>`;
+
+  // ── Technique search (courses only)
+  if (c.type==='course') {
+    if (c.techniqueId && c.techniqueName) {
+      html += `<div class="selected-item" style="margin-bottom:10px">
+        <div>
+          <div class="selected-item-name">${h(c.techniqueName)}</div>
+          <div class="selected-item-meta">Technique database</div>
+        </div>
+        <button class="selected-clear" data-action="clear-tech" data-id="${c.id}" title="Change">✕</button>
+      </div>`;
+    } else {
+      // Search field — show current dishName as placeholder if set
+      const techPlaceholder = c.dishName ? `Link to technique database…` : 'Search technique database…';
+      html += `<div class="search-wrap" id="tech-wrap-${c.id}" style="margin-bottom:10px">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" id="tech-input-${c.id}" type="text" placeholder="${h(techPlaceholder)}">
+        <div class="autocomplete-list" id="tech-list-${c.id}"></div>
+      </div>`;
+    }
+  }
+
+  // ── Dish / description
+  html += `<div class="field-group" style="margin-bottom:10px">
+    <label class="field-label">Dish / Description</label>
+    <input class="field-input dish-input" data-id="${c.id}" type="text" value="${h(c.dishName)}" placeholder="e.g. Bacalhau Fritter">
+  </div>`;
+
+  // ── Beverage section
+  if (c.type==='course') {
+    // Show selected beverage (from pairing) or pairing groups
+    if (c.beverageName) {
+      const ptClass = PT_CLASS[c.pairingType]||'';
+      html += `<div class="selected-item selected-pairing-display">
+        <div>
+          <div class="selected-item-name">${h(c.beverageName)}</div>
+          ${c.pairingType?`<div class="selected-item-meta ${ptClass}">${c.pairingType.toUpperCase()}</div>`:''}
+        </div>
+        <button class="selected-clear" data-action="clear-bev" data-id="${c.id}" title="Change pairing">✕</button>
+      </div>`;
+      if (c.pairingRationale) {
+        html += `<div class="selected-pairing-rationale">&ldquo;${h(c.pairingRationale)}&rdquo;</div>`;
+      }
+    }
+    // Pairing groups (shown when technique selected)
+    if (c.pairings) {
+      html += buildPairingGroups(c);
+    } else if (c.techniqueId && !c.beverageName) {
+      html += `<div class="pairings-section"><div class="pairings-loading">Loading pairing suggestions…</div></div>`;
+    }
+    // Manual override if no pairing found
+    if (!c.beverageName) {
+      html += `<div class="field-group" style="margin-top:10px">
+        <label class="field-label">Or enter beverage manually</label>
+        <input class="field-input bev-manual-input" data-id="${c.id}" type="text" value="${h(c.beverageName)}" placeholder="Beverage name">
+      </div>`;
+    }
+  } else {
+    // Aperitif / Digestif — beverage search
+    if (c.beverageId || c.beverageName) {
+      html += `<div class="selected-item">
+        <div>
+          <div class="selected-item-name">${h(c.beverageName)}</div>
+          <div class="selected-item-meta">${c.type==='aperitif'?'Aperitif':'Digestif'}</div>
+        </div>
+        <button class="selected-clear" data-action="clear-bev" data-id="${c.id}" title="Change">✕</button>
+      </div>`;
+    } else {
+      const catHint = c.type==='aperitif' ? 'sparkling' : 'spirits';
+      html += `<div class="search-wrap" id="bev-wrap-${c.id}">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" id="bev-input-${c.id}" type="text" placeholder="Search beverage database…" data-cat="${catHint}">
+        <div class="autocomplete-list" id="bev-list-${c.id}"></div>
+      </div>
+      <div class="field-group" style="margin-top:8px">
+        <label class="field-label">Or enter manually</label>
+        <input class="field-input bev-manual-input" data-id="${c.id}" type="text" value="${h(c.beverageName)}" placeholder="Beverage name">
+      </div>`;
+    }
+  }
+
+  // ── Service notes
+  html += `<textarea class="service-notes-input service-notes-ta" data-id="${c.id}" placeholder="Service notes: vessel · temperature · pour…">${h(c.serviceNotes)}</textarea>`;
+
+  div.innerHTML = html;
+  return div;
+}
+
+function buildPairingGroups(c) {
+  const pairings = c.pairings || {};
+  let html = '<div class="pairings-section">';
+  let hasAny = false;
+
+  PT_TYPES.forEach(pt => {
+    const opts = pairings[pt] || [];
+    if (!opts.length) return;
+    hasAny = true;
+    const ptClass = PT_CLASS[pt]||'';
+    html += `<div class="pairing-group">
+      <div class="pairing-group-label ${ptClass}">${PT_LABELS[pt]}</div>`;
+    opts.slice(0,3).forEach((opt,oi) => {
+      const chosen = c.beverageId===opt.beverage_id && c.pairingType===pt;
+      const meta = [opt.producer,opt.region].filter(Boolean).join(', ');
+      html += `<div class="pairing-option${chosen?' chosen':''}"
+        data-action="select-pairing" data-id="${c.id}"
+        data-pt="${pt}" data-bev-id="${opt.beverage_id||''}"
+        data-bev-name="${h(opt.beverage_name||'')}"
+        data-rationale="${h(opt.rationale||'')}">
+        <div class="pairing-radio"></div>
+        <div>
+          <div class="pairing-bev-name">${h(opt.beverage_name||'')}</div>
+          ${meta?`<div class="pairing-bev-meta">${h(meta)}</div>`:''}
+          ${opt.rationale?`<div class="pairing-rationale">${h(opt.rationale)}</div>`:''}
+          ${opt.general_suggestion?`<div class="pairing-general-note">General category suggestion</div>`:''}
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  if (!hasAny) {
+    html += '<div class="pairings-loading">No specific pairings found. Enter a beverage manually above.</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+// ─── Event delegation ────────────────────────────────────────────────────────
+document.getElementById('courses-list').addEventListener('click', e => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  const id = parseInt(btn.dataset.id, 10);
+
+  if (action==='up')          { moveCourse(id,-1); }
+  else if (action==='down')   { moveCourse(id,1); }
+  else if (action==='remove') { removeCourse(id); }
+  else if (action==='clear-tech') { clearTechnique(id); }
+  else if (action==='clear-bev')  { clearBeverage(id); }
+  else if (action==='select-pairing') {
+    const pt    = btn.dataset.pt;
+    const bevId = btn.dataset.bevId ? parseInt(btn.dataset.bevId,10) : null;
+    const bevNm = btn.dataset.bevName;
+    const rat   = btn.dataset.rationale;
+    selectPairing(id, pt, bevId, bevNm, rat);
+  }
+});
+
+// ─── Attach live search events (called after each renderAll) ─────────────────
+function attachSearchEvents() {
+  // Technique search inputs
+  document.querySelectorAll('[id^="tech-input-"]').forEach(inp => {
+    const courseId = parseInt(inp.id.replace('tech-input-',''),10);
+    inp.addEventListener('input', () => debounce(courseId,'tech', ()=>searchTech(courseId, inp.value)));
+    inp.addEventListener('focus', () => { if (inp.value.length>=2) searchTech(courseId,inp.value); });
+    inp.addEventListener('blur', () => setTimeout(()=>closeList('tech-list-'+courseId),200));
+    attachListKeyboard(inp, 'tech-list-'+courseId);
+  });
+
+  // Beverage search inputs (aperitif/digestif)
+  document.querySelectorAll('[id^="bev-input-"]').forEach(inp => {
+    const courseId = parseInt(inp.id.replace('bev-input-',''),10);
+    const cat = inp.dataset.cat || '';
+    inp.addEventListener('input', () => debounce(courseId,'bev', ()=>searchBev(courseId,inp.value,cat)));
+    inp.addEventListener('focus', () => searchBev(courseId, inp.value, cat));
+    inp.addEventListener('blur', () => setTimeout(()=>closeList('bev-list-'+courseId),200));
+    attachListKeyboard(inp, 'bev-list-'+courseId);
+  });
+
+  // Dish name inputs
+  document.querySelectorAll('.dish-input').forEach(inp => {
+    const id = parseInt(inp.dataset.id,10);
+    inp.addEventListener('input', () => updateField(id,'dishName',inp.value));
+  });
+
+  // Service notes textareas
+  document.querySelectorAll('.service-notes-ta').forEach(ta => {
+    const id = parseInt(ta.dataset.id,10);
+    ta.addEventListener('input', () => updateField(id,'serviceNotes',ta.value));
+  });
+
+  // Manual bev inputs
+  document.querySelectorAll('.bev-manual-input').forEach(inp => {
+    const id = parseInt(inp.dataset.id,10);
+    inp.addEventListener('input', () => updateField(id,'beverageName',inp.value));
+  });
+}
+
+function attachListKeyboard(inp, listId) {
+  inp.addEventListener('keydown', e => {
+    const list = document.getElementById(listId);
+    if (!list || !list.classList.contains('open')) return;
+    const items = list.querySelectorAll('.autocomplete-item');
+    let idx = Array.from(items).findIndex(el=>el.classList.contains('active'));
+    if (e.key==='ArrowDown') { e.preventDefault(); if(idx<items.length-1){items[idx]&&items[idx].classList.remove('active');items[idx+1].classList.add('active');} }
+    else if (e.key==='ArrowUp') { e.preventDefault(); if(idx>0){items[idx].classList.remove('active');items[idx-1].classList.add('active');} }
+    else if (e.key==='Enter') { e.preventDefault(); const active=list.querySelector('.active'); if(active) active.dispatchEvent(new MouseEvent('mousedown',{bubbles:true})); }
+    else if (e.key==='Escape') { closeList(listId); }
+  });
+}
+
+function closeList(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+
+// ─── Debounce per (courseId, type) ───────────────────────────────────────────
+const _timers = {};
+function debounce(courseId, type, fn, ms=280) {
+  const k = `${courseId}-${type}`;
+  clearTimeout(_timers[k]);
+  _timers[k] = setTimeout(fn, ms);
+}
+
+// ─── State updates ────────────────────────────────────────────────────────────
+function updateField(id, field, val) {
+  const c = courses.find(c=>c.id===id);
+  if (c) c[field]=val;
+}
+function clearTechnique(id) {
+  const c = courses.find(c=>c.id===id);
+  if (!c) return;
+  c.techniqueId=null; c.techniqueName=null; c.pairings=null;
+  c.beverageId=null; c.beverageName=''; c.pairingType=''; c.pairingRationale='';
+  renderAll();
+}
+function clearBeverage(id) {
+  const c = courses.find(c=>c.id===id);
+  if (!c) return;
+  c.beverageId=null; c.beverageName=''; c.pairingType=''; c.pairingRationale='';
+  renderAll();
+}
+function selectTechnique(courseId, tech) {
+  const c = courses.find(c=>c.id===courseId);
+  if (!c) return;
+  c.techniqueId=tech.id;
+  c.techniqueName=tech.name;
+  if (!c.dishName) c.dishName=tech.name;
+  renderAll();
+  loadPairings(courseId, tech.id);
+}
+function selectPairing(courseId, pt, bevId, bevNm, rationale) {
+  const c = courses.find(c=>c.id===courseId);
+  if (!c) return;
+  c.pairingType=pt; c.beverageId=bevId; c.beverageName=bevNm; c.pairingRationale=rationale;
+  renderAll();
+  if (bevId) fetchService(courseId, bevId);
+}
+function selectBeverage(courseId, bev) {
+  const c = courses.find(c=>c.id===courseId);
+  if (!c) return;
+  c.beverageId=bev.id; c.beverageName=bev.name;
+  renderAll();
+  if (bev.id) fetchService(courseId, bev.id);
+}
+
+// ─── API ─────────────────────────────────────────────────────────────────────
+function searchTech(courseId, q) {
+  const list = document.getElementById('tech-list-'+courseId);
+  if (!list) return;
+  if (!q || q.length < 2) { list.classList.remove('open'); return; }
+  fetch(`/api/programme/search-techniques?q=${encodeURIComponent(q)}&limit=8`)
+    .then(r=>r.json())
+    .then(results => {
+      if (!document.getElementById('tech-list-'+courseId)) return;
+      list.innerHTML='';
+      if (!results.length) {
+        list.innerHTML='<div class="autocomplete-item"><div class="autocomplete-item-name" style="color:var(--text-dim)">No matches</div></div>';
+      } else {
+        results.forEach(t => {
+          const item = document.createElement('div');
+          item.className='autocomplete-item';
+          item.innerHTML=`<div class="autocomplete-item-name">${h(t.name)}</div>
+            <div class="autocomplete-item-meta">${h([t.category,t.origin].filter(Boolean).join(' · '))}</div>`;
+          item.addEventListener('mousedown', e => { e.preventDefault(); selectTechnique(courseId, t); });
+          list.appendChild(item);
+        });
+      }
+      list.classList.add('open');
+    }).catch(()=>{});
+}
+
+function searchBev(courseId, q, category) {
+  const list = document.getElementById('bev-list-'+courseId);
+  if (!list) return;
+  const params = new URLSearchParams({limit:8});
+  if (q && q.length>=2) params.set('q',q);
+  if (category) params.set('category',category);
+  fetch(`/api/programme/beverages?${params}`)
+    .then(r=>r.json())
+    .then(results => {
+      if (!document.getElementById('bev-list-'+courseId)) return;
+      list.innerHTML='';
+      if (!results.length) {
+        list.innerHTML='<div class="autocomplete-item"><div class="autocomplete-item-name" style="color:var(--text-dim)">No matches</div></div>';
+      } else {
+        results.forEach(b => {
+          const item = document.createElement('div');
+          item.className='autocomplete-item';
+          const meta=[b.producer_name,b.region_name,b.category].filter(Boolean).join(' · ');
+          item.innerHTML=`<div class="autocomplete-item-name">${h(b.name)}</div>
+            <div class="autocomplete-item-meta">${h(meta)}</div>`;
+          item.addEventListener('mousedown', e => { e.preventDefault(); selectBeverage(courseId, b); });
+          list.appendChild(item);
+        });
+      }
+      list.classList.add('open');
+    }).catch(()=>{});
+}
+
+function loadPairings(courseId, techniqueId) {
+  fetch(`/api/programme/pairings?technique_id=${techniqueId}`)
+    .then(r=>r.json())
+    .then(data => {
+      const c = courses.find(c=>c.id===courseId);
+      if (!c) return;
+      c.pairings = data.pairings || {};
+      renderAll();
+    }).catch(()=>{});
+}
+
+function fetchService(courseId, beverageId) {
+  fetch(`/api/programme/service?beverage_id=${beverageId}`)
+    .then(r=>r.json())
+    .then(data => {
+      const c = courses.find(c=>c.id===courseId);
+      if (!c || c.serviceNotes) return;
+      const svc = data.service || {};
+      if (svc.vessel) {
+        c.serviceNotes = [svc.vessel, svc.temperature, svc.pour].filter(Boolean).join(' · ');
+        // Patch just the textarea without full re-render
+        const ta = document.querySelector(`#course-${courseId} .service-notes-ta`);
+        if (ta) ta.value = c.serviceNotes;
+      }
+    }).catch(()=>{});
+}
+
+// ─── Load saved programme ─────────────────────────────────────────────────────
+function toggleLoadPanel() {
+  const panel = document.getElementById('load-panel');
+  if (panel.style.display === 'none') {
+    panel.style.display = 'block';
+    populateLoadPanel();
+    panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+function populateLoadPanel() {
+  const container = document.getElementById('saved-programme-list');
+  container.innerHTML = '<div style="font-family:var(--mono);font-size:10px;color:var(--text-dim)">Loading…</div>';
+  fetch('/api/programme/list')
+    .then(r=>r.json())
+    .then(list => {
+      if (!list.length) {
+        container.innerHTML = '<div style="font-size:13px;color:var(--text-dim)">No saved programmes yet.</div>';
+        return;
+      }
+      container.innerHTML = '';
+      list.forEach(p => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid rgba(201,168,76,0.08);border-radius:6px;background:rgba(245,241,233,0.015)';
+        const meta = [p.event_date ? p.event_date.split('T')[0] : '', p.covers ? `${p.covers} covers` : ''].filter(Boolean).join(' · ');
+        row.innerHTML = `
+          <div>
+            <div style="font-size:13px;color:var(--cream)">${h(p.name)}${p.is_demo?' <span style="font-family:var(--mono);font-size:8px;color:var(--gold);letter-spacing:1px">DEMO</span>':''}</div>
+            ${meta?`<div style="font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-top:2px">${h(meta)}</div>`:''}
+          </div>
+          <button style="background:none;border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:5px 12px;color:var(--gold);font-family:var(--mono);font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer" data-prog-id="${p.id}">Load</button>`;
+        row.querySelector('button').addEventListener('click', () => loadSavedProgramme(p.id));
+        container.appendChild(row);
+      });
+    })
+    .catch(() => {
+      container.innerHTML = '<div style="font-size:13px;color:var(--text-dim)">Failed to load.</div>';
+    });
+}
+
+function loadSavedProgramme(id) {
+  fetch(`/api/programme/${id}`)
+    .then(r=>r.json())
+    .then(prog => {
+      if (prog.error) { alert(prog.error); return; }
+      // Reset state
+      courses = [];
+      _idCounter = 1;
+      document.getElementById('load-panel').style.display = 'none';
+      document.getElementById('demo-banner').style.display = 'none';
+      savedProgrammeId = prog.id;
+      document.getElementById('event-name').value  = prog.name || '';
+      document.getElementById('event-date').value  = (prog.event_date || '').split('T')[0];
+      document.getElementById('event-covers').value = prog.covers || '';
+      document.getElementById('programme-notes').value = prog.notes || '';
+
+      let dc = prog.courses;
+      if (typeof dc === 'string') dc = JSON.parse(dc);
+      courses = (dc || []).map(c => ({
+        id: _idCounter++,
+        type: c.type || 'course',
+        techniqueId: c.technique_id || null,
+        techniqueName: c.type === 'course' && c.dish_name ? c.dish_name : null,
+        dishName: c.dish_name || '',
+        beverageId: c.beverage_id || null,
+        beverageName: c.beverage_name || '',
+        pairingType: c.pairing_type || '',
+        pairingRationale: c.pairing_rationale || '',
+        serviceNotes: c.service_notes || '',
+        pairings: null,
+      }));
+
+      renderAll();
+      document.getElementById('export-btn').disabled = false;
+
+      const n = document.getElementById('saved-notice');
+      n.textContent = `Programme loaded: ${prog.name}`;
+      n.classList.add('visible');
+      window.scrollTo({top:0, behavior:'smooth'});
+    })
+    .catch(e => alert('Load failed: '+e));
+}
+
+// ─── Save / Export ────────────────────────────────────────────────────────────
+function saveProgramme() {
+  const name = document.getElementById('event-name').value.trim();
+  if (!name) {
+    alert('Please give your programme a name.');
+    document.getElementById('event-name').focus();
+    return;
+  }
+  const payload = {
+    name,
+    date:   document.getElementById('event-date').value || null,
+    covers: parseInt(document.getElementById('event-covers').value)||1,
+    notes:  document.getElementById('programme-notes').value || null,
+    courses: courses.map((c,i) => ({
+      position: i, type: c.type,
+      technique_id: c.techniqueId,
+      dish_name: c.dishName || c.techniqueName || '',
+      beverage_id: c.beverageId,
+      beverage_name: c.beverageName,
+      pairing_type: c.pairingType,
+      pairing_rationale: c.pairingRationale,
+      service_notes: c.serviceNotes,
+    })),
+  };
+  fetch('/api/programme/save',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload),
+  })
+  .then(r=>r.json())
+  .then(data => {
+    if (data.id) {
+      savedProgrammeId = data.id;
+      const n = document.getElementById('saved-notice');
+      n.textContent = `Programme saved (ID ${data.id}). Click Export PDF to download.`;
+      n.classList.add('visible');
+      document.getElementById('export-btn').disabled = false;
+    } else {
+      alert('Save failed: ' + JSON.stringify(data));
+    }
+  })
+  .catch(e => alert('Save error: '+e));
+}
+
+function exportPDF() {
+  if (!savedProgrammeId) { alert('Save the programme first.'); return; }
+  window.location.href = `/api/programme/export/${savedProgrammeId}?format=pdf`;
+}
+
+// ─── Utility ──────────────────────────────────────────────────────────────────
+function h(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function toggleMobileMenu() {
+  var nav = document.getElementById('mobileNav');
+  var overlay = document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+}
+</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
+</body>
+</html>

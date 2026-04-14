@@ -1,0 +1,103 @@
+{
+  "tradition": "spirits",
+  "region": "Caribbean — Trinidad (Angostura)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:59:20.730279+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "trinidad rum molasses column-pot",
+      "region": "Caribbean — Trinidad and Tobago",
+      "name": "Angostura Trinidad Rum — The Island of the Bitters and the Column Still",
+      "terroir_origin": "Trinidad, the southernmost major Caribbean island (just 11km off the Venezuelan coast), sits at the convergence of the Caribbean Sea and the Atlantic Ocean. Its proximity to South America means Trinidad has a different botanical and agricultural character from the northern Antilles: more South American biodiversity, different soil types (from the Orinoco River's geological influence), and a richer secondary fermentation flora from the rainforest environment. The PCT connection: Trinidad was part of the Spanish colonial system before the British took it in 1797; sugarcane and rum production had been established under both Spanish and then British colonial control. The Portuguese Atlantic colonial sugarcane chain reached Trinidad via the same route as Barbados and Jamaica: Madeira → Brazil → Eastern Caribbean. Angostura Ltd (founded 1949 as a distillery, though the Angostura name dates to 1824) is the primary Trinidadian rum producer and the world's most famous bitters producer. The double significance of Angostura: First, it produces rum using the heavy molasses of Trinidad's south coast refineries — the same blackstrap molasses from Venezuelan-adjacent sugarcane. Second, it produces Angostura Aromatic Bitters — the small bottle with the oversized label that is in every cocktail bar on earth. Angostura Bitters (invented 1824 by German-Venezuelan Dr. Johann Siegert in Ciudad Bolívar, Venezuela; moved to Trinidad 1875) contains gentian root, various spices and botanicals, and rum — the formula is secret. It is the highest-volume cocktail ingredient in the world.",
+      "production_technique": "Angostura rum production: Fermentation: blackstrap molasses; 24–96 hours; pot and column still fermentations run separately, each with different yeast strains and fermentation times. Distillation: Angostura operates both traditional column stills and pot stills; the lighter column-distilled fraction is used for white rum (1919 White); the heavier pot-still fraction blended for aged expressions. Angostura 1824: the flagship; named for the year Siegert founded the bitters company. 1919 Rum: the standard aged expression; 8-year average age, heavy molasses base, Trinidadian terroir — full-bodied, dark fruit, vanilla, brown spice. Angostura 1824 12-Year: complex; ex-bourbon and ex-sherry cask ageing; similar in quality tier to Appleton 12yr. Bitters production: the Angostura Bitters recipe is one of the most guarded commercial secrets in the food and beverage industry. The formula is known only to five people (all family members). The production: macerate botanicals in high-proof rum alcohol; blend with gentian extract; bottle at 44.7% ABV. The oversized label (a source of questions since 1870) originated when two brothers independently ordered labels and bottles and the labels arrived too large — the mistake was retained as a brand identity.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Appleton Estate 12yr (Jamaica)",
+          "connection": "Angostura 1824 and Appleton 12yr represent the heavy-molasses Caribbean pot-column hybrid at comparable quality tiers. Jamaica's Appleton uses Jamaican limestone-filtered water and the Nassau Valley terroir; Trinidad's Angostura uses Venezuelan-influenced molasses and rainforest botanical environment. Both achieve full-body dark-rum complexity through careful blending and tropical ageing; the distinction is Appleton's banana-ester Jamaican pot-still character versus Angostura's darker, drier, more molasses-forward Trinidadian style"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Peychaud's Bitters (Sazerac comparison)",
+          "connection": "Angostura Bitters and Peychaud's Bitters are the two essential cocktail bitters that shaped the entire history of the cocktail. Peychaud's (New Orleans, 1830) is rum-based and lighter; Angostura (Trinidad, 1824) is heavier, more complex, gentian-dominant. Both are technically spirits (44.7% ABV) but used in such small quantities as flavouring agents that their contribution is aromatic rather than alcoholic. The PCT significance: both are rum-based; both emerged from the Atlantic colonial rum trade infrastructure"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Angostura 1919: deep mahogany-brown; viscous; slow tears. Bitters: near-opaque dark brown; aromatic smoke when opened. 1824 12-year: deep amber with reddish highlights.",
+        "nose": "Angostura 1919: molasses-forward (this is the signature — more immediately molasses than Jamaica or Barbados); dark dried fruit (raisin, prune), vanilla, brown spice, leather, a hint of tobacco. The full South American-proximity molasses terroir character. 1824 12-year: more refined; the molasses integrates into dark chocolate, dried stone fruit, toasted oak, cinnamon; the Trinidadian character under all of it. Angostura Bitters (undiluted): extraordinarily complex — gentian root bitterness, clove, allspice, vanilla, orange peel, rum, mystery; the most complex olfactory experience in a small bottle.",
+        "palate": "1919 (40% ABV): full body; sweetness from the molasses base (residual sugar from commercial production); dark fruit finish; the most accessible full-body Caribbean rum for cocktail use. 1824 12-year: drier, more structured; excellent sipping rum. Bitters in an Old Fashioned (2 dashes in 50mL Bourbon or rum): the most transformative micro-addition in bartending — the gentian and spice add dimensions unavailable in any other ingredient.",
+        "conclusion": "Angostura occupies a unique position: it is both a significant rum producer and the world's most important non-rum beverage company — the bitters in every cocktail bar globally. For a programme: serve 1824 12-year as the sipping Trinidad rum; serve Angostura Bitters as the cocktail education anchor. The oversized label story is mandatory table narrative."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Angostura 1824 12-year / Cask Collection",
+          "criteria": "12+ years tropical ageing; pot and column blend; ex-bourbon and ex-sherry; limited edition cask expressions",
+          "markers": "Angostura 1824; Angostura Cask Collection releases; BC ~$55–75; US ~$45–60"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Angostura 7-year / 1919 Rum",
+          "criteria": "7–8 years; correct Trinidadian molasses-dark character; blended pot-column; accessible premium sipping",
+          "markers": "Angostura 1919; Angostura 7yr; BC ~$35–48; US ~$30–40"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Angostura 5-year / Reserva",
+          "criteria": "5 years; accessible; cocktail-grade sipping; Trinidadian molasses base correct",
+          "markers": "Angostura Reserva 5yr; BC ~$25–35; US ~$20–28"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Angostura White / Bitters (Specialty Category)",
+          "criteria": "White rum (column-distilled, charcoal filtered) or Bitters as signature product; foundational cocktail ingredients",
+          "markers": "Angostura 1919 White; Angostura Aromatic Bitters 200ml; widely available; BC bitters ~$12–15; US ~$10–12"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "1824 12-year: room temperature neat; 1919: over large ice or in cocktails",
+        "vessel": "Glencairn for 1824 sipping; rocks glass for 1919 cocktails",
+        "technique": "Angostura 1824 12yr neat: 45mL, room temperature, 5 minutes rest. Trinidad Sour: Angostura 1919 60mL + lime 22mL + sugar 15mL + 2 dashes Angostura Bitters + egg white — the spirit and its own bitters in one cocktail. Old Fashioned with Angostura 1824: 60mL + 2 dashes Angostura Bitters + 5mL demerara + orange peel. Rum Punch: the bitters bottle is essential.",
+        "programme_position": "Caribbean rum anchor; cocktail education with bitters; Trinidadian provenance narrative",
+        "verbal_presentation": "Angostura 1824 — Port of Spain, Trinidad. The same company that has been flavouring cocktails since 1824. The oversized label? A mistake they kept. The secret formula? Five family members know it."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Angostura Ltd (Port of Spain, Trinidad and Tobago)",
+        "producer_location": "20 Concession Road, Brighton, La Brea, Trinidad",
+        "key_person": "Lorcan Dowd (CEO, Angostura Holdings Ltd); Joy Spence (Appleton) was the first female Master Blender — Angostura's equivalent is their master blending team",
+        "production_volume": "Large commercial; Angostura Bitters distributed to 170+ countries annually; rum distributed in 50+ markets",
+        "certifications": [
+          "Trinidad Rum Producers Association",
+          "WIRSPA"
+        ],
+        "bc_distributor": "Angostura widely available at BC Liquor stores (BCLDB); bitters and standard rum expressions widely distributed",
+        "us_distributor": "Campari America (US distribution of Angostura rum — confirmed); bitters direct through Angostura USA / multiple distributors",
+        "uk_distributor": "Widely available UK: Sainsbury's, Waitrose, Majestic, The Whisky Exchange",
+        "price_tier": "Market to Reserve (Bitters ~$12 BC; 1919 ~$35 BC; 1824 12yr ~$60 BC)",
+        "availability_notes": "Angostura products: BC Liquor stores nationally; virtually universal distribution. Bitters: available in every bar supply store, supermarket spirits aisle, and specialty retailer in North America. 1824 12-year: BC Liquor stores and specialty spirits shops."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "Angostura Bitters was invented in 1824 by a German physician in Venezuela using Caribbean rum and Amazonian botanicals — a product of the Portuguese Atlantic-colonial rum trade (the base spirit), the German scientific tradition (the inventor), and the Amazonian botanical knowledge of the South American coast. When the Siegert family moved Angostura to Trinidad in 1875, they placed the world's most widely distributed cocktail ingredient on the same island that was part of the Atlantic sugarcane trade. Every cocktail bar on earth has Angostura Bitters. Every bottle is PCT.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Doubles (Trinidad curried chickpea fritters in bara bread)",
+          "pairing_type": "complement",
+          "rationale": "Trinidad's national street food — bara bread stuffed with curried chickpeas, chutney, and pepper sauce — pairs with Angostura 1919 as the canonical Trinidadian breakfast-to-lunch pairing. The curried chickpea's warmth and the bara's fried dough find the rum's molasses-dark warmth as a complementary register"
+        },
+        {
+          "technique_id": "",
+          "dish": "Bitters Old Fashioned / Cocktail reference",
+          "pairing_type": "bridge",
+          "rationale": "The most direct product education: Angostura Bitters in an Old Fashioned alongside a neat pour of Angostura 1824 12yr demonstrates that the cocktail's essential flavouring agent and the sipping rum come from the same island, the same company, and ultimately the same Atlantic colonial sugarcane trade"
+        }
+      ],
+      "source": "Angostura Holdings Ltd official history and production documentation; Johann Gottlieb Benjamin Siegert 1824 bitters formulation historical records; WIRSPA production standards; Dave Broom 'Rum' (Trinidad section); Campari America US distribution confirmation",
+      "entry_id": "SPR-CARTRI-001",
+      "extracted_at": "2026-04-11T15:59:20.729679+00:00",
+      "batch_number": 1
+    }
+  ]
+}

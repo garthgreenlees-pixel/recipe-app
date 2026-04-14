@@ -1,0 +1,197 @@
+{
+  "tradition": "spirits",
+  "region": "Caribbean — Barbados",
+  "batch_number": 1,
+  "entry_count": 2,
+  "extracted_at": "2026-04-11T15:36:40.671208+00:00",
+  "entries": [
+    {
+      "tradition": "spirits",
+      "sub_tradition": "barbados rum hybrid pot-column",
+      "region": "Caribbean — Barbados",
+      "name": "Barbados Rum — Foursquare and the Hybrid Pot-Column Style",
+      "terroir_origin": "Barbados claims the first written record of rum distillation anywhere in the world — a 1647 account by Richard Ligon describing a potent spirit made from sugarcane juice. The island sits at the easternmost point of the Caribbean arc, catching the full force of Atlantic trade winds, which moderate tropical heat to produce a sugarcane with distinct mineral-saline character. Barbados's coral limestone terroir — a flat island built on reef bedrock — imparts a mineral precision to its distillates that distinguishes Barbadian rum from the heavier Jamaican or the lighter Puerto Rican styles. The PCT connection is immediate: the sugarcane varieties used in Barbados arrived via the Portuguese Atlantic island trade route (Madeira → Brazil → Caribbean), making Barbados rum the northernmost expression of the same agricultural chain that began in Madeira in the 15th century. Foursquare Distillery (St. Philip Parish) is the flagship modern Barbados producer: Richard Seale (4th generation) has become one of the world's most respected rum makers through an uncompromising 'pure rum' philosophy — no added sugar, no artificial colouring, no additives. His Exceptional Cask Series releases have won Jim Murray's Rum of the Year multiple times and redefined global expectations for Barbados rum.",
+      "production_technique": "Barbados rum uses the hybrid pot-and-column still format — the defining technical characteristic of the Barbadian style. Foursquare operates both a two-column continuous still and traditional copper pot stills simultaneously. Each fraction is distilled separately — the column produces lighter, cleaner spirit; the pot still produces heavier, ester-rich fractions — then blended and aged together. Fermentation: 24–36 hours using select yeasts; molasses-based (blackstrap molasses from West Indian sugarcane). Distillation: pot still fraction at 75–80% ABV; column fraction at 88–92% ABV; both reduced and blended pre-ageing. Ageing: ex-bourbon American oak barrels (most common); ex-sherry and port casks for Exceptional Cask releases. Tropical ageing in Barbados accelerates maturation — the angel's share runs approximately 7–8% annually, so a 12-year Barbados rum has experienced more ageing than a 15-year Scotch. Richard Seale's Exceptional Cask Series: single cask or small batch, cask-strength releases that have included ex-Madeira (a direct PCT link), ex-port, ex-sherry, and double-ageing (Barbados + Scotland finish). The 2021 Exceptional Cask finished in ex-Madeira cask was reviewed as one of the finest rums ever produced.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Single Malt Scotch Whisky (Highland)",
+          "connection": "Foursquare Exceptional Cask Series invites direct comparison with Highland malt: both use traditional copper pot stills alongside column distillation for complexity; both age in ex-bourbon and ex-sherry casks; both are understood through vintage expressions and cask-strength releases. Seale has explicitly positioned Foursquare in the Scotch quality conversation, and collectors follow his releases with the same anticipation as Samaroli or Berry Bros. Scotch bottlings"
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Cognac (Grande Champagne)",
+          "connection": "Mount Gay XO and the broader Barbados aged rum tradition share Cognac's central tension: blending across different cask types and ages to achieve consistent house style versus single-vintage expression. Both traditions use copper pot stills (alembic vs. Barbadian copper pot) and both finish in French oak-adjacent casks. The mineral precision of Barbados terroir parallels Grande Champagne chalk's contribution to Cognac's signature linearity"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Golden to deep amber; Foursquare Exceptional releases often show deep tawny brown with ex-sherry cask influence; viscous at cask strength (58–62% ABV)",
+        "nose": "Foursquare 12yr: fresh banana, vanilla, toasted oak, coconut husk, baking spice (cinnamon, nutmeg), dried apricot; mineral-saline undertone characteristic of Barbados coral limestone. Exceptional Cask (ex-Madeira finish): dried fig, walnut, orange peel, espresso, dark toffee — distinctly vinous from the Madeira wood. No added sugar means the finish is dry and precise rather than sweet and broad.",
+        "palate": "Medium-full body; balanced pot/column profile means complexity without heaviness; Foursquare 12yr: 40% ABV; structured; clean, dry finish with vanilla and oak. Exceptional Cask: cask strength (typically 58–62% ABV); extraordinary depth; a decade of flavour development across one uninterrupted sip. Mount Gay Black Barrel: double ageing (ex-bourbon then American white oak); sweeter profile; vanilla-caramel-tropical fruit; the most accessible Barbados style.",
+        "conclusion": "Foursquare Exceptional Cask Series is the strongest argument that rum deserves the same cellar space as rare Scotch or aged Cognac. At the same price point, nothing else in spirits delivers comparable complexity-to-cost. For a programme: lead with Mount Gay Black Barrel for cocktails and introduction; position Foursquare Exceptional as the premium sipping conversation."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Foursquare Exceptional Cask Series / Vintage Single Cask",
+          "criteria": "Named vintage; cask-strength or close; ex-sherry, ex-Madeira, or double-aged; Foursquare or Mark Reynier (Habitation Velier) collaboration releases",
+          "markers": "Foursquare Exceptional Cask 2008–2019 vintages; Doorly's XO; Habitation Velier Foursquare; limited allocations through specialty spirits merchants; BC ~$110–180"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Foursquare 12yr / Mount Gay XO",
+          "criteria": "12+ years tropical ageing; hybrid pot-column; named estate; no added sugar confirmed",
+          "markers": "Foursquare 12yr; Mount Gay XO; Mount Gay 1703 (blend); BC ~$60–90; Total Wine, BevMo nationally"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Foursquare 9yr / Mount Gay Black Barrel",
+          "criteria": "Double or extended ageing; correct Barbados mineral character; cocktail or entry sipping",
+          "markers": "Foursquare 9yr; Mount Gay Black Barrel; Doorly's 12yr; BC ~$38–55"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Mount Gay Eclipse / Doorly's 8yr",
+          "criteria": "Accessible entry; correct Barbados style; cocktail foundation",
+          "markers": "Mount Gay Eclipse; Doorly's 8yr; Cockspur; BC ~$28–38"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature for Exceptional Cask sipping; over large ice for cocktails",
+        "vessel": "Glencairn or NEAT glass for Foursquare sipping; rocks glass for Mount Gay cocktails",
+        "technique": "Foursquare Exceptional Cask: neat, 45mL, 10 minutes to open — treat like a Highland malt. Add a few drops of water to cask-strength expressions to open the ester profile. Mount Gay Black Barrel Old Fashioned: 60mL + 5mL demerara syrup + 2 dashes Angostura + orange peel. Rum Sour: Foursquare 12yr 60mL + lime 22mL + sugar syrup 15mL + egg white — the superior riff on a Whisky Sour.",
+        "programme_position": "Premium spirits sipping section; rum cocktail foundation; Exceptional Cask as the 'serious rum' table narrative",
+        "verbal_presentation": "Foursquare Exceptional Cask — Barbados, 2010 vintage. Twelve years in Caribbean heat, then finished in ex-Madeira cask. No added sugar. Richard Seale's definition of pure rum."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Foursquare Distillery (St. Philip, Barbados) — Richard Seale",
+        "producer_location": "Foursquare, St. Philip Parish, Barbados",
+        "key_person": "Richard Seale (Master Blender, 4th generation; the world's most vocal advocate for pure rum standards); Peter Boos (Mount Gay, Rémy Cointreau)",
+        "production_volume": "Foursquare: boutique to premium (Exceptional Cask: limited allocation); Mount Gay: large commercial (1703 brand, world's oldest operational rum distillery)",
+        "certifications": [
+          "Barbados Rum Association",
+          "WIRSPA (West Indies Rum and Spirits Producers Association)"
+        ],
+        "bc_distributor": "Foursquare: Authentic Wine & Spirits Merchants (AWSM Canada) — BC specialist importer [verify current arrangement]; Mount Gay: available at BC Liquor (BCLDB confirmed)",
+        "us_distributor": "Foursquare: Altamar Brands (national US distribution — confirmed); Mount Gay: Rémy Cointreau USA (confirmed national)",
+        "uk_distributor": "Foursquare: widely available; Berry Bros. & Rudd carries Exceptional Cask releases. Mount Gay: mainstream UK availability (Waitrose, Sainsbury's, Majestic)",
+        "price_tier": "Reserve to Prestige (Foursquare 12yr BC ~$65; Exceptional Cask ~$130–180; Mount Gay XO BC ~$75; Eclipse BC ~$32)",
+        "availability_notes": "Mount Gay Eclipse: BC Liquor stores widely. Foursquare 12yr and Exceptional Cask: Marquis Wine Cellars, Liberty Wine, Firefly Fine Wines (Vancouver). US: Foursquare via Altamar at Total Wine and specialty spirits shops nationally."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "Barbados rum is the cultural and agricultural convergence of the Portuguese Atlantic colonial project (sugarcane from Madeira via Brazil) and the West African Diaspora Trail (enslaved Barbadian workers who built and operated the first distilleries from 1647). Foursquare operates the Barbados Rum Factory — a heritage site incorporating the original 19th-century steam engine and mill house. Richard Seale's 'pure rum' advocacy represents a deliberate resistance to the category's historic exploitation and obscurity.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Conkies (Barbadian cornmeal, coconut, pumpkin steamed pudding)",
+          "pairing_type": "complement",
+          "rationale": "The coconut-spice register of Foursquare 12yr mirrors conkies' own coconut and cinnamon character — the national dish paired with the national spirit at the same flavour frequency"
+        },
+        {
+          "technique_id": "",
+          "dish": "Grilled flying fish with bajan seasoning (Barbados national dish)",
+          "pairing_type": "contrast",
+          "rationale": "The salt-mineral-herb profile of flying fish seasoned with garlic, lime, scotch bonnet, and marjoram contrasts cleanly against the sweet-vanilla barrel character of Mount Gay Black Barrel — salt cutting sweetness, acid cutting wood tannin"
+        }
+      ],
+      "source": "Foursquare Distillery official production documentation; Richard Seale interview archive (The Fat Rum Pirate, 2016–2023); Mount Gay Distilleries official history; Jim Murray's Rum of the Year citations (2016–2022); Richard Ligon 1647 Barbados account; WIRSPA production standards documentation",
+      "entry_id": "SPR-CARBAR-001",
+      "extracted_at": "2026-04-11T15:36:40.670559+00:00",
+      "batch_number": 1
+    },
+    {
+      "tradition": "spirits",
+      "sub_tradition": "barbados rum mount gay heritage",
+      "region": "Caribbean — Barbados",
+      "name": "Mount Gay — The World's Oldest Rum Distillery (1703)",
+      "terroir_origin": "Mount Gay Distilleries, established by deed of sale in 1703 (St. Lucy Parish, Barbados), is the world's oldest operational rum distillery — predating the Scotch whisky industry's oldest licensed distillery by over a century. The 1703 date is documented in the sale deed of a plantation with 'two stone windmills, one boiling house, one curing house, and one still house' — the complete infrastructure of a working distillery. St. Lucy Parish sits at Barbados's northernmost tip, the most wind-exposed point of the island. The Atlantic-facing coral limestone plateau produces sugarcane with a pronounced mineral salinity — the same terroir character that distinguishes Barbados rum from the Caribbean's other major styles. Rémy Cointreau acquired Mount Gay in 1989, and the brand has operated under French fine-spirits management since — bringing a house-style discipline that emphasises consistency and the layered complexity of long ageing. The PCT connection: St. Lucy's geographic position — facing directly toward the Portuguese Atlantic route — means Mount Gay's terroir is the most direct Caribbean expression of the transatlantic sugarcane migration that Portugal initiated from Madeira in the 1400s.",
+      "production_technique": "Mount Gay uses the Barbados hybrid still format: copper pot stills (for heavy, complex marks) combined with column stills (for lighter, cleaner fractions). Master Blender Trudiann Branker blends pot and column fractions at various aged stages to build the layered house style. Fermentation: blackstrap molasses; 24–36 hours; proprietary yeast strain. Ageing: primary ageing in ex-bourbon American oak casks in Barbados tropical climate. Eclipse (flagship): minimum 2 years; blend of pot and column spirits. Black Barrel: double-aged — first in ex-bourbon, then 6 months in charred American white oak barrels used for bourbon (the 'black barrel' of the name); the second ageing adds caramel, vanilla depth without losing Barbados mineral character. XO: reserve blend, pot and column, aged 8–15 years; the prestige house expression. 1703 Master Select: annual limited release, the oldest and most complex Mount Gay expression (15–30 year blends from the private reserve). Trudiann Branker became Master Blender in 2018 — one of the first women to hold that title in the rum industry globally, following Joy Spence at Appleton by two decades.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "spirits",
+          "beverage": "Armagnac (Bas-Armagnac, Hors d'Age)",
+          "connection": "Mount Gay 1703 Master Select and Armagnac Hors d'Age share the defining challenge of the luxury aged spirits: blending across a wide range of vintages to achieve extraordinary complexity while maintaining house character. Both use copper pot distillation (column + pot for Mount Gay; continuous Armagnac alembic + pot for prestige releases); both express terroir through mineral linearity rather than oak-forward sweetness"
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Aged Oloroso Sherry (Jerez)",
+          "connection": "Mount Gay XO's ageing in tropical Caribbean heat produces the same progressive concentration and oxidative complexity that solera ageing achieves in Jerez. Both show dried fruit (raisin, fig), tobacco, leather, and toasted nut; both are built on the principle that time and evaporation create more complexity than any production shortcut"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Mount Gay Black Barrel: medium amber, bright; Eclipse: pale gold; XO: deep amber-mahogany; 1703: dark tawny with viscosity at 43% ABV",
+        "nose": "Eclipse: banana, vanilla, caramel, light coconut — clean, youthful, mineral base. Black Barrel: butterscotch, toasted vanilla, banana foster, light smoke, caramelised sugar — the second char brings warmth. XO: dark toffee, dried stone fruit (apricot, plum), warm spice, leather, coconut cream — the full Barbados spectrum. 1703 Master Select: extraordinary — orange peel confit, espresso, walnut, roasted oak, dark dried fruit, ancient wood — the rarest character in Barbados rum",
+        "palate": "Black Barrel: 43% ABV; full body for the price; warm, long finish. XO: 43% ABV; the definition of Barbados balance — weight without heaviness, complexity without difficulty. 1703: 43% ABV; enormous; the rum equivalent of a 25-year Highland malt at comparable pricing.",
+        "conclusion": "Mount Gay XO is the most historically significant rum in constant production — the unbroken 320-year lineage from the same St. Lucy Parish soil. For a programme, it carries a story that no other spirit category can match: this distillery was operating before the United States existed."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "1703 Master Select / XO Pot Still Collection",
+          "criteria": "Annual limited release; 15–30 year blend from private reserve; or XO Pot Still Collection (100% pot still, unblended with column)",
+          "markers": "1703 Master Select (annual allocation); XO Pot Still; Vintage 1981 archive; BC ~$130–220+"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Mount Gay XO",
+          "criteria": "8–15 year blend; pot and column; Barbados tropical ageing",
+          "markers": "Mount Gay XO; BC ~$75; Total Wine, BevMo nationally"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Mount Gay Black Barrel",
+          "criteria": "Double-aged; ex-bourbon then charred American white oak; correct Barbados character",
+          "markers": "Mount Gay Black Barrel; BC ~$45; widely available"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Mount Gay Eclipse",
+          "criteria": "Entry level; accessible pot-column blend; cocktail or introduction",
+          "markers": "Mount Gay Eclipse (gold and silver); BC ~$32; most widely distributed Barbados rum"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature for XO and 1703; over ice or in cocktails for Black Barrel and Eclipse",
+        "vessel": "Tulip or Glencairn for XO and 1703; rocks glass for Eclipse and Black Barrel cocktails",
+        "technique": "XO neat: 45mL, room temperature, 5 minutes rest — allow the tropical ageing concentration to open. 1703: 30mL as a digestif, no ice. Mount Gay Black Barrel Daiquiri: 60mL + 22mL lime + 15mL simple syrup, shaken — the double-ageing caramel deepens the classic daiquiri framework. Eclipse Rum Punch: 60mL + 30mL orange juice + 15mL grenadine + lime + Angostura.",
+        "programme_position": "Heritage narrative anchor for any rum programme; 1703 Master Select as the premium tasting experience; Black Barrel as the cocktail workhorse",
+        "verbal_presentation": "Mount Gay Eclipse — St. Lucy, Barbados. The world's oldest rum distillery, operating since 1703. Three hundred and twenty years on the same coral limestone."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Mount Gay Distilleries (St. Lucy Parish, Barbados)",
+        "producer_location": "St. Lucy Parish, Barbados (north-facing Atlantic coral limestone)",
+        "key_person": "Trudiann Branker (Master Blender since 2018 — one of rum's first female Master Blenders); Rémy Cointreau (owner since 1989)",
+        "production_volume": "Large commercial; Eclipse is one of the top 5 globally distributed premium rums",
+        "certifications": [
+          "Barbados Rum Association",
+          "WIRSPA"
+        ],
+        "bc_distributor": "BCLDB direct import; Mount Gay Eclipse and XO available at BC Liquor stores (confirmed)",
+        "us_distributor": "Rémy Cointreau USA (confirmed national distribution)",
+        "uk_distributor": "Rémy Cointreau UK; Waitrose, Sainsbury's, Majestic widely",
+        "price_tier": "Market to Reserve (Eclipse BC ~$32; Black Barrel ~$45; XO ~$75; 1703 ~$160–220)",
+        "availability_notes": "Eclipse and Black Barrel: BC Liquor stores statewide. XO: BC Liquor select locations or special order. 1703: specialty spirits merchants (Marquis, Liberty Wine Vancouver). US: nationwide via Rémy Cointreau at Total Wine, BevMo."
+      },
+      "trail_connection": "PCT×WADT",
+      "trail_note": "Mount Gay's 1703 founding predates the American Revolution by 73 years. The distillery has operated through 13 British monarchs, American independence, the abolition of slavery in Barbados (1834), and Barbados's independence from Britain (2021). The sugarcane varieties at St. Lucy are descended from the Portuguese Atlantic island trade that defines the PCT. Under Rémy Cointreau's stewardship, Mount Gay has become the premium face of Barbados rum globally — the 320-year continuous operation is the rum world's most compelling provenance narrative.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Rum and raisin dark chocolate (70% cacao)",
+          "pairing_type": "bridge",
+          "rationale": "The rum-soaked raisin in dark chocolate is the textbook Mount Gay XO pairing — the dried fruit and bitter chocolate mirror the XO's own dried plum and tobacco depth, creating a feedback loop between food and spirit"
+        },
+        {
+          "technique_id": "",
+          "dish": "Barbados pepperpot (slow-braised beef with cassareep and scotch bonnet)",
+          "pairing_type": "complement",
+          "rationale": "The molasses depth of cassareep — the Amerindian cassava-based braising sauce that defines pepperpot — mirrors Mount Gay's molasses-base terroir. Black Barrel alongside pepperpot is the most literal flavour alignment in Barbadian food and drink culture"
+        }
+      ],
+      "source": "Mount Gay Distilleries official history and 1703 deed documentation; Trudiann Branker Master Blender biography; Rémy Cointreau annual report 2024; Barbados Rum Association production standards; Dave Broom 'Rum'; WIRSPA West Indian Rum documentation",
+      "entry_id": "SPR-CARBAR-002",
+      "extracted_at": "2026-04-11T15:36:40.670886+00:00",
+      "batch_number": 1
+    }
+  ]
+}

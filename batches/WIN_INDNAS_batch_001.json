@@ -1,0 +1,77 @@
+{
+  "tradition": "wine",
+  "region": "India — Nashik District Maharashtra (Sula Vineyards Rasa Shiraz, Godavari Basin Basalt, Colonial Wine Legacy)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T19:59:34.713063+00:00",
+  "entries": [
+    {
+      "name": "Sula Rasa Shiraz — Nashik District Basalt Plateau, Godavari Basin, Tropical Monsoon Viticulture at 600m Elevation",
+      "category": "wine",
+      "subcategory": "wine_still",
+      "origin": "India",
+      "region": "India — Nashik District Maharashtra (Sula Vineyards Rasa Shiraz, Godavari Basin Basalt, Colonial Wine Legacy)",
+      "producer": "Sula Vineyards — Nashik District, Maharashtra",
+      "alcohol_content": 13.5,
+      "price_tier": "premium",
+      "terroir_origin": "Nashik District sits at 18–20°N latitude in the Sahyadri ranges of the Western Ghats, at 550–700m elevation in the upper Godavari River basin. The viticultural zone extends across two geologically distinct zones: the Nashik plains (550–580m), dominated by deep alluvial soils from Godavari sedimentation, and the Dindori plateau (600–650m), where black Deccan basalt (Deccan Traps formation, 65 million years old) with shallow laterite topsoil over fractured basalt bedrock creates the most distinctive terroir. The Deccan Traps basalt is the same volcanic geological formation that underlies much of central India; the basalt retains heat through the night and releases it slowly, moderating the extreme diurnal temperature swing of 15–20°C between the 35–40°C daytime maximum and the 18–22°C nighttime minimum during October harvest. The monsoon viticulture cycle is the defining production challenge: vines are pruned twice annually (January and June) because the June–September southwest monsoon delivers 400–600mm of concentrated rainfall that interrupts the normal northern hemisphere annual cycle — Indian viticulture is fundamentally counter-seasonal to European wine production. British colonial presence in Maharashtra from 1818 created an administrative and economic infrastructure that brought European wine culture to Pune and Mumbai, generating the first wine consumption demand in India that Nashik now serves as the primary production zone.",
+      "production_technique": "Sula Rasa Shiraz is produced from estate and contract-farmed Syrah/Shiraz vines on Nashik basalt plateau sites at 600–620m elevation, planted at 1,650–2,000 vines/ha on trellised overhead pergola systems (mandap training) — the dominant Nashik vine training architecture adapted from Goa Portuguese-era grape cultivation and later standardized by Indian viticulturists to manage the monsoon canopy. The double-pruning cycle is managed so that the second pruning (June–July) forces fruit-set timing into September–October, after the monsoon retreats and the cool dry season begins. Harvest takes place October–November at 22–24 Brix, with hand-harvesting at dawn to preserve fruit temperature below 25°C before transport to the winery. The Rasa (meaning \"essence\" in Sanskrit) tier receives extended maceration of 18–21 days with active pump-overs twice daily during fermentation in temperature-controlled stainless steel at 24–26°C. Post-fermentation, the wine undergoes malolactic conversion in barrel and ages for 9–12 months in a combination of French and American oak barriques (225L, 50% new oak for Rasa tier), contributing vanilla and spice character that integrates with the inherently rich tropical fruit character of Nashik Shiraz. Total production of Sula Rasa Shiraz: approximately 30,000–50,000 bottles annually. The wine is fined and cold-stabilized before bottling under cork.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Barossa Valley Shiraz (South Australia, continental influence)",
+          "connection": "Nashik Shiraz and Barossa Valley Shiraz share the structural character of warm-climate Syrah — dense dark fruit, high natural sugar ripeness (both harvesting at 22–25 Brix), and American oak affinity — but differ in tannin architecture: Barossa Shiraz develops polyphenol richness from the diurnal temperature swing of a continental interior, while Nashik Shiraz is shaped by tropical humidity that produces silkier tannins and more forward tropical fruit (mango, guava) versus Barossa's plum and blackberry. Both represent hot-climate Shiraz styles that use American oak to frame rather than restrain the inherent fruit intensity."
+        },
+        {
+          "tradition": "Cape Winelands Shiraz (Stellenbosch, South African colonial wine)",
+          "connection": "Nashik and Stellenbosch share the post-colonial wine narrative: both wine industries were shaped by European colonial agricultural transfer (British in Maharashtra; Dutch then British in the Cape), and both produce Shiraz in warm-to-hot growing climates where canopy management is the dominant technical challenge. The British colonial administration connection is direct: the same administrative class that developed Stellenbosch wine culture from Cape Colony wine also created the Indian civil service wine demand that drove Nashik winery development in the post-Independence era."
+        },
+        {
+          "tradition": "Portuguese Dão Touriga Nacional (highland India wine parallel)",
+          "connection": "Both Nashik Shiraz and Dão Touriga Nacional represent wines produced in elevated plateaus (Nashik 600m basalt; Dão 400–600m granite) where highland altitude moderates daytime heat and preserves natural acidity in warm-climate settings. The Portuguese colonial wine heritage connection to India is also direct via Goa: the Portuguese established viticulture in Goa (Portuguese India 1510–1961), creating the first commercial winemaking infrastructure on the Indian subcontinent that preceded Nashik's modern wine industry by four centuries."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep ruby-garnet, opaque core, purple rim tinge reflecting the young fruit concentration typical of tropical Nashik Shiraz; excellent color saturation from 18–21 day maceration on basalt-terroir fruit; brilliant clarity after cold stabilization and fining; good legs at 13.5% ABV indicating the glycerol contribution of warm-climate ripeness.",
+        "nose": "Tropical dark fruit dominates: overripe blackberry, mulberry, and a distinctly Indian tropical register of ripe guava and black plum from the monsoon-modulated warm-climate ripening; behind the fruit, vanilla and cedar from French and American oak barriques; a characteristic white pepper and violet note from Syrah variety expressed in the 600m Nashik altitude; warm spice (black pepper, cinnamon) from the American oak component; full aromatic intensity with no reduction or VA defects in the Rasa tier.",
+        "palate": "Full body, warm 13.5% ABV, ripe tannins silky rather than grippy from the tropical fruit concentration and monsoon-modulated ripening; the mid-palate delivers the tropical fruit intensity of the nose — dark mulberry, blackcurrant, ripe plum; oak spice and vanilla frame the finish without overwhelming the fruit character; medium-long finish with warm spice lingering; acidity moderate, consistent with warm-climate Shiraz from basalt-retained heat sites; the wine demonstrates that Nashik basalt terroir produces Shiraz of genuine structural complexity, not merely warm-climate fruit richness."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Sula Classic Shiraz (entry)",
+          "criteria": "The high-volume entry tier: Nashik plains alluvial-soil Shiraz, stainless steel fermentation without extended maceration, no barrel aging — fresh, fruit-forward, no structural complexity; the Indian restaurant house wine tier at accessible pricing."
+        },
+        {
+          "tier": 2,
+          "tier_name": "Sula Reserve Shiraz",
+          "criteria": "Dindori basalt-site fruit, 12-day maceration, 6 months American oak aging; more structured than Classic but without the Rasa tier's extended maceration and French oak component; the premium commercial tier representing accessible Nashik basalt character."
+        },
+        {
+          "tier": 3,
+          "tier_name": "Sula Rasa Shiraz",
+          "criteria": "The estate benchmark: 18–21 day maceration, 9–12 months French and American oak, Dindori plateau basalt-site selection, full malolactic conversion — the expression that demonstrates Nashik's capacity for international-standard Shiraz at the premium tier."
+        },
+        {
+          "tier": 4,
+          "tier_name": "Sula The Source (single-vineyard apex)",
+          "criteria": "Single-vineyard selection from the oldest Sula estate vines on Dindori plateau basalt — maximum concentration from oldest vine root depth, extended maceration to 28 days, 16 months new French oak aging; the collector tier and India's reference benchmark for estate-level Shiraz at international quality standards."
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Sula Rasa Shiraz at 17–19°C for maximum aromatic expression of the tropical fruit character — cooler than standard red wine service at 20°C suppresses the warm-climate fruit intensity; in a climate-controlled environment, 60 minutes in a standard refrigerator from room temperature achieves the optimal window. Decanting for 30–45 minutes opens the oak structure and allows the pepper-violet Syrah aromatics to develop. Do not serve above 20°C — the warm-climate fruit base becomes jammy and the alcohol heat dominates above this threshold.",
+        "vessel": "Standard Syrah/Shiraz Burgundy-style glass with wide bowl to capture the aromatic complexity of the tropical fruit and spice character; a decanter for 30–45 minutes before service allows the warm-climate tannins to soften and the oak spice to integrate; pour at 120ml for programme tasting flight or 150ml for table service. In a PCT colonial India narrative programme, the wine connects the Portuguese Goa viticultural heritage (first Indian wine production) to the British colonial Maharashtra administrative demand that created the modern Nashik wine industry.",
+        "programme_position": "In a Malabar Coast / Indian beverages programme: serve after Kerala kallu (the pre-colonial fermented baseline) and before Goa feni (distilled coconut) — the Sula Rasa Shiraz represents the modern Indian wine industry built on the colonial wine consumption infrastructure that British and Portuguese colonial administration created in Maharashtra."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Sula Vineyards — Nashik District, Maharashtra (market leader, 65% of Indian premium wine; Rasa Shiraz is the Nashik benchmark for international-standard Indian red wine); York Winery Dindori for Reserve Chenin Blanc as the benchmark Indian white wine at estate-quality level.",
+        "north_america_access": "Sula wines available through specialty Indian wine importers in Ontario (LCBO special order), select BC private wine stores, and New York/California specialty wine retailers. Pricing approximately USD $18–25 for Rasa Shiraz in US market. Growing diaspora restaurant demand driving improved North American distribution.",
+        "culinary_application": "Sula Rasa Shiraz pairs with the spice-heat character of Indian cuisine in a way that Old World European reds do not: the warm-climate tropical fruit base and gentle tannin structure complement rather than clash with chili heat, tamarind tartness, and coconut richness — the wine was developed in the same culinary climate that produces the food."
+      },
+      "price_trajectory": "rising",
+      "entry_id": "WIN-INDNAS-001",
+      "tradition": "wine",
+      "extracted_at": "2026-04-12T19:59:34.712616+00:00",
+      "batch_number": 1
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "tradition": "spirits",
+  "region": "Barbados — St Philip Parish (Foursquare Distillery, Exceptional Cask Series, Pot-Column Hybrid)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-12T14:21:08.162961+00:00",
+  "entries": [
+    {
+      "name": "Foursquare Exceptional Cask Series — Barbados Pot-Column Blend, Natural Color and Proof",
+      "category": "spirits",
+      "subcategory": "rum_blended",
+      "origin": "Barbados",
+      "region": "St Philip Parish, Barbados",
+      "producer": "Foursquare Distillery — Richard Seale",
+      "alcohol_content": 56.0,
+      "price_tier": "super_premium",
+      "terroir_origin": "The Foursquare estate sits on the coral limestone plateau of St Philip Parish — the oldest and most mineralogically complex geological formation in Barbados, composed of compacted coral and marine sediment raised from the ocean floor by tectonic uplift approximately 700,000 years ago. The coral limestone has three critical effects on Foursquare's production: the sub-surface limestone aquifer provides the purest, most mineral-neutral water in Barbados for dilution (a direct influence on finished spirit character); the porous limestone soil provides superior drainage for the cane fields, limiting water stress while concentrating the sucrose and aromatic precursors in the cane stalk; and the limestone's thermal mass moderates the extreme Caribbean heat slightly in the St Philip coastal zone, where the Atlantic trade wind exposure from the eastern coast provides an additional cooling effect. The combination of coral limestone agriculture, Atlantic trade wind influence, and the specific Barbados flying fish-current microclimate around the island produces a cane character that Richard Seale describes as \"restrained and refined\" compared to the more exuberant tropical character of Jamaican or Haitian cane — a character that translates into Foursquare's disciplined house style. The coral limestone aging warehouse environment is a further terroir factor: the tropical humidity accelerates barrel interaction while the Atlantic breeze moderates temperature extremes, producing what Seale calls \"tropical aging without tropical excess\" — a more controlled barrel interaction than inland Caribbean distilleries.",
+      "production_technique": "Foursquare's hybrid distillation approach combines pot still complexity with column still cleanliness in proportions that vary by expression. The pot still (a 2,000-litre copper traditional pot) is charged with fully fermented molasses wash (from Barbados sugar estates) and double-distilled in the traditional Barbadian method — a technique that produces a heavy, ester-rich rum at 86–88% ABV from the spirit still. The two-column Coffey (continuous) still produces a lighter, cleaner distillate at 94–96% ABV from the same molasses wash source. Richard Seale blends pot and column distillates at different ratios for different Exceptional Cask Series expressions — some vintages lean 60:40 pot-to-column for more body and ester character; others run 40:60 for cleaner, more refined structure. The specific blend ratio is determined by Seale's tasting of the individual distillate batches against his vision for the vintage expression. Fermentation at Foursquare runs 48–72 hours with a proprietary Saccharomyces cerevisiae culture maintained at the distillery — a moderate fermentation time that produces a clean, moderately estered wash without the extreme dunder-driven character of Jamaican high-ester producers. Aging occurs in a combination of ex-bourbon American oak (first-fill, second-fill, and third-fill barrels) and ex-Cognac French Limousin oak — the Cognac cask introduction in the Exceptional Cask Series adds dried fruit, spice, and floral complexity from the used French oak. Extended aging of 10–20 years depending on the specific Exceptional Cask bottling produces extraordinary tertiary complexity. Zero additives: no caramel coloring, no sugar addition, no glycerol, no artificial flavoring — the natural aging color and proof dilution (with limestone aquifer water) are the only modifications to the distillate.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "Cognac VS/VSOP/XO (Charentais pot still, Limousin oak aging)",
+          "connection": "Foursquare's use of ex-Cognac Limousin oak barrels in the Exceptional Cask Series creates the most direct technical connection between Barbados rum and Cognac in the Caribbean spirits world — Richard Seale explicitly positions the Exceptional Cask Series as the Caribbean equivalent of single-château Cognac: terroir-specific, additive-free, aged for complexity rather than consistency"
+        },
+        {
+          "tradition": "Hampden Estate HLCF (Jamaican high-ester, opposite philosophy)",
+          "connection": "Foursquare and Hampden represent the definitional contrast in the Caribbean artisan rum renaissance: Foursquare optimizing for refined structure, minimal ester, transparency of aging, additive-free authenticity; Hampden optimizing for maximum ester intensity, terroir-extreme \"Hogo\" character, wild fermentation — both are world-class expressions of Caribbean rum culture but through opposite philosophies"
+        },
+        {
+          "tradition": "Blanton's Single Barrel Bourbon (additive-free, terroir-specific, allocated)",
+          "connection": "Both Foursquare Exceptional Cask and single-barrel premium Bourbon occupy the same consumer position: additive-free declarations from named single estates, strict barrel-level quality selection, cask-strength bottling, extremely limited allocation that creates immediate sell-out on release day — the \"fine wine\" rum positioning that Seale pioneered for Barbados rum in 2012"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Rich mahogany amber-brown from extended ex-bourbon and ex-Cognac oak aging; perfectly clear; natural color variation vintage to vintage (no standardization through caramel); significant viscous legs from 56% ABV",
+        "nose": "Complex and structured: dried tropical fruit (raisin, fig, dried mango), dark caramel, vanilla from American oak, dried flower and dried fruit spice from the Cognac cask contribution, coral limestone mineral in background, warm and elegant rather than aggressive — the restraint of the Barbados pot-column blend evident in every aromatic layer",
+        "palate": "Full body, warming 56% that integrates rather than burns, dark fruit-caramel core, oak-derived dried spice, long finish with coral limestone mineral dryness — the benchmark of how elegant, additive-free, extended-aged Barbados rum can be; the pot-column blend gives both richness (pot still) and cleanliness (column) in a final integration that is the most technically sophisticated in Caribbean rum production"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 1,
+          "tier_name": "Foursquare 2S (Entry Expression)",
+          "criteria": "Foursquare's accessible expression from shorter aging and higher column still proportion — the entry to the house philosophy at a more accessible price point"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Foursquare Probitas (Collaboration, White Rum)",
+          "criteria": "Collaboration with Hampden Estate producing a 50/50 Barbados/Jamaica white rum — bridges the two great Caribbean rum philosophies in a single unaged expression"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Exceptional Cask Series (Named Vintage)",
+          "criteria": "The flagship: named vintage year, specific pot-column ratio, specific cask combination, 10–20 years aging, cask strength, additive-free — each annual release is a distinct expression of that harvest year's distillate aged in Seale's specific cask selection"
+        },
+        {
+          "tier": 4,
+          "tier_name": "Exceptional Cask Triptych (Three-Expression Set)",
+          "criteria": "The highest-tier release: three bottles from the same vintage distillate aged in different cask types (ex-Cognac, ex-Bourbon, ex-Sherry) released as a set to demonstrate how cask type modifies the same distillate base — limited to under 500 sets globally, priced at Cognac XO collector level"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Room temperature at 20–22°C for the Exceptional Cask expressions — the 56% ABV works at room temperature with 5–10ml of still water to open aromatics rather than ice dilution; Seale recommends adding water drop-by-drop until the palate opens, a technique borrowed from Scotch whisky service",
+        "vessel": "Glencairn or tulip nosing glass to concentrate the complex aromatics from the blended distillate; the fine aromatic architecture of the Exceptional Cask Series rewards slow, patient nosing rather than the quick pour-and-drink approach appropriate for simpler rums; large Riedel Vinum Cognac glass also works excellently",
+        "aging_potential": "Once bottled, Foursquare Exceptional Cask continues to develop in the bottle for 5–10 years — the high ABV and residual wood compounds allow ongoing micro-oxidation through the cork; collectors who have opened bottles at 2 years post-release versus 7 years post-release report dramatically different aromatic profiles"
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Foursquare Distillery (Richard Seale) — the international benchmark for Barbados artisan rum and the most influential Caribbean spirits producer in the quality transparency movement",
+        "north_america_access": "Exceptional Cask via Skurnik Wines (US) and K&L direct allocation — requires email list registration for allocation notification; BC Liquor carries Foursquare portfolio items; private import for Exceptional Cask releases in Canada through specialist retailers",
+        "culinary_application": "Foursquare Exceptional Cask at lower-tier expressions (2S, 12-year) serves as the base for the most sophisticated rum cocktail programs in the PNW — the additive-free character means the spirit's natural flavors are not masked by sweeteners, making it honest in any preparation; at Exceptional Cask tier, serve neat as a contemplative digestive spirit rather than as a cocktail component"
+      },
+      "price_trajectory": "rising",
+      "entry_id": "SPR-STPHI-001",
+      "tradition": "spirits",
+      "extracted_at": "2026-04-12T14:21:08.162417+00:00",
+      "batch_number": 1
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "tradition": "fortified",
+  "region": "Portugal — Douro (Vintage Port, Declared and LBV)",
+  "batch_number": 1,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T23:30:08.624451+00:00",
+  "entries": [
+    {
+      "tradition": "fortified",
+      "sub_tradition": "port vintage declared single harvest reductive",
+      "region": "Portugal — Douro (Vintage Port, Declared Vintage)",
+      "name": "Declared Vintage Port — Graham's, The Apex of the Reductive Maturation Path",
+      "terroir_origin": "Declared Vintage Port is the style that defines the category's ceiling and occupies the most coveted position in the international fine wine market. A 'declaration' is a decision made by the individual Port house in the second year after harvest — if the vintage is considered exceptional in quality and character, the house 'declares' and bottles after a minimum of 2 years in wood, then the wine is expected to age 20-50 years in bottle. Not every year is declared — typically 3-5 times per decade for a given house. Universal declarations (when most houses agree the vintage is exceptional) occur even less frequently: 1977, 1994, 2000, 2011, 2017, 2022 are the key post-war universal declarations. Graham's Quinta dos Malvedos (Tua tributary, Douro Superior): the primary single-quinta source for declared Graham's Vintage. Altitude: 100-400m. Soils: pre-Cambrian schist (xisto), steep terrace cultivation. Varieties: Touriga Nacional (15-20%), Touriga Franca (20-25%), Tinta Roriz (30-35%), Tinta Barroca, Tinto Cao. The blend ratio changes by vintage. The PCT connection: Vintage Port is the wine that the Methuen Treaty (1703) created the commercial infrastructure for — Portugal's answer to French Claret for the English market, sustained by 300 years of Anglo-Portuguese trade alliance.",
+      "production_technique": "Graham's Vintage Port production: Harvest: hand-picking in early October; Quinta dos Malvedos harvested by the resident workforce (approximately 200 people during harvest). The lagar: foot-treading in granite lagares is standard for declared vintage; the human foot provides optimal tannin and colour extraction without pip crushing. Fortification: at 5-6 Baume (approximately 9-11% residual sugar); grape spirit (77% abv) stops fermentation and preserves sweetness. Wood: 20 months maximum in large wood (600-800L casks) before bottling; the brief wood phase preserves the reductive potential for bottle evolution. Bottling: filtered and sealed under cork with wax or lead-free foil. The bottle phase: the reductive maturation in bottle creates the defining character — tannins slowly polymerise, the deep ruby loses colour through the rim, primary fruit compounds transform to tertiary complexity (dried fruit, leather, cedar, tobacco, iron). The 20-year trajectory: a declared Vintage Port from a great year (1977, 1994, 2011) is drinking in the 20-30 year window post-vintage; the 1977 Graham's was still extraordinary at 45 years old in 2022.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Chateau Latour (Premier Cru Classe Pauillac, 20yr+ old vintage)",
+          "connection": "Both are fine wines that demand decades of bottle maturation for full expression. Both develop the tannin-fruit-mineral complexity that defines the pinnacle of their respective traditions. The comparison contextualises why Vintage Port is priced and cellared on the same logic as first-growth Bordeaux — both are 20-50 year maturation propositions."
+        },
+        {
+          "tradition": "fortified",
+          "beverage": "Colheita Tawny Port (same region, oxidative path)",
+          "connection": "Vintage Port (reductive bottle ageing, dark ruby to garnet) vs Colheita (oxidative wood ageing, dark ruby to amber) from the same Douro terroir reveals the fundamental fork in Port production. Both start from the same fortified wine; the maturation environment creates opposite colour and flavour outcomes."
+        },
+        {
+          "tradition": "wine",
+          "beverage": "Barolo Riserva (Nebbiolo, Piedmont, 15yr+)",
+          "connection": "Both are Italy's and Portugal's most tannic wines requiring 20+ years to fully integrate their tannin structure. Barolo Riserva and Vintage Port are the two European wine categories most reliably requiring a full generation of patience. The comparison teaches cellar-building logic to wine-educated guests."
+        },
+        {
+          "tradition": "spirits",
+          "beverage": "Macallan 25yr Sherry Oak Single Malt Scotch",
+          "connection": "Both occupy the 'heritage prestige' price-and-narrative space at the top of their respective categories. Both are used as cellar-building investments and gifts for milestone occasions. The comparison bridges the fortified wine and spirits luxury positioning conversation for guests who know whisky."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Deep ruby-garnet at 5yr; garnet-brick at 15yr; the colour browning at the rim is visible at 20yr; 30yr+ shows significant brick-orange fading at the rim",
+        "nose": "Young (5yr): black plum, blackcurrant, dark chocolate, violets, cedar. 15yr: dried plum, leather, tobacco, iron mineral, coffee. 25yr+: cigar, dried rose, cedar chest, dark chocolate, vanilla from the brief wood phase",
+        "palate": "The tannins are the story — young Vintage Port is tannic and structured; at 20yr they are polished and integrated. The sweetness persists through all ages, providing the thread that connects young to mature",
+        "texture": "The most tannic fortified wine produced — but the tannins are ripe from the lagar extraction and polymerise into silk over 20 years of bottle maturation",
+        "finish": "3-5 minutes at 20yr+; the longest finish in the Port category; tannin, dried fruit, cedar, and iron mineral work in sequence; the sweetness is the last note to resolve",
+        "conclusion": "The fortified wine that rewards generational patience — the one category where cellaring is not optional but intrinsic to the design"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Graham's Vintage Port 1977 or 1963 (legendary decades)",
+          "criteria": "Universal declaration vintage; 40-60yr bottle maturation; tannins fully polymerised; tertiary development at maximum; one of the greatest wine experiences available",
+          "markers": "Graham's 1977; auction price $250-500+; still drinking magnificently at 45yr"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Graham's Vintage Port 2011 or 2017 (modern classics)",
+          "criteria": "Universal declaration vintages of the modern era; at 10-15yr drinking window approaching but requiring patience; the benchmark for cellaring investment at current market",
+          "markers": "Graham's 2011; BC ~$90-130; US ~$80-115; BCLDB listed; cellar 5-15yr more"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Graham's LBV (Late Bottled Vintage) filtered",
+          "criteria": "Single vintage; 4-6yr in wood; filtered for immediate drinking; the accessible entry to vintage Port character without 20yr cellar requirement",
+          "markers": "Graham's LBV; BC ~$25-35; US ~$22-30; BCLDB listed; drink within 5yr of purchase"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Graham's Six Grapes or Warre's Warrior (Ruby Reserve)",
+          "criteria": "Non-vintage Ruby; fruit-forward; no ageing requirement; introduction to Port's fruit character at the widest audience price point",
+          "markers": "Six Grapes; BC ~$20-28; US ~$18-25; BCLDB widely listed"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Serve at 16-18 degrees C for mature Vintage Port — the tannin structure needs warmth to open; too cold makes the tannins tight and the fruit hidden",
+        "vessel": "Large tulip or a white Burgundy glass — the wide bowl essential for the nose to develop the layered tertiary character",
+        "technique": "Mature Vintage Port requires 1-2 hours decanting. For restaurant service: the decant is the service ritual — perform it at the table with a candle if possible, pouring against the light to see the sediment in the bottle neck. The narrative: 'This was bottled in [year]. It has been maturing in the bottle for [X] years. We decanted it [X] hours ago to allow it to open. When you taste the tannins, you are tasting what time does to grapes.' Serve with Stilton, walnuts, dried fruit. The Stilton-Vintage Port combination is the most iconic British fine dining ritual.",
+        "programme_position": "Cellar programme flagship; milestone anniversary wine; fine wine education anchor for the fortified category",
+        "verbal_presentation": "Graham's Vintage Port, [year]. Declared by Graham's as the finest wine of the year. Foot-treaded in the Douro, cellared for [X] years. The wine that required your patience."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Graham's (Symington Family Estates) — the most celebrated Vintage Port house in the modern era",
+        "producer_location": "Quinta dos Malvedos, Douro Superior / Vila Nova de Gaia lodge",
+        "key_person": "David Guimaraens (head winemaker for Symington Estates across all houses)",
+        "bc_distributor": "BCLDB stocks Graham's LBV and current declared vintages in Signature stores",
+        "us_distributor": "Kobrand Corporation (US national for Graham's/Warre's/Dow's/Quinta do Vesuvio)",
+        "uk_distributor": "Berry Bros. and Rudd, Majestic, Waitrose — widely available across all channels",
+        "price_tier": "Entry: $20-28 (Six Grapes). Mid: $25-35 (LBV). Premium: $90-130 (current declared). Ultra: $250-500+ (legendary decades).",
+        "availability_notes": "Graham's LBV and current declared vintages are BCLDB Signature store staples. Older declared vintages through Berry Bros., Corney and Barrow (UK), or auction. US: Kobrand national distribution; widely available Total Wine and specialty wine shops."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Stilton blue cheese with toasted walnuts",
+          "pairing_type": "complement",
+          "rationale": "The canonical Anglo-Portuguese Vintage Port pairing — the blue cheese fat and salt find their structural counterpart in the wine's ripe tannin and sweetness. The walnut bridges both the rancio character of the mature Port and the mineral fat of the cheese. The cultural narrative: the same Methuen Treaty that built the Port trade also established the British taste for Port-and-cheese."
+        },
+        {
+          "technique_id": "",
+          "dish": "Dark chocolate tart (70%+ cacao, light salt crust)",
+          "pairing_type": "bridge",
+          "rationale": "The tannin in mature Vintage Port and the tannin in high-cacao chocolate create a shared structural register — both require patience to reveal their sweetness and both carry a mineral iron note that bridges the two. The salt crust on the tart amplifies the mineral dimension of both."
+        }
+      ],
+      "source": "IVDP Vintage Port classification and declaration records; Graham's (Symington) production documentation; Berry Bros. and Rudd Vintage Port archive; BCLDB product listings verified April 2026",
+      "trail_connection": "PCT-1",
+      "trail_note": "PCT Region 1: Portugal (Douro). Declared Vintage Port is the wine category that the Methuen Treaty made possible — the preferential tariff arrangement that gave Portuguese wine access to the British market in 1703 created the commercial incentive for the English families (Graham, Taylor, Warre, Dow, Sandeman) to invest in the Douro terroir and develop the Vintage Port style. Without the Methuen Treaty, there would be no Vintage Port.",
+      "entry_id": "FOR-PORDOU-001",
+      "extracted_at": "2026-04-11T23:30:08.623708+00:00",
+      "batch_number": 1
+    }
+  ]
+}

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ technique.name }} — Provenance Technique Library</title>
+<meta name="description" content="{{ technique.description[:155] if technique.description else '' }}">
+<link rel="canonical" href="{{ canonical_url }}">
+<meta property="og:title" content="{{ technique.name }} — Provenance Technique Library">
+<meta property="og:description" content="{{ technique.description[:160] if technique.description else '' }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ technique.name }} — Provenance Technique Library">
+<meta name="twitter:description" content="{{ technique.description[:160] if technique.description|length > 160 else technique.description }}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": {{ technique.name | tojson }},
+  "description": {{ technique.description | tojson }},
+  "step": [
+    {% if technique.key_principles %}
+    {
+      "@type": "HowToSection",
+      "name": "Key Principles",
+      "itemListElement": [
+        {% for line in technique.key_principles.split('\n') if line.strip() %}
+        {"@type": "HowToStep", "text": {{ line.strip() | tojson }}}{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% if technique.pro_tips %},{% endif %}
+    {% endif %}
+    {% if technique.pro_tips %}
+    {
+      "@type": "HowToSection",
+      "name": "Pro Tips",
+      "itemListElement": [
+        {% for line in technique.pro_tips.split('\n') if line.strip() %}
+        {"@type": "HowToStep", "text": {{ line.strip() | tojson }}}{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+    {% endif %}
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-light:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
+  --cream:#F5F1E9;--cream-dark:#1A1816;
+  --text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);
+  --border:rgba(201,168,76,0.20);
+  --bg:#08080A;--surface:#131210;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
+.nav-links a:hover{color:#C9A84C}
+.nav-links .nav-active{color:rgba(201,168,76,0.75)}
+.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
+.nav-p:hover{border-color:#C9A84C}
+.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
+.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
+.mobile-nav.active{right:0}
+.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
+.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
+.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
+@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+.breadcrumb{padding:12px 32px;font-size:13px;color:var(--text-light);border-bottom:1px solid var(--border);background:#08080A}
+.breadcrumb a{color:var(--text-secondary);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb span{margin:0 8px;opacity:0.4}
+.container{max-width:860px;margin:0 auto;padding:48px 32px 80px}
+.technique-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.technique-category{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+.technique-tier{font-family:var(--mono);font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-light);background:var(--cream-dark);padding:3px 8px;border-radius:4px}
+.technique-authority{font-family:var(--mono);font-size:11px;color:var(--text-light)}
+.technique-title{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-1px;margin-bottom:16px}
+.technique-origin{font-size:14px;color:var(--text-secondary);font-weight:300;margin-bottom:32px}
+.section{margin-bottom:36px}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--gold-border)}
+.technique-desc{font-size:16px;color:var(--text-secondary);font-weight:300;line-height:1.75;max-width:680px}
+.technique-text{font-size:15px;color:var(--text-secondary);font-weight:300;line-height:1.75;white-space:pre-wrap;max-width:680px}
+.flavour-context{font-size:15px;color:var(--text-secondary);font-style:italic;line-height:1.7;padding:16px 20px;border-left:3px solid var(--gold-border);background:var(--gold-bg);border-radius:0 6px 6px 0;max-width:620px}
+.related-list{display:flex;flex-wrap:wrap;gap:8px}
+.related-tag{font-family:var(--mono);font-size:12px;color:var(--text-secondary);background:rgba(201,168,76,0.06);border:1px solid var(--border);padding:4px 12px;border-radius:20px;text-decoration:none;transition:all 0.15s}
+.related-tag:hover{color:var(--gold);border-color:var(--gold-border);background:var(--gold-bg)}
+.source-book{font-size:13px;color:var(--text-light);font-style:italic}
+.cross-cuisine-tag{font-family:var(--mono);font-size:11px;color:var(--text-secondary);background:rgba(255,255,255,0.05);padding:3px 10px;border-radius:4px;display:inline-block;margin:2px}
+.parallels-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.parallels-item{font-size:14px;color:var(--text-secondary);line-height:1.65;padding-left:16px;position:relative}
+.parallels-item::before{content:'—';position:absolute;left:0;color:var(--gold,#8B6914);font-size:12px;top:2px}
+@media(max-width:640px){
+  .container{padding:32px 16px 60px}
+  .breadcrumb{padding:10px 16px}
+}
+
+/* ── TECHNIQUE HERO IMAGE ── */
+.tech-hero{position:relative;height:380px;overflow:hidden}
+.tech-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.tech-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(8,8,10,0.15) 0%,rgba(8,8,10,0.55) 60%,rgba(8,8,10,0.97) 100%);
+}
+@media(max-width:640px){.tech-hero{height:240px}}
+
+/* ── STICKY BOTTOM BAR ── */
+body{padding-bottom:60px}
+.tech-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:500;
+  height:52px;display:flex;align-items:center;
+  background:rgba(8,8,10,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(201,168,76,0.12);
+}
+.tech-bar-btn{
+  flex:1;height:100%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.5rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(245,241,233,0.45);background:none;border:none;
+  border-right:1px solid rgba(201,168,76,0.07);
+  cursor:pointer;text-decoration:none;transition:color 0.2s,background 0.2s;
+}
+.tech-bar-btn:last-child{border-right:none}
+.tech-bar-btn:hover,.tech-bar-btn.active{color:var(--gold);background:rgba(201,168,76,0.04)}
+
+/* ── SLIDE-UP PANELS ── */
+.tech-panel{
+  position:fixed;bottom:52px;left:0;right:0;z-index:499;
+  background:#0D0C0A;border-top:1px solid rgba(201,168,76,0.14);
+  max-height:55vh;overflow-y:auto;
+  transform:translateY(102%);transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+.tech-panel.open{transform:translateY(0)}
+.tech-panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.85rem 1.5rem;border-bottom:1px solid rgba(201,168,76,0.07);
+  position:sticky;top:0;background:#0D0C0A;z-index:1;
+}
+.tech-panel-title{
+  font-family:var(--mono);font-size:0.5rem;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--gold);
+}
+.tech-panel-close{
+  background:none;border:none;color:rgba(245,241,233,0.3);
+  cursor:pointer;font-size:1.1rem;padding:0;line-height:1;
+  transition:color 0.2s;
+}
+.tech-panel-close:hover{color:var(--cream)}
+.tech-panel-body{
+  padding:1.5rem;
+  font-family:var(--sans);font-weight:300;font-size:0.85rem;
+  color:rgba(245,241,233,0.62);line-height:1.75;
+  white-space:pre-wrap;min-height:100px;
+}
+.panel-prompt{
+  display:flex;flex-direction:column;align-items:flex-start;gap:0.75rem;
+}
+.panel-generate-btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.65rem 1.5rem;
+  border:1px solid rgba(201,168,76,0.22);border-radius:3px;
+  background:none;color:var(--gold);
+  font-family:var(--mono);font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.2s;
+}
+.panel-generate-btn:hover{background:rgba(201,168,76,0.08);border-color:var(--gold)}
+.panel-generate-btn:disabled{opacity:0.35;cursor:not-allowed}
+.panel-hint{
+  font-family:var(--mono);font-size:0.5rem;letter-spacing:0.05em;
+  color:rgba(245,241,233,0.22);
+}
+.panel-loading{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:var(--mono);font-size:0.55rem;letter-spacing:0.1em;
+  color:rgba(201,168,76,0.5);
+}
+.panel-loading::before{
+  content:'';width:13px;height:13px;
+  border:1px solid rgba(201,168,76,0.25);border-top-color:var(--gold);
+  border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.panel-allergens{
+  margin-top:1rem;padding:0.75rem 1rem;
+  border:1px solid rgba(201,168,76,0.08);border-radius:4px;
+  font-family:var(--mono);font-size:0.5rem;letter-spacing:0.08em;
+  color:rgba(245,241,233,0.35);
+}
+.panel-allergen-tag{
+  display:inline-block;margin:0.15rem 0.3rem 0.15rem 0;
+  padding:0.15rem 0.5rem;background:rgba(220,80,60,0.08);
+  border:1px solid rgba(220,80,60,0.2);border-radius:3px;
+  color:rgba(220,130,100,0.7);font-size:0.5rem;letter-spacing:0.06em;
+}
+</style>
+<!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4G21HCX2D0');
+</script>
+<!-- PWA -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Provenance">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+</head>
+<body>
+{% set house_ns = namespace(tier=none) %}
+{% if technique.quality_hierarchy %}
+  {% for _qh in technique.quality_hierarchy %}
+    {% if _qh is mapping and (_qh.get('tier') == 1 or _qh.get('tier_name', '')|lower == 'house') %}
+      {% set house_ns.tier = _qh %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/cuisines">Cuisines</a>
+    <a href="/techniques/browse" class="nav-active">Techniques</a>
+    <a href="/about">About</a>
+    <a href="/suppliers">Suppliers</a>
+    {% if is_authenticated %}
+    <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
+    {% else %}
+    <a href="/auth/login">Sign In</a>
+    {% endif %}
+  </div>
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/cuisines">Cuisines</a>
+  <a href="/techniques/browse">Techniques</a>
+  {% if is_authenticated %}
+  <a href="/auth/account">{{ current_user.display_name or 'Account' }}</a>
+  <a href="/auth/logout" class="mobile-nav-secondary">Sign Out</a>
+  {% else %}
+  <a href="/auth/login">Sign In</a>
+  <a href="/auth/signup" class="mobile-nav-secondary">Create Account</a>
+  {% endif %}
+  <a href="/about" class="mobile-nav-secondary">About</a>
+  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
+</nav>
+
+{% if technique.image_url %}
+<div class="tech-hero">
+  <img src="{{ technique.image_url }}" alt="{{ technique.name }}" loading="eager">
+  <div class="tech-hero-overlay"></div>
+</div>
+{% endif %}
+
+<div class="breadcrumb">
+  <a href="/">Home</a><span>/</span><a href="/techniques/browse">Techniques</a><span>/</span>{{ technique.name }}
+</div>
+
+<div class="container">
+
+  <div class="technique-eyebrow">
+    <span class="technique-category">{{ technique.category | replace('_', ' ') | title }}</span>
+    {% if technique.tier_level and technique.tier_level != 'standard' %}
+    <span class="technique-tier">{{ technique.tier_level }}</span>
+    {% endif %}
+    {% if technique.authority_tier == 1 %}<span class="technique-authority">Provenance Verified · Examination Grade</span>{% elif technique.authority_tier == 2 %}<span class="technique-authority">Provenance Verified</span>{% endif %}
+  </div>
+
+  <h1 class="technique-title">{{ technique.name }}</h1>
+
+  {% if technique.origin %}
+  <p class="technique-origin">{{ technique.origin }}</p>
+  {% endif %}
+
+  {% if technique.description %}
+  <div class="section">
+    <div class="section-label">Overview</div>
+    <p class="technique-desc">{{ technique.description }}</p>
+  </div>
+  {% endif %}
+
+  {% if technique.flavour_context %}
+  <div class="section">
+    <div class="section-label">Flavour Context</div>
+    <p class="flavour-context">{{ technique.flavour_context }}</p>
+  </div>
+  {% endif %}
+
+  {% if technique.key_principles %}
+  <div class="section">
+    <div class="section-label">Key Principles</div>
+    <p class="technique-text">{{ technique.key_principles }}</p>
+  </div>
+  {% endif %}
+
+  {% if technique.pro_tips %}
+  <div class="section">
+    <div class="section-label">Pro Tips</div>
+    <p class="technique-text">{{ technique.pro_tips }}</p>
+  </div>
+  {% endif %}
+
+  {% if technique.common_mistakes %}
+  <div class="section">
+    <div class="section-label">Common Mistakes</div>
+    <p class="technique-text">{{ technique.common_mistakes }}</p>
+  </div>
+  {% endif %}
+
+  {% if technique.source_book %}
+  <div class="section">
+    <div class="section-label">Source</div>
+    <p class="source-book">{{ technique.source_book }}</p>
+  </div>
+  {% endif %}
+
+  {% if technique.cross_cuisine_parallels %}
+  <div class="section">
+    <div class="section-label">Cross-Cuisine Parallels</div>
+    <ul class="parallels-list">
+      {% for item in technique.cross_cuisine_parallels %}
+      <li class="parallels-item">{{ item | linkify_cuisines }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if technique.related_techniques %}
+  <div class="section">
+    <div class="section-label">Related Techniques</div>
+    <div class="related-list">
+      {% for item in technique.related_techniques %}
+      <span class="related-tag">{{ item }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {# ── Door 1: Kitchen — quality hierarchy, sensory tests, species precision ── #}
+  {% if user_tier != 'free' %}
+
+    {% if technique.quality_hierarchy %}
+    <div class="section">
+      <div class="section-label">Quality Hierarchy</div>
+      {% for tier_item in technique.quality_hierarchy %}
+        {% if tier_item is mapping %}
+        <div style="margin-bottom:1rem;padding:12px 16px;border-left:2px solid rgba(201,168,76,0.2);background:rgba(201,168,76,0.03);border-radius:0 4px 4px 0">
+          {% if tier_item.get('tier_name') %}
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:4px">{{ tier_item.tier_name }}</div>
+          {% endif %}
+          {% if tier_item.get('criteria') %}
+          <p class="technique-text" style="font-size:14px">{{ tier_item.criteria }}</p>
+          {% endif %}
+          {% if tier_item.get('markers') %}
+          <p class="technique-text" style="font-size:13px;color:var(--text-light);margin-top:4px">{{ tier_item.markers }}</p>
+          {% endif %}
+        </div>
+        {% else %}
+        <p class="technique-text">{{ tier_item }}</p>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if technique.sensory_tests %}
+    <div class="section">
+      <div class="section-label">Sensory Tests</div>
+      {% for test in technique.sensory_tests %}
+        {% if test is mapping %}
+        <div style="margin-bottom:0.75rem;display:grid;grid-template-columns:80px 1fr;gap:8px;align-items:start">
+          {% if test.get('sense') %}
+          <span style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(201,168,76,0.5);padding-top:2px">{{ test.sense }}</span>
+          {% endif %}
+          <div>
+            {% if test.get('cue') %}<p style="font-size:14px;color:var(--text-secondary)">{{ test.cue }}</p>{% endif %}
+            {% if test.get('fail_indicator') %}<p style="font-size:13px;color:rgba(245,100,80,0.7);margin-top:2px">Fail: {{ test.fail_indicator }}</p>{% endif %}
+          </div>
+        </div>
+        {% else %}
+        <p class="technique-text">{{ test }}</p>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if technique.species_precision %}
+    <div class="section">
+      <div class="section-label">Species Precision</div>
+      <p class="technique-text">{{ technique.species_precision }}</p>
+    </div>
+    {% endif %}
+
+  {% else %}
+
+    {# Frosted glass gate #}
+    {% if technique.quality_hierarchy or technique.sensory_tests or technique.species_precision %}
+    <div style="position:relative;margin-top:2.5rem;padding:2rem;border:1px solid rgba(201,168,76,0.08);border-radius:8px;background:rgba(245,241,233,0.02)">
+      <div style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:rgba(201,168,76,0.35);text-transform:uppercase;margin-bottom:1rem">
+        Quality Hierarchy · Sensory Tests · Species Precision
+      </div>
+      <p style="font-size:0.85rem;color:rgba(245,241,233,0.4);line-height:1.6;margin-bottom:1.5rem">
+        The complete technique entry — including what separates Reserve from House, the sensory cues that tell you when it's right, and the exact ingredients at species precision.
+      </p>
+      <a href="/subscribe/kitchen" style="display:inline-block;padding:8px 20px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:4px;color:#C9A84C;font-family:'DM Sans',sans-serif;font-size:0.8rem;text-decoration:none;letter-spacing:0.05em">
+        Open The Kitchen — $4.99/month
+      </a>
+    </div>
+    {% endif %}
+
+  {% endif %}
+
+  {% if technique.flavour_context or technique.common_mistakes or technique.species_precision %}
+  <section style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08)">
+    <h3 style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:rgba(245,241,233,0.35);text-transform:uppercase;margin-bottom:1.5rem">Common Questions</h3>
+
+    {% if technique.flavour_context %}
+    <details style="margin-bottom:1rem">
+      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">Why does {{ technique.name }} taste the way it does?</summary>
+      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.flavour_context[:400] }}</p>
+    </details>
+    {% endif %}
+
+    {% if house_ns.tier %}
+    <details style="margin-bottom:1rem">
+      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What are common mistakes when making {{ technique.name }}?</summary>
+      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ house_ns.tier.get('criteria', '')[:400] }}</p>
+    </details>
+    {% elif technique.common_mistakes %}
+    <details style="margin-bottom:1rem">
+      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What are common mistakes when making {{ technique.name }}?</summary>
+      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.common_mistakes[:400] }}</p>
+    </details>
+    {% endif %}
+
+    {% if technique.species_precision %}
+    <details style="margin-bottom:1rem">
+      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What ingredients should I use for {{ technique.name }}?</summary>
+      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.species_precision[:400] }}</p>
+    </details>
+    {% endif %}
+
+    {% if technique.cross_cuisine_parallels and technique.cross_cuisine_parallels|length > 0 %}
+    <details style="margin-bottom:1rem">
+      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What dishes are similar to {{ technique.name }}?</summary>
+      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{% for p in technique.cross_cuisine_parallels[:3] %}{{ p if p is string else p.get('technique', '') }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+    </details>
+    {% endif %}
+  </section>
+  {% endif %}
+
+</div>
+
+{% if related_techniques or technique.origin %}
+<div class="related-section">
+  <div class="related-section-inner">
+
+    {% if technique.origin %}
+    <div class="related-cuisine-bar">
+      <span class="related-cuisine-label">{{ technique.origin }} Cuisine</span>
+      <a href="/techniques/browse?cuisine={{ technique.origin | urlencode }}" class="related-cuisine-link">Browse all {{ technique.origin }} techniques →</a>
+    </div>
+    {% endif %}
+
+    {% if related_techniques %}
+    <div class="related-section-label">More from {{ technique.origin or 'this cuisine' }}</div>
+    <div class="related-cards">
+      {% for r in related_techniques %}
+      <a href="/technique/{{ r.slug or '' }}" class="related-card">
+        <div class="related-card-cat">{{ r.category | replace('_', ' ') | title }}</div>
+        <div class="related-card-name">{{ r.name }}</div>
+        {% if r.description %}
+        <div class="related-card-desc">{{ r.description[:100] }}{% if r.description | length > 100 %}…{% endif %}</div>
+        {% endif %}
+        <span class="related-card-arrow">→</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if technique.flavour_context %}
+    <div class="pairing-suggestion">
+      <div class="pairing-suggestion-label">Beverage Pairing Note</div>
+      <p class="pairing-suggestion-text">{{ technique.flavour_context }}</p>
+      <a href="/beverage" class="pairing-suggestion-link">Explore beverage terroir →</a>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endif %}
+
+<style>
+.related-section{
+  background:#0E0D0B;border-top:1px solid var(--border);
+  padding:48px 32px 64px;margin-top:0;
+}
+.related-section-inner{max-width:860px;margin:0 auto}
+.related-cuisine-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:28px;flex-wrap:wrap;gap:8px;
+}
+.related-cuisine-label{
+  font-family:var(--serif);font-size:22px;font-weight:600;color:var(--text);
+}
+.related-cuisine-link{
+  font-size:13px;color:var(--gold);text-decoration:none;font-weight:400;
+  border-bottom:1px solid var(--gold-border);padding-bottom:1px;transition:border-color 0.15s;
+}
+.related-cuisine-link:hover{border-color:var(--gold)}
+.related-section-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px;
+}
+.related-section-label::after{content:'';flex:1;height:1px;background:var(--gold-border)}
+.related-cards{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;
+  margin-bottom:40px;
+}
+.related-card{
+  background:#131210;border:1px solid rgba(201,168,76,0.12);border-radius:8px;
+  padding:18px 18px 14px;text-decoration:none;color:var(--text);
+  transition:all 0.18s;display:block;
+}
+.related-card:hover{border-color:var(--gold-border);box-shadow:0 4px 16px rgba(201,168,76,0.08)}
+.related-card-cat{
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:6px;
+}
+.related-card-name{
+  font-family:var(--serif);font-size:17px;font-weight:600;margin-bottom:6px;line-height:1.2;
+}
+.related-card:hover .related-card-name{color:var(--gold)}
+.related-card-desc{
+  font-size:12px;color:var(--text-secondary);font-weight:300;line-height:1.5;margin-bottom:10px;
+}
+.related-card-arrow{font-size:14px;color:var(--text-light);display:block}
+.related-card:hover .related-card-arrow{color:var(--gold)}
+.pairing-suggestion{
+  background:#131210;border:1px solid rgba(201,168,76,0.12);border-radius:8px;
+  padding:20px 24px;border-left:3px solid var(--gold-border);
+}
+.pairing-suggestion-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.pairing-suggestion-text{
+  font-size:14px;color:var(--text-secondary);font-style:italic;line-height:1.65;margin-bottom:12px;
+}
+.pairing-suggestion-link{
+  font-size:13px;color:var(--gold);text-decoration:none;font-weight:400;
+}
+.pairing-suggestion-link:hover{text-decoration:underline}
+@media(max-width:640px){
+  .related-section{padding:36px 16px 48px}
+  .related-cards{grid-template-columns:1fr}
+}
+</style>
+
+<script>
+function toggleMobileMenu(){
+  var nav=document.getElementById('mobileNav');
+  var overlay=document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+}
+</script>
+
+<div class="about-footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/techniques/browse">Techniques</a>
+    <a href="/suppliers">Suppliers</a>
+    <a href="/for-professionals">For Professionals</a>
+    <a href="/methodology">Methodology</a>
+    <a href="/auth/account">My Kitchen</a>
+    <a href="mailto:info@provenance.kitchen">Contact</a>
+  </div>
+  <span class="footer-wm">Provenance</span>
+</div>
+
+{% if technique.flavour_context or technique.common_mistakes or technique.species_precision %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {% set _faq_sep = namespace(first=true) %}
+        {% if technique.flavour_context %}
+        {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
+        {"@type":"Question","name":{{ ("Why does " + technique.name + " taste the way it does?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ technique.flavour_context[:500] | tojson }}}}
+        {% endif %}
+        {% if house_ns.tier %}
+        {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
+        {"@type":"Question","name":{{ ("What are common mistakes when making " + technique.name + "?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ house_ns.tier.get('criteria', '')[:500] | tojson }}}}
+        {% elif technique.common_mistakes %}
+        {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
+        {"@type":"Question","name":{{ ("What are common mistakes when making " + technique.name + "?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ technique.common_mistakes[:500] | tojson }}}}
+        {% endif %}
+        {% if technique.species_precision %}
+        {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
+        {"@type":"Question","name":{{ ("What ingredients should I use for " + technique.name + "?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ technique.species_precision[:500] | tojson }}}}
+        {% endif %}
+    ]
+}
+</script>
+{% endif %}
+
+<!-- ── STICKY BOTTOM BAR ── -->
+<div class="tech-bar">
+  <a href="/auth/account" class="tech-bar-btn">← My Kitchen</a>
+  <button class="tech-bar-btn" id="btn-notes" onclick="togglePanel('notes')">Kitchen Notes</button>
+  <button class="tech-bar-btn" id="btn-haccp" onclick="togglePanel('haccp')">Food Safety / HACCP</button>
+</div>
+
+<!-- Kitchen Notes panel -->
+<div class="tech-panel" id="panel-notes">
+  <div class="tech-panel-header">
+    <span class="tech-panel-title">Kitchen Notes — {{ technique.name }}</span>
+    <button class="tech-panel-close" onclick="togglePanel('notes')">✕</button>
+  </div>
+  <div class="tech-panel-body" id="notes-body">
+    <div class="panel-prompt">
+      <div class="panel-hint">Generates a laminated-pass-style reference card for your kitchen team.</div>
+      <button class="panel-generate-btn" id="notes-btn" onclick="generateNotes()">Generate Kitchen Notes</button>
+    </div>
+  </div>
+</div>
+
+<!-- HACCP panel -->
+<div class="tech-panel" id="panel-haccp">
+  <div class="tech-panel-header">
+    <span class="tech-panel-title">Food Safety / HACCP — {{ technique.name }}</span>
+    <button class="tech-panel-close" onclick="togglePanel('haccp')">✕</button>
+  </div>
+  <div class="tech-panel-body" id="haccp-body">
+    <div class="panel-prompt">
+      <div class="panel-hint">Generates a professional HACCP brief with CCPs, temperature targets, and allergen flags.</div>
+      <button class="panel-generate-btn" id="haccp-btn" onclick="generateHACCP()">Generate HACCP Brief</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Technique data for API calls ──
+const TDATA = {
+  title: {{ technique.name | tojson }},
+  description: {{ (technique.description or '') | tojson }},
+  key_principles: {{ (technique.key_principles or '') | tojson }},
+  species_precision: {{ (technique.species_precision or '') | tojson }},
+  trigger_keywords: {{ technique.trigger_keywords | tojson if technique.trigger_keywords else '[]' }}
+};
+
+function buildPayload() {
+  const steps = [];
+  if (TDATA.description) steps.push(TDATA.description);
+  if (TDATA.key_principles) {
+    TDATA.key_principles.split('\n').filter(s => s.trim()).slice(0, 12).forEach(s => steps.push(s.trim()));
+  }
+  if (!steps.length) steps.push(TDATA.title + ' — culinary technique preparation and execution.');
+  const ingredients = Array.isArray(TDATA.trigger_keywords) ? TDATA.trigger_keywords.slice(0, 20) : [];
+  if (TDATA.species_precision) ingredients.unshift(TDATA.species_precision.substring(0, 200));
+  return { title: TDATA.title, ingredients, method_steps: steps };
+}
+
+// ── Panel toggle ──
+let activePanel = null;
+function togglePanel(id) {
+  const panel = document.getElementById('panel-' + id);
+  const btn = document.getElementById('btn-' + id);
+  if (activePanel && activePanel !== id) {
+    document.getElementById('panel-' + activePanel).classList.remove('open');
+    document.getElementById('btn-' + activePanel).classList.remove('active');
+  }
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  btn.classList.toggle('active', !isOpen);
+  activePanel = !isOpen ? id : null;
+}
+
+// ── Kitchen Notes ──
+let notesGenerated = false;
+async function generateNotes() {
+  if (notesGenerated) return;
+  const body = document.getElementById('notes-body');
+  const btn = document.getElementById('notes-btn');
+  btn.disabled = true;
+  body.innerHTML = '<span class="panel-loading">Generating kitchen notes…</span>';
+  try {
+    const res = await fetch('/api/kitchen-notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(buildPayload())
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    body.textContent = data.notes;
+    notesGenerated = true;
+  } catch(e) {
+    body.innerHTML = '<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">Could not generate notes. Try again.</span>';
+    btn.disabled = false;
+  }
+}
+
+// ── HACCP ──
+let haccpGenerated = false;
+async function generateHACCP() {
+  if (haccpGenerated) return;
+  const body = document.getElementById('haccp-body');
+  const btn = document.getElementById('haccp-btn');
+  btn.disabled = true;
+  body.innerHTML = '<span class="panel-loading">Generating HACCP brief…</span>';
+  try {
+    const res = await fetch('/api/haccp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(buildPayload())
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    let html = '<div>' + data.haccp.replace(/\n/g,'<br>') + '</div>';
+    if (data.allergens && data.allergens.length) {
+      html += '<div class="panel-allergens">Allergens detected: ' +
+        data.allergens.map(a => `<span class="panel-allergen-tag">${a}</span>`).join('') +
+        '</div>';
+    }
+    body.innerHTML = html;
+    haccpGenerated = true;
+  } catch(e) {
+    body.innerHTML = '<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">Could not generate HACCP brief. Try again.</span>';
+    btn.disabled = false;
+  }
+}
+</script>
+
+<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
+  <span>Add Provenance to your home screen</span>
+  <div>
+    <button onclick="installPWA()" style="background:rgba(201,168,76,0.12);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-right:8px">Install</button>
+    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(245,241,233,0.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
+  </div>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .catch(err => console.log('SW:', err));
+}
+let _pwaPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  if (!localStorage.getItem('pwa-dismissed')) {
+    document.getElementById('pwa-prompt').style.display = 'flex';
+  }
+});
+function installPWA() {
+  if (_pwaPrompt) {
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(() => {
+      document.getElementById('pwa-prompt').style.display = 'none';
+      _pwaPrompt = null;
+    });
+  }
+}
+function dismissPWA() {
+  document.getElementById('pwa-prompt').style.display = 'none';
+  localStorage.setItem('pwa-dismissed', 'true');
+}
+</script>
+</body>
+</html>

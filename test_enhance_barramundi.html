@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Provenance — Enhance Recipe Test</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f0; color: #1a1a1a; }
+  .header { background: #1a1a1a; color: #fff; padding: 20px 32px; }
+  .header h1 { font-size: 20px; font-weight: 600; }
+  .header p { font-size: 13px; opacity: 0.6; margin-top: 4px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+  .panel { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+  .panel h2 { font-size: 16px; margin-bottom: 16px; }
+  label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; }
+  input[type="text"], textarea { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; font-family: inherit; margin-bottom: 14px; }
+  textarea { resize: vertical; }
+  .hint { font-size: 12px; color: #888; margin: -10px 0 14px; }
+  .btn { padding: 10px 24px; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 600; }
+  .btn-primary { background: #1a1a1a; color: #fff; }
+  .btn-primary:hover { background: #333; }
+  .btn-primary:disabled { background: #999; cursor: not-allowed; }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 6px; vertical-align: middle; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #results { display: none; }
+  .step-card { border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+  .step-num { background: #1a1a1a; color: #fff; padding: 8px 16px; font-size: 13px; font-weight: 600; }
+  .step-content { padding: 16px; }
+  .step-section { margin-bottom: 12px; }
+  .step-section:last-child { margin-bottom: 0; }
+  .step-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #888; margin-bottom: 4px; }
+  .step-original { color: #666; font-size: 14px; font-style: italic; }
+  .step-enhanced { font-size: 15px; line-height: 1.6; }
+  .step-insight { font-size: 13px; color: #555; background: #f8f5ee; padding: 10px 14px; border-radius: 6px; border-left: 3px solid #c9a96e; }
+  .step-techniques { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tech-badge { background: #e3f2fd; color: #1565c0; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .stats { font-size: 13px; color: #666; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Provenance Enhancement Pipeline — Test</h1>
+  <p>Paste a recipe below and hit Enhance to see the pipeline in action</p>
+</div>
+
+<div class="container">
+  <div class="panel">
+    <h2>Input Recipe</h2>
+    <label>Recipe Title</label>
+    <input type="text" id="title" placeholder="e.g. Classic Beef Bourguignon" value="Paperbark Barramundi">
+
+    <label>Ingredients (one per line)</label>
+    <textarea id="ingredients" rows="8" placeholder="2 cups flour&#10;1 tsp salt&#10;...">1 whole barramundi fillet (skin on, about 500g)
+1 large sheet of paperbark (melaleuca bark)
+2 tablespoons lemon myrtle, dried and ground
+1 tablespoon native pepper (Tasmanian pepperberry)
+2 tablespoons macadamia oil
+1 lemon, juiced
+Sea salt
+Finger limes for serving</textarea>
+    <div class="hint">One ingredient per line</div>
+
+    <label>Method Steps (one per line)</label>
+    <textarea id="steps" rows="8" placeholder="Step 1&#10;Step 2&#10;...">Soak the paperbark in water for 30 minutes
+Season the fish with lemon myrtle, native pepper and salt
+Brush with macadamia oil
+Wrap the fish in the paperbark and tie with kitchen string
+Cook on a medium grill or in a hot oven for 15-20 minutes
+Unwrap and serve with finger lime pearls and lemon juice</textarea>
+    <div class="hint">One step per line</div>
+
+    <button class="btn btn-primary" id="enhanceBtn" onclick="enhance()">Enhance Recipe</button>
+  </div>
+
+  <div id="results" class="panel">
+    <h2>Enhanced Recipe: <span id="resultTitle"></span></h2>
+    <div class="stats" id="stats"></div>
+    <div id="stepCards"></div>
+  </div>
+</div>
+
+<script>
+async function enhance() {
+  const btn = document.getElementById('enhanceBtn');
+  const title = document.getElementById('title').value.trim();
+  const ingredients = document.getElementById('ingredients').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const steps = document.getElementById('steps').value.split('\n').map(s => s.trim()).filter(Boolean);
+
+  if (!steps.length) { alert('Add at least one step'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Enhancing…';
+  document.getElementById('results').style.display = 'none';
+
+  const start = Date.now();
+  try {
+    const res = await fetch('/api/enhance-recipe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipe_title: title, ingredients, steps }),
+    });
+    const data = await res.json();
+    if (data.error) { alert(data.error); return; }
+
+    const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+    const totalTechniques = data.enhanced_steps.reduce((sum, s) => sum + s.matched_techniques.length, 0);
+
+    document.getElementById('resultTitle').textContent = data.recipe_title;
+    document.getElementById('stats').textContent =
+      `${data.enhanced_steps.length} steps enhanced in ${elapsed}s · ${totalTechniques} technique matches`;
+
+    document.getElementById('stepCards').innerHTML = data.enhanced_steps.map((s, i) => `
+      <div class="step-card">
+        <div class="step-num">Step ${s.step_number}${s.matched_techniques.length ? ' · ' + s.matched_techniques.length + ' technique match' + (s.matched_techniques.length > 1 ? 'es' : '') : ''}</div>
+        <div class="step-content">
+          <div class="step-section">
+            <div class="step-label">Original</div>
+            <div class="step-original">${esc(data.original_steps[i])}</div>
+          </div>
+          <div class="step-section">
+            <div class="step-label">Enhanced</div>
+            <div class="step-enhanced">${esc(s.enhanced_step)}</div>
+          </div>
+          ${s.insight ? `<div class="step-section"><div class="step-insight">${esc(s.insight)}</div></div>` : ''}
+          ${s.matched_techniques.length ? `<div class="step-section"><div class="step-label">Matched techniques</div><div class="step-techniques">${s.matched_techniques.map(t => `<span class="tech-badge">${esc(t)}</span>`).join('')}</div></div>` : ''}
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+  } catch (e) {
+    alert('Error: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enhance Recipe';
+  }
+}
+
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>

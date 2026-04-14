@@ -1,0 +1,81 @@
+import sys
+sys.path.insert(0, '/Users/garthgreenlees/Desktop/provenance-tester-1')
+from beverage_extractor import BeverageSession
+
+# Fix: 'elevate' was flagged in Ainaro Timor-Hybrido entry. Resume session.
+session = BeverageSession(
+    tradition='coffee',
+    region='Timor-Leste — Aileu and Ainaro Districts (Timor-Hybrido Genetic Heritage, Rust-Resistant Arabica, Mountain Spring Water Processing)',
+    output_dir='.',
+    starting_entry=1,
+    session_number=49,
+    running_total=0
+)
+
+session.add_beverage({
+    'name': "Timor-Hybrido Ainaro Natural Process — Rust-Resistant Genetic Heritage, Tatamailau Highland Terroir, Artisanal Recovery",
+    'category': 'coffee',
+    'subcategory': 'arabica_single_origin',
+    'origin': 'Timor-Leste',
+    'region': 'Timor-Leste — Aileu and Ainaro Districts (Timor-Hybrido Genetic Heritage, Rust-Resistant Arabica, Mountain Spring Water Processing)',
+    'producer': 'Seeds of Life / Oxfam Australia — Ainaro Specialty Coffee Program',
+    'alcohol_content': 0.0,
+    'price_tier': 'premium',
+    'terroir_origin': (
+        "Ainaro District occupies the southern face of Timor's central mountain range, where the 2,963m summit of Tatamailau (the highest peak in all of Timor island) creates an orographic rainfall shadow that concentrates humidity on the upper slopes while the lower valleys experience distinct dry seasons. The Timor-Hybrido — first documented in the Ainaro and Ermera districts in 1927 by Dutch colonial scientists studying coffee leaf rust resistance — is the most genetically significant coffee discovery of the 20th century: a spontaneous interspecific hybrid between Coffea arabica and Coffea canephora (Robusta) that occurred naturally in Timor's forest gardens when the two species grown in close proximity produced a fertile cross. The Timor-Hybrido's genes have been introduced into CLR-resistant varieties now grown in Central America (Catimor, Sarchimor), Colombia (Castillo variety), and Ethiopia's breeding programs, making it the genetic ancestor of the majority of disease-resistant Arabica cultivated globally. Growing this variety in its original Ainaro highland terroir — on volcanic soils, in forest-garden conditions, at 1,300-1,700m — produces a coffee that is both a taste and a genetic record of one of the most important agricultural events of the 20th century."
+    ),
+    'production_technique': (
+        "Ainaro Timor-Hybrido is processed using the natural (dry) method: fully ripe red-yellow cherries are hand-sorted and spread on raised drying beds at the highland dry season temperatures (22-28°C day, 12-15°C night) for 25-35 days. The extended drying in the highland Ainaro climate (lower humidity than the coast) produces a controlled fermentation of the cherry pulp around the bean: slow, even, and non-vinegary due to the dry conditions and cool nights that moderate the fermentation rate. The Timor-Hybrido variety produces slightly more Robusta-like body in the natural process than standard Typica or Bourbon — the hybrid's genetic heritage shows as increased body and chocolate depth compared to pure Arabica natural process. The mountain spring water used in water-flotation sorting before natural process drying contributes the distinctive mineral quality of Ainaro's high-altitude aquifer to the initial sorting process. Final moisture is controlled to 11-11.5% before milling and export."
+    ),
+    'cross_tradition_parallels': [
+        {
+            'tradition': 'Colombia Castillo Variety (Timor-Hybrido genetic descendant, CLR-resistant)',
+            'connection': "Ainaro Timor-Hybrido and Colombia Castillo are parent and progeny in the global coffee breeding program — the Castillo variety (Colombia's dominant CLR-resistant Arabica) was developed by the Colombian Cenicafé using Timor-Hybrido genes crossed with Colombian Caturra; drinking Ainaro natural-process Timor-Hybrido alongside a Castillo lot demonstrates how the same genetic heritage expresses differently in equatorial Pacific volcanic highland versus South American Andean terroir"
+        },
+        {
+            'tradition': 'Ethiopia Heirloom Varieties (wild genetic diversity, forest-garden, minimal intervention)',
+            'connection': "Ainaro Timor-Hybrido and Ethiopia's uncatalogued heirloom varieties represent the two poles of the Arabica genetic diversity spectrum — Ethiopia as the origin of pure-species genetic diversity, Timor as the only location on Earth where Arabica and Robusta crossed naturally to produce a fertile hybrid; both are irreplaceable genetic resources for the global coffee industry and both produce coffees of distinctive terroir character when grown in their original forest-garden habitats"
+        }
+    ],
+    'sensory_profile': {
+        'appearance': 'Green bean: larger than standard Arabica due to the Robusta genetic heritage; roasted at medium-light: dark brown with mahogany tints; brewed: dark amber-brown with good clarity',
+        'nose': 'Natural process fruit-forward with the distinctive Timor hybrid body: dark berry (blackcurrant, dark plum), fermented tropical fruit, dark chocolate, earthy volcanic mineral, slight floral lift — the hybrid character shows as a deeper, earthier backdrop to the natural-process fruit than pure Arabica natural process',
+        'palate': 'Full body (the most distinctive characteristic — fuller than any pure Arabica natural process at this altitude due to the Robusta genetic heritage); fruit-forward entry of dark berry and dried plum; chocolate and earth mid-palate; long finish with mild bitterness and mineral persistence; the body-acidity balance is unique to Timor-Hybrido and irreproducible in other origins'
+    },
+    'quality_hierarchy': [
+        {
+            'tier': 1,
+            'tier_name': 'Standard Ainaro Timor-Hybrido Washed',
+            'criteria': 'Washed process Timor-Hybrido showing the genetic body without the natural-process fruit complexity; the commercial reference point for the variety character'
+        },
+        {
+            'tier': 2,
+            'tier_name': 'Ainaro Honey Process Timor-Hybrido',
+            'criteria': 'Partial natural processing (mucilage retained on bean during drying); intermediate between washed clarity and natural richness; SCA 84-86'
+        },
+        {
+            'tier': 3,
+            'tier_name': 'Ainaro Full Natural Timor-Hybrido',
+            'criteria': 'Full natural-process at highland altitude with the Timor-Hybrido genetic body-fruit-earth combination; SCA 86-88; available from Seeds of Life and specialty exporters'
+        },
+        {
+            'tier': 4,
+            'tier_name': 'Competition Grade Tatamailau Natural (above 1700m)',
+            'criteria': 'Highest-elevation natural-process lots from the slopes of Tatamailau; SCA 88+; essentially unavailable outside specialty auction; the precision tier of Timor-Leste specialty coffee'
+        }
+    ],
+    'service_intelligence': {
+        'temperature': 'Brew at 90-92°C — lower than standard for the natural process to avoid over-extraction of the fuller body; the Robusta heritage means this coffee extracts faster than pure Arabica',
+        'vessel': 'French press or AeroPress to honor the full body; pour-over works but should use a longer bloom time to compensate for the denser bean structure of the hybrid variety',
+        'programme_position': 'Post-dinner coffee as the conversation-starter origin; the Timor-Hybrido genetic story (the most important coffee variety discovered in the last century) is the coffee equivalent of serving a wine from a historic pre-phylloxera vineyard — it requires the presenter to explain the context for the guest to fully appreciate what they are experiencing'
+    },
+    'purveyor_intelligence': {
+        'benchmark_producer': 'CCT / Seeds of Life Ainaro program — the benchmark; specialty roasters such as Onyx Coffee Lab and Intelligentsia have featured Timor-Leste natural-process lots',
+        'north_america_access': 'Growing specialty availability; Equal Exchange (US) widely distributed; Ethical Bean (Vancouver) occasional lots; specialty coffee subscription services occasionally feature Timor single origins',
+        'culinary_application': "The Timor-Leste coffee narrative is unique in the PCT for its combination of political significance (occupation, independence), genetic significance (Timor-Hybrido), and practical accessibility — it is the most accessible PCT origin for mainstream restaurant programming while still having depth for specialist engagement"
+    },
+    'price_trajectory': 'rising'
+})
+
+session.commit_batch()
+session.finish()

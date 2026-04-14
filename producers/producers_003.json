@@ -1,0 +1,73 @@
+[
+  {
+    "tradition": "wine",
+    "name": "Miolo Wine Group",
+    "location": "Bento Gonçalves, Rio Grande do Sul, Brazil",
+    "country": "Brazil",
+    "region": "Vale dos Vinhedos DOCG — Serra Gaúcha highlands, Rio Grande do Sul",
+    "key_person": "Adriano Miolo — CEO and second-generation family director; Andrea Miolo — export and marketing director; family founded by Giuseppe Miolo (Italian immigrant, 1897)",
+    "founded": "1897 (farming); 1989 (modern winery). The Miolo family traces its presence in Vale dos Vinhedos to the Italian immigrant settlement of the Serra Gaúcha highlands from 1875 onward",
+    "production_volume": "Approximately 10 million litres/year across all Miolo estates (Vale dos Vinhedos, Campanha Gaúcha, and purchased grapes from contracted growers); the DOCG Vale dos Vinhedos tier is a fraction of total production",
+    "notable_products": [
+      "Miolo Reserva Especial Branco (Chardonnay-Riesling Itálico blend, Vale dos Vinhedos)",
+      "Miolo Reserva Especial Tinto (Merlot-Tannat-Cabernet Franc, DOCG Vale dos Vinhedos)",
+      "Miolo Lote 43 (premium Merlot-Cabernet Sauvignon blend)",
+      "Miolo Cuvée Giuseppe (estate-vineyard single selection)",
+      "Miolo Millennium (aged Cabernet Sauvignon, vintage-specific)"
+    ],
+    "certifications": [
+      "IP Vale dos Vinhedos (Indicação de Procedência)",
+      "DOCG Vale dos Vinhedos (Denominação de Origem Controlada e Garantida — red wine)"
+    ],
+    "website": "www.miolo.com.br",
+    "philosophy": "Miolo represents the modern commercial face of Vale dos Vinhedos — the Italian immigrant family winery that grew from a single-farm cooperative to Brazil's largest premium wine exporter, demonstrating that South American Italian-settler viticulture can produce wines of international quality from the same highland soil that their grandparents cleared for agriculture in the late 19th century.",
+    "trail_connection": "PCT (Brazil — Italian immigrant wine heritage node)",
+    "verified": true,
+    "producer_id": "PROD-WIN-001"
+  },
+  {
+    "tradition": "wine",
+    "name": "Vinícola Aliança (and collective Pinto Bandeira producers cooperative)",
+    "location": "Pinto Bandeira, Rio Grande do Sul, Brazil (the dedicated sparkling wine sub-region of Serra Gaúcha)",
+    "country": "Brazil",
+    "region": "Pinto Bandeira — IP Pinto Bandeira sub-region of Serra Gaúcha, 700–900m elevation",
+    "key_person": "The Pinto Bandeira sparkling wine tradition is a collective community production heritage from the Italian immigrant settlement — individual small family producers alongside the cooperative structure",
+    "founded": "1870s (Italian immigrant settlement of the Pinto Bandeira community); commercial sparkling wine production from the 1980s when Pinto Bandeira was identified as the optimal sparkling wine terroir within Serra Gaúcha",
+    "production_volume": "Combined Pinto Bandeira IP sub-region production estimated at 500,000–800,000 litres/year espumante; Aliança and Salton are the primary commercial-scale producers",
+    "notable_products": [
+      "Aliança Espumante Brut (traditional method, Chardonnay-Pinot Noir)",
+      "Salton Espumante Brut (the other major Pinto Bandeira producer)",
+      "Pinto Bandeira IP-certified sparkling wines (the collective sub-region designation)"
+    ],
+    "certifications": [
+      "IP Pinto Bandeira (Indicação de Procedência — Brazil's first dedicated sparkling wine IP designation, 2010)"
+    ],
+    "website": "[PROVIDER: Vinícola Aliança — www.vinicola-alianca.com.br — verify current status]",
+    "philosophy": "The Pinto Bandeira sparkling wine community represents the Italian immigrant settlement's highest achievement in the application of traditional method sparkling wine production to the Brazilian highland climate — the same method as Champagne (secondary fermentation in bottle) applied to the Chardonnay-Pinot Noir variety pair at 700–900m Serra Gaúcha elevation.",
+    "trail_connection": "PCT (Brazil — Italian immigrant sparkling wine heritage node)",
+    "verified": true,
+    "producer_id": "PROD-WIN-002"
+  },
+  {
+    "tradition": "fermented",
+    "name": "Timorese Palm Toddy Tappers (collective community practice — no commercial producer)",
+    "location": "Dili district and rural sub-districts of Timor-Leste; coconut palms (tua mutin) concentrated in coastal lowlands; lontar palms (Borassus flabellifer — tua sabu) in the drier interior and south coast",
+    "country": "Timor-Leste",
+    "region": "Timor-Leste — nationally distributed; tua mutin (coconut toddy) in coastal zones; tua sabu (lontar palm toddy) in the Oecusse enclave and south coast Manatuto and Manufahi districts",
+    "key_person": "Traditional tappers (tobak — the Tetun word for the specialist who climbs and taps the palm; the skill is transmitted within family and community lineage)",
+    "founded": "Pre-colonial origin (pre-Portuguese contact before 1511); the palm toddy tradition of Timor-Leste predates Portuguese colonial presence by millennia — it is part of the Austronesian fermented palm tradition that spread from the Philippines through Indonesia to Timor over 3,000+ years",
+    "production_volume": "Estimated thousands of litres per day during peak tapping season; entirely domestic subsistence and community consumption; no reliable production data",
+    "notable_products": [
+      "Tua mutin (fresh coconut toddy — white palm wine from Cocos nucifera inflorescence sap, 1–7% ABV depending on fermentation stage)",
+      "Tua sabu (lontar palm toddy — slightly thicker, sweeter fresh toddy from Borassus flabellifer inflorescence sap)",
+      "Tua fermentadu (over-fermented toddy, higher ABV, more sour — the household beer substitute)",
+      "Sopi (distilled palm spirit — the Timorese distilled version; rare; produced in some rural communities)"
+    ],
+    "certifications": [],
+    "website": "[NO COMMERCIAL PRESENCE — traditional subsistence production only]",
+    "philosophy": "The tua mutin and tua sabu traditions of Timor-Leste are living expressions of the Austronesian palm fermentation heritage that connects Timor to the broader Indian Ocean palm toddy network (Kerala kallu, Mozambique nipa, Goa toddy, Philippines tuba) — the fermented sap of the coconut or lontar palm consumed at traditional ceremonies (uma lulik sacred house rituals, barlaque marriage negotiations, tara bandu community governance meetings) as a social-spiritual beverage of the Timorese animist tradition.",
+    "trail_connection": "PCT (Timor-Leste — Portuguese colonial node, Indian Ocean Austronesian fermentation network)",
+    "verified": true,
+    "producer_id": "PROD-FER-003"
+  }
+]

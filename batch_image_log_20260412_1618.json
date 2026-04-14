@@ -1,0 +1,189 @@
+{
+  "started": "2026-04-12T16:18:03.777324",
+  "recipes": {
+    "generated": [],
+    "skipped": [],
+    "failed": [
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Adobo Sauce",
+        "slug": "adobo-sauce"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":4}\n",
+        "name": "Aglio e Olio",
+        "slug": "aglio-e-olio"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":1}\n",
+        "name": "Agua de Jamaica (Hibiscus Concentrate \u2014 Extraction Method)",
+        "slug": "agua-de-jamaica-hibiscus-concentrate-extraction-method"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Aioli",
+        "slug": "aioli"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Air Fryer Chicken (Why It Works \u2014 Convection Science and Rapid Crisping)",
+        "slug": "air-fryer-chicken-why-it-works-convection-science-and-rapid-crisping"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":14}\n",
+        "name": "Aloo Gobi",
+        "slug": "aloo-gobi"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":10}\n",
+        "name": "Aloo Gobi (Naturally Vegan)",
+        "slug": "aloo-gobi-naturally-vegan"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":7}\n",
+        "name": "Anchovies as Pantry Ingredient",
+        "slug": "anchovies-as-pantry-ingredient"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":4}\n",
+        "name": "Andhra Gongura Mutton",
+        "slug": "andhra-gongura-mutton"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":0}\n",
+        "name": "Andhra Pesarattu",
+        "slug": "andhra-pesarattu"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Apple Pie",
+        "slug": "apple-pie"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Arancini",
+        "slug": "arancini"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Arancini (Sicilian \u2014 Saffron Rag\u00f9 Rice Balls \u2014 Frying Method)",
+        "slug": "arancini-sicilian-saffron-rag-rice-balls-frying-method"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Arroz con Leche (Naturally Gluten-Free \u2014 Rice Pudding)",
+        "slug": "arroz-con-leche-naturally-gluten-free-rice-pudding"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Avadhi Kakori Kebab",
+        "slug": "avadhi-kakori-kebab"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Avocado Toast (Brunch Viral \u2014 Sourdough, Lemon, Chilli, Egg Variations)",
+        "slug": "avocado-toast-brunch-viral-sourdough-lemon-chilli-egg-variations"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":5}\n",
+        "name": "Bacalhau \u00e0 Br\u00e1s (Christmas Eve \u2014 Portuguese Tradition)",
+        "slug": "bacalhau-brs-christmas-eve-portuguese-tradition"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":2}\n",
+        "name": "Baccal\u00e0 Mantecato (Venetian Whipped Salt Cod)",
+        "slug": "baccal-mantecato-venetian-whipped-salt-cod"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Bagna C\u00e0uda (Piedmontese \u2014 Anchovy and Garlic Hot Dip)",
+        "slug": "bagna-cuda-piedmontese-anchovy-and-garlic-hot-dip"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Baguette",
+        "slug": "baguette"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":3}\n",
+        "name": "Baharat",
+        "slug": "baharat"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Baked Feta Pasta (Finnish TikTok Viral \u2014 Oven Method and Acid Balance)",
+        "slug": "baked-feta-pasta-finnish-tiktok-viral-oven-method-and-acid-balance"
+      },
+      {
+        "status": "error",
+        "code": 404,
+        "message": "{\"error\":\"Recipe not found\"}\n",
+        "name": "Baked Oats (Overnight into Oven \u2014 Texture and Sweetness Balance)",
+        "slug": "baked-oats-overnight-into-oven-texture-and-sweetness-balance"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":16}\n",
+        "name": "Baklava",
+        "slug": "baklava"
+      },
+      {
+        "status": "error",
+        "code": 429,
+        "message": "{\"error\":\"Rate limit exceeded\",\"message\":\"Unauthenticated access is limited to 10 requests per minute. Include a valid X-API-Key header for full access.\",\"retry_after\":12}\n",
+        "name": "Banana Bread",
+        "slug": "banana-bread"
+      }
+    ]
+  },
+  "beverages": {
+    "generated": [],
+    "skipped": [],
+    "failed": []
+  }
+}

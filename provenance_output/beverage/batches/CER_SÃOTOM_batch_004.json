@@ -1,0 +1,103 @@
+{
+  "tradition": "ceremonial",
+  "region": "São Tomé & Príncipe — Cacao and Colonial Beverages",
+  "batch_number": 4,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T15:42:17.568838+00:00",
+  "entries": [
+    {
+      "tradition": "ceremonial",
+      "sub_tradition": "sao tome fine cacao drinking chocolate",
+      "region": "São Tomé & Príncipe (Gulf of Guinea, Atlantic)",
+      "name": "São Tomé Fine Cacao — Drinking Chocolate and the Colonial Sugar-Cacao Trade",
+      "terroir_origin": "São Tomé and Príncipe, two volcanic islands in the Gulf of Guinea off West Africa's coast, were uninhabited when Portuguese navigators arrived in 1470. The islands became the first Portuguese plantation economy — the template for the colonial agricultural model subsequently applied across Brazil, Angola, and the Indian Ocean colonies. Sugarcane was the first crop; enslaved West African workers were the first labour force. By 1550, São Tomé was the world's largest sugar producer. When Brazilian sugar overtook São Tomé production by 1600, the islands transitioned to a new cash crop: cacao. Cacao was introduced to São Tomé in the 1820s (seeds from Brazil — the same Portuguese colonial agricultural network operating in reverse: plant material moving from the Americas back to Africa via the PCT corridor). São Tomé's volcanic basalt terroir — equatorial heat (average 27°C), 1,500–3,000mm annual rainfall, Obô natural reserve forest cover — creates ideal cacao growing conditions. The primary cacao variety: Amelonado (Forastero subtype), old planted stock from 19th-century introduction. Claudio Corallo, an Italian-Portuguese chocolatier who moved to São Tomé in the 1990s, grows and produces direct-from-plantation chocolate on the island at his Terreiro Velho estate — considered among the finest chocolate production in the world and the reference for São Tomé cacao character.",
+      "production_technique": "São Tomé fine cacao production follows traditional Amelonado processing: Harvest: manual, year-round with peaks February–April and October–December. Fermentation: 5–7 days in wooden fermentation boxes; indigenous yeasts and bacteria from the forest environment. The Gulf of Guinea humidity and heat create active, complex fermentations that produce the fruity-acidic-floral character of premium São Tomé cacao. Drying: sun-drying on raised beds 7–14 days. The equatorial sun produces rapid drying without the extended time required in cooler origins. Claudio Corallo's method (Terreiro Velho estate): fermentation on the tree (selective harvest at precise ripeness); minimum-intervention fermentation; controlled drying; stone-ground on the island — no conching, no added lecithin. The resulting chocolate is intentionally 'rustic' with maximum terroir expression. Drinking chocolate tradition: São Tomé's Creole food culture (roça / plantation culture) includes a traditional hot cacao drink made from roasted, ground cacao beans, hot water, and palm sugar — the same preparation found in Aztec and Mayan traditions, introduced to West Africa via the Portuguese Atlantic trade.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "wine",
+          "beverage": "Vintage Port (Douro Valley)",
+          "connection": "São Tomé fine cacao and Vintage Port occupy the same position in their respective categories: both are products of extreme terroir (volcanic island vs. Douro schist), both carry the historical weight of the Portuguese colonial trade system that created them, and both achieve complexity through terroir-primary production philosophy. A tasting of Claudio Corallo São Tomé chocolate with Vintage Port creates the PCT's most condensed historical narrative: 500 years of Portuguese agriculture, two products, one pairing"
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Ethiopia Heirloom Natural (Yirgacheffe/Guji)",
+          "connection": "Ethiopian natural coffee and São Tomé fine cacao drinking chocolate share the fermented-fruit-complexity register: both are beverages where controlled fermentation of tropical agricultural raw material produces extraordinary complexity. Both origins are African; both use indigenous microbial fermentation; both resist standardisation and industrial processing by the strength of their terroir character"
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "São Tomé cacao drinking chocolate: deep brown-black; viscous; no sheen (natural cacao fat without added lecithin); served warm at 70–75°C in traditional ceramic or metal cups",
+        "nose": "Claudio Corallo São Tomé: intensely fruity (dried cherry, blackcurrant, red wine); notable acidity on the nose (the Amelonado fermentation character); tobacco, dried mushroom, sea air, prune. Traditional Creole cacao drink: more roasted, less fermented complexity — deep toasted dark chocolate, slight bitterness, palm sugar sweetness, warm and earthy. Both express the same volcanic terroir through different preparation intensities.",
+        "palate": "Claudio Corallo 75% drinking chocolate: extraordinary — the most complex West African single-origin cacao. Bitter-fruity opening, then dried cherry and red wine, then sustained tobacco-mineral finish. Acidic by chocolate standards — the fermentation defines the flavour more than roasting. Traditional cacao drink (light-roast ground cacao + water): thick, warming, bitter-sweet; the agricultural version of the Aztec preparation that predates all modern chocolate. Both: long finish, volcanic mineral depth.",
+        "conclusion": "São Tomé fine cacao is the PCT's most emotionally complex beverage: the same islands where the Portuguese first deployed the plantation-and-slavery model now produce some of the world's finest chocolate. The Claudio Corallo story — an Italian who chose to grow and make chocolate on São Tomé rather than import the cacao elsewhere — is a modern counternarrative to the plantation extraction history. For a programme: serve as a flight-closing ceremonial element."
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Claudio Corallo Estate São Tomé (Terreiro Velho)",
+          "criteria": "Single estate; estate-processed; stone-ground; no additives; Claudio Corallo label; 70–100% cacao content",
+          "markers": "Claudio Corallo 75%, 80%, 100%; Terreiro Velho estate; limited international distribution; ~$15–25 per 50g bar; drinking chocolate preparation from bars"
+        },
+        {
+          "tier": 3,
+          "tier_name": "São Tomé Fine Cacao — Certified Single Origin",
+          "criteria": "Certified single origin São Tomé; named producer or cooperative; 72%+ cacao content; bean-to-bar by quality chocolatier",
+          "markers": "Valrhona Manjari (STP origin); Vintage Plantations São Tomé; Pralus São Tomé; ~$8–14 per 50g bar"
+        },
+        {
+          "tier": 2,
+          "tier_name": "São Tomé Commercial Origin",
+          "criteria": "São Tomé origin certified; commercial chocolatier processing; correct terroir character but less complexity",
+          "markers": "Barry-Callebaut São Tomé origin; commercial specialty chocolate bars; ~$5–8 per 50g"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Gulf of Guinea Blend",
+          "criteria": "West African origin (may include STP); commercial grade; accessible introduction to the flavour profile",
+          "markers": "Commercial West African chocolate; flavour profile accessible; ~$2–4 per 50g"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Drinking chocolate (traditional cacao preparation): 70–75°C; serve in warmed ceramic cup. Do NOT use milk — the traditional preparation is water-based to allow the cacao terroir to express directly.",
+        "vessel": "Small ceramic or earthenware cup (125–150mL); heavy base to retain heat",
+        "technique": "Traditional cacao drink preparation: roast whole dried cacao beans 10 minutes at 170°C; cool; peel shells; grind in mortar or food processor to coarse paste; dissolve 2 tbsp paste in 150mL near-boiling water; add pinch of sea salt and small amount of palm sugar or muscovado sugar; whisk until uniform. Modern Corallo bar drinking chocolate: melt 15g Corallo 75% in 100mL warm water at 70°C; no milk; no sugar; whisk smooth. Programme service: offer as a closing ceremonial drink after a PCT tasting flight; pair with a small piece of Claudio Corallo bar alongside.",
+        "programme_position": "Ceremonial closing element for PCT beverage programme; historical narrative anchor for the colonial Atlantic plantation system; dessert pairing or standalone tasting experience",
+        "verbal_presentation": "Claudio Corallo São Tomé — Terreiro Velho estate, Gulf of Guinea. The islands where Portugal built the first plantation economy in history. Cacao grown on the same volcanic soil, five centuries later."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Claudio Corallo (Terreiro Velho estate, São Tomé)",
+        "producer_location": "Terreiro Velho, São Tomé Island, Democratic Republic of São Tomé & Príncipe",
+        "key_person": "Claudio Corallo (founder; Italian chocolatier who relocated permanently to STP in the 1990s; considered one of the world's finest fine chocolate producers)",
+        "production_volume": "Very small — estate-scale; Claudio Corallo produces fewer than 20 tonnes of finished chocolate annually",
+        "certifications": [
+          "São Tomé DOP cacao (partial)",
+          "Artisanal production (estate-direct)"
+        ],
+        "bc_distributor": "No dedicated BC distributor for Claudio Corallo; Meinhardt Fine Foods (Vancouver) has carried Corallo bars; specialty chocolate shops (Beta5 Chocolates Vancouver) sourced via European import; Valrhona and Vintage Plantations STP origins more reliably available at Thierry Chocolatier (Vancouver), Daniel Le Chocolat Belge",
+        "us_distributor": "Corallo: select specialty retailers (Dean & DeLuca; Zingerman's Ann Arbor; Formaggio Kitchen Boston); no national distributor confirmed. Vintage Plantations São Tomé: Americas specialty chocolate distributors; Valrhona USA (Manjari and similar STP origins)",
+        "uk_distributor": "Claudio Corallo: Rococo Chocolates (London); Fortnum & Mason (occasional); specialist fine chocolate merchants. Valrhona STP widely available UK.",
+        "price_tier": "Reserve to Prestige (Corallo bars ~$20–28 CAD per 50g; Valrhona/Vintage Plantations ~$8–12 per 50g; drinking chocolate preparation ~$5–10 per service)",
+        "availability_notes": "Claudio Corallo is the most difficult PCT beverage to source in North America. Most reliable: order direct from claudiocorallo.com (ships internationally). In Vancouver: Meinhardt Fine Foods has carried; call ahead to confirm stock. US: Zingerman's (zingermans.com) reliably carries Corallo; Formaggio Kitchen (Boston, Cambridge MA) carries when available."
+      },
+      "trail_connection": "PCT-6",
+      "trail_note": "São Tomé & Príncipe is the starting point for the entire PCT plantation model: the Portuguese colonial agricultural template first deployed here in the 1480s — forced labour, monoculture cash crops, offshore island plantation — was subsequently replicated in Brazil (1500s), Angola (1600s), and Mozambique (1700s). The cacao that Claudio Corallo grows on Terreiro Velho estate is the direct descendant of seeds brought from Brazil in the 1820s by the same colonial trade network that the 1480s plantation model made possible. São Tomé fine cacao is the PCT's most compressed historical object.",
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Roasted coconut and cashew (São Tomé Creole tradition)",
+          "pairing_type": "complement",
+          "rationale": "São Tomé's Creole kitchen uses coconut and cashew from the same plantation-era agricultural introduction that brought cacao. Roasted cashews with dark cacao drinking chocolate mirrors the island's own flavour palette: the cashew's sweet-roasted-nut character bridges with cacao's bitter-fruity depth while the coconut fat on the palate softens the cacao's pronounced acidity"
+        },
+        {
+          "technique_id": "",
+          "dish": "Vintage Port (Taylor Fladgate or Quinta do Noval)",
+          "pairing_type": "bridge",
+          "rationale": "The PCT's most historically resonant pairing: São Tomé cacao drinking chocolate alongside Vintage Port unites the Portuguese colonial trade system's two most important agricultural products — cacao from the Gulf of Guinea and wine from the Douro — both shaped by 500 years of Portuguese agricultural and commercial history. The bridge is the shared dried-fruit and mineral character in both"
+        }
+      ],
+      "source": "Claudio Corallo official production documentation (claudiocorallo.com); São Tomé colonial history (UNESCO; João de Barros, Décadas da Ásia, 1552); ICCO (International Cacao Organisation) São Tomé DOP documentation; Vintage Plantations origin documentation; William Gervase Clarence-Smith 'Cocoa and Chocolate 1765–1914'",
+      "entry_id": "CER-SÃOTOM-001",
+      "extracted_at": "2026-04-11T15:42:17.568475+00:00",
+      "batch_number": 4
+    }
+  ]
+}

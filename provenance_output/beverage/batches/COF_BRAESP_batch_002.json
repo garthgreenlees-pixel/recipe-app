@@ -1,0 +1,110 @@
+{
+  "tradition": "coffee",
+  "region": "Brazil — Espirito Santo (Biodynamic, Fazenda Camocim)",
+  "batch_number": 2,
+  "entry_count": 1,
+  "extracted_at": "2026-04-11T23:38:21.633877+00:00",
+  "entries": [
+    {
+      "tradition": "coffee",
+      "sub_tradition": "brazil biodynamic espirito santo mountain robusta conillon specialty",
+      "region": "Brazil — Espirito Santo (Pedra Azul Mountains, 900-1100m)",
+      "name": "Espirito Santo Conillon Specialty — Brazil's Robusta Reinvention, Mountain Biodynamic",
+      "terroir_origin": "Espirito Santo is a small coastal state in southeastern Brazil — the second-largest producer of coffee in Brazil after Minas Gerais, but the first in Conillon (Coffea canephora var. canephora, Brazilian robusta equivalent). The PCT connection: Espirito Santo was among the first Brazilian states to receive Portuguese colonists after the initial settlements in Bahia. The state's Portuguese name (Espirito Santo — Holy Spirit) was given by Vasco Fernandes Coutinho in 1535. Coffee arrived in the state in the 19th century as part of the same expansion from the Coffee Belt that reached Sao Paulo and Minas Gerais. Conillon distinction: standard Conillon is Brazil's commercial robusta — primarily used for instant coffee, expresso blends, and bulk export. The quality revolution: since 2015, a small number of producers in the Pedra Azul mountains (900-1,100m) have been producing Conillon at specialty grade — the first time the variety has been treated with the same quality framework as arabica. Fazenda Camocim (Seabra family): the leader of this revolution. At 900-1,100m on basalt-derived soils in the Pedra Azul mountains, with biodynamic certification, the Camocim Conillon is not a compromise — it is a different kind of coffee. The distinction: specialty Conillon has less acidity than arabica but more body and a deeper, darker flavour profile. It is the first robusta-type coffee to achieve international specialty recognition.",
+      "production_technique": "Fazenda Camocim Conillon production: Biodynamic certification: Demeter-certified since 2004; Rudolf Steiner's biodynamic calendar governs planting, harvest, and processing. Variety: Conillon (Coffea canephora var. canephora) — Brazilian robusta selection; the Camocim clonal selection has been selected over 20 years for cup quality rather than yield. Altitude: 900-1,100m on the Pedra Azul basalt massif — exceptional for Conillon (standard Conillon is grown at 200-500m). Harvest: manual selective picking; Conillon ripens unevenly so selective picking is essential for specialty quality. Processing: natural/sun-dried on raised beds; the biodynamic farm calendar determines processing days (fruit days preferred for harvest and drying). The natural process on Conillon at altitude creates a dramatically different cup from standard Conillon: dark chocolate, tobacco, dried fruit, low acidity with high sweetness from the natural processing fermentation. Roasting: medium-dark to medium; Conillon needs more heat than arabica due to its higher moisture content and denser bean structure. The 80-20 blend context: Camocim Conillon is also used in high-end espresso blends by specialty roasters to add body and reduce acidity — a direct reversal of the traditional 'robusta for cheapness' model.",
+      "cross_tradition_parallels": [
+        {
+          "tradition": "coffee",
+          "beverage": "Uganda Sipi Falls Fine Robusta (Ugandan specialty canephora)",
+          "connection": "Both are specialty-grade Coffea canephora from different continents. Uganda's Sipi Falls (Elgon sub-region) and Espirito Santo's Pedra Azul are the two most cited examples of 'specialty robusta' globally. The comparison teaches that robusta's reputation for low quality is a growing-condition problem, not a variety limitation."
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Brazil Sul de Minas Natural Arabica (same state cluster, opposite variety)",
+          "connection": "The internal Brazilian comparison: same natural processing method, same mountain Brazilian context, opposite variety (arabica vs Conillon). Sul de Minas: lighter body, higher acidity, stone fruit. Camocim Conillon: heavier body, lower acidity, dark chocolate and tobacco. The comparison dismantles the arabica-superiority assumption."
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Vietnam Arabica Da Lat (mountain robusta-to-arabica transition region)",
+          "connection": "Both are examples of the quality transition happening in traditional robusta-producing regions. Vietnam's Da Lat highlands and Brazil's Espirito Santo mountains are both producing arabica-level quality from canephora varieties through altitude and careful farming."
+        },
+        {
+          "tradition": "coffee",
+          "beverage": "Indonesia Kopi Luwak (civet coffee, Sumatra — variety indeterminate)",
+          "connection": "Both are examples of how context transforms a commodity coffee variety into a premium narrative. Kopi Luwak transforms robusta through civet digestion; Camocim transforms Conillon through biodynamic altitude farming. Both challenge the assumption that variety alone determines quality."
+        }
+      ],
+      "sensory_profile": {
+        "appearance": "Dark brown at medium-dark roast; the Conillon bean is smaller and denser than arabica; less crema on espresso but more body",
+        "nose": "Dark chocolate, roasted grain, dried tobacco leaf, faint dried mushroom, earthy mineral from the basalt mountain soils",
+        "palate": "Entry: low-acidity, full body from high-solids Conillon extraction. Mid-palate: dark chocolate and roasted grain dominant. Finish: clean and dry with a tobacco-mineral persistence",
+        "texture": "The highest body of any Brazilian coffee tradition; the Conillon's higher caffeine and different lipid profile creates a syrupy weight that arabica cannot match",
+        "finish": "25-35 seconds (shorter than arabica from equivalent altitude); dark chocolate and grain; the biodynamic mineral character adds a dry stone finish",
+        "conclusion": "The category-redefining coffee — proof that quality is a cultivation choice, not a variety limitation"
+      },
+      "quality_hierarchy": [
+        {
+          "tier": 4,
+          "tier_name": "Fazenda Camocim Conillon Biodynamic (natural, single harvest)",
+          "criteria": "Demeter biodynamic; natural process; single harvest; the reference expression for specialty Conillon globally",
+          "markers": "Fazenda Camocim Conillon; BC: specialty roasters only; US ~$20-28/250g"
+        },
+        {
+          "tier": 3,
+          "tier_name": "Espirito Santo Conillon Specialty (other farms, mountain grade)",
+          "criteria": "Mountain-grown Conillon (800m+); specialty grade processing; the regional category without single-farm pricing",
+          "markers": "ES Conillon Specialty; BC: specialty roasters; US ~$15-22/250g"
+        },
+        {
+          "tier": 2,
+          "tier_name": "Espirito Santo Conillon Fine Cup (certified)',",
+          "criteria": "Fine cup certification from CoE or BSCA; above-standard quality; introduction to the specialty Conillon character",
+          "markers": "ES Fine Cup; BC/US ~$12-18/250g"
+        },
+        {
+          "tier": 1,
+          "tier_name": "Brazilian espresso blend with Conillon component",
+          "criteria": "Commercial espresso blend; Conillon as body-contributor component; widely available; introduction to the variety character in a familiar format",
+          "markers": "Various commercial espresso blends; BC/US ~$10-15/250g"
+        }
+      ],
+      "service_intelligence": {
+        "temperature": "Espresso: 93-94 degrees C, 9 bar, 25-28s; the higher temperature develops the chocolate character. Filter: 94-96 degrees C (higher than arabica to extract the denser bean)",
+        "vessel": "Espresso: pre-heated demitasse; the body requires containment. Filter: ceramic flat-bottom for maximum body extraction",
+        "technique": "Camocim Conillon as a specialty coffee education tool: blind tasting against a Sul de Minas arabica natural. The result: most guests cannot identify which is robusta because the altitude and biodynamic farming have produced a quality level that the variety distinction no longer predicts. The sales script: 'The coffee world has been wrong about robusta for 100 years. This is the correction.'",
+        "programme_position": "Specialty coffee education; Brazil origin depth; espresso bar single-origin robusta offering",
+        "verbal_presentation": "Espirito Santo Conillon — Pedra Azul mountains, Brazil. Biodynamic. Mountain-grown at 1,000 metres. The robusta that rewrites the rulebook."
+      },
+      "purveyor_intelligence": {
+        "benchmark_producer": "Fazenda Camocim (Seabra family) — Demeter-certified biodynamic Conillon pioneer",
+        "producer_location": "Domingos Martins, Espirito Santo, Brazil",
+        "key_person": "Pedro Domingo Seabra (owner; biodynamic advocate)",
+        "bc_distributor": "Specialty roasters in BC source Camocim directly; no mass-market distribution",
+        "us_distributor": "Counter Culture Coffee and Intelligentsia have featured Camocim Conillon; specialty importers (Cafe Imports, Mercanta) carry Espirito Santo specialty Conillon",
+        "uk_distributor": "Has Bean Coffee (UK); Square Mile Coffee",
+        "price_tier": "Entry: $10-15 (blended). Mid: $12-18 (Fine Cup). Premium: $15-22 (specialty mountain). Ultra: $20-28 (Camocim biodynamic single harvest).",
+        "availability_notes": "Fazenda Camocim is available seasonally through specialty importers. Espirito Santo specialty Conillon is increasingly stocked by leading specialty roasters as the 'specialty robusta' category grows in recognition."
+      },
+      "food_pairings": [
+        {
+          "technique_id": "",
+          "dish": "Moqueca de peixe (Espirito Santo fish stew with coconut milk and dendê oil)",
+          "pairing_type": "complement",
+          "rationale": "Moqueca Capixaba is the regional dish of Espirito Santo — a fish stew with tomato, coconut milk, and dendê (palm oil), served in a clay pot. A cup of Camocim Conillon after the moqueca is the authentic Espirito Santo meal close. The dark chocolate and grain of the coffee cuts through the coconut oil richness and prepares the palate for the meal's finish."
+        },
+        {
+          "technique_id": "",
+          "dish": "Brigadeiro (Brazilian chocolate truffle with condensed milk)",
+          "pairing_type": "bridge",
+          "rationale": "Brigadeiro — Brazil's national confection — uses condensed milk and cocoa powder to create a dark-sweet truffle. The dark chocolate and tobacco character of Conillon bridges the cocoa-condensed milk sweetness of the brigadeiro through the shared dark chocolate register."
+        }
+      ],
+      "source": "BSCA (Brazilian Specialty Coffee Association) Conillon specialty classification; Fazenda Camocim production documentation; Demeter biodynamic certification records; Cafe Imports Brazil sourcing documentation",
+      "trail_connection": "PCT-13",
+      "trail_note": "PCT Region 13: Brazil (Coffee). Espirito Santo is the PCT's most historically continuous coffee state — Portuguese since 1535, coffee-growing since the 19th century, now producing the world's first specialty Conillon. The biodynamic Conillon of Fazenda Camocim represents the Portuguese colonial agricultural legacy producing its highest quality expression in the 21st century.",
+      "entry_id": "COF-BRAESP-001",
+      "extracted_at": "2026-04-11T23:38:21.633591+00:00",
+      "batch_number": 2
+    }
+  ]
+}

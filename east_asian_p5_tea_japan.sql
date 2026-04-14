@@ -1,0 +1,268 @@
+-- EAST ASIAN SESSION — PHASE 5: JAPAN TEA PRODUCTS (20)
+-- Producer IDs: Ippodo=120, Marukyu-Koyamaen=121, Nakamura-Tokichi=122
+--               Kyoto-Obubu=123, Yamamotoyama=124, Chiran-Cooperative=125, Nishide=126
+-- Region IDs: Uji=51, Shizuoka=52, Kagoshima=53
+
+BEGIN;
+
+-- ============================================================
+-- MATCHA — UJI (7 products)
+-- ============================================================
+INSERT INTO beverage_products (name, category, subcategory, producer_id, region_id, origin_country, description, is_vintage_specific, quality_tier, quality_hierarchy, deductive_profile, service_specs, flavour_markers, flavour_weight, flavour_profile_type, origin_brand, price_tier, price_range_cad, technical_specs, is_published) VALUES
+
+('Ippodo Ummon Ceremonial Matcha', 'tea', 'matcha_ceremonial', 120, 51, 'Japan',
+ 'Ippodo''s Ummon is the jewel of a three-century matcha tradition — the finest ceremonial-grade matcha produced by Japan''s oldest continuously operating tea company (founded 1717). Ummon is reserved for the highest level of tea ceremony service, specifically koicha (thick tea) — the application that demands the greatest concentration, sweetness, and colour intensity. The name references Ummon Zenji, a Tang Dynasty Zen master, anchoring this tea''s use in the spiritual tradition of chanoyu. Stone-ground from premium Uji tencha on traditional granite wheels.',
+ false, 'reserve',
+ '[{"tier": "Supreme Ceremonial Grade", "criteria": "Koicha (thick tea) designated; highest Ippodo grade; 300-year production lineage"}, {"tier": "Below", "criteria": "Ippodo Kan-un (thin tea / usucha grade)"}, {"tier": "Reference", "criteria": "The standard against which all other ceremonial matcha is measured"}]',
+ '{"appearance": "The most vivid jade-green powder; fine particle size (less than 10 microns); the green is so saturated it appears almost luminous; whisked liquor forms a deep forest-green foam with stable microbubbles", "nose": "Marine umami (the shade-grown theanine concentration); fresh spring grass; sweet rice note; the deep Uji terroir is immediately apparent compared to lower grades — an oceanic, mineral-green complexity", "palate": "Thick tea (koicha) application: a concentrated, sweet-bitter balance that is the archetype of the genre. The umami is extraordinary — the 20-day shade cultivation has forced the plant to accumulate theanine to unusual levels. Bitterness (EGCG polyphenols) and sweetness (theanine) exist in perfect equilibrium. No astringency at the correct temperature", "finish": "Long, 90+ seconds of diminishing umami-sweetness; the marine mineral character of premium shade-grown tea persists as a pure clean note"}',
+ '{"brewing_for_koicha": "2.5-3g per 40ml water at 75-80°C; chasen (whisk) approximately 70 strokes using a kneading motion (unlike usucha''s brisk back-and-forth)", "brewing_for_usucha": "1.5g per 60ml water at 70-75°C; vigorous back-and-forth whisking to form stable foam", "water_temperature": "70-75°C for usucha; 75-80°C for koicha — critical: boiling water causes bitterness and destroys theanine''s sweetness", "bc_source": "Ippodo online (ippodo-tea.co.jp international shipping); Fujiya Japanese Market Vancouver (limited seasonal stock)", "storage": "Refrigerate after opening; use within 30 days of opening; do not freeze"}',
+ ARRAY['marine umami', 'spring grass', 'sweet rice', 'Uji jade mineral', 'theanine sweetness', 'shade complexity'],
+ 'medium', 'umami_sweet', 'Ippodo Ummon',
+ 'ultra_premium', '$55-$95 CAD (30g tin)',
+ '{"shade_period": "20+ days pre-harvest shading using traditional tana (reed screen) method", "stone_grinding": "Granite wheel slow grinding; temperature-controlled mill room to prevent heat degradation of colour and flavour compounds", "harvest": "First harvest (ichiban-cha) spring; exact harvest date varies with seasonal conditions", "particle_size": "Under 10 microns — smoothest texture of any matcha grade", "theanine_content": "Premium grade: approximately 3.2-3.8% theanine in dry leaf (shade stress accumulation)", "region": "Uji, Kyoto Prefecture; specific growing zone within GI-protected area", "gi_status": "Uji-cha GI protected under Japanese law"}',
+ true),
+
+('Ippodo Kan-un Ceremonial Matcha', 'tea', 'matcha_ceremonial', 120, 51, 'Japan',
+ 'Ippodo Kan-un (Cloud in the Sky) is the standard ceremonial-grade entry for Ippodo — designed for usucha (thin tea) service in chanoyu and for premium restaurant matcha applications. At this grade, the colour is vivid green, the umami is substantial, and the particle size is fine enough for smooth whisking. For most restaurant applications — tableside matcha service, high-end matcha dessert beverages — Kan-un is the correct grade and represents exceptional value at the ceremonial tier.',
+ false, 'estate',
+ '[{"tier": "Premium Ceremonial — Usucha Grade", "criteria": "Usucha (thin tea) application; premium restaurant matcha tier"}, {"tier": "Below", "criteria": "Ippodo entry-grade matcha for culinary use"}, {"tier": "Above", "criteria": "Ippodo Ummon for koicha and highest ceremony use"}]',
+ '{"appearance": "Vivid jade-green powder; fine particle size; whisked liquor forms bright green foam", "nose": "Shade-grown umami; fresh spring grass; sweet pea; clean marine note. Clearly premium grade compared to culinary matcha", "palate": "Usucha (thin tea) character: lighter than koicha but maintaining the shade-grown umami depth that distinguishes ceremonial from culinary grade. Theanine sweetness is the primary character; bitterness is present but balanced", "finish": "45-60 seconds; umami and sweetness diminish together; clean green exit"}',
+ '{"brewing": "1.5g per 60-70ml water at 70-75°C; vigorous chasen whisking (80-100 strokes) to form stable foam", "restaurant_application": "Tableside matcha whisking; matcha flight service; high-end matcha dessert beverage base (matcha latte, matcha soft serve where flavour integrity matters)", "bc_source": "Ippodo online; Fujiya Japanese Market Vancouver"}',
+ ARRAY['jade spring grass', 'marine umami', 'sweet pea', 'theanine sweetness', 'clean green'],
+ 'medium-light', 'umami_bright', 'Ippodo Kan-un',
+ 'premium', '$35-$55 CAD (30g tin)',
+ '{"shade_period": "20 days", "stone_grinding": "Granite wheel grinding", "harvest": "First harvest spring", "particle_size": "10-15 microns", "application": "Usucha (thin tea) primary; koicha secondary"}',
+ true),
+
+('Marukyu Koyamaen Wako Ceremonial Matcha', 'tea', 'matcha_ceremonial', 121, 51, 'Japan',
+ 'Marukyu Koyamaen''s Wako (Harmonious Light) is their most widely distributed ceremonial grade — the matcha that has been served in formal chanoyu practice at Urasenke and Omotesenke tea ceremony schools for generations. The institutional endorsement is not marketing; it is documented use: when Japan''s tea ceremony schools prepare matcha for state occasions, royal ceremonies, or international demonstrations, Wako is typically the chosen vehicle. A different profile from Ippodo''s Ummon: slightly more structured, with more distinct bitterness — the Marukyu house style.',
+ false, 'reserve',
+ '[{"tier": "Tea Ceremony School Standard", "criteria": "Urasenke and Omotesenke institutional endorsement; decades of school use"}, {"tier": "Style Note", "criteria": "More structured than Ippodo; slightly more defined bitterness frame"}]',
+ '{"appearance": "Deep jade-green; particle size comparable to Ippodo Ummon; the foam from whisking is very stable — a sign of quality stone grinding and fresh production", "nose": "Marukyu''s house style is apparent: deeper marine umami, slight vegetal complexity that Ippodo''s ultra-refined grade minimises. Not less quality — different quality: more character versus more refinement", "palate": "The structured bitterness that the ceremony schools value: a more distinct EGCG frame around the theanine sweetness. Not harsh — the highest-quality bitter character is clean and resolves quickly into sweetness. Complex and satisfying", "finish": "Long; the bitterness resolves into sweetness over 60+ seconds; a different but equally valid experience from Ippodo''s more purely sweet approach"}',
+ '{"brewing": "2.5-3g per 40ml at 75-80°C for koicha; 1.5g per 60ml at 70-75°C for usucha", "bc_source": "Marukyu Koyamaen online (marukyu-koyamaen.co.jp); specialty tea retailers"}',
+ ARRAY['deep marine umami', 'jade complexity', 'structured EGCG', 'vegetal depth', 'theanine sweetness', 'ceremony character'],
+ 'medium', 'ceremonial_structured', 'Marukyu Wako',
+ 'ultra_premium', '$55-$90 CAD (30-40g tin)',
+ '{"shade_period": "20-25 days", "tea_school_use": "Official supplier to Urasenke and Omotesenke tea ceremony schools", "grinding": "Stone-ground on traditional granite wheels", "harvest": "First harvest spring, Uji"}',
+ true),
+
+('Marukyu Koyamaen Aoarashi Ceremonial Matcha', 'tea', 'matcha_ceremonial', 121, 51, 'Japan',
+ 'Aoarashi (Blue Storm) is Marukyu Koyamaen''s most aesthetically striking matcha name — and the experience justifies the title. This is the koicha-grade pinnacle of the Marukyu range: even deeper green than Wako, even more concentrated umami, even more structured bitterness that resolves into profound sweetness. Reserved for the highest ceremonial occasions. The comparison between Aoarashi and Ippodo Ummon — both supreme ceremonial grades from different houses — is one of the most educationally valuable matcha tastings possible.',
+ false, 'reserve',
+ '[{"tier": "Marukyu Supreme — Koicha Grade", "criteria": "Highest Marukyu grade; deepest colour and umami concentration"}, {"tier": "Comparison Value", "criteria": "The ideal counterpart to Ippodo Ummon for ceremonial grade comparison tasting"}]',
+ '{"appearance": "The most saturated jade-green in the Marukyu range; powder is notably fine and dry; the whisked foam is extraordinarily vivid", "nose": "Maximum marine umami; deep shade-grown character; something almost oceanic — the 25-day shade period''s full expression. The bitterness is apparent even on the nose as a pleasantly astringent quality", "palate": "Profound: the deepest bitterness-into-sweetness resolution of any matcha in this list. This is what the tea ceremony schools chose for their highest occasions — maximum presence, maximum expression, maximum ritual impact", "finish": "90+ seconds; the EGCG bitterness slowly reveals theanine''s sweetness over a long resolution — this is the finish that teaches you why tea masters find the bitter-sweet of premium matcha to be the most meditative drinking experience in the world"}',
+ '{"brewing": "Koicha primary: 2.5-3g per 35-40ml at 75-80°C; bowl must be warm; careful kneading motion with chasen", "bc_source": "Marukyu Koyamaen online; specialist matcha retailers"}',
+ ARRAY['oceanic umami', 'maximum jade', 'EGCG bitterness', '25-day shade depth', 'profound sweetness resolution'],
+ 'medium', 'ceremonial_profound', 'Marukyu Aoarashi',
+ 'ultra_premium', '$70-$110 CAD (40g tin)',
+ '{"shade_period": "25+ days — extended shading for maximum theanine and EGCG accumulation", "grade": "Koicha designated — highest application", "grinding": "Granite wheel stone-ground; mill at temperature-controlled facility"}',
+ true),
+
+('Nakamura Tokichi Uji Ceremonial Matcha', 'tea', 'matcha_ceremonial', 122, 51, 'Japan',
+ 'Nakamura Tokichi Honten''s ceremonial matcha is the product behind Japan''s most celebrated matcha dining experience: the Uji Tokichi restaurant, where matcha appears in every course and the beverage programme anchors the entire experience. The matcha itself comes from the family''s own Uji growing areas and is stone-ground on traditional wheels at their Uji facility. This is the matcha that teaches guests what Uji means: shade-grown complexity, stone-ground texture, the deepest umami of any green tea.',
+ false, 'estate',
+ '[{"tier": "Dining-Integrated Ceremonial Grade", "criteria": "Produced for their own Uji Tokichi restaurant programme; proven fine dining integration"}, {"tier": "Educational Value", "criteria": "Comes with exceptional provenance storytelling from the restaurant model"}]',
+ '{"appearance": "Vivid jade-green; good particle size; beautiful whisked foam", "nose": "Clean, bright Uji character: spring grass, marine umami, sweet rice note. The Nakamura house style is more accessible than the intensity of Ippodo or Marukyu supreme grades — still ceremonial but with a gentleness that makes it ideal for first-time ceremony experiences", "palate": "Balanced: theanine sweetness and EGCG bitterness in pleasant equilibrium; the umami is present without being dominant; accessible without sacrificing depth", "finish": "45-60 seconds; clean green and umami; a satisfying ceremonial experience that does not overwhelm"}',
+ '{"brewing": "1.5g per 60-70ml at 70-75°C for usucha; can adapt to culinary applications", "bc_source": "Online from Nakamura Tokichi; specialty tea retailers", "restaurant_model": "Their Uji Tokichi restaurant uses this matcha throughout the menu — an excellent model for BC restaurant matcha programme development"}',
+ ARRAY['spring grass', 'marine umami', 'sweet rice', 'accessible jade', 'balanced bittersweet'],
+ 'medium-light', 'balanced_ceremonial', 'Nakamura Tokichi',
+ 'premium', '$40-$65 CAD (30g tin)',
+ '{"shade_period": "20 days", "growing_area": "Nakamura family own Uji growing areas", "grinding": "Traditional granite wheel, Uji facility", "restaurant_use": "Nakamura Tokichi Honten''s Uji Tokichi restaurant menu"}',
+ true),
+
+('Kyoto Obubu Okumidori Single-Cultivar Ceremonial Matcha', 'tea', 'matcha_ceremonial', 123, 51, 'Japan',
+ 'Kyoto Obubu''s single-cultivar Okumidori matcha represents the most transparent approach to Uji matcha production in Japan: a named cultivar (Okumidori — Late Green) stone-ground from their own Wazuka-cho growing areas, with detailed harvest date, specific field identification, and cultivar documentation that enables the kind of provenance storytelling no other matcha producer offers. Okumidori cultivar produces a sweeter, more delicate character than Yabukita — an education in cultivar identity as much as a beverage.',
+ false, 'estate',
+ '[{"tier": "Transparency-First Ceremonial", "criteria": "Single cultivar; named field; harvest date documented — maximum provenance"}, {"tier": "Educational Excellence", "criteria": "Enables wine-like provenance discussion for matcha in restaurant context"}]',
+ '{"appearance": "Bright jade-green; slightly more delicate hue than broader-blend matchas — the Okumidori cultivar''s specific chlorophyll profile", "nose": "Distinctly sweeter and more delicate than blend matchas: honeydew melon, sweet pea, light marine umami. The Okumidori character is clearly different from Yabukita (more common) — softer, rounder aromatics", "palate": "The sweetness-forward character that makes Okumidori a tea ceremony favourite: theanine very prominent, EGCG bitterness moderate and well-framed. A more gentle, accommodating experience than the intense Marukyu grades", "finish": "Clean, 40-50 seconds; sweet-green; gentle"}',
+ '{"brewing": "1.5g per 60ml at 70°C; gentler brewing temperature than Marukyu/Ippodo due to Okumidori''s more delicate structure", "bc_source": "Direct from obubutea.com; Kyoto Obubu ships internationally", "service_note": "Provide the cultivar information: Okumidori means Late Green; it ripens 1 week later than Yabukita; this later ripening allows additional amino acid accumulation in cool spring conditions"}',
+ ARRAY['honeydew melon', 'sweet pea', 'gentle marine', 'Okumidori delicacy', 'theanine forward', 'sweet green'],
+ 'medium-light', 'sweet_delicate', 'Kyoto Obubu Okumidori',
+ 'premium', '$40-$60 CAD (30g tin)',
+ '{"cultivar": "Okumidori (Late Green) — single-cultivar, separately harvested", "shade_period": "20 days using traditional tana shading", "growing_area": "Wazuka-cho, Uji region, Kyoto", "harvest_documentation": "Exact harvest date documented per lot; field identification available", "grinding": "Traditional granite wheel grinding"}',
+ true),
+
+('Yamamotoyama Matcha for Culinary Use', 'tea', 'matcha_culinary', 124, 51, 'Japan',
+ 'Yamamotoyama''s culinary-grade matcha is the honest, accessible entry to Japanese matcha for kitchen and beverage applications where ceremonial grade is not required. Uji-sourced tencha, stone-ground at slightly coarser particle size than ceremonial grade, this produces a vivid green colour and genuine matcha flavour at a fraction of the cost of premium ceremonial grades. Essential for matcha lattes, pastry applications, matcha soft serve, and any preparation where the matcha is mixed with milk, sugar, or other ingredients that would mask the nuances of ceremonial grade.',
+ false, 'market',
+ '[{"tier": "Culinary Grade", "criteria": "Kitchen and beverage mixing applications; not for ceremonial whisking"}, {"tier": "Distinction", "criteria": "Genuine Uji-sourced product unlike cheap culinary matchas from non-Uji sources"}]',
+ '{"appearance": "Good green — vivid but not the luminous jade of ceremonial grade; slightly coarser particle size visible if examined closely", "nose": "Green tea character with appropriate matcha intensity; slightly more grassy and less refined than ceremonial grade", "palate": "Appropriate matcha character for culinary applications; the bitterness is more prominent (acceptable when mixed with milk and sweetener); umami is present", "finish": "Shorter than ceremonial; functional rather than meditative"}',
+ '{"application": "Matcha latte; pastry filling; matcha ice cream; baking; any application where matcha is mixed with other ingredients", "not_suitable": "Ceremonial whisking (thin tea or thick tea for solo drinking); the particle size and character are optimised for mixing, not ceremony", "bc_source": "T&T Supermarket; Asian grocery stores; Amazon Canada; widely available"}',
+ ARRAY['green tea', 'matcha', 'grassy', 'culinary bitterness', 'vivid green'],
+ 'medium', 'culinary_functional', 'Yamamotoyama Matcha',
+ 'mid_range', '$15-$30 CAD (30-40g tin)',
+ '{"source": "Uji-region tencha", "grade": "Culinary — coarser particle size than ceremonial; acceptable for mixing applications", "application": "Kitchen, beverage mixing — not ceremonial"}',
+ true);
+
+-- ============================================================
+-- GYOKURO — UJI (3 products)
+-- ============================================================
+INSERT INTO beverage_products (name, category, subcategory, producer_id, region_id, origin_country, description, is_vintage_specific, quality_tier, quality_hierarchy, deductive_profile, service_specs, flavour_markers, flavour_weight, flavour_profile_type, origin_brand, price_tier, price_range_cad, technical_specs, is_published) VALUES
+
+('Ippodo Gyokuro Sayamakaori', 'tea', 'gyokuro', 120, 51, 'Japan',
+ 'Ippodo Gyokuro Sayamakaori is the most umami-intense tea legally sold in Japan — shade-grown for 21+ days, rolled like sencha (unlike matcha''s tencha leaf), retaining the whole leaf''s structural integrity while accumulating theanine to extraordinary levels. The name Sayamakaori refers to a cultivar originally developed in Saitama (Sayama district) but grown in Uji''s superior conditions. This is the tea served at the finest Japanese kaiseki restaurants when the matcha course demands a liquid alternative: the deepest possible expression of shade-grown umami in leaf form.',
+ false, 'reserve',
+ '[{"tier": "Umami Pinnacle", "criteria": "21+ day shade; highest theanine of any whole-leaf Japanese tea; Ippodo top grade"}, {"tier": "Category Reference", "criteria": "The standard against which all other gyokuro is measured"}]',
+ '{"appearance": "Very dark jade-green rolled needles; leaves are slightly glossy from the shade cultivation''s impact on the leaf''s surface wax layer", "nose": "The most intense marine-umami nose of any tea: seaweed (kombu), sweet pea, marine algae, something that smells like the ocean just before the tide comes in. This is the concentrated theanine and amino acid profile of 21 days without sunlight forcing the plant''s metabolic resources toward amino acid production", "palate": "The lowest brewing temperature in Japanese tea (60°C) extracts primarily theanine (sweet-savoury) while leaving most EGCG (bitter) unextracted. The result is pure umami: sweet, savoury, oceanic, thick texture from the glutamate-rich liquor. This is not a beverage that anyone without context will initially understand — it requires framing", "finish": "90+ seconds of pure umami that rises and falls like a wave — the most remarkable tea finish available"}',
+ '{"brewing": "3g per 40ml water at 60°C — CRITICAL: 60°C only; higher temperature produces bitterness that overwhelms the umami; the low temperature extracts theanine while leaving EGCG bound", "steeping_time": "2 minutes for first infusion; 30 seconds for second; 20 seconds for third; 3 infusions minimum", "water": "Soft water essential; hard water interferes with theanine extraction", "bc_source": "Ippodo online; Fujiya Japanese Market (seasonal stock)", "service_narrative": "60°C is not a suggestion — it is the discovery that transforms gyokuro from bitter to transcendent. At 60°C, this tea has more umami than most food preparations."}',
+ ARRAY['seaweed kombu', 'sweet pea', 'marine algae', 'ocean mineral', 'pure theanine umami', 'sweet-savoury depth'],
+ 'medium', 'umami_oceanic', 'Ippodo Sayamakaori',
+ 'ultra_premium', '$65-$120 CAD (20g tin)',
+ '{"shade_period": "21+ days — the minimum for gyokuro classification; Ippodo''s premium grades extend to 25 days", "cultivar": "Sayamakaori — cultivar developed in Saitama; excels in Uji conditions", "brewing_temperature": "60°C CRITICAL — this is the foundational knowledge for gyokuro service", "theanine_content": "Among highest of any tea type due to extended shade stress", "steeps": "3 high-quality infusions from a single serving"}',
+ true),
+
+('Marukyu Koyamaen Gyokuro Unkaku', 'tea', 'gyokuro', 121, 51, 'Japan',
+ 'Marukyu Koyamaen''s Unkaku (Cloud Crane) gyokuro is their premium expression of the shade-grown genre — produced for tea ceremony use where gyokuro serves as an alternative to matcha in the pre-ceremony kaiseki context. Marukyu''s house gyokuro style tends toward a slightly more structured, complex character than Ippodo''s more purely oceanic approach: more distinct vegetal complexity alongside the marine umami.',
+ false, 'reserve',
+ '[{"tier": "Ceremony-Grade Gyokuro", "criteria": "Marukyu premium grade; ceremony school endorsed"}, {"tier": "Style Contrast", "criteria": "Compare with Ippodo Sayamakaori for house style differences in premium gyokuro"}]',
+ '{"appearance": "Very dark jade-green rolled needles; glossy surface", "nose": "Marukyu''s house gyokuro style: marine umami but with added complexity — layered vegetal notes (asparagus, sweet green bean) alongside the seaweed depth. More dimensions than a purely oceanic gyokuro", "palate": "Rich umami with added structure: the Unkaku has more distinct layers than some purely theanine-forward gyokuros. Still requires 60°C brewing; still produces extraordinary umami — but with additional complexity", "finish": "Long; layered; the vegetal complexity lingers alongside the oceanic umami"}',
+ '{"brewing": "3g per 40ml at 60°C; 2 minutes first infusion", "bc_source": "Marukyu Koyamaen online"}',
+ ARRAY['seaweed', 'asparagus', 'sweet green bean', 'marine umami', 'layered complexity', 'jade depth'],
+ 'medium', 'umami_complex', 'Marukyu Unkaku',
+ 'ultra_premium', '$60-$100 CAD (20g tin)',
+ '{"shade_period": "21-25 days", "brewing_temperature": "60°C", "cultivar": "Okumidori — Marukyu''s preferred gyokuro cultivar"}',
+ true),
+
+('Kyoto Obubu Gyokuro', 'tea', 'gyokuro', 123, 51, 'Japan',
+ 'Kyoto Obubu''s gyokuro from Wazuka-cho, Uji — documented with exact harvest date, specific growing area, and cultivar information — provides the most transparent provenance of any premium gyokuro available for North American purchase. The quality is genuine and backed by the Uji terroir; the differentiation is the transparency that enables restaurant provenance storytelling and the direct-farm relationship that no large-house gyokuro can offer.',
+ false, 'estate',
+ '[{"tier": "Transparent-Provenance Gyokuro", "criteria": "Named cultivar, exact harvest date, specific field — maximum provenance documentation"}, {"tier": "Accessibility", "criteria": "More accessible than Ippodo/Marukyu supreme grades; excellent introduction to premium gyokuro"}]',
+ '{"appearance": "Dark jade-green needles", "nose": "Classic Uji gyokuro: marine umami, sweet pea, light seaweed. The Wazuka-cho terroir is consistent with the broader Uji designation but carries a slightly more grassy quality from the specific hillside growing conditions", "palate": "Substantial umami at 60°C; theanine-dominant as appropriate for premium gyokuro; the single-cultivar documentation allows year-over-year comparison", "finish": "Long umami; marine mineral; satisfying"}',
+ '{"brewing": "3g per 40ml at 60°C", "bc_source": "Kyoto Obubu online — direct international orders with detailed harvest documentation"}',
+ ARRAY['marine umami', 'sweet pea', 'light seaweed', 'Wazuka mineral', 'theanine sweet'],
+ 'medium-light', 'umami_transparent', 'Kyoto Obubu Gyokuro',
+ 'premium', '$45-$75 CAD (20g)',
+ '{"shade_period": "21 days", "cultivar": "Single cultivar documented per lot (Okumidori or Saemidori)", "harvest_date": "Documented per lot on Obubu website", "growing_area": "Wazuka-cho, Uji region — specific field coordinates available"}',
+ true);
+
+-- ============================================================
+-- SENCHA — JAPAN (5 products)
+-- ============================================================
+INSERT INTO beverage_products (name, category, subcategory, producer_id, region_id, origin_country, description, is_vintage_specific, quality_tier, quality_hierarchy, deductive_profile, service_specs, flavour_markers, flavour_weight, flavour_profile_type, origin_brand, price_tier, price_range_cad, technical_specs, is_published) VALUES
+
+('Ippodo Sencha Shogyokuro', 'tea', 'sencha', 120, 51, 'Japan',
+ 'Ippodo''s Shogyokuro (Inviting Jade Dew) sencha is the finest unshaded green tea in their range — demonstrating what Uji''s terroir produces when the plant is grown in full sunlight rather than shaded for matcha/gyokuro. Sencha''s steamed processing (not pan-fired like Chinese green tea) produces a bright, vegetal character that is the backbone of Japanese tea culture. The Uji terroir is apparent even in the unshaded style: a mineral depth and clarity that distinguishes this from any non-Uji sencha.',
+ false, 'estate',
+ '[{"tier": "Premium Uji Sencha", "criteria": "Ippodo''s finest sencha expression; Uji mineral terroir"}, {"tier": "Style Reference", "criteria": "Classic Japanese steamed sencha benchmark"}]',
+ '{"appearance": "Bright emerald-green liquor; clear; fine rolled needles in the leaf", "nose": "Classic steamed sencha: fresh grass, young leaves, light marine note (absent shading, the marine is much lighter than gyokuro), slight sweetness, steaming''s characteristic green-vegetal note that pan-firing does not produce", "palate": "Light-medium body; the steaming process produces a distinctly different texture from pan-fired Chinese green tea — silkier, more enveloping, with a clean vegetal sweetness. The Uji terroir is present as a mineral clarity beneath the grass", "finish": "Clean, 30-40 seconds; fresh grass and light mineral"}',
+ '{"brewing": "3g per 200ml at 70-75°C; 1 minute first infusion; 30-40 seconds second; multiple infusions possible", "water_temperature": "70-75°C — higher than gyokuro but still below boiling; boiling water produces bitterness in steamed sencha", "bc_source": "Ippodo online; Fujiya Japanese Market", "food_pairing": "All Japanese cuisine; light seafood; vegetable-based preparations"}',
+ ARRAY['fresh grass', 'young leaves', 'light marine', 'Uji mineral clarity', 'steamed green', 'clean sweetness'],
+ 'light', 'vegetal_bright', 'Ippodo Shogyokuro',
+ 'premium', '$30-$50 CAD (50g bag)',
+ '{"processing": "Steaming (mushirochu) — distinctly Japanese method vs. pan-firing (Chinese method)", "harvest": "First harvest spring; Uji region", "cultivar": "Yabukita or Saemidori blend", "brewing_temperature": "70-75°C"}',
+ true),
+
+('Marukyu Koyamaen Sencha Tsujikaze', 'tea', 'sencha', 121, 51, 'Japan',
+ 'Tsujikaze (Crossroads Wind) is Marukyu Koyamaen''s flagship sencha — a first-flush Uji expression that carries the same cultivation standards and quality attention as their ceremonial matcha programme. The name evokes the fresh spring wind that signals the first harvest: the most eagerly anticipated moment in the Japanese tea calendar.',
+ false, 'estate',
+ '[{"tier": "Marukyu Flagship Sencha", "criteria": "First flush; Uji quality standard; consistent with the matcha programme''s cultivation approach"}]',
+ '{"appearance": "Bright emerald-green; clear; distinctive fine needle leaf rolled in the Uji style", "nose": "First flush sencha at its finest: vivid fresh grass, sweet young leaf, faint cherry blossom (a seasonal note from first-flush harvest timing), light marine mineral. The spring wind name is apt: there is genuine freshness here that later harvests cannot replicate", "palate": "Light body; clean; the first-flush sweetness is more apparent than later harvests. Uji''s terroir mineral is clearly present", "finish": "30-40 seconds; clean grass and mineral; the cherry blossom note briefly reappears"}',
+ '{"brewing": "3g per 200ml at 70-75°C; 1 minute first infusion", "bc_source": "Marukyu Koyamaen online"}',
+ ARRAY['first flush grass', 'sweet young leaf', 'cherry blossom', 'Uji mineral', 'spring freshness'],
+ 'light', 'first_flush_bright', 'Marukyu Tsujikaze',
+ 'premium', '$35-$55 CAD (50g)',
+ '{"harvest": "First flush (ichiban-cha) spring — the highest quality harvest; earlier picking = more amino acids, less EGCG bitterness", "processing": "Steamed (mushirochu); traditional Uji rolling", "cultivar": "Okumidori"}',
+ true),
+
+('Nishide Honyama Fukamushi Sencha', 'tea', 'sencha', 126, 52, 'Japan',
+ 'Nishide''s Honyama Fukamushi (deep-steamed sencha from the Honyama sub-district) is Shizuoka''s highest expression — and the definitive demonstration that Shizuoka produces something entirely different from Uji. Where Uji sencha is light and delicate, Honyama fukamushi is jade-green, body-rich, and intensely flavourful: the extended steaming (2-3x standard duration) breaks down the leaf structure and releases a different, fuller expression of the tea''s compounds into the water. A restaurant house green tea of unusual presence.',
+ false, 'estate',
+ '[{"tier": "Shizuoka Premium Fukamushi", "criteria": "Honyama microterroir; deep-steam intensity; best-in-class Shizuoka expression"}, {"tier": "Style Alternative", "criteria": "For guests who find Uji sencha too delicate; the full-bodied sencha for savoury pairings"}]',
+ '{"appearance": "Jade-green with visible fine particles in the liquor — characteristic of fukamushi processing; the broken leaf structure releases cloudiness that standard sencha lacks. Pour color is deeper and more saturated than Uji sencha", "nose": "Deeper and more saturated than Uji sencha: steamed grain, deep vegetal sweetness, umami note from the extended steaming, slight body. More food-pairing assertiveness", "palate": "Fuller body than standard sencha; the fukamushi process extracts more from the leaf — more sweetness, more umami, more colour, more texture. This pairs brilliantly with heartier Japanese preparations where Uji''s delicacy might be overwhelmed", "finish": "40-50 seconds; deep vegetal sweetness; the Honyama mineral is present as a firm structure beneath the soft leaf character"}',
+ '{"brewing": "3g per 200ml at 75-80°C; 45-60 seconds first infusion — slightly shorter time and higher temperature than standard sencha due to fukamushi process", "bc_source": "O5 Tea (Vancouver) stocks Shizuoka expressions; online specialty tea retailers", "style_note": "The cloudiness in the cup is intentional and desirable — it represents the broken leaf particles contributing to the richer body"}',
+ ARRAY['steamed grain', 'deep vegetal sweetness', 'sencha umami', 'jade body', 'Honyama mineral', 'rich green'],
+ 'medium', 'deep_full', 'Nishide Honyama',
+ 'premium', '$30-$50 CAD (50g)',
+ '{"processing": "Fukamushi (deep-steam) — 2-3x standard steaming time; breaks leaf cell structure; releases greater volume of flavour compounds", "sub_district": "Honyama, Shizuoka — considered the finest microterroir within Shizuoka for premium sencha", "harvest": "First and second flush; spring Honyama"}',
+ true),
+
+('Kagoshima Chiran Saemidori First Flush Sencha', 'tea', 'sencha', 125, 53, 'Japan',
+ 'Kagoshima''s Chiran district Saemidori first flush is the earliest premium Japanese sencha of each year — Kagoshima''s subtropical climate allows first harvest 2-3 weeks before Uji or Shizuoka, meaning Chiran tea arrives on BC restaurant tables first. Saemidori (Clear Green) cultivar, grown in Shirasu volcanic soil, produces a vivid green colour and distinctly sweet character. A demonstration that Kagoshima''s volcanic terroir produces a character unlike any other Japanese sencha.',
+ false, 'estate',
+ '[{"tier": "Earliest Japanese First Flush", "criteria": "First-to-harvest premium Japanese sencha; Saemidori cultivar vivid colour"}, {"tier": "Terroir Identity", "criteria": "Volcanic Shirasu soil mineral signature — distinct from Uji and Shizuoka expressions"}]',
+ '{"appearance": "The most vivid green of any Japanese sencha — Saemidori cultivar produces an almost fluorescent jade colour that is immediately striking. The volcanic soil mineral contributes to the unusual colour saturation", "nose": "Bright, sweet, distinctly different from Uji or Shizuoka: more tropical sweetness (the subtropical climate), lighter marine note, the volcanic soil''s mineral freshness. A sencha with its own identity", "palate": "Sweet and clean; the subtropical climate produces faster cell development with higher amino acid content in the early spring harvest; more apparent sweetness than Uji at the same quality tier. The Shirasu volcanic mineral provides a clean, bright finish", "finish": "Clean, 30-35 seconds; vivid green and light tropical sweetness"}',
+ '{"brewing": "3g per 200ml at 70-75°C; 1 minute first infusion", "bc_source": "Online specialty tea retailers; some Vancouver Japanese tea shops", "seasonal_note": "Available 2-3 weeks before Uji and Shizuoka first flush — offer as the first premium Japanese green tea of the season"}',
+ ARRAY['vivid jade', 'tropical sweetness', 'Shirasu volcanic mineral', 'bright freshness', 'Saemidori colour', 'subtropical clean'],
+ 'light', 'vivid_sweet', 'Chiran Saemidori',
+ 'premium', '$30-$50 CAD (50g)',
+ '{"cultivar": "Saemidori — developed in Kagoshima; produces highest vivid green colour of any Japanese cultivar; high theanine accumulation", "soil": "Volcanic Shirasu (volcanic ash) from Sakurajima eruptions — unique mineral character", "harvest_timing": "2-3 weeks earlier than Uji due to subtropical climate"}',
+ true),
+
+('Kyoto Obubu Kabuse Sencha', 'tea', 'kabuse_sencha', 123, 51, 'Japan',
+ 'Kabuse sencha (covered sencha) occupies the middle ground between standard sencha and gyokuro — shaded for 7-10 days rather than gyokuro''s 21+ days, producing a character that combines sencha''s vegetal freshness with gyokuro''s umami depth. Kyoto Obubu''s kabuse from Wazuka-cho, with documented cultivar and harvest information, allows the clearest possible demonstration of what shading does to a tea plant: the 7-day shade visibly increases the marine umami note while preserving the bright green character of unshaded sencha.',
+ false, 'estate',
+ '[{"tier": "Style Bridge", "criteria": "7-10 day shade; between sencha and gyokuro; educational middle ground"}, {"tier": "Transparency", "criteria": "Documented provenance; ideal for teaching the shade-cultivation spectrum"}]',
+ '{"appearance": "Darker green than standard sencha; slightly glossier leaves from shade cultivation''s effect on surface wax", "nose": "More umami than sencha, less than gyokuro — the 7-day shade starts the marine transformation without completing it. Fresh grass + young seaweed + light sweet pea: the combination that defines the kabuse category", "palate": "Light-medium body; the marine umami is perceptible but not dominant — still accessible to guests who find gyokuro''s full umami challenging. A gateway from standard sencha into the shade-grown world", "finish": "35-45 seconds; combined grass-umami; a pleasant demonstration of the transition"}',
+ '{"brewing": "3g per 150ml at 65-70°C — slightly lower than standard sencha to account for increased umami and avoid bitterness", "bc_source": "Kyoto Obubu online", "teaching_note": "Kabuse allows the most visible demonstration of shading''s impact: serve kabuse and standard sencha side-by-side and ask the guest what they notice"}',
+ ARRAY['young seaweed', 'fresh grass', 'light marine umami', 'sweet pea', 'shade-grass bridge'],
+ 'medium-light', 'umami_fresh', 'Kyoto Obubu Kabuse',
+ 'premium', '$30-$50 CAD (50g)',
+ '{"shade_period": "7-10 days — intermediate between sencha (none) and gyokuro (21+ days)", "cultivar": "Single cultivar documented", "growing_area": "Wazuka-cho, Uji region", "category": "Kabuse = covered; partial shade producing intermediate marine umami character"}',
+ true);
+
+-- ============================================================
+-- SPECIALTY JAPAN TEAS (5 products)
+-- ============================================================
+INSERT INTO beverage_products (name, category, subcategory, producer_id, region_id, origin_country, description, is_vintage_specific, quality_tier, quality_hierarchy, deductive_profile, service_specs, flavour_markers, flavour_weight, flavour_profile_type, origin_brand, price_tier, price_range_cad, technical_specs, is_published) VALUES
+
+('Ippodo Uji Hojicha Roasted Green Tea', 'tea', 'hojicha', 120, 51, 'Japan',
+ 'Ippodo''s hojicha (roasted green tea) is the most accessible tea in the range — the gentle transformation of sencha through high-heat roasting, which burns away most caffeine and catechins while developing the Maillard reaction''s caramel, coffee, and chocolate notes. The result is Japan''s most approachable tea: nutty, warm, low-caffeine, and utterly food-friendly. The Uji-sourced leaf base gives this hojicha more depth than commodity versions. A natural late-evening or post-meal tea for Western guests who find Japanese green tea too grassy.',
+ false, 'market',
+ '[{"tier": "Premium Accessible", "criteria": "Uji-sourced; most approachable Japanese tea for Western palates; low caffeine"}, {"tier": "Service Context", "criteria": "Ideal late-evening or post-meal tea; naturally caffeine-reduced by roasting"}]',
+ '{"appearance": "Red-brown liquor; warm amber colour from the roasting; completely different visually from green sencha or matcha", "nose": "Roasted grain, caramel, light chocolate, faint coffee — the Maillard reaction''s sweet results. Warming rather than vegetal. This is what green tea becomes when approximately 50% of its catechins are thermally degraded by 200°C+ roasting", "palate": "Light-medium body; nutty, caramel sweetness; the roasting''s heat has removed most bitterness along with most caffeine. Warming and comforting. Pairs with milk as hojicha latte — a natural match", "finish": "30-40 seconds; caramel and roasted grain; warm and pleasant"}',
+ '{"brewing": "3g per 200ml at 95°C (near-boiling — unlike green teas, roasted teas tolerate high brewing temperatures)", "service_context": "Post-meal; late evening; daytime for caffeine-sensitive guests; excellent as hojicha latte with steamed milk", "bc_source": "Ippodo online; Fujiya Japanese Market"}',
+ ARRAY['roasted grain', 'caramel', 'light chocolate', 'warm nuttiness', 'Maillard sweetness'],
+ 'light', 'roasted_warming', 'Ippodo Hojicha',
+ 'mid_range', '$20-$35 CAD (50g)',
+ '{"processing": "High-heat roasting (200°C+) of sencha; Maillard reaction produces caramel and roasted notes; caffeine reduced approximately 80% by roasting", "caffeine": "Very low — approximately 15-20mg per 200ml vs 35-40mg for sencha", "base_leaf": "Uji-sourced sencha or bancha (mature leaf) for hojicha base"}',
+ true),
+
+('Yamamotoyama Genmaicha Green Tea with Roasted Rice', 'tea', 'genmaicha', 124, 51, 'Japan',
+ 'Genmaicha (brown rice tea) is the everyman''s Japanese tea — green tea blended with toasted and popped rice kernels in roughly equal proportions. The resulting brew combines the fresh green character of sencha with the nutty, popcorn sweetness of roasted rice. Historically a frugal tea (the rice extended the more expensive tea), genmaicha has become Japan''s most widely consumed household tea. Yamamotoyama''s version, with its Uji-adjacent green tea base, is the most accessible and widely available quality genmaicha in BC.',
+ false, 'house',
+ '[{"tier": "Cultural Staple", "criteria": "Japan''s most widely consumed household tea; accessible, affordable, honest"}, {"tier": "Introductory", "criteria": "Ideal introduction for guests new to Japanese tea; most approachable style"}]',
+ '{"appearance": "Gold-green liquor; slightly cloudy from the starch released by the toasted rice; popped rice kernels visible in the dry blend", "nose": "Instantly recognisable: popcorn-like roasted rice aroma dominant; light green tea vegetal beneath; faint nuttiness. The smell alone is welcoming", "palate": "Light body; the rice''s starch adds slight body to the green tea base; the popcorn-sweet note is dominant; light grass beneath. Naturally lower caffeine than pure green tea. Very food-friendly", "finish": "Short; popcorn and light green; pleasant and undemanding"}',
+ '{"brewing": "3g per 200ml at 80-85°C; 1 minute — the roasted rice tolerates higher temperature than delicate green tea alone", "bc_source": "T&T Supermarket; Asian grocery stores; widely available", "service_context": "House tea for casual dining; lunch service; guests who want something Japanese but not too intense"}',
+ ARRAY['toasted rice popcorn', 'light green tea', 'gentle nutty', 'starch sweetness', 'welcoming warmth'],
+ 'light', 'nutty_accessible', 'Yamamotoyama Genmaicha',
+ 'entry', '$10-$20 CAD (100g)',
+ '{"blend": "Approximately 50% green tea (sencha or bancha) + 50% roasted rice; some kernels pop (''rice popcorn'') during roasting", "caffeine": "Lower than pure green tea due to rice dilution", "historical_note": "Originally a frugal blend to extend expensive tea with cheaper rice; now a cultural staple consumed without frugality implications"}',
+ true),
+
+('Kagoshima Chiran Tamaryokucha (Guricha)', 'tea', 'tamaryokucha', 125, 53, 'Japan',
+ 'Tamaryokucha (also called guricha in Kyushu) is Kagoshima''s indigenous green tea style — pan-fired rather than steamed, rolled into curved (guri = curved/coiled) needles rather than straight, producing a distinctly different character from standard sencha. The pan-firing (borrowed from Chinese technique, unlike Japan''s steaming tradition) produces a roasted sweetness and body absent from steamed sencha. Kagoshima''s volcanic soil gives this tamaryokucha a mineral brightness that distinguishes it from similar Kyushu styles.',
+ false, 'estate',
+ '[{"tier": "Regional Specialty", "criteria": "Kagoshima indigenous style; pan-fired vs. steamed; unique flavour profile"}, {"tier": "Discovery Tea", "criteria": "Unknown to most Western guests; educational differentiation from standard sencha"}]',
+ '{"appearance": "Gold-green liquor; slightly warmer gold tone than steamed sencha due to pan-firing; curved needles in the leaf (the ''guri'' of the name)", "nose": "The pan-firing difference is immediately apparent: warm roasted note alongside the green tea character; slight toastiness; the volcanic mineral freshness of Kagoshima beneath. This smells like a bridge between Japanese and Chinese green tea", "palate": "More body than steamed sencha due to pan-firing''s impact on polysaccharide extraction. Sweet and clean with a pleasant toasty warmth. The volcanic mineral is a distinctive freshness", "finish": "35-45 seconds; toasty green tea; warm mineral tail"}',
+ '{"brewing": "3g per 200ml at 75-80°C; 1 minute", "bc_source": "Online specialty Japanese tea retailers; some Vancouver Japanese grocery stores"}',
+ ARRAY['pan-roasted warmth', 'green tea', 'volcanic mineral', 'toasty sweetness', 'Kyushu character'],
+ 'medium-light', 'toasty_mineral', 'Chiran Tamaryokucha',
+ 'mid_range', '$25-$40 CAD (50g)',
+ '{"processing": "Pan-firing (kamairicha method) — Chinese-influenced technique producing toasted notes absent from steamed sencha; rolled into curved needles (guri) rather than straight needles", "cultivar": "Saemidori; Yabukita", "soil": "Kagoshima volcanic Shirasu"}',
+ true),
+
+('Nishide Shizuoka First Flush Shincha', 'tea', 'shincha', 126, 52, 'Japan',
+ 'Shincha (New Tea) is the Japanese tea world''s equivalent of Beaujolais Nouveau: the year''s first harvest, consumed immediately and with great seasonal celebration. Nishide''s Honyama shincha captures the absolute freshest expression of the Shizuoka growing season — harvested at the moment of optimum amino acid concentration before the plants begin their second growth cycle. This tea exists only for a brief window each spring; by summer, the shincha window has closed and the tea is consumed or aged into standard sencha. An inherently seasonal, time-sensitive product.',
+ false, 'estate',
+ '[{"tier": "Seasonal Pinnacle", "criteria": "First-of-year harvest; maximum amino acid concentration; the moment of peak Japanese green tea freshness"}, {"tier": "Temporal Significance", "criteria": "Available only spring; creates natural restaurant seasonal menu opportunity"}]',
+ '{"appearance": "The freshest, most vivid green liquor of any Japanese tea: the first-flush leaves have not yet experienced photodegradation of their chlorophyll", "nose": "The freshness is immediately apparent: young grass, light mountain air, sweet pea, almost dewy freshness that simply does not exist in tea processed even 2 weeks later. This is what Japanese tea smells like when the first leaves are still attached to the branch", "palate": "Maximum theanine concentration — the winter''s stored amino acids release fully in the first flush; sweetness is at its annual peak. Light body but intense freshness. The phrase ''drinkable spring'' applies here", "finish": "35-40 seconds; mountain spring and fresh grass; the freshness is the finish"}',
+ '{"brewing": "3g per 200ml at 70°C; 90 seconds first infusion — lower temperature and longer time for maximum sweetness extraction", "seasonal_availability": "Available spring only (typically April-June in BC); pre-order from specialty tea retailers recommended", "bc_source": "O5 Tea Vancouver; online specialty Japanese tea retailers; pre-order for spring delivery"}',
+ ARRAY['first-of-year freshness', 'young grass', 'sweet pea', 'mountain dew', 'maximum amino sweetness', 'spring morning'],
+ 'light', 'fresh_sweet', 'Nishide Shincha',
+ 'premium', '$35-$60 CAD (50g)',
+ '{"harvest_timing": "The year''s very first harvest — before the standard sencha season", "processing": "Standard sencha steaming/rolling; only the timing (first flush) distinguishes shincha from regular sencha", "seasonal_note": "Shincha is available only for a brief spring window; it is a deliberate seasonal product that creates restaurant menu opportunity"}',
+ true),
+
+('Marukyu Koyamaen Tencha Raw Matcha Leaf', 'tea', 'tencha', 121, 51, 'Japan',
+ 'Tencha is the direct precursor to matcha — shade-grown and steamed tencha leaf that has been stripped of stems and veins but not yet ground. Brewing tencha as a loose-leaf tea rather than grinding it into matcha produces a completely different experience: the same theanine umami and shade-grown depth as ceremonial matcha but with the clarity and refinement of a whole-leaf tea. Marukyu Koyamaen''s tencha, produced for their matcha grinding programme but available separately, is the rarest and most educationally significant green tea available in BC.',
+ false, 'reserve',
+ '[{"tier": "Educational Rarity", "criteria": "The pre-matcha leaf; shows matcha''s origin as a brewed tea before grinding was invented"}, {"tier": "Collector Category", "criteria": "Not commercially produced for loose-leaf brewing in large quantities; most tencha becomes matcha"}]',
+ '{"appearance": "Flat, broad, irregular leaf fragments — very different from sencha''s rolled needles; dark jade-green; minimal stem content", "nose": "Unmistakably shade-grown: the marine umami, seaweed, sweet pea of premium matcha — but as a whole leaf rather than powder. The shade-grown character is intact but somehow more pure than the ground version because the leaf''s structure is complete", "palate": "Extraordinary: this is premium matcha flavour as a brewed tea rather than a whisked suspension. The umami is as deep as gyokuro but the character is slightly different — broader, more expansive. This is the tea that Zen monks drank in the 12th century before stone grinding transformed the category", "finish": "Long umami; cleaner than matcha due to the leaf''s filtration; the shade-grown depth is fully present"}',
+ '{"brewing": "2g per 100ml at 65-70°C; 2 minutes; the flat leaf requires gentle water agitation to extract fully", "bc_source": "Marukyu Koyamaen online (very limited — primarily produced for grinding into matcha; tencha as loose-leaf is not a large commercial category)", "historical_context": "Tencha was Japan''s premium tea before stone grinding was adopted in the 15th century — serving tencha as a brewed tea is a historical re-enactment of pre-matcha tea culture"}',
+ ARRAY['matcha umami in leaf form', 'marine depth', 'seaweed', 'shade-grown complexity', 'pre-matcha history', 'pure jade'],
+ 'medium', 'umami_profound', 'Marukyu Tencha',
+ 'ultra_premium', '$60-$100 CAD (20g)',
+ '{"processing": "Shade grown 20-25 days; steamed; stems and veins removed; NOT ground — used as loose leaf; most tencha becomes matcha", "cultivar": "Okumidori — the matcha cultivar", "rarity": "Tencha as loose-leaf is not commonly sold; most is immediately ground into matcha", "historical": "The original Japanese premium tea; stone-ground matcha developed from this leaf in the 15th century"}',
+ true);
+
+COMMIT;
