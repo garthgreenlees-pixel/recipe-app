@@ -1,3 +1,7 @@
+# COMPLIANCE GATES: See COMPLIANCE_ROADMAP.md.
+# Current stage: BETA.
+# Next gate: PRE-LAUNCH — Termly ToS+Privacy, cookie consent, food safety disclaimer, photo consent.
+
 import os
 import sentry_sdk
 
@@ -24,6 +28,8 @@ import io
 import time as _time
 import re as _re
 import urllib.parse as _urllib_parse
+import socket
+import concurrent.futures as _futures
 import psycopg2
 import psycopg2.extras
 import requests as http_requests
@@ -34,6 +40,8 @@ import anthropic
 import fal_client
 import stripe
 from werkzeug.security import generate_password_hash, check_password_hash
+from email_service import send_password_reset_email, send_verification_email
+from datetime import datetime as _dt, timedelta as _timedelta
 from PIL import Image
 import pillow_heif
 
@@ -131,6 +139,12 @@ SCRAPE_BLOCK_HOURS = 24
 _BLOCKED_IPS: dict = {}
 _BLOCK_LOCK = threading.Lock()
 
+# ── Verified-bot cache: ip -> (is_verified: bool, expiry: float) ─────────────
+_BOT_CACHE: dict = {}
+_BOT_CACHE_LOCK = threading.Lock()
+BOT_CACHE_TTL = 3600   # 1 hour
+_BOT_DNS_POOL = _futures.ThreadPoolExecutor(max_workers=2, thread_name_prefix="bot_dns")
+
 # ── Async access log queue ────────────────────────────────────────────────────
 _LOG_QUEUE: _queue.Queue = _queue.Queue()
 
@@ -204,6 +218,38 @@ def _block_ip(ip: str, permanent: bool = False, hours: int = SCRAPE_BLOCK_HOURS)
         _BLOCKED_IPS[ip] = expiry
 
 
+def _dns_check_googlebot(ip: str) -> bool:
+    """Reverse-DNS verify an IP is genuine Googlebot per Google's published method."""
+    try:
+        hostname, _, _ = socket.gethostbyaddr(ip)
+        if not (hostname.endswith(".googlebot.com") or hostname.endswith(".google.com")):
+            return False
+        resolved = socket.gethostbyname(hostname)
+        return resolved == ip
+    except (socket.herror, socket.gaierror, OSError):
+        return False
+
+
+def _is_verified_googlebot(ip: str) -> bool:
+    """True if this request is a verified Googlebot/Bingbot, cached 1 hour per IP."""
+    ua = request.headers.get("User-Agent", "")
+    if "Googlebot" not in ua and "Bingbot" not in ua:
+        return False
+    now = _time.time()
+    with _BOT_CACHE_LOCK:
+        entry = _BOT_CACHE.get(ip)
+        if entry is not None and now < entry[1]:
+            return entry[0]
+    try:
+        future = _BOT_DNS_POOL.submit(_dns_check_googlebot, ip)
+        result = future.result(timeout=3.0)
+    except (_futures.TimeoutError, Exception):
+        result = False
+    with _BOT_CACHE_LOCK:
+        _BOT_CACHE[ip] = (result, now + BOT_CACHE_TTL)
+    return result
+
+
 def _track_scrape(ip: str, slug: str) -> bool:
     """Record a unique page visit. Returns True when the IP hits SCRAPE_LIMIT."""
     hour = int(_time.time() // 3600)
@@ -233,10 +279,42 @@ def _rl_consume(ip: str):
         return True, remaining, reset_at
 
 
+# ── Global error handlers: keep /api/ responses as JSON, never HTML ──────────
+from werkzeug.exceptions import HTTPException as _HTTPException
+
+
+@app.errorhandler(_HTTPException)
+def handle_http_exception(e):
+    """Convert any Werkzeug HTTP error on /api/ paths to JSON."""
+    if request.path.startswith("/api/"):
+        import traceback
+        app.logger.error(
+            f"HTTP {e.code} on {request.path}: {e.description}\n{traceback.format_exc()}"
+        )
+        return jsonify({"error": e.description or str(e)}), e.code
+    return e
+
+
+@app.errorhandler(Exception)
+def handle_unhandled_exception(e):
+    """Catch any non-HTTP exception that escaped route handlers."""
+    if request.path.startswith("/api/"):
+        import traceback
+        app.logger.error(
+            f"Unhandled exception on {request.path}: {traceback.format_exc()}"
+        )
+        return jsonify({"error": f"Internal error: {str(e)}"}), 500
+    return None  # let Flask use default HTML handling for non-API routes
+
+
 @app.before_request
 def enforce_security():
     """Global security: block detection, scrape tracking, bulk auth, rate limiting."""
     ip = _get_client_ip()
+
+    # ── Verified search-engine bot: bypass all limits ─────────────────────────
+    if _is_verified_googlebot(ip):
+        return
 
     # ── Blocked IP ────────────────────────────────────────────────────────────
     if _is_blocked(ip):
@@ -307,6 +385,12 @@ def finalize_response(response):
         response.headers["X-RateLimit-Limit"] = str(RL_MAX)
         response.headers["X-RateLimit-Remaining"] = str(getattr(g, "rl_remaining", 0))
         response.headers["X-RateLimit-Reset"] = str(getattr(g, "rl_reset", 0))
+
+    if response.status_code == 403:
+        ua = request.headers.get("User-Agent", "")
+        if "bot" in ua.lower() or "spider" in ua.lower() or "crawler" in ua.lower():
+            app.logger.warning("[BOT_403] ip=%s path=%s ua=%s",
+                               _get_client_ip(), request.path, ua[:120])
 
     if request.path.startswith("/api/"):
         ip = _get_client_ip()
@@ -631,23 +715,299 @@ def init_db():
             invoice_total DECIMAL(10,2)
         )
     """)
+    # ── Costing engine v2 — per-user invoices + pricing ──────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS supplier_invoices (
+            id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id TEXT NOT NULL,
+            supplier_id INTEGER REFERENCES suppliers(id) ON DELETE SET NULL,
+            supplier_name TEXT NOT NULL,
+            invoice_number TEXT,
+            invoice_date DATE,
+            invoice_total NUMERIC(10,2),
+            currency TEXT DEFAULT 'CAD',
+            raw_text TEXT,
+            source_pdf_path TEXT,
+            extraction_warnings JSONB DEFAULT '[]'::jsonb,
+            created_at TIMESTAMP DEFAULT now()
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS supplier_invoice_lines (
+            id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+            invoice_id uuid REFERENCES supplier_invoices(id) ON DELETE CASCADE,
+            line_number INTEGER,
+            raw_description TEXT NOT NULL,
+            quantity NUMERIC(10,3),
+            unit TEXT,
+            unit_price NUMERIC(10,2),
+            line_total NUMERIC(10,2),
+            matched_ingredient_id INTEGER REFERENCES ingredient_products(id) ON DELETE SET NULL,
+            matched_ingredient_name TEXT,
+            match_confidence NUMERIC(3,2),
+            created_at TIMESTAMP DEFAULT now()
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS ingredient_pricing (
+            id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id TEXT NOT NULL,
+            ingredient_name TEXT NOT NULL,
+            supplier_id INTEGER REFERENCES suppliers(id) ON DELETE SET NULL,
+            supplier_name TEXT,
+            price_per_unit NUMERIC(10,4) NOT NULL,
+            unit TEXT NOT NULL,
+            invoice_id uuid REFERENCES supplier_invoices(id) ON DELETE SET NULL,
+            invoice_line_id uuid REFERENCES supplier_invoice_lines(id) ON DELETE SET NULL,
+            effective_date DATE NOT NULL,
+            is_active BOOLEAN DEFAULT true,
+            created_at TIMESTAMP DEFAULT now()
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_pricing_user_ingredient_date
+        ON ingredient_pricing(user_id, ingredient_name, effective_date DESC)
+        WHERE is_active = true
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS kitchen_notes (
+            id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            recipe_slug TEXT NOT NULL,
+            body        TEXT NOT NULL,
+            created_at  TIMESTAMP DEFAULT now(),
+            updated_at  TIMESTAMP DEFAULT now()
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_kitchen_notes_user_recipe
+        ON kitchen_notes(user_id, recipe_slug)
+    """)
+    # ── Recipe v2 columns (additive, all nullable) ─────────────────────────────
+    for stmt in [
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS subtitle TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS editorial_showcase BOOLEAN DEFAULT FALSE",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS cuisine_canon VARCHAR(100)",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS eyebrow_override TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS sashimi_standard TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS origin_provenance TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS tradition_tags JSONB DEFAULT '[]'::jsonb",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS markers JSONB DEFAULT '[]'::jsonb",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS flourish TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS pairings JSONB DEFAULT '[]'::jsonb",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS cross_cuisine_parallels JSONB DEFAULT '[]'::jsonb",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS yield_desc TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS active_time TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS total_time TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS glass TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS ice_spec TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS build_method TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS abv TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS vintage TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS wine_region TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS producer TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS drinking_window TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS style TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS brewery TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS abv_ibu TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS serving_temp TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS brew_method TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS yield_volume TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS brew_time TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS origin_estate TEXT",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id)",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS last_cooked_at TIMESTAMP",
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS cook_count INTEGER DEFAULT 0",
+        # User location for proximity-based supplier ranking (Global Sashimi Rule)
+        "ALTER TABLE users ADD COLUMN IF NOT EXISTS user_location TEXT",
+        # Costing engine — supplier flags
+        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS user_added BOOLEAN DEFAULT false",
+        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS verification_status TEXT DEFAULT 'verified'",
+        # Kitchen notes → recipe_annotations rename (idempotent — fails silently if already done)
+        "ALTER TABLE kitchen_notes RENAME TO recipe_annotations",
+    ]:
+        try:
+            cur.execute(stmt)
+        except Exception:
+            pass
+    # ── recipe_kitchen_notes_cache ────────────────────────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS recipe_kitchen_notes_cache (
+            recipe_slug   TEXT PRIMARY KEY,
+            content       JSONB NOT NULL,
+            generated_at  TIMESTAMP DEFAULT now()
+        )
+    """)
+    # Grant access to both DB roles. GET requests use provenance_reader (read
+    # user) but the cache INSERT also runs in that connection, so it needs
+    # INSERT/UPDATE too. Wrapped individually so a missing role doesn't abort.
+    for _grant in [
+        "GRANT SELECT, INSERT, UPDATE, DELETE ON recipe_kitchen_notes_cache TO provenance_tester_1",
+        "GRANT SELECT, INSERT, UPDATE ON recipe_kitchen_notes_cache TO provenance_reader",
+    ]:
+        try:
+            cur.execute(_grant)
+        except Exception:
+            pass
+    # ── user_recipe_markers_read ───────────────────────────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS user_recipe_markers_read (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            recipe_slug VARCHAR(500) NOT NULL,
+            marker_index INTEGER NOT NULL,
+            opened_at TIMESTAMP DEFAULT NOW(),
+            UNIQUE(user_id, recipe_slug, marker_index)
+        )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_urmr_user_slug ON user_recipe_markers_read(user_id, recipe_slug)")
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS user_kitchen_recipes (
+            uuid TEXT PRIMARY KEY,
+            user_id INTEGER,
+            title TEXT NOT NULL,
+            slug TEXT,
+            preamble TEXT DEFAULT '',
+            tags JSONB DEFAULT '[]',
+            ingredients JSONB DEFAULT '[]',
+            steps JSONB DEFAULT '[]',
+            original_steps JSONB DEFAULT '[]',
+            enhanced_steps JSONB DEFAULT '[]',
+            time_active TEXT DEFAULT '',
+            time_total TEXT DEFAULT '',
+            servings JSONB DEFAULT '[]',
+            source_name TEXT DEFAULT '',
+            source_url TEXT DEFAULT '',
+            has_image BOOLEAN DEFAULT FALSE,
+            is_draft BOOLEAN DEFAULT FALSE,
+            created_at TIMESTAMPTZ DEFAULT NOW(),
+            updated_at TIMESTAMPTZ DEFAULT NOW()
+        )
+    """)
+    # Idempotent migration: add slug column to existing installations
+    cur.execute("ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS slug TEXT")
+    cur.execute("""
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_ukr_slug
+        ON user_kitchen_recipes(slug) WHERE slug IS NOT NULL
+    """)
+    # Backfill slugs for any rows that don't have one yet
+    cur.execute("""
+        UPDATE user_kitchen_recipes SET
+            slug = LOWER(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(
+                title, '[^a-zA-Z0-9 ]', '', 'g'),
+                ' +', '-', 'g'), '-+', '-', 'g')) || '-' || LOWER(LEFT(uuid, 6))
+        WHERE slug IS NULL
+    """)
+    # ── user_kitchen_recipes v2 columns (Sashimi Pipeline) ────────────────────
+    for stmt in [
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS source_book_title TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS source_book_author TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS source_book_publisher TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS source_book_year INTEGER",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS source_book_isbn TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS source_book_page TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS origin TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS quality_hierarchy JSONB",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS sensory_tests JSONB",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS cross_cuisine_parallels JSONB",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS flavour_context TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS lives_or_dies TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS quality_warnings JSONB",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS ingredient_origin_markers JSONB",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS source_units_raw JSONB",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS servings_text TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS servings_count INTEGER",
+        "ALTER TABLE supplier_invoices ADD COLUMN IF NOT EXISTS page_count INTEGER DEFAULT 1",
+        # Auth — email verification
+        "ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN DEFAULT FALSE",
+        "ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMP",
+        # v3 recipe cards
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS recipe_content_jsonb JSONB",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS template_version VARCHAR(8) DEFAULT 'legacy'",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS faqs JSONB DEFAULT NULL",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS beverage_pairings JSONB DEFAULT NULL",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS enrichment_locked JSONB DEFAULT NULL",
+    ]:
+        try:
+            cur.execute(stmt)
+        except Exception:
+            pass
+    # ── Password reset tokens ─────────────────────────────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS password_reset_tokens (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            token VARCHAR(64) UNIQUE NOT NULL,
+            expires_at TIMESTAMP NOT NULL,
+            used_at TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_token ON password_reset_tokens(token)")
+    # ── Email verification tokens ─────────────────────────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS email_verification_tokens (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            token VARCHAR(64) UNIQUE NOT NULL,
+            expires_at TIMESTAMP NOT NULL,
+            used_at TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_email_verification_tokens_token ON email_verification_tokens(token)")
+    # ── Auth rate limits ──────────────────────────────────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS auth_rate_limits (
+            id SERIAL PRIMARY KEY,
+            identifier VARCHAR(255) NOT NULL,
+            action VARCHAR(50) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_auth_rate_limits ON auth_rate_limits(identifier, action, created_at)")
+    # ── Recipe submissions (editorial review pipeline) ────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS recipe_submissions (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_kitchen_recipe_id TEXT NOT NULL REFERENCES user_kitchen_recipes(uuid) ON DELETE CASCADE,
+            submitted_at TIMESTAMPTZ DEFAULT NOW(),
+            submitted_by_user_id INTEGER REFERENCES users(id),
+            status TEXT DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected','withdrawn')),
+            reviewed_at TIMESTAMPTZ,
+            reviewer_notes TEXT,
+            approved_destination TEXT CHECK (approved_destination IN ('network','provenance_1000') OR approved_destination IS NULL)
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_recipe_submissions_recipe_status
+        ON recipe_submissions(user_kitchen_recipe_id, status)
+    """)
     cur.close()
     conn.close()
 
 
-init_db()
+import os
+if not os.environ.get("SKIP_INIT_DB"):
+    init_db()
 
 
 # ─── Static files ────────────────────────────────────────────────────────────
 
 @app.route("/")
 def index():
-    return send_file("index.html")
+    user = get_current_user()
+    if user:
+        return redirect(url_for("kitchen"))
+    return render_template("index.html")
 
 
 @app.route("/kitchen")
 def kitchen():
-    return render_template("kitchen.html")
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("auth_login") + "?next=/kitchen")
+    return send_file("kitchen.html")
 
 
 @app.route("/recipes")
@@ -872,7 +1232,25 @@ Wrong protein is a FAIL. Respond with valid JSON only."""
 
 @app.route("/about")
 def about_page():
-    return render_template("about.html")
+    stats = {"techniques": 12198, "p1000": 686, "beverages": 3654, "suppliers": 91}
+    if DATABASE_URL:
+        try:
+            conn = get_db()
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT
+                  (SELECT COUNT(*) FROM technique_references) AS techniques,
+                  (SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 1000%%') AS p1000,
+                  (SELECT COUNT(*) FROM beverage_products) AS beverages,
+                  (SELECT COUNT(*) FROM suppliers) AS suppliers
+            """)
+            row = cur.fetchone()
+            cur.close(); conn.close()
+            if row:
+                stats = {"techniques": row[0], "p1000": row[1], "beverages": row[2], "suppliers": row[3]}
+        except Exception:
+            pass
+    return render_template("about.html", stats=stats)
 
 
 @app.route("/api/recipe/<slug>/generate-image", methods=["POST"])
@@ -1341,6 +1719,430 @@ def suppliers_page():
     return render_template("suppliers.html", suppliers=suppliers)
 
 
+# ── Global Sashimi Rule — proximity-based supplier ranking ───────────────
+# Adjacent cross-border regions as (country, region_or_None) pairs.
+# Same-country tiers are handled by the country-match logic; only
+# cross-border adjacencies need explicit entries here.
+REGION_ADJACENCY = {
+    "CA-BC": [("US", "WA"), ("US", "OR"), ("US", "AK")],
+    "US-WA": [("CA", "BC")],
+    "US-OR": [("CA", "BC")],
+    "US-AK": [("CA", "BC")],
+    "US-ID": [("CA", "BC")],
+    "GB-LND": [("IE", None)],
+    "GB-SCT": [("IE", None)],
+    "GB-ENG": [("IE", None)],
+    "AU-NSW": [("NZ", None)],
+    "AU-VIC": [("NZ", None)],
+    "AU-WA":  [("NZ", None)],
+    "AU-QLD": [("NZ", None)],
+    "AU-SA":  [("NZ", None)],
+    "NZ":     [("AU", None)],
+    "JP-13":  [("KR", None), ("TW", None)],
+    "KR":     [("JP", None)],
+    "TW":     [("JP", None)],
+    "IE":     [("GB", None)],
+}
+
+# Non-ISO country codes used in the DB → ISO 3166-1 alpha-2 normalisation
+_COUNTRY_NORM = {"UK": "GB"}
+
+# City names associated with ISO sub-region codes (all lowercase).
+# Used to match suppliers whose state_province is null but city is known.
+_REGION_CITIES = {
+    "LND": {"london"},
+    "NSW": {"sydney", "alexandria", "newcastle", "wollongong"},
+    "VIC": {"melbourne", "geelong"},
+    "WA":  {"perth", "fremantle"},
+    "QLD": {"brisbane", "gold coast"},
+    "SA":  {"adelaide"},
+    "BC":  {"vancouver", "victoria", "burnaby", "richmond", "surrey", "north vancouver"},
+    "ON":  {"toronto", "ottawa", "mississauga"},
+    "AB":  {"calgary", "edmonton"},
+    "NY":  {"new york", "brooklyn", "queens", "bronx"},
+    "CA":  {"san francisco", "los angeles", "san diego", "oakland", "sacramento"},
+    "WA-ST": {"seattle", "tacoma", "bellevue"},  # US-WA
+    "13":  {"tokyo"},
+}
+
+
+def _norm_country(c):
+    c = (c or "").upper()
+    return _COUNTRY_NORM.get(c, c)
+
+
+def get_proximity_tier(s_country, s_state, s_city, s_service_regions, user_loc):
+    """Return proximity tier 1–4 for a supplier vs. user location.
+
+    1 = local/same-region   2 = same-country   3 = adjacent   4 = global
+
+    Tier 1 rules (any of):
+      • service_region explicitly names the user's region code (any supplier country)
+      • supplier state_province == user region, same country
+      • supplier city is a known city for the user's region, same country
+    """
+    if not user_loc or user_loc.upper() == "GLOBAL":
+        return 4
+
+    parts = user_loc.upper().split("-", 1)
+    u_country = parts[0]                                # e.g. "CA"
+    u_region  = parts[1] if len(parts) > 1 else ""     # e.g. "BC"
+
+    sup_country = _norm_country(s_country)
+    sup_state   = (s_state or "").upper()
+    sup_city    = (s_city or "").lower()
+    sup_regions = [r.upper() for r in (s_service_regions or [])]
+
+    # ── Tier 1 ─────────────────────────────────────────────────────────────
+    if u_region:
+        # Any supplier that explicitly serves the user's region
+        if u_region in sup_regions:
+            return 1
+        if sup_country == u_country:
+            if sup_state == u_region:
+                return 1
+            # City-based match for suppliers with no state_province (e.g. London)
+            if sup_city and sup_city in _REGION_CITIES.get(u_region, set()):
+                return 1
+
+    # ── Tier 2: same country, or explicit nationwide-<country> flag ────────
+    if sup_country == u_country:
+        return 2
+    nationwide_key = f"NATIONWIDE_{u_country}"
+    if nationwide_key in sup_regions:
+        return 2
+
+    # ── Tier 3: explicitly adjacent cross-border region ────────────────────
+    for adj_country, adj_region in REGION_ADJACENCY.get(user_loc.upper(), []):
+        adj_country = adj_country.upper()
+        adj_region  = adj_region.upper() if adj_region else None
+        if sup_country == adj_country:
+            if adj_region is None:          # whole adjacent country qualifies
+                return 3
+            if sup_state == adj_region:
+                return 3
+            if adj_region in sup_regions:
+                return 3
+
+    return 4
+
+
+def get_user_location():
+    """Resolve requesting user's ISO region code (e.g. 'CA-BC').
+
+    Priority: ?loc= query param (dev/test) → stored user preference → 'global'
+    """
+    loc = request.args.get("loc", "").strip()
+    if loc:
+        return loc.upper()
+    user = get_current_user()
+    if user and user.get("user_location"):
+        return str(user["user_location"]).upper()
+    return "global"
+
+
+def _find_pairings_for_user_recipe(recipe_title, limit=3):
+    """Return up to `limit` beverage pairings for a user kitchen recipe.
+
+    Two-level heuristic (no LLM cost):
+    1. Match title tokens against technique_references.name →
+       pull rows from technique_beverage_pairings (534 curated entries).
+    2. Fallback: map title keywords to food_category →
+       pull published rows from pairing_intelligence (1,984 rows).
+    Returns [] when nothing matches — caller handles graceful empty state.
+    """
+    if not recipe_title or not DATABASE_URL:
+        return []
+
+    # ── keyword → food_category map (pairing_intelligence fallback) ──────────
+    KEYWORD_CATEGORY = {
+        "beef": "red_meat", "steak": "red_meat", "brisket": "red_meat",
+        "ribeye": "red_meat", "short rib": "red_meat",
+        "lamb": "lamb", "mutton": "lamb",
+        "pork": "meat", "bacon": "meat", "ham": "meat",
+        "chicken": "meat_poultry", "poultry": "meat_poultry",
+        "duck": "poultry", "turkey": "meat_poultry",
+        "salmon": "fish", "tuna": "fish", "cod": "fish",
+        "trout": "fish", "snapper": "fish", "fish": "fish",
+        "crab": "shellfish", "lobster": "shellfish",
+        "prawn": "shellfish", "shrimp": "shellfish",
+        "scallop": "shellfish", "oyster": "shellfish",
+        "mussel": "shellfish", "clam": "shellfish",
+        "mushroom": "mushroom", "truffle": "fungi_truffles",
+        "pasta": "pasta_grain", "risotto": "pasta_grain",
+        "ravioli": "pasta_grain", "lasagna": "pasta_grain",
+        "spaghetti": "pasta_grain", "linguine": "pasta_grain",
+        "fettuccine": "pasta_grain", "penne": "pasta_grain",
+        "tagliatelle": "pasta_grain", "pappardelle": "pasta_grain",
+        "gnocchi": "pasta_grain", "noodle": "noodles",
+        "chocolate": "chocolate", "cocoa": "chocolate",
+        "cheese": "cheese", "gruyere": "cheese",
+        "dessert": "dessert", "cake": "dessert",
+        "tart": "dessert", "pudding": "dessert",
+        "lentil": "vegetables_legumes", "bean": "vegetables_legumes",
+        "legume": "vegetables_legumes", "chickpea": "vegetables_legumes",
+        "vegetable": "vegetables", "salad": "salad",
+        "soup": "vegetables", "charcuterie": "charcuterie",
+        "venison": "game", "rabbit": "game",
+        "rice": "grain", "grain": "grain",
+    }
+
+    title_lower = recipe_title.lower()
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        # ── Level 1: technique name match → technique_beverage_pairings ──────
+        STOPWORDS = {
+            "the", "a", "an", "and", "or", "with", "of", "for", "in", "on",
+            "recipe", "easy", "simple", "classic", "homemade", "quick", "best",
+        }
+        tokens = [t.strip(",.()[]'\"—-&").lower() for t in recipe_title.split() if len(t) >= 4]
+        tokens = [t for t in tokens if t not in STOPWORDS]
+
+        # Only use significant tokens (5+ chars, not generic cooking words) for
+        # Level 1 to avoid "soup" matching "French Onion Soup" for unrelated recipes.
+        GENERIC_COOKING = {
+            "soup", "salad", "dish", "food", "meal", "plate", "baked", "fried",
+            "roast", "braise", "grill", "steam", "sauce", "spice", "herbs",
+            "herb", "style", "style", "saute", "stew", "boil", "blend",
+        }
+        significant_tokens = [t for t in tokens if len(t) >= 5 and t not in GENERIC_COOKING]
+
+        if significant_tokens:
+            conditions = " OR ".join(["LOWER(tr.name) LIKE %s"] * len(significant_tokens))
+            params = [f"%{t}%" for t in significant_tokens]
+            cur.execute(f"""
+                SELECT tr.id AS technique_id, tr.name AS technique_name,
+                       tbp.pairing_type, tbp.beverage_category, tbp.pairing_rationale,
+                       tbp.confidence_status,
+                       bp.name AS product_name,
+                       bprod.name AS producer_name
+                FROM technique_references tr
+                JOIN technique_beverage_pairings tbp ON tbp.technique_id = tr.id
+                LEFT JOIN beverage_products bp ON bp.id = tbp.beverage_product_id
+                LEFT JOIN beverage_producers bprod ON bprod.id = tbp.beverage_producer_id
+                WHERE {conditions}
+                ORDER BY tr.id DESC,
+                         CASE tbp.confidence_status
+                           WHEN 'editorial' THEN 1
+                           WHEN 'reviewed' THEN 2
+                           ELSE 3
+                         END,
+                         tbp.display_order
+                LIMIT %s
+            """, params + [limit])
+            rows = cur.fetchall()
+            if rows:
+                results = []
+                for r in rows:
+                    _name = r["product_name"] or r["producer_name"] or ""
+                    results.append({
+                        "beverage_category": r["beverage_category"] or "",
+                        "beverage_style": _name,
+                        "beverage_name": _name,
+                        "beverage_description": r["pairing_rationale"] or "",
+                        "flavour_logic": "",
+                        "confidence": r["confidence_status"] or "partial",
+                        "pairing_type": r["pairing_type"] or "",
+                        "source": "technique_match",
+                        "matched_on": r["technique_name"],
+                        "beverage_product_id": None,
+                        "pantry_url": None,
+                    })
+                return results
+
+        # ── Level 2: keyword → food_category → pairing_intelligence ──────────
+        matched_category = None
+        for kw, cat in KEYWORD_CATEGORY.items():
+            if kw in title_lower:
+                matched_category = cat
+                break
+
+        if not matched_category:
+            return []
+
+        cur.execute("""
+            SELECT pi.beverage_category, pi.beverage_style, pi.beverage_description,
+                   pi.flavour_logic, pi.confidence, pi.pairing_type, pi.food_category,
+                   pi.beverage_product_id,
+                   bp.name AS bp_name, bp.slug AS bp_slug
+            FROM pairing_intelligence pi
+            LEFT JOIN beverage_products bp ON bp.id = pi.beverage_product_id
+            WHERE pi.is_published = TRUE
+              AND pi.food_category = %s
+              AND pi.beverage_category IS NOT NULL
+            ORDER BY CASE pi.confidence
+                       WHEN 'classic'     THEN 1
+                       WHEN 'established' THEN 2
+                       WHEN 'suggested'   THEN 3
+                       ELSE 4
+                     END
+            LIMIT %s
+        """, (matched_category, limit))
+        rows = cur.fetchall()
+        results = []
+        for r in rows:
+            bp_id = r["beverage_product_id"]
+            results.append({
+                "beverage_category": r["beverage_category"] or "",
+                "beverage_style": r["beverage_style"] or "",
+                "beverage_name": r["bp_name"] or r["beverage_style"] or "",
+                "beverage_description": r["beverage_description"] or "",
+                "flavour_logic": r["flavour_logic"] or "",
+                "confidence": r["confidence"] or "",
+                "pairing_type": r["pairing_type"] or "",
+                "source": "category_match",
+                "matched_on": r["food_category"],
+                "beverage_product_id": bp_id,
+                "pantry_url": f"/beverage/products/{bp_id}" if bp_id else None,
+            })
+        return results
+
+    except Exception:
+        return []
+    finally:
+        cur.close()
+        conn.close()
+
+
+def _suggested_beverages_for_recipe(recipe_name, cur, limit=4):
+    """Return beverage product suggestions for a recipe by matching its name to technique names."""
+    if not recipe_name:
+        return []
+    STOPWORDS = {"the", "a", "an", "and", "or", "with", "of", "for", "in", "on",
+                 "recipe", "easy", "simple", "classic", "homemade", "quick", "best"}
+    tokens = [t.strip(",.()[]'\"—–-&").lower() for t in recipe_name.split()]
+    tokens = [t for t in tokens if len(t) >= 4 and t not in STOPWORDS]
+    if not tokens:
+        return []
+    conditions = " OR ".join(["LOWER(tr.name) LIKE %s"] * len(tokens))
+    params = [f"%{t}%" for t in tokens] + [limit]
+    cur.execute(f"""
+        SELECT DISTINCT
+            bp.id,
+            bp.name,
+            br.name AS region,
+            tbp.pairing_type AS relationship_type
+        FROM technique_references tr
+        JOIN technique_beverage_pairings tbp ON tbp.technique_id = tr.id
+        JOIN beverage_products bp ON bp.id = tbp.beverage_product_id
+        LEFT JOIN beverage_regions br ON br.id = bp.region_id
+        WHERE {conditions}
+        ORDER BY bp.name ASC
+        LIMIT %s
+    """, params)
+    return [dict(r) for r in cur.fetchall()]
+
+
+def _recipes_using_beverage(beverage_id, cur, limit=6):
+    """Return recipes whose names match techniques that pair with this beverage."""
+    cur.execute("""
+        SELECT DISTINCT
+            r.id,
+            r.slug,
+            r.name,
+            r.cuisine AS origin,
+            tbp.pairing_type AS relationship_type
+        FROM technique_beverage_pairings tbp
+        JOIN technique_references tr ON tr.id = tbp.technique_id
+        JOIN recipes r ON (
+            LOWER(r.name) LIKE '%%' || LOWER(tr.name) || '%%'
+            OR LOWER(tr.name) LIKE '%%' || LOWER(r.name) || '%%'
+        )
+        WHERE tbp.beverage_product_id = %s
+        ORDER BY r.name ASC
+        LIMIT %s
+    """, (beverage_id, limit))
+    return [dict(r) for r in cur.fetchall()]
+
+
+# ── v3 recipe card JSON-LD helpers ────────────────────────────────────────────
+
+def _build_v3_recipe_jsonld(d):
+    instructions = []
+    for s in d.get("method_steps", []):
+        clean = _re.sub(r"<[^>]+>", "", s.get("body", ""))
+        instructions.append({"@type": "HowToStep", "name": s.get("title", ""), "text": clean})
+    cuisine = d.get("cuisine", "")
+    if d.get("region"):
+        cuisine = f"{cuisine} · {d['region']}"
+    tradition_tags = d.get("tradition_tags", [])
+    # Strip HTML entities for keywords
+    keywords = d.get("keywords", ", ".join(_re.sub(r"&[a-z]+;", "&", t) for t in tradition_tags))
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "name": d.get("title", ""),
+        "image": [f"https://provenance.kitchen/og/{d.get('url_slug', '')}.jpg"],
+        "description": d.get("meta_description", ""),
+        "recipeCategory": d.get("recipe_category", "Main course"),
+        "recipeCuisine": cuisine,
+        "keywords": keywords,
+        "recipeYield": f"{d.get('yield_default', '')} {d.get('yield_unit', '')}",
+        "prepTime": d.get("iso_prep_time", ""),
+        "cookTime": d.get("iso_cook_time", ""),
+        "totalTime": d.get("iso_total_time", ""),
+        "datePublished": "2026-05-07",
+        "isAccessibleForFree": True,
+        "author": {
+            "@type": "Person",
+            "name": "Chef Garth Greenlees",
+            "url": "https://provenance.kitchen/chef/garth-greenlees",
+            "jobTitle": "Editor, Provenance Culinary Intelligence",
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Provenance",
+            "url": "https://provenance.kitchen",
+            "logo": {"@type": "ImageObject", "url": "https://provenance.kitchen/logo.png"},
+        },
+        "recipeIngredient": [
+            f"{item.get('amount', '')} {item.get('name', '')}" + (f" — {item.get('prep', '')}" if item.get("prep") else "")
+            for grp in d.get("ingredient_groups", [])
+            for item in grp.get("items", [])
+        ],
+        "recipeInstructions": instructions,
+        "tool": d.get("equipment", []),
+    }
+    if d.get("citation"):
+        schema["citation"] = d["citation"]
+    return schema
+
+
+def _build_v3_faq_jsonld(faqs):
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": f.get("q", ""),
+                "acceptedAnswer": {"@type": "Answer", "text": f.get("a", "")},
+            }
+            for f in faqs
+        ],
+    }
+
+
+def _build_v3_breadcrumb_jsonld(d):
+    items = [
+        {"@type": "ListItem", "position": 1, "name": "Provenance", "item": "https://provenance.kitchen"},
+        {"@type": "ListItem", "position": 2, "name": "Cuisines", "item": "https://provenance.kitchen/cuisines"},
+    ]
+    pos = 3
+    for crumb in d.get("canon_path", []):
+        items.append({
+            "@type": "ListItem",
+            "position": pos,
+            "name": crumb,
+            "item": f"https://provenance.kitchen/cuisines/{crumb.lower().replace(' ', '-')}",
+        })
+        pos += 1
+    items.append({"@type": "ListItem", "position": pos, "name": d.get("title", "")})
+    return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
+
+
 @app.route("/recipe/<slug>")
 def recipe_page(slug):
     if not DATABASE_URL:
@@ -1350,12 +2152,78 @@ def recipe_page(slug):
     cur.execute("SELECT * FROM recipes WHERE slug = %s", (slug,))
     recipe = cur.fetchone()
     if not recipe:
+        # Check user kitchen recipes
+        cur.execute("SELECT * FROM user_kitchen_recipes WHERE slug = %s", (slug,))
+        kitchen_recipe = cur.fetchone()
+        if kitchen_recipe:
+            # v3 recipe cards use a dedicated Jinja template
+            if kitchen_recipe.get("template_version") == "v3":
+                cur.close()
+                conn.close()
+                recipe_data = kitchen_recipe.get("recipe_content_jsonb") or {}
+                _recipe_ld = json.dumps(_build_v3_recipe_jsonld(recipe_data), indent=2)
+                _faq_ld = json.dumps(_build_v3_faq_jsonld(recipe_data.get("faqs", [])), indent=2)
+                _crumb_ld = json.dumps(_build_v3_breadcrumb_jsonld(recipe_data), indent=2)
+                return render_template(
+                    "recipe_v3.html",
+                    recipe=recipe_data,
+                    recipe_jsonld=_recipe_ld,
+                    faq_jsonld=_faq_ld,
+                    breadcrumb_jsonld=_crumb_ld,
+                    recipe_user_id=kitchen_recipe.get("user_id"),
+                )
+            user = get_current_user()
+            _user_tier = user.get("subscription_tier", "free") if user else "free"
+            _user_role = user.get("role", "") if user else ""
+            _is_auth = user is not None
+            _stored_pairings = kitchen_recipe.get("beverage_pairings")
+            _pairings = _stored_pairings if _stored_pairings else _find_pairings_for_user_recipe(kitchen_recipe.get("title", ""))
+            _has_pending_sub = False
+            try:
+                cur.execute(
+                    "SELECT id FROM recipe_submissions WHERE user_kitchen_recipe_id = %s AND status = 'pending' LIMIT 1",
+                    (kitchen_recipe["uuid"],)
+                )
+                _has_pending_sub = cur.fetchone() is not None
+            except Exception:
+                pass
+            cur.close()
+            conn.close()
+            _recipe_dict = dict(kitchen_recipe)
+            # Normalize yield text for display — fix bare "serve"/"serves" suffix
+            _st = (_recipe_dict.get("servings_text") or "").rstrip()
+            for _bad in (" serves", " serve"):
+                if _st.endswith(_bad):
+                    _recipe_dict["servings_text"] = _st[:-len(_bad)].rstrip() + " servings"
+                    break
+            # If servings_text is still empty, derive it from the JSONB array
+            if not _recipe_dict.get("servings_text") and _recipe_dict.get("servings"):
+                _norm, _ = _parse_yield(_recipe_dict["servings"])
+                if _norm:
+                    _recipe_dict["servings_text"] = _norm
+            _ingredient_names = [
+                i.get("name", "") for i in (kitchen_recipe.get("ingredients") or [])
+                if isinstance(i, dict) and i.get("name")
+            ]
+            _sourced = _get_kitchen_recipe_suppliers(_ingredient_names, get_user_location())
+            return render_template(
+                "user_kitchen_recipe.html",
+                recipe=_recipe_dict,
+                user_tier=_user_tier,
+                user_role=_user_role,
+                is_authenticated=_is_auth,
+                pairings_for_recipe=_pairings,
+                has_pending_submission=_has_pending_sub,
+                origin_suppliers=_sourced["origin"],
+                provider_suppliers=_sourced["providers"],
+            )
         cur.close()
         conn.close()
         return "Recipe not found", 404
 
     # Find suppliers (ORIGIN and PROVIDER) linked to this recipe's ingredients by name
     recipe_suppliers = []
+    user_loc = get_user_location()
     try:
         ingredients = recipe.get("ingredients") or []
         ingredient_names = [ing.get("name", "") for ing in ingredients if ing.get("name")]
@@ -1366,6 +2234,7 @@ def recipe_page(slug):
             cur.execute("""
                 SELECT DISTINCT ON (s.id, ip.name)
                     s.id, s.name, s.website, s.city, s.state_province, s.country,
+                    s.service_region,
                     ip.name AS product_name,
                     LEFT(ip.description, 140) AS product_desc
                 FROM ingredient_products ip
@@ -1382,7 +2251,6 @@ def recipe_page(slug):
             """, (patterns, ingredient_names[:20]))
             rows = cur.fetchall()
             # Group products by supplier
-            from collections import defaultdict
             supplier_map = {}
             for row in rows:
                 sid = row['id']
@@ -1390,25 +2258,115 @@ def recipe_page(slug):
                     supplier_map[sid] = {
                         'id': sid, 'name': row['name'], 'website': row['website'],
                         'city': row['city'], 'state_province': row['state_province'],
-                        'country': row['country'], 'products': []
+                        'country': row['country'],
+                        'service_region': list(row['service_region'] or []),
+                        'products': []
                     }
                 if row['product_name']:
                     supplier_map[sid]['products'].append({
                         'name': row['product_name'],
                         'desc': row['product_desc'] or ''
                     })
-            recipe_suppliers = list(supplier_map.values())
+            # Assign proximity tier then sort (tier ASC, name ASC)
+            for sup in supplier_map.values():
+                sup['tier'] = get_proximity_tier(
+                    sup['country'], sup['state_province'], sup['city'],
+                    sup['service_region'], user_loc
+                )
+            recipe_suppliers = sorted(
+                supplier_map.values(),
+                key=lambda s: (s['tier'], s['name'].lower())
+            )
     except Exception:
         recipe_suppliers = []
 
+    suggested_beverages = []
+    try:
+        suggested_beverages = _suggested_beverages_for_recipe(recipe.get('name', ''), cur)
+    except Exception as e:
+        app.logger.warning(f"beverage suggestion failed for recipe {recipe.get('id')}: {e}")
+
     cur.close()
     conn.close()
-    return render_template("recipe.html", recipe=recipe, recipe_suppliers=recipe_suppliers)
+    return render_template("recipe.html", recipe=recipe,
+                           recipe_suppliers=recipe_suppliers,
+                           suggested_beverages=suggested_beverages,
+                           user_location=user_loc)
+
+
+@app.route("/api/recipe/<slug>/edit", methods=["POST"])
+def recipe_v3_edit(slug):
+    """Update editable fields on a v3 user kitchen recipe."""
+    user = get_current_user()
+    if not user:
+        return jsonify({"success": False, "error": "Not authenticated"}), 401
+    if not DATABASE_URL_WRITE:
+        return jsonify({"success": False, "error": "Database not configured"}), 503
+
+    conn = psycopg2.connect(DATABASE_URL_WRITE)
+    conn.autocommit = True
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute(
+            "SELECT id, user_id, recipe_content_jsonb FROM user_kitchen_recipes WHERE slug = %s",
+            (slug,)
+        )
+        row = cur.fetchone()
+        if not row:
+            return jsonify({"success": False, "error": "Recipe not found"}), 404
+        if row["user_id"] != user["id"]:
+            return jsonify({"success": False, "error": "Forbidden"}), 403
+
+        content = dict(row["recipe_content_jsonb"] or {})
+
+        # Text fields
+        for field in ("title", "subtitle", "notes_placeholder"):
+            val = request.form.get(field)
+            if val is not None:
+                content[field] = val.strip()
+
+        for field in ("source_attribution", "sashimi"):
+            val = request.form.get(field)
+            if val is not None:
+                content[field] = val
+
+        # Hero image — file upload takes priority over URL
+        hero_file = request.files.get("hero_image_file")
+        hero_url = (request.form.get("hero_image_url") or "").strip()
+
+        if hero_file and hero_file.filename:
+            import time
+            ext = os.path.splitext(hero_file.filename)[1].lower()
+            if ext not in (".jpg", ".jpeg", ".png", ".webp"):
+                return jsonify({"success": False, "error": "Unsupported image format"}), 400
+            if hero_file.content_length and hero_file.content_length > 5 * 1024 * 1024:
+                return jsonify({"success": False, "error": "Image too large (max 5 MB)"}), 400
+            upload_dir = os.path.join("static", "uploads", "recipes", str(user["id"]))
+            os.makedirs(upload_dir, exist_ok=True)
+            ts = int(time.time())
+            filename = f"{slug}-hero-{ts}{ext}"
+            save_path = os.path.join(upload_dir, filename)
+            hero_file.save(save_path)
+            content["hero_image"] = f"/static/uploads/recipes/{user['id']}/{filename}"
+        elif hero_url and hero_url.startswith("https://"):
+            content["hero_image"] = hero_url
+
+        cur.execute(
+            "UPDATE user_kitchen_recipes SET recipe_content_jsonb = %s WHERE id = %s",
+            (json.dumps(content), row["id"])
+        )
+        return jsonify({"success": True, "redirect": f"/recipe/{slug}"})
+    except Exception as e:
+        app.logger.error(f"recipe_v3_edit error for {slug}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        cur.close()
+        conn.close()
 
 
 @app.route("/api/curated-recipes")
 def curated_recipes():
-    """Return all recipes from the recipes table (curated + user-built)."""
+    """Return curated catalog recipes + user kitchen recipes."""
     if not DATABASE_URL:
         return jsonify({"recipes": []}), 200
     conn = get_db()
@@ -1417,10 +2375,307 @@ def curated_recipes():
         SELECT id, name, slug, cuisine, description, image_url, recipe_type, is_curated
         FROM recipes ORDER BY is_curated DESC, id ASC
     """)
-    recipes = [dict(r) for r in cur.fetchall()]
+    catalog = [dict(r) for r in cur.fetchall()]
+    # Also include user kitchen recipes (prepended — user's own recipes shown first)
+    user_recipes = []
+    try:
+        cur.execute("""
+            SELECT uuid, title, slug, preamble,
+                   CASE WHEN jsonb_array_length(COALESCE(tags,'[]'::jsonb)) > 0
+                        THEN tags->>0 ELSE NULL END AS cuisine,
+                   CASE WHEN has_image
+                        THEN '/images/' || uuid || '/miniature.jpg' ELSE NULL END AS image_url
+            FROM user_kitchen_recipes
+            WHERE is_draft = FALSE
+            ORDER BY created_at DESC
+        """)
+        for r in cur.fetchall():
+            user_recipes.append({
+                "id": r["uuid"],
+                "name": r["title"],
+                "slug": r["slug"],
+                "cuisine": r["cuisine"],
+                "description": r["preamble"] or "",
+                "image_url": r["image_url"],
+                "recipe_type": "user_kitchen",
+                "is_curated": False,
+            })
+    except Exception as e:
+        app.logger.warning(f"[curated-recipes] user_kitchen_recipes query failed: {e}")
     cur.close()
     conn.close()
-    return jsonify({"recipes": recipes})
+    return jsonify({"recipes": user_recipes + catalog})
+
+
+@app.route("/api/recipe/submit-for-review", methods=["POST"])
+def submit_recipe_for_review():
+    """Submit a user kitchen recipe for editorial review."""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Authentication required"}), 401
+    if not DATABASE_URL_WRITE:
+        return jsonify({"error": "Database not configured"}), 503
+
+    data = request.get_json() or {}
+    recipe_id = data.get("recipe_id")
+    if not recipe_id:
+        return jsonify({"error": "recipe_id required"}), 400
+
+    # Verify recipe exists and belongs to this user
+    try:
+        rconn = psycopg2.connect(DATABASE_URL)
+        rconn.autocommit = True
+        rcur = rconn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        rcur.execute("SELECT * FROM user_kitchen_recipes WHERE uuid = %s", (recipe_id,))
+        recipe = rcur.fetchone()
+        if not recipe or recipe["user_id"] != user["id"]:
+            rcur.close(); rconn.close()
+            return jsonify({"error": "Recipe not found"}), 404
+        # Check for existing pending submission
+        rcur.execute(
+            "SELECT id FROM recipe_submissions WHERE user_kitchen_recipe_id = %s AND status = 'pending' LIMIT 1",
+            (recipe_id,)
+        )
+        existing = rcur.fetchone()
+        rcur.close(); rconn.close()
+    except Exception as exc:
+        app.logger.error("submit-for-review DB read error: %s", exc)
+        return jsonify({"error": "Database error"}), 500
+
+    if existing:
+        return jsonify({"error": "Already submitted for review"}), 409
+
+    # Insert submission
+    try:
+        wconn = psycopg2.connect(DATABASE_URL_WRITE)
+        wconn.autocommit = True
+        wcur = wconn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        wcur.execute(
+            "INSERT INTO recipe_submissions (user_kitchen_recipe_id, submitted_by_user_id) VALUES (%s, %s) RETURNING id, submitted_at, status",
+            (recipe_id, user["id"])
+        )
+        submission = wcur.fetchone()
+        wcur.close(); wconn.close()
+    except Exception as exc:
+        app.logger.error("submit-for-review DB write error: %s", exc)
+        return jsonify({"error": "Could not save submission"}), 500
+
+    submission_id = str(submission["id"])
+    submitted_at = submission["submitted_at"]
+
+    # Build email data
+    recipe_dict = dict(recipe)
+    steps = recipe_dict.get("enhanced_steps") or recipe_dict.get("steps") or []
+    if isinstance(steps, str):
+        try: steps = json.loads(steps)
+        except Exception: steps = []
+    steps_with_notes = sum(1 for s in steps if isinstance(s, dict) and s.get("insight"))
+
+    quality_warnings = recipe_dict.get("quality_warnings") or []
+    if isinstance(quality_warnings, str):
+        try: quality_warnings = json.loads(quality_warnings)
+        except Exception: quality_warnings = []
+
+    origin_markers = recipe_dict.get("ingredient_origin_markers") or []
+    if isinstance(origin_markers, str):
+        try: origin_markers = json.loads(origin_markers)
+        except Exception: origin_markers = []
+    producers, products, supplier_names = set(), set(), set()
+    for m in origin_markers:
+        for s in (m.get("suppliers") or []):
+            if s.get("name"): supplier_names.add(s["name"])
+        if m.get("product_name"): products.add(m["product_name"])
+        if m.get("origin"): producers.add(m["origin"])
+
+    tags = recipe_dict.get("tags") or []
+    if isinstance(tags, str):
+        try: tags = json.loads(tags)
+        except Exception: tags = []
+
+    at_fmt = submitted_at.strftime("%Y-%m-%d %H:%M UTC") if hasattr(submitted_at, "strftime") else str(submitted_at)
+    chef_name = user.get("display_name") or user["email"].split("@")[0]
+
+    email_data = {
+        "recipe_title": recipe_dict.get("title", recipe_id),
+        "chef_name": chef_name,
+        "chef_email": user["email"],
+        "submitted_at": at_fmt,
+        "slug": recipe_dict.get("slug", ""),
+        "yield_text": recipe_dict.get("servings_text") or str(recipe_dict.get("servings_count") or ""),
+        "active_time": recipe_dict.get("time_active") or "not set",
+        "total_time": recipe_dict.get("time_total") or "not set",
+        "tags": ", ".join(tags) if tags else "none",
+        "sashimi_line": recipe_dict.get("lives_or_dies") or "",
+        "audit_issue_count": len(quality_warnings),
+        "audit_issues": [w.get("title", str(w)) if isinstance(w, dict) else str(w) for w in quality_warnings],
+        "producer_count": len(producers),
+        "product_count": len(products),
+        "supplier_names": ", ".join(filter(None, supplier_names)) or "none",
+        "step_count": len(steps),
+        "steps_with_notes": steps_with_notes,
+        "submission_id": submission_id,
+    }
+
+    editorial_email = os.environ.get("EDITORIAL_REVIEW_EMAIL")
+    if editorial_email:
+        from email_service import send_editorial_review_email
+        try:
+            send_editorial_review_email(editorial_email, email_data)
+        except Exception as exc:
+            app.logger.error("Editorial review email failed for submission %s: %s", submission_id, exc)
+    else:
+        app.logger.warning("EDITORIAL_REVIEW_EMAIL not set — submission %s recorded but not emailed", submission_id)
+
+    return jsonify({
+        "submission_id": submission_id,
+        "status": "pending",
+        "submitted_at": submitted_at.isoformat() if hasattr(submitted_at, "isoformat") else str(submitted_at),
+    })
+
+
+@app.route("/api/kitchen/recipes")
+def kitchen_recipes():
+    """Return recipes for the My Kitchen page (DB + file-based, merged)."""
+    recipes_out = []
+
+    # 1. DB recipes
+    if DATABASE_URL:
+        try:
+            conn = get_db()
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("""
+                SELECT id, name, slug, cuisine, cuisine_canon, recipe_type,
+                       image_url, description, tradition_tags, pairings,
+                       last_cooked_at, cook_count, is_curated, user_id,
+                       ingredients, created_at
+                FROM recipes
+                WHERE slug IS NOT NULL AND slug != ''
+                ORDER BY is_curated DESC, id DESC
+                LIMIT 200
+            """)
+            for r in cur.fetchall():
+                row = dict(r)
+                # Build primary_ingredients from ingredients JSONB
+                ings = row.get("ingredients") or []
+                if isinstance(ings, str):
+                    try:
+                        ings = json.loads(ings)
+                    except Exception:
+                        ings = []
+                pi = []
+                for ing in (ings[:5] if isinstance(ings, list) else []):
+                    if isinstance(ing, dict):
+                        pi.append(ing.get("name") or "")
+                    elif isinstance(ing, str):
+                        pi.append(ing)
+                recipes_out.append({
+                    "id": row["id"],
+                    "slug": row["slug"],
+                    "title": row["name"] or "",
+                    "recipe_type": row["recipe_type"] or "food",
+                    "hero_image_url": row["image_url"] or "",
+                    "cuisine_canon": row["cuisine_canon"] or row["cuisine"] or "",
+                    "cuisine": row["cuisine"] or "",
+                    "primary_ingredients": [p for p in pi if p],
+                    "has_pairing": bool(row.get("pairings") and row["pairings"] != "[]"),
+                    "source_type": "curated" if row["is_curated"] else "url_import",
+                    "last_cooked_at": row["last_cooked_at"].isoformat() if row.get("last_cooked_at") else None,
+                    "cook_count": row.get("cook_count") or 0,
+                    "_source": "db",
+                })
+            cur.close()
+            conn.close()
+        except Exception:
+            pass
+
+    # 2. File-based recipes (recipes.json) — uuid-based
+    try:
+        file_recipes = load_recipes()
+        for r in file_recipes:
+            slug = r.get("slug") or r.get("uuid")
+            if not slug:
+                continue
+            title = r.get("title") or r.get("name") or "Untitled"
+            tags = r.get("tags") or []
+            ings = r.get("ingredients") or []
+            pi = []
+            for ing in (ings[:5] if isinstance(ings, list) else []):
+                if isinstance(ing, dict):
+                    pi.append(ing.get("name") or "")
+                elif isinstance(ing, str):
+                    pi.append(ing)
+            source_type = "url_import"
+            if r.get("hasImage") and not r.get("source", {}).get("address", "").startswith("http"):
+                source_type = "photographed"
+            elif any(t in tags for t in ("conceived", "ai")):
+                source_type = "conceived"
+            recipes_out.append({
+                "id": None,
+                "slug": slug,
+                "title": title,
+                "recipe_type": "cocktail" if any(t in tags for t in ("cocktail", "drink", "beverage")) else "food",
+                "hero_image_url": f"/images/{r['uuid']}/main.jpg" if r.get("uuid") and r.get("hasImage") else "",
+                "cuisine_canon": (tags[0] if tags else ""),
+                "cuisine": (tags[0] if tags else ""),
+                "primary_ingredients": [p for p in pi if p],
+                "has_pairing": False,
+                "source_type": source_type,
+                "last_cooked_at": r.get("cooking", {}).get("last") or None,
+                "cook_count": int(r.get("cooking", {}).get("times") or 0),
+                "_source": "file",
+            })
+    except Exception:
+        pass
+
+    return jsonify({"recipes": recipes_out, "total": len(recipes_out)})
+
+
+@app.route("/api/kitchen/marker-read", methods=["POST"])
+def kitchen_marker_read():
+    """Record that a user has opened a gold-star marker."""
+    user = get_current_user()
+    if not user or not DATABASE_URL_WRITE:
+        return jsonify({"ok": False}), 401
+    data = request.get_json() or {}
+    slug = data.get("slug")
+    idx = data.get("marker_index")
+    if not slug or idx is None:
+        return jsonify({"ok": False}), 400
+    try:
+        conn = psycopg2.connect(DATABASE_URL_WRITE)
+        conn.autocommit = True
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO user_recipe_markers_read (user_id, recipe_slug, marker_index)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (user_id, recipe_slug, marker_index) DO NOTHING
+        """, (user["id"], slug, int(idx)))
+        cur.close()
+        conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/kitchen/markers-read/<slug>")
+def kitchen_markers_read(slug):
+    """Return set of marker indices the current user has read for a recipe."""
+    user = get_current_user()
+    if not user or not DATABASE_URL:
+        return jsonify({"read": []})
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT marker_index FROM user_recipe_markers_read WHERE user_id = %s AND recipe_slug = %s",
+            (user["id"], slug)
+        )
+        indices = [r[0] for r in cur.fetchall()]
+        cur.close()
+        conn.close()
+        return jsonify({"read": indices})
+    except Exception:
+        return jsonify({"read": []})
 
 
 @app.route("/manifest.json")
@@ -1465,6 +2720,44 @@ Sitemap: https://provenance.kitchen/sitemap.xml
 
 @app.route("/recipes.json")
 def recipes_json():
+    """Serve user's personal kitchen recipes. DB is source of truth; flat file is fallback."""
+    if DATABASE_URL:
+        try:
+            conn = get_db()
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("""
+                SELECT uuid, title, preamble, tags, ingredients, steps,
+                       original_steps, enhanced_steps, time_active, time_total,
+                       servings, source_name, source_url, has_image, is_draft
+                FROM user_kitchen_recipes
+                ORDER BY created_at ASC
+            """)
+            rows = cur.fetchall()
+            cur.close()
+            conn.close()
+            recipes = []
+            for r in rows:
+                recipes.append({
+                    "uuid": r["uuid"],
+                    "title": r["title"],
+                    "lang": "", "version": "1", "favourite": False, "rating": 0.0,
+                    "updated": "", "importDate": "",
+                    "hasImage": r["has_image"] or False,
+                    "time": {"active": r["time_active"] or "", "total": r["time_total"] or ""},
+                    "cooking": {"times": "0", "last": ""},
+                    "tags": r["tags"] or [],
+                    "servings": r["servings"] or [],
+                    "ingredients": r["ingredients"] or [],
+                    "steps": r["steps"] or [],
+                    "original_steps": r["original_steps"] or [],
+                    "enhanced_steps": r["enhanced_steps"] or [],
+                    "preamble": r["preamble"] or "",
+                    "source": {"name": r["source_name"] or "", "address": r["source_url"] or ""},
+                    "_draft": r["is_draft"] or False,
+                })
+            return Response(json.dumps(recipes), mimetype="application/json")
+        except Exception as e:
+            app.logger.error(f"[recipes.json] DB read failed, falling back to flat file: {e}")
     return send_file(RECIPES_FILE, mimetype="application/json")
 
 
@@ -1491,6 +2784,96 @@ def load_recipes():
 def save_recipes(recipes):
     with open(RECIPES_FILE, "w", encoding="utf-8") as f:
         json.dump(recipes, f, indent=2, ensure_ascii=False)
+
+
+def make_kitchen_slug(title: str, uuid_prefix: str) -> str:
+    """Generate a URL-safe slug from a recipe title + 6-char uuid suffix."""
+    base = _re.sub(r'[^a-z0-9]+', '-', title.lower().strip())
+    base = base.strip('-')[:60] or 'recipe'
+    return f"{base}-{uuid_prefix.lower()[:6]}"
+
+
+def _parse_ingredient_line(line):
+    """Parse a free-text ingredient line into structured form.
+    Returns dict: {count, unit, name, info, group} or None for empty lines.
+    """
+    line = (line or "").strip()
+    if not line:
+        return None
+    # Group heading
+    if line.startswith("##") or line.startswith("**"):
+        return {"count": "", "unit": "", "name": line.lstrip("#* ").strip().rstrip(":"), "info": "", "group": "heading"}
+    UNITS = ["tablespoons", "tablespoon", "teaspoons", "teaspoon", "tbsp", "tsp",
+             "cups", "cup", "pints", "pint", "quarts", "quart", "gallons", "gallon",
+             "fl oz", "ounces", "ounce", "oz", "pounds", "pound", "lbs", "lb",
+             "grams", "gram", "kilograms", "kilogram", "kg", "g", "mg",
+             "milliliters", "milliliter", "ml", "liters", "liter", "l",
+             "pinch", "dash", "handful", "splash", "drop", "drops", "cloves", "clove",
+             "stick", "sticks", "slice", "slices", "can", "cans", "bunch", "bunches"]
+    num_pat = _re.compile(r'^\s*(\d+(?:\s+\d+/\d+)?(?:\.\d+)?|\d+/\d+)\s*')
+    m = num_pat.match(line)
+    count, rest = ("", line)
+    if m:
+        count = m.group(1).strip()
+        rest = line[m.end():].strip()
+    unit = ""
+    rest_lower = rest.lower()
+    for u in UNITS:
+        if rest_lower == u or rest_lower.startswith(u + " ") or rest_lower.startswith(u + ","):
+            unit = u
+            rest = rest[len(u):].strip().lstrip(",").strip()
+            if rest.lower().startswith("of "):
+                rest = rest[3:].strip()
+            break
+    # Handle fused "200g" pattern (count present, unit fused at start of rest)
+    if count and not unit:
+        fused = _re.match(r'^([a-z]+)(?:\s|,|$)', rest, _re.IGNORECASE)
+        if fused and fused.group(1).lower() in [u for u in UNITS if " " not in u]:
+            unit = fused.group(1).lower()
+            rest = rest[fused.end():].strip().lstrip(",").strip()
+    # "Pinch of X" / "Dash of X" — no count
+    if not count and not unit:
+        for u in ["pinch", "dash", "handful", "splash"]:
+            if rest_lower.startswith(u + " "):
+                unit = u
+                rest = rest[len(u):].strip()
+                if rest.lower().startswith("of "):
+                    rest = rest[3:].strip()
+                break
+    name = rest
+    info = ""
+    paren = _re.search(r'\s*\(([^)]+)\)', name)
+    if paren:
+        info = paren.group(1).strip()
+        name = name[:paren.start()].strip()
+    if "," in name and not info:
+        parts = name.split(",", 1)
+        name = parts[0].strip()
+        info = parts[1].strip()
+    return {"count": count, "unit": unit, "name": name, "info": info, "group": ""}
+
+
+def _parse_ingredients_text(text):
+    """Convert multi-line ingredients textarea into structured array."""
+    if isinstance(text, list):
+        return text
+    return [p for p in (_parse_ingredient_line(l) for l in (text or "").splitlines()) if p]
+
+
+def _parse_steps_text(text):
+    """Convert multi-line steps textarea into structured array."""
+    if isinstance(text, list):
+        return text
+    step_prefix = _re.compile(r'^\s*(?:\d+[\.\)]\s*|step\s+\d+:?\s*)', _re.IGNORECASE)
+    out = []
+    for line in (text or "").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        clean = step_prefix.sub('', line).strip()
+        if clean:
+            out.append(clean)
+    return out
 
 
 def save_hero_image(recipe_uuid, image_b64):
@@ -1577,15 +2960,17 @@ def scan_recipe():
   "ingredients": [
     {"count": "2", "unit": "cups", "name": "flour", "info": "sifted", "group": ""}
   ],
-  "steps": ["Step 1 text", "Step 2 text"]
+  "steps": ["Step 1 text verbatim", "Step 2 text verbatim"],
+  "source_book": {"title": null, "author": null, "publisher": null, "year": null, "isbn": null, "page": null}
 }
 
 Rules:
-- Extract ALL ingredients with precise quantities
-- Include ALL steps in full detail
+- Extract ALL ingredients with precise quantities — do not simplify or combine
+- Include ALL steps verbatim — do not rewrite, merge, or add steps
 - Use lowercase tags
 - Infer reasonable tags from the recipe type (e.g. "dessert", "vegetarian", "italian")
 - If there are ingredient groups (e.g. "For the sauce"), set the group field
+- If the page shows book title/author/publisher info, populate source_book; otherwise leave null
 - Return ONLY valid JSON, no markdown fences"""
 
     content = images + [{"type": "text", "text": prompt_text}]
@@ -1612,11 +2997,85 @@ Rules:
         return jsonify(recipe)
 
     except json.JSONDecodeError as e:
-        return jsonify(error=f"Failed to parse AI response: {e}"), 500
+        return jsonify(error=f"Failed to parse the response: {e}"), 500
     except anthropic.RateLimitError as e:
         return jsonify(error=f"rate limit: {e}"), 429
     except Exception as e:
         return jsonify(error=str(e)), 500
+
+
+# ─── Cover OCR ───────────────────────────────────────────────────────────────
+
+@app.route("/api/scan-cover", methods=["POST"])
+def scan_cover():
+    """Extract book metadata from a cover image using Claude vision."""
+    f = request.files.get("file")
+    if not f:
+        # Also accept base64 JSON
+        data = request.get_json(silent=True) or {}
+        b64 = data.get("image_b64")
+        media_type = data.get("media_type", "image/jpeg")
+        if not b64:
+            return jsonify(error="No image provided"), 400
+    else:
+        raw = f.read()
+        data_bytes, media_type = _prepare_image(raw)
+        b64 = base64.b64encode(data_bytes).decode("utf-8")
+
+    content = [
+        {
+            "type": "image",
+            "source": {"type": "base64", "media_type": media_type, "data": b64},
+        },
+        {
+            "type": "text",
+            "text": (
+                "Extract book metadata from this cover image. "
+                'Return ONLY valid JSON: {"title": "...", "author": "...", "publisher": "...", "year": null, "isbn": null}'
+            ),
+        },
+    ]
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=300,
+            messages=[{"role": "user", "content": content}],
+        )
+        resp_text = response.content[0].text.strip()
+        if resp_text.startswith("```"):
+            lines = resp_text.split("\n")
+            resp_text = "\n".join(lines[1:-1] if lines and lines[-1].strip() == "```" else lines[1:])
+        return jsonify(json.loads(resp_text))
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+
+
+@app.route("/api/recipes/recent-cookbooks")
+def recent_cookbooks():
+    """Return distinct cookbooks recently used for scan imports."""
+    if not DATABASE_URL:
+        return jsonify([])
+    try:
+        user = get_current_user()
+        user_id = user["id"] if user else None
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT DISTINCT ON (source_book_title)
+                source_book_title, source_book_author, source_book_publisher, source_book_year
+            FROM user_kitchen_recipes
+            WHERE source_book_title IS NOT NULL
+              AND (%s IS NULL OR user_id = %s)
+            ORDER BY source_book_title, MAX(created_at) OVER (PARTITION BY source_book_title) DESC
+            LIMIT 20
+        """, (user_id, user_id))
+        rows = [dict(r) for r in cur.fetchall()]
+        cur.close()
+        conn.close()
+        return jsonify(rows)
+    except Exception as e:
+        app.logger.warning(f"[recent_cookbooks] {e}")
+        return jsonify([])
 
 
 # ─── Classify pages (PDF import) ────────────────────────────────────────────
@@ -1680,7 +3139,7 @@ Rules:
         return jsonify(result)
 
     except json.JSONDecodeError as e:
-        return jsonify(error=f"Failed to parse AI response: {e}"), 500
+        return jsonify(error=f"Failed to parse the response: {e}"), 500
     except anthropic.RateLimitError as e:
         return jsonify(error=f"rate limit: {e}"), 429
     except Exception as e:
@@ -1878,13 +3337,15 @@ def import_url():
   "ingredients": [
     {{"count": "2", "unit": "cups", "name": "flour", "info": "sifted", "group": ""}}
   ],
-  "steps": ["Step 1 text", "Step 2 text"]
+  "steps": ["Step 1 text verbatim", "Step 2 text verbatim"],
+  "source_book": null
 }}
 
 Rules:
-- Extract ALL ingredients with precise quantities
-- Include ALL steps in full detail
+- Extract ALL ingredients with precise quantities — do not simplify or combine
+- Include ALL steps verbatim — do not rewrite, merge, or add steps
 - Use lowercase tags
+- source_book is always null for URL imports
 - Return ONLY valid JSON, no markdown fences
 
 Webpage text:
@@ -1910,7 +3371,64 @@ Webpage text:
         return jsonify(recipe)
 
     except json.JSONDecodeError as e:
-        return jsonify(error=f"Failed to parse AI response: {e}"), 500
+        return jsonify(error=f"Failed to parse the response: {e}"), 500
+    except anthropic.RateLimitError as e:
+        return jsonify(error=f"rate limit: {e}"), 429
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+
+
+@app.route("/api/recipes/extract-from-text", methods=["POST"])
+def extract_from_text():
+    data = request.get_json()
+    text = (data.get("text") or "").strip()
+    if not text:
+        return jsonify(error="No text provided"), 400
+
+    text_truncated = text[:8000]
+
+    prompt = f"""Extract the recipe from this text. Return a JSON object with these fields:
+{{
+  "title": "Recipe title",
+  "preamble": "Brief description or headnote",
+  "tags": ["tag1", "tag2"],
+  "time": {{"active": "20 mins", "total": "1 hour"}},
+  "servings": [{{"count": "4", "unit": "serve"}}],
+  "ingredients": [
+    {{"count": "2", "unit": "cups", "name": "flour", "info": "sifted", "group": ""}}
+  ],
+  "steps": ["Step 1 text verbatim", "Step 2 text verbatim"],
+  "source_book": {{"title": null, "author": null, "publisher": null, "year": null, "isbn": null, "page": null}}
+}}
+
+Rules:
+- Extract ALL ingredients with precise quantities — do not simplify or combine
+- Include ALL steps verbatim — do not rewrite, merge, or add steps
+- Use lowercase tags
+- If this appears to be from a cookbook, populate source_book; otherwise leave null
+- Return ONLY valid JSON, no markdown fences
+
+Recipe text:
+{text_truncated}"""
+
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=4096,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        response_text = response.content[0].text.strip()
+        if response_text.startswith("```"):
+            lines = response_text.split("\n")
+            lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            response_text = "\n".join(lines)
+        recipe = json.loads(response_text)
+        recipe["_method"] = "text"
+        return jsonify(recipe)
+    except json.JSONDecodeError as e:
+        return jsonify(error=f"Failed to parse the response: {e}"), 500
     except anthropic.RateLimitError as e:
         return jsonify(error=f"rate limit: {e}"), 429
     except Exception as e:
@@ -2132,59 +3650,58 @@ Rules:
         recipes_list.append(recipe)
         save_recipes(recipes_list)
 
-        # Also save to the recipes table so /recipe/<slug> works
+        # Save to user_kitchen_recipes so /recipe/<slug>/edit works
         if DATABASE_URL:
             try:
+                user = get_current_user()
+                user_id = user["id"] if user else None
                 slug_base = _slugify(rdata.get("title", "composed-recipe"))
                 slug = slug_base
                 conn2 = get_db()
                 cur2 = conn2.cursor()
                 suffix = 1
                 while suffix < 100:
-                    cur2.execute("SELECT id FROM recipes WHERE slug = %s", (slug,))
+                    cur2.execute(
+                        "SELECT uuid FROM user_kitchen_recipes WHERE slug = %s AND user_id IS NOT DISTINCT FROM %s",
+                        (slug, user_id)
+                    )
                     if not cur2.fetchone():
                         break
                     slug = f"{slug_base}-{suffix}"
                     suffix += 1
-                # Determine servings count
-                srv_raw = rdata.get("servings", [{}])
-                try:
-                    srv_count = int(srv_raw[0].get("count", 4)) if srv_raw else 4
-                except (IndexError, AttributeError, ValueError, TypeError):
-                    srv_count = 4
-                tags = rdata.get("tags", [])
-                recipe_type = "drink" if any(t in ("cocktail", "drink", "beverage", "cocktails") for t in tags) else "food"
-                full_content = {
-                    "origin": rdata.get("preamble", ""),
-                    "provenance_notes": rdata.get("provenance_notes", ""),
-                    "suggested_pairing": rdata.get("suggested_pairing", {}),
-                }
+                time_dict = rdata.get("time", {})
+                if not isinstance(time_dict, dict):
+                    time_dict = {}
                 cur2.execute("""
-                    INSERT INTO recipes (name, slug, cuisine, description, recipe_type,
-                                        is_curated, full_content, ingredients, steps, servings)
-                    VALUES (%s, %s, %s, %s, %s, FALSE, %s, %s, %s, %s)
+                    INSERT INTO user_kitchen_recipes
+                        (uuid, user_id, title, slug, preamble, tags, ingredients, steps,
+                         time_active, time_total, servings, is_draft)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE)
                 """, (
+                    recipe_uuid,
+                    user_id,
                     rdata.get("title", "Composed Recipe"),
                     slug,
-                    tags[0] if tags else None,
-                    (rdata.get("preamble", ""))[:500],
-                    recipe_type,
-                    json.dumps(full_content),
+                    rdata.get("preamble", ""),
+                    json.dumps(rdata.get("tags", [])),
                     json.dumps(rdata.get("ingredients", [])),
                     json.dumps(rdata.get("steps", [])),
-                    srv_count,
+                    time_dict.get("active", ""),
+                    time_dict.get("total", ""),
+                    json.dumps(rdata.get("servings", [])),
                 ))
                 conn2.commit()
                 cur2.close()
                 conn2.close()
                 recipe["slug"] = slug
-            except Exception:
+            except Exception as e:
+                app.logger.error(f"[COMPOSE] db_write=FAILED err={e}")
                 recipe["slug"] = None
 
         return jsonify(recipe)
 
     except json.JSONDecodeError as e:
-        return jsonify(error=f"Failed to parse AI response: {e}"), 500
+        return jsonify(error=f"Failed to parse the response: {e}"), 500
     except anthropic.RateLimitError as e:
         return jsonify(error=f"rate limit: {e}"), 429
     except Exception as e:
@@ -2219,12 +3736,38 @@ def create_blank_recipe():
     }
     recipes.append(recipe)
     save_recipes(recipes)
+    recipe_slug = make_kitchen_slug("Untitled Recipe", recipe_uuid)
+    recipe["slug"] = recipe_slug
+    if DATABASE_URL_WRITE:
+        try:
+            user = get_current_user()
+            user_id = user["id"] if user else None
+            conn = get_db()
+            cur = conn.cursor()
+            cur.execute("""
+                INSERT INTO user_kitchen_recipes
+                    (uuid, user_id, title, slug, tags, ingredients, steps, servings, is_draft)
+                VALUES (%s, %s, %s, %s, '[]', '[]', '[]', '[]', TRUE)
+                ON CONFLICT (uuid) DO NOTHING
+            """, (recipe_uuid, user_id, "Untitled Recipe", recipe_slug))
+            cur.close()
+            conn.close()
+        except Exception as e:
+            app.logger.error(f"[CREATE_BLANK_RECIPE] uuid={recipe_uuid} db_write=FAILED err={e}")
     return jsonify(recipe)
 
 
 @app.route("/api/recipes", methods=["POST"])
 def create_recipe():
     data = request.get_json()
+    # Accept free-text textarea input for ingredients and steps
+    if isinstance(data.get("ingredients"), str):
+        data["ingredients"] = _parse_ingredients_text(data["ingredients"])
+    if isinstance(data.get("steps"), str):
+        data["steps"] = _parse_steps_text(data["steps"])
+    if "method_steps" in data and "steps" not in data:
+        raw = data["method_steps"]
+        data["steps"] = _parse_steps_text(raw) if isinstance(raw, str) else raw
     recipes = load_recipes()
 
     recipe_uuid = str(uuid.uuid4()).upper()
@@ -2269,37 +3812,260 @@ def create_recipe():
             ext = "jpg" if "jpeg" in mt or "jpg" in mt else "png"
             (image_dir / f"page_{i}.{ext}").write_bytes(base64.b64decode(b64))
 
-    # Enhance steps automatically
+    # ── Sashimi Pipeline ────────────────────────────────────────────────────────
+
+    # Step 1: Parse yield
+    raw_servings = recipe.get("servings", [])
+    servings_text, servings_count = _parse_yield(raw_servings)
+
+    # Step 2: Unit conversion
+    converted_ingredients, source_units_raw, unit_warnings = _convert_to_metric(
+        recipe.get("ingredients", [])
+    )
+    recipe["ingredients"] = converted_ingredients
+
+    # Build ingredient strings for Claude calls
+    ingredient_strings = []
+    for ing in converted_ingredients:
+        if not isinstance(ing, dict):
+            ingredient_strings.append(str(ing))
+            continue
+        parts = []
+        if ing.get("count"):
+            parts.append(str(ing["count"]))
+        if ing.get("unit"):
+            parts.append(ing["unit"])
+        parts.append(ing.get("name", ""))
+        if ing.get("info"):
+            parts.append(f"({ing['info']})")
+        ingredient_strings.append(" ".join(parts).strip())
+
+    # Step 3: Extract book metadata
+    source_book = data.get("source_book") or {}
+    source_book_title = source_book.get("title") or data.get("source_book_title")
+    source_book_author = source_book.get("author") or data.get("source_book_author")
+    source_book_publisher = source_book.get("publisher") or data.get("source_book_publisher")
+    source_book_year = source_book.get("year") or data.get("source_book_year")
+    source_book_isbn = source_book.get("isbn") or data.get("source_book_isbn")
+    source_book_page = source_book.get("page") or data.get("source_book_page")
+
+    # Step 4: Add step insights (verbatim steps — no rewriting)
+    steps = list(recipe.get("steps", []))
+    enhanced_steps = []
     try:
-        ingredient_strings = []
-        for ing in recipe.get("ingredients", []):
-            parts = []
-            if ing.get("count"):
-                parts.append(ing["count"])
-            if ing.get("unit"):
-                parts.append(ing["unit"])
-            parts.append(ing.get("name", ""))
-            if ing.get("info"):
-                parts.append(f"({ing['info']})")
-            ingredient_strings.append(" ".join(parts).strip())
-
-        result = _enhance_recipe_steps(recipe["title"], ingredient_strings, recipe["steps"])
-        if result:
-            enhanced_strings, enhanced_objects = result
-            recipe["original_steps"] = list(recipe["steps"])
-            recipe["enhanced_steps"] = enhanced_objects
-            recipe["steps"] = enhanced_strings
+        enhanced_steps = _add_step_insights(recipe["title"], ingredient_strings, steps)
+        recipe["original_steps"] = steps
+        recipe["enhanced_steps"] = enhanced_steps
+        # steps column stays verbatim — do NOT overwrite recipe["steps"]
     except Exception:
-        pass  # Enhancement failure doesn't block saving
+        pass
 
+    # Step 5: Enhance recipe structure
+    structure = {}
+    quality_warnings = list(unit_warnings)
+    try:
+        ingredients_text = "\n".join(f"- {s}" for s in ingredient_strings)
+        steps_text = "\n".join(f"{i + 1}. {s}" for i, s in enumerate(steps))
+        structure = _enhance_recipe_structure(recipe["title"], ingredients_text, steps_text)
+        if structure.get("quality_warnings"):
+            quality_warnings.extend(structure["quality_warnings"])
+    except Exception:
+        pass
+
+    # Step 6: Match suppliers and merge with origin markers
+    ingredient_names = [ing.get("name", "") for ing in converted_ingredients
+                        if isinstance(ing, dict) and ing.get("name")]
+    supplier_matches = _match_suppliers_for_ingredients(ingredient_names)
+
+    # Build ingredient→supplier lookup
+    supplier_by_ingredient = {}
+    for s in supplier_matches:
+        for prod in s.get("products", []):
+            pname = (prod.get("name") or "").lower()
+            for iname in ingredient_names:
+                if iname.lower() in pname or pname in iname.lower():
+                    supplier_by_ingredient.setdefault(iname, [])
+                    if s not in supplier_by_ingredient[iname]:
+                        supplier_by_ingredient[iname].append(s)
+
+    origin_markers = structure.get("ingredient_origin_markers", [])
+    ingredient_origin_markers = []
+    for marker in origin_markers:
+        iname = marker.get("ingredient_name", "")
+        entry = dict(marker)
+        matched_sups = supplier_by_ingredient.get(iname, [])
+        if not matched_sups:
+            for k, v in supplier_by_ingredient.items():
+                if iname.lower() in k.lower() or k.lower() in iname.lower():
+                    matched_sups = v
+                    break
+        entry["matched_supplier_ids"] = [s["id"] for s in matched_sups]
+        entry["suppliers"] = matched_sups
+        ingredient_origin_markers.append(entry)
+
+    # Append suppliers not yet in origin_markers
+    already_marked = {m.get("ingredient_name", "").lower() for m in ingredient_origin_markers}
+    for iname, sups in supplier_by_ingredient.items():
+        if iname.lower() not in already_marked:
+            ingredient_origin_markers.append({
+                "ingredient_name": iname,
+                "origin_marker": "",
+                "matched_supplier_ids": [s["id"] for s in sups],
+                "suppliers": sups,
+            })
+
+    # ── Post-parse enrichment (beverage pairings, time estimates, FAQs) ───────
+    _enrich_pairings_result = []
+    _enrich_faqs_result = []
+    try:
+        from concurrent.futures import ThreadPoolExecutor
+        _ex_active = recipe.get("time", {}).get("active", "").strip()
+        _ex_total  = recipe.get("time", {}).get("total", "").strip()
+        _ing_lines = "\n".join(
+            f"{i.get('count', '')} {i.get('unit', '')} {i.get('name', '')}".strip()
+            for i in converted_ingredients
+        )
+        _steps_lines = "\n".join(
+            f"{idx + 1}. {(enhanced_steps[idx].get('text', '') if idx < len(enhanced_steps) else '') or (steps[idx] if idx < len(steps) else '')}"
+            for idx in range(len(steps))
+        )
+        with ThreadPoolExecutor(max_workers=3) as _pool:
+            _fp = _pool.submit(_enrich_beverage_pairings, recipe["title"])
+            _ff = _pool.submit(_enrich_faqs, recipe["title"], _ing_lines, _steps_lines)
+            _ft = _pool.submit(_enrich_time_estimates, recipe["title"], _ing_lines, _steps_lines, _ex_active, _ex_total)
+            _enrich_pairings_result = _fp.result(timeout=30) or []
+            _enrich_faqs_result     = _ff.result(timeout=30) or []
+            _at, _tt = _ft.result(timeout=30)
+        if _at:
+            recipe.setdefault("time", {})["active"] = _at
+        if _tt:
+            recipe.setdefault("time", {})["total"] = _tt
+    except Exception as _enrich_err:
+        app.logger.warning(f"[CREATE_RECIPE] enrichment stage failed: {_enrich_err}")
+
+    recipe_slug = make_kitchen_slug(recipe["title"], recipe_uuid)
+    recipe["slug"] = recipe_slug
     recipes.append(recipe)
     save_recipes(recipes)
+
+    # Persist to PostgreSQL (source of truth — flat file is ephemeral on Fly.io)
+    if DATABASE_URL_WRITE:
+        try:
+            user = get_current_user()
+            user_id = user["id"] if user else None
+            conn = get_db()
+            cur = conn.cursor()
+            cur.execute("""
+                INSERT INTO user_kitchen_recipes
+                    (uuid, user_id, title, slug, preamble, tags, ingredients, steps,
+                     original_steps, enhanced_steps, time_active, time_total,
+                     servings, source_name, source_url, has_image, is_draft,
+                     source_book_title, source_book_author, source_book_publisher,
+                     source_book_year, source_book_isbn, source_book_page,
+                     origin, quality_hierarchy, sensory_tests, cross_cuisine_parallels,
+                     flavour_context, lives_or_dies, quality_warnings,
+                     ingredient_origin_markers, source_units_raw,
+                     servings_text, servings_count,
+                     beverage_pairings, faqs)
+                VALUES (
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                )
+                ON CONFLICT (uuid) DO NOTHING
+            """, (
+                recipe_uuid,
+                user_id,
+                recipe["title"],
+                recipe_slug,
+                recipe.get("preamble", ""),
+                json.dumps(recipe.get("tags", [])),
+                json.dumps(converted_ingredients),
+                json.dumps(steps),                          # verbatim original steps
+                json.dumps(steps),                          # original_steps
+                json.dumps(enhanced_steps),
+                recipe.get("time", {}).get("active", ""),
+                recipe.get("time", {}).get("total", ""),
+                json.dumps(raw_servings),
+                recipe.get("source", {}).get("name", ""),
+                recipe.get("source", {}).get("address", ""),
+                recipe.get("hasImage", False),
+                recipe.get("_draft", False),
+                source_book_title,
+                source_book_author,
+                source_book_publisher,
+                source_book_year,
+                source_book_isbn,
+                source_book_page,
+                structure.get("origin"),
+                json.dumps(structure["quality_hierarchy"]) if structure.get("quality_hierarchy") else None,
+                json.dumps(structure["sensory_tests"]) if structure.get("sensory_tests") else None,
+                json.dumps(structure["cross_cuisine_parallels"]) if structure.get("cross_cuisine_parallels") else None,
+                structure.get("flavour_context"),
+                structure.get("lives_or_dies"),
+                json.dumps(quality_warnings) if quality_warnings else None,
+                json.dumps(ingredient_origin_markers) if ingredient_origin_markers else None,
+                json.dumps(source_units_raw) if source_units_raw else None,
+                servings_text,
+                servings_count,
+                json.dumps(_enrich_pairings_result) if _enrich_pairings_result else None,
+                json.dumps(_enrich_faqs_result) if _enrich_faqs_result else None,
+            ))
+            cur.close()
+            conn.close()
+            app.logger.info(
+                f"[CREATE_RECIPE] title={recipe['title']!r} uuid={recipe_uuid} "
+                f"user_id={user_id} db_write=SUCCESS"
+            )
+        except Exception as e:
+            app.logger.error(
+                f"[CREATE_RECIPE] title={recipe['title']!r} uuid={recipe_uuid} "
+                f"db_write=FAILED err={e}"
+            )
+    else:
+        app.logger.warning(
+            f"[CREATE_RECIPE] title={recipe['title']!r} uuid={recipe_uuid} "
+            f"db_write=SKIPPED (no DATABASE_URL_WRITE)"
+        )
+
     return jsonify(recipe), 201
+
+
+@app.route("/api/recipes/<slug>", methods=["GET"])
+def get_recipe_api(slug):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute("""
+            SELECT uuid, slug, title, preamble, ingredients, steps,
+                   time_active, time_total, servings, tags,
+                   source_name, source_url, is_draft, has_image
+            FROM user_kitchen_recipes
+            WHERE slug = %s AND user_id = %s
+            LIMIT 1
+        """, (slug, user["id"]))
+        row = cur.fetchone()
+        if not row:
+            return jsonify({"error": "Not found or not yours"}), 404
+        return jsonify(dict(row))
+    finally:
+        cur.close()
+        conn.close()
 
 
 @app.route("/api/recipes/<recipe_uuid>", methods=["PUT"])
 def update_recipe(recipe_uuid):
     data = request.get_json()
+    if isinstance(data.get("ingredients"), str):
+        data["ingredients"] = _parse_ingredients_text(data["ingredients"])
+    if isinstance(data.get("steps"), str):
+        data["steps"] = _parse_steps_text(data["steps"])
+    if "method_steps" in data and "steps" not in data:
+        raw = data["method_steps"]
+        data["steps"] = _parse_steps_text(raw) if isinstance(raw, str) else raw
     recipes = load_recipes()
 
     idx = next((i for i, r in enumerate(recipes) if r["uuid"] == recipe_uuid), None)
@@ -2349,6 +4115,42 @@ def update_recipe(recipe_uuid):
 
     recipes[idx] = recipe
     save_recipes(recipes)
+
+    # Sync to PostgreSQL
+    if DATABASE_URL_WRITE:
+        try:
+            conn = get_db()
+            cur = conn.cursor()
+            cur.execute("""
+                UPDATE user_kitchen_recipes SET
+                    title = %s, preamble = %s, tags = %s, ingredients = %s,
+                    steps = %s, original_steps = %s, enhanced_steps = %s,
+                    time_active = %s, time_total = %s, servings = %s,
+                    source_name = %s, source_url = %s, has_image = %s,
+                    is_draft = %s, updated_at = NOW()
+                WHERE uuid = %s
+            """, (
+                recipe["title"],
+                recipe.get("preamble", ""),
+                json.dumps(recipe.get("tags", [])),
+                json.dumps(recipe.get("ingredients", [])),
+                json.dumps(recipe.get("steps", [])),
+                json.dumps(recipe.get("original_steps", [])),
+                json.dumps(recipe.get("enhanced_steps", [])),
+                recipe.get("time", {}).get("active", ""),
+                recipe.get("time", {}).get("total", ""),
+                json.dumps(recipe.get("servings", [])),
+                recipe.get("source", {}).get("name", ""),
+                recipe.get("source", {}).get("address", ""),
+                data.get("has_image", recipe.get("hasImage", False)),
+                recipe.get("_draft", False),
+                recipe_uuid,
+            ))
+            cur.close()
+            conn.close()
+        except Exception as e:
+            app.logger.error(f"[UPDATE_RECIPE] uuid={recipe_uuid} db_sync=FAILED err={e}")
+
     return jsonify(recipe)
 
 
@@ -2368,7 +4170,115 @@ def delete_recipe(recipe_uuid):
     if image_dir.is_dir():
         shutil.rmtree(image_dir)
 
+    # Sync delete to PostgreSQL
+    if DATABASE_URL_WRITE:
+        try:
+            conn = get_db()
+            cur = conn.cursor()
+            cur.execute("DELETE FROM user_kitchen_recipes WHERE uuid = %s", (recipe_uuid,))
+            cur.close()
+            conn.close()
+        except Exception as e:
+            app.logger.error(f"[DELETE_RECIPE] uuid={recipe_uuid} db_sync=FAILED err={e}")
+
     return jsonify(success=True)
+
+
+# ─── Recipe editor ────────────────────────────────────────────────────────────
+
+@app.route("/api/recipes/by-slug/<slug>", methods=["GET"])
+def get_user_recipe_by_slug(slug):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute("""
+            SELECT uuid, slug, title, preamble, ingredients, steps,
+                   time_active, time_total, servings, tags,
+                   source_name, source_url, is_draft, has_image
+            FROM user_kitchen_recipes
+            WHERE slug = %s AND user_id = %s
+            LIMIT 1
+        """, (slug, user["id"]))
+        row = cur.fetchone()
+        if not row:
+            return jsonify({"error": "Recipe not found or not yours"}), 404
+        return jsonify(dict(row))
+    finally:
+        cur.close()
+        conn.close()
+
+
+@app.route("/api/recipes/<slug>/upload-image", methods=["POST"])
+def upload_user_recipe_image(slug):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if "file" not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+    f = request.files["file"]
+    if not f or not f.filename:
+        return jsonify({"error": "No file"}), 400
+    ext = f.filename.rsplit(".", 1)[-1].lower() if "." in f.filename else ""
+    if ext not in {"jpg", "jpeg", "png", "webp"}:
+        return jsonify({"error": "Use jpeg, png, or webp"}), 400
+    f.seek(0, 2)
+    size = f.tell()
+    f.seek(0)
+    if size > 5 * 1024 * 1024:
+        return jsonify({"error": "File too large. Max 5MB"}), 400
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute(
+            "SELECT uuid FROM user_kitchen_recipes WHERE slug = %s AND user_id = %s",
+            (slug, user["id"])
+        )
+        row = cur.fetchone()
+        if not row:
+            return jsonify({"error": "Recipe not found"}), 404
+        recipe_uuid = row["uuid"]
+        img_bytes = f.read()
+        image_dir = EXTRACTED_DIR / recipe_uuid
+        image_dir.mkdir(parents=True, exist_ok=True)
+        (image_dir / "hero.jpg").write_bytes(img_bytes)
+        (image_dir / "main.jpg").write_bytes(img_bytes)
+        cur.execute(
+            "UPDATE user_kitchen_recipes SET has_image = TRUE WHERE uuid = %s AND user_id = %s",
+            (recipe_uuid, user["id"])
+        )
+        conn.commit()
+        return jsonify({"ok": True, "url": f"/images/{recipe_uuid}/hero.jpg"})
+    finally:
+        cur.close()
+        conn.close()
+
+
+@app.route("/recipe/<slug>/edit")
+def recipe_editor(slug):
+    user = get_current_user()
+    if not user:
+        return redirect(f"/auth/login?next=/recipe/{slug}/edit")
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute("""
+            SELECT uuid, slug, title, preamble, ingredients, steps,
+                   time_active, time_total, servings, tags,
+                   source_name, source_url, is_draft, has_image
+            FROM user_kitchen_recipes
+            WHERE slug = %s AND user_id = %s
+            LIMIT 1
+        """, (slug, user["id"]))
+        row = cur.fetchone()
+        if not row:
+            return redirect("/kitchen")
+        return render_template("recipe_editor.html", recipe=dict(row))
+    finally:
+        cur.close()
+        conn.close()
 
 
 # ─── Share links ─────────────────────────────────────────────────────────────
@@ -2545,21 +4455,137 @@ def match_techniques():
     return jsonify(_match_techniques_for_step(step))
 
 
+# ─── Sashimi validator ────────────────────────────────────────────────────────
+# Applies to INSERTs and UPDATEs only. Existing rows with NULL in new pillar
+# columns are not retroactively failed. Content watcher handles backlog enrichment.
+
+_SASHIMI_BANNED_WORDS = [
+    "ai-powered", " ai ", "platform", "solution", "non-negotiable",
+    "revolutionary", "game-changing", "world-class", "premium",
+    "leverage", "unlock", "seamless", "cutting-edge",
+]
+
+_SASHIMI_CHECKED_FIELDS = [
+    "origin", "description", "flavour_context", "species_precision",
+    "quality_hierarchy", "sensory_tests", "key_principles",
+]
+
+
+def _validate_technique_entry(e: dict) -> list[str]:
+    """
+    Validate a technique entry at commit time. Returns a list of error strings.
+    Empty list means the entry passes.
+
+    Rules (new inserts must satisfy all):
+    1. Four existing pillars: origin, description, key_principles, flavour_context — all non-empty.
+    2. Three new pillars: quality_hierarchy, sensory_tests, species_precision — all non-empty.
+    3. quality_hierarchy must be a list with at least one item.
+    4. sensory_tests must be a list of dicts, each with sense/cue/fail_indicator keys.
+    5. At least one technique_ingredients row present (ingredients list non-empty).
+    6. Every ingredient row has a tier value.
+    7. No banned words in any text field.
+    """
+    errors = []
+
+    # Rule 1 — four existing pillars
+    for field in ("origin", "description", "key_principles", "flavour_context"):
+        val = e.get(field)
+        if not val or (isinstance(val, str) and not val.strip()):
+            errors.append(f"Missing required pillar: {field}")
+
+    # Rule 2 — three new pillars
+    for field in ("quality_hierarchy", "sensory_tests", "species_precision"):
+        val = e.get(field)
+        if val is None or (isinstance(val, str) and not val.strip()):
+            errors.append(f"Missing required new pillar: {field}")
+
+    # Rule 3 — quality_hierarchy must be a non-empty list
+    qh = e.get("quality_hierarchy")
+    if qh is not None:
+        if not isinstance(qh, list) or len(qh) == 0:
+            errors.append("quality_hierarchy must be a non-empty list")
+
+    # Rule 4 — sensory_tests must be a list of dicts with sense/cue/fail_indicator
+    st = e.get("sensory_tests")
+    if st is not None:
+        if not isinstance(st, list) or len(st) == 0:
+            errors.append("sensory_tests must be a non-empty list")
+        else:
+            for i, test in enumerate(st):
+                if not isinstance(test, dict):
+                    errors.append(f"sensory_tests[{i}] must be a dict with sense/cue/fail_indicator")
+                else:
+                    for key in ("sense", "cue", "fail_indicator"):
+                        if not test.get(key):
+                            errors.append(f"sensory_tests[{i}] missing key: {key}")
+
+    # Rule 5 — at least one ingredient
+    ingredients = e.get("ingredients", [])
+    if not ingredients:
+        errors.append("At least one technique_ingredients row required")
+
+    # Rule 6 — every ingredient must have a tier
+    if isinstance(ingredients, list):
+        for i, ing in enumerate(ingredients):
+            if isinstance(ing, dict) and not ing.get("tier"):
+                errors.append(f"ingredients[{i}] missing tier value")
+
+    # Rule 7 — banned words across text fields
+    for field in _SASHIMI_CHECKED_FIELDS:
+        val = e.get(field)
+        if val is None:
+            continue
+        text = val if isinstance(val, str) else json.dumps(val)
+        text_lower = text.lower()
+        for bw in _SASHIMI_BANNED_WORDS:
+            if bw in text_lower:
+                errors.append(f"Banned word '{bw.strip()}' found in {field}")
+
+    return errors
+
+
+def _resolve_supplier_id(cur, supplier_name: str) -> int | None:
+    """Look up a supplier by name (case-insensitive). Returns id or None."""
+    if not supplier_name:
+        return None
+    cur.execute(
+        "SELECT id FROM suppliers WHERE LOWER(name) = LOWER(%s) LIMIT 1",
+        (supplier_name,)
+    )
+    row = cur.fetchone()
+    return row[0] if row else None
+
+
 @app.route("/api/techniques/bulk", methods=["POST"])
 def bulk_create_techniques():
     entries = request.get_json()
     if not isinstance(entries, list):
         return jsonify(error="Expected a JSON array"), 400
+
     conn = get_db()
     cur = conn.cursor()
     count = 0
+    validation_errors = []
+
     for e in entries:
+        # Run Sashimi validator — collect errors but do not hard-block legacy imports
+        # that lack the new pillars (those use the old import path without ingredients).
+        # Hard-block only if the entry explicitly includes new-schema fields.
+        is_new_schema = "ingredients" in e or "quality_hierarchy" in e
+        if is_new_schema:
+            errs = _validate_technique_entry(e)
+            if errs:
+                validation_errors.append({"entry": e.get("name", "?"), "errors": errs})
+                continue  # skip this entry — do not commit a failing entry
+
         cur.execute(
             """INSERT INTO technique_references
                (name, category, description, key_principles, common_mistakes, pro_tips,
                 trigger_keywords, authority_tier, related_techniques, tier_level,
-                source_book, cross_cuisine_parallels, origin, flavour_context)
-               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                source_book, cross_cuisine_parallels, origin, flavour_context,
+                quality_hierarchy, sensory_tests, species_precision)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+               RETURNING id""",
             (
                 e.get("name", ""),
                 e.get("category", ""),
@@ -2575,12 +4601,44 @@ def bulk_create_techniques():
                 json.dumps(e.get("cross_cuisine_parallels", [])),
                 e.get("origin"),
                 e.get("flavour_context"),
+                json.dumps(e["quality_hierarchy"]) if e.get("quality_hierarchy") is not None else None,
+                json.dumps(e["sensory_tests"]) if e.get("sensory_tests") is not None else None,
+                e.get("species_precision"),
             ),
         )
+        technique_id = cur.fetchone()[0]
+
+        # Write technique_ingredients rows — one transaction with the parent row
+        ingredients = e.get("ingredients", [])
+        for idx, ing in enumerate(ingredients):
+            if not isinstance(ing, dict):
+                continue
+            provider_id = ing.get("provider_supplier_id")
+            if provider_id is None and ing.get("provider_supplier_name"):
+                provider_id = _resolve_supplier_id(cur, ing["provider_supplier_name"])
+            cur.execute(
+                """INSERT INTO technique_ingredients
+                   (technique_id, ingredient_name, origin_brand, provider_supplier_id, tier, display_order)
+                   VALUES (%s, %s, %s, %s, %s, %s)""",
+                (
+                    technique_id,
+                    ing.get("name", ""),
+                    ing.get("origin_brand"),
+                    provider_id,
+                    ing.get("tier"),
+                    ing.get("display_order", idx),
+                ),
+            )
         count += 1
+
     cur.close()
     conn.close()
-    return jsonify(inserted=count), 201
+
+    response = {"inserted": count}
+    if validation_errors:
+        response["validation_errors"] = validation_errors
+        response["skipped"] = len(validation_errors)
+    return jsonify(response), 201
 
 
 @app.route("/api/techniques/<int:technique_id>", methods=["GET"])
@@ -2615,8 +4673,12 @@ def update_technique(technique_id):
         "name": str, "category": str, "description": str, "key_principles": str,
         "common_mistakes": str, "pro_tips": str, "authority_tier": int,
         "tier_level": str, "source_book": str, "origin": str, "flavour_context": str,
+        "species_precision": str,
     }
-    json_fields = {"trigger_keywords", "related_techniques", "cross_cuisine_parallels"}
+    json_fields = {
+        "trigger_keywords", "related_techniques", "cross_cuisine_parallels",
+        "quality_hierarchy", "sensory_tests",
+    }
 
     sets = []
     vals = []
@@ -2734,7 +4796,7 @@ def extract_techniques():
         return jsonify(techniques)
 
     except json.JSONDecodeError as e:
-        return jsonify(error=f"Failed to parse AI response: {e}"), 500
+        return jsonify(error=f"Failed to parse the response: {e}"), 500
     except anthropic.RateLimitError as e:
         return jsonify(error=f"rate limit: {e}"), 429
     except Exception as e:
@@ -2767,6 +4829,532 @@ def post_technique_builder_log():
     return jsonify(success=True), 201
 
 
+# ─── Sashimi-Grade Ingestion Pipeline Helpers ────────────────────────────────
+
+UNIT_CONVERSIONS = {
+    'cup': ('ml', 240), 'cups': ('ml', 240),
+    'tablespoon': ('ml', 15), 'tablespoons': ('ml', 15), 'tbsp': ('ml', 15),
+    'teaspoon': ('ml', 5), 'teaspoons': ('ml', 5), 'tsp': ('ml', 5),
+    'oz': ('g', 28.35), 'ounce': ('g', 28.35), 'ounces': ('g', 28.35),
+    'lb': ('g', 453.6), 'pound': ('g', 453.6), 'pounds': ('g', 453.6),
+    'fl oz': ('ml', 29.57),
+    'quart': ('ml', 946), 'quarts': ('ml', 946),
+    'pint': ('ml', 473), 'pints': ('ml', 473),
+}
+
+TEMP_PATTERN = _re.compile(r'(\d+(?:\.\d+)?)\s*°F')
+
+ENCODING_FIXES = [
+    ('â€™', '\u2019'), ('â€˜', '\u2018'), ('â€œ', '\u201c'), ('â€\x9d', '\u201d'),
+    ('â€"', '\u2013'), ('â€"', '\u2014'), ('Ã©', 'é'), ('Ã¨', 'è'),
+    ('Ã\xa0', 'à'), ('Ã§', 'ç'), ('Ã®', 'î'), ('Ã´', 'ô'),
+    ('Ã¢', 'â'), ('Ã»', 'û'), ('Ã¹', 'ù'), ('Ã«', 'ë'),
+    ('â€¦', '…'), ('â€¢', '•'),
+]
+
+
+def _cleanup_raw_text(text):
+    """Fix encoding artifacts, smart quotes, PDF artifacts, OCR hyphenation.
+    Returns (cleaned_text, list_of_corrections)."""
+    corrections = []
+    result = text
+
+    for bad, good in ENCODING_FIXES:
+        if bad in result:
+            result = result.replace(bad, good)
+            corrections.append(f"encoding: {bad!r}")
+
+    # Smart quotes / dashes normalization
+    result = result.replace('\u201c', '"').replace('\u201d', '"')
+    result = result.replace('\u2018', "'").replace('\u2019', "'")
+    result = result.replace('\u2013', '–').replace('\u2014', '—')
+
+    # PDF column artifact: 4+ spaces → single space
+    result = _re.sub(r' {4,}', ' ', result)
+
+    # OCR hyphenation: word-\nnewword → wordnewword
+    result = _re.sub(r'(\w)-\n(\w)', r'\1\2', result)
+
+    # Remove lone page numbers and duplicate consecutive lines
+    lines = result.split('\n')
+    filtered_lines = []
+    prev_stripped = None
+    for line in lines:
+        stripped = line.strip()
+        if _re.match(r'^\d{1,4}$', stripped):
+            corrections.append(f"removed page number: {stripped!r}")
+            continue
+        if stripped and stripped == prev_stripped:
+            corrections.append(f"removed duplicate: {stripped[:50]!r}")
+            continue
+        filtered_lines.append(line)
+        if stripped:
+            prev_stripped = stripped
+
+    # Join mid-sentence line breaks (no terminal punct + next line starts lowercase)
+    joined_lines = []
+    i = 0
+    while i < len(filtered_lines):
+        line = filtered_lines[i]
+        stripped = line.strip()
+        if (i + 1 < len(filtered_lines)
+                and stripped
+                and stripped[-1] not in '.!?:;'
+                and filtered_lines[i + 1].strip()
+                and filtered_lines[i + 1].strip()[0].islower()):
+            joined_lines.append(stripped + ' ' + filtered_lines[i + 1].strip())
+            corrections.append("joined mid-sentence line break")
+            i += 2
+        else:
+            joined_lines.append(line)
+            i += 1
+
+    result = '\n'.join(joined_lines)
+    result = _re.sub(r'\n{3,}', '\n\n', result)
+    return result.strip(), corrections
+
+
+def _convert_to_metric(ingredients):
+    """Convert imperial measurements to metric-primary with imperial in parens.
+    Returns (converted_ingredients, source_units_raw, quality_warnings)."""
+    source_units_raw = [dict(ing) if isinstance(ing, dict) else ing for ing in ingredients]
+    converted = []
+    has_imperial = False
+    has_metric = False
+
+    for ing in ingredients:
+        if not isinstance(ing, dict):
+            converted.append(ing)
+            continue
+
+        new_ing = dict(ing)
+        unit = (ing.get('unit') or '').strip().lower()
+        count_str = str(ing.get('count') or '').strip()
+
+        if unit in UNIT_CONVERSIONS:
+            metric_unit, factor = UNIT_CONVERSIONS[unit]
+            try:
+                count_val = float(count_str)
+                metric_val = count_val * factor
+                rounded = round(metric_val / 5) * 5 if metric_val > 20 else round(metric_val, 1)
+                imperial_str = f"{count_str} {unit}"
+                new_ing['unit'] = metric_unit
+                new_ing['count'] = str(int(rounded) if rounded == int(rounded) else rounded)
+                existing_info = new_ing.get('info', '') or ''
+                new_ing['info'] = (f"{existing_info} ({imperial_str})".strip())
+                has_imperial = True
+            except (ValueError, TypeError):
+                pass
+        elif unit in ('g', 'kg', 'ml', 'l', 'cl', 'dl'):
+            has_metric = True
+
+        converted.append(new_ing)
+
+    quality_warnings = []
+    if has_imperial and has_metric:
+        quality_warnings.append({
+            "type": "mixed_units",
+            "detail": "Recipe mixes imperial and metric measurements",
+        })
+
+    return converted, source_units_raw, quality_warnings
+
+
+def _parse_yield(servings_raw):
+    """Parse servings JSONB array → (servings_text: str, servings_count: int|None)."""
+    if not servings_raw:
+        return None, None
+
+    if isinstance(servings_raw, list) and servings_raw:
+        first = servings_raw[0]
+        if isinstance(first, dict):
+            count_str = str(first.get('count') or '').strip()
+            unit_str = (first.get('unit') or '').strip()
+            raw_str = f"{count_str} {unit_str}".strip()
+        else:
+            raw_str = str(first)
+            count_str = raw_str
+            unit_str = ''
+    else:
+        raw_str = str(servings_raw)
+        count_str = raw_str
+        unit_str = ''
+
+    raw_lower = raw_str.lower()
+
+    yield_patterns = [
+        (_re.compile(r'makes?\s+~?(\d+)\s*(ml|g|jar|cup|jars|cups)', _re.I),
+         lambda m: (f"Makes ~{m.group(1)}{m.group(2)}", None)),
+        (_re.compile(r'makes?\s+(\d+)', _re.I),
+         lambda m: (f"Makes {m.group(1)}", int(m.group(1)))),
+        (_re.compile(r'yields?\s+(\d+)', _re.I),
+         lambda m: (f"Yields {m.group(1)}", int(m.group(1)))),
+        (_re.compile(r'serves?\s+(\d+)(?:\s*[-\u2013]\s*(\d+))?', _re.I),
+         lambda m: (
+             f"Serves {m.group(1)}–{m.group(2)}" if m.group(2) else f"Serves {m.group(1)}",
+             int(m.group(1))
+         )),
+        (_re.compile(r'(\d+)\s+to\s+(\d+)\s+(?:servings?|serves?)', _re.I),
+         lambda m: (f"{m.group(1)} to {m.group(2)} servings", int(m.group(1)))),
+        (_re.compile(r'(\d+)(?:\s*[-\u2013]\s*(\d+))?\s+(?:servings?|serves?)', _re.I),
+         lambda m: (
+             f"{m.group(1)}–{m.group(2)} servings" if m.group(2)
+             else f"{m.group(1)} serving{'s' if int(m.group(1)) != 1 else ''}",
+             int(m.group(1))
+         )),
+        (_re.compile(r'(\d+)\s+portions?', _re.I),
+         lambda m: (f"{m.group(1)} portions", int(m.group(1)))),
+        (_re.compile(r'feeds?\s+(\d+)', _re.I),
+         lambda m: (f"Feeds {m.group(1)}", int(m.group(1)))),
+    ]
+
+    for pattern, handler in yield_patterns:
+        m = pattern.search(raw_lower)
+        if m:
+            return handler(m)
+
+    # Fallback: try to extract number directly from count_str
+    try:
+        count_int = int(float(count_str))
+        label = unit_str if unit_str and unit_str not in ('serve', 'serves') \
+            else ('serving' if count_int == 1 else 'servings')
+        return f"{count_int} {label}", count_int
+    except (ValueError, TypeError):
+        pass
+
+    return raw_str.strip() or None, None
+
+
+def _add_step_insights(title, ingredients, steps):
+    """Add professional insights to steps WITHOUT rewriting them.
+    Returns list of {original_step, enhanced_step (verbatim), insight, matched_techniques}."""
+    if not steps:
+        return []
+
+    ingredient_block = "\n".join(f"- {ing}" for ing in ingredients)
+    result_steps = []
+
+    insight_system = (
+        "You are a culinary annotation engine. For each recipe step, write a 1–2 sentence "
+        "professional insight explaining the underlying technique principle. "
+        "Do NOT rewrite the step. Do NOT add steps. "
+        'Return JSON: {"insight": "..."}'
+    )
+
+    for i, step_text in enumerate(steps):
+        matched = _match_techniques_for_step(step_text)
+
+        technique_block = ""
+        if matched:
+            parts = [
+                f"Technique: {t['name']}\nKey principles: {t['key_principles']}\nPro tips: {t['pro_tips']}"
+                for t in matched
+            ]
+            technique_block = "\n\nMatched technique references:\n" + "\n---\n".join(parts)
+
+        user_prompt = (
+            f"Recipe: {title}\n\nIngredients:\n{ingredient_block}\n\n"
+            f"Step {i + 1}: {step_text}"
+            f"{technique_block}\n\n"
+            "Write a 1–2 sentence professional insight for this step only. "
+            'Return JSON: {"insight": "..."}'
+        )
+
+        try:
+            response = client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=300,
+                system=insight_system,
+                messages=[{"role": "user", "content": user_prompt}],
+            )
+            resp_text = response.content[0].text.strip()
+            if resp_text.startswith("```"):
+                lines = resp_text.split("\n")
+                resp_text = "\n".join(lines[1:-1] if lines and lines[-1].strip() == "```" else lines[1:])
+            insight = json.loads(resp_text).get("insight", "")
+        except Exception:
+            insight = ""
+
+        result_steps.append({
+            "original_step": step_text,
+            "enhanced_step": step_text,   # verbatim — never rewritten
+            "insight": insight,
+            "matched_techniques": [t["name"] for t in matched],
+        })
+
+    return result_steps
+
+
+def _enhance_recipe_structure(title, ingredients_text, steps_text):
+    """Generate recipe-level structural metadata. Returns dict."""
+    prompt = (
+        f"You are a culinary intelligence engine. Analyse this recipe and return structural metadata.\n"
+        f"You may NOT modify the steps or ingredients. You add structural metadata only.\n"
+        f"Flag errors in quality_warnings — do not silently correct them.\n\n"
+        f"Recipe: {title}\n\nIngredients:\n{ingredients_text}\n\nSteps:\n{steps_text}\n\n"
+        'Return ONLY valid JSON — no markdown fences:\n'
+        '{\n'
+        '  "origin": "1–2 sentence geographic/historical placement",\n'
+        '  "quality_hierarchy": {"tier1": "...", "tier2": "...", "tier3": "..."},\n'
+        '  "sensory_tests": [\n'
+        '    {"sense": "visual|aroma|texture|taste|sound", "cue": "...", "fail_indicator": "..."}\n'
+        '  ],\n'
+        '  "cross_cuisine_parallels": [\n'
+        '    {"cuisine": "...", "dish": "...", "mechanism": "..."}\n'
+        '  ],\n'
+        '  "flavour_context": "Food-science reasoning. No waffle.",\n'
+        '  "lives_or_dies": "The one principle this dish stands or falls on. One sentence.",\n'
+        '  "quality_warnings": [],\n'
+        '  "ingredient_origin_markers": [\n'
+        '    {"ingredient_name": "name from recipe", "origin_marker": "1 sentence on provenance"}\n'
+        '  ]\n'
+        '}\n\n'
+        'quality_warnings: flag contradictory storage, mixed units, step reference gaps, fragments. '
+        'Empty array if clean. Return 2–4 sensory_tests. '
+        'ingredient_origin_markers: only ingredients with a meaningful origin story.'
+    )
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        resp_text = response.content[0].text.strip()
+        if resp_text.startswith("```"):
+            lines = resp_text.split("\n")
+            resp_text = "\n".join(lines[1:-1] if lines and lines[-1].strip() == "```" else lines[1:])
+        return json.loads(resp_text)
+    except Exception as e:
+        app.logger.warning(f"[_enhance_recipe_structure] failed: {e}")
+        return {}
+
+
+def _enrich_beverage_pairings(title):
+    """Import-time pairing capture. Returns list from the heuristic matcher."""
+    try:
+        return _find_pairings_for_user_recipe(title, limit=3) or []
+    except Exception as e:
+        app.logger.warning(f"[_enrich_beverage_pairings] failed: {e}")
+        return []
+
+
+def _enrich_time_estimates(title, ingredients_text, steps_text, existing_active="", existing_total=""):
+    """Estimate active/total time via Haiku if either field is blank.
+    Returns (active_text, total_text) — either value is None if already set."""
+    if existing_active and existing_total:
+        return None, None
+    prompt = (
+        f"You are a culinary timing expert. Estimate preparation times for this recipe.\n"
+        f"Recipe: {title}\n\nIngredients:\n{ingredients_text}\n\nSteps:\n{steps_text}\n\n"
+        "Return ONLY valid JSON with no markdown fences:\n"
+        '{"active_time": "X mins", "total_time": "Y hours Z mins"}\n\n'
+        "active_time = hands-on prep + cooking time. "
+        "total_time = active_time + inactive time (marinating, resting, chilling). "
+        'Use "X mins" for under 1 hour, "X hr Y mins" for 1+ hours. '
+        "If total equals active, repeat the value."
+    )
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=80,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        resp_text = response.content[0].text.strip()
+        if resp_text.startswith("```"):
+            lines = resp_text.split("\n")
+            resp_text = "\n".join(lines[1:-1] if lines and lines[-1].strip() == "```" else lines[1:])
+        d = json.loads(resp_text)
+        active_out = d.get("active_time") if not existing_active else None
+        total_out  = d.get("total_time")  if not existing_total  else None
+        return active_out, total_out
+    except Exception as e:
+        app.logger.warning(f"[_enrich_time_estimates] failed: {e}")
+        return None, None
+
+
+def _enrich_faqs(title, ingredients_text, steps_text):
+    """Generate 3–5 cook's FAQs via Haiku. Returns [{q, a}] list."""
+    prompt = (
+        f"You are a culinary instructor. Generate 3 to 5 practical cook's questions and answers "
+        f"for this recipe.\n"
+        f"Recipe: {title}\n\nIngredients:\n{ingredients_text}\n\nSteps:\n{steps_text}\n\n"
+        "Focus on common mistakes, substitutions, make-ahead tips, and technique clarifications.\n"
+        "Return ONLY valid JSON with no markdown fences:\n"
+        '[{"q": "...", "a": "..."}, ...]\n\n'
+        "Keep answers under 50 words. No waffle. Practical only."
+    )
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=800,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        resp_text = response.content[0].text.strip()
+        if resp_text.startswith("```"):
+            lines = resp_text.split("\n")
+            resp_text = "\n".join(lines[1:-1] if lines and lines[-1].strip() == "```" else lines[1:])
+        result = json.loads(resp_text)
+        if isinstance(result, list):
+            return [{"q": str(i.get("q", "")), "a": str(i.get("a", ""))} for i in result if i.get("q")]
+        return []
+    except Exception as e:
+        app.logger.warning(f"[_enrich_faqs] failed: {e}")
+        return []
+
+
+def _match_suppliers_for_ingredients(ingredient_names):
+    """Reusable supplier matching. Returns list of supplier dicts with products[]."""
+    if not ingredient_names or not DATABASE_URL:
+        return []
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        names = [n for n in ingredient_names[:20] if n]
+        patterns = [f"%{n}%" for n in names]
+        cur.execute("""
+            SELECT DISTINCT ON (s.id, ip.name)
+                s.id, s.name, s.website, s.city, s.state_province, s.country,
+                ip.name AS product_name,
+                LEFT(ip.description, 140) AS product_desc
+            FROM ingredient_products ip
+            JOIN product_suppliers ps ON ip.id = ps.product_id
+            JOIN suppliers s ON ps.supplier_id = s.id
+            WHERE (
+                ip.name ILIKE ANY(%s)
+                OR EXISTS (
+                    SELECT 1 FROM unnest(%s::text[]) AS ri(nm)
+                    WHERE ri.nm ILIKE '%%' || ip.name || '%%'
+                )
+            )
+            ORDER BY s.id, ip.name, s.name
+        """, (patterns, names))
+        rows = cur.fetchall()
+        supplier_map = {}
+        for row in rows:
+            sid = row['id']
+            if sid not in supplier_map:
+                supplier_map[sid] = {
+                    'id': sid, 'name': row['name'], 'website': row['website'],
+                    'city': row['city'], 'state_province': row['state_province'],
+                    'country': row['country'], 'products': [],
+                }
+            if row['product_name']:
+                supplier_map[sid]['products'].append({
+                    'name': row['product_name'],
+                    'desc': row['product_desc'] or '',
+                })
+        cur.close()
+        conn.close()
+        return list(supplier_map.values())
+    except Exception as e:
+        app.logger.warning(f"[_match_suppliers_for_ingredients] failed: {e}")
+        return []
+
+
+def _supplier_in_region(row, region_code):
+    """True if supplier is T1 for the given region code (or region_code is None → show all)."""
+    if not region_code:
+        return True  # global user: show all providers
+    state = row.get("state_province") or ""
+    svc   = row.get("service_region") or []
+    _WESTERN_CA = {"BC", "AB", "SK", "MB"}
+    if state == region_code:
+        return True
+    if region_code in svc:
+        return True
+    if region_code in _WESTERN_CA and "Western_Canada" in svc:
+        return True
+    return False
+
+
+def _get_kitchen_recipe_suppliers(ingredient_names, user_loc="global"):
+    """
+    Fetch Origin (benchmark) and Provider (local) suppliers for a kitchen recipe.
+    Returns: {"origin": [supplier_dict, ...], "providers": [supplier_dict, ...]}
+
+    Origin   = ps.role='ORIGIN' — region-agnostic, global benchmark reference
+    Provider = ps.role='PROVIDER' — hard-filtered to user's T1 region:
+               s.state_province matches user's region code, OR
+               region code appears explicitly in s.service_region (NOT nationwide_ umbrella)
+    """
+    if not ingredient_names or not DATABASE_URL:
+        return {"origin": [], "providers": []}
+
+    region_code = None
+    if user_loc and user_loc != "global":
+        parts = user_loc.split("-", 1)
+        if len(parts) == 2:
+            region_code = parts[1]  # e.g. "BC", "WA"
+
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        names = [n for n in ingredient_names[:20] if n]
+        patterns = [f"%{n}%" for n in names]
+
+        # Step 1: find product IDs matching ingredient names
+        cur.execute("""
+            SELECT DISTINCT ip.id AS product_id
+            FROM ingredient_products ip
+            WHERE ip.name ILIKE ANY(%s)
+               OR EXISTS (
+                   SELECT 1 FROM unnest(%s::text[]) AS ri(nm)
+                   WHERE ri.nm ILIKE '%%' || ip.name || '%%'
+               )
+        """, (patterns, names))
+        product_ids = [r["product_id"] for r in cur.fetchall()]
+        if not product_ids:
+            cur.close()
+            conn.close()
+            return {"origin": [], "providers": []}
+
+        # Step 2: fetch ORIGIN + PROVIDER suppliers for those products
+        cur.execute("""
+            SELECT DISTINCT ON (s.id, ps.role)
+                s.id, s.name, s.website, s.city, s.state_province, s.country,
+                s.service_region,
+                ps.role, ps.is_primary,
+                ip.name AS matched_product_name,
+                LEFT(ip.description, 120) AS product_desc
+            FROM ingredient_products ip
+            JOIN product_suppliers ps ON ip.id = ps.product_id
+            JOIN suppliers s ON ps.supplier_id = s.id
+            WHERE ip.id = ANY(%s)
+              AND s.is_active = TRUE
+            ORDER BY s.id, ps.role, ps.is_primary DESC NULLS LAST
+        """, (product_ids,))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        origin_map = {}
+        provider_map = {}
+        for row in rows:
+            sid = row["id"]
+            sup = {
+                "id": sid, "name": row["name"], "website": row["website"],
+                "city": row["city"], "state_province": row["state_province"],
+                "country": row["country"], "products": [],
+            }
+            if row["matched_product_name"]:
+                sup["products"].append({
+                    "name": row["matched_product_name"],
+                    "desc": row["product_desc"] or "",
+                })
+            if row["role"] == "ORIGIN":
+                if sid not in origin_map:
+                    origin_map[sid] = sup
+            elif row["role"] == "PROVIDER":
+                if _supplier_in_region(row, region_code):
+                    if sid not in provider_map:
+                        provider_map[sid] = sup
+
+        return {"origin": list(origin_map.values()), "providers": list(provider_map.values())}
+    except Exception as e:
+        app.logger.warning(f"[_get_kitchen_recipe_suppliers] failed: {e}")
+        return {"origin": [], "providers": []}
+
+
 # ─── Recipe enhancement pipeline ─────────────────────────────────────────────
 
 ENHANCE_SYSTEM_PROMPT = (
@@ -2780,71 +5368,18 @@ ENHANCE_SYSTEM_PROMPT = (
 
 
 def _enhance_recipe_steps(title, ingredients, steps):
-    """Enhance recipe steps using Claude and technique matching.
-
-    Returns (enhanced_step_strings, enhanced_step_objects) or None on failure.
+    """Wrapper kept for /api/enhance-recipe backward compat.
+    Delegates to _add_step_insights() — steps are preserved verbatim.
+    Returns (step_strings, step_objects) or None on failure.
     """
     if not steps:
         return None
-
-    ingredient_block = "\n".join(f"- {ing}" for ing in ingredients)
-    enhanced_steps = []
-
-    for i, step_text in enumerate(steps):
-        matched = _match_techniques_for_step(step_text)
-
-        technique_block = ""
-        if matched:
-            parts = []
-            for t in matched:
-                parts.append(
-                    f"Technique: {t['name']}\n"
-                    f"Key principles: {t['key_principles']}\n"
-                    f"Common mistakes: {t['common_mistakes']}\n"
-                    f"Pro tips: {t['pro_tips']}"
-                )
-            technique_block = (
-                "\n\nMatched technique references:\n"
-                + "\n---\n".join(parts)
-            )
-
-        user_prompt = (
-            f"Recipe: {title}\n\n"
-            f"Ingredients:\n{ingredient_block}\n\n"
-            f"Original step {i + 1}: {step_text}"
-            f"{technique_block}\n\n"
-            "Enhance this step. Fix technique errors. Add missing temperatures, "
-            "timing, quantities. If the step is vague, expand it into proper method. "
-            "If it references a technique that should be multiple steps, split it. "
-            'Return JSON: {"enhanced_step": "string", "insight": "string"}'
-        )
-
-        try:
-            response = client.messages.create(
-                model="claude-sonnet-4-20250514",
-                max_tokens=1000,
-                system=ENHANCE_SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": user_prompt}],
-            )
-            resp_text = response.content[0].text.strip()
-            if resp_text.startswith("```"):
-                lines = resp_text.split("\n")
-                lines = lines[1:]
-                if lines and lines[-1].strip() == "```":
-                    lines = lines[:-1]
-                resp_text = "\n".join(lines)
-            result = json.loads(resp_text)
-        except (json.JSONDecodeError, Exception) as e:
-            result = {"enhanced_step": step_text, "insight": f"Enhancement failed: {e}"}
-
-        enhanced_steps.append({
-            "enhanced_step": result.get("enhanced_step", step_text),
-            "insight": result.get("insight", ""),
-            "matched_techniques": [t["name"] for t in matched],
-        })
-
-    enhanced_strings = [s["enhanced_step"] for s in enhanced_steps]
-    return (enhanced_strings, enhanced_steps)
+    try:
+        objects = _add_step_insights(title, ingredients, steps)
+        strings = [s["original_step"] for s in objects]
+        return (strings, objects)
+    except Exception:
+        return None
 
 
 @app.route("/api/enhance-recipe", methods=["POST"])
@@ -2941,6 +5476,144 @@ def _detect_raw_served(ingredients, method_steps):
     return False
 
 
+# ── HACCP Structured Brief — Codex Alimentarius CXC 1-1969 ──
+
+HACCP_ALLERGEN_REGIONS = {
+    "US": {
+        "label": "United States (Big 9)",
+        "allergens": ["milk", "eggs", "fish", "crustacean_shellfish", "tree_nuts",
+                      "peanuts", "wheat", "soy", "sesame"]
+    },
+    "EU": {
+        "label": "European Union / United Kingdom (Big 14)",
+        "allergens": ["cereals_containing_gluten", "crustaceans", "eggs", "fish",
+                      "peanuts", "soybeans", "milk", "nuts", "celery", "mustard",
+                      "sesame_seeds", "sulphites", "lupin", "molluscs"]
+    },
+    "CA": {
+        "label": "Canada (Priority 11)",
+        "allergens": ["eggs", "milk", "mustard", "peanuts", "crustaceans_molluscs",
+                      "fish", "sesame", "soy", "sulphites", "tree_nuts", "wheat_triticale"]
+    },
+    "AU_NZ": {
+        "label": "Australia / New Zealand (10)",
+        "allergens": ["cereals_containing_gluten", "crustacea", "egg", "fish", "milk",
+                      "peanuts", "sesame_seeds", "soybeans", "tree_nuts", "lupin"]
+    }
+}
+
+HACCP_DEFAULT_REGION = "EU"
+HACCP_SCHEMA_VERSION = "1.0"
+
+
+def build_haccp_system_prompt(recipe_name, recipe_ingredients, allergen_region):
+    region_info = HACCP_ALLERGEN_REGIONS.get(allergen_region, HACCP_ALLERGEN_REGIONS[HACCP_DEFAULT_REGION])
+    region_allergens = ", ".join(region_info["allergens"])
+
+    return f"""You are a HACCP (Hazard Analysis and Critical Control Point) consultant writing a brief for a working professional kitchen. Your output will be reviewed by health inspectors and used in a real food preparation environment.
+
+FRAMEWORK: Codex Alimentarius CXC 1-1969 (General Principles of Food Hygiene), 7 HACCP principles, 12-step framework.
+
+VOICE: Speak like a senior chef writing for the line. Direct. Specific. No filler. No reference to artificial intelligence, language models, or generation. The inspector should believe a HACCP-trained chef wrote this.
+
+OUTPUT FORMAT: Return STRICT JSON only — no markdown fences, no preamble, no closing remarks. The JSON must validate against this exact schema:
+
+{{
+  "schema_version": "{HACCP_SCHEMA_VERSION}",
+  "recipe_name": "string",
+  "framework": "Codex Alimentarius CXC 1-1969",
+
+  "allergens": {{
+    "region": "{allergen_region}",
+    "region_label": "{region_info['label']}",
+    "detected": ["list", "of", "detected", "allergens", "from", "this", "region's", "list"],
+    "rationale": "Brief one-sentence explanation of which ingredients triggered which allergens"
+  }},
+
+  "process_flow": [
+    {{"id": "receiving", "label": "Receiving & Purchasing"}},
+    {{"id": "storage", "label": "Storage"}},
+    {{"id": "preparation", "label": "Preparation"}},
+    {{"id": "cooking", "label": "Cooking"}},
+    {{"id": "service", "label": "Hot Hold & Service"}}
+  ],
+
+  "receiving_criteria": [
+    {{
+      "ingredient": "specific ingredient name",
+      "delivery_temp_max_c": 4.0,
+      "accept_criteria": "Sensory + visual + packaging criteria for acceptance",
+      "reject_criteria": "Specific reject criteria — what does spoiled/unsafe look, smell, feel like"
+    }}
+  ],
+
+  "ccp_table": [
+    {{
+      "step": "Step name (e.g. Cooking, Cooling, Hot Hold)",
+      "step_id": "matching id from process_flow",
+      "ingredient_or_process": "what this CCP applies to",
+      "hazard_category": "Biological | Chemical | Physical",
+      "hazard": "specific hazard (e.g. Salmonella spp., Listeria monocytogenes, Staphylococcus aureus enterotoxin)",
+      "is_ccp": true,
+      "decision_tree": {{
+        "q1_control_measures_exist": {{
+          "answer": "Yes | No",
+          "rationale": "one sentence explaining whether preventive control measures exist for this hazard at this step"
+        }},
+        "q2_step_designed_to_eliminate": {{
+          "answer": "Yes | No",
+          "rationale": "one sentence explaining whether this step is specifically designed to eliminate or reduce the hazard to an acceptable level"
+        }},
+        "q3_contamination_could_exceed": {{
+          "answer": "Yes | No",
+          "rationale": "one sentence on whether contamination could occur in excess of acceptable levels or could increase to unacceptable levels at this step"
+        }},
+        "q4_subsequent_step_eliminates": {{
+          "answer": "Yes | No | N/A",
+          "rationale": "one sentence on whether a subsequent step will eliminate the hazard or reduce it to acceptable levels"
+        }},
+        "conclusion": "One sentence stating why this step is or isn't a CCP based on the four answers above. Cite the Codex decision tree logic."
+      }},
+      "critical_limit": "Specific measurable limit — temperature, time, pH, water activity (e.g. 'Core temperature ≥75°C for ≥15 seconds')",
+      "monitoring": "What is monitored, how, frequency, by whom (e.g. 'Calibrated probe thermometer, every batch, by station chef')",
+      "corrective_action": "Specific action if the limit is breached",
+      "records": "Where this is logged (e.g. 'Cook Log CL-01')"
+    }}
+  ],
+
+  "non_ccp_steps": [
+    {{
+      "step": "step name",
+      "rationale": "why this step is not a CCP (e.g. 'subsequent cooking eliminates the hazard')"
+    }}
+  ],
+
+  "pic_signoff_required": true,
+  "footer_note": "Brief structure follows Codex Alimentarius CXC 1-1969 (General Principles of Food Hygiene). Implementation is the responsibility of the operator."
+}}
+
+ALLERGEN INSTRUCTIONS:
+- The region is {allergen_region} ({region_info['label']})
+- The region's allergen list is: {region_allergens}
+- Include ONLY allergens that this region's regulator requires labeling for
+- Detect allergens from the ingredient list. Match conservatively: if dairy is present, flag "milk"; if any egg product, flag "eggs"; if any wheat-based, flag accordingly per region
+- Provide a one-sentence rationale stating which ingredient triggered which allergen
+
+DECISION TREE LOGIC (Codex):
+- Apply the four questions to EVERY step in the process flow
+- A step is a CCP if Q3 = Yes AND Q4 = No (contamination could exceed limits AND no subsequent step eliminates it)
+- A step is NOT a CCP if Q4 = Yes (a subsequent step handles the hazard) OR Q3 = No (contamination cannot reach unacceptable levels)
+- Be honest about non-CCPs — list them in the non_ccp_steps array. Inspectors prefer a tight list of real CCPs to a bloated list of nominal ones.
+
+QUALITY RULES:
+- Critical limits must be measurable. Numbers, units, time bounds. No vague language.
+- Monitoring must specify: what, how, frequency, who. Not "regularly" — say "every two hours by the station chef."
+- Corrective actions must be specific actions, not policies.
+- Receiving criteria must be sensory and verifiable by a cook with a thermometer and their own senses.
+
+The recipe is "{recipe_name}". The ingredient list and method steps are below. Generate the brief."""
+
+
 RAW_SERVED_HACCP_PROMPT = """You are a certified HACCP consultant and food safety scientist writing professional food safety documentation for trained culinary professionals. This recipe contains RAW-SERVED proteins — ingredients consumed without a validated kill step. Apply the full raw-served hazard framework.
 
 Do not use markdown bold (**text**) or markdown headers (## text). Use only plain section labels followed by an em dash. Do not use the terms 'sushi-grade' or 'sashimi-grade' — these have no legal definition in any jurisdiction and no regulatory standing.
@@ -2999,77 +5672,512 @@ STANDARDS: Every critical limit must include a number and unit. Every CCP must s
 
 @app.route("/api/haccp", methods=["POST"])
 def haccp_analysis():
-    data = request.get_json()
+    print("[HACCP] route entered", flush=True)
+    from datetime import datetime, timezone
+    data = request.get_json() or {}
     title = data.get("title", "Untitled")
     ingredients = data.get("ingredients", [])
     method_steps = data.get("method_steps", [])
-    recipe_uuid = data.get("uuid")
 
-    if not method_steps:
-        return jsonify(error="No method steps provided"), 400
+    if not method_steps and not ingredients:
+        return jsonify(error="No recipe data provided"), 400
 
-    try:
-        is_raw = _detect_raw_served(ingredients, method_steps)
-        system_prompt = RAW_SERVED_HACCP_PROMPT if is_raw else COOKED_HACCP_PROMPT
+    # Per-request region override, then user profile, then default EU
+    requested_region = (data.get("allergen_region") or "").upper()
 
-        resp = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=4096,
-            system=system_prompt,
-            messages=[{"role": "user", "content": _build_recipe_user_msg(title, ingredients, method_steps)}],
-        )
-        haccp_text = resp.content[0].text
+    user = get_current_user()
+    allergen_region = HACCP_DEFAULT_REGION
+    if user and user.get("haccp_allergen_region"):
+        r = user["haccp_allergen_region"].upper()
+        if r in HACCP_ALLERGEN_REGIONS:
+            allergen_region = r
+    if requested_region and requested_region in HACCP_ALLERGEN_REGIONS:
+        allergen_region = requested_region
 
-        # Extract allergens via a cheap/fast second call
-        allergens = []
+    print(f"[HACCP] building prompt; title={title!r} ingredients={len(ingredients)} steps={len(method_steps)} region={allergen_region}", flush=True)
+
+    system_prompt = build_haccp_system_prompt(title, ingredients, allergen_region)
+
+    ingredients_text = json.dumps(ingredients, ensure_ascii=False)
+    method_text = json.dumps(method_steps, ensure_ascii=False)
+    user_message = (
+        f"Recipe: {title}\n"
+        f"Ingredients (JSON): {ingredients_text}\n"
+        f"Method steps (JSON): {method_text}\n\n"
+        f"Generate the structured HACCP brief now. Return JSON only."
+    )
+
+    print(f"[HACCP] calling Anthropic API; prompt_chars={len(system_prompt)} user_msg_chars={len(user_message)}", flush=True)
+
+    MAX_ATTEMPTS = 2
+    required_keys = {"schema_version", "recipe_name", "allergens", "process_flow", "ccp_table"}
+    last_error = None
+
+    for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
-            allergen_resp = client.messages.create(
+            resp = client.messages.create(
                 model="claude-haiku-4-5-20251001",
-                max_tokens=256,
-                system="Extract all food allergens mentioned in this HACCP brief. Return ONLY a JSON array of allergen name strings, e.g. [\"Milk\", \"Wheat\", \"Fish\"]. No other text.",
-                messages=[{"role": "user", "content": haccp_text}],
+                max_tokens=8192,
+                timeout=90.0,
+                system=system_prompt,
+                messages=[{"role": "user", "content": user_message}],
             )
-            allergens = json.loads(allergen_resp.content[0].text)
-        except Exception:
-            pass  # Allergen extraction failure doesn't block HACCP
+            raw_text = resp.content[0].text.strip()
+            print(f"[HACCP] attempt {attempt}/{MAX_ATTEMPTS} LLM returned; raw_chars={len(raw_text)}", flush=True)
 
-        # Persist allergens to recipe if uuid provided
-        if recipe_uuid and allergens:
-            try:
-                recipes = load_recipes()
-                for r in recipes:
-                    if r["uuid"] == recipe_uuid:
-                        r["allergens"] = allergens
-                        save_recipes(recipes)
-                        break
-            except Exception:
-                pass  # Persistence failure doesn't block response
+            # Strip any accidental markdown fences
+            if raw_text.startswith("```"):
+                raw_text = raw_text.split("```", 2)[1]
+                if raw_text.startswith("json"):
+                    raw_text = raw_text[4:]
+                raw_text = raw_text.rsplit("```", 1)[0].strip()
 
-        return jsonify(haccp=haccp_text, allergens=allergens)
+            brief = json.loads(raw_text)
+
+            # Validate required top-level keys
+            missing = required_keys - set(brief.keys())
+            if missing:
+                raise ValueError(f"Missing required sections: {', '.join(sorted(missing))}")
+
+            brief["generated_at"] = datetime.now(timezone.utc).isoformat()
+            return jsonify(brief)
+
+        except (json.JSONDecodeError, ValueError) as e:
+            last_error = e
+            app.logger.warning(
+                f"[HACCP] Attempt {attempt}/{MAX_ATTEMPTS} failed for recipe {title!r}: "
+                f"{type(e).__name__}: {e}"
+            )
+            if attempt < MAX_ATTEMPTS:
+                _time.sleep(1)
+                continue
+
+        except Exception as e:
+            app.logger.error(f"[HACCP] Non-retryable error on attempt {attempt}/{MAX_ATTEMPTS} for recipe {title!r}: {e}")
+            return jsonify(error=str(e)), 500
+
+    app.logger.error(
+        f"[HACCP] All {MAX_ATTEMPTS} attempts exhausted for recipe {title!r}. Last error: {last_error}"
+    )
+    return jsonify({
+        "error": "Brief generation incomplete",
+        "detail": "The brief came back in an unexpected format. Please regenerate.",
+        "regenerate_recommended": True
+    }), 502
+
+
+# ── HACCP Persistence Routes ──
+
+def _apply_haccp_edits(brief, edits):
+    """Apply user edits on top of generated brief.
+    Editable: ccp_table[].monitoring/corrective_action/records,
+              receiving_criteria[].accept_criteria/reject_criteria.
+    NOT editable: critical_limit, decision_tree."""
+    if not edits:
+        return brief
+    out = json.loads(json.dumps(brief))
+    ccp_edits = edits.get("ccp_table") or {}
+    for row in out.get("ccp_table", []):
+        sid = row.get("step_id")
+        if sid and sid in ccp_edits:
+            for fld in ("monitoring", "corrective_action", "records"):
+                if fld in ccp_edits[sid]:
+                    row[fld] = ccp_edits[sid][fld]
+    rc_edits = edits.get("receiving_criteria") or {}
+    for row in out.get("receiving_criteria", []):
+        ing = row.get("ingredient")
+        if ing and ing in rc_edits:
+            for fld in ("accept_criteria", "reject_criteria"):
+                if fld in rc_edits[ing]:
+                    row[fld] = rc_edits[ing][fld]
+    return out
+
+
+@app.route("/api/haccp/save", methods=["POST"])
+def save_haccp_brief():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    data = request.get_json() or {}
+    brief = data.get("brief")
+    edits = data.get("edits") or {}
+    recipe_slug = data.get("recipe_slug") or (brief or {}).get("recipe_slug")
+    if not brief or not recipe_slug:
+        return jsonify({"error": "brief with recipe_slug required"}), 400
+    recipe_name = brief.get("recipe_name", "")
+    allergen_region = (brief.get("allergens", {}).get("region") or "EU").upper()
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        cur.execute("""
+            SELECT COALESCE(MAX(version), 0) + 1
+            FROM haccp_briefs
+            WHERE user_id = %s AND recipe_slug = %s
+        """, (user["id"], recipe_slug))
+        next_version = cur.fetchone()[0]
+        cur.execute("""
+            INSERT INTO haccp_briefs
+                (user_id, recipe_slug, recipe_name, version, schema_version,
+                 allergen_region, brief_json, edits_json)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id, version, created_at
+        """, (
+            user["id"], recipe_slug, recipe_name, next_version,
+            brief.get("schema_version", "1.0"), allergen_region,
+            json.dumps(brief), json.dumps(edits)
+        ))
+        row = cur.fetchone()
+        return jsonify({"ok": True, "id": row[0], "version": row[1], "saved_at": row[2].isoformat()})
     except Exception as e:
-        return jsonify(error=str(e)), 500
+        app.logger.exception("HACCP save failed")
+        return jsonify({"error": "Save failed", "detail": str(e)}), 500
+    finally:
+        cur.close()
+        conn.close()
 
 
-@app.route("/api/kitchen-notes", methods=["POST"])
-def kitchen_notes():
-    data = request.get_json()
-    title = data.get("title", "Untitled")
-    ingredients = data.get("ingredients", [])
-    method_steps = data.get("method_steps", [])
+@app.route("/api/haccp/latest/<recipe_slug>", methods=["GET"])
+def get_latest_haccp_brief(recipe_slug):
+    user = get_current_user()
+    if not user:
+        return jsonify({"exists": False, "reason": "not_logged_in"}), 200
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute("""
+            SELECT id, version, schema_version, brief_json, edits_json,
+                   pic_name, pic_signed_at, generated_at, created_at
+            FROM haccp_briefs
+            WHERE user_id = %s AND recipe_slug = %s
+            ORDER BY version DESC LIMIT 1
+        """, (user["id"], recipe_slug))
+        row = cur.fetchone()
+        if not row:
+            return jsonify({"exists": False}), 200
+        brief = row["brief_json"]
+        if isinstance(brief, str):
+            brief = json.loads(brief)
+        edits = row["edits_json"] or {}
+        if isinstance(edits, str):
+            edits = json.loads(edits)
+        applied = _apply_haccp_edits(brief, edits)
+        return jsonify({
+            "exists": True, "id": row["id"], "version": row["version"],
+            "schema_version": row["schema_version"], "brief": applied, "edits": edits,
+            "pic_name": row["pic_name"],
+            "pic_signed_at": row["pic_signed_at"].isoformat() if row["pic_signed_at"] else None,
+            "saved_at": row["created_at"].isoformat()
+        })
+    finally:
+        cur.close()
+        conn.close()
 
-    if not method_steps:
-        return jsonify(error="No method steps provided"), 400
 
+@app.route("/api/haccp/history/<recipe_slug>", methods=["GET"])
+def get_haccp_history(recipe_slug):
+    user = get_current_user()
+    if not user:
+        return jsonify({"history": []}), 200
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute("""
+            SELECT id, version, pic_name, pic_signed_at, created_at
+            FROM haccp_briefs
+            WHERE user_id = %s AND recipe_slug = %s
+            ORDER BY version DESC
+        """, (user["id"], recipe_slug))
+        rows = cur.fetchall()
+        return jsonify({"history": [{
+            "id": r["id"], "version": r["version"], "pic_name": r["pic_name"],
+            "pic_signed_at": r["pic_signed_at"].isoformat() if r["pic_signed_at"] else None,
+            "saved_at": r["created_at"].isoformat()
+        } for r in rows]})
+    finally:
+        cur.close()
+        conn.close()
+
+
+@app.route("/api/haccp/sign", methods=["POST"])
+def sign_haccp_brief():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    data = request.get_json() or {}
+    brief_id = data.get("id")
+    pic_name = (data.get("pic_name") or "").strip()
+    if not brief_id or not pic_name:
+        return jsonify({"error": "id and pic_name required"}), 400
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        cur.execute("""
+            UPDATE haccp_briefs
+            SET pic_name = %s, pic_signed_at = NOW()
+            WHERE id = %s AND user_id = %s
+            RETURNING pic_signed_at
+        """, (pic_name, brief_id, user["id"]))
+        row = cur.fetchone()
+        if not row:
+            return jsonify({"error": "Brief not found"}), 404
+        return jsonify({"ok": True, "pic_signed_at": row[0].isoformat()})
+    except Exception as e:
+        return jsonify({"error": "Sign failed", "detail": str(e)}), 500
+    finally:
+        cur.close()
+        conn.close()
+
+
+def _annotation_create(user, slug, body):
+    """Shared insert for recipe_annotations."""
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(
+        "INSERT INTO recipe_annotations (user_id, recipe_slug, body) VALUES (%s, %s, %s) RETURNING *",
+        (str(user["id"]), slug, body)
+    )
+    note = dict(cur.fetchone())
+    note["created_at"] = note["created_at"].isoformat()
+    note["updated_at"] = note["updated_at"].isoformat()
+    cur.close()
+    conn.close()
+    return note
+
+
+def _annotation_list(user, slug):
+    """Shared list for recipe_annotations."""
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(
+        "SELECT * FROM recipe_annotations WHERE user_id = %s AND recipe_slug = %s ORDER BY created_at DESC",
+        (str(user["id"]), slug)
+    )
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    notes = []
+    for r in rows:
+        n = dict(r)
+        n["created_at"] = n["created_at"].isoformat()
+        n["updated_at"] = n["updated_at"].isoformat()
+        notes.append(n)
+    return notes
+
+
+# ── /api/annotations/ — personal notepad (renamed from kitchen_notes) ──────
+
+@app.route("/api/annotations", methods=["POST"])
+def annotations_create():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+    data = request.get_json() or {}
+    slug = (data.get("slug") or "").strip()
+    body = (data.get("body") or "").strip()
+    if not slug or not body:
+        return jsonify({"error": "slug and body required"}), 400
+    return jsonify(_annotation_create(user, slug, body)), 201
+
+
+@app.route("/api/annotations/<slug>", methods=["GET"])
+def annotations_list(slug):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+    return jsonify(_annotation_list(user, slug))
+
+
+@app.route("/api/annotations/note/<note_id>", methods=["PUT"])
+def annotations_update(note_id):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+    data = request.get_json() or {}
+    body = (data.get("body") or "").strip()
+    if not body:
+        return jsonify({"error": "body required"}), 400
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(
+        "UPDATE recipe_annotations SET body = %s, updated_at = now() WHERE id = %s AND user_id = %s RETURNING *",
+        (body, note_id, str(user["id"]))
+    )
+    note = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not note:
+        return jsonify({"error": "Not found"}), 404
+    note = dict(note)
+    note["created_at"] = note["created_at"].isoformat()
+    note["updated_at"] = note["updated_at"].isoformat()
+    return jsonify(note)
+
+
+@app.route("/api/annotations/note/<note_id>", methods=["DELETE"])
+def annotations_delete(note_id):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        "DELETE FROM recipe_annotations WHERE id = %s AND user_id = %s",
+        (note_id, str(user["id"]))
+    )
+    deleted = cur.rowcount
+    cur.close()
+    conn.close()
+    if not deleted:
+        return jsonify({"error": "Not found"}), 404
+    return jsonify({"ok": True})
+
+
+# ── /api/kitchen-notes/<slug> — AI-generated HACCP safety card ─────────────
+
+@app.route("/api/kitchen-notes/<slug>", methods=["GET"])
+def kitchen_notes_card(slug):
+    """Return auto-generated kitchen safety card (CCPs, temps, allergens, etc.).
+    Cached per recipe. Re-generates if cache is absent."""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    # Serve from cache if available
+    cur.execute(
+        "SELECT content FROM recipe_kitchen_notes_cache WHERE recipe_slug = %s",
+        (slug,)
+    )
+    cached = cur.fetchone()
+    if cached:
+        cur.close()
+        conn.close()
+        return jsonify(cached["content"])
+
+    # Fetch recipe data
+    cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (slug,))
+    recipe = cur.fetchone()
+    if not recipe:
+        cur.close()
+        conn.close()
+        return jsonify({"error": "Recipe not found"}), 404
+
+    name         = recipe.get("name") or slug
+    cuisine      = recipe.get("cuisine") or ""
+    recipe_type  = recipe.get("recipe_type") or "food"
+    description  = recipe.get("sashimi_standard") or recipe.get("description") or ""
+
+    # Build ingredients text — handle flat list and grouped list
+    raw_ings = recipe.get("ingredients") or []
+    ing_lines = []
+    for item in raw_ings:
+        if not isinstance(item, dict):
+            continue
+        if "items" in item:  # grouped
+            if item.get("group"):
+                ing_lines.append(f"[{item['group']}]")
+            for sub in (item.get("items") or []):
+                if sub.get("name"):
+                    qty  = sub.get("quantity") or ""
+                    unit = sub.get("unit") or ""
+                    ing_lines.append(f"  {qty} {unit} {sub['name']}".strip())
+        elif item.get("name"):
+            qty  = item.get("quantity") or ""
+            unit = item.get("unit") or ""
+            ing_lines.append(f"{qty} {unit} {item['name']}".strip())
+    ingredients_text = "\n".join(ing_lines) or "Not specified"
+
+    # Build method text
+    raw_steps = recipe.get("steps") or recipe.get("method") or []
+    step_lines = []
+    for idx, s in enumerate(raw_steps, 1):
+        if isinstance(s, dict):
+            text = s.get("text") or s.get("step") or s.get("instruction") or ""
+        else:
+            text = str(s)
+        if text:
+            step_lines.append(f"{idx}. {text}")
+    steps_text = "\n".join(step_lines) or description or "Not specified"
+
+    anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not anthropic_key:
+        cur.close()
+        conn.close()
+        return jsonify({"error": "Service not configured"}), 500
+
+    prompt = f"""You are a food safety advisor for working chefs. Analyse this recipe and return a concise kitchen safety card as structured JSON.
+
+RECIPE: {name}
+CUISINE: {cuisine or 'Not specified'}
+TYPE: {recipe_type}
+
+INGREDIENTS:
+{ingredients_text}
+
+METHOD:
+{steps_text}
+
+Return a JSON object with exactly these keys:
+- "ccps": Critical Control Points. One sentence each. Cover: protein/dairy/egg storage temps, cook-through temps, time-temperature danger zone, hot-hold/cold-hold, reheating. Only include what applies to this recipe.
+- "temperatures": Temperature windows that matter for this dish — doneness, food-safety thresholds, texture-critical zones (e.g. egg coagulation). Give the range, not just a single number.
+- "allergens": Flat array of allergen strings. Labels: egg, gluten, milk, shellfish, fish, tree nuts, peanuts, soy, sesame, sulphites. Add source in parentheses where helpful (e.g. "milk (Pecorino, Parmigiano)"). List only allergens present.
+- "cross_contamination": Contamination-risk strings. Flag: raw protein near cooked surfaces, allergen cross-contact, board/knife separation, multi-use equipment risks.
+- "shelf_life_signals": Storage and service-life strings. Cover: prepared components, opened ingredients, hot-hold limits, how long mise en place holds.
+
+Rules:
+- Working-chef voice. Blunt and precise. Not academic, not legal. No "please ensure" or "it is recommended."
+- Maximum 5 items per section. Minimum 1 per section if relevant.
+- If a section genuinely has no items (e.g. no allergens), return an empty array [].
+- Be specific: "63°C core" not "piping hot." "72h refrigerated" not "a few days."
+- Return ONLY valid JSON. No markdown fences, no commentary outside the JSON object."""
+
+    client = anthropic.Anthropic(api_key=anthropic_key)
     try:
         resp = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=1024,
-            system="You are a head chef writing a quick food safety reference card for your kitchen team. Write a concise, practical food safety note for this recipe — the kind that gets laminated and clipped to the pass.\n\nDo not use markdown bold (**text**) or markdown headers (## text). Use only plain section labels followed by an em dash.\n\nStructure with exactly these sections:\n\nKey Temperatures — list every temperature target in this recipe. Format: [Item]: [°C] / [°F]. Include cooking targets, holding temps, and fridge storage.\n\nWatch Points — the 2–3 moments in this recipe where a cook can make a food safety mistake. One sentence each. Plain language, not clinical.\n\nAllergens — list all allergens present. Flag any hidden ones a cook might miss.\n\nStorage — fridge temp, how long it keeps, container, label requirement. Two sentences maximum.\n\nHandwash Points — the specific moments in this recipe where hands must be washed. One sentence.\n\nTone: direct, practical, how a good head chef talks to their team. No jargon. No repetition. Punchy.",
-            messages=[{"role": "user", "content": _build_recipe_user_msg(title, ingredients, method_steps)}],
+            model="claude-haiku-4-5-20251001",
+            max_tokens=1500,
+            messages=[{"role": "user", "content": prompt}]
         )
-        return jsonify(notes=resp.content[0].text)
+        raw = resp.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+        card_data = json.loads(raw)
+        # Ensure all 5 keys present
+        for k in ("ccps", "temperatures", "allergens", "cross_contamination", "shelf_life_signals"):
+            if k not in card_data or not isinstance(card_data[k], list):
+                card_data[k] = []
+        # Cache result
+        cur.execute("""
+            INSERT INTO recipe_kitchen_notes_cache (recipe_slug, content)
+            VALUES (%s, %s)
+            ON CONFLICT (recipe_slug) DO UPDATE
+              SET content = EXCLUDED.content, generated_at = now()
+        """, (slug, json.dumps(card_data)))
+        cur.close()
+        conn.close()
+        return jsonify(card_data)
     except Exception as e:
-        return jsonify(error=str(e)), 500
+        import traceback
+        app.logger.error(f"Kitchen notes generation failed for {slug}: {traceback.format_exc()}")
+        if conn:
+            try:
+                cur.close()
+                conn.close()
+            except Exception:
+                pass
+        return jsonify({"error": f"Generation failed: {str(e)}"}), 500
 
 
 @app.route("/api/haccp/<slug>/pdf")
@@ -5255,7 +8363,7 @@ Rules:
         result = json.loads(resp_text)
         return jsonify(result)
     except json.JSONDecodeError as e:
-        return jsonify(error=f"Failed to parse AI response: {e}"), 500
+        return jsonify(error=f"Failed to parse the response: {e}"), 500
     except anthropic.RateLimitError as e:
         return jsonify(error=f"rate limit: {e}"), 429
     except Exception as e:
@@ -5445,6 +8553,12 @@ def beverage_product_page(product_id):
     """, (product_id,))
     pairings = [_serialize_row(r) for r in cur.fetchall()]
 
+    recipes_using = []
+    try:
+        recipes_using = _recipes_using_beverage(product_id, cur)
+    except Exception as e:
+        app.logger.warning(f"recipes-using lookup failed for beverage {product_id}: {e}")
+
     cur.close()
     conn.close()
 
@@ -5452,7 +8566,7 @@ def beverage_product_page(product_id):
     canonical_url = f"https://provenance.kitchen/beverage/{product_slug}"
     return render_template("beverage_product.html",
         product=product, producers=producers, pairings=pairings,
-        canonical_url=canonical_url)
+        recipes_using=recipes_using, canonical_url=canonical_url)
 
 
 @app.route("/beverage/producers/<int:producer_id>")
@@ -5493,6 +8607,16 @@ def beverage_producer_page(producer_id):
         producer=producer, products=products, canonical_url=canonical_url)
 
 
+@app.route("/beverage/producers/<path:rest>")
+def legacy_producer_slug(rest):
+    return "<h1>Gone</h1>", 410
+
+
+@app.route("/beverage/regions/<path:rest>")
+def legacy_region_slug(rest):
+    return "<h1>Gone</h1>", 410
+
+
 # ─── Technique public page ────────────────────────────────────────────────────
 
 @app.route("/technique/<slug>")
@@ -5529,6 +8653,63 @@ def technique_page(slug):
         """, (technique['origin'], technique['id']))
         related_techniques = [_serialize_row(r) for r in cur.fetchall()]
 
+    # Fetch Pat's Rule ingredients for this technique
+    cur.execute("""
+        SELECT ti.ingredient_name, ti.origin_brand, ti.tier, ti.display_order,
+               s.name AS supplier_name
+        FROM technique_ingredients ti
+        LEFT JOIN suppliers s ON s.id = ti.provider_supplier_id
+        WHERE ti.technique_id = %s
+        ORDER BY ti.display_order, ti.id
+    """, (technique['id'],))
+    technique_ingredients = [dict(r) for r in cur.fetchall()]
+
+    # Fetch technique-beverage pairings (Tier 1 editorial + Tier 2 partial)
+    user = get_current_user()
+    user_tier = user.get("subscription_tier", "free") if user else "free"
+    user_region = user.get("region", "") if user else ""
+
+    _tbp_base = """
+        SELECT tbp.id, tbp.pairing_type, tbp.pairing_rationale,
+               tbp.confidence_status, tbp.display_order,
+               bp.id   AS product_id,
+               bp.name AS product_name,
+               bp.slug AS product_slug,
+               bp.category AS product_category,
+               bpr.name AS producer_name,
+               br.name  AS region_name
+        FROM technique_beverage_pairings tbp
+        LEFT JOIN beverage_products  bp  ON tbp.beverage_product_id = bp.id
+        LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, tbp.beverage_producer_id) = bpr.id
+        LEFT JOIN beverage_regions   br  ON bp.region_id = br.id
+        WHERE tbp.technique_id = %s
+    """
+    _tbp_order = """
+        ORDER BY
+            CASE tbp.confidence_status
+                WHEN 'editorial' THEN 1
+                WHEN 'reviewed'  THEN 2
+                WHEN 'partial'   THEN 3
+                ELSE 4
+            END,
+            tbp.display_order, tbp.id
+    """
+    if user_region:
+        cur.execute(
+            _tbp_base + """
+              AND (tbp.region_filter IS NULL
+                   OR tbp.region_filter->'include' = '[]'::jsonb
+                   OR tbp.region_filter->'include' ? %s)
+            """ + _tbp_order,
+            (technique['id'], user_region),
+        )
+    else:
+        cur.execute(_tbp_base + _tbp_order, (technique['id'],))
+
+    _all_pairings = [_serialize_row(r) for r in cur.fetchall()]
+    technique_pairings_editorial = [p for p in _all_pairings if p['confidence_status'] in ('editorial', 'reviewed')]
+    technique_pairings_partial   = [p for p in _all_pairings if p['confidence_status'] == 'partial']
+
     cur.close()
     conn.close()
     canonical_url = f"https://provenance.kitchen/technique/{slug}"
@@ -5536,7 +8717,20 @@ def technique_page(slug):
         technique=technique,
         canonical_url=canonical_url,
         related_techniques=related_techniques,
+        user_tier=user_tier,
+        user_region=user_region,
+        technique_ingredients=technique_ingredients,
+        technique_pairings_editorial=technique_pairings_editorial,
+        technique_pairings_partial=technique_pairings_partial,
     )
+
+
+# ─── Beverage product integer-ID redirect ─────────────────────────────────────
+
+@app.route("/beverage/<int:product_id>")
+def beverage_by_int_id(product_id):
+    from flask import redirect
+    return redirect(f"/beverage/products/{product_id}", 301)
 
 
 # ─── Beverage product slug page ───────────────────────────────────────────────
@@ -5578,13 +8772,19 @@ def beverage_by_slug(slug):
     """, (product_id,))
     pairings = [_serialize_row(r) for r in cur.fetchall()]
 
+    recipes_using = []
+    try:
+        recipes_using = _recipes_using_beverage(product_id, cur)
+    except Exception as e:
+        app.logger.warning(f"recipes-using lookup failed for beverage {product_id}: {e}")
+
     cur.close()
     conn.close()
 
     canonical_url = f"https://provenance.kitchen/beverage/{slug}"
     return render_template("beverage_product.html",
         product=product, producers=producers, pairings=pairings,
-        canonical_url=canonical_url)
+        recipes_using=recipes_using, canonical_url=canonical_url)
 
 
 # ─── Discovery browse pages ──────────────────────────────────────────────────
@@ -5637,7 +8837,7 @@ def cuisines_page():
 @app.route("/techniques/browse")
 def techniques_browse():
     _tb_fallback = dict(techniques=[], total=0, page=1, total_pages=1, per_page=50,
-        cuisine="", category="", q="", all_cuisines=[], all_categories=[])
+        cuisine="", category="", q="")
     if not DATABASE_URL:
         return render_template("techniques_browse.html", **_tb_fallback)
     try:
@@ -5681,26 +8881,6 @@ def techniques_browse():
     )
     techniques = [_serialize_row(r) for r in cur.fetchall()]
 
-    # Cuisine dropdown: use origin field directly (matches /cuisines page)
-    cur.execute("""
-        SELECT DISTINCT origin AS cuisine_name
-        FROM technique_references
-        WHERE origin IS NOT NULL AND origin != ''
-        ORDER BY origin
-    """)
-    all_cuisines = [r["cuisine_name"] for r in cur.fetchall() if r["cuisine_name"]]
-
-    # Category dropdown: show the top-level group prefix (before " — ")
-    cur.execute("""
-        SELECT DISTINCT
-            CASE WHEN category LIKE '% — %' THEN TRIM(SPLIT_PART(category, ' — ', 1)) ELSE category END
-            AS cat_group
-        FROM technique_references
-        WHERE category IS NOT NULL AND category != ''
-        ORDER BY cat_group
-    """)
-    all_categories = [r["cat_group"] for r in cur.fetchall() if r["cat_group"]]
-
     cur.close()
     conn.close()
 
@@ -5715,9 +8895,51 @@ def techniques_browse():
         cuisine=cuisine,
         category=category,
         q=q,
-        all_cuisines=all_cuisines,
-        all_categories=all_categories,
     )
+
+
+@app.route("/api/filter-options/cuisines")
+def api_filter_cuisines():
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT DISTINCT origin AS cuisine_name
+            FROM technique_references
+            WHERE origin IS NOT NULL AND origin != ''
+            ORDER BY origin
+        """)
+        items = [r["cuisine_name"] for r in cur.fetchall() if r["cuisine_name"]]
+        cur.close()
+        conn.close()
+    except Exception:
+        items = []
+    resp = jsonify(items)
+    resp.headers["Cache-Control"] = "public, max-age=3600"
+    return resp
+
+
+@app.route("/api/filter-options/categories")
+def api_filter_categories():
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT DISTINCT
+                CASE WHEN category LIKE '%% — %%' THEN TRIM(SPLIT_PART(category, ' — ', 1)) ELSE category END
+                AS cat_group
+            FROM technique_references
+            WHERE category IS NOT NULL AND category != ''
+            ORDER BY cat_group
+        """)
+        items = [r["cat_group"] for r in cur.fetchall() if r["cat_group"]]
+        cur.close()
+        conn.close()
+    except Exception:
+        items = []
+    resp = jsonify(items)
+    resp.headers["Cache-Control"] = "public, max-age=3600"
+    return resp
 
 
 @app.route("/drinks")
@@ -6567,6 +9789,8 @@ def user_can_access(required_tier):
     user = get_current_user()
     if not user:
         return False
+    if user.get("role") in ("founder", "admin"):
+        return True
     user_tier = user.get("subscription_tier", "free")
     user_status = user.get("subscription_status", "inactive")
     if required_tier == "free":
@@ -6584,6 +9808,7 @@ def inject_user():
     return {
         "current_user": user,
         "user_tier": user.get("subscription_tier", "free") if user else "free",
+        "user_role": user.get("role", "user") if user else "user",
         "is_authenticated": user is not None,
     }
 
@@ -6612,9 +9837,27 @@ def auth_signup():
             (email, password_hash, name or None),
         )
         row = cur.fetchone()
+        user_id = row["id"]
+        # Generate and send verification email (soft — account usable without verifying)
+        try:
+            token = secrets.token_hex(32)
+            expires_at = _dt.utcnow() + _timedelta(days=7)
+            conn2 = psycopg2.connect(DATABASE_URL_WRITE)
+            conn2.autocommit = True
+            cur2 = conn2.cursor()
+            cur2.execute(
+                "INSERT INTO email_verification_tokens (user_id, token, expires_at) VALUES (%s, %s, %s)",
+                (user_id, token, expires_at),
+            )
+            cur2.close()
+            conn2.close()
+            verify_url = request.url_root.rstrip("/") + "/auth/verify-email?token=" + token
+            send_verification_email(email, verify_url)
+        except Exception:
+            pass  # Never block signup over email failure
         cur.close()
         conn.close()
-        session["user_id"] = row["id"]
+        session["user_id"] = user_id
         next_url = request.args.get("next", "/")
         return redirect(next_url)
     except psycopg2.errors.UniqueViolation:
@@ -6668,6 +9911,227 @@ def auth_account():
     subscribed = request.args.get("subscribed") == "true"
     cancelled = request.args.get("cancelled") == "true"
     return render_template("auth/account.html", user=user, subscribed=subscribed, cancelled=cancelled)
+
+
+# ─── Password reset + email verification routes ───────────────────────────────
+
+def _auth_rate_limit(identifier: str, action: str, limit: int, window_seconds: int) -> bool:
+    """Return True if under limit, False if over limit."""
+    try:
+        conn = psycopg2.connect(DATABASE_URL_WRITE)
+        conn.autocommit = True
+        cur = conn.cursor()
+        cutoff = _dt.utcnow() - _timedelta(seconds=window_seconds)
+        cur.execute(
+            "SELECT COUNT(*) FROM auth_rate_limits WHERE identifier=%s AND action=%s AND created_at > %s",
+            (identifier, action, cutoff),
+        )
+        count = cur.fetchone()[0]
+        if count >= limit:
+            cur.close(); conn.close()
+            return False
+        cur.execute(
+            "INSERT INTO auth_rate_limits (identifier, action) VALUES (%s, %s)",
+            (identifier, action),
+        )
+        cur.close(); conn.close()
+        return True
+    except Exception:
+        return True  # Fail open — never block a user over a rate limit DB error
+
+
+@app.route("/auth/forgot-password", methods=["GET"])
+def auth_forgot_password():
+    return render_template("auth/forgot_password.html")
+
+
+@app.route("/api/auth/forgot-password", methods=["POST"])
+def api_auth_forgot_password():
+    """Always returns generic success to prevent account enumeration."""
+    client_ip = request.headers.get("X-Forwarded-For", request.remote_addr or "unknown").split(",")[0].strip()
+    if not _auth_rate_limit(client_ip, "forgot_password", 5, 3600):
+        return render_template("auth/email_sent.html")  # Still generic — don't reveal rate limiting
+
+    email = request.form.get("email", "").strip().lower()
+    if not email:
+        return render_template("auth/email_sent.html")
+
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.autocommit = True
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("SELECT id FROM users WHERE email = %s", (email,))
+        user = cur.fetchone()
+        cur.close(); conn.close()
+    except Exception:
+        return render_template("auth/email_sent.html")
+
+    if user:
+        try:
+            token = secrets.token_hex(32)
+            expires_at = _dt.utcnow() + _timedelta(hours=24)
+            conn2 = psycopg2.connect(DATABASE_URL_WRITE)
+            conn2.autocommit = True
+            cur2 = conn2.cursor()
+            cur2.execute(
+                "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (%s, %s, %s)",
+                (user["id"], token, expires_at),
+            )
+            cur2.close(); conn2.close()
+            reset_url = request.url_root.rstrip("/") + "/auth/reset-password?token=" + token
+            send_password_reset_email(email, reset_url)
+        except Exception:
+            pass  # Silent — generic response regardless
+
+    return render_template("auth/email_sent.html")
+
+
+@app.route("/auth/reset-password", methods=["GET"])
+def auth_reset_password():
+    token = request.args.get("token", "").strip()
+    if not token:
+        return redirect("/auth/forgot-password")
+
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.autocommit = True
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute(
+            "SELECT * FROM password_reset_tokens WHERE token=%s AND used_at IS NULL AND expires_at > NOW()",
+            (token,),
+        )
+        row = cur.fetchone()
+        cur.close(); conn.close()
+    except Exception:
+        row = None
+
+    if not row:
+        return render_template("auth/forgot_password.html"), 400
+
+    return render_template("auth/reset_password.html", token=token)
+
+
+@app.route("/api/auth/reset-password", methods=["POST"])
+def api_auth_reset_password():
+    token = request.form.get("token", "").strip()
+    password = request.form.get("password", "")
+    confirm = request.form.get("confirm", "")
+
+    if not token or not password:
+        return render_template("auth/reset_password.html", token=token, error="Token and password are required.")
+
+    if password != confirm:
+        return render_template("auth/reset_password.html", token=token, error="Passwords do not match.")
+
+    if len(password) < 8:
+        return render_template("auth/reset_password.html", token=token, error="Password must be at least 8 characters.")
+
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.autocommit = True
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute(
+            "SELECT * FROM password_reset_tokens WHERE token=%s AND used_at IS NULL AND expires_at > NOW()",
+            (token,),
+        )
+        row = cur.fetchone()
+        cur.close(); conn.close()
+    except Exception:
+        return render_template("auth/reset_password.html", token=token, error="Something went wrong. Please try again.")
+
+    if not row:
+        return render_template("auth/forgot_password.html"), 400
+
+    try:
+        new_hash = generate_password_hash(password)
+        conn2 = psycopg2.connect(DATABASE_URL_WRITE)
+        conn2.autocommit = True
+        cur2 = conn2.cursor()
+        cur2.execute("UPDATE users SET password_hash=%s WHERE id=%s", (new_hash, row["user_id"]))
+        cur2.execute("UPDATE password_reset_tokens SET used_at=NOW() WHERE id=%s", (row["id"],))
+        cur2.close(); conn2.close()
+    except Exception:
+        return render_template("auth/reset_password.html", token=token, error="Something went wrong. Please try again.")
+
+    return redirect("/auth/login?reset=1")
+
+
+@app.route("/auth/verify-email", methods=["GET"])
+def auth_verify_email():
+    token = request.args.get("token", "").strip()
+    if not token:
+        return redirect("/kitchen")
+
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.autocommit = True
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute(
+            "SELECT * FROM email_verification_tokens WHERE token=%s AND used_at IS NULL AND expires_at > NOW()",
+            (token,),
+        )
+        row = cur.fetchone()
+        cur.close(); conn.close()
+    except Exception:
+        return redirect("/kitchen")
+
+    if not row:
+        return redirect("/kitchen")
+
+    try:
+        conn2 = psycopg2.connect(DATABASE_URL_WRITE)
+        conn2.autocommit = True
+        cur2 = conn2.cursor()
+        cur2.execute("UPDATE users SET email_verified=TRUE, email_verified_at=NOW() WHERE id=%s", (row["user_id"],))
+        cur2.execute("UPDATE email_verification_tokens SET used_at=NOW() WHERE id=%s", (row["id"],))
+        cur2.close(); conn2.close()
+    except Exception:
+        pass
+
+    return redirect("/kitchen?verified=1")
+
+
+@app.route("/api/auth/resend-verification", methods=["POST"])
+def api_auth_resend_verification():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    if user.get("email_verified"):
+        return jsonify({"ok": True, "message": "Already verified"})
+
+    user_id = user["id"]
+    if not _auth_rate_limit(str(user_id), "resend_verification", 3, 3600):
+        return jsonify({"error": "Too many requests. Please wait before trying again."}), 429
+
+    try:
+        token = secrets.token_hex(32)
+        expires_at = _dt.utcnow() + _timedelta(days=7)
+        conn = psycopg2.connect(DATABASE_URL_WRITE)
+        conn.autocommit = True
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO email_verification_tokens (user_id, token, expires_at) VALUES (%s, %s, %s)",
+            (user_id, token, expires_at),
+        )
+        cur.close(); conn.close()
+        verify_url = request.url_root.rstrip("/") + "/auth/verify-email?token=" + token
+        send_verification_email(user["email"], verify_url)
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": "Failed to send verification email."}), 500
+
+
+# ─── Legal pages ─────────────────────────────────────────────────────────────
+
+@app.route("/terms")
+def terms_page():
+    return render_template("terms.html")
+
+
+@app.route("/privacy")
+def privacy_page():
+    return render_template("privacy.html")
 
 
 # ─── Stripe routes ───────────────────────────────────────────────────────────
@@ -6885,140 +10349,237 @@ def sitemap():
 
 # ─── Recipe Costing Engine ────────────────────────────────────────────────────
 
-@app.route("/api/costing/scan-invoice", methods=["POST"])
-def scan_invoice():
-    """Scan a supplier invoice photo via Claude Vision. Extracts line items and updates ingredient prices."""
-    user = get_current_user()
-    if not user:
-        return jsonify({"error": "Login required"}), 401
+# ── Costing Engine v2 — Unit Conversion ───────────────────────────────────────
+# All weights reduce to grams; all volumes to ml; counts to each.
+_WT = {'g':1,'gram':1,'grams':1,'kg':1000,'kilogram':1000,'kilograms':1000,
+       'lb':453.592,'lbs':453.592,'pound':453.592,'pounds':453.592,
+       'oz':28.3495,'ounce':28.3495,'ounces':28.3495}
+_VL = {'ml':1,'milliliter':1,'milliliters':1,'millilitre':1,'millilitres':1,
+       'l':1000,'liter':1000,'liters':1000,'litre':1000,'litres':1000,
+       'cup':236.588,'cups':236.588,'tbsp':14.787,'tablespoon':14.787,'tablespoons':14.787,
+       'tsp':4.929,'teaspoon':4.929,'teaspoons':4.929,
+       'fl_oz':29.574,'fl oz':29.574,'floz':29.574,'fluid_oz':29.574}
+_CT = {'each':1,'pcs':1,'piece':1,'pieces':1,'unit':1,'units':1,
+       'dozen':12,'doz':12,'case':1}
+# Pack size conversions: (ingredient_keyword, supplier_unit) -> grams per unit.
+# Intentionally small — flag rather than guess for unlisted items.
+PACK_SIZE_CONVERSIONS = {
+    ("spaghetti", "case"): 12000,    # De Cecco standard: 24 × 500g
+    ("pasta", "case"): 12000,
+    ("rice", "case"): 25000,         # 25kg case standard
+    ("flour", "case"): 25000,
+    ("sugar", "case"): 25000,
+    ("salt", "case"): 25000,
+    ("olive oil", "case"): 12000,    # 12 × 1L (~1g/ml)
+    ("vinegar", "case"): 12000,
+    ("canned tomato", "case"): 2800, # 6 × ~400g cans (drained weight)
+}
+# Approximate g/ml density for common ingredients (volume↔weight bridge)
+_DENSITY = {
+    'salt':1.22,'sugar':0.845,'flour':0.593,'butter':0.911,'oil':0.92,
+    'olive oil':0.91,'water':1.0,'milk':1.03,'cream':1.01,'honey':1.42,
+    'rice':0.867,'pepper':0.50,'cocoa':0.52,'starch':0.60,'syrup':1.33,
+}
 
-    image_data = None
-    image_url = None
-    media_type = "image/jpeg"
 
-    if request.files.get("invoice"):
-        file = request.files["invoice"]
-        image_data = base64.b64encode(file.read()).decode("utf-8")
-        media_type = file.content_type or "image/jpeg"
-    elif request.json and request.json.get("image_url"):
-        image_url = request.json["image_url"]
-    else:
-        return jsonify({"error": "No invoice image provided"}), 400
+def _unit_family(u):
+    u = (u or '').lower().strip()
+    if u in _WT: return 'weight'
+    if u in _VL: return 'volume'
+    if u in _CT: return 'count'
+    return 'unknown'
 
-    currency = (request.form.get("currency")
-                or (request.json.get("currency") if request.json else None)
-                or "CAD")
 
-    anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not anthropic_key:
-        return jsonify({"error": "Vision API not configured"}), 500
+def costing_convert(qty, recipe_unit, price_unit, ingredient_name=''):
+    """Convert recipe qty (in recipe_unit) to price_unit for cost calculation.
+    Returns (converted_qty: float, needs_estimate: bool).
+    needs_estimate=True means vol↔weight bridge was used — caller should warn.
+    """
+    ru = (recipe_unit or '').lower().strip()
+    pu = (price_unit or '').lower().strip()
+    if ru == pu or not ru or not pu:
+        return qty, False
+    rf, pf = _unit_family(ru), _unit_family(pu)
+    if rf == 'weight' and pf == 'weight':
+        return qty * _WT[ru] / _WT[pu], False
+    if rf == 'volume' and pf == 'volume':
+        return qty * _VL[ru] / _VL[pu], False
+    if rf == 'count' and pf == 'count':
+        return qty * _CT.get(ru,1) / _CT.get(pu,1), False
+    # Volume ↔ weight via density lookup
+    density = None
+    iname = ingredient_name.lower()
+    for key, d in _DENSITY.items():
+        if key in iname:
+            density = d
+            break
+    if density is None:
+        return qty, True   # can't convert; flag as estimate
+    if rf == 'weight' and pf == 'volume':
+        return (qty * _WT[ru] / density) / _VL[pu], True
+    if rf == 'volume' and pf == 'weight':
+        return (qty * _VL[ru] * density) / _WT[pu], True
+    return qty, True
 
-    client = anthropic.Anthropic(api_key=anthropic_key)
 
-    content = []
-    if image_data:
-        content.append({"type": "image", "source": {"type": "base64", "media_type": media_type, "data": image_data}})
-    elif image_url:
-        content.append({"type": "image", "source": {"type": "url", "url": image_url}})
-
-    content.append({"type": "text", "text": (
-        "Extract ALL line items from this supplier invoice. "
-        "For each item return: item_name (exactly as printed), quantity, quantity_unit (kg/lb/case/bunch/each/L/dozen/etc.), "
-        "unit_price (price per unit), line_total. "
-        "Also extract: supplier_name, invoice_date (YYYY-MM-DD), invoice_total, currency (detect from invoice, default " + currency + "). "
-        "Return ONLY valid JSON, no markdown:\n"
-        '{"supplier_name":"...","invoice_date":"YYYY-MM-DD","invoice_total":0.00,"currency":"CAD",'
-        '"items":[{"item_name":"...","quantity":0,"quantity_unit":"kg","unit_price":0.00,"line_total":0.00}]}'
-    )})
-
+def _fuzzy_ingredient_match(cur, description):
+    """Return (ingredient_products row, confidence) for the best name match, or (None, 0)."""
+    desc_lower = description.lower().strip()
+    # Exact substring match first
+    cur.execute("""
+        SELECT id, name FROM ingredient_products
+        WHERE %s ILIKE '%%' || name || '%%' OR name ILIKE '%%' || %s || '%%'
+        ORDER BY LENGTH(name) DESC LIMIT 1
+    """, (desc_lower, desc_lower))
+    row = cur.fetchone()
+    if row:
+        return row, 0.85
+    # Trigram similarity via pg_trgm if available, else partial word match
     try:
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=4000,
-            messages=[{"role": "user", "content": content}]
-        )
-        raw_text = response.content[0].text.strip()
-        if raw_text.startswith("```"):
-            raw_text = raw_text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-        invoice_data = json.loads(raw_text)
-    except Exception as e:
-        return jsonify({"error": f"Invoice scan failed: {str(e)}"}), 500
-
-    conn = get_db()
-    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-    items_extracted = len(invoice_data.get("items", []))
-    prices_updated = 0
-
-    for item in invoice_data.get("items", []):
-        name = (item.get("item_name") or "").strip()
-        if not name:
-            continue
-        normalized = name.lower().strip()
-        unit_price = float(item.get("unit_price") or 0)
-        unit = (item.get("quantity_unit") or "each").lower()
-        supplier = invoice_data.get("supplier_name") or "Unknown"
-        inv_date = invoice_data.get("invoice_date")
-        curr = invoice_data.get("currency") or currency
-        if unit_price <= 0:
-            continue
-
-        # Look up yield factor
         cur.execute("""
-            SELECT default_yield FROM yield_factors
-            WHERE %s ILIKE ingredient_pattern
-            ORDER BY LENGTH(ingredient_pattern) DESC LIMIT 1
-        """, (normalized,))
-        yield_row = cur.fetchone()
-        yield_factor = float(yield_row["default_yield"]) if yield_row else 1.0
+            SELECT id, name, similarity(name, %s) AS sim
+            FROM ingredient_products
+            WHERE similarity(name, %s) > 0.3
+            ORDER BY sim DESC LIMIT 1
+        """, (desc_lower, desc_lower))
+        row = cur.fetchone()
+        if row and float(row['sim']) > 0.3:
+            return row, round(float(row['sim']), 2)
+    except Exception:
+        pass
+    return None, 0.0
 
+
+def _resolve_ingredient_master_id(cur, name):
+    """
+    Resolve an ingredient name to ingredient_master.id via ingredient_aliases.
+    Returns (ingredient_id: int | None, was_resolved: bool).
+
+    Resolution order:
+      1. Exact alias_lower match in ingredient_aliases (ingredient_id NOT NULL)
+      2. Substring containment against canonical_name in ingredient_master
+      3. Trigram similarity > 0.4 (if pg_trgm available)
+
+    Read-only — does NOT insert aliases. Used by Phase 3 dual-write paths.
+    """
+    if not name or not name.strip():
+        return None, False
+    n = name.strip().lower()
+
+    # 1. Exact alias match
+    cur.execute("""
+        SELECT ingredient_id FROM ingredient_aliases
+        WHERE alias_lower = %s AND ingredient_id IS NOT NULL
+        LIMIT 1
+    """, (n,))
+    row = cur.fetchone()
+    if row:
+        return row[0] if isinstance(row, (list, tuple)) else row["ingredient_id"], True
+
+    # 2. Substring containment (prefer foundational / shorter canonical names)
+    cur.execute("""
+        SELECT id FROM ingredient_master
+        WHERE %s LIKE '%%' || lower(canonical_name) || '%%'
+           OR lower(canonical_name) LIKE '%%' || %s || '%%'
+        ORDER BY
+          CASE WHEN category LIKE 'foundational_%%' THEN 0 ELSE 1 END,
+          length(canonical_name) ASC
+        LIMIT 1
+    """, (n, n))
+    row = cur.fetchone()
+    if row:
+        return row[0] if isinstance(row, (list, tuple)) else row["id"], True
+
+    # 3. Trigram similarity (best-effort)
+    try:
         cur.execute("""
-            INSERT INTO ingredient_prices
-                (ingredient_name, ingredient_name_normalized, unit_price, unit, currency,
-                 supplier_name, invoice_date, yield_factor, updated_at)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NOW())
-            ON CONFLICT (ingredient_name_normalized, supplier_name)
-            DO UPDATE SET
-                unit_price = EXCLUDED.unit_price,
-                unit = EXCLUDED.unit,
-                currency = EXCLUDED.currency,
-                invoice_date = EXCLUDED.invoice_date,
-                updated_at = NOW()
-        """, (name, normalized, unit_price, unit, curr, supplier, inv_date, yield_factor))
-        prices_updated += 1
+            SELECT id FROM ingredient_master
+            WHERE similarity(canonical_name, %s) > 0.4
+            ORDER BY similarity(canonical_name, %s) DESC LIMIT 1
+        """, (name, name))
+        row = cur.fetchone()
+        if row:
+            return row[0] if isinstance(row, (list, tuple)) else row["id"], True
+    except Exception:
+        pass
+
+    return None, False
+
+
+def _dw_resolve_supplier_id(cur, supplier_name):
+    """
+    Phase 3 dual-write: resolve a supplier name to suppliers.id via supplier_aliases.
+    Returns (supplier_id: int | None, was_resolved: bool).
+    Distinct from the older _resolve_supplier_id (line ~3675) which returns int|None only.
+    """
+    if not supplier_name or not supplier_name.strip():
+        return None, False
+    n = supplier_name.strip().lower()
 
     cur.execute("""
-        INSERT INTO invoice_scans
-            (user_id, supplier_name, invoice_date, items_extracted, prices_updated,
-             raw_extraction, currency, invoice_total)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    """, (user["id"], invoice_data.get("supplier_name"), invoice_data.get("invoice_date"),
-          items_extracted, prices_updated, json.dumps(invoice_data), currency,
-          invoice_data.get("invoice_total")))
+        SELECT supplier_id FROM supplier_aliases
+        WHERE alias_lower = %s LIMIT 1
+    """, (n,))
+    row = cur.fetchone()
+    if row:
+        v = row[0] if isinstance(row, (list, tuple)) else row["supplier_id"]
+        if v is not None:
+            return v, True
 
-    cur.close()
-    conn.close()
+    # Fallback: fuzzy match against suppliers.name
+    cur.execute("""
+        SELECT id FROM suppliers
+        WHERE lower(name) = %s OR lower(name) LIKE %s
+        ORDER BY length(name) ASC LIMIT 1
+    """, (n, f"%{n[:20]}%"))
+    row = cur.fetchone()
+    if row:
+        return row[0] if isinstance(row, (list, tuple)) else row["id"], True
 
+    return None, False
+
+
+def _dual_write_enabled():
+    """Single source of truth for the dual-write feature flag."""
+    return os.environ.get("DUAL_WRITE_INGREDIENT_MODEL", "0") == "1"
+
+
+def _read_new_model_enabled():
+    """Phase 4 feature flag. True = costing reads from price_history. Default OFF."""
+    return os.environ.get("READ_NEW_INGREDIENT_MODEL", "0") == "1"
+
+
+@app.route("/api/costing/scan-invoice", methods=["POST"])
+def costing_scan_invoice_legacy():
+    """RETIRED in Phase 4. Use POST /api/invoices/scan instead."""
     return jsonify({
-        "success": True,
-        "supplier": invoice_data.get("supplier_name"),
-        "invoice_date": invoice_data.get("invoice_date"),
-        "items_extracted": items_extracted,
-        "prices_updated": prices_updated,
-        "invoice_total": invoice_data.get("invoice_total"),
-        "currency": currency,
-        "items": invoice_data.get("items", []),
-    })
+        "error": "This endpoint is retired.",
+        "use_instead": "POST /api/invoices/scan",
+        "phase": "4 — read switchover"
+    }), 410
 
 
 @app.route("/api/costing/recipe/<slug>")
 def get_recipe_cost(slug):
-    """Calculate and return the cost breakdown for a recipe."""
+    """Calculate cost breakdown for a recipe.
+    Library+ users: uses per-user ingredient_pricing first, falls back to global ingredient_prices.
+    Unauthenticated / sub-library: still works but uses only global prices.
+    """
+    user = get_current_user()
+    user_id = str(user["id"]) if user else None
+    use_user_pricing = user_id is not None and user_can_access("kitchen")
+
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (slug,))
     recipe = cur.fetchone()
+    if not recipe:
+        cur.execute(
+            "SELECT * FROM user_kitchen_recipes WHERE slug = %s AND user_id = 1 LIMIT 1",
+            (slug,),
+        )
+        recipe = cur.fetchone()
     if not recipe:
         cur.close(); conn.close()
         return jsonify({"error": "Recipe not found"}), 404
@@ -7036,6 +10597,7 @@ def get_recipe_cost(slug):
     breakdown = []
     total_cost = 0.0
     unpriced = []
+    unit_warning_items = []
 
     for ing in ingredients:
         name = ""
@@ -7043,7 +10605,7 @@ def get_recipe_cost(slug):
         unit = ""
         if isinstance(ing, dict):
             name = ing.get("name") or ing.get("ingredient") or ""
-            qty = float(ing.get("quantity") or ing.get("amount") or 0)
+            qty = float(ing.get("quantity") or ing.get("amount") or ing.get("count") or 0)
             unit = ing.get("unit") or ""
         elif isinstance(ing, str):
             name = ing
@@ -7053,35 +10615,150 @@ def get_recipe_cost(slug):
             continue
 
         normalized = name.lower().strip()
-        cur.execute("""
-            SELECT ingredient_name, unit_price, unit, yield_factor, effective_cost,
-                   supplier_name, currency
-            FROM ingredient_prices
-            WHERE ingredient_name_normalized ILIKE %s
-            ORDER BY updated_at DESC LIMIT 1
-        """, (f"%{normalized}%",))
-        price_row = cur.fetchone()
+        price_row = None
+        source = "global"
+        unit_estimate = False
+
+        # === PHASE 4: NEW PATH (read from price_history via ingredient_aliases) ===
+        if _read_new_model_enabled():
+            price_row = None
+            master_id, was_resolved = _resolve_ingredient_master_id(cur, normalized)
+            if was_resolved and use_user_pricing:
+                cur.execute("""
+                    SELECT %s AS ingredient_name, price_per_unit AS unit_price, unit,
+                           supplier_name, currency
+                    FROM price_history
+                    WHERE ingredient_id = %s AND user_id = %s
+                      AND source IN ('invoice', 'manual', 'backfill_legacy')
+                    ORDER BY effective_date DESC, created_at DESC
+                    LIMIT 1
+                """, (normalized, master_id, user_id))
+                price_row = cur.fetchone()
+                if price_row:
+                    source = "user"
+            if was_resolved and not price_row:
+                cur.execute("""
+                    SELECT %s AS ingredient_name, price_per_unit AS unit_price, unit,
+                           yield_factor, NULL AS effective_cost,
+                           supplier_name, currency
+                    FROM price_history
+                    WHERE ingredient_id = %s AND is_global = true
+                    ORDER BY effective_date DESC, created_at DESC
+                    LIMIT 1
+                """, (normalized, master_id))
+                price_row = cur.fetchone()
+                if price_row:
+                    source = "global"
+
+        # === OLD PATH (unchanged — runs when flag is off) ===
+        else:
+            # 1. Per-user ingredient_pricing (Library+ users)
+            if use_user_pricing:
+                cur.execute("""
+                    SELECT ingredient_name, price_per_unit AS unit_price, unit,
+                           supplier_name, 'CAD' AS currency
+                    FROM ingredient_pricing
+                    WHERE user_id = %s AND is_active = true
+                      AND ingredient_name ILIKE %s
+                    ORDER BY effective_date DESC LIMIT 1
+                """, (user_id, f"%{normalized}%"))
+                price_row = cur.fetchone()
+                if price_row:
+                    source = "user"
+
+            # 2. Fall back to global ingredient_prices
+            if not price_row:
+                cur.execute("""
+                    SELECT ingredient_name, unit_price, unit, yield_factor, effective_cost,
+                           supplier_name, currency
+                    FROM ingredient_prices
+                    WHERE ingredient_name_normalized ILIKE %s
+                    ORDER BY updated_at DESC LIMIT 1
+                """, (f"%{normalized}%",))
+                price_row = cur.fetchone()
 
         if price_row:
-            effective = float(price_row["effective_cost"] or price_row["unit_price"])
-            # If priced per kg and qty looks like grams, convert
-            if price_row["unit"] == "kg" and qty >= 10:
-                line_cost = round((qty / 1000) * effective, 2)
+            price_unit = price_row.get("unit", "each") or "each"
+            raw_price = float(price_row.get("unit_price") or price_row.get("price_per_unit") or 0)
+            # Yield factor (only in global ingredient_prices)
+            yf = float(price_row.get("yield_factor") or 1.0)
+            effective = raw_price / yf if yf else raw_price
+            supplier_name = price_row.get("supplier_name") or ""
+            currency = price_row.get("currency") or "CAD"
+
+            # Unitless recipe quantities (e.g. "6 egg yolks" with unit="") are
+            # counted by the piece. Normalise here so costing_convert can apply
+            # count-family ratios (each→dozen, etc.) without short-circuiting.
+            costing_unit = unit if unit else "each"
+            ru_family = _unit_family(costing_unit)
+            pu_family = _unit_family(price_unit)
+            cost_warning = None
+            cost_warning_message = None
+            line_cost = 0.0
+
+            if pu_family == 'count' and ru_family in ('weight', 'volume'):
+                # Supplier prices per case/each but recipe uses g/ml — need pack size lookup
+                pack_g = None
+                name_lower = name.lower()
+                pu_lower = price_unit.lower().strip()
+                for (kw, su), grams in PACK_SIZE_CONVERSIONS.items():
+                    if kw in name_lower and su == pu_lower:
+                        pack_g = grams
+                        break
+                if pack_g:
+                    qty_g = qty * _WT.get(unit.lower().strip(), 1) if ru_family == 'weight' \
+                            else qty * _VL.get(unit.lower().strip(), 1)
+                    cost_per_g = effective / pack_g
+                    line_cost = round(cost_per_g * qty_g, 2)
+                    unit_estimate = True  # pack size from lookup, not invoice
+                else:
+                    cost_warning = "needs_unit_info"
+                    cost_warning_message = (
+                        f"Can't confidently price this — supplier price is "
+                        f"{currency} {raw_price:.2f}/{price_unit} but the pack size "
+                        f"isn't known. Edit the price manually or re-scan the invoice "
+                        f"with full pack details."
+                    )
             else:
-                line_cost = round(qty * effective, 2)
+                cqty, unit_estimate = costing_convert(qty, costing_unit, price_unit, name)
+                line_cost = round(cqty * effective, 2)
+                # Sanity check: cost_per_g > CAD 5/g = CAD 5000/kg almost certainly means
+                # a unit conversion error (e.g. case price treated as per-gram).
+                # Real saffron is ~CAD 30/g — the most expensive common kitchen ingredient.
+                if ru_family == 'weight' and effective > 0 and qty > 0:
+                    qty_g = qty * _WT.get(unit.lower().strip(), 1)
+                    if qty_g > 0:
+                        cost_per_g = line_cost / qty_g
+                        if cost_per_g > 5.0:
+                            cost_warning = "needs_unit_info"
+                            cost_warning_message = (
+                                f"Can't confidently price this — computed cost implies "
+                                f"{currency} {cost_per_g * 1000:.0f}/kg which looks incorrect. "
+                                f"Edit the price manually or re-scan the invoice with full pack details."
+                            )
+                            line_cost = 0.0
+
+            if cost_warning:
+                unit_warning_items.append(name)
+
             breakdown.append({
                 "ingredient": name,
                 "quantity": qty,
                 "unit": unit,
-                "unit_price": float(price_row["unit_price"]),
-                "price_unit": price_row["unit"],
-                "yield_factor": float(price_row["yield_factor"]),
+                "unit_price": raw_price,
+                "price_unit": price_unit,
+                "yield_factor": yf,
                 "effective_cost": effective,
-                "line_cost": line_cost,
-                "supplier": price_row["supplier_name"],
-                "currency": price_row["currency"],
+                "line_cost": line_cost if not cost_warning else None,
+                "supplier": supplier_name,
+                "currency": currency,
+                "source": source,
+                "unit_estimate": unit_estimate,
+                "cost_warning": cost_warning,
+                "cost_warning_message": cost_warning_message,
             })
-            total_cost += line_cost
+            if not cost_warning:
+                total_cost += line_cost
         else:
             unpriced.append(name)
             breakdown.append({
@@ -7150,9 +10827,11 @@ def get_recipe_cost(slug):
         "menu_price": menu_price,
         "actual_food_cost_pct": actual_pct,
         "over_target": over_target,
-        "priced_count": len(breakdown) - len(unpriced),
+        "priced_count": len(breakdown) - len(unpriced) - len(unit_warning_items),
         "unpriced_count": len(unpriced),
         "unpriced_items": unpriced,
+        "unit_warning_count": len(unit_warning_items),
+        "unit_warning_items": unit_warning_items,
         "breakdown": breakdown,
     })
 
@@ -7229,6 +10908,2995 @@ def weekly_cost_summary():
         "over_target_count": len(over_target),
         "over_target_dishes": over_target,
     })
+
+
+# ─── Costing Engine v2 routes ────────────────────────────────────────────────
+
+
+@app.route("/api/internal/costing-compare/<slug>", methods=["GET"])
+def costing_compare(slug):
+    """
+    Phase 3 admin-only endpoint: returns old-model and new-model costing side-by-side.
+    Used to verify dual-write parity before Phase 4 read switchover.
+    Requires X-Admin-Token header matching ADMIN_TOKEN env var.
+    """
+    expected = os.environ.get("ADMIN_TOKEN")
+    provided = request.headers.get("X-Admin-Token")
+    if not expected or not provided or provided != expected:
+        return jsonify({"error": "unauthorized"}), 401
+
+    user_id = request.args.get("user_id")
+    if not user_id:
+        return jsonify({"error": "user_id query param required"}), 400
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    try:
+        cur.execute("SELECT id, name, ingredients FROM recipes WHERE slug = %s", (slug,))
+        recipe = cur.fetchone()
+        if not recipe:
+            cur.close(); conn.close()
+            return jsonify({"error": f"recipe '{slug}' not found"}), 404
+
+        # Old model: count of active pricing rows for this user
+        cur.execute("""
+            SELECT COUNT(*) AS old_active_prices
+            FROM ingredient_pricing
+            WHERE user_id = %s AND is_active = true
+        """, (user_id,))
+        old_summary = dict(cur.fetchone())
+
+        # New model: count of price_history rows for this user (live writes only)
+        cur.execute("""
+            SELECT COUNT(*) AS new_priced_rows
+            FROM price_history
+            WHERE user_id = %s AND source IN ('invoice', 'manual')
+        """, (user_id,))
+        new_summary = dict(cur.fetchone())
+
+        # Per-ingredient resolution check
+        recipe_ings = recipe["ingredients"] if isinstance(recipe["ingredients"], list) else []
+        per_ingredient = []
+        for ing in recipe_ings[:50]:
+            ing_name = ing.get("name") if isinstance(ing, dict) else str(ing)
+            if not ing_name:
+                continue
+
+            # Old model: ILIKE against ingredient_pricing
+            cur.execute("""
+                SELECT price_per_unit, unit, supplier_name
+                FROM ingredient_pricing
+                WHERE user_id = %s AND is_active = true
+                  AND ingredient_name ILIKE %s
+                ORDER BY effective_date DESC LIMIT 1
+            """, (user_id, f"%{ing_name}%"))
+            old_match = cur.fetchone()
+
+            # New model: alias resolution + price_history
+            master_id, was_resolved = _resolve_ingredient_master_id(cur, ing_name)
+            new_match = None
+            if was_resolved:
+                cur.execute("""
+                    SELECT price_per_unit, unit, supplier_name, currency
+                    FROM price_history
+                    WHERE ingredient_id = %s AND user_id = %s
+                    ORDER BY effective_date DESC LIMIT 1
+                """, (master_id, user_id))
+                new_match = cur.fetchone()
+
+            if old_match and new_match:
+                try:
+                    parity = ("match"
+                              if abs(float(old_match["price_per_unit"]) - float(new_match["price_per_unit"])) < 0.01
+                              else "diff")
+                except Exception:
+                    parity = "diff"
+            elif old_match:
+                parity = "old_only"
+            elif new_match:
+                parity = "new_only"
+            else:
+                parity = "neither"
+
+            per_ingredient.append({
+                "ingredient": ing_name,
+                "old_model": dict(old_match) if old_match else None,
+                "new_model_master_id": master_id,
+                "new_model_resolved": was_resolved,
+                "new_model_price": dict(new_match) if new_match else None,
+                "parity": parity,
+            })
+
+        parity_counts = {}
+        for p in per_ingredient:
+            parity_counts[p["parity"]] = parity_counts.get(p["parity"], 0) + 1
+
+        cur.close(); conn.close()
+        return jsonify({
+            "recipe_slug": slug,
+            "recipe_name": recipe["name"],
+            "user_id": user_id,
+            "old_model_summary": old_summary,
+            "new_model_summary": new_summary,
+            "ingredient_count": len(per_ingredient),
+            "parity_summary": parity_counts,
+            "per_ingredient": per_ingredient,
+        })
+    except Exception:
+        import traceback
+        app.logger.error(f"[costing-compare] error: {traceback.format_exc()}")
+        try:
+            cur.close(); conn.close()
+        except Exception:
+            pass
+        return jsonify({"error": "internal error"}), 500
+
+
+@app.route("/api/invoices/scan", methods=["POST"])
+def invoices_scan():
+    """Scan a supplier invoice (images or PDF, multi-page) via Claude Vision.
+    Accepts files[] (multiple pages) or legacy single 'invoice' field.
+    Saves to supplier_invoices + supplier_invoice_lines.
+    Returns a review structure with extracted lines for user confirmation.
+    """
+    try:
+        app.logger.info(
+            f"[SCAN] POST /api/invoices/scan ct={request.content_type!r} "
+            f"files={list(request.files.keys())!r} len={request.content_length}"
+        )
+        user = get_current_user()
+        if not user:
+            return jsonify({"error": "Login required"}), 401
+        if not user_can_access("kitchen"):
+            return jsonify({"error": "Kitchen tier required"}), 403
+
+        _CLAUDE_IMAGE_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
+
+        # Collect uploaded files — support files[] (multi-page) or legacy 'invoice' (single)
+        uploaded = request.files.getlist("files[]")
+        if not uploaded:
+            f = request.files.get("invoice")
+            if f:
+                uploaded = [f]
+
+        content = []   # Claude content blocks (multiple image blocks for multi-page)
+        page_count = 0
+        _json = request.get_json(silent=True)  # safe on multipart — returns None instead of raising 415
+
+        if uploaded:
+            for file in uploaded:
+                raw_bytes = file.read()
+                is_pdf = (file.content_type == "application/pdf"
+                          or (file.filename or "").lower().endswith(".pdf"))
+                if is_pdf:
+                    try:
+                        from pdf2image import convert_from_bytes
+                        import io as _io
+                        pages = convert_from_bytes(raw_bytes, dpi=200, first_page=1, last_page=5)
+                        for page_img in pages:
+                            buf = _io.BytesIO()
+                            page_img.save(buf, format="PNG")
+                            img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+                            content.append({"type": "image", "source": {
+                                "type": "base64", "media_type": "image/png", "data": img_b64}})
+                            page_count += 1
+                    except Exception:
+                        # pdf2image unavailable — send as native PDF document
+                        img_b64 = base64.b64encode(raw_bytes).decode("utf-8")
+                        content.append({"type": "document", "source": {
+                            "type": "base64", "media_type": "application/pdf", "data": img_b64}})
+                        page_count += 1
+                else:
+                    # Image: use _prepare_image to handle HEIC → JPEG conversion
+                    img_bytes, media_type = _prepare_image(raw_bytes)
+                    if media_type not in _CLAUDE_IMAGE_TYPES:
+                        media_type = "image/jpeg"
+                    img_b64 = base64.b64encode(img_bytes).decode("utf-8")
+                    content.append({"type": "image", "source": {
+                        "type": "base64", "media_type": media_type, "data": img_b64}})
+                    page_count += 1
+        elif _json:
+            raw = _json.get("image", "")
+            if raw:
+                img_b64 = raw.split(",")[1] if "," in raw else raw
+                raw_type = _json.get("media_type") or "image/jpeg"
+                media_type = raw_type if raw_type in _CLAUDE_IMAGE_TYPES else "image/jpeg"
+                content.append({"type": "image", "source": {
+                    "type": "base64", "media_type": media_type, "data": img_b64}})
+                page_count = 1
+            elif _json.get("image_url"):
+                content.append({"type": "image", "source": {
+                    "type": "url", "url": _json["image_url"]}})
+                page_count = 1
+
+        if not content:
+            return jsonify({"error": "No invoice image provided"}), 400
+
+        currency = request.form.get("currency") or (_json.get("currency") if _json else None) or "CAD"
+
+        anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not anthropic_key:
+            return jsonify({"error": "Vision API not configured"}), 500
+
+        client = anthropic.Anthropic(api_key=anthropic_key)
+        page_note = f"This is a {page_count}-page invoice. " if page_count > 1 else ""
+        content.append({"type": "text", "text": (
+            f"{page_note}Extract ALL line items from this supplier invoice precisely. "
+            "For each item return: item_name (exactly as printed on invoice), "
+            "quantity (numeric), quantity_unit (kg/lb/g/L/ml/case/bunch/each/dozen/box/etc.), "
+            "unit_price (price per one unit), line_total. "
+            "Also extract at document level: supplier_name, supplier_address, "
+            "invoice_number (or PO number), invoice_date (YYYY-MM-DD), "
+            "invoice_total (bottom-line total), currency (default " + currency + "). "
+            "Respond with the JSON object ONLY. No markdown fences. No prose. No explanation. Begin your response with { and end with }.\n"
+            '{"supplier_name":"","supplier_address":"","invoice_number":"","invoice_date":"YYYY-MM-DD",'
+            '"invoice_total":0.00,"currency":"CAD",'
+            '"items":[{"item_name":"","quantity":0,"quantity_unit":"kg","unit_price":0.00,"line_total":0.00}]}'
+        )})
+    except Exception as _pre:
+        import traceback
+        app.logger.error(f"Invoice scan pre-flight crashed: {traceback.format_exc()}")
+        return jsonify({"error": f"Scan failed: {str(_pre)}"}), 500
+
+
+    try:
+        resp = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=4000,
+            messages=[{"role": "user", "content": content}]
+        )
+        raw_text = resp.content[0].text.strip() if resp.content else ""
+        app.logger.info(
+            f"[SCAN] Vision response stop_reason={resp.stop_reason!r} "
+            f"content_blocks={len(resp.content)} len={len(raw_text)} "
+            f"preview={raw_text[:300]!r}"
+        )
+        if not raw_text:
+            return jsonify({"error": "Vision API returned empty response — check model PDF support"}), 500
+
+        import re as _re
+
+        # Strip markdown code fences if present
+        fence_match = _re.search(r'```(?:json)?\s*(.*?)\s*```', raw_text, _re.DOTALL)
+        if fence_match:
+            raw_text = fence_match.group(1).strip()
+
+        # Skip any leading prose before the opening brace
+        if not raw_text.startswith('{'):
+            brace_start = raw_text.find('{')
+            if brace_start == -1:
+                app.logger.error(f"[SCAN] No JSON object found: {raw_text[:500]!r}")
+                return jsonify({"error": "Invoice extraction returned no JSON object"}), 500
+            raw_text = raw_text[brace_start:]
+
+        # Walk forward counting braces to find the actual end of the JSON object,
+        # discarding any trailing prose that follows the closing brace.
+        depth = 0
+        end_idx = 0
+        in_string = False
+        escape = False
+        for i, ch in enumerate(raw_text):
+            if escape:
+                escape = False
+                continue
+            if ch == '\\':
+                escape = True
+                continue
+            if ch == '"' and not escape:
+                in_string = not in_string
+                continue
+            if in_string:
+                continue
+            if ch == '{':
+                depth += 1
+            elif ch == '}':
+                depth -= 1
+                if depth == 0:
+                    end_idx = i + 1
+                    break
+
+        if end_idx == 0:
+            app.logger.error(f"[SCAN] Unterminated JSON object: {raw_text[:500]!r}")
+            return jsonify({"error": "Invoice extraction returned malformed JSON"}), 500
+
+        raw_text = raw_text[:end_idx]
+        invoice_data = json.loads(raw_text)
+    except Exception as e:
+        import traceback
+        app.logger.error(f"[SCAN] Vision call/parse failed: {traceback.format_exc()}")
+        return jsonify({"error": f"Invoice extraction failed: {str(e)}"}), 500
+
+    conn = None
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        # Match or auto-create supplier
+        supplier_name = (invoice_data.get("supplier_name") or "Unknown Supplier").strip()
+        supplier_id = None
+        sup_found_existing = False
+
+        # === PHASE 3 DUAL-WRITE: try alias-based resolution first ===
+        if _dual_write_enabled():
+            try:
+                resolved_id, was_resolved = _dw_resolve_supplier_id(cur, supplier_name)
+                if was_resolved:
+                    supplier_id = resolved_id
+                    sup_found_existing = True
+                    app.logger.info(f"[dual-write] supplier '{supplier_name}' resolved via aliases -> id={supplier_id}")
+            except Exception as e:
+                app.logger.warning(f"[dual-write] supplier alias lookup failed: {e}")
+
+        # Original exact/prefix match (fallback)
+        if supplier_id is None:
+            cur.execute("""
+                SELECT id FROM suppliers
+                WHERE name ILIKE %s OR name ILIKE %s LIMIT 1
+            """, (supplier_name, f"%{supplier_name[:20]}%"))
+            sup_row = cur.fetchone()
+            if sup_row:
+                supplier_id = sup_row["id"]
+                sup_found_existing = True
+
+        if not supplier_id:
+            # Auto-create unverified supplier
+            try:
+                cur.execute("""
+                    INSERT INTO suppliers
+                        (name, country, supplier_type, verified_date, verification_source,
+                         is_active, user_added, verification_status)
+                    VALUES (%s, 'CA', 'distributor', NOW(), 'invoice_scan', true, true, 'unverified')
+                    ON CONFLICT (name) DO NOTHING RETURNING id
+                """, (supplier_name,))
+                new_row = cur.fetchone()
+                if new_row:
+                    supplier_id = new_row["id"]
+                    # === PHASE 3 DUAL-WRITE: also insert into supplier_aliases ===
+                    if _dual_write_enabled():
+                        try:
+                            cur.execute("""
+                                INSERT INTO supplier_aliases (supplier_id, alias, source)
+                                VALUES (%s, %s, 'invoice')
+                                ON CONFLICT (alias_lower) DO NOTHING
+                            """, (supplier_id, supplier_name))
+                        except Exception as e:
+                            app.logger.warning(f"[dual-write] supplier_aliases insert failed: {e}")
+                else:
+                    cur.execute("SELECT id FROM suppliers WHERE name = %s", (supplier_name,))
+                    r = cur.fetchone()
+                    if r:
+                        supplier_id = r["id"]
+                        sup_found_existing = True
+            except Exception:
+                pass
+
+        # Insert supplier_invoices row
+        cur.execute("""
+            INSERT INTO supplier_invoices
+                (user_id, supplier_id, supplier_name, invoice_number, invoice_date,
+                 invoice_total, currency, raw_text, page_count)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
+        """, (
+            str(user["id"]), supplier_id, supplier_name,
+            invoice_data.get("invoice_number"),
+            invoice_data.get("invoice_date"),
+            invoice_data.get("invoice_total"),
+            invoice_data.get("currency") or currency,
+            json.dumps(invoice_data),
+            page_count,
+        ))
+        invoice_id = str(cur.fetchone()["id"])
+
+        # Insert invoice lines + fuzzy-match ingredients
+        lines_out = []
+        for i, item in enumerate(invoice_data.get("items", []), 1):
+            raw_desc = (item.get("item_name") or "").strip()
+            if not raw_desc:
+                continue
+            qty = item.get("quantity")
+            unit = (item.get("quantity_unit") or "each").lower()
+            unit_price = item.get("unit_price")
+            line_total = item.get("line_total")
+
+            matched_row, confidence = _fuzzy_ingredient_match(cur, raw_desc)
+            matched_id = matched_row["id"] if matched_row else None
+            matched_name = matched_row["name"] if matched_row else None
+
+            # === PHASE 3 DUAL-WRITE: resolve to ingredient_master and record alias ===
+            if _dual_write_enabled():
+                try:
+                    ingredient_master_id, was_resolved = _resolve_ingredient_master_id(cur, raw_desc)
+                    if was_resolved and raw_desc:
+                        cur.execute("""
+                            INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+                            VALUES (%s, %s, 'invoice')
+                            ON CONFLICT (alias_lower) DO NOTHING
+                        """, (ingredient_master_id, raw_desc))
+                    elif raw_desc:
+                        cur.execute("""
+                            INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+                            VALUES (NULL, %s, 'invoice')
+                            ON CONFLICT (alias_lower) DO NOTHING
+                        """, (raw_desc,))
+                except Exception as e:
+                    app.logger.warning(f"[dual-write] ingredient resolution failed for '{raw_desc}': {e}")
+
+            cur.execute("""
+                INSERT INTO supplier_invoice_lines
+                    (invoice_id, line_number, raw_description, quantity, unit,
+                     unit_price, line_total, matched_ingredient_id,
+                     matched_ingredient_name, match_confidence)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                RETURNING id
+            """, (invoice_id, i, raw_desc, qty, unit, unit_price, line_total,
+                  matched_id, matched_name, confidence if confidence > 0 else None))
+            line_id = str(cur.fetchone()["id"])
+            lines_out.append({
+                "id": line_id,
+                "line_number": i,
+                "raw_description": raw_desc,
+                "quantity": float(qty) if qty is not None else None,
+                "unit": unit,
+                "unit_price": float(unit_price) if unit_price is not None else None,
+                "line_total": float(line_total) if line_total is not None else None,
+                "matched_ingredient_name": matched_name or raw_desc,
+                "match_confidence": float(confidence) if confidence else 0.0,
+                "confirmed": confidence >= 0.7,
+            })
+
+        cur.close()
+        conn.close()
+
+        return jsonify({
+            "invoice_id": invoice_id,
+            "supplier_name": supplier_name,
+            "supplier_id": supplier_id,
+            "invoice_date": invoice_data.get("invoice_date"),
+            "invoice_number": invoice_data.get("invoice_number"),
+            "invoice_total": invoice_data.get("invoice_total"),
+            "currency": invoice_data.get("currency") or currency,
+            "page_count": page_count,
+            "lines": lines_out,
+            "auto_created_supplier": not sup_found_existing,
+        })
+    except Exception as e:
+        import traceback
+        app.logger.error(f"Invoice scan DB failed: {traceback.format_exc()}")
+        if conn:
+            try:
+                conn.close()
+            except Exception:
+                pass
+        return jsonify({"error": f"Scan failed: {str(e)}"}), 500
+
+
+@app.route("/api/invoices/<invoice_id>/apply", methods=["POST"])
+def invoices_apply(invoice_id):
+    """Apply user-confirmed invoice lines to ingredient_pricing."""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+
+    data = request.get_json() or {}
+    lines = data.get("lines", [])   # [{line_id, ingredient_name, price_per_unit, unit}]
+    if not lines:
+        return jsonify({"error": "No lines provided"}), 400
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    # Verify invoice belongs to this user
+    cur.execute("SELECT * FROM supplier_invoices WHERE id = %s AND user_id = %s",
+                (invoice_id, str(user["id"])))
+    inv = cur.fetchone()
+    if not inv:
+        cur.close(); conn.close()
+        return jsonify({"error": "Invoice not found"}), 404
+
+    effective_date = inv["invoice_date"] or __import__("datetime").date.today().isoformat()
+    supplier_id = inv["supplier_id"]
+    supplier_name = inv["supplier_name"]
+    applied = 0
+    skipped = 0
+
+    for line in lines:
+        ingredient_name = (line.get("ingredient_name") or "").strip()
+        price_per_unit = line.get("price_per_unit")
+        unit = (line.get("unit") or "each").strip()
+        line_id = line.get("line_id")
+        if not ingredient_name or price_per_unit is None:
+            skipped += 1
+            continue
+        # Mark previous active rows for this user+ingredient as inactive
+        cur.execute("""
+            UPDATE ingredient_pricing SET is_active = false
+            WHERE user_id = %s AND ingredient_name ILIKE %s AND is_active = true
+        """, (str(user["id"]), ingredient_name))
+        # Insert new active row
+        cur.execute("""
+            INSERT INTO ingredient_pricing
+                (user_id, ingredient_name, supplier_id, supplier_name,
+                 price_per_unit, unit, invoice_id, invoice_line_id, effective_date, is_active)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, true)
+        """, (str(user["id"]), ingredient_name, supplier_id, supplier_name,
+              float(price_per_unit), unit, invoice_id, line_id, effective_date))
+        # === PHASE 3 DUAL-WRITE: also insert into price_history ===
+        if _dual_write_enabled():
+            try:
+                master_id, was_resolved = _resolve_ingredient_master_id(cur, ingredient_name)
+                if not was_resolved:
+                    app.logger.info(f"[dual-write] apply: '{ingredient_name}' unresolved — skipping price_history INSERT")
+                else:
+                    cur.execute("""
+                        SELECT COALESCE(currency, 'CAD') AS currency
+                        FROM supplier_invoices WHERE id = %s
+                    """, (invoice_id,))
+                    curr_row = cur.fetchone()
+                    currency = curr_row["currency"] if curr_row else "CAD"
+                    cur.execute("""
+                        INSERT INTO price_history (
+                            ingredient_id, user_id, is_global,
+                            supplier_id, supplier_name,
+                            price_per_unit, unit, currency, yield_factor,
+                            invoice_id, invoice_line_id,
+                            effective_date, source
+                        )
+                        VALUES (%s, %s, false, %s, %s, %s, %s, %s, 1.0, %s, %s, %s, 'invoice')
+                    """, (
+                        master_id, str(user["id"]),
+                        supplier_id, supplier_name,
+                        float(price_per_unit), unit, currency,
+                        invoice_id, line_id, effective_date
+                    ))
+                    cur.execute("""
+                        INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+                        VALUES (%s, %s, 'invoice')
+                        ON CONFLICT (alias_lower) DO NOTHING
+                    """, (master_id, ingredient_name))
+            except Exception as e:
+                app.logger.warning(f"[dual-write] price_history INSERT (apply) failed for '{ingredient_name}': {e}")
+        applied += 1
+
+    cur.close()
+    conn.close()
+    return jsonify({"applied": applied, "skipped": skipped})
+
+
+@app.route("/api/invoices")
+def invoices_list():
+    """List supplier invoices for the current user."""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT si.id, si.supplier_name, si.invoice_number, si.invoice_date,
+               si.invoice_total, si.currency, si.created_at,
+               COALESCE(si.page_count, 1) AS page_count,
+               COUNT(sil.id) AS line_count
+        FROM supplier_invoices si
+        LEFT JOIN supplier_invoice_lines sil ON sil.invoice_id = si.id
+        WHERE si.user_id = %s
+        GROUP BY si.id
+        ORDER BY si.created_at DESC
+    """, (str(user["id"]),))
+    rows = cur.fetchall()
+    invoices = []
+    for r in rows:
+        invoices.append({
+            "id": str(r["id"]),
+            "supplier_name": r["supplier_name"],
+            "invoice_number": r["invoice_number"],
+            "invoice_date": str(r["invoice_date"]) if r["invoice_date"] else None,
+            "invoice_total": float(r["invoice_total"]) if r["invoice_total"] else None,
+            "currency": r["currency"],
+            "line_count": int(r["line_count"]),
+            "page_count": int(r["page_count"]),
+            "created_at": str(r["created_at"]),
+        })
+    cur.close()
+    conn.close()
+    return jsonify({"invoices": invoices})
+
+
+@app.route("/api/invoices/<invoice_id>/lines")
+def invoice_lines(invoice_id):
+    """Return all line items for a specific invoice (for review UI)."""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT supplier_name, invoice_date FROM supplier_invoices WHERE id = %s AND user_id = %s",
+                (invoice_id, str(user["id"])))
+    inv = cur.fetchone()
+    if not inv:
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    cur.execute("""
+        SELECT id, line_number, raw_description, quantity, unit,
+               unit_price, line_total, matched_ingredient_name, match_confidence
+        FROM supplier_invoice_lines WHERE invoice_id = %s ORDER BY line_number
+    """, (invoice_id,))
+    lines = []
+    for r in cur.fetchall():
+        lines.append({
+            "id": str(r["id"]),
+            "line_number": r["line_number"],
+            "raw_description": r["raw_description"],
+            "quantity": float(r["quantity"]) if r["quantity"] is not None else None,
+            "unit": r["unit"],
+            "unit_price": float(r["unit_price"]) if r["unit_price"] is not None else None,
+            "line_total": float(r["line_total"]) if r["line_total"] is not None else None,
+            "matched_ingredient_name": r["matched_ingredient_name"] or r["raw_description"],
+            "match_confidence": float(r["match_confidence"]) if r["match_confidence"] else 0.0,
+        })
+    cur.close()
+    conn.close()
+    return jsonify({
+        "invoice_id": invoice_id,
+        "supplier_name": inv["supplier_name"],
+        "invoice_date": str(inv["invoice_date"]) if inv["invoice_date"] else None,
+        "lines": lines,
+    })
+
+
+@app.route("/api/pricing/user")
+def pricing_user():
+    """Return the current user's active ingredient pricing table."""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    if _read_new_model_enabled():
+        # NEW PATH: read from price_history
+        cur.execute("""
+            SELECT
+                ph.id::text AS id,
+                COALESCE(im.canonical_name,
+                         'Unknown ingredient (master_id ' || ph.ingredient_id || ')')
+                    AS ingredient_name,
+                ph.price_per_unit, ph.unit, ph.supplier_name,
+                ph.effective_date, ph.invoice_id::text AS invoice_id, ph.created_at,
+                ph.source
+            FROM price_history ph
+            LEFT JOIN ingredient_master im ON im.id = ph.ingredient_id
+            WHERE ph.user_id = %s
+              AND ph.source IN ('invoice', 'manual', 'backfill_legacy')
+            ORDER BY ph.effective_date DESC, im.canonical_name ASC
+        """, (str(user["id"]),))
+    else:
+        # OLD PATH (unchanged)
+        cur.execute("""
+            SELECT ip.id, ip.ingredient_name, ip.price_per_unit, ip.unit,
+                   ip.supplier_name, ip.effective_date, ip.invoice_id, ip.created_at,
+                   si.invoice_number
+            FROM ingredient_pricing ip
+            LEFT JOIN supplier_invoices si ON si.id = ip.invoice_id
+            WHERE ip.user_id = %s AND ip.is_active = true
+            ORDER BY ip.ingredient_name ASC
+        """, (str(user["id"]),))
+    rows = cur.fetchall()
+    pricing = []
+    for r in rows:
+        pricing.append({
+            "id": str(r["id"]),
+            "ingredient_name": r["ingredient_name"],
+            "price_per_unit": float(r["price_per_unit"]),
+            "unit": r["unit"],
+            "supplier_name": r["supplier_name"],
+            "effective_date": str(r["effective_date"]) if r["effective_date"] else None,
+            "invoice_id": str(r["invoice_id"]) if r.get("invoice_id") else None,
+            "invoice_number": r.get("invoice_number"),
+            "source": r.get("source") or ("invoice" if r.get("invoice_id") else "manual"),
+        })
+    cur.close()
+    conn.close()
+    return jsonify({"pricing": pricing})
+
+
+@app.route("/api/pricing/manual", methods=["PUT", "POST"])
+def pricing_manual():
+    """Manually set/update an ingredient price for the current user."""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    if not user_can_access("kitchen"):
+        return jsonify({"error": "Kitchen tier required"}), 403
+    data = request.get_json() or {}
+    ingredient_name = (data.get("ingredient_name") or "").strip()
+    price_per_unit = data.get("price_per_unit")
+    unit = (data.get("unit") or "each").strip()
+    supplier_name = (data.get("supplier_name") or "").strip() or None
+    if not ingredient_name or price_per_unit is None:
+        return jsonify({"error": "ingredient_name and price_per_unit required"}), 400
+    import datetime
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE ingredient_pricing SET is_active = false
+        WHERE user_id = %s AND ingredient_name ILIKE %s AND is_active = true
+    """, (str(user["id"]), ingredient_name))
+    cur.execute("""
+        INSERT INTO ingredient_pricing
+            (user_id, ingredient_name, supplier_name, price_per_unit, unit,
+             effective_date, is_active)
+        VALUES (%s, %s, %s, %s, %s, %s, true)
+    """, (str(user["id"]), ingredient_name, supplier_name,
+          float(price_per_unit), unit, datetime.date.today()))
+    # === PHASE 3 DUAL-WRITE: also insert into price_history ===
+    if _dual_write_enabled():
+        try:
+            master_id, was_resolved = _resolve_ingredient_master_id(cur, ingredient_name)
+            if not was_resolved:
+                app.logger.info(f"[dual-write] manual: '{ingredient_name}' unresolved — skipping price_history INSERT")
+            else:
+                currency = data.get('currency', 'CAD')
+                cur.execute("""
+                    INSERT INTO price_history (
+                        ingredient_id, user_id, is_global,
+                        supplier_name,
+                        price_per_unit, unit, currency, yield_factor,
+                        effective_date, source
+                    )
+                    VALUES (%s, %s, false, %s, %s, %s, %s, 1.0, %s, 'manual')
+                """, (
+                    master_id, str(user["id"]),
+                    supplier_name,
+                    float(price_per_unit), unit, currency,
+                    datetime.date.today()
+                ))
+                cur.execute("""
+                    INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+                    VALUES (%s, %s, 'user')
+                    ON CONFLICT (alias_lower) DO NOTHING
+                """, (master_id, ingredient_name))
+        except Exception as e:
+            app.logger.warning(f"[dual-write] price_history INSERT (manual) failed for '{ingredient_name}': {e}")
+    cur.close()
+    conn.close()
+    return jsonify({"success": True, "ingredient_name": ingredient_name,
+                    "price_per_unit": float(price_per_unit), "unit": unit})
+
+
+# ─── OPT3 Canon routes ───────────────────────────────────────────────────────
+
+@app.route("/canons-v2/")
+def canons_index():
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT slug, name, description, entry_count, status, display_order
+        FROM canons
+        WHERE status != 'archived'
+        ORDER BY display_order, name
+    """)
+    canons = [_serialize_row(r) for r in cur.fetchall()]
+    cur.close()
+    conn.close()
+    return render_template("canons_index.html", canons=canons)
+
+
+@app.route("/canon/<canon_slug>/")
+def canon_book(canon_slug):
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM canons WHERE slug = %s", (canon_slug,))
+    canon = cur.fetchone()
+    if not canon:
+        cur.close()
+        conn.close()
+        return "Canon not found", 404
+    canon = _serialize_row(canon)
+    cur.execute("""
+        SELECT cs.section_slug, cs.name, cs.description, cs.entry_count, cs.display_order
+        FROM canon_sections cs
+        WHERE cs.canon_slug = %s
+        ORDER BY cs.display_order, cs.section_slug
+    """, (canon_slug,))
+    sections = [_serialize_row(r) for r in cur.fetchall()]
+    cur.close()
+    conn.close()
+    return render_template("canon_book.html", canon=canon, sections=sections)
+
+
+@app.route("/canon/<canon_slug>/<section_slug>/")
+def canon_section(canon_slug, section_slug):
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM canons WHERE slug = %s", (canon_slug,))
+    canon = cur.fetchone()
+    if not canon:
+        cur.close()
+        conn.close()
+        return "Canon not found", 404
+    canon = _serialize_row(canon)
+    cur.execute("""
+        SELECT * FROM canon_sections
+        WHERE canon_slug = %s AND section_slug = %s
+    """, (canon_slug, section_slug))
+    section = cur.fetchone()
+    if not section:
+        cur.close()
+        conn.close()
+        return "Section not found", 404
+    section = _serialize_row(section)
+    cur.execute("""
+        SELECT id, name, slug, entry_slug, decimal_id, description, origin, authority_tier
+        FROM technique_references
+        WHERE canon_slug = %s AND section_slug = %s
+        ORDER BY decimal_id, name
+    """, (canon_slug, section_slug))
+    entries = [_serialize_row(r) for r in cur.fetchall()]
+    cur.close()
+    conn.close()
+    return render_template("canon_section.html",
+        canon=canon, section=section, entries=entries)
+
+
+@app.route("/canon/<canon_slug>/<section_slug>/<entry_slug>")
+def canon_entry(canon_slug, section_slug, entry_slug):
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT * FROM technique_references
+        WHERE canon_slug = %s AND section_slug = %s AND entry_slug = %s
+    """, (canon_slug, section_slug, entry_slug))
+    technique = cur.fetchone()
+    if not technique:
+        cur.close()
+        conn.close()
+        return "Entry not found", 404
+    technique = _serialize_row(technique)
+    # Redirect to canonical slug-based URL preserving existing page
+    cur.close()
+    conn.close()
+    from flask import redirect, url_for
+    return redirect(url_for("technique_page", slug=technique["slug"]), code=301)
+
+
+@app.route("/explorer")
+def canon_explorer():
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT slug, name, entry_count, status
+        FROM canons
+        WHERE status != 'archived' AND entry_count > 0
+        ORDER BY entry_count DESC, name
+        LIMIT 50
+    """)
+    canons = [_serialize_row(r) for r in cur.fetchall()]
+    cur.execute("""
+        SELECT canon_slug, COUNT(*) as n
+        FROM technique_references
+        WHERE canon_slug IS NOT NULL
+        GROUP BY canon_slug
+        ORDER BY n DESC LIMIT 50
+    """)
+    canon_counts = {r["canon_slug"]: r["n"] for r in cur.fetchall()}
+    cur.close()
+    conn.close()
+    return render_template("explorer.html", canons=canons, canon_counts=canon_counts)
+
+
+@app.route("/atlas/<volume_slug>")
+def atlas_volume(volume_slug):
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM volumes WHERE slug = %s AND volume_type = 'atlas'", (volume_slug,))
+    volume = cur.fetchone()
+    if not volume:
+        cur.close()
+        conn.close()
+        return "Atlas not found", 404
+    volume = _serialize_row(volume)
+    cur.execute("""
+        SELECT ve.display_order, ve.editorial_note,
+               tr.id, tr.name, tr.slug, tr.entry_slug, tr.decimal_id,
+               tr.description, tr.origin, tr.canon_slug, tr.section_slug
+        FROM volume_entries ve
+        JOIN technique_references tr ON tr.id = ve.entry_id
+        WHERE ve.volume_slug = %s
+        ORDER BY ve.display_order, tr.name
+    """, (volume_slug,))
+    entries = [_serialize_row(r) for r in cur.fetchall()]
+    cur.close()
+    conn.close()
+    return render_template("atlas_volume.html", volume=volume, entries=entries)
+
+
+@app.route("/route/<volume_slug>")
+def route_volume(volume_slug):
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM volumes WHERE slug = %s AND volume_type = 'route'", (volume_slug,))
+    volume = cur.fetchone()
+    if not volume:
+        cur.close()
+        conn.close()
+        return "Route not found", 404
+    volume = _serialize_row(volume)
+    cur.execute("""
+        SELECT ve.display_order, ve.editorial_note,
+               tr.id, tr.name, tr.slug, tr.entry_slug, tr.decimal_id,
+               tr.description, tr.origin, tr.canon_slug, tr.section_slug
+        FROM volume_entries ve
+        JOIN technique_references tr ON tr.id = ve.entry_id
+        WHERE ve.volume_slug = %s
+        ORDER BY ve.display_order, tr.name
+    """, (volume_slug,))
+    entries = [_serialize_row(r) for r in cur.fetchall()]
+    cur.close()
+    conn.close()
+    return render_template("route_volume.html", volume=volume, entries=entries)
+
+
+# Legacy: integer ID redirect → canonical slug
+@app.route("/technique/<int:tid>")
+def technique_by_id(tid):
+    if not DATABASE_URL:
+        return "Not found", 404
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT slug FROM technique_references WHERE id = %s", (tid,))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not row:
+        return "Not found", 404
+    return redirect(url_for("technique_page", slug=row["slug"]), code=301)
+
+
+# ─── Technique–Beverage Pairings ─────────────────────────────────────────────
+
+@app.route("/api/technique-pairings/<int:technique_id>")
+def technique_beverage_pairings(technique_id):
+    """
+    Returns pairings from technique_beverage_pairings for a given technique,
+    grouped by tier: editorial+reviewed (full gold) and partial (muted).
+
+    Query params:
+        region  ISO 3166-2 subdivision code, e.g. "BC", "OR", "CA".
+                When supplied, rows whose region_filter excludes this code are omitted.
+                Rows with region_filter=null are always included.
+    """
+    if not DATABASE_URL:
+        return jsonify({"editorial": [], "partial": []}), 200
+
+    region = request.args.get("region", "").strip().upper() or None
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    # Build region filter clause
+    # A row is visible when:
+    #   - region_filter IS NULL  (unrestricted)
+    #   - OR region param not supplied
+    #   - OR region_filter->'include' is empty array
+    #   - OR region_filter->'include' contains the requested region code
+    if region:
+        region_clause = """
+            AND (
+                tbp.region_filter IS NULL
+                OR tbp.region_filter->'include' = '[]'::jsonb
+                OR tbp.region_filter->'include' ? %(region)s
+            )
+        """
+    else:
+        region_clause = "AND (tbp.region_filter IS NULL OR TRUE)"
+
+    cur.execute(
+        f"""
+        SELECT
+            tbp.id,
+            tbp.technique_id,
+            tbp.pairing_type,
+            tbp.pairing_rationale,
+            tbp.confidence_status,
+            tbp.verification_level,
+            tbp.display_order,
+            tbp.source_urls,
+            tbp.beverage_category,
+            -- product fields
+            bp.id          AS product_id,
+            bp.name        AS product_name,
+            bp.category    AS product_category,
+            bp.subcategory AS product_subcategory,
+            bp.description AS product_description,
+            bp.price_tier  AS product_price_tier,
+            -- producer fields
+            bpr.id         AS producer_id,
+            bpr.name       AS producer_name,
+            bpr.country    AS producer_country,
+            -- region fields
+            br.id          AS region_id,
+            br.name        AS region_name,
+            br.country     AS region_country
+        FROM technique_beverage_pairings tbp
+        LEFT JOIN beverage_products  bp  ON tbp.beverage_product_id  = bp.id
+        LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, tbp.beverage_producer_id) = bpr.id
+        LEFT JOIN beverage_regions   br  ON bp.region_id = br.id
+        WHERE tbp.technique_id = %(technique_id)s
+          {region_clause}
+        ORDER BY
+            CASE tbp.confidence_status
+                WHEN 'editorial' THEN 1
+                WHEN 'reviewed'  THEN 2
+                WHEN 'partial'   THEN 3
+                ELSE 4
+            END,
+            tbp.display_order,
+            tbp.id
+        """,
+        {"technique_id": technique_id, "region": region},
+    )
+    rows = [_serialize_row(r) for r in cur.fetchall()]
+    cur.close()
+    conn.close()
+
+    # Split into rendering tiers
+    editorial = [r for r in rows if r["confidence_status"] in ("editorial", "reviewed")]
+    partial   = [r for r in rows if r["confidence_status"] == "partial"]
+
+    return jsonify({
+        "technique_id": technique_id,
+        "region_filter_applied": region,
+        "editorial": editorial,
+        "partial": partial,
+        "total": len(rows),
+    })
+
+
+# ─── Admin: Technique–Beverage Pairings ──────────────────────────────────────
+
+def _admin_guard():
+    """Redirect to login if no active session."""
+    if not session.get("user_id"):
+        return redirect("/auth/login")
+    return None
+
+
+def _admin_guard_api():
+    """Return 401 JSON if no active session."""
+    if not session.get("user_id"):
+        return jsonify(error="Unauthorized"), 401
+    return None
+
+
+# Route 1 — Dashboard
+@app.route("/admin/technique-pairings/")
+def admin_tbp_dashboard():
+    g = _admin_guard()
+    if g:
+        return g
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    cur.execute("""
+        SELECT confidence_status, COUNT(*) AS n
+        FROM technique_beverage_pairings
+        GROUP BY confidence_status
+    """)
+    stats = {r["confidence_status"]: r["n"] for r in cur.fetchall()}
+
+    cur.execute("""
+        SELECT COUNT(*) AS n FROM technique_beverage_pairings_staging
+        WHERE review_status = 'pending'
+    """)
+    staging_pending = cur.fetchone()["n"]
+
+    cur.execute("""
+        SELECT tr.id, tr.name, tr.slug, tr.canon_slug,
+               COUNT(tbp.id) AS total,
+               SUM(CASE WHEN tbp.confidence_status IN ('editorial','reviewed') THEN 1 ELSE 0 END) AS n_editorial,
+               SUM(CASE WHEN tbp.confidence_status = 'partial' THEN 1 ELSE 0 END) AS n_partial
+        FROM technique_references tr
+        JOIN technique_beverage_pairings tbp ON tbp.technique_id = tr.id
+        GROUP BY tr.id, tr.name, tr.slug, tr.canon_slug
+        ORDER BY tr.canon_slug, tr.name
+    """)
+    techniques = cur.fetchall()
+    canons = sorted({t["canon_slug"] for t in techniques})
+    cur.close()
+
+    return render_template("admin_tbp_dashboard.html",
+        stats=stats,
+        staging_pending=staging_pending,
+        techniques=techniques,
+        canons=canons,
+    )
+
+
+# Route 2 — Per-technique review
+@app.route("/admin/technique-pairings/technique/<int:technique_id>")
+def admin_tbp_technique(technique_id):
+    g = _admin_guard()
+    if g:
+        return g
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    cur.execute(
+        "SELECT id, name, slug, canon_slug, origin FROM technique_references WHERE id = %s",
+        (technique_id,),
+    )
+    technique = cur.fetchone()
+    if not technique:
+        cur.close()
+        return "Technique not found", 404
+
+    cur.execute("""
+        SELECT tbp.id, tbp.pairing_type, tbp.pairing_rationale,
+               tbp.confidence_status, tbp.verification_level,
+               tbp.display_order, tbp.beverage_category,
+               bp.id AS product_id, bp.name AS product_name, bp.slug AS product_slug,
+               bp.subcategory AS product_subcategory,
+               bpr.id AS producer_id, bpr.name AS producer_name,
+               br.name AS region_name, br.country
+        FROM technique_beverage_pairings tbp
+        LEFT JOIN beverage_products  bp  ON tbp.beverage_product_id = bp.id
+        LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, tbp.beverage_producer_id) = bpr.id
+        LEFT JOIN beverage_regions   br  ON bp.region_id = br.id
+        WHERE tbp.technique_id = %s
+        ORDER BY
+            CASE tbp.confidence_status
+                WHEN 'editorial' THEN 1
+                WHEN 'reviewed'  THEN 2
+                WHEN 'partial'   THEN 3
+                ELSE 4
+            END,
+            tbp.display_order, tbp.id
+    """, (technique_id,))
+    pairings = cur.fetchall()
+
+    cur.execute("""
+        SELECT s.id, s.pairing_type, s.pairing_rationale, s.source_urls,
+               s.review_status, s.batch_id, s.generated_at,
+               bp.name AS product_name, bpr.name AS producer_name
+        FROM technique_beverage_pairings_staging s
+        LEFT JOIN beverage_products  bp  ON s.beverage_product_id = bp.id
+        LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, s.beverage_producer_id) = bpr.id
+        WHERE s.technique_id = %s AND s.review_status = 'pending'
+        ORDER BY s.generated_at DESC
+    """, (technique_id,))
+    staging = cur.fetchall()
+    cur.close()
+
+    return render_template("admin_tbp_technique.html",
+        technique=technique,
+        pairings=pairings,
+        staging=staging,
+    )
+
+
+# Route 3 — AJAX: update a single pairing
+@app.route("/admin/technique-pairings/pairing/<int:pairing_id>/update", methods=["POST"])
+def admin_tbp_pairing_update(pairing_id):
+    g = _admin_guard_api()
+    if g:
+        return g
+    data = request.get_json(silent=True) or {}
+
+    VALID_CONFIDENCE = ("partial", "reviewed", "editorial")
+    VALID_TYPE = ("signature", "regional", "alternative", "contrast")
+
+    sets, params = [], []
+    if data.get("confidence_status") in VALID_CONFIDENCE:
+        sets += ["confidence_status = %s", "verification_level = %s"]
+        params += [
+            data["confidence_status"],
+            {"partial": "auto", "reviewed": "manual", "editorial": "editorial"}[data["confidence_status"]],
+        ]
+    if data.get("pairing_type") in VALID_TYPE:
+        sets.append("pairing_type = %s")
+        params.append(data["pairing_type"])
+    if "pairing_rationale" in data:
+        sets.append("pairing_rationale = %s")
+        params.append(str(data["pairing_rationale"])[:1000])
+    if "display_order" in data:
+        try:
+            sets.append("display_order = %s")
+            params.append(int(data["display_order"]))
+        except (TypeError, ValueError):
+            pass
+    if not sets:
+        return jsonify(error="No valid fields"), 400
+
+    sets.append("updated_at = NOW()")
+    params.append(pairing_id)
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(f"UPDATE technique_beverage_pairings SET {', '.join(sets)} WHERE id = %s", params)
+    cur.close()
+    return jsonify(ok=True)
+
+
+# Route 4 — AJAX: delete a pairing
+@app.route("/admin/technique-pairings/pairing/<int:pairing_id>/delete", methods=["POST"])
+def admin_tbp_pairing_delete(pairing_id):
+    g = _admin_guard_api()
+    if g:
+        return g
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM technique_beverage_pairings WHERE id = %s", (pairing_id,))
+    deleted = cur.rowcount
+    cur.close()
+    return jsonify(ok=True, deleted=deleted)
+
+
+# Route 5 — AJAX: bulk-tag (preview then apply)
+@app.route("/admin/technique-pairings/technique/<int:technique_id>/bulk", methods=["POST"])
+def admin_tbp_bulk(technique_id):
+    g = _admin_guard_api()
+    if g:
+        return g
+    data = request.get_json(silent=True) or {}
+    ids = [int(i) for i in data.get("ids", []) if str(i).isdigit()]
+    action = data.get("action", "preview")
+    new_confidence = data.get("confidence_status", "")
+    new_type = data.get("pairing_type", "")
+
+    VALID_CONFIDENCE = ("partial", "reviewed", "editorial")
+    VALID_TYPE = ("signature", "regional", "alternative", "contrast")
+
+    if not ids:
+        return jsonify(error="No IDs"), 400
+    if new_confidence and new_confidence not in VALID_CONFIDENCE:
+        return jsonify(error="Invalid confidence_status"), 400
+    if new_type and new_type not in VALID_TYPE:
+        return jsonify(error="Invalid pairing_type"), 400
+    if not new_confidence and not new_type:
+        return jsonify(error="Specify confidence_status or pairing_type"), 400
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    ph = ",".join(["%s"] * len(ids))
+
+    cur.execute(
+        f"""SELECT tbp.id, tbp.confidence_status, tbp.pairing_type,
+                   bp.name AS product_name, bpr.name AS producer_name
+            FROM technique_beverage_pairings tbp
+            LEFT JOIN beverage_products  bp  ON tbp.beverage_product_id = bp.id
+            LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, tbp.beverage_producer_id) = bpr.id
+            WHERE tbp.id IN ({ph}) AND tbp.technique_id = %s""",
+        ids + [technique_id],
+    )
+    items = cur.fetchall()
+
+    if action == "preview":
+        cur.close()
+        return jsonify(
+            count=len(items),
+            new_confidence=new_confidence or None,
+            new_type=new_type or None,
+            items=[{
+                "id": r["id"],
+                "product_name": r["product_name"],
+                "producer_name": r["producer_name"],
+                "current_confidence": r["confidence_status"],
+                "current_type": r["pairing_type"],
+            } for r in items],
+        )
+
+    sets, params = [], []
+    if new_confidence:
+        vl = {"partial": "auto", "reviewed": "manual", "editorial": "editorial"}[new_confidence]
+        sets += ["confidence_status = %s", "verification_level = %s"]
+        params += [new_confidence, vl]
+    if new_type:
+        sets.append("pairing_type = %s")
+        params.append(new_type)
+    sets.append("updated_at = NOW()")
+
+    cur2 = conn.cursor()
+    cur2.execute(
+        f"UPDATE technique_beverage_pairings SET {', '.join(sets)} WHERE id IN ({ph}) AND technique_id = %s",
+        params + ids + [technique_id],
+    )
+    updated = cur2.rowcount
+    cur.close()
+    cur2.close()
+    return jsonify(ok=True, updated=updated)
+
+
+# Route 6 — Staging queue
+@app.route("/admin/technique-pairings/staging")
+def admin_tbp_staging():
+    g = _admin_guard()
+    if g:
+        return g
+    batch_filter  = request.args.get("batch", "").strip()
+    status_filter = request.args.get("status", "pending").strip()
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    cur.execute(
+        "SELECT DISTINCT batch_id FROM technique_beverage_pairings_staging ORDER BY batch_id DESC"
+    )
+    batches = [r["batch_id"] for r in cur.fetchall()]
+
+    where, params = [], []
+    if status_filter:
+        where.append("s.review_status = %s")
+        params.append(status_filter)
+    if batch_filter:
+        where.append("s.batch_id = %s")
+        params.append(batch_filter)
+    where_sql = ("WHERE " + " AND ".join(where)) if where else ""
+
+    cur.execute(f"""
+        SELECT s.id, s.technique_id, s.pairing_type, s.pairing_rationale,
+               s.source_urls, s.review_status, s.batch_id, s.generated_at,
+               tr.name AS technique_name, tr.slug AS technique_slug,
+               bp.id  AS product_id,  bp.name  AS product_name,  bp.slug AS product_slug,
+               bpr.id AS producer_id, bpr.name AS producer_name,
+               br.name AS region_name
+        FROM technique_beverage_pairings_staging s
+        JOIN  technique_references tr  ON s.technique_id = tr.id
+        LEFT JOIN beverage_products  bp  ON s.beverage_product_id = bp.id
+        LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, s.beverage_producer_id) = bpr.id
+        LEFT JOIN beverage_regions   br  ON bp.region_id = br.id
+        {where_sql}
+        ORDER BY s.generated_at DESC, s.id
+        LIMIT 300
+    """, params)
+    items = cur.fetchall()
+    cur.close()
+
+    return render_template("admin_tbp_staging.html",
+        items=items,
+        batches=batches,
+        batch_filter=batch_filter,
+        status_filter=status_filter,
+    )
+
+
+# Route 7 — AJAX: staging decide (promote / reject / edit+promote)
+@app.route("/admin/technique-pairings/staging/<int:staging_id>/decide", methods=["POST"])
+def admin_tbp_staging_decide(staging_id):
+    g = _admin_guard_api()
+    if g:
+        return g
+    data   = request.get_json(silent=True) or {}
+    action = data.get("action", "")
+    if action not in ("approve", "reject", "edit_approve"):
+        return jsonify(error="Invalid action"), 400
+
+    conn = get_db()
+    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM technique_beverage_pairings_staging WHERE id = %s", (staging_id,))
+    row = cur.fetchone()
+    if not row:
+        cur.close()
+        return jsonify(error="Not found"), 404
+
+    if action == "reject":
+        cur.execute(
+            "UPDATE technique_beverage_pairings_staging SET review_status='rejected', reviewed_at=NOW(), reviewer_notes=%s WHERE id=%s",
+            (data.get("notes", ""), staging_id),
+        )
+        cur.close()
+        return jsonify(ok=True, action="rejected")
+
+    # approve or edit_approve — promote to primary
+    VALID_TYPE = ("signature", "regional", "alternative", "contrast")
+    pairing_type = data.get("pairing_type", row["pairing_type"])
+    if pairing_type not in VALID_TYPE:
+        pairing_type = row["pairing_type"]
+    rationale = data.get("pairing_rationale", row["pairing_rationale"])
+
+    bev_cat = "wine"
+    if row["beverage_product_id"]:
+        cur.execute("SELECT category FROM beverage_products WHERE id = %s", (row["beverage_product_id"],))
+        prod = cur.fetchone()
+        if prod:
+            c = prod["category"] or ""
+            bev_cat = "wine" if c.startswith("wine_") else (c if c in (
+                "beer", "sake", "tea", "coffee", "kombucha", "spirit", "non_alcoholic"
+            ) else "wine")
+
+    src = row["source_urls"]
+    src_json = json.dumps(src if isinstance(src, list) else [])
+
+    cur.execute("""
+        INSERT INTO technique_beverage_pairings
+            (technique_id, beverage_product_id, beverage_producer_id,
+             pairing_type, pairing_rationale, confidence_status, verification_level,
+             display_order, source_urls, beverage_category)
+        VALUES (%s, %s, %s, %s, %s, 'partial', 'auto', 100, %s::jsonb, %s)
+        ON CONFLICT (technique_id, beverage_product_id) DO NOTHING
+    """, (
+        row["technique_id"], row["beverage_product_id"], row["beverage_producer_id"],
+        pairing_type, rationale, src_json, bev_cat,
+    ))
+    promoted = cur.rowcount
+    cur.execute(
+        "UPDATE technique_beverage_pairings_staging SET review_status='approved', reviewed_at=NOW() WHERE id=%s",
+        (staging_id,),
+    )
+    cur.close()
+    return jsonify(ok=True, action="promoted", inserted=promoted)
+
+
+# Route 8 — Producer inverse view
+@app.route("/admin/technique-pairings/producer/<int:producer_id>")
+def admin_tbp_producer(producer_id):
+    g = _admin_guard()
+    if g:
+        return g
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    cur.execute(
+        "SELECT id, name, country, producer_type FROM beverage_producers WHERE id = %s",
+        (producer_id,),
+    )
+    producer = cur.fetchone()
+    if not producer:
+        cur.close()
+        return "Producer not found", 404
+
+    cur.execute("""
+        SELECT bp.id AS product_id, bp.name AS product_name, bp.slug AS product_slug,
+               bp.subcategory,
+               COUNT(tbp.id) AS pairing_count,
+               SUM(CASE WHEN tbp.confidence_status IN ('editorial','reviewed') THEN 1 ELSE 0 END) AS editorial_count
+        FROM beverage_products bp
+        LEFT JOIN technique_beverage_pairings tbp ON tbp.beverage_product_id = bp.id
+        WHERE bp.producer_id = %s
+        GROUP BY bp.id, bp.name, bp.slug, bp.subcategory
+        ORDER BY pairing_count DESC, bp.name
+    """, (producer_id,))
+    products = cur.fetchall()
+
+    cur.execute("""
+        SELECT tbp.id AS pairing_id, tbp.pairing_type, tbp.confidence_status,
+               tbp.pairing_rationale, tbp.display_order,
+               tr.id  AS technique_id, tr.name AS technique_name,
+               tr.slug AS technique_slug, tr.canon_slug,
+               bp.id  AS product_id,   bp.name AS product_name, bp.slug AS product_slug
+        FROM technique_beverage_pairings tbp
+        JOIN technique_references tr ON tbp.technique_id = tr.id
+        LEFT JOIN beverage_products bp ON tbp.beverage_product_id = bp.id
+        WHERE bp.producer_id = %s OR tbp.beverage_producer_id = %s
+        ORDER BY tr.canon_slug, tr.name, tbp.confidence_status, tbp.display_order
+    """, (producer_id, producer_id))
+    pairings = cur.fetchall()
+    cur.close()
+
+    return render_template("admin_tbp_producer.html",
+        producer=producer,
+        products=products,
+        pairings=pairings,
+    )
+
+
+# ─── Admin: Producer Warnings ────────────────────────────────────────────────
+
+@app.route("/admin/producers/review")
+def admin_producer_review():
+    g = _admin_guard()
+    if g: return g
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    cur.execute("""
+        SELECT bp.id, bp.name, bp.country, bp.slug,
+               bp.producer_type, bp.price_positioning, bp.is_published,
+               bp.warnings, jsonb_array_length(bp.warnings) AS warning_count,
+               br.name AS region_name, br.country AS region_country,
+               bp.created_at
+        FROM beverage_producers bp
+        LEFT JOIN beverage_regions br ON bp.region_id = br.id
+        WHERE jsonb_array_length(bp.warnings) > 0
+        ORDER BY jsonb_array_length(bp.warnings) DESC, bp.created_at DESC
+        LIMIT 200
+    """)
+    flagged = [dict(r) for r in cur.fetchall()]
+
+    cur.execute("""
+        SELECT
+            COUNT(*)                                                              AS total,
+            SUM(CASE WHEN jsonb_array_length(warnings) > 0 THEN 1 ELSE 0 END)  AS flagged,
+            SUM(CASE WHEN jsonb_array_length(warnings) = 0 THEN 1 ELSE 0 END)  AS clean
+        FROM beverage_producers
+    """)
+    stats = dict(cur.fetchone())
+
+    # Warning-code frequency across flagged rows
+    cur.execute("""
+        SELECT w->>'code' AS code, COUNT(*) AS n
+        FROM beverage_producers, jsonb_array_elements(warnings) AS w
+        GROUP BY code ORDER BY n DESC
+    """)
+    code_freq = [dict(r) for r in cur.fetchall()]
+
+    cur.close()
+    conn.close()
+    return render_template("admin_producer_review.html",
+        flagged=flagged,
+        stats=stats,
+        code_freq=code_freq,
+        is_sample_view=False,
+        sample=[],
+    )
+
+
+@app.route("/admin/producers/<int:producer_id>/dismiss-warning", methods=["POST"])
+def admin_producer_dismiss_warning(producer_id):
+    g = _admin_guard_api()
+    if g: return g
+    data = request.get_json(force=True)
+    code = (data.get("code") or "").strip()
+    if not code:
+        return jsonify({"ok": False, "error": "Missing warning code"})
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        UPDATE beverage_producers
+        SET warnings = (
+                SELECT COALESCE(jsonb_agg(w), '[]'::jsonb)
+                FROM jsonb_array_elements(warnings) AS w
+                WHERE w->>'code' <> %s
+            ),
+            updated_at = NOW()
+        WHERE id = %s
+        RETURNING jsonb_array_length(warnings) AS remaining
+    """, (code, producer_id))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not row:
+        return jsonify({"ok": False, "error": "Producer not found"})
+    return jsonify({"ok": True, "remaining": row["remaining"]})
+
+
+@app.route("/admin/producers/sample")
+def admin_producer_sample():
+    """Weekly 1% random sample from non-warning producers for Haiku failure-mode detection."""
+    g = _admin_guard()
+    if g: return g
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    # Clamp sample size: 1% of clean producers, min 5, max 50
+    cur.execute("""
+        SELECT GREATEST(5, LEAST(50, COUNT(*) / 100))::int AS n
+        FROM beverage_producers
+        WHERE jsonb_array_length(warnings) = 0
+    """)
+    sample_n = cur.fetchone()["n"]
+
+    cur.execute("""
+        SELECT bp.id, bp.name, bp.country, bp.slug,
+               bp.producer_type, bp.production_philosophy,
+               LEFT(bp.philosophy_description, 240) AS philosophy_snippet,
+               LEFT(bp.reputation_narrative,   240) AS narrative_snippet,
+               bp.is_published, bp.created_at,
+               br.name AS region_name
+        FROM beverage_producers bp
+        LEFT JOIN beverage_regions br ON bp.region_id = br.id
+        WHERE jsonb_array_length(bp.warnings) = 0
+        ORDER BY RANDOM()
+        LIMIT %s
+    """, (sample_n,))
+    sample = [dict(r) for r in cur.fetchall()]
+
+    cur.close()
+    conn.close()
+    return render_template("admin_producer_review.html",
+        flagged=[],
+        stats=None,
+        code_freq=[],
+        is_sample_view=True,
+        sample=sample,
+    )
+
+
+# ─── l'Atelier — Menu Composition API ───────────────────────────────────────
+
+_ATELIER_OCCASION_TYPES = {
+    "wedding", "funeral", "birthday", "anniversary",
+    "christmas_eve", "christmas_day", "thanksgiving", "easter",
+    "halloween", "new_years_eve", "new_years_day",
+    "lunar_new_year", "diwali", "eid_al_fitr", "eid_al_adha",
+    "passover", "hanukkah", "bar_mitzvah", "bat_mitzvah",
+    "quinceañera", "baby_shower", "corporate", "retirement",
+    "graduation", "valentines", "mothers_day", "fathers_day",
+    "harvest_seasonal", "summer_bbq", "day_of_the_dead",
+    "mardi_gras", "st_patricks", "oktoberfest",
+}
+
+_ATELIER_SEASONS = {"spring", "summer", "autumn", "winter", "any"}
+
+_ATELIER_MENU_FORMAT_TYPES = {
+    "tasting_menu", "communal_feast", "canapé_reception",
+    "family_style_centerpiece", "ritual_progression", "buffet",
+    "cocktail_reception", "multi_course_seated",
+    "shared_plates", "single_dish_inventive",
+}
+
+_ATELIER_OUTPUT_SHAPES = {"single_recipe", "menu"}
+
+_ATELIER_PARSE_SYSTEM_PROMPT = """\
+You are a culinary brief parser for Provenance, a professional chef's tool. \
+A chef has written a free-form brief describing a meal they want to compose. \
+Parse it into structured JSON.
+
+Return ONLY a single JSON object — no prose, no markdown fences, no explanation. \
+The object must have exactly two top-level keys: "brief_parsed" and "confidence".
+
+"brief_parsed" schema (use null for any field you are uncertain about):
+{
+  "occasion_type": <string|null — must be one of the 33 values listed below, or null>,
+  "guest_count": <integer|null>,
+  "dietary_constraints": <array of strings — empty array if none mentioned>,
+  "primary_cuisine": <string|null — cuisine slug, e.g. "japanese", "polish", "thai">,
+  "secondary_cuisines": <array of strings — empty array if none>,
+  "season": <string|null — must be one of: spring, summer, autumn, winter, any — or null>,
+  "beverage_preferences": <array of strings — empty array if none mentioned>,
+  "home_tradition": <string|null — the chef's training tradition or home cuisine, if stated>,
+  "current_location": <string|null — where they are cooking, if stated>,
+  "output_shape_hint": <string|null — must be "single_recipe" or "menu" or null>,
+  "course_count_target": <integer|null>,
+  "menu_format_hint": <string|null — must be one of the 10 values listed below, or null>,
+  "user_notes": <string|null — anything relevant that doesn't fit the above fields>
+}
+
+"confidence" schema — parallel to "brief_parsed", same keys, values 0.0–1.0:
+  1.0 = explicitly stated fact in the brief
+  0.5–0.8 = clearly inferable from context (e.g. "May" implies "spring")
+  0.0–0.5 = speculative
+
+Valid occasion_type values (use exactly as written, or null):
+wedding, funeral, birthday, anniversary, christmas_eve, christmas_day,
+thanksgiving, easter, halloween, new_years_eve, new_years_day,
+lunar_new_year, diwali, eid_al_fitr, eid_al_adha, passover, hanukkah,
+bar_mitzvah, bat_mitzvah, quinceañera, baby_shower, corporate, retirement,
+graduation, valentines, mothers_day, fathers_day, harvest_seasonal,
+summer_bbq, day_of_the_dead, mardi_gras, st_patricks, oktoberfest
+
+Valid menu_format_hint values (use exactly as written, or null):
+tasting_menu, communal_feast, canapé_reception, family_style_centerpiece,
+ritual_progression, buffet, cocktail_reception, multi_course_seated,
+shared_plates, single_dish_inventive
+
+If a field is ambiguous or not mentioned, return null for that field and a low confidence score. \
+Never fabricate details not present or clearly inferable from the brief.\
+"""
+
+
+@app.route("/api/atelier/parse-brief", methods=["POST"])
+def atelier_parse_brief():
+    from datetime import datetime
+    print("[ATELIER PARSE] route entered", flush=True)
+
+    user = get_current_user()
+    if not user:
+        return jsonify(error="Login required"), 401
+
+    data = request.get_json() or {}
+    brief_text = (data.get("brief_text") or "").strip()
+    if not brief_text or len(brief_text) < 20:
+        return jsonify(error="brief_text must be at least 20 characters"), 400
+
+    title_override = (data.get("title") or "").strip() or None
+
+    user_message = (
+        "Parse the following chef's brief into the JSON structure described in your instructions.\n\n"
+        f"<<<BRIEF>>>\n{brief_text}\n<<<END BRIEF>>>\n\n"
+        "Return ONLY the JSON object now."
+    )
+
+    print(f"[ATELIER PARSE] calling Anthropic API; brief_chars={len(brief_text)}", flush=True)
+
+    MAX_ATTEMPTS = 2
+    required_keys = {"occasion_type", "output_shape_hint"}
+    last_error = None
+    warnings = []
+
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            resp = client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=2048,
+                timeout=30.0,
+                system=_ATELIER_PARSE_SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": user_message}],
+            )
+            raw_text = resp.content[0].text.strip()
+            print(
+                f"[ATELIER PARSE] attempt {attempt}/{MAX_ATTEMPTS} LLM returned; "
+                f"raw_chars={len(raw_text)}",
+                flush=True,
+            )
+
+            # Strip accidental markdown fences (same as HACCP)
+            if raw_text.startswith("```"):
+                raw_text = raw_text.split("```", 2)[1]
+                if raw_text.startswith("json"):
+                    raw_text = raw_text[4:]
+                raw_text = raw_text.rsplit("```", 1)[0].strip()
+
+            parsed = json.loads(raw_text)
+
+            # Require top-level wrapper keys
+            missing = required_keys - set((parsed.get("brief_parsed") or {}).keys())
+            if "brief_parsed" not in parsed or "confidence" not in parsed:
+                raise ValueError("Response missing 'brief_parsed' or 'confidence' wrapper")
+            # required_keys must be present in brief_parsed (null is fine)
+            bp = parsed["brief_parsed"]
+            for k in required_keys:
+                if k not in bp:
+                    raise ValueError(f"brief_parsed missing required key: {k!r}")
+
+            print(f"[ATELIER PARSE] attempt {attempt}/{MAX_ATTEMPTS} succeeded", flush=True)
+            break  # success
+
+        except (json.JSONDecodeError, ValueError) as e:
+            last_error = e
+            app.logger.warning(
+                f"[ATELIER PARSE] attempt {attempt}/{MAX_ATTEMPTS} failed: "
+                f"{type(e).__name__}: {e}"
+            )
+            if attempt < MAX_ATTEMPTS:
+                _time.sleep(1)
+                continue
+
+        except Exception as e:
+            app.logger.error(
+                f"[ATELIER PARSE] non-retryable error on attempt {attempt}/{MAX_ATTEMPTS}: {e}"
+            )
+            return jsonify(error=str(e)), 500
+
+    else:
+        app.logger.error(
+            f"[ATELIER PARSE] all {MAX_ATTEMPTS} attempts exhausted. Last error: {last_error}"
+        )
+        return jsonify(
+            error="Brief parsing incomplete",
+            detail="The parser returned an unexpected format. Please try again.",
+            regenerate_recommended=True,
+        ), 502
+
+    bp = parsed["brief_parsed"]
+    confidence = parsed["confidence"]
+
+    # ── Constrained-enum normalization ────────────────────────────────────────
+    def _normalize(field, valid_set):
+        val = bp.get(field)
+        if val is not None and val not in valid_set:
+            warnings.append(
+                f"Could not match {field}={val!r} to a known value."
+            )
+            bp[field] = None
+            confidence[field] = 0.0
+
+    _normalize("occasion_type", _ATELIER_OCCASION_TYPES)
+    _normalize("season", _ATELIER_SEASONS)
+    _normalize("menu_format_hint", _ATELIER_MENU_FORMAT_TYPES)
+    _normalize("output_shape_hint", _ATELIER_OUTPUT_SHAPES)
+
+    # ── output_shape for compositions (NOT NULL) ──────────────────────────────
+    output_shape = bp.get("output_shape_hint") or "menu"
+    if not bp.get("output_shape_hint"):
+        warnings.append("output_shape_hint was null; defaulted to 'menu'.")
+
+    # ── Title generation ──────────────────────────────────────────────────────
+    if title_override:
+        title = title_override
+    else:
+        segments = []
+        if bp.get("occasion_type"):
+            segments.append(bp["occasion_type"].replace("_", " ").title())
+        elif bp.get("primary_cuisine"):
+            segments.append(bp["primary_cuisine"].title())
+        segments.append(datetime.now().strftime("%-d %b %Y"))
+        title = "Composition · " + " · ".join(segments)
+
+    # ── INSERT into compositions ──────────────────────────────────────────────
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        INSERT INTO compositions
+          (user_id, title, brief_text, brief_parsed,
+           occasion_type, guest_count, dietary_constraints,
+           season, home_tradition, current_location,
+           output_shape, status)
+        VALUES
+          (%s, %s, %s, %s::jsonb,
+           %s, %s, %s::jsonb,
+           %s, %s, %s,
+           %s, 'draft')
+        RETURNING id
+        """,
+        (
+            user["id"],
+            title,
+            brief_text,
+            json.dumps(bp),
+            bp.get("occasion_type"),
+            bp.get("guest_count"),
+            json.dumps(bp.get("dietary_constraints") or []),
+            bp.get("season"),
+            bp.get("home_tradition"),
+            bp.get("current_location"),
+            output_shape,
+        ),
+    )
+    composition_id = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    print(f"[ATELIER PARSE] saved composition_id={composition_id} title={title!r}", flush=True)
+
+    return jsonify(
+        composition_id=composition_id,
+        title=title,
+        brief_parsed=bp,
+        confidence=confidence,
+        warnings=warnings,
+    )
+
+
+# ─── l'Atelier — Compose Engine (Phase B thin slice) ────────────────────────
+# Canon-anchored only. Every slot → Invention via Haiku 4.5.
+# Real-components rule enforced: lineage IDs validated against candidate pools.
+# Mirrors HACCP retry pattern (MAX_ATTEMPTS=2, fence strip, 1s sleep).
+
+_ATELIER_COMPOSE_MODEL = "claude-haiku-4-5-20251001"
+_ATELIER_COMPOSE_MAX_ATTEMPTS = 2
+
+INGREDIENT_AUGMENTATION_MODEL = 'claude-haiku-4-5-20251001'
+INGREDIENT_AUGMENTATION_PROMPT_VERSION = 'INGREDIENT_AUGMENTATION_PROMPT_V2'
+INGREDIENT_AUGMENTATION_THRESHOLD = 0.5
+INGREDIENT_AUGMENTATION_FUZZY_THRESHOLD = 0.6
+
+INGREDIENT_AUGMENTATION_PLACEHOLDER_NAMES = frozenset({
+    'salt', 'sugar', 'butter', 'oil', 'water', 'pepper', 'flour',
+    'milk', 'cream', 'heavy cream', 'eggs', 'egg', 'pasta', 'dried pasta',
+    'vinegar', 'wine', 'chocolate', 'dark chocolate', 'olive oil',
+    'black pepper', 'white pepper', 'vegetables', 'spring vegetables',
+})
+
+INGREDIENT_AUGMENTATION_SYSTEM_PROMPT_V2 = """\
+You are writing for Provenance, a structured culinary library held to the standard of Larousse Gastronomique. When a dish's ingredient list is missing the ingredients that define it authentically, your task is to identify the signature ingredients \u2014 what a chef teaching this dish at examination depth would name as essential.
+
+Rules:
+- Return ONLY a JSON array of ingredient names. No prose, no markdown fence, no commentary.
+- Use canonical culinary English with regional, varietal, or grade specificity. Examples: "Pecorino Romano DOP", "Guanciale", "Tonnarelli", "Veal cutlets", "Prosciutto di Parma", "Sage leaves", "Marsala wine", "Tellicherry black pepper", "Maldon sea salt flakes", "\u00c9chir\u00e9 cultured butter", "Spring asparagus", "Heirloom tomatoes".
+- Names a chef in Tokyo or Lisbon would recognize as canonical \u2014 not regional shorthand, not branded supplier names.
+- No producer names, no brands, no suppliers, no restaurants. "Veal" is correct. "Two Rivers veal" is wrong.
+- NEVER return single-word generic names: Salt, Sugar, Butter, Oil, Water, Pepper, Flour, Milk, Cream, Eggs, Pasta, Vinegar, Wine, Chocolate, Vegetables. If a basic is signature to the dish, name it with precision ("Tellicherry black pepper", "Maldon flake salt", "00 Caputo flour", "Marans egg yolks"). If it cannot be specified, do not include it.
+- Include basics ONLY when they are part of the dish identity itself \u2014 typically when the ingredient appears in the dish name (Cacio e Pepe \u2192 black pepper at Tellicherry grade; Salt-Crusted Branzino \u2192 salt at Maldon grade). If the basic is just kitchen support (butter to mount a sauce, salt to season a vegetable), exclude it.
+- Where a regional variant matters, name it precisely ("Pecorino Romano DOP", not generic pecorino; "Marsala wine", not generic fortified wine).
+- Better 4 canonical names than 8 mixed-quality names. Return 3\u20138 names total."""
+
+
+# ─── Canon keyword extraction (tradition-agnostic) ──────────────────────────
+
+_CANON_KEYWORD_STOPWORDS = frozenset({
+    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+    'of', 'with', 'by', 'from', 'is', 'are', 'was', 'were', 'be', 'been',
+    'has', 'have', 'had', 'this', 'that', 'these', 'those', 'as', 'it',
+    'its', 'can', 'will', 'would', 'could', 'should', 'may', 'might',
+    'must', 'shall', 'do', 'does', 'did', 'one', 'two', 'three', 'four',
+    'five', 'six', 'seven', 'eight', 'nine', 'ten',
+    'course', 'courses', 'menu', 'meal', 'dish', 'dishes', 'food', 'foods',
+    'cooking', 'cook', 'cooked', 'kitchen', 'served', 'serve', 'serves',
+    'eaten', 'eating', 'recipe', 'recipes', 'traditional', 'traditionally',
+    'usually', 'often', 'sometimes', 'including', 'such', 'other', 'others',
+    'each', 'every', 'some', 'most', 'many', 'much', 'more', 'less',
+    'where', 'when', 'what', 'which', 'who', 'whom', 'whose', 'why', 'how',
+    'before', 'after', 'during', 'between', 'about', 'into', 'onto', 'over',
+    'under', 'above', 'below', 'across', 'around', 'through',
+})
+
+
+def _extract_canon_keywords(canon, max_keywords=80):
+    """
+    Extract content keywords from a canon entry to scope the candidate pool.
+    Tradition-agnostic — pulls from the canon's name, description, origin,
+    and course_slots slot names. Same code works for kaiseki, wigilia, mezze,
+    sri lankan rice & curry, italian sunday lunch — every canon.
+    """
+    text_parts = []
+    # name and origin first — short, high-signal
+    for field in ('name', 'origin'):
+        val = canon.get(field)
+        if val:
+            text_parts.append(str(val))
+
+    # course_slots notes BEFORE description — slot notes contain the richest
+    # tradition-specific vocabulary (matsutake, dashi, hamaguri, pierogi, etc.)
+    # and must not be crowded out by the prose description budget.
+    slots = canon.get('course_slots') or []
+    if isinstance(slots, list):
+        for slot in slots:
+            if not isinstance(slot, dict):
+                continue
+            for key in ('slot_name', 'slot_role', 'notes'):
+                v = slot.get(key)
+                if v:
+                    text_parts.append(str(v))
+
+    # Description last — often generic prose, padded after slot vocabulary
+    if canon.get('description'):
+        text_parts.append(str(canon['description']))
+
+    text = ' '.join(text_parts).lower()
+    # Alphabetic runs of length >= 4 (handles unicode for non-English canons)
+    tokens = _re.findall(r"[a-zà-ÿäöüß'-]{4,}", text)
+    keywords = []
+    seen = set()
+    for tok in tokens:
+        tok = tok.strip("'-")
+        if len(tok) < 4 or tok in _CANON_KEYWORD_STOPWORDS or tok in seen:
+            continue
+        seen.add(tok)
+        keywords.append(tok)
+        if len(keywords) >= max_keywords:
+            break
+    return keywords
+
+
+def _build_candidate_pools_for_canon(canon, parsed_brief=None):
+    """
+    Pre-fetch real DB rows for the Haiku candidate pool.
+    Filter is canon-derived keywords (tradition-agnostic) — same code works
+    for any canon. The keywords come from the canon entry itself, so a kaiseki
+    canon scopes the pool around 'matsutake/sake/dashi' and a wigilia canon
+    scopes around 'carp/beetroot/pierogi/poppy', without code change.
+
+    parsed_brief is optional. When present, the brief's primary_cuisine expands
+    into CUISINE_SYNONYMS and ORed into each query so an Italian brief also
+    pulls Italian-origin content even if the canon keywords don't include
+    geographic terms.
+    """
+    keywords = _extract_canon_keywords(canon)
+    kw_pattern = '|'.join(_re.escape(k) for k in keywords) if keywords else 'zzzzz_no_match'
+
+    # Cuisine expansion — adds geo/sub-cuisine terms as a second OR branch
+    cuisine_synonyms = _expand_cuisine((parsed_brief or {}).get('primary_cuisine'))
+    cuisine_regex = '|'.join(_re.escape(s) for s in cuisine_synonyms) if cuisine_synonyms else None
+    cuisine_countries = _expand_cuisine_countries((parsed_brief or {}).get('primary_cuisine'))
+    app.logger.info(f"[ATELIER DIAG] cuisine_patterns={cuisine_synonyms} cuisine_regex={cuisine_regex}")
+
+    app.logger.info(
+        f"[ATELIER POOL] canon {canon['id']} "
+        f"keywords={keywords[:10]}{'...' if len(keywords) > 10 else ''} "
+        f"cuisine_regex={cuisine_regex!r:.60}"
+    )
+
+    pools = {"techniques": [], "ingredients": [], "beverages": [], "_keywords": keywords}
+
+    conn = get_db()
+    try:
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        try:
+            # Techniques — match keywords OR cuisine synonyms
+            if cuisine_regex:
+                cur.execute(
+                    """SELECT id, name, description FROM technique_references
+                       WHERE id IS DISTINCT FROM %s
+                         AND (
+                               COALESCE(origin, '')      ~* %s
+                            OR name                      ~* %s
+                            OR COALESCE(description, '') ~* %s
+                            OR COALESCE(origin, '')      ~* %s
+                            OR name                      ~* %s
+                            OR COALESCE(description, '') ~* %s
+                         )
+                       ORDER BY id LIMIT 80""",
+                    (canon['id'],
+                     kw_pattern, kw_pattern, kw_pattern,
+                     cuisine_regex, cuisine_regex, cuisine_regex),
+                )
+            else:
+                cur.execute(
+                    """SELECT id, name, description FROM technique_references
+                       WHERE id IS DISTINCT FROM %s
+                         AND (
+                               COALESCE(origin, '')      ~* %s
+                            OR name                      ~* %s
+                            OR COALESCE(description, '') ~* %s
+                         )
+                       ORDER BY id LIMIT 80""",
+                    (canon['id'], kw_pattern, kw_pattern, kw_pattern),
+                )
+            pools["techniques"] = [dict(r) for r in cur.fetchall()]
+
+            # Ingredients — match against name / description / origin_country
+            try:
+                if cuisine_regex:
+                    cur.execute(
+                        """SELECT id, name, COALESCE(description, '') AS description
+                           FROM ingredient_products
+                           WHERE name                         ~* %s
+                              OR COALESCE(description, '')    ~* %s
+                              OR COALESCE(origin_country, '') ~* %s
+                              OR name                         ~* %s
+                              OR COALESCE(description, '')    ~* %s
+                              OR COALESCE(origin_country, '') ~* %s
+                           ORDER BY id LIMIT 120""",
+                        (kw_pattern, kw_pattern, kw_pattern,
+                         cuisine_regex, cuisine_regex, cuisine_regex),
+                    )
+                else:
+                    cur.execute(
+                        """SELECT id, name, COALESCE(description, '') AS description
+                           FROM ingredient_products
+                           WHERE name                         ~* %s
+                              OR COALESCE(description, '')    ~* %s
+                              OR COALESCE(origin_country, '') ~* %s
+                           ORDER BY id LIMIT 120""",
+                        (kw_pattern, kw_pattern, kw_pattern),
+                    )
+                pools["ingredients"] = [dict(r) for r in cur.fetchall()]
+            except Exception as e:
+                app.logger.warning(f"[ATELIER POOL] ingredients query failed: {e}")
+                pools["ingredients"] = []
+
+            # Beverages — country-anchored when cuisine is known; cuisine_regex
+            # is a secondary allow for sub-regional names within that country.
+            try:
+                if cuisine_countries:
+                    cur.execute(
+                        """SELECT bp.id, bp.name, br.name AS region
+                           FROM beverage_products bp
+                           LEFT JOIN beverage_regions br ON br.id = bp.region_id
+                           WHERE br.country = ANY(%s)
+                              OR bp.name ~* %s
+                           ORDER BY bp.id LIMIT 80""",
+                        (cuisine_countries, cuisine_regex or 'zzzz_no_match'),
+                    )
+                elif cuisine_regex:
+                    cur.execute(
+                        """SELECT bp.id, bp.name, br.name AS region
+                           FROM beverage_products bp
+                           LEFT JOIN beverage_regions br ON br.id = bp.region_id
+                           WHERE bp.name                  ~* %s
+                              OR COALESCE(br.name,    '') ~* %s
+                              OR COALESCE(br.country, '') ~* %s
+                              OR bp.name                  ~* %s
+                              OR COALESCE(br.name,    '') ~* %s
+                              OR COALESCE(br.country, '') ~* %s
+                           ORDER BY bp.id LIMIT 80""",
+                        (kw_pattern, kw_pattern, kw_pattern,
+                         cuisine_regex, cuisine_regex, cuisine_regex),
+                    )
+                else:
+                    cur.execute(
+                        """SELECT bp.id, bp.name, br.name AS region
+                           FROM beverage_products bp
+                           LEFT JOIN beverage_regions br ON br.id = bp.region_id
+                           WHERE bp.name                  ~* %s
+                              OR COALESCE(br.name,    '') ~* %s
+                              OR COALESCE(br.country, '') ~* %s
+                           ORDER BY bp.id LIMIT 80""",
+                        (kw_pattern, kw_pattern, kw_pattern),
+                    )
+                pools["beverages"] = [dict(r) for r in cur.fetchall()]
+            except Exception as e:
+                app.logger.warning(f"[ATELIER POOL] beverages query failed: {e}")
+                pools["beverages"] = []
+        finally:
+            cur.close()
+    finally:
+        conn.close()
+
+    app.logger.info(f"[ATELIER DIAG] pool sizes: techniques={len(pools.get('techniques',[]))} ingredients={len(pools.get('ingredients',[]))} beverages={len(pools.get('beverages',[]))}")
+    return pools
+
+
+# ─── Cuisine synonym map ─────────────────────────────────────────────────────
+
+CUISINE_SYNONYMS = {
+    'italian':   ['italian', 'italy', 'italia', 'roman', 'tuscan', 'tuscany',
+                  'sicilian', 'sicily', 'neapolitan', 'naples', 'venetian', 'venice',
+                  'lombard', 'piedmontese', 'piedmont', 'umbrian', 'emilian',
+                  'apulian', 'calabrian', 'sardinian', 'ligurian'],
+    'french':    ['french', 'france', 'burgundian', 'burgundy', 'bordelaise', 'bordeaux',
+                  'provençal', 'provencal', 'provence', 'alsatian', 'alsace',
+                  'gascon', 'gascony', 'normand', 'normandy', 'savoyard', 'savoy',
+                  'breton', 'brittany', 'lyonnaise', 'lyon', 'parisian', 'paris'],
+    'japanese':  ['japanese', 'japan', 'kaiseki', 'washoku', 'edomae', 'kansai',
+                  'kanto', 'okinawan', 'okinawa', 'kyoto', 'osaka', 'hokkaido',
+                  'kyushu', 'tohoku'],
+    'chinese':   ['chinese', 'china', 'cantonese', 'guangdong', 'sichuan', 'szechuan',
+                  'hunan', 'shanghainese', 'shanghai', 'beijing', 'pekinese',
+                  'fujian', 'shandong', 'jiangsu', 'taiwanese', 'taiwan'],
+    'mexican':   ['mexican', 'mexico', 'oaxacan', 'oaxaca', 'yucatecan', 'yucatan',
+                  'jalisco', 'pueblan', 'puebla', 'veracruz', 'sonoran', 'baja'],
+    'thai':      ['thai', 'thailand', 'isan', 'lanna', 'central thai', 'southern thai'],
+    'indian':    ['indian', 'india', 'punjabi', 'punjab', 'bengali', 'bengal',
+                  'goan', 'goa', 'kerala', 'tamil', 'rajasthani', 'mughlai',
+                  'gujarati', 'maharashtrian', 'kashmir'],
+    'spanish':   ['spanish', 'spain', 'catalan', 'catalonia', 'basque', 'andalusian',
+                  'andalucia', 'galician', 'galicia', 'castilian', 'castile',
+                  'valencian', 'valencia'],
+    'greek':     ['greek', 'greece', 'cretan', 'crete', 'macedonian', 'thessaloniki',
+                  'cycladic', 'peloponnesian', 'epirote'],
+    'korean':    ['korean', 'korea', 'jeolla', 'gyeongsang', 'seoul', 'busan'],
+    'vietnamese':['vietnamese', 'vietnam', 'hanoi', 'saigon', 'mekong', 'hue'],
+    'lebanese':  ['lebanese', 'lebanon', 'levantine', 'levant'],
+    'moroccan':  ['moroccan', 'morocco', 'maghrebi', 'maghreb', 'fez', 'marrakech'],
+    'peruvian':  ['peruvian', 'peru', 'limeño', 'limeno', 'lima', 'andean', 'amazonian'],
+    'ukrainian': ['ukrainian', 'ukraine', 'kyiv', 'lviv', 'odessa', 'galician',
+                  'cossack', 'carpathian', 'eastern european'],
+}
+
+
+def _expand_cuisine(cuisine_str):
+    """Return the synonym list for a cuisine key, or [key] if unknown."""
+    if not cuisine_str:
+        return []
+    key = cuisine_str.strip().lower()
+    return CUISINE_SYNONYMS.get(key, [key])
+
+
+CUISINE_TO_COUNTRIES = {
+    'italian':    ['Italy'],
+    'french':     ['France'],
+    'japanese':   ['Japan'],
+    'chinese':    ['China'],
+    'mexican':    ['Mexico'],
+    'thai':       ['Thailand'],
+    'indian':     ['India'],
+    'spanish':    ['Spain'],
+    'greek':      ['Greece'],
+    'korean':     ['South Korea', 'Korea'],
+    'vietnamese': ['Vietnam'],
+    'lebanese':   ['Lebanon'],
+    'moroccan':   ['Morocco'],
+    'peruvian':   ['Peru'],
+    'ukrainian':  ['Ukraine'],
+}
+
+
+def _expand_cuisine_countries(cuisine_str):
+    if not cuisine_str:
+        return []
+    return CUISINE_TO_COUNTRIES.get(cuisine_str.strip().lower(), [])
+
+
+def _ingredient_signature_overlap(invention):
+    """
+    Returns the fraction of significant Latin-script tokens from the dish name
+    that appear in any lineage_ingredient name.
+    Returns 1.0 for non-Latin-script dish names (we cannot tokenize them, so
+    the augmentation trigger fails open rather than firing incorrectly).
+    """
+    _OVERLAP_STOPWORDS = frozenset({
+        'and', 'with', 'for', 'the', 'di', 'alla', 'con', 'alle', 'della',
+        'del', 'all', 'da', 'dal', 'in', 'on', 'of', 'le', 'la', 'et',
+    })
+    dish_name = invention.get('name') or ''
+    tokens = [
+        t.lower() for t in _re.findall(r'[a-zA-Z]{3,}', dish_name)
+        if t.lower() not in _OVERLAP_STOPWORDS
+    ]
+    if not tokens:
+        return 1.0
+    ingredients = invention.get('lineage_ingredients') or []
+    ing_text = ' '.join(
+        (i.get('name') if isinstance(i, dict) else str(i)).lower()
+        for i in ingredients
+    )
+    matched = sum(1 for t in tokens if t in ing_text)
+    return matched / len(tokens)
+
+
+def _augment_ingredients_via_haiku(invention, parsed_brief, cur):
+    """
+    Calls Haiku to identify signature ingredients for a dish whose
+    lineage_ingredients list is sparse. Resolves returned names against
+    ingredient_products via exact match, parenthetical-stripped match,
+    pg_trgm fuzzy match, or INSERT as a new ai-augmented row.
+    Mutates invention['lineage_ingredients'] in place.
+    Any exception is caught and printed; augmentation never crashes compose.
+    """
+    import json as _json
+
+    try:
+        # ── Check pg_trgm availability (read-only; never auto-enable) ──────────
+        cur.execute("SELECT 1 FROM pg_extension WHERE extname = 'pg_trgm'")
+        trgm_available = cur.fetchone() is not None
+        if not trgm_available:
+            print("[AUGMENT] pg_trgm not enabled — fuzzy match disabled", flush=True)
+
+        # ── Build user prompt ────────────────────────────────────────────────────
+        current_names = [
+            i.get('name', i) if isinstance(i, dict) else str(i)
+            for i in (invention.get('lineage_ingredients') or [])
+        ]
+        user_prompt = (
+            f"Dish: {invention['name']}\n"
+            f"Description: {invention.get('description') or '(none)'}\n"
+            f"Cuisine: {parsed_brief.get('primary_cuisine') or 'unspecified'}\n"
+            f"Current ingredient list (incomplete): {current_names}\n\n"
+            f"Return the signature ingredients for this dish."
+        )
+
+        # ── Call Haiku ──────────────────────────────────────────────────────────
+        response = client.messages.create(
+            model=INGREDIENT_AUGMENTATION_MODEL,
+            max_tokens=256,
+            system=INGREDIENT_AUGMENTATION_SYSTEM_PROMPT_V2,
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+        raw = response.content[0].text.strip()
+
+        # ── Parse JSON array ─────────────────────────────────────────────────────
+        s, e = raw.find('['), raw.rfind(']')
+        if s == -1 or e == -1 or s >= e:
+            print(
+                f"[AUGMENT] Haiku returned non-array for dish "
+                f"{invention['name']!r}: {raw[:120]!r}",
+                flush=True,
+            )
+            return invention
+        returned_names = _json.loads(raw[s:e + 1])
+        if not isinstance(returned_names, list):
+            print(
+                f"[AUGMENT] parsed result is not a list for {invention['name']!r}",
+                flush=True,
+            )
+            return invention
+
+        # ── Derive origin_country from cuisine ──────────────────────────────────
+        cuisine_str = (parsed_brief.get('primary_cuisine') or '').strip().lower()
+        country_list = CUISINE_TO_COUNTRIES.get(cuisine_str, [])
+        origin_country = country_list[0] if country_list else None
+
+        # ── Resolve / insert each name ──────────────────────────────────────────
+        existing_ids = {
+            i['id'] for i in (invention.get('lineage_ingredients') or [])
+            if isinstance(i, dict) and i.get('id') is not None
+        }
+        new_entries = []
+
+        for ing_name in returned_names:
+            ing_name = str(ing_name).strip()
+            if not ing_name:
+                continue
+
+            # FIX 2B — reject generic placeholder names before any DB work
+            if ing_name.lower() in INGREDIENT_AUGMENTATION_PLACEHOLDER_NAMES:
+                print(
+                    f"[AUGMENT] rejected placeholder name: {ing_name!r} "
+                    f"for {invention.get('name')!r}",
+                    flush=True,
+                )
+                continue
+
+            # 1. Exact case-insensitive match
+            cur.execute(
+                "SELECT id, name FROM ingredient_products "
+                "WHERE lower(name) = lower(%s) LIMIT 1",
+                (ing_name,),
+            )
+            row = cur.fetchone()
+            if row:
+                entry = dict(row)
+                if entry['id'] not in existing_ids:
+                    new_entries.append(entry)
+                    existing_ids.add(entry['id'])
+                continue
+
+            # 1b. Parenthetical-stripped match — resolves "Bottarga di Muggine"
+            # against "Bottarga di Muggine (Grey Mullet Roe)" and vice versa.
+            cur.execute(
+                r"SELECT id, name FROM ingredient_products "
+                r"WHERE lower(regexp_replace(name, '\s*\([^)]*\)\s*', '')) "
+                r"    = lower(regexp_replace(%s,  '\s*\([^)]*\)\s*', '')) "
+                r"LIMIT 1",
+                (ing_name,),
+            )
+            row = cur.fetchone()
+            if row:
+                entry = dict(row)
+                if entry['id'] not in existing_ids:
+                    new_entries.append(entry)
+                    existing_ids.add(entry['id'])
+                continue
+
+            # 2. Fuzzy trigram match (threshold INGREDIENT_AUGMENTATION_FUZZY_THRESHOLD)
+            if trgm_available:
+                cur.execute(
+                    """SELECT id, name, similarity(name, %s) AS sim
+                       FROM ingredient_products
+                       WHERE similarity(name, %s) >= %s
+                       ORDER BY sim DESC
+                       LIMIT 1""",
+                    (ing_name, ing_name, INGREDIENT_AUGMENTATION_FUZZY_THRESHOLD),
+                )
+                row = cur.fetchone()
+                if row:
+                    entry = {'id': row['id'], 'name': row['name']}
+                    if entry['id'] not in existing_ids:
+                        new_entries.append(entry)
+                        existing_ids.add(entry['id'])
+                    continue
+
+            # 3. INSERT new ai-augmented row.
+            # category is NOT NULL with no default — 'produce_specialty' is used
+            # as the most generic valid category for ai-augmented entries.
+            # (Judgment call documented in Phase 1 build report.)
+            try:
+                cur.execute(
+                    """INSERT INTO ingredient_products
+                           (name, category, origin_country,
+                            source, validated, model_version, prompt_version)
+                       VALUES (%s, 'produce_specialty', %s,
+                               'ai-augmented', false, %s, %s)
+                       RETURNING id, name""",
+                    (
+                        ing_name,
+                        origin_country,
+                        INGREDIENT_AUGMENTATION_MODEL,
+                        INGREDIENT_AUGMENTATION_PROMPT_VERSION,
+                    ),
+                )
+                new_row = cur.fetchone()
+                if new_row:
+                    entry = dict(new_row)
+                    new_entries.append(entry)
+                    existing_ids.add(entry['id'])
+            except Exception as insert_exc:
+                print(
+                    f"[AUGMENT] INSERT failed for {ing_name!r}: {insert_exc}",
+                    flush=True,
+                )
+                continue
+
+        # ── Merge into lineage_ingredients (dedupe by id, preserve order) ───────
+        existing_list = [
+            i for i in (invention.get('lineage_ingredients') or [])
+            if isinstance(i, dict)
+        ]
+        invention['lineage_ingredients'] = existing_list + new_entries
+
+        print(
+            f"[AUGMENT] {invention['name']!r}: added {len(new_entries)} ingredient(s) "
+            f"via Haiku augmentation",
+            flush=True,
+        )
+
+    except Exception as exc:
+        print(
+            f"[AUGMENT] augmentation failed for {invention.get('name')!r}: {exc}",
+            flush=True,
+        )
+
+    return invention
+
+
+# ─── Canon matcher, free-form slot generator, lineage enricher ───────────────
+
+def _match_library_recipe_for_slot(slot, parsed_brief, cur, threshold=0.03, invention=None):
+    """
+    Find the best curated library recipe matching this slot via PostgreSQL FTS.
+    Returns dict {id, slug, name, cuisine, description, score} or None.
+    Only searches is_curated=true recipes (public library, not user recipes).
+
+    Query strategy: ingredient names from the generated invention, OR-joined via
+    websearch_to_tsquery. Invention name and slot_role are excluded — dish names
+    are too specific for sister-dish matching, and slot_role terms like "pasta course"
+    produce dead stop-word constraints ('cours') that kill AND matches.
+    OR-based scoring sits in the 0.03–0.06 range for true positives; threshold=0.03.
+    """
+    # Ingredient names are the highest-signal stable terms across sister dishes.
+    # Exclude invention name (too dish-specific) and slot/occasion terms (stop words).
+    query_parts = []
+    if invention:
+        for ing in (invention.get('lineage_ingredients') or [])[:5]:
+            ing_name = ing.get('name') if isinstance(ing, dict) else ing
+            if ing_name:
+                query_parts.append(str(ing_name))
+
+    if not query_parts:
+        return None
+
+    # OR-join so any matching ingredient hits the recipe; plainto_tsquery AND would
+    # require all terms to appear verbatim, which sister dishes rarely satisfy.
+    query_text = ' OR '.join(query_parts)
+
+    cuisine_synonyms = _expand_cuisine(parsed_brief.get('primary_cuisine'))
+    cuisine_re = '|'.join(cuisine_synonyms) if cuisine_synonyms else None
+
+    try:
+        cur.execute(
+            """SELECT id, slug, name, cuisine, description,
+                      ts_rank(
+                          to_tsvector('english',
+                              COALESCE(name, '') || ' ' ||
+                              COALESCE(cuisine, '') || ' ' ||
+                              COALESCE(description, '')
+                          ),
+                          websearch_to_tsquery('english', %s)
+                      ) AS score
+               FROM recipes
+               WHERE is_curated = true
+                 AND to_tsvector('english',
+                         COALESCE(name, '') || ' ' ||
+                         COALESCE(cuisine, '') || ' ' ||
+                         COALESCE(description, '')
+                     ) @@ websearch_to_tsquery('english', %s)
+               ORDER BY score DESC
+               LIMIT 5""",
+            (query_text, query_text),
+        )
+        candidates = [dict(r) for r in cur.fetchall()]
+
+        # Prefer cuisine-matching candidates; fall back to all if none match
+        if cuisine_re and candidates:
+            matching = [c for c in candidates
+                        if c.get('cuisine')
+                        and _re.search(cuisine_re, c['cuisine'], _re.IGNORECASE)]
+            if matching:
+                candidates = matching
+
+        best = candidates[0] if candidates else None
+        if best and float(best.get('score', 0)) >= threshold:
+            return {
+                'id':          best['id'],
+                'slug':        best.get('slug'),
+                'name':        best['name'],
+                'cuisine':     best.get('cuisine'),
+                'description': best.get('description'),
+                'score':       float(best['score']),
+            }
+    except Exception as exc:
+        app.logger.warning(
+            f"[ATELIER LIBRARY] recipe match failed for slot "
+            f"{slot.get('slot_name')!r}: {exc}"
+        )
+    return None
+
+
+def _match_canon_for_brief(parsed_brief, cur):
+    """
+    Rules-based canon matcher. No LLM. Returns (canon_id, canon_name) or (None, None).
+    Searches technique_references where canon_tier IS NOT NULL and course_slots IS NOT NULL.
+    Tries primary_cuisine, home_tradition, secondary_cuisines in order.
+    """
+    terms = []
+    for field in ('primary_cuisine', 'home_tradition'):
+        val = parsed_brief.get(field)
+        if val:
+            terms.append(str(val).lower().replace('_', ' '))
+    for val in (parsed_brief.get('secondary_cuisines') or []):
+        terms.append(str(val).lower().replace('_', ' '))
+
+    for term in terms:
+        if len(term) < 3:
+            continue
+        cur.execute(
+            """SELECT id, name FROM technique_references
+               WHERE canon_tier IS NOT NULL
+                 AND course_slots IS NOT NULL
+                 AND (LOWER(name) ILIKE %s OR LOWER(origin) ILIKE %s)
+               ORDER BY canon_tier ASC
+               LIMIT 1""",
+            (f'%{term}%', f'%{term}%'),
+        )
+        row = cur.fetchone()
+        if row:
+            return row['id'], row['name']
+
+    return None, None
+
+
+def _generate_freeform_slots(parsed_brief):
+    """
+    When no canon matches, call Haiku once to generate a slot structure shaped
+    like course_slots JSONB. Falls back to a minimal structure on failure.
+    """
+    cuisine  = parsed_brief.get('primary_cuisine') or 'contemporary'
+    season   = parsed_brief.get('season') or 'any'
+    course_n = parsed_brief.get('course_count_target') or 5
+    occasion = parsed_brief.get('occasion_type') or 'dinner'
+
+    cuisine_hint = ""
+    if parsed_brief.get('primary_cuisine'):
+        c = parsed_brief['primary_cuisine']
+        cuisine_hint = (
+            f"\n\nIMPORTANT: The cuisine is **{c}**. Use cuisine-appropriate course "
+            f"nomenclature in slot_name fields — never default to French restaurant "
+            f"terms unless the cuisine is French or unspecified. Examples:\n"
+            f"  italian → antipasto, primo, secondo, contorno, formaggi, dolce\n"
+            f"  french  → amuse-bouche, entrée, plat principal, fromage, dessert\n"
+            f"  japanese → zensai, mukozuke, hassun, takiawase, yakimono, gohan\n"
+            f"  chinese → liang cai, re cai, zhu shi, tang, tian dian\n"
+            f"  mexican → entrada, sopa, plato fuerte, guarnición, postre\n"
+            f"  spanish → tapas, primero, segundo, postre\n"
+            f"  ukrainian → zakuski, soup course, fish or vegetable course, main, sweet course\n"
+            f"If the cuisine is not listed, use authentic course terminology from "
+            f"that culture's tradition."
+        )
+
+    prompt = (
+        f"Design a {course_n}-course menu structure for a {cuisine} "
+        f"{occasion} in {season}.\n\n"
+        f"Return a JSON array of exactly {course_n} slot objects. Each must have:\n"
+        "  \"position\": integer (1-indexed),\n"
+        "  \"slot_name\": short name using cuisine-appropriate terminology,\n"
+        "  \"slot_role\": one-word role (e.g. starter, fish_course, main, dessert),\n"
+        "  \"typical_temperature\": \"hot\" | \"warm\" | \"cool\" | \"cold\",\n"
+        "  \"notes\": 1-2 sentences on what this slot should achieve.\n\n"
+        "Return ONLY the JSON array, no markdown fence, no prose."
+        + cuisine_hint
+    )
+
+    last_err = None
+    for attempt in range(_ATELIER_COMPOSE_MAX_ATTEMPTS):
+        try:
+            resp = client.messages.create(
+                model=_ATELIER_COMPOSE_MODEL,
+                max_tokens=800,
+                timeout=30.0,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = resp.content[0].text.strip()
+            if raw.startswith("```"):
+                raw = raw.split("```", 2)[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+                raw = raw.rsplit("```", 1)[0].strip()
+            slots = json.loads(raw)
+            if not isinstance(slots, list) or not slots:
+                raise ValueError("Expected non-empty list")
+            for i, s in enumerate(slots):
+                s.setdefault("position", i + 1)
+                s.setdefault("slot_name", f"course_{i + 1}")
+                s.setdefault("slot_role", "course")
+                s.setdefault("typical_temperature", "warm")
+                s.setdefault("notes", "")
+            return slots
+        except Exception as exc:
+            last_err = exc
+            if attempt < _ATELIER_COMPOSE_MAX_ATTEMPTS - 1:
+                _time.sleep(1)
+
+    app.logger.error(f"[ATELIER FREEFORM] slot generation failed: {last_err}")
+    n = course_n if isinstance(course_n, int) else 5
+    return [
+        {"position": i + 1, "slot_name": f"course_{i + 1}",
+         "slot_role": "course", "typical_temperature": "warm", "notes": ""}
+        for i in range(n)
+    ]
+
+
+def _enrich_invention_lineage(invention, cur):
+    """
+    Resolve lineage ID lists to dicts with id/name (and slug for techniques).
+    Replaces the raw ID lists on the invention dict in-place and returns it.
+    beverage_references have no public page route — name only, no URL.
+    """
+    def resolve_techniques(id_list):
+        if not id_list:
+            return []
+        cur.execute(
+            "SELECT id, name, slug FROM technique_references WHERE id = ANY(%s)",
+            (id_list,)
+        )
+        by_id = {r['id']: dict(r) for r in cur.fetchall()}
+        return [by_id[i] for i in id_list if i in by_id]
+
+    def resolve_ingredients(id_list):
+        if not id_list:
+            return []
+        cur.execute(
+            "SELECT id, name FROM ingredient_products WHERE id = ANY(%s)",
+            (id_list,)
+        )
+        by_id = {r['id']: dict(r) for r in cur.fetchall()}
+        return [by_id[i] for i in id_list if i in by_id]
+
+    def resolve_beverages(id_list):
+        if not id_list:
+            return []
+        cur.execute(
+            """SELECT bp.id, bp.name, br.name AS region
+               FROM beverage_products bp
+               LEFT JOIN beverage_regions br ON br.id = bp.region_id
+               WHERE bp.id = ANY(%s)""",
+            (id_list,)
+        )
+        by_id = {r['id']: dict(r) for r in cur.fetchall()}
+        return [by_id[i] for i in id_list if i in by_id]
+
+    invention['lineage_techniques']  = resolve_techniques(invention.get('lineage_techniques')  or [])
+    invention['lineage_ingredients'] = resolve_ingredients(invention.get('lineage_ingredients') or [])
+    invention['lineage_beverages']   = resolve_beverages(invention.get('lineage_beverages')    or [])
+    return invention
+
+
+def _atelier_build_slot_prompt(slot, slot_index, slot_count, canon, brief_parsed, pools):
+    techniques_str = "\n".join(
+        f"  [id={t['id']}] {t['name']} — {(t.get('description') or '')[:100]}"
+        for t in pools["techniques"]
+    ) or "  (none available)"
+
+    ingredients_str = "\n".join(
+        f"  [id={i['id']}] {i['name']} — {(i.get('description') or '')[:80]}"
+        for i in pools["ingredients"]
+    ) or "  (none available)"
+
+    beverages_str = "\n".join(
+        f"  [id={b['id']}] {b['name']} ({(b.get('origin') or '')[:60]})"
+        for b in pools["beverages"]
+    ) or "  (none available)"
+
+    return (
+        f"You are composing one course of a {canon['menu_format_type']} menu, "
+        f"anchored to the canon \"{canon['name']}\".\n\n"
+        "VOICE: Short active sentences. Second person where natural. Present tense. "
+        "Chef-to-peer prose. No marketing language. No AI reference. Examination depth.\n\n"
+        "SLOT TO FILL\n"
+        f"  Position: course {slot_index + 1} of {slot_count}\n"
+        f"  Slot name: {slot.get('slot_name', 'unnamed')}\n"
+        f"  Slot role: {slot.get('slot_role', 'not specified')}\n"
+        f"  Temperature register: {slot.get('typical_temperature', 'unspecified')}\n"
+        f"  Liturgical rule: {slot.get('liturgical_rule') or 'none'}\n"
+        f"  Canon notes: {slot.get('notes', '')}\n\n"
+        "USER BRIEF\n"
+        f"{json.dumps(brief_parsed, indent=2, ensure_ascii=False)}\n\n"
+        "REAL-COMPONENTS RULE (HARD CONSTRAINT)\n"
+        "Select ONLY from the numbered pools below. Reference by integer id.\n"
+        "Any id outside the pools will be rejected and the slot retried.\n"
+        "You may include zero beverages if none fit the slot.\n\n"
+        f"AVAILABLE TECHNIQUES (pick 1–3 central to this course)\n{techniques_str}\n\n"
+        f"AVAILABLE INGREDIENTS (pick 2–6 that define this course)\n{ingredients_str}\n\n"
+        f"AVAILABLE BEVERAGES (pick 0–2 that pair with this course)\n{beverages_str}\n\n"
+        "OUTPUT: Return ONE JSON object. No markdown fence. No prose before or after.\n\n"
+        "{\n"
+        '  "name": "Course name in Provenance voice — specific, not generic",\n'
+        '  "description": "2–4 sentences. Name the technique, cut/temperature/time, '
+        'and the moment where the dish lives or dies.",\n'
+        '  "lineage_techniques": [<integer ids from techniques pool>],\n'
+        '  "lineage_ingredients": [<integer ids from ingredients pool>],\n'
+        '  "lineage_beverages": [<integer ids from beverages pool, may be empty list>]\n'
+        "}"
+    )
+
+
+def _atelier_compose_slot(slot, slot_index, slot_count, canon, brief_parsed, pools):
+    """
+    Compose one Invention for one slot via Haiku 4.5.
+    Mirrors HACCP retry: MAX_ATTEMPTS=2, fence strip, 1s sleep on retryable failure.
+    Validates real-components rule before returning.
+    Raises RuntimeError after exhaustion.
+    """
+    valid_technique_ids = {t["id"] for t in pools["techniques"]}
+    valid_ingredient_ids = {i["id"] for i in pools["ingredients"]}
+    valid_beverage_ids = {b["id"] for b in pools["beverages"]}
+
+    prompt = _atelier_build_slot_prompt(
+        slot, slot_index, slot_count, canon, brief_parsed, pools
+    )
+    last_error = None
+
+    for attempt in range(1, _ATELIER_COMPOSE_MAX_ATTEMPTS + 1):
+        try:
+            resp = client.messages.create(
+                model=_ATELIER_COMPOSE_MODEL,
+                max_tokens=1500,
+                timeout=45.0,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = resp.content[0].text.strip()
+
+            # Strip accidental markdown fences (mirrors HACCP)
+            if raw.startswith("```"):
+                raw = raw.split("```", 2)[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+                raw = raw.rsplit("```", 1)[0].strip()
+
+            invention = json.loads(raw)
+
+            if not invention.get("name"):
+                raise ValueError("missing 'name'")
+            if not invention.get("description"):
+                raise ValueError("missing 'description'")
+
+            invention.setdefault("lineage_techniques", [])
+            invention.setdefault("lineage_ingredients", [])
+            invention.setdefault("lineage_beverages", [])
+
+            # Real-components rule — hard check
+            for tid in invention["lineage_techniques"]:
+                if tid not in valid_technique_ids:
+                    raise ValueError(f"technique id {tid} not in candidate pool")
+            for iid in invention["lineage_ingredients"]:
+                if iid not in valid_ingredient_ids:
+                    raise ValueError(f"ingredient id {iid} not in candidate pool")
+            for bid in invention["lineage_beverages"]:
+                if bid not in valid_beverage_ids:
+                    raise ValueError(f"beverage id {bid} not in candidate pool")
+
+            app.logger.info(
+                f"[ATELIER COMPOSE] slot {slot_index + 1} "
+                f"attempt {attempt}/{_ATELIER_COMPOSE_MAX_ATTEMPTS} succeeded"
+            )
+            return invention
+
+        except (json.JSONDecodeError, ValueError) as e:
+            last_error = e
+            app.logger.warning(
+                f"[ATELIER COMPOSE] slot {slot_index + 1} "
+                f"attempt {attempt}/{_ATELIER_COMPOSE_MAX_ATTEMPTS} failed: "
+                f"{type(e).__name__}: {e}"
+            )
+            if attempt < _ATELIER_COMPOSE_MAX_ATTEMPTS:
+                _time.sleep(1)
+                continue
+
+        except Exception as e:
+            app.logger.error(
+                f"[ATELIER COMPOSE] slot {slot_index + 1} non-retryable error: {e}"
+            )
+            raise
+
+    app.logger.error(
+        f"[ATELIER COMPOSE] slot {slot_index + 1} ({slot.get('slot_name')}) "
+        f"exhausted {_ATELIER_COMPOSE_MAX_ATTEMPTS} attempts. Last error: {last_error}"
+    )
+    raise RuntimeError(
+        f"Could not compose slot {slot_index + 1} ({slot.get('slot_name')}) "
+        f"after {_ATELIER_COMPOSE_MAX_ATTEMPTS} attempts: {last_error}"
+    )
+
+
+@app.route("/api/atelier/compose", methods=["POST"])
+def atelier_compose():
+    from datetime import datetime
+    print("[ATELIER COMPOSE] route entered", flush=True)
+
+    user = get_current_user()
+    if not user:
+        return jsonify(error="Login required"), 401
+
+    data = request.get_json() or {}
+    brief_parsed   = data.get("brief_parsed") or {}
+    canon_entry_id = data.get("canon_entry_id")   # None unless explicitly supplied
+    app.logger.info(f"[ATELIER DIAG] parsed_brief = {brief_parsed}")
+
+    # ── 1. Resolve canon / slot structure (Mode A / B / C) ───────────────────
+    conn = get_db()
+    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    if canon_entry_id:
+        # Mode A — explicit canon_id supplied
+        compose_mode = "canon_anchored"
+        cur.execute(
+            """SELECT id, name, origin, description,
+                      menu_format_type, canon_tier, course_slots
+               FROM technique_references WHERE id = %s""",
+            (int(canon_entry_id),),
+        )
+        canon_row = cur.fetchone()
+        cur.close(); conn.close()
+        if not canon_row:
+            return jsonify(error=f"canon entry {canon_entry_id} not found"), 404
+        canon = dict(canon_row)
+        if not canon.get("course_slots"):
+            return jsonify(error=f"canon entry {canon_entry_id} has no course_slots"), 400
+        course_slots = canon["course_slots"]
+
+    else:
+        # Mode B — try rules-based matcher
+        matched_id, matched_name = _match_canon_for_brief(brief_parsed, cur)
+        app.logger.info(f"[ATELIER DIAG] canon_match: id={matched_id} name={matched_name}")
+
+        if matched_id:
+            compose_mode = "canon_anchored"
+            cur.execute(
+                """SELECT id, name, origin, description,
+                          menu_format_type, canon_tier, course_slots
+                   FROM technique_references WHERE id = %s""",
+                (matched_id,),
+            )
+            canon = dict(cur.fetchone())
+            course_slots = canon["course_slots"]
+            cur.close(); conn.close()
+        else:
+            cur.close(); conn.close()
+            # Mode C — free-form: synthesise slot structure with Haiku
+            compose_mode = "free_form"
+            canon = {
+                "id":               None,
+                "name":             (brief_parsed.get("primary_cuisine") or "Contemporary").title(),
+                "origin":           brief_parsed.get("current_location") or "",
+                "description":      "",
+                "menu_format_type": brief_parsed.get("menu_format_hint") or "tasting_menu",
+                "canon_tier":       None,
+                "course_slots":     None,
+            }
+            course_slots = _generate_freeform_slots(brief_parsed)
+            canon["course_slots"] = course_slots
+
+    print(
+        f"[ATELIER COMPOSE] mode={compose_mode} canon_id={canon.get('id')} "
+        f"name={canon['name'][:40]!r} slots={len(course_slots)} "
+        f"format={canon.get('menu_format_type')}",
+        flush=True,
+    )
+
+    # ── 2. Build candidate pools ──────────────────────────────────────────────
+    pools = _build_candidate_pools_for_canon(canon, parsed_brief=brief_parsed)
+    app.logger.info(
+        f"[ATELIER COMPOSE] pools: {len(pools['techniques'])} techniques, "
+        f"{len(pools['ingredients'])} ingredients, "
+        f"{len(pools['beverages'])} beverages"
+    )
+
+    # ── 3. Insert Composition row ─────────────────────────────────────────────
+    occasion    = (brief_parsed.get("occasion_type") or "").replace("_", " ").title()
+    today_str   = datetime.now().strftime("%-d %b %Y")
+    canon_label = canon["name"][:40]
+    comp_title  = (
+        f"Composition · {occasion or canon_label} · {today_str}".strip(" ·")
+    )
+    based_on_id = canon.get("id")  # None for free_form
+
+    conn = get_db()
+    cur  = conn.cursor()
+    cur.execute(
+        """INSERT INTO compositions
+             (user_id, title, brief_parsed, based_on_canon_id, output_shape, status)
+           VALUES (%s, %s, %s::jsonb, %s, 'menu', 'draft')
+           RETURNING id""",
+        (user["id"], comp_title, json.dumps(brief_parsed), based_on_id),
+    )
+    composition_id = cur.fetchone()[0]
+    cur.close(); conn.close()
+
+    print(f"[ATELIER COMPOSE] composition_id={composition_id} title={comp_title!r}", flush=True)
+
+    # ── 4. Compose each slot → Invention → composition_course ─────────────────
+    courses      = []
+    enrich_conn  = get_db()
+    enrich_cur   = enrich_conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    for slot_index, slot in enumerate(course_slots):
+        print(
+            f"[ATELIER COMPOSE] slot {slot_index + 1}/{len(course_slots)}: "
+            f"{slot.get('slot_name')}",
+            flush=True,
+        )
+
+        invention = _atelier_compose_slot(
+            slot=slot,
+            slot_index=slot_index,
+            slot_count=len(course_slots),
+            canon=canon,
+            brief_parsed=brief_parsed,
+            pools=pools,
+        )
+
+        # Persist Invention then link via composition_course
+        conn2 = get_db()
+        cur2  = conn2.cursor()
+        cur2.execute(
+            """INSERT INTO user_inventions
+                 (user_id, name, description,
+                  derived_from_techniques, derived_from_ingredients,
+                  derived_from_beverages, composed_by_brief_id)
+               VALUES (%s, %s, %s, %s::jsonb, %s::jsonb, %s::jsonb, %s)
+               RETURNING id""",
+            (
+                user["id"],
+                invention["name"],
+                invention["description"],
+                json.dumps(invention.get("lineage_techniques", [])),
+                json.dumps(invention.get("lineage_ingredients", [])),
+                json.dumps(invention.get("lineage_beverages", [])),
+                composition_id,
+            ),
+        )
+        invention_id = cur2.fetchone()[0]
+
+        # XOR constraint: recipe_id must be NULL when invention_id is set
+        cur2.execute(
+            """INSERT INTO composition_courses
+                 (composition_id, position, slot_name, slot_role, invention_id, recipe_id)
+               VALUES (%s, %s, %s, %s, %s, NULL)""",
+            (
+                composition_id,
+                slot_index + 1,
+                slot.get("slot_name"),
+                slot.get("slot_role"),
+                invention_id,
+            ),
+        )
+        cur2.close(); conn2.close()
+
+        # Enrich lineage: replace raw ID lists with dicts {id, name, slug}
+        _enrich_invention_lineage(invention, enrich_cur)
+
+        # Augment lineage_ingredients via Haiku if signature overlap is low
+        if _ingredient_signature_overlap(invention) < INGREDIENT_AUGMENTATION_THRESHOLD:
+            _augment_ingredients_via_haiku(invention, brief_parsed, enrich_cur)
+
+        # Match a curated library recipe for this slot (may be None)
+        library_recipe = _match_library_recipe_for_slot(slot, brief_parsed, enrich_cur, invention=invention)
+
+        courses.append(
+            {
+                "position":            slot_index + 1,
+                "slot_name":           slot.get("slot_name"),
+                "slot_role":           slot.get("slot_role"),
+                "invention_id":        invention_id,
+                "name":                invention["name"],
+                "description":         invention["description"],
+                "lineage_techniques":  invention.get("lineage_techniques", []),
+                "lineage_ingredients": invention.get("lineage_ingredients", []),
+                "lineage_beverages":   invention.get("lineage_beverages", []),
+                "library_recipe":      library_recipe,
+            }
+        )
+
+    enrich_cur.close(); enrich_conn.close()
+
+    print(
+        f"[ATELIER COMPOSE] complete. composition_id={composition_id} "
+        f"courses={len(courses)}",
+        flush=True,
+    )
+
+    return jsonify(
+        composition_id=composition_id,
+        title=comp_title,
+        compose_mode=compose_mode,
+        canon_name=canon["name"],
+        based_on_canon_id=based_on_id,
+        menu_format_type=canon.get("menu_format_type"),
+        slot_count=len(courses),
+        courses=courses,
+    )
+
+
+@app.route("/atelier")
+def atelier():
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("auth_login") + "?next=/atelier")
+    if user.get("role") not in ("founder", "admin"):
+        return redirect(url_for("kitchen"))
+    return send_file("atelier.html")
 
 
 # ─── Run ─────────────────────────────────────────────────────────────────────
