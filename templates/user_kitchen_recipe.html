@@ -427,6 +427,18 @@ body{font-family:var(--serif);font-size:14px;line-height:1.7;background:var(--cr
   color:var(--gold-mid);text-decoration:none;transition:color 0.15s;
 }
 .r-pairing-drop-link:hover{color:var(--gold)}
+.r-pairing-drop-tier{
+  font-family:var(--serif);font-size:7.5px;font-style:italic;
+  letter-spacing:3px;text-transform:uppercase;color:var(--gold);
+  opacity:0.55;margin-bottom:3px;
+}
+.r-pairing-btn--null{
+  opacity:0.25;text-decoration:none;cursor:default;font-style:italic;
+}
+.r-pairing-drop-note--null{
+  font-family:var(--serif);font-size:12px;font-style:italic;
+  color:rgba(245,241,233,0.2);margin-bottom:8px;
+}
 
 /* ── ACCORDION ──────────────────────────────────────── */
 .r-accordion{margin:24px 0}
@@ -1124,17 +1136,24 @@ select.haccp-input{padding:3px 7px}
     <div class="r-to-drink-line">
       {% for p in pairings_for_recipe %}
         {% if not loop.first %}<span class="r-pairing-dot">·</span>{% endif %}
-        <button class="r-pairing-btn" id="pbtn-{{ loop.index0 }}" onclick="togglePairing({{ loop.index0 }}, {{ pairings_for_recipe | length }})">{{ p.beverage_name or p.beverage_style }}</button>
+        {% set _pname = p.beverage_name or p.beverage_style %}
+        <button class="r-pairing-btn{% if not _pname %} r-pairing-btn--null{% endif %}" id="pbtn-{{ loop.index0 }}" onclick="togglePairing({{ loop.index0 }}, {{ pairings_for_recipe | length }})">{{ _pname or "not yet matched" }}</button>
       {% endfor %}
       <button class="r-why-btn" onclick="toggleAllPairings({{ pairings_for_recipe | length }})">Why these →</button>
     </div>
     <div class="r-pairing-drops">
+      {% set _tier_defaults = ["COMPLEMENT", "BRIDGE", "CONTRAST"] %}
       {% for p in pairings_for_recipe %}
       <div class="r-pairing-drop" id="pdrop-{{ loop.index0 }}">
+        <div class="r-pairing-drop-tier">{{ p.tier_label or _tier_defaults[loop.index0] }}</div>
         {% if p.beverage_category %}
         <div class="r-pairing-drop-cat">{{ p.beverage_category | replace('_', ' ') }}</div>
         {% endif %}
+        {% if p.beverage_name or p.beverage_style %}
         <div class="r-pairing-drop-note">{{ p.beverage_description or p.flavour_logic }}</div>
+        {% else %}
+        <div class="r-pairing-drop-note r-pairing-drop-note--null">→ pairing not yet matched</div>
+        {% endif %}
         {% if p.pantry_url %}
         <a href="{{ p.pantry_url }}" class="r-pairing-drop-link">View full pairing →</a>
         {% endif %}

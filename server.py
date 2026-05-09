@@ -2329,6 +2329,41 @@ def recipe_cook_mode(slug):
     return render_template("cook_mode.html", recipe=dict(recipe))
 
 
+@app.route("/api/recipe/<slug>/re-enrich-pairings", methods=["POST"])
+def re_enrich_pairings(slug):
+    """Re-run LLM beverage pairing enrichment for a kitchen recipe. Founder/admin only."""
+    user = get_current_user()
+    if not user or user.get("role") not in ("founder", "admin"):
+        return jsonify({"error": "forbidden"}), 403
+    if not DATABASE_URL_WRITE:
+        return jsonify({"error": "no write DB"}), 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM user_kitchen_recipes WHERE slug = %s", (slug,))
+    recipe = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not recipe:
+        return jsonify({"error": "recipe not found"}), 404
+    _ing_lines = "\n".join(
+        f"{i.get('count', '')} {i.get('unit', '')} {i.get('name', '')}".strip()
+        for i in (recipe.get("ingredients") or [])
+        if isinstance(i, dict)
+    )
+    pairings = _enrich_beverage_pairings(recipe["title"], _ing_lines)
+    if not pairings:
+        return jsonify({"error": "enrichment returned nothing"}), 500
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE user_kitchen_recipes SET beverage_pairings = %s WHERE slug = %s",
+        (json.dumps(pairings), slug),
+    )
+    cur.close()
+    conn.close()
+    return jsonify({"ok": True, "slug": slug, "pairings": pairings})
+
+
 @app.route("/api/recipe/<slug>/edit", methods=["POST"])
 def recipe_v3_edit(slug):
     """Update editable fields on a v3 user kitchen recipe."""
@@ -3965,7 +4000,7 @@ def create_recipe():
             for idx in range(len(steps))
         )
         with ThreadPoolExecutor(max_workers=3) as _pool:
-            _fp = _pool.submit(_enrich_beverage_pairings, recipe["title"])
+            _fp = _pool.submit(_enrich_beverage_pairings, recipe["title"], _ing_lines)
             _ff = _pool.submit(_enrich_faqs, recipe["title"], _ing_lines, _steps_lines)
             _ft = _pool.submit(_enrich_time_estimates, recipe["title"], _ing_lines, _steps_lines, _ex_active, _ex_total)
             _enrich_pairings_result = _fp.result(timeout=30) or []
@@ -5164,10 +5199,152 @@ def _enhance_recipe_structure(title, ingredients_text, steps_text):
         return {}
 
 
-def _enrich_beverage_pairings(title):
-    """Import-time pairing capture. Returns list from the heuristic matcher."""
+# ── Pairing constraint constants ──────────────────────────────────────────────
+_GENERIC_NAME_RE = _re.compile(
+    r"^(beer(\s+(ale|lager|stout|porter|ipa|pilsner))?|sake|wines?|red\s+wine|white\s+wine|"
+    r"ros[eé]|spirits?|tea|coffee|kombucha|sparkling\s+wine|mocktail|soft\s+drink)$",
+    _re.IGNORECASE,
+)
+_ALCOHOLIC_CATS = frozenset({
+    "red_wine", "white_wine", "sparkling_wine", "rosé", "rose",
+    "sake", "beer", "spirit_cocktail",
+})
+_TIER_DEFAULTS = ["complement", "bridge", "contrast"]
+
+
+def _enrich_beverage_pairings(title, ingredients_text=""):
+    """LLM-based pairing generation at import time.
+
+    Three hard constraints enforced with post-validation + one re-prompt:
+    1. Non-alcoholic floor  — at least one of three pairings is non-alcoholic.
+    2. Category diversity   — no two pairings share a category.
+    3. Specific named drinks — name must be producer + product, never a bare label.
+    Returns list of 3 dicts conforming to the pairings_for_recipe template schema.
+    Non-compliant slots on final failure get name=None → template shows placeholder.
+    """
+    SYSTEM = (
+        "You are a professional sommelier and beverage curator for Provenance, a culinary platform.\n"
+        "Generate exactly three beverage pairings for a recipe. Follow ALL THREE rules:\n\n"
+        "RULE 1 — NON-ALCOHOLIC FLOOR: At least one pairing must be non-alcoholic. "
+        "Suitable: tea (sencha, hojicha, oolong, genmaicha, buckwheat tea), coffee, kombucha, "
+        "herbal soda, sparkling water with culinary garnish, mocktail.\n\n"
+        "RULE 2 — CATEGORY DIVERSITY: Each pairing must use a different category. "
+        "Valid categories: red_wine, white_wine, sparkling_wine, rosé, sake, beer, "
+        "spirit_cocktail, tea, coffee, soft_drink, mocktail, kombucha.\n\n"
+        "RULE 3 — SPECIFIC NAMED DRINKS: Every name must be a real specific drink — "
+        "producer + product name (e.g. 'Domaine Weinbach Riesling Cuvée Théo', "
+        "'En Nichi Hojicha Roasted Green Tea'). "
+        "Never use a bare category label such as 'sake', 'beer ale', or 'tea'. "
+        "If you cannot name a specific drink with high confidence, return null for that name.\n\n"
+        "Label by slot: slot 0 = complement, slot 1 = bridge, slot 2 = contrast.\n\n"
+        "Example — Bouillabaisse (Provençal fish stew, saffron, rouille):\n"
+        "[\n"
+        '  {"name": "Château Simone Palette Blanc", "category": "white_wine", '
+        '"pairing_type": "complement", '
+        '"tasting_note": "Clairette and Grenache Blanc from Palette AOC — saline minerality '
+        'mirrors the saffron broth; weight holds against the rouille."},\n'
+        '  {"name": "Kizakura Josen Ginjo", "category": "sake", "pairing_type": "bridge", '
+        '"tasting_note": "Light umami backbone from Fushimi water ties to the shellfish stock; '
+        'the rice sweetness echoes the fennel."},\n'
+        '  {"name": "Mariage Frères Thé du Hammam", "category": "tea", '
+        '"pairing_type": "contrast", '
+        '"tasting_note": "Gunpowder green with rose and citrus — cuts the saffron heat; '
+        'serve at 80°C alongside or after."}\n'
+        "]\n\n"
+        "Return ONLY valid JSON — a list of exactly 3 objects. "
+        "No markdown fences. No text outside the array."
+    )
+
+    def _call(user_content):
+        resp = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=700,
+            system=SYSTEM,
+            messages=[{"role": "user", "content": user_content}],
+        )
+        raw = resp.content[0].text.strip()
+        if raw.startswith("```"):
+            lines = raw.split("\n")
+            raw = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
+        return json.loads(raw)
+
+    def _violations(pairings):
+        if not isinstance(pairings, list) or len(pairings) != 3:
+            return ["not a list of 3"]
+        cats, flags = [], []
+        has_na = False
+        for p in pairings:
+            name = (p.get("name") or "").strip()
+            cat = (p.get("category") or "").lower().strip()
+            if name and _GENERIC_NAME_RE.match(name):
+                flags.append(f"generic name {name!r}")
+            if cat not in _ALCOHOLIC_CATS:
+                has_na = True
+            cats.append(cat)
+        if not has_na:
+            flags.append("all alcoholic")
+        if len(set(cats)) < 3:
+            flags.append(f"duplicate categories {cats}")
+        return flags
+
+    def _to_schema(pairings):
+        result = []
+        for i, p in enumerate(pairings[:3]):
+            name = (p.get("name") or "").strip() or None
+            if name and _GENERIC_NAME_RE.match(name):
+                name = None
+            cat = (p.get("category") or "").lower().replace(" ", "_")
+            tier = (p.get("pairing_type") or _TIER_DEFAULTS[i]).lower()
+            result.append({
+                "beverage_name": name,
+                "beverage_style": name or "",
+                "beverage_category": cat,
+                "beverage_description": (p.get("tasting_note") or "").strip(),
+                "flavour_logic": "",
+                "pairing_type": tier,
+                "tier_label": tier.upper(),
+                "confidence": "editorial",
+                "source": "llm_generated",
+                "beverage_product_id": None,
+                "pantry_url": None,
+            })
+        # Pad to 3 with null slots if response was short
+        null_tiers = ["COMPLEMENT", "BRIDGE", "CONTRAST"]
+        while len(result) < 3:
+            i = len(result)
+            result.append({
+                "beverage_name": None, "beverage_style": "",
+                "beverage_category": "", "beverage_description": "",
+                "flavour_logic": "", "pairing_type": _TIER_DEFAULTS[i],
+                "tier_label": null_tiers[i], "confidence": "",
+                "source": "llm_generated",
+                "beverage_product_id": None, "pantry_url": None,
+            })
+        return result
+
     try:
-        return _find_pairings_for_user_recipe(title, limit=3) or []
+        base_msg = f"Recipe: {title}"
+        if ingredients_text:
+            base_msg += f"\n\nKey ingredients:\n{ingredients_text[:600]}"
+
+        pairings = _call(base_msg)
+        v = _violations(pairings)
+        if v:
+            app.logger.info(f"[_enrich_beverage_pairings] first-pass violations: {v} — re-prompting")
+            retry_msg = (
+                f"{base_msg}\n\nYour previous response had these issues: {'; '.join(v)}. "
+                "Fix them: (1) include at least one non-alcoholic category, "
+                "(2) use three different categories, (3) use specific producer+product names."
+            )
+            pairings = _call(retry_msg)
+            v2 = _violations(pairings)
+            if v2:
+                app.logger.warning(f"[_enrich_beverage_pairings] second-pass violations: {v2} — nulling bad slots")
+                for p in pairings:
+                    n = (p.get("name") or "").strip()
+                    if n and _GENERIC_NAME_RE.match(n):
+                        p["name"] = None
+        return _to_schema(pairings)
     except Exception as e:
         app.logger.warning(f"[_enrich_beverage_pairings] failed: {e}")
         return []
