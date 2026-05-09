@@ -2294,6 +2294,41 @@ def recipe_page(slug):
                            user_location=user_loc)
 
 
+@app.route("/recipe/<slug>/cook")
+def recipe_cook_mode(slug):
+    """Cook mode — phone-first minimal view with Wake Lock for on-the-line use."""
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    # Kitchen recipes take priority (user-imported, Cook button lives on that page)
+    cur.execute("SELECT * FROM user_kitchen_recipes WHERE slug = %s", (slug,))
+    kitchen_recipe = cur.fetchone()
+    if kitchen_recipe:
+        cur.close()
+        conn.close()
+        _recipe_dict = dict(kitchen_recipe)
+        # Normalize yield text — same logic as recipe_page
+        _st = (_recipe_dict.get("servings_text") or "").rstrip()
+        for _bad in (" serves", " serve"):
+            if _st.endswith(_bad):
+                _recipe_dict["servings_text"] = _st[:-len(_bad)].rstrip() + " servings"
+                break
+        if not _recipe_dict.get("servings_text") and _recipe_dict.get("servings"):
+            _norm, _ = _parse_yield(_recipe_dict["servings"])
+            if _norm:
+                _recipe_dict["servings_text"] = _norm
+        return render_template("cook_mode.html", recipe=_recipe_dict)
+    # Fall back to public recipes table
+    cur.execute("SELECT * FROM recipes WHERE slug = %s", (slug,))
+    recipe = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not recipe:
+        return "Recipe not found", 404
+    return render_template("cook_mode.html", recipe=dict(recipe))
+
+
 @app.route("/api/recipe/<slug>/edit", methods=["POST"])
 def recipe_v3_edit(slug):
     """Update editable fields on a v3 user kitchen recipe."""

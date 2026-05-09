@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>{{ recipe.title }} — Cook — Provenance</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0e0d0b;
+  --bg-layer:#161512;
+  --cream:#f5f1e9;
+  --cream-muted:rgba(245,241,233,0.55);
+  --cream-dim:rgba(245,241,233,0.25);
+  --gold:#C9A84C;
+  --gold-faint:rgba(201,168,76,0.15);
+  --divider:rgba(245,241,233,0.1);
+  --serif:Georgia,'Times New Roman',serif;
+  --didot:'Playfair Display',Georgia,serif;
+  --max-w:600px;
+}
+
+html{-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--cream)}
+body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg);color:var(--cream);padding-bottom:60px;min-height:100vh}
+
+/* ── TOP BAR ─────────────────────────────────────────── */
+.cm-bar{
+  position:sticky;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;
+  background:rgba(14,13,11,0.85);backdrop-filter:blur(12px);
+  border-bottom:0.5px solid var(--divider);gap:12px;
+}
+.cm-bar-exit{
+  display:flex;align-items:center;gap:6px;flex-shrink:0;
+  text-decoration:none;color:var(--cream-muted);
+  font-family:var(--serif);font-size:12px;font-style:italic;
+  letter-spacing:0.2px;transition:color 0.15s;white-space:nowrap;
+}
+.cm-bar-exit:hover{color:var(--cream)}
+.cm-bar-exit svg{flex-shrink:0}
+.cm-bar-title{
+  font-family:var(--serif);font-size:11px;
+  letter-spacing:0.04em;
+  color:var(--cream-muted);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  flex:1;text-align:center;
+}
+.cm-bar-lock{
+  display:flex;align-items:center;gap:7px;flex-shrink:0;
+  cursor:pointer;user-select:none;
+}
+.cm-bar-lock-label{
+  font-family:var(--serif);font-size:10px;font-style:italic;
+  letter-spacing:0.06em;color:var(--cream-dim);
+  transition:color 0.2s;
+}
+.cm-lock-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--cream-dim);
+  transition:background 0.3s,box-shadow 0.3s;
+  flex-shrink:0;
+}
+.cm-lock-dot.active{
+  background:var(--gold);
+  box-shadow:0 0 6px rgba(201,168,76,0.6);
+}
+.cm-bar-lock.active .cm-bar-lock-label{color:var(--gold)}
+
+/* ── HERO ─────────────────────────────────────────────── */
+.cm-hero{
+  width:100%;max-width:var(--max-w);
+  margin:0 auto;padding:20px 20px 0;
+}
+.cm-hero-img{
+  width:100%;height:220px;object-fit:cover;
+  border-radius:4px;display:block;
+}
+.cm-title{
+  max-width:var(--max-w);margin:24px auto 0;
+  padding:0 20px;
+  font-family:var(--didot);font-size:clamp(22px,5vw,28px);
+  font-weight:400;line-height:1.25;color:var(--cream);
+}
+
+/* ── META STRIP ───────────────────────────────────────── */
+.cm-meta{
+  max-width:var(--max-w);margin:16px auto 0;
+  padding:0 20px;
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  font-family:var(--serif);font-size:12px;
+  font-style:italic;letter-spacing:0.03em;color:var(--cream-muted);
+}
+.cm-meta-dot{color:var(--gold);margin:0 2px}
+
+/* ── SECTION ──────────────────────────────────────────── */
+.cm-section{max-width:var(--max-w);margin:32px auto 0;padding:0 20px}
+.cm-section-head{
+  font-family:var(--serif);font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:18px;
+}
+
+/* ── UNIT TOGGLE ──────────────────────────────────────── */
+.cm-unit-row{display:flex;justify-content:flex-end;margin-bottom:14px}
+.cm-unit-toggle{display:inline-flex;border:0.5px solid rgba(201,168,76,0.5);border-radius:2px;overflow:hidden}
+.cm-unit-toggle button{
+  background:transparent;border:none;
+  padding:6px 14px;
+  font-family:var(--serif);font-size:12px;letter-spacing:0.06em;
+  text-transform:lowercase;color:var(--gold);cursor:pointer;
+  transition:background 0.15s,color 0.15s;
+}
+.cm-unit-toggle button.active{background:var(--gold);color:var(--bg)}
+.cm-unit-toggle button:not(.active):hover{background:rgba(201,168,76,0.1)}
+
+/* ── INGREDIENTS ──────────────────────────────────────── */
+.cm-ing-list{list-style:none;padding:0;margin:0}
+.cm-ing-row{
+  display:flex;align-items:baseline;gap:10px;
+  padding:11px 0;border-bottom:0.5px solid var(--divider);
+}
+.cm-ing-row:last-child{border-bottom:none}
+.cm-ing-qty{
+  font-family:var(--serif);font-size:15px;font-weight:400;
+  color:var(--cream);flex-shrink:0;min-width:52px;
+}
+.cm-ing-name{
+  font-family:var(--serif);font-size:15px;color:var(--cream);
+  line-height:1.4;
+}
+.cm-ing-info{
+  font-family:var(--serif);font-size:13px;
+  font-style:italic;color:var(--cream-muted);margin-left:4px;
+}
+
+/* ── METHOD ───────────────────────────────────────────── */
+.cm-step{
+  display:flex;gap:18px;padding:20px 0;
+  border-bottom:0.5px solid var(--divider);
+  cursor:pointer;transition:opacity 0.2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.cm-step:last-child{border-bottom:none}
+.cm-step.cm-step--dimmed{opacity:0.25}
+.cm-step.cm-step--focused{opacity:1}
+.cm-step-num{
+  font-family:var(--serif);font-size:12px;font-style:italic;
+  color:var(--gold);flex-shrink:0;min-width:22px;
+  padding-top:3px;
+}
+.cm-step-text{
+  font-family:var(--serif);font-size:17px;line-height:1.65;
+  color:var(--cream);
+}
+
+/* ── DIVIDER ──────────────────────────────────────────── */
+.cm-ornament{
+  text-align:center;font-family:var(--serif);
+  color:var(--gold);font-size:13px;letter-spacing:6px;
+  margin:28px 0;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="cm-bar">
+  <a class="cm-bar-exit" href="/recipe/{{ recipe.slug }}">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Exit cook
+  </a>
+  <span class="cm-bar-title">{{ recipe.title }}</span>
+  <div class="cm-bar-lock" id="cm-lock-btn" onclick="toggleWakeLock()" title="Screen wake lock">
+    <span class="cm-bar-lock-label" id="cm-lock-label">Screen on</span>
+    <span class="cm-lock-dot" id="cm-lock-dot"></span>
+  </div>
+</header>
+
+<!-- HERO IMAGE (small, contained) -->
+{% if recipe.has_image and recipe.uuid %}
+<div class="cm-hero">
+  <img class="cm-hero-img"
+    src="/images/{{ recipe.uuid }}/hero.jpg"
+    alt="{{ recipe.title }}"
+    onerror="this.parentElement.style.display='none'">
+</div>
+{% elif recipe.image_url %}
+<div class="cm-hero">
+  <img class="cm-hero-img"
+    src="{{ recipe.image_url }}"
+    alt="{{ recipe.title }}"
+    onerror="this.parentElement.style.display='none'">
+</div>
+{% endif %}
+
+<!-- TITLE (shown always, below hero if hero present) -->
+<h1 class="cm-title">{{ recipe.title }}</h1>
+
+<!-- META STRIP -->
+{% set _parts = [] %}
+{% set _srv = recipe.servings_text or '' %}
+{% if not _srv and recipe.servings and recipe.servings | length > 0 %}
+  {% set _s0 = recipe.servings[0] %}
+  {% if _s0 is mapping %}
+    {% set _srv = (_s0.count | string) + ((' ' + _s0.unit) if _s0.unit else '') %}
+  {% else %}
+    {% set _srv = _s0 | string %}
+  {% endif %}
+{% endif %}
+{% if _srv %}{% set _ = _parts.append(_srv) %}{% endif %}
+{% if recipe.time_active %}{% set _ = _parts.append(recipe.time_active + ' active') %}{% endif %}
+{% if recipe.time_total %}{% set _ = _parts.append(recipe.time_total + ' total') %}{% endif %}
+{% if _parts %}
+<div class="cm-meta">
+  {% for part in _parts %}
+    {% if not loop.first %}<span class="cm-meta-dot">·</span>{% endif %}
+    {{ part }}
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- INGREDIENTS -->
+{% if recipe.ingredients and recipe.ingredients | length > 0 %}
+<div class="cm-section">
+  <div class="cm-unit-row">
+    <div class="cm-unit-toggle">
+      <button id="cm-unit-metric" class="active" onclick="setUnits('metric')">metric</button>
+      <button id="cm-unit-imperial" onclick="setUnits('imperial')">imperial</button>
+    </div>
+  </div>
+  <p class="cm-section-head">Ingredients</p>
+  <ul class="cm-ing-list">
+    {% for ing in recipe.ingredients %}
+    <li class="cm-ing-row">
+      <span class="cm-ing-qty">
+        {% if ing is mapping %}{{ ing.count or '' }}{% if ing.unit %}&thinsp;{{ ing.unit }}{% endif %}{% endif %}
+      </span>
+      <span>
+        <span class="cm-ing-name">{% if ing is mapping %}{{ ing.name or '' }}{% else %}{{ ing }}{% endif %}</span>
+        {% if ing is mapping and ing.info %}<span class="cm-ing-info">({{ ing.info }})</span>{% endif %}
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<div class="cm-ornament">· · ·</div>
+
+<!-- METHOD -->
+{% set method_steps = recipe.steps %}
+{% if method_steps and method_steps | length > 0 %}
+<div class="cm-section">
+  <p class="cm-section-head">Method</p>
+  {% for step in method_steps %}
+  {% set step_text = step if step is not mapping else (step.text or step.instruction or step.body or '') %}
+  <div class="cm-step" id="cmstep-{{ loop.index0 }}" onclick="focusStep({{ loop.index0 }}, {{ method_steps | length }})">
+    <span class="cm-step-num">{{ loop.index }}</span>
+    <span class="cm-step-text">{{ step_text }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<script>
+// ── Wake Lock ──────────────────────────────────────────
+let wakeLock = null;
+let noSleepInstance = null;
+let noSleepLoaded = false;
+
+function updateDot(active) {
+  const dot = document.getElementById('cm-lock-dot');
+  const btn = document.getElementById('cm-lock-btn');
+  const lbl = document.getElementById('cm-lock-label');
+  if (dot)  dot.classList.toggle('active', active);
+  if (btn)  btn.classList.toggle('active', active);
+  if (lbl)  lbl.style.color = active ? 'var(--gold)' : '';
+}
+
+async function acquireWakeLock() {
+  if ('wakeLock' in navigator) {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => {
+        wakeLock = null;
+        updateDot(false);
+      });
+      updateDot(true);
+    } catch(e) {
+      updateDot(false);
+    }
+  } else {
+    loadNoSleep();
+  }
+}
+
+function releaseWakeLock() {
+  if (wakeLock) {
+    wakeLock.release();
+    wakeLock = null;
+    updateDot(false);
+  }
+  if (noSleepInstance) {
+    noSleepInstance.disable();
+    updateDot(false);
+  }
+}
+
+function toggleWakeLock() {
+  if (wakeLock || (noSleepInstance && noSleepInstance._enabled)) {
+    releaseWakeLock();
+  } else {
+    acquireWakeLock();
+  }
+}
+
+function loadNoSleep() {
+  if (noSleepLoaded) { return; }
+  noSleepLoaded = true;
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/nosleep.js/0.12.0/NoSleep.min.js';
+  s.onload = () => {
+    noSleepInstance = new NoSleep();
+    // NoSleep requires a user gesture — use click on dot as trigger if needed
+    // If we're here, it's already a page load. Try enable; may require gesture.
+    const tryEnable = () => {
+      noSleepInstance.enable();
+      updateDot(true);
+      document.removeEventListener('touchstart', tryEnable, true);
+      document.removeEventListener('click', tryEnable, true);
+    };
+    document.addEventListener('touchstart', tryEnable, { once: true, capture: true });
+    document.addEventListener('click', tryEnable, { once: true, capture: true });
+  };
+  document.head.appendChild(s);
+}
+
+document.addEventListener('DOMContentLoaded', acquireWakeLock);
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && !wakeLock) {
+    acquireWakeLock();
+  }
+});
+
+window.addEventListener('beforeunload', releaseWakeLock);
+
+document.querySelector('.cm-bar-exit')?.addEventListener('click', releaseWakeLock);
+
+// ── Step focus ─────────────────────────────────────────
+let focusedStep = -1;
+
+function focusStep(i, total) {
+  if (focusedStep === i) {
+    // Tap same step again: advance to next
+    const next = i + 1;
+    if (next < total) {
+      setFocus(next);
+    } else {
+      clearFocus();
+    }
+  } else {
+    setFocus(i);
+  }
+}
+
+function setFocus(i) {
+  focusedStep = i;
+  document.querySelectorAll('.cm-step').forEach((el, j) => {
+    el.classList.toggle('cm-step--focused', j === i);
+    el.classList.toggle('cm-step--dimmed', j !== i);
+  });
+  document.getElementById('cmstep-' + i)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function clearFocus() {
+  focusedStep = -1;
+  document.querySelectorAll('.cm-step').forEach(el => {
+    el.classList.remove('cm-step--focused', 'cm-step--dimmed');
+  });
+}
+
+// ── Unit toggle ────────────────────────────────────────
+const _MET = /(\d[\d.,]*)[\s\u2009]*(kg|g\b|l\b|dl|cl|ml)\b/i;
+const _IMP = /(\d[\d.,\/\s]*)[\s\u2009]*(oz|ounces?|lbs?|pounds?|cups?|tbsp|tablespoons?|tsp|teaspoons?|fl\.?\s*oz|pints?|quarts?)\b/i;
+
+function _parseQty(qtyText, infoText) {
+  const combined = qtyText + ' ' + (infoText || '');
+  const mM = combined.match(_MET);
+  const mI = combined.match(_IMP);
+  if (mM && mI) return { metric: mM[0].trim(), imperial: mI[0].trim() };
+  if (mM)       return { metric: mM[0].trim(), imperial: qtyText };
+  if (mI)       return { metric: qtyText,       imperial: mI[0].trim() };
+  return         { metric: qtyText,             imperial: qtyText };
+}
+
+function initUnits() {
+  document.querySelectorAll('.cm-ing-row').forEach(row => {
+    const qEl = row.querySelector('.cm-ing-qty');
+    const iEl = row.querySelector('.cm-ing-info');
+    if (!qEl) return;
+    const parsed = _parseQty(qEl.textContent.trim(), iEl ? iEl.textContent.replace(/[()]/g,'').trim() : '');
+    qEl.dataset.metric   = parsed.metric;
+    qEl.dataset.imperial = parsed.imperial;
+  });
+  const saved = localStorage.getItem('pv_units') || 'metric';
+  setUnits(saved, true);
+}
+
+function setUnits(u, silent) {
+  document.querySelectorAll('.cm-ing-qty').forEach(el => {
+    const val = el.dataset[u];
+    if (val !== undefined) el.textContent = val;
+  });
+  document.getElementById('cm-unit-metric').classList.toggle('active', u === 'metric');
+  document.getElementById('cm-unit-imperial').classList.toggle('active', u === 'imperial');
+  if (!silent) localStorage.setItem('pv_units', u);
+}
+
+document.addEventListener('DOMContentLoaded', initUnits);
+</script>
+
+</body>
+</html>
