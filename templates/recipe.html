@@ -4,1194 +4,2794 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ recipe.name }} — Provenance</title>
-<meta name="description" content="How to make {{ recipe.name }}. {{ (recipe.description or '')[:155] }}">
+<meta name="description" content="{{ ((recipe.sashimi_standard or recipe.description or '') | truncate(155, true, '')) }}">
 <link rel="canonical" href="https://provenance.kitchen/recipe/{{ recipe.slug }}">
 <meta property="og:title" content="{{ recipe.name }} — Provenance">
-<meta property="og:description" content="{{ (recipe.description or '')[:160] }}">
+<meta property="og:description" content="{{ ((recipe.description or '') | truncate(160, true, '')) }}">
 <meta property="og:image" content="{{ recipe.image_url or 'https://provenance.kitchen/static/img/og-default.jpg' }}">
 <meta property="og:url" content="https://provenance.kitchen/recipe/{{ recipe.slug }}">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="Provenance">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ recipe.name }} — Provenance">
-<meta name="twitter:description" content="{{ (recipe.description or '')[:160] }}">
 <meta name="twitter:image" content="{{ recipe.image_url or 'https://provenance.kitchen/static/img/og-default.jpg' }}">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": {{ recipe.name | tojson }},
-  "description": {{ (recipe.description or '')[:300] | tojson }},
+  "description": {{ (recipe.description or '') | truncate(300) | tojson }},
   "author": { "@type": "Organization", "name": "Provenance" },
   "url": "https://provenance.kitchen/recipe/{{ recipe.slug }}"
 }
 </script>
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
+
+<!-- Fonts: Georgia (system), Playfair Display (Didot sub) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+
 <style>
+/* ═══════════════════════════════════════════════
+   PROVENANCE RECIPE TEMPLATE v2
+   Editorial register. Cream/burgundy/gold.
+   ═══════════════════════════════════════════════ */
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
 :root{
-  --bg:#0A0A09;--surface:#111110;--surface2:#181817;
-  --cream:#F4F1E8;--smoke:#9C9A93;--stone:#6B6962;--dim:#3A3835;
-  --gold:#C9A84C;--gold-faint:rgba(201,168,76,0.12);--gold-border:rgba(201,168,76,0.25);
-  --border:rgba(74,72,64,0.35);
-  --serif:'Playfair Display',Georgia,serif;
-  --sans:'DM Sans',-apple-system,sans-serif;
-  --mono:'DM Mono',monospace;
+  --cream:#F0EDE8;
+  --cream-bright:#FAF7F2;
+  --cream-mid:#EBE7E2;
+  --gold:#C9A84C;
+  --gold-mid:#A8966B;
+  --gold-faint:rgba(201,168,76,0.18);
+  --burgundy:#8B2C1A;
+  --burgundy-deep:#5A2810;
+  --burgundy-pale:rgba(254,242,240,0.8);
+  --text:#1C1917;
+  --text-mid:#444441;
+  --text-muted:#888780;
+  --divider:#E7E5E4;
+  --divider-warm:rgba(168,150,107,0.4);
+  --max-w:680px;
+  --serif:Georgia,'Times New Roman',serif;
+  --didot:'Playfair Display',Georgia,serif;
+  --mono:'SF Mono','Roboto Mono','Courier New',monospace;
+  --surface:#F7F5F0;
 }
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
-body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.65;
-     padding-bottom:80px} /* space for fixed action bar */
 
-/* ── Top Bar ─────────────────────────────────────────── */
-.top-bar{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  height:56px;padding:0 2rem;
+html{-webkit-font-smoothing:antialiased;background:var(--cream);color:var(--text)}
+body{font-family:var(--serif);font-size:14px;line-height:1.7;background:var(--cream);color:var(--text);padding-bottom:60px}
+
+/* ── 1. TOP BAR ─────────────────────────────────────────── */
+.r-top-bar{
+  position:sticky;top:0;left:0;right:0;z-index:200;
   display:flex;align-items:center;justify-content:space-between;
-  background:rgba(10,10,9,0.92);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+  background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);
+  border-bottom:0.5px solid var(--divider);
 }
-.top-bar-back{
-  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
-  text-transform:uppercase;color:var(--stone);text-decoration:none;
-  transition:color 180ms;
+.r-top-back{
+  display:flex;align-items:center;gap:6px;
+  text-decoration:none;color:var(--text-muted);
+  font-family:var(--serif);font-size:11px;font-style:italic;
+  letter-spacing:0.2px;transition:color 0.15s;
 }
-.top-bar-back:hover{color:var(--gold)}
-.top-bar-wordmark{
-  font-family:var(--serif);font-size:1.05rem;font-weight:400;
-  color:var(--cream);text-decoration:none;
+.r-top-back:hover{color:var(--text)}
+.r-top-back svg{flex-shrink:0}
+.r-top-wordmark{
+  font-family:var(--serif);font-size:11px;letter-spacing:5px;
+  text-transform:uppercase;color:var(--text-muted);
+  pointer-events:none;user-select:none;
 }
-.top-bar-type{
-  font-family:var(--mono);font-size:9px;letter-spacing:2px;
-  text-transform:uppercase;color:var(--stone);
+.r-top-actions{display:flex;align-items:center;gap:14px}
+.r-top-btn{
+  background:none;border:none;cursor:pointer;
+  color:var(--text-muted);padding:2px;
+  transition:color 0.15s;display:flex;align-items:center;
 }
+.r-top-btn:hover{color:var(--text)}
+.r-top-btn.saved{color:var(--burgundy)}
 
-/* ── Breadcrumb ──────────────────────────────────────── */
-.breadcrumb{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.15em;color:rgba(245,241,233,0.35);text-transform:uppercase;padding:0.75rem 2rem;margin-top:56px;border-bottom:1px solid var(--border);background:var(--bg)}
-.breadcrumb a{color:rgba(245,241,233,0.35);text-decoration:none}
-.breadcrumb a:hover{color:var(--gold)}
-.breadcrumb span{margin:0 0.5rem}
-
-/* ── Hero ────────────────────────────────────────────── */
-.hero{
-  position:relative;width:100%;height:65vh;min-height:420px;max-height:700px;
-  overflow:hidden;
+/* ── 2. HERO BAND ──────────────────────────────────────── */
+.r-hero{
+  position:relative;width:100%;
+  height:280px;overflow:hidden;
 }
-.hero-img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  filter:brightness(0.65);
+@media(min-width:768px){.r-hero{height:360px}}
+.r-hero-photo{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  display:block;
 }
-.hero-overlay{
+.r-hero-veil{
   position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(10,10,9,0.1) 0%,rgba(10,10,9,0.15) 40%,rgba(10,10,9,0.7) 75%,rgba(10,10,9,0.92) 100%);
+  background:linear-gradient(180deg,transparent 50%,rgba(20,18,16,0.55) 100%);
 }
-.hero-content{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:3rem 2rem 2.5rem;max-width:820px;margin:0 auto;
+/* Cream fallback hero */
+.r-hero-cream{
+  width:100%;height:100%;
+  background:var(--cream-mid);
+  position:relative;
+  display:flex;align-items:flex-end;
 }
-.hero-eyebrow{
-  font-family:var(--mono);font-size:9px;letter-spacing:3px;
-  text-transform:uppercase;color:rgba(201,168,76,0.75);margin-bottom:0.85rem;
+.r-hero-cream-texture{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 60px,
+    rgba(232,222,194,0.06) 60px,
+    rgba(232,222,194,0.06) 61px
+  );
 }
-.hero-title{
-  font-family:var(--serif);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;
-  color:#fff;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem;
+.r-hero-ornament{
+  position:absolute;top:18px;right:24px;
+  font-family:var(--didot);font-size:64px;font-style:italic;
+  color:rgba(168,150,107,0.12);line-height:1;
+  pointer-events:none;user-select:none;
 }
-.hero-desc{
-  font-family:var(--sans);font-weight:300;font-size:15px;
-  color:rgba(244,241,232,0.65);line-height:1.65;max-width:560px;
+.r-hero-content{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  padding:48px 24px 20px 24px;
+}
+.r-hero-eyebrow{
+  font-family:var(--serif);font-size:9px;font-style:italic;
+  letter-spacing:5px;text-transform:uppercase;
+  margin-bottom:8px;display:block;
+}
+.r-hero-eyebrow--photo{color:rgba(250,247,242,0.85)}
+.r-hero-eyebrow--cream{color:#A8857A}
+.r-hero-title{
+  font-family:var(--didot);font-weight:400;font-style:italic;
+  font-size:34px;letter-spacing:-0.01em;line-height:1.05;
+  margin-bottom:8px;
+}
+@media(min-width:768px){.r-hero-title{font-size:42px}}
+.r-hero-title--photo{color:#FAF7F2}
+.r-hero-title--cream{color:var(--text)}
+.r-hero-subtitle{
+  font-family:var(--serif);font-style:italic;
+  font-size:11.5px;letter-spacing:0.3px;line-height:1.5;
+}
+.r-hero-subtitle--photo{color:rgba(250,247,242,0.85)}
+.r-hero-subtitle--cream{color:var(--burgundy-deep)}
+
+/* ── 3. META ROW ───────────────────────────────────────── */
+.r-meta-row{
+  display:grid;
+  background:rgba(255,255,255,0.5);
+  border-bottom:0.5px solid var(--divider);
+  max-width:100%;
+}
+.r-meta-row--4{grid-template-columns:repeat(4,1fr)}
+.r-meta-row--3{grid-template-columns:repeat(3,1fr)}
+.r-meta-cell{
+  padding:12px 14px;text-align:center;
+  border-right:0.5px solid var(--divider);
+}
+.r-meta-cell:last-child{border-right:none}
+.r-meta-label{
+  display:block;
+  font-family:var(--serif);font-size:8.5px;font-style:italic;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold-mid);margin-bottom:3px;
+}
+.r-meta-value{
+  display:block;
+  font-family:var(--serif);font-size:11.5px;
+  letter-spacing:0.2px;line-height:1.3;color:var(--text);
+}
+.r-meta-markers{
+  font-style:italic;color:#A8857A;
 }
 
-/* ── Meta bar ────────────────────────────────────────── */
-.meta-bar{
-  max-width:760px;margin:0 auto;
-  padding:1.5rem 2rem;
-  display:flex;align-items:center;gap:2rem;flex-wrap:wrap;
-  border-bottom:1px solid var(--border);
-}
-.meta-item{display:flex;flex-direction:column;gap:3px}
-.meta-label{
-  font-family:var(--mono);font-size:9px;letter-spacing:2px;
-  text-transform:uppercase;color:var(--stone);
-}
-.meta-value{font-family:var(--sans);font-size:14px;font-weight:400;color:var(--cream)}
-.servings-adjuster{display:flex;align-items:center;gap:8px}
-.servings-btn{
-  width:24px;height:24px;border-radius:50%;border:1px solid var(--gold-border);
-  background:transparent;color:var(--gold);font-size:14px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:background 150ms,border-color 150ms;line-height:1;
-}
-.servings-btn:hover{background:var(--gold-faint);border-color:var(--gold)}
-.servings-count{font-family:var(--mono);font-size:13px;color:var(--cream);min-width:1.5rem;text-align:center}
+/* ── PAGE MAX-WIDTH WRAPPER ────────────────────────────── */
+.r-page{max-width:var(--max-w);margin:0 auto;padding:0 20px}
 
-/* ── Content ─────────────────────────────────────────── */
-.content{max-width:760px;margin:0 auto;padding:3rem 2rem 2rem}
-.section{margin-bottom:3.5rem}
-.section-label{
-  font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
-  text-transform:uppercase;color:var(--gold);opacity:0.75;
-  margin-bottom:1.25rem;display:flex;align-items:center;gap:12px;
+/* ── SECTION HEADER ────────────────────────────────────── */
+.r-section-hd{
+  display:flex;align-items:baseline;justify-content:space-between;
+  padding-bottom:8px;
+  border-bottom:0.5px solid var(--divider);
+  margin:24px 0 14px;
 }
-.section-label::after{content:'';flex:1;height:1px;background:var(--gold-border)}
-
-/* ── Origin / body ───────────────────────────────────── */
-.origin-block{border-left:2px solid var(--gold-border);padding-left:1.5rem}
-.origin-text{font-family:var(--serif);font-size:1.05rem;font-style:italic;font-weight:400;color:var(--smoke);line-height:1.8}
-.body-text{font-size:15px;color:var(--smoke);font-weight:300;line-height:1.8}
-
-/* ── Quality list ────────────────────────────────────── */
-.quality-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:1rem}
-.quality-item{display:flex;gap:1rem;align-items:flex-start;font-size:14px;color:var(--smoke);font-weight:300;line-height:1.7}
-.quality-bullet{flex-shrink:0;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:8px}
-
-/* ── Lives panel ─────────────────────────────────────── */
-.lives-panel{
-  border:1px solid var(--gold-border);border-left:3px solid var(--gold);
-  background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0;
-  padding:1.5rem 1.75rem;
+.r-section-title{
+  font-family:var(--didot);font-style:italic;
+  font-size:18px;color:var(--text);letter-spacing:-0.01em;
 }
-.lives-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:0.75;margin-bottom:0.85rem}
-.lives-text{font-family:var(--serif);font-size:1.05rem;font-weight:400;font-style:italic;color:var(--cream);line-height:1.75}
+.r-section-meta{
+  font-family:var(--serif);font-size:9.5px;font-style:italic;
+  letter-spacing:2px;text-transform:uppercase;color:var(--gold-mid);
+}
 
-/* ── Item list ───────────────────────────────────────── */
-.item-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:0.9rem}
-.item-entry{font-size:14px;color:var(--smoke);font-weight:300;line-height:1.7;padding-left:1.25rem;position:relative}
-.item-entry::before{content:'—';position:absolute;left:0;color:var(--gold);opacity:0.6;font-size:12px;top:3px}
+/* ── GOLD RULE (centered, 60px) ─────────────────────────── */
+.r-rule{
+  display:flex;justify-content:center;margin:8px 0;
+}
+.r-rule::before{
+  content:'';display:block;width:60px;height:0.5px;background:var(--gold);
+}
 
-/* ── Ingredients ─────────────────────────────────────── */
-.ing-list{list-style:none;padding:0;display:flex;flex-direction:column}
-.ing-item{
-  display:grid;grid-template-columns:90px 1fr;gap:12px;
-  padding:0.7rem 0;border-bottom:1px solid rgba(74,72,64,0.2);align-items:start;
+/* ── 4. SASHIMI STANDARD LINE ──────────────────────────── */
+.r-sashimi{
+  margin-top:24px;padding:0 20px;
+  max-width:var(--max-w);margin-left:auto;margin-right:auto;
 }
-.ing-item:last-child{border-bottom:none}
-.ing-amount{font-family:var(--mono);font-size:12px;color:var(--gold);opacity:0.85;padding-top:1px;white-space:nowrap}
-.ing-detail{display:flex;flex-direction:column;gap:2px}
-.ing-name{font-size:14px;color:var(--cream);font-weight:300;line-height:1.5}
-.ing-info{font-size:12px;color:var(--stone);font-weight:300;line-height:1.4}
-.ing-source{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--gold);opacity:0.7;text-transform:uppercase;margin-top:3px}
+.r-sashimi-eyebrow{
+  display:block;text-align:center;
+  font-family:var(--serif);font-size:9px;font-style:italic;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold-mid);margin-bottom:10px;
+}
+.r-sashimi-body{
+  font-family:var(--serif);font-style:italic;
+  font-size:14px;line-height:1.7;letter-spacing:0.15px;
+  color:var(--text);
+}
+@media(min-width:768px){.r-sashimi-body{font-size:14.5px}}
 
-/* ── Method steps ────────────────────────────────────── */
-.step-list{display:flex;flex-direction:column;gap:0}
-.recipe-step{
-  padding:1.25rem 0;border-bottom:1px solid rgba(74,72,64,0.2);
+/* ── 5. ORIGIN & PROVENANCE ────────────────────────────── */
+.r-origin{
+  position:relative;
+  border:0.5px solid var(--divider-warm);
+  background:rgba(255,255,255,0.4);
+  border-radius:8px;
+  padding:18px 20px 20px 26px;
+  margin-top:24px;
+  overflow:hidden;
+  max-width:var(--max-w);margin-left:auto;margin-right:auto;
 }
-.recipe-step:last-child{border-bottom:none}
-.step-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:0.6rem}
-.step-num{
-  font-family:var(--mono);font-size:11px;color:var(--gold);opacity:0.6;
-  padding-top:3px;flex-shrink:0;min-width:20px;
+.r-origin-accent{
+  position:absolute;top:0;left:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,#C9A84C 0%,#A8966B 100%);
+  border-radius:8px 0 0 8px;
 }
-.step-text{font-size:14px;color:var(--smoke);font-weight:300;line-height:1.8;flex:1}
-.technique-toggle{
-  flex-shrink:0;margin-left:auto;margin-top:2px;
-  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
-  text-transform:uppercase;color:rgba(201,168,76,0.55);
-  background:transparent;border:1px solid rgba(201,168,76,0.2);
-  border-radius:3px;padding:3px 8px;cursor:pointer;
-  white-space:nowrap;transition:color 150ms,border-color 150ms,background 150ms;
+.r-origin-eyebrow{
+  display:block;
+  font-family:var(--serif);font-size:9px;font-style:italic;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold-mid);margin-bottom:10px;
 }
-.technique-toggle:hover{color:var(--gold);border-color:rgba(201,168,76,0.5);background:var(--gold-faint)}
-.technique-note{
-  margin:0.75rem 0 0 34px;
-  background:rgba(201,168,76,0.06);
+.r-origin-body{
+  font-family:var(--serif);font-size:13px;line-height:1.7;
+  letter-spacing:0.1px;color:var(--text);
+}
+.r-origin-body em{color:var(--burgundy-deep)}
+
+/* ── 6. TRADITION TAGS ─────────────────────────────────── */
+.r-tags{
+  display:flex;flex-wrap:wrap;gap:6px;
+  padding:18px 20px 4px;
+  max-width:var(--max-w);margin:0 auto;
+}
+.r-tag{
+  font-family:var(--serif);font-size:9.5px;font-style:italic;
+  color:var(--burgundy-deep);
+  background:rgba(254,242,240,0.8);
+  padding:5px 11px;border-radius:14px;
+  letter-spacing:0.4px;
+  border:0.5px solid rgba(139,44,26,0.15);
+}
+
+/* ── 7. INGREDIENTS ────────────────────────────────────── */
+.r-ing-group{margin-bottom:18px}
+.r-ing-group-name{
+  display:block;
+  font-family:var(--serif);font-size:10px;font-style:italic;
+  color:var(--burgundy-deep);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:8px;padding-bottom:5px;
+  border-bottom:0.5px dotted var(--divider-warm);
+}
+.r-ing-item{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:6px 0;border-bottom:0.5px solid rgba(231,229,228,0.5);
+}
+.r-ing-item:last-child{border-bottom:none}
+.r-ing-name{
+  font-family:var(--serif);font-size:13px;color:var(--text);
+  line-height:1.4;padding-right:12px;
+}
+.r-ing-name--linked{
+  border-bottom:0.5px dotted rgba(139,44,26,0.4);
+  cursor:pointer;
+}
+.r-ing-amount{
+  font-family:var(--serif);font-style:italic;font-size:12.5px;
+  color:var(--burgundy-deep);font-variant-numeric:tabular-nums;
+  letter-spacing:0.2px;white-space:nowrap;flex-shrink:0;
+}
+
+/* ── 8. METHOD ─────────────────────────────────────────── */
+.r-step{
+  display:flex;gap:14px;
+  padding:0 0 18px 0;
+}
+.r-step-num{
+  font-family:var(--didot);font-style:italic;font-size:24px;
+  color:var(--gold-mid);line-height:1;flex-shrink:0;width:28px;
+  padding-top:4px;
+}
+.r-step-body{
+  flex:1;
+  font-family:var(--serif);font-size:13.5px;color:var(--text);
+  line-height:1.75;letter-spacing:0.1px;
+}
+@media(min-width:768px){.r-step-body{font-size:14px}}
+
+/* Gold star markers */
+.r-marker{
+  font-style:italic;color:#9A7A2E;font-weight:500;
+  background:linear-gradient(180deg,transparent 65%,var(--gold-faint) 65%);
+  border-bottom:0.5px dotted var(--gold);
+  padding:0 1px;cursor:pointer;position:relative;
+  display:inline;
+}
+.r-marker sup{
+  font-size:9px;vertical-align:super;font-style:normal;
+  color:var(--gold);letter-spacing:0;font-weight:400;
+}
+.r-marker--read{border-bottom:0.5px solid var(--gold)}
+.r-marker-reveal{
+  display:none;
+  margin-top:8px;padding:10px 14px;
+  background:rgba(254,247,232,0.7);
   border-left:2px solid var(--gold);
-  border-radius:0 4px 4px 0;
-  padding:1rem 1.25rem;
+  border-radius:0 6px 6px 0;
 }
-.technique-note-label{
-  font-family:var(--mono);font-size:8px;letter-spacing:2.5px;
-  text-transform:uppercase;color:var(--gold);opacity:0.7;
-  margin-bottom:0.6rem;
+.r-marker-reveal.open{display:block}
+.r-marker-reveal-eyebrow{
+  display:block;
+  font-family:var(--serif);font-size:8.5px;font-style:italic;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold-mid);font-weight:500;margin-bottom:4px;
 }
-.technique-note-body{
-  font-size:13px;color:var(--smoke);font-weight:300;line-height:1.75;
+.r-marker-reveal-body{
+  font-family:var(--serif);font-style:italic;font-size:11.5px;
+  color:var(--burgundy-deep);line-height:1.6;letter-spacing:0.1px;
 }
 
-/* ── Divider ─────────────────────────────────────────── */
-.divider{width:60%;height:1px;background:var(--border);margin:0 auto 3.5rem}
+/* ── 9. THE FLOURISH ───────────────────────────────────── */
+.r-flourish{
+  padding:24px 20px 0;
+  max-width:var(--max-w);margin:0 auto;
+}
+.r-flourish-eyebrow{
+  display:block;text-align:center;
+  font-family:var(--serif);font-size:9px;font-style:italic;
+  letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold-mid);margin-bottom:10px;
+}
+.r-flourish-body{
+  font-family:var(--serif);font-style:italic;
+  font-size:13.5px;line-height:1.75;letter-spacing:0.15px;
+  color:var(--text);
+}
 
-/* ── Sourced by Provenance (FIX 1) ──────────────────── */
-.suppliers-section{
-  border-top:1px solid var(--border);
-  padding:2.5rem 2rem 3rem;max-width:760px;margin:0 auto;
+/* ── 10. PAIRING BLOCK ─────────────────────────────────── */
+.r-pairing{
+  margin:24px 20px 0;
+  background:rgba(90,40,16,0.06);
+  border:0.5px solid rgba(90,40,16,0.2);
+  border-radius:8px;
+  max-width:calc(var(--max-w) - 40px);
+  cursor:pointer;
 }
-.suppliers-eyebrow{
-  font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
-  text-transform:uppercase;color:var(--gold);opacity:0.75;
-  margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;
+.r-pairing-collapsed{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:16px 18px;
 }
-.suppliers-eyebrow::after{content:'';flex:1;height:1px;background:var(--gold-border)}
-.suppliers-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;
-  border:1px solid var(--gold-border);border-left:3px solid var(--gold);
-}
-.supplier-card{
-  padding:1.25rem 1.4rem;
-  background:rgba(201,168,76,0.08);
-  color:rgba(245,241,233,0.85);
-  border-right:1px solid rgba(201,168,76,0.15);
-  border-bottom:1px solid rgba(201,168,76,0.15);
-}
-.supplier-card:hover{background:rgba(201,168,76,0.13)}
-.supplier-name{
-  font-family:var(--serif);font-size:1rem;font-weight:400;
-  color:rgba(245,241,233,0.85);margin-bottom:0.3rem;
-}
-.supplier-loc{
-  font-family:var(--mono);font-size:9px;letter-spacing:1px;
-  text-transform:uppercase;color:rgba(245,241,233,0.85);
-  opacity:0.6;margin-bottom:0.75rem;
-}
-.supplier-for-recipe{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(201,168,76,0.6);margin-bottom:0.4rem}
-.supplier-products{list-style:none;padding:0;margin-bottom:0.75rem}
-.supplier-product{font-size:11px;color:var(--smoke);font-weight:300;line-height:1.5;padding:0.25rem 0;border-top:1px solid rgba(201,168,76,0.08)}
-.supplier-product-name{color:var(--gold);opacity:0.85}
-.supplier-link{
-  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
-  text-transform:uppercase;color:rgba(245,241,233,0.85);
-  text-decoration:none;transition:color 150ms;
-}
-.supplier-link:hover{color:var(--gold)}
-
-/* ── Fixed action bar (FIX 2) ───────────────────────── */
-.action-bar{
-  position:fixed;bottom:0;left:0;right:0;z-index:150;
-  height:64px;padding:0 2rem;
-  display:flex;align-items:center;justify-content:flex-end;gap:10px;
-  background:rgba(10,10,9,0.95);backdrop-filter:blur(20px);
-  border-top:1px solid var(--border);
-}
-.recipe-btn{
-  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
-  text-transform:uppercase;cursor:pointer;
-  padding:0 1.25rem;height:36px;border-radius:4px;
-  transition:all 180ms;display:flex;align-items:center;gap:6px;
-}
-.btn-kitchen{
-  color:var(--stone);background:transparent;
-  border:1px solid rgba(74,72,64,0.5);
-  text-decoration:none;
-}
-.btn-kitchen:hover{color:var(--cream);border-color:rgba(74,72,64,0.9)}
-.btn-haccp{
-  color:var(--gold);background:transparent;
-  border:1px solid var(--gold-border);
-}
-.btn-haccp:hover{background:var(--gold-faint);border-color:var(--gold)}
-.btn-haccp:disabled{opacity:0.45;cursor:not-allowed}
-
-/* ── Safety slide panel (FIX 2) ─────────────────────── */
-.safety-panel{
-  position:fixed;bottom:64px;right:0;z-index:140;
-  width:min(540px,100vw);height:calc(100vh - 120px);
-  background:var(--surface);border-left:1px solid var(--border);
-  border-top:1px solid var(--border);
-  display:flex;flex-direction:column;
-  transform:translateX(100%);transition:transform 280ms cubic-bezier(0.4,0,0.2,1);
-}
-.safety-panel.open{transform:translateX(0)}
-.safety-panel-head{
-  padding:1rem 1.5rem;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
-}
-.safety-panel-title{
-  font-family:var(--mono);font-size:10px;letter-spacing:2px;
-  text-transform:uppercase;color:var(--gold);
-}
-.safety-panel-close{
-  font-family:var(--mono);font-size:10px;letter-spacing:1px;
-  color:var(--stone);background:transparent;border:none;cursor:pointer;
-  transition:color 150ms;padding:4px 8px;
-}
-.safety-panel-close:hover{color:var(--cream)}
-.safety-panel-body{
-  flex:1;overflow-y:auto;padding:1.5rem;
-  font-size:13px;color:var(--smoke);font-weight:300;line-height:1.8;
-  white-space:pre-wrap;
-}
-.safety-panel-allergens{
-  padding:1rem 1.5rem;border-top:1px solid var(--border);flex-shrink:0;
-}
-.allergen-label{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--stone);margin-bottom:0.5rem}
-.allergen-tags{display:flex;flex-wrap:wrap;gap:6px}
-.allergen-tag{
-  font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;
-  color:var(--gold);border:1px solid var(--gold-border);
-  padding:2px 8px;border-radius:3px;
-}
-.safety-loading{
+.r-pairing-icon{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(90,40,16,0.12);
   display:flex;align-items:center;justify-content:center;
-  height:100%;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;
-  text-transform:uppercase;color:var(--stone);
+  flex-shrink:0;
+}
+.r-pairing-icon svg{color:var(--burgundy-deep)}
+.r-pairing-text{flex:1}
+.r-pairing-eyebrow{
+  display:block;
+  font-family:var(--serif);font-size:9px;font-style:italic;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--burgundy-deep);margin-bottom:4px;
+}
+.r-pairing-name{
+  display:block;
+  font-family:var(--didot);font-style:italic;
+  font-size:15px;color:var(--text);
+  letter-spacing:0;line-height:1.3;margin-bottom:3px;
+}
+.r-pairing-note{
+  display:block;
+  font-family:var(--serif);font-style:italic;
+  font-size:11px;color:var(--burgundy-deep);
+  line-height:1.5;letter-spacing:0.1px;
+}
+.r-pairing-supplier{
+  display:block;
+  font-family:var(--serif);font-style:italic;
+  font-size:10.5px;color:var(--burgundy-deep);
+  letter-spacing:0.1px;margin-top:4px;
+  text-decoration:underline;text-decoration-style:dotted;
+  cursor:pointer;
+}
+/* Expanded pairings list */
+.r-pairings-expanded{
+  display:none;border-top:0.5px solid rgba(90,40,16,0.15);
+}
+.r-pairings-expanded.open{display:block}
+.r-pairing-item{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:14px 18px;
+  border-bottom:0.5px solid rgba(90,40,16,0.08);
+  cursor:pointer;
+}
+.r-pairing-item:last-child{border-bottom:none}
+.r-pairing-item:hover{background:rgba(90,40,16,0.04)}
+/* Cocktail build sheet */
+.r-build-sheet{
+  margin:8px 14px 14px 14px;padding:12px;
+  background:rgba(254,247,232,0.5);
+  border-radius:6px;border-left:2px solid var(--gold);
+}
+.r-build-row{
+  font-family:var(--serif);font-size:11.5px;line-height:1.6;color:var(--text);
+  padding:3px 0;
+}
+.r-build-label{
+  font-family:var(--serif);font-size:8.5px;font-style:italic;
+  letter-spacing:2px;text-transform:uppercase;color:var(--gold-mid);
+  display:inline-block;min-width:60px;
 }
 
-/* ── Photo Panel ── */
-.change-photo-btn{position:absolute;bottom:1rem;right:1rem;background:rgba(8,8,10,0.75);border:1px solid rgba(201,168,76,0.45);color:rgba(201,168,76,0.85);font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.45rem 1rem;cursor:pointer;transition:all 0.2s;z-index:20}
-.change-photo-btn:hover{border-color:#C9A84C;color:#C9A84C;background:rgba(8,8,10,0.9)}
-.photo-panel{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:600;align-items:center;justify-content:center}
-.photo-panel-inner{background:#1A1816;border:1px solid rgba(201,168,76,0.2);padding:2rem;width:360px;max-width:92vw}
-.pp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
-.pp-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.3em;color:#C9A84C;text-transform:uppercase}
-.pp-close{background:none;border:none;color:rgba(245,241,233,0.35);font-size:1.1rem;cursor:pointer;padding:0;line-height:1}
-.pp-option-title{font-size:0.875rem;color:#F5F1E9;font-weight:400;margin-bottom:0.3rem}
-.pp-option-desc{font-size:0.75rem;color:rgba(245,241,233,0.4);line-height:1.55;margin-bottom:0.85rem}
-.pp-btn{background:none;border:1px solid rgba(201,168,76,0.4);color:#C9A84C;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.5rem 1.2rem;cursor:pointer;transition:all 0.2s;white-space:nowrap}
-.pp-btn:hover{background:rgba(201,168,76,0.08);border-color:#C9A84C}
-.pp-divider{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.2em;color:rgba(245,241,233,0.18);text-transform:uppercase;text-align:center;margin:1.25rem 0;border-top:1px solid rgba(201,168,76,0.07);border-bottom:1px solid rgba(201,168,76,0.07);padding:0.5rem 0}
-.pp-generating{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:rgba(245,241,233,0.4);margin-top:0.75rem}
-.pp-spinner{display:inline-block;animation:pp-spin 1s linear infinite}
-@keyframes pp-spin{to{transform:rotate(360deg)}}
-.pp-url-row{display:flex;gap:0.5rem}
-.pp-url-input{flex:1;min-width:0;background:#131210;border:1px solid rgba(201,168,76,0.18);color:#F5F1E9;font-size:0.75rem;padding:0.45rem 0.7rem;font-family:'DM Sans',sans-serif}
-.pp-url-input::placeholder{color:rgba(245,241,233,0.18)}
-.pp-url-input:focus{outline:none;border-color:rgba(201,168,76,0.4)}
-.pp-preview{margin-top:1.25rem;border-top:1px solid rgba(201,168,76,0.1);padding-top:1.25rem}
-.pp-preview img{width:100%;height:180px;object-fit:cover;display:block}
-.pp-preview-actions{display:flex;gap:0.5rem;margin-top:0.75rem}
-.pp-keep{flex:1;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.4);color:#C9A84C;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.5rem;cursor:pointer;transition:all 0.2s}
-.pp-keep:hover{background:rgba(201,168,76,0.18)}
-.pp-discard{background:none;border:1px solid rgba(245,241,233,0.08);color:rgba(245,241,233,0.3);font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.5rem 0.85rem;cursor:pointer}
-
-/* ── Footer ──────────────────────────────────────────── */
-.recipe-footer{
-  border-top:1px solid var(--border);
-  padding:1.5rem 2rem 2rem;max-width:760px;margin:0 auto;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+/* ── 11. CROSS-CUISINE PARALLELS ───────────────────────── */
+.r-parallel{
+  display:grid;grid-template-columns:90px 1fr;gap:14px;
+  align-items:start;
+  padding:14px 0;
+  border-bottom:0.5px solid var(--divider);
 }
-.footer-back{
-  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
-  text-transform:uppercase;color:var(--stone);text-decoration:none;transition:color 180ms;
+.r-parallel:last-child{border-bottom:none}
+.r-parallel-culture{
+  font-family:var(--serif);font-style:italic;
+  font-size:11px;color:var(--burgundy-deep);
+  letter-spacing:1px;text-transform:uppercase;
+  font-weight:500;padding-top:2px;
 }
-.footer-back:hover{color:var(--gold)}
-.footer-wordmark{font-family:var(--serif);font-size:13px;font-weight:400;color:var(--dim)}
-/* ── App Footer ──────────────────────────────────────── */
-.app-footer{background:#0E0D0B;border-top:1px solid rgba(201,168,76,0.12);padding:4rem 4rem 2rem;margin-top:auto}
-.app-footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
-.app-footer-brand{font-family:var(--serif);font-size:1.3rem;color:#F5F1E9;margin-bottom:0.5rem}
-.app-footer-tagline{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;color:rgba(245,241,233,0.35);text-transform:uppercase}
-.app-footer-label{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.25em;color:#C9A84C;text-transform:uppercase;margin-bottom:1rem}
-.app-footer-col a{display:block;color:rgba(245,241,233,0.55);font-size:0.85rem;font-weight:300;text-decoration:none;padding:0.3rem 0;transition:color 0.2s}
-.app-footer-col a:hover{color:#F5F1E9}
-.app-footer-bottom{display:flex;justify-content:space-between;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08);font-family:var(--mono);font-size:0.5rem;letter-spacing:0.15em;color:rgba(245,241,233,0.2);text-transform:uppercase}
-@media(max-width:768px){.app-footer-grid{grid-template-columns:1fr 1fr}.app-footer{padding:3rem 1.5rem 2rem}.app-footer-bottom{flex-direction:column;gap:0.5rem}}
+.r-parallel-dish{
+  display:block;
+  font-family:var(--serif);font-style:italic;
+  font-size:12.5px;color:var(--text);
+  font-weight:500;margin-bottom:3px;
+}
+.r-parallel-note{
+  font-family:var(--serif);font-size:12px;color:#444441;line-height:1.65;
+}
 
-@media(max-width:640px){
-  .hero-content{padding:2rem 1.25rem 2rem}
-  .meta-bar{padding:1.25rem;gap:1.25rem}
-  .content{padding:2.5rem 1.25rem 2rem}
-  .suppliers-section{padding:2rem 1.25rem 2.5rem}
-  .action-bar{padding:0 1.25rem;justify-content:space-between}
-  .safety-panel{width:100vw}
-  .ing-item{grid-template-columns:75px 1fr}
+/* ── 12. ACTION ROW ────────────────────────────────────── */
+.r-actions{
+  display:flex;gap:8px;flex-wrap:wrap;
+  padding:18px 20px 20px;
+  border-top:0.5px solid var(--divider);
+  margin-top:18px;
+  background:rgba(255,255,255,0.4);
+  max-width:var(--max-w);margin-left:auto;margin-right:auto;
+}
+.r-action-btn{
+  display:flex;align-items:center;gap:6px;
+  font-family:var(--serif);font-style:italic;font-size:11px;
+  color:var(--burgundy-deep);letter-spacing:0.5px;
+  background:transparent;
+  border:0.5px solid rgba(139,44,26,0.3);
+  padding:8px 14px;border-radius:18px;
+  cursor:pointer;transition:background 0.15s,border-color 0.15s;
+}
+.r-action-btn:hover{
+  background:rgba(254,242,240,0.6);
+  border-color:var(--burgundy);
+}
+.r-action-btn svg{flex-shrink:0}
+
+/* ── 13. FOOTER ────────────────────────────────────────── */
+.r-footer{
+  padding:18px 20px 22px;
+  text-align:center;
+  border-top:0.5px solid var(--divider);
+  background:rgba(255,255,255,0.3);
+}
+.r-footer-wordmark{
+  display:block;
+  font-family:var(--didot);font-style:italic;
+  font-size:11px;letter-spacing:6px;
+  color:var(--gold-mid);font-weight:500;
+}
+.r-footer-tagline{
+  display:block;
+  font-family:var(--serif);font-style:italic;
+  font-size:10.5px;color:var(--text-muted);
+  letter-spacing:0.3px;line-height:1.5;
+  margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;
+}
+
+/* ── Pour with — beverage pairings ──────────────────────────────── */
+.r-pour-list{list-style:none;margin:0;padding:0}
+.r-pour-row{
+  display:flex;align-items:baseline;justify-content:space-between;gap:1.5rem;
+  padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.06);
+}
+.r-pour-row:last-child{border-bottom:none}
+.r-pour-link{
+  flex:1;color:inherit;text-decoration:none;
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:1.05rem;line-height:1.4;
+  border-bottom:1px solid transparent;
+  transition:border-color 180ms ease,color 180ms ease;
+  padding-bottom:1px;align-self:flex-start;
+}
+.r-pour-link:hover{color:rgba(201,168,76,1);border-bottom-color:rgba(201,168,76,0.6)}
+.r-pour-name{font-style:italic;font-weight:500}
+.r-pour-region{font-style:italic;color:rgba(26,24,21,0.55);font-size:0.95rem}
+.r-pour-relationship{
+  flex-shrink:0;
+  font-family:'DM Mono','IBM Plex Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;
+  color:rgba(26,24,21,0.45);
+}
+
+/* ── Supplier accordion — South Sea ──────────────────────────────── */
+.r-supplier-list{list-style:none;margin:0;padding:0}
+.r-supplier-row{
+  position:relative;display:block;width:100%;
+  padding:1.4rem 0 1.4rem 1.5rem;
+  background:transparent;border:none;
+  border-bottom:1px solid rgba(201,168,76,0.06);
+  text-align:left;cursor:pointer;color:inherit;font-family:inherit;
+  transition:border-color 200ms ease,transform 120ms ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.r-supplier-row:last-of-type{border-bottom:none}
+.r-supplier-row:hover,.r-supplier-row:focus-visible{
+  border-bottom-color:rgba(201,168,76,0.18);outline:none;
+}
+.r-supplier-row:active{transform:translateY(1px)}
+.r-supplier-row::before{
+  content:'';position:absolute;left:0;top:50%;
+  width:2px;height:0;background:rgba(201,168,76,0.85);
+  transform:translateY(-50%);
+  transition:height 240ms cubic-bezier(0.22,0.61,0.36,1);
+}
+.r-supplier-row:hover::before,.r-supplier-row:focus-visible::before,.r-supplier-row.is-open::before{height:70%}
+.r-supplier-head{display:flex;align-items:baseline;justify-content:space-between;gap:1.5rem}
+.r-supplier-id{flex:1;min-width:0}
+.r-supplier-name{
+  font-family:'Playfair Display',Georgia,serif;font-style:italic;
+  font-size:1.15rem;font-weight:normal;color:#1a1815;
+  margin:0 0 0.25rem;line-height:1.25;
+}
+.r-supplier-loc{
+  font-family:'DM Mono','IBM Plex Mono',monospace;
+  font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:rgba(26,24,21,0.45);
+}
+.r-supplier-chevron{
+  flex-shrink:0;width:12px;height:12px;
+  color:rgba(201,168,76,0.7);
+  transition:transform 280ms cubic-bezier(0.22,0.61,0.36,1),color 200ms ease;
+}
+.r-supplier-row:hover .r-supplier-chevron,.r-supplier-row.is-open .r-supplier-chevron{color:rgba(201,168,76,1)}
+.r-supplier-row.is-open .r-supplier-chevron{transform:rotate(180deg)}
+.r-supplier-body{
+  overflow:hidden;max-height:0;opacity:0;margin-top:0;
+  transition:max-height 320ms cubic-bezier(0.22,0.61,0.36,1),opacity 200ms ease,margin-top 280ms cubic-bezier(0.22,0.61,0.36,1);
+}
+.r-supplier-row.is-open .r-supplier-body{max-height:800px;opacity:1;margin-top:1.5rem}
+.r-supplier-body-inner{padding:0 1rem 0.5rem 0}
+.r-supplier-credit{
+  font-family:'Playfair Display',Georgia,serif;font-style:italic;
+  font-size:0.9rem;line-height:1.6;color:rgba(26,24,21,0.62);
+  margin:0 0 1.5rem;padding-left:1rem;
+  border-left:1px solid rgba(201,168,76,0.25);
+}
+.r-supplier-section{margin-bottom:1.25rem}
+.r-supplier-section:last-child{margin-bottom:0}
+.r-supplier-section-label{
+  font-family:'DM Mono','IBM Plex Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;
+  color:rgba(26,24,21,0.4);margin-bottom:0.5rem;
+}
+.r-supplier-products{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:0.95rem;line-height:1.55;color:rgba(26,24,21,0.85);
+  margin:0;padding:0;list-style:none;
+}
+.r-supplier-products li{padding:0.15rem 0}
+.r-supplier-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  margin-top:1.25rem;padding-top:1.25rem;
+  border-top:1px solid rgba(201,168,76,0.1);
+}
+.r-supplier-link{
+  font-family:'DM Mono','IBM Plex Mono',monospace;
+  font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;
+  color:rgba(201,168,76,0.95);text-decoration:none;
+  border-bottom:1px solid rgba(201,168,76,0.4);padding-bottom:2px;
+  transition:border-color 180ms ease;
+}
+.r-supplier-link:hover{border-bottom-color:rgba(201,168,76,1)}
+.r-supplier-show-all{
+  margin-top:1.5rem;background:transparent;border:none;padding:0.5rem 0;
+  font-family:'DM Mono','IBM Plex Mono',monospace;
+  font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;
+  color:rgba(26,24,21,0.5);cursor:pointer;transition:color 180ms ease;
+}
+.r-supplier-show-all:hover{color:rgba(201,168,76,1)}
+@media(prefers-reduced-motion:reduce){
+  .r-supplier-row,.r-supplier-row::before,.r-supplier-chevron,.r-supplier-body{transition:none}
+}
+
+/* ── SUPPLIER PANEL (legacy modal — orphaned) ──────────────────── */
+.r-supplier-backdrop{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(20,18,16,0.45);backdrop-filter:blur(8px);
+}
+.r-supplier-backdrop.open{display:block}
+.r-supplier-sheet{
+  position:fixed;bottom:0;left:0;right:0;z-index:301;
+  max-height:75vh;overflow-y:auto;
+  background:rgba(250,247,242,0.96);backdrop-filter:blur(40px);
+  border-top:0.5px solid rgba(201,168,76,0.4);
+  border-radius:18px 18px 0 0;
+  padding:20px 20px 30px;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(100%);
+  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.35s;
+}
+.r-supplier-sheet.open{
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateY(0);
+  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0s;
+}
+@media(min-width:768px){
+  .r-supplier-sheet{
+    left:auto;right:20px;bottom:20px;
+    width:380px;max-height:70vh;
+    border-radius:12px;
+    border:0.5px solid rgba(201,168,76,0.4);
+    box-shadow:0 12px 40px rgba(28,25,23,0.18);
+  }
+}
+.r-supplier-drag{
+  width:32px;height:3px;
+  background:#D6D3D1;border-radius:2px;
+  margin:0 auto 18px;
+}
+@media(min-width:768px){.r-supplier-drag{display:none}}
+.r-supplier-close{
+  position:absolute;top:14px;right:16px;
+  background:none;border:none;cursor:pointer;
+  font-family:var(--serif);font-size:11px;
+  color:var(--text-muted);
+}
+.r-supplier-name{
+  font-family:var(--didot);font-style:italic;
+  font-size:22px;color:var(--text);margin-bottom:4px;
+}
+.r-supplier-loc{
+  font-family:var(--serif);font-style:italic;
+  font-size:11px;color:var(--text-muted);margin-bottom:14px;
+}
+.r-supplier-credit{
+  font-family:var(--serif);font-size:13px;
+  line-height:1.65;color:var(--text);margin-bottom:12px;
+}
+.r-supplier-products{list-style:none;padding:0}
+.r-supplier-product{
+  padding:6px 0;border-bottom:0.5px solid rgba(231,229,228,0.6);
+  font-family:var(--serif);font-size:12px;color:var(--text-mid);line-height:1.5;
+}
+.r-supplier-product:last-child{border-bottom:none}
+.r-supplier-footer{
+  margin-top:16px;padding-top:12px;
+  border-top:0.5px solid var(--divider);
+  font-family:var(--serif);font-style:italic;
+  font-size:11px;color:var(--text-muted);
+}
+
+/* ── CONTENT PEEK PANEL ────────────────────────────────── */
+.r-peek-backdrop{
+  display:none;position:fixed;inset:0;z-index:400;
+  background:rgba(20,18,16,0.45);backdrop-filter:blur(8px);
+}
+.r-peek-backdrop.open{display:block}
+.r-peek-sheet{
+  position:fixed;bottom:0;left:0;right:0;z-index:401;
+  max-height:80vh;overflow-y:auto;
+  background:rgba(250,247,242,0.97);backdrop-filter:blur(40px);
+  border-top:0.5px solid rgba(201,168,76,0.4);
+  border-radius:18px 18px 0 0;
+  padding:20px 20px 36px;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(100%);
+  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.35s;
+}
+.r-peek-sheet.open{
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateY(0);
+  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0s;
+}
+@media(min-width:768px){
+  .r-peek-sheet{
+    left:auto;right:20px;bottom:20px;
+    width:400px;max-height:72vh;
+    border-radius:12px;
+    border:0.5px solid rgba(201,168,76,0.4);
+    box-shadow:0 12px 40px rgba(28,25,23,0.18);
+  }
+}
+.r-peek-drag{
+  width:32px;height:3px;background:#D6D3D1;border-radius:2px;
+  margin:0 auto 18px;
+}
+@media(min-width:768px){.r-peek-drag{display:none}}
+.r-peek-close{
+  position:absolute;top:14px;right:16px;
+  background:none;border:none;cursor:pointer;
+  font-family:var(--serif);font-size:11px;color:var(--text-muted);
+}
+.r-peek-eyebrow{
+  font-family:var(--serif);font-style:italic;
+  font-size:10.5px;letter-spacing:0.8px;color:var(--gold);
+  text-transform:uppercase;margin-bottom:6px;
+}
+.r-peek-title{
+  font-family:var(--didot);font-style:italic;
+  font-size:20px;color:var(--text);line-height:1.25;margin-bottom:8px;
+}
+.r-peek-desc{
+  font-family:var(--serif);font-size:13px;line-height:1.7;
+  color:var(--text-mid);margin-bottom:16px;
+}
+.r-peek-preview{
+  border:0.5px solid rgba(201,168,76,0.25);border-radius:8px;
+  padding:14px 16px;margin-bottom:18px;overflow:hidden;
+  position:relative;
+}
+.r-peek-preview-inner{
+  font-family:var(--serif);font-size:12.5px;line-height:1.65;
+  color:var(--text-mid);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 30%,rgba(0,0,0,0));
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 30%,rgba(0,0,0,0));
+  max-height:80px;overflow:hidden;
+  filter:blur(1.5px);
+  user-select:none;pointer-events:none;
+}
+.r-peek-preview-label{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-style:italic;font-size:11px;color:var(--text-muted);
+  backdrop-filter:blur(2px);
+}
+.r-peek-cta{
+  display:block;width:100%;text-align:center;
+  padding:13px;border-radius:8px;
+  background:var(--burgundy);color:#FAF7F2;
+  font-family:var(--serif);font-size:13px;letter-spacing:0.5px;
+  text-decoration:none;transition:background 0.15s;border:none;cursor:pointer;
+}
+.r-peek-cta:hover{background:#6D2215}
+.r-peek-sub{
+  display:block;text-align:center;margin-top:10px;
+  font-family:var(--serif);font-style:italic;font-size:11.5px;
+  color:var(--text-muted);
+}
+
+/* ── PRINT ─────────────────────────────────────────────── */
+@media print{
+  .r-top-bar,.r-hero-veil,.r-actions,.r-supplier-backdrop,.r-peek-backdrop{display:none!important}
+  body{background:#fff;color:#000;font-size:11pt}
+  .r-page{max-width:100%;padding:0}
+  .r-pairing{display:none}
+}
+/* ── Costing Modal ───────────────────────────────────── */
+.c-overlay{position:fixed;inset:0;background:rgba(28,25,23,0.82);z-index:9000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px 0 32px}
+.c-overlay.open{display:flex}
+.c-modal{background:var(--cream);width:100%;max-width:700px;min-height:60vh;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;margin:auto}
+.c-header{border-bottom:0.5px solid var(--divider);padding:14px 16px 0;display:flex;flex-direction:column;gap:10px;position:sticky;top:0;background:var(--cream);z-index:1}
+.c-header-top{display:flex;align-items:center;justify-content:space-between}
+.c-recipe-label{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)}
+.c-close{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-muted);padding:2px 4px}
+.c-close:hover{color:var(--text)}
+.c-tabs{display:flex;gap:0;border-top:0.5px solid var(--divider);margin-left:-16px;margin-right:-16px;padding:0 16px}
+.c-tab{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:10px 12px 9px;border-bottom:2px solid transparent;margin-bottom:-0.5px}
+.c-tab.active{color:var(--text);border-bottom-color:var(--gold)}
+.c-tab:hover:not(.active){color:var(--text-mid)}
+.c-body{padding:20px 16px;flex:1;overflow-y:auto}
+/* cost tab */
+.c-banner{background:var(--gold-faint);border:0.5px solid var(--divider-warm);border-radius:3px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:var(--text-mid)}
+.c-banner a{color:var(--gold);cursor:pointer;text-decoration:none}
+.c-ing-table{width:100%;border-collapse:collapse}
+.c-ing-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);padding:0 0 8px;text-align:left;border-bottom:0.5px solid var(--divider)}
+.c-ing-table th:last-child{text-align:right}
+.c-ing-table td{padding:8px 0;border-bottom:0.5px solid var(--divider);font-size:13px;vertical-align:top}
+.c-ing-table td:last-child{text-align:right}
+.c-ing-name{font-family:var(--serif);color:var(--text)}
+.c-ing-meta{font-size:10px;color:var(--text-muted);font-style:italic}
+.c-ing-supplier{font-size:10px;color:var(--text-muted)}
+.c-ing-nodata{font-size:11px;color:var(--text-muted);font-style:italic}
+.c-ing-nodata a{color:var(--gold);cursor:pointer}
+.c-unit-warn{font-size:9px;color:var(--gold-mid);font-style:italic}
+.c-totals{margin-top:16px;padding:12px 0 0;border-top:0.5px solid var(--divider)}
+.c-totals-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px}
+.c-totals-label{color:var(--text-mid);font-family:var(--serif)}
+.c-totals-value{font-family:var(--didot);font-size:15px;color:var(--text)}
+.c-menu-price-row{display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--divider)}
+.c-menu-price-row label{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)}
+.c-menu-input{border:0.5px solid var(--divider-warm);background:var(--cream-bright);font-family:var(--serif);font-size:14px;color:var(--text);padding:4px 8px;width:80px;border-radius:2px}
+.c-gp-display{font-family:var(--mono);font-size:11px;color:var(--text-mid)}
+.c-actions{display:flex;gap:10px;margin-top:16px;padding-top:12px;border-top:0.5px solid var(--divider)}
+.c-btn{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;padding:8px 14px;border:0.5px solid var(--divider-warm);background:none;cursor:pointer;color:var(--text-mid);border-radius:2px}
+.c-btn:hover{background:var(--gold-faint);color:var(--text)}
+.c-btn-primary{border-color:var(--gold);color:var(--gold)}
+.c-btn-primary:hover{background:var(--gold-faint)}
+.c-profession-note{font-size:10px;color:var(--text-muted);font-style:italic;margin-left:auto;align-self:center}
+/* invoices tab */
+.c-invoice-actions{display:flex;gap:10px;margin-bottom:12px}
+.c-dropzone{
+  border:1.5px dashed var(--divider-warm);border-radius:8px;
+  min-height:200px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:8px;cursor:pointer;padding:32px 20px;
+  transition:border-color 0.15s,background 0.15s;margin:4px 0 16px;
+}
+.c-dropzone:hover,.c-dropzone.drag-over{border-color:var(--gold);background:var(--gold-faint)}
+.c-dz-icon{font-size:26px;color:var(--text-muted);line-height:1}
+.c-dz-main{font-family:var(--didot);font-style:italic;font-size:15px;color:var(--text);text-align:center}
+.c-dz-sub{font-size:11px;color:var(--text-muted);font-style:italic;text-align:center}
+.c-inv-queue{display:flex;align-items:center;gap:8px;padding:8px 0 12px;border-bottom:0.5px solid var(--divider);margin-bottom:12px;flex-wrap:wrap}
+.c-inv-queue-label{font-family:var(--mono);font-size:11px;color:var(--text-mid);flex:1;min-width:120px}
+.c-inv-page-badge{font-family:var(--mono);font-size:9px;letter-spacing:0.05em;text-transform:uppercase;background:var(--gold-faint);color:var(--gold-mid);padding:1px 5px;border-radius:2px;margin-left:4px;vertical-align:middle}
+.c-btn-mobile{display:none}.c-btn-desktop{display:inline}
+@media(pointer:coarse){.c-btn-mobile{display:inline}.c-btn-desktop{display:none}}
+.c-invoice-card{border-bottom:0.5px solid var(--divider);padding:10px 0;cursor:pointer}
+.c-invoice-card:hover{background:var(--gold-faint)}
+.c-inv-header{display:flex;justify-content:space-between;align-items:baseline}
+.c-inv-supplier{font-family:var(--didot);font-style:italic;font-size:14px;color:var(--text)}
+.c-inv-total{font-size:13px;color:var(--text)}
+.c-inv-meta{font-size:10px;color:var(--text-muted);font-family:var(--mono);letter-spacing:0.05em;text-transform:uppercase;margin-top:2px}
+.c-inv-lines{padding:8px 0 4px;display:none}
+.c-inv-lines.open{display:block}
+.c-line-row{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--divider);font-size:12px;align-items:center}
+.c-line-desc{color:var(--text)}
+.c-line-match{font-style:italic;color:var(--text-muted);font-size:11px}
+.c-line-price{font-family:var(--mono);font-size:11px;color:var(--text-mid)}
+.c-confidence{font-size:9px;border-radius:2px;padding:1px 4px;background:var(--gold-faint);color:var(--gold-mid);font-family:var(--mono)}
+.c-line-name-edit{border:0.5px solid var(--divider);background:var(--cream-bright);font-family:var(--serif);font-size:12px;color:var(--text);padding:2px 6px;width:100%;border-radius:2px}
+.c-apply-bar{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--divider);display:flex;justify-content:flex-end;gap:8px}
+/* pricing tab */
+.c-pricing-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.c-search-input{flex:1;border:0.5px solid var(--divider-warm);background:var(--cream-bright);font-family:var(--serif);font-size:13px;color:var(--text);padding:6px 10px;border-radius:2px}
+.c-pricing-table{width:100%;border-collapse:collapse}
+.c-pricing-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);padding:0 4px 8px;text-align:left;border-bottom:0.5px solid var(--divider)}
+.c-pricing-table td{padding:7px 4px;border-bottom:0.5px solid var(--divider);font-size:12px;vertical-align:middle}
+.c-pricing-table tr:hover td{background:var(--gold-faint)}
+/* loading / empty */
+.c-loading{padding:40px;text-align:center;color:var(--text-muted);font-style:italic;font-size:13px}
+.c-empty{padding:32px 0;text-align:center;color:var(--text-muted);font-size:13px;font-style:italic}
+/* upload progress */
+.c-scan-progress{display:none;padding:24px;text-align:center}
+.c-scan-progress.active{display:block}
+.c-scan-spinner{width:24px;height:24px;border:2px solid var(--divider);border-top-color:var(--gold);border-radius:50%;animation:cspin 0.8s linear infinite;margin:0 auto 12px}
+@keyframes cspin{to{transform:rotate(360deg)}}
+/* review screen */
+.c-review-header{font-family:var(--didot);font-style:italic;font-size:16px;color:var(--text);margin-bottom:4px}
+.c-review-meta{font-size:11px;color:var(--text-muted);margin-bottom:14px}
+/* ── Kitchen Notes Card ──────────────────────────────── */
+.kn-overlay{position:fixed;inset:0;background:rgba(28,25,23,0.82);z-index:9000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px 16px 40px}
+.kn-overlay.open{display:flex}
+.kn-card{background:#fff;width:100%;max-width:600px;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;margin:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18)}
+.kn-card-header{border-bottom:2px solid var(--text);padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;background:#fff;position:sticky;top:0;z-index:1}
+.kn-card-eyebrow{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:5px}
+.kn-card-name{font-family:var(--didot);font-style:italic;font-size:19px;color:var(--text);display:block;line-height:1.2}
+.kn-card-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:12px;padding-top:2px}
+.kn-print-btn{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;background:transparent;color:var(--text-muted);border:0.5px solid var(--divider);border-radius:2px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.kn-print-btn:hover{border-color:var(--text);color:var(--text)}
+.kn-close{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-muted);padding:2px 4px;line-height:1}
+.kn-close:hover{color:var(--text)}
+.kn-card-body{display:flex;flex-direction:column;color:#1c1917;font-size:13px}
+.kn-loading{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);text-align:center;padding:44px 0}
+.kn-section{border-bottom:0.5px solid var(--divider);padding:14px 20px}
+.kn-section:last-child{border-bottom:none;padding-bottom:22px}
+.kn-section-label{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px;font-weight:600;color:#1c1917}
+.kn-ccp-label{color:#b03a2e}
+.kn-temp-label{color:#1a5276}
+.kn-allergen-label{color:#784212}
+.kn-xc-label{color:#145a32}
+.kn-shelf-label{color:#4a235a}
+.kn-items{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.kn-item{font-size:13px;line-height:1.55;color:#1c1917;font-weight:400;padding-left:16px;position:relative}
+.kn-item::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%}
+.kn-ccp-item::before{background:#b03a2e}
+.kn-temp-item::before{background:#1a5276}
+.kn-xc-item::before{background:#145a32}
+.kn-shelf-item::before{background:#4a235a}
+.kn-allergen-section{display:flex;flex-wrap:wrap;gap:6px;padding-top:2px}
+.kn-allergen-pill{font-family:var(--mono);font-size:9px;letter-spacing:0.07em;text-transform:uppercase;background:#fdf6e3;border:0.5px solid #c9941a;color:#5a2d0a;font-weight:600;border-radius:2px;padding:4px 9px}
+.kn-empty-section{font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:0.05em}
+@media print{
+  @page{size:A5;margin:12mm}
+  body{background:white}
+  .kn-overlay{position:static;background:none;padding:0;display:block!important;overflow:visible}
+  body>*:not(#kn-overlay):not(#haccp-overlay){display:none!important}
+  #kn-overlay:not(.open){display:none!important}
+  #haccp-overlay:not(.open){display:none!important}
+  .kn-card{box-shadow:none;border:none;border-radius:0;max-width:100%;padding:0}
+  .kn-card-header{position:static;border-bottom:0.5pt solid #1c1917;padding-bottom:6mm;margin-bottom:6mm}
+  .kn-print-btn,.kn-close{display:none!important}
+  .kn-card-eyebrow,.kn-card-name{color:#1c1917}
+  .kn-card-body{font-size:11pt;line-height:1.5}
+  .kn-section{page-break-inside:avoid;margin-bottom:5mm}
+  .kn-item{font-size:11pt;line-height:1.4}
+  .haccp-table{font-size:9pt}
+  .haccp-table th,.haccp-table td{padding:4px 5px}
+  .haccp-table-wrap{overflow:visible}
+}
+/* ── HACCP brief extras ──────────────────────────────────────────── */
+.haccp-rationale{font-size:11px;color:var(--text-muted);margin-top:8px;font-style:italic;line-height:1.5}
+.haccp-flow{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:4px}
+.haccp-flow-step{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;background:#f0f4f8;border:0.5px solid #b8cdd9;border-radius:2px;padding:3px 8px;color:#1a5276}
+.haccp-flow-arrow{color:var(--text-muted);font-size:11px;padding:0 1px}
+.haccp-receiving-item{margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid var(--divider)}
+.haccp-receiving-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.haccp-receiving-ingredient{font-weight:600;font-size:12px;color:#145a32;margin-bottom:4px}
+.haccp-receiving-detail{font-size:12px;line-height:1.5;margin-bottom:2px;color:#1c1917}
+.haccp-reject{color:#b03a2e}
+.haccp-table-wrap{overflow-x:auto;margin-top:4px}
+.haccp-table{width:100%;border-collapse:collapse;font-size:11px;line-height:1.45}
+.haccp-table th{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);border-bottom:1.5px solid var(--divider);padding:5px 8px;text-align:left;white-space:nowrap}
+.haccp-table td{border-bottom:0.5px solid var(--divider);padding:7px 8px;vertical-align:top;color:#1c1917}
+.haccp-table tr:last-child td{border-bottom:none}
+.haccp-limit{font-weight:600;color:#b03a2e;min-width:100px}
+.haccp-hazard-cat{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
+.haccp-footer{font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:0.05em;line-height:1.6;font-style:italic}
+/* ── HACCP compliance wrapper ────────────────────────────────────── */
+.haccp-doc-ctrl{background:var(--surface)}
+.haccp-doc-ctrl-top{margin-bottom:10px}
+.haccp-version-badge{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;border-radius:2px;padding:3px 9px;display:inline-block}
+.haccp-version-draft{background:#fff0ed;border:0.5px solid #b03a2e;color:#b03a2e}
+.haccp-version-signed{background:#edf7f0;border:0.5px solid #145a32;color:#145a32}
+.haccp-doc-ctrl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px 20px;margin-top:8px}
+.haccp-doc-ctrl-field{display:flex;flex-direction:column;gap:4px}
+.haccp-doc-ctrl-label{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)}
+.haccp-doc-ctrl-value{font-size:12px;color:var(--text)}
+.haccp-input{font-family:var(--mono);font-size:11px;border:0.5px solid var(--divider);border-radius:2px;padding:4px 7px;background:#fff;color:var(--text);width:100%;box-sizing:border-box}
+.haccp-input:focus{outline:none;border-color:#1a5276}
+select.haccp-input{padding:3px 7px}
+.haccp-textarea{width:100%;font-family:var(--serif);font-size:12px;line-height:1.6;color:var(--text);border:0.5px solid var(--divider);border-radius:2px;padding:8px 10px;resize:vertical;background:#fff;box-sizing:border-box;min-height:72px}
+.haccp-textarea:focus{outline:none;border-color:#1a5276}
+.haccp-text-display{font-size:12px;line-height:1.6;color:var(--text)}
+.haccp-signoff-note{font-family:var(--mono);font-size:9px;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.04em}
+.haccp-signoff-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+.haccp-sig-field{grid-column:1/-1}
+.haccp-sig-input{font-style:italic}
+.haccp-signature-display{font-size:17px;font-style:italic;font-family:Georgia,'Times New Roman',serif;color:var(--text);line-height:1.3;border-bottom:0.5px solid var(--divider);padding-bottom:2px;display:inline-block;min-width:160px}
+.haccp-btn-sign{background:var(--text)!important;color:var(--cream)!important;border-color:var(--text)!important;font-weight:600}
+.haccp-btn-sign:hover{background:var(--burgundy)!important;border-color:var(--burgundy)!important}
+.haccp-btn-new{color:#1a5276!important;border-color:#1a5276!important}
+.haccp-validation-msg{font-family:var(--mono);font-size:9px;color:#b03a2e;letter-spacing:0.04em;margin-top:6px;display:none}
+.haccp-watermark-draft{display:none}
+@media print{
+  .haccp-watermark-draft{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);font-family:var(--mono,monospace);font-size:52pt;color:rgba(176,58,46,0.09);pointer-events:none;z-index:9999;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap}
+  .haccp-input,.haccp-textarea,.haccp-validation-msg{display:none!important}
+  .haccp-doc-ctrl-value,.haccp-text-display,.haccp-signature-display{display:block}
+  .haccp-btn-sign,.haccp-btn-new{display:none!important}
+  .haccp-signoff-blank{display:block;border-bottom:0.5px solid #1c1917;min-width:120px;height:18px}
 }
 </style>
-<!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-4G21HCX2D0');
-</script>
-<!-- PWA -->
-<link rel="manifest" href="/static/manifest.json">
-<meta name="theme-color" content="#08080A">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Provenance">
-<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/processing_overlay.css') }}">
 </head>
 <body>
 
-<!-- ── Top Bar ──────────────────────────────────────────────────── -->
-<div class="top-bar">
-  <a href="/auth/account" class="top-bar-back">← My Kitchen</a>
-  <a href="/" class="top-bar-wordmark">Provenance</a>
-  <span class="top-bar-type">{{ recipe.recipe_type | upper }}</span>
-</div>
+{# ── Computed helpers ── #}
+{% set has_photo = recipe.image_url %}
+{% set recipe_type = recipe.recipe_type or 'food' %}
+{% set is_editorial = recipe.editorial_showcase %}
+{% set sashimi = recipe.sashimi_standard %}
+{% set origin = recipe.origin_provenance or (recipe.full_content.origin if recipe.full_content else None) %}
+{% set trad_tags = recipe.tradition_tags or [] %}
+{% set flourish = recipe.flourish %}
+{% set pairings = recipe.pairings or [] %}
+{% set parallels = recipe.cross_cuisine_parallels or [] %}
+{% set markers_data = recipe.markers or [] %}
 
-<!-- ── Breadcrumb ───────────────────────────────────────────────── -->
-<nav class="breadcrumb" aria-label="breadcrumb">
-  <a href="/">Provenance</a><span>/</span>
-  <a href="/recipes">Recipes</a><span>/</span>
-  {% if recipe.cuisine %}<a href="/recipes?cuisine={{ recipe.cuisine | urlencode }}">{{ recipe.cuisine }}</a><span>/</span>{% endif %}
-  <span>{{ recipe.name }}</span>
-</nav>
+{# Determine hero text colors based on photo/cream state #}
+{% if has_photo %}
+  {% set eyebrow_cls = 'r-hero-eyebrow--photo' %}
+  {% set title_cls = 'r-hero-title--photo' %}
+  {% set subtitle_cls = 'r-hero-subtitle--photo' %}
+{% else %}
+  {% set eyebrow_cls = 'r-hero-eyebrow--cream' %}
+  {% set title_cls = 'r-hero-title--cream' %}
+  {% set subtitle_cls = 'r-hero-subtitle--cream' %}
+{% endif %}
 
-<!-- ── Hero ─────────────────────────────────────────────────────── -->
-<div class="hero">
-  {% if recipe.image_url %}
-  <img class="hero-img" src="{{ recipe.image_url }}" alt="{{ recipe.name }}">
-  {% else %}
-  <div class="hero-img" style="background:linear-gradient(135deg,#141413,#2A2018)"></div>
+{# Eyebrow text #}
+{% if recipe.eyebrow_override %}
+  {% set eyebrow_text = recipe.eyebrow_override %}
+{% elif is_editorial %}
+  {% set eyebrow_text = '— Transcendent Recipe —' %}
+{% elif recipe.cuisine_canon %}
+  {% set eyebrow_text = '— Of the ' ~ recipe.cuisine_canon ~ ' Canon —' %}
+{% elif recipe_type == 'cocktail' %}
+  {% set eyebrow_text = '— Cocktail —' %}
+{% elif recipe_type == 'wine' %}
+  {% set eyebrow_text = '— Wine —' %}
+{% elif recipe_type == 'beer' %}
+  {% set eyebrow_text = '— Beer —' %}
+{% elif recipe_type == 'coffee_tea_na' %}
+  {% set eyebrow_text = '— Coffee & Tea —' %}
+{% elif is_authenticated %}
+  {% set eyebrow_text = '— Your Kitchen —' %}
+{% else %}
+  {% set eyebrow_text = '— Provenance —' %}
+{% endif %}
+
+{# Count gold-star markers in method steps #}
+{% set ns = namespace(marker_count=0) %}
+{% for step in (recipe.steps or recipe.method or []) %}
+  {% if step is mapping and step.markers %}
+    {% set ns.marker_count = ns.marker_count + (step.markers | length) %}
   {% endif %}
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-eyebrow">{{ recipe.cuisine or '' }}</div>
-    <h1 class="hero-title">{{ recipe.name }}</h1>
-    {% if recipe.description %}
-    <p class="hero-desc">{{ recipe.description }}</p>
+{% endfor %}
+
+<!-- ═══ 1. TOP BAR ════════════════════════════════════════ -->
+<header class="r-top-bar">
+  <a href="{{ '/kitchen' if is_authenticated else '/recipes' }}" class="r-top-back">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.2"/></svg>
+    back to kitchen
+  </a>
+  <span class="r-top-wordmark">Provenance</span>
+  <div class="r-top-actions">
+    <button class="r-top-btn" id="btn-save" title="Save" onclick="toggleSave()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h10v12l-5-3-5 3V2z" stroke="currentColor" stroke-width="1.2"/></svg>
+    </button>
+    <button class="r-top-btn" title="Share" onclick="shareRecipe()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="12" cy="3" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="4" cy="8" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="13" r="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7l5-3M5.5 9l5 3" stroke="currentColor" stroke-width="1.2"/></svg>
+    </button>
+    <button class="r-top-btn" title="Print" onclick="window.print()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="5" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M5 5V3h6v2M5 12v1h6v-1" stroke="currentColor" stroke-width="1.2"/><circle cx="11.5" cy="8.5" r="0.5" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ═══ 2. HERO BAND ════════════════════════════════════════ -->
+<div class="r-hero">
+{% if has_photo %}
+  <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" class="r-hero-photo">
+  <div class="r-hero-veil"></div>
+{% else %}
+  <div class="r-hero-cream">
+    <div class="r-hero-cream-texture"></div>
+    {% if recipe.cuisine_canon %}
+      <div class="r-hero-ornament">{{ recipe.cuisine_canon[0] }}</div>
     {% endif %}
   </div>
-  <button class="change-photo-btn" onclick="document.getElementById('photoPanel').style.display='flex'" title="Change photo">⊕ Photo</button>
+{% endif %}
+  <div class="r-hero-content">
+    <span class="r-hero-eyebrow {{ eyebrow_cls }}">{{ eyebrow_text }}</span>
+    <h1 class="r-hero-title {{ title_cls }}">{{ recipe.name }}</h1>
+    {% if recipe.subtitle %}
+      <p class="r-hero-subtitle {{ subtitle_cls }}">{{ recipe.subtitle }}</p>
+    {% endif %}
+  </div>
 </div>
 
-<!-- ── Meta bar ──────────────────────────────────────────────────── -->
-{% if recipe.servings or recipe.prep_time_mins or recipe.cook_time_mins %}
-<div class="meta-bar">
-  {% if recipe.servings %}
-  <div class="meta-item">
-    <span class="meta-label">Serves</span>
-    <div class="servings-adjuster">
-      <button class="servings-btn" id="btn-minus" aria-label="Reduce servings">−</button>
-      <span class="servings-count" id="servings-display">{{ recipe.servings }}</span>
-      <button class="servings-btn" id="btn-plus" aria-label="Increase servings">+</button>
+<!-- ═══ 3. META ROW ════════════════════════════════════════ -->
+{% if recipe_type == 'cocktail' %}
+<div class="r-meta-row r-meta-row--4">
+  <div class="r-meta-cell"><span class="r-meta-label">Glass</span><span class="r-meta-value">{{ recipe.glass or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Ice</span><span class="r-meta-value">{{ recipe.ice_spec or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Build</span><span class="r-meta-value">{{ recipe.build_method or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">ABV</span><span class="r-meta-value">{{ recipe.abv or '—' }}</span></div>
+</div>
+{% elif recipe_type == 'wine' %}
+<div class="r-meta-row r-meta-row--4">
+  <div class="r-meta-cell"><span class="r-meta-label">Vintage</span><span class="r-meta-value">{{ recipe.vintage or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Region</span><span class="r-meta-value">{{ recipe.wine_region or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Producer</span><span class="r-meta-value">{{ recipe.producer or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Window</span><span class="r-meta-value">{{ recipe.drinking_window or '—' }}</span></div>
+</div>
+{% elif recipe_type == 'beer' %}
+<div class="r-meta-row r-meta-row--4">
+  <div class="r-meta-cell"><span class="r-meta-label">Style</span><span class="r-meta-value">{{ recipe.style or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Brewery</span><span class="r-meta-value">{{ recipe.brewery or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">ABV / IBU</span><span class="r-meta-value">{{ recipe.abv_ibu or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Serve</span><span class="r-meta-value">{{ recipe.serving_temp or '—' }}</span></div>
+</div>
+{% elif recipe_type == 'coffee_tea_na' %}
+<div class="r-meta-row r-meta-row--4">
+  <div class="r-meta-cell"><span class="r-meta-label">Method</span><span class="r-meta-value">{{ recipe.brew_method or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Yield</span><span class="r-meta-value">{{ recipe.yield_volume or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Time</span><span class="r-meta-value">{{ recipe.brew_time or '—' }}</span></div>
+  <div class="r-meta-cell"><span class="r-meta-label">Origin</span><span class="r-meta-value">{{ recipe.origin_estate or recipe.cuisine or '—' }}</span></div>
+</div>
+{% else %}
+  {# Food recipe — show 4 cells if we have markers, 3 if not #}
+  {% if ns.marker_count > 0 %}
+  <div class="r-meta-row r-meta-row--4">
+    <div class="r-meta-cell"><span class="r-meta-label">Yield</span><span class="r-meta-value">{{ recipe.yield_desc or (recipe.servings ~ ' serves' if recipe.servings else '—') }}</span></div>
+    <div class="r-meta-cell"><span class="r-meta-label">Active</span><span class="r-meta-value">{{ recipe.active_time or (recipe.time.active if recipe.time else '—') or '—' }}</span></div>
+    <div class="r-meta-cell"><span class="r-meta-label">Total</span><span class="r-meta-value">{{ recipe.total_time or (recipe.time.total if recipe.time else '—') or '—' }}</span></div>
+    <div class="r-meta-cell"><span class="r-meta-label">Markers</span><span class="r-meta-value r-meta-markers">{{ ns.marker_count }} ★, tap to read</span></div>
+  </div>
+  {% else %}
+  <div class="r-meta-row r-meta-row--3">
+    <div class="r-meta-cell"><span class="r-meta-label">Yield</span><span class="r-meta-value">{{ recipe.yield_desc or (recipe.servings ~ ' serves' if recipe.servings else '—') }}</span></div>
+    <div class="r-meta-cell"><span class="r-meta-label">Active</span><span class="r-meta-value">{{ recipe.active_time or (recipe.time.active if recipe.time else '—') or '—' }}</span></div>
+    <div class="r-meta-cell"><span class="r-meta-label">Total</span><span class="r-meta-value">{{ recipe.total_time or (recipe.time.total if recipe.time else '—') or '—' }}</span></div>
+  </div>
+  {% endif %}
+{% endif %}
+
+<!-- ═══ 4. SASHIMI STANDARD LINE ═══════════════════════════ -->
+{% if sashimi %}
+<div class="r-sashimi">
+  <div class="r-rule"></div>
+  <span class="r-sashimi-eyebrow">— Where the {{ 'drink' if recipe_type != 'food' else 'dish' }} lives or dies —</span>
+  <p class="r-sashimi-body">{{ sashimi }}</p>
+  <div class="r-rule"></div>
+</div>
+{% endif %}
+
+<!-- ═══ 5. ORIGIN & PROVENANCE ══════════════════════════════ -->
+{% if origin %}
+<div class="r-page" style="margin-top:24px">
+  <div class="r-origin">
+    <div class="r-origin-accent"></div>
+    <span class="r-origin-eyebrow">— Origin &amp; Provenance —</span>
+    <div class="r-origin-body">{{ origin | safe }}</div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ═══ 6. TRADITION TAGS ═══════════════════════════════════ -->
+{% if trad_tags %}
+<div class="r-tags">
+  {% for tag in trad_tags %}<span class="r-tag">{{ tag }}</span>{% endfor %}
+</div>
+{% endif %}
+
+<!-- ═══ 7. INGREDIENTS ══════════════════════════════════════ -->
+{% set raw_ingredients = recipe.ingredients %}
+{% if raw_ingredients %}
+<div class="r-page">
+  <div class="r-section-hd">
+    <span class="r-section-title">Ingredients</span>
+    {# Count groups #}
+    {% set ing_list = raw_ingredients if raw_ingredients is iterable else [] %}
+    {% set has_groups = ing_list and ing_list[0] is mapping and ing_list[0].items is defined and 'group' in ing_list[0] %}
+    {% if has_groups %}
+      <span class="r-section-meta">— {{ ing_list | length }} components —</span>
+    {% endif %}
+  </div>
+
+  {% if has_groups %}
+    {# Grouped ingredients #}
+    {% for grp in ing_list %}
+      <div class="r-ing-group">
+        {% if grp.group %}<span class="r-ing-group-name">{{ grp.group }}</span>{% endif %}
+        {% for ing in (grp.items or []) %}
+          <div class="r-ing-item">
+            <span class="r-ing-name{% if ing.technique_link or ing.supplier_link %} r-ing-name--linked{% endif %}"
+              {% if ing.technique_link or ing.supplier_link %}onclick="openIngredientPanel('{{ ing.name | e }}')"{% endif %}>{{ ing.name }}</span>
+            <span class="r-ing-amount">{{ ing.amount }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  {% else %}
+    {# Flat ingredient list #}
+    <div class="r-ing-group">
+      {% for ing in ing_list %}
+        {% if ing is mapping %}
+          <div class="r-ing-item">
+            <span class="r-ing-name">{{ ing.name or ing.get('ingredient', '') }}</span>
+            <span class="r-ing-amount">
+              {{ ing.count or ing.amount or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}{% if ing.info %} ({{ ing.info }}){% endif %}
+            </span>
+          </div>
+        {% else %}
+          <div class="r-ing-item"><span class="r-ing-name">{{ ing }}</span><span class="r-ing-amount"></span></div>
+        {% endif %}
+      {% endfor %}
     </div>
-  </div>
-  {% endif %}
-  {% if recipe.prep_time_mins %}
-  <div class="meta-item">
-    <span class="meta-label">Prep</span>
-    <span class="meta-value">{{ recipe.prep_time_mins }} min</span>
-  </div>
-  {% endif %}
-  {% if recipe.cook_time_mins is not none %}
-  <div class="meta-item">
-    <span class="meta-label">Cook</span>
-    <span class="meta-value">
-      {%- if recipe.cook_time_mins == 0 -%}No cook
-      {%- elif recipe.cook_time_mins >= 60 -%}{{ (recipe.cook_time_mins // 60) }}h{% if recipe.cook_time_mins % 60 %} {{ recipe.cook_time_mins % 60 }}min{% endif %}
-      {%- else -%}{{ recipe.cook_time_mins }} min{%- endif -%}
-    </span>
-  </div>
   {% endif %}
 </div>
 {% endif %}
 
-<!-- ── Content ───────────────────────────────────────────────────── -->
-<div class="content">
-
-  {% if recipe.full_content and recipe.full_content.origin %}
-  <div class="section">
-    <div class="section-label">Origin</div>
-    <div class="origin-block">
-      <p class="origin-text">{{ recipe.full_content.origin }}</p>
-    </div>
+<!-- ═══ 8. METHOD ═══════════════════════════════════════════ -->
+{% set raw_steps = recipe.steps or recipe.method %}
+{% if raw_steps %}
+<div class="r-page">
+  {% set method_label = 'Tasting &amp; Service' if recipe_type in ('wine','beer') else 'Method' %}
+  <div class="r-section-hd">
+    <span class="r-section-title">{{ method_label | safe }}</span>
+    <span class="r-section-meta">— gold ★ marks the science —</span>
   </div>
-  {% endif %}
 
-  {% if recipe.ingredients %}
-  <div class="section">
-    <div class="section-label">Ingredients</div>
-    <ul class="ing-list" id="ing-list">
-      {% for ing in recipe.ingredients %}
-      <li class="ing-item"
-          data-base-count="{{ ing.count or '' }}"
-          data-product-name="{{ ing.name | lower }}">
-        <span class="ing-amount">
-          {%- if ing.count and ing.unit -%}{{ ing.count }} {{ ing.unit }}
-          {%- elif ing.count -%}{{ ing.count }}
-          {%- elif ing.unit -%}{{ ing.unit }}
-          {%- else -%}—{%- endif -%}
-        </span>
-        <div class="ing-detail">
-          <span class="ing-name">{{ ing.name }}</span>
-          {% if ing.info %}<span class="ing-info">{{ ing.info }}</span>{% endif %}
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
-
-  {% if recipe.steps %}
-  <div class="section">
-    <div class="section-label">Method</div>
-    <ol class="step-list">
-      {% for step in recipe.steps %}
-      <li class="recipe-step">
-        {% if step is mapping %}
-          <div class="step-header">
-            <span class="step-num">{{ loop.index }}</span>
-            <p class="step-text">{{ step.instruction }}</p>
-            {% if step.technique_note %}
-            <button class="technique-toggle" onclick="toggleNote(this)">Technique Note ↓</button>
-            {% endif %}
-          </div>
-          {% if step.technique_note %}
-          <div class="technique-note" style="display:none">
-            <div class="technique-note-label">Technique Depth</div>
-            <div class="technique-note-body">{{ step.technique_note }}</div>
-          </div>
-          {% endif %}
-        {% else %}
-          <div class="step-header">
-            <span class="step-num">{{ loop.index }}</span>
-            <p class="step-text">{{ step }}</p>
-          </div>
+  <div id="r-steps-container">
+  {% for step in raw_steps %}
+    {% set step_idx = loop.index0 %}
+    {% set step_text = step.instruction if step is mapping and step.instruction else (step.body if step is mapping and step.body else (step.enhanced if step is mapping and step.enhanced else (step.text if step is mapping and step.text else (step if step is not mapping else '')))) %}
+    {% set step_markers = step.markers if step is mapping and step.markers else [] %}
+    {% set step_note = step.technique_note if step is mapping and step.technique_note else '' %}
+    <div class="r-step" data-step="{{ step_idx }}">
+      <div class="r-step-num">{{ loop.index }}</div>
+      <div class="r-step-body">
+        {{ step_text | safe }}
+        {# Gold-star trigger for technique_note (new schema) #}
+        {% if step_note %}
+        <span class="r-marker" data-marker-idx="{{ step_idx }}" onclick="toggleMarker('{{ step_idx }}', this)"> ★</span>
         {% endif %}
-      </li>
-      {% endfor %}
-    </ol>
-  </div>
-  {% endif %}
-
-  {% if recipe.full_content and recipe.full_content.technique %}
-  <div class="section">
-    <div class="section-label">The Technique</div>
-    <p class="body-text">{{ recipe.full_content.technique }}</p>
-  </div>
-  {% endif %}
-
-  {% if recipe.full_content and recipe.full_content.quality_hierarchy %}
-  <div class="section">
-    <div class="section-label">Quality Hierarchy</div>
-    <ul class="quality-list">
-      {% for item in recipe.full_content.quality_hierarchy %}
-      <li class="quality-item">
-        <span class="quality-bullet"></span>
-        <span>{{ item }}</span>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
-
-  {% if recipe.full_content and recipe.full_content.where_it_lives_or_dies %}
-  <div class="section">
-    <div class="lives-panel">
-      <div class="lives-label">Where It Lives or Dies</div>
-      <p class="lives-text">{{ recipe.full_content.where_it_lives_or_dies }}</p>
-    </div>
-  </div>
-  {% endif %}
-
-  {% if recipe.full_content and recipe.full_content.sensory_tests %}
-  <div class="section">
-    <div class="section-label">Sensory Tests</div>
-    <ul class="item-list">
-      {% for item in recipe.full_content.sensory_tests %}
-      <li class="item-entry">{{ item }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
-
-  {% if recipe.full_content and recipe.full_content.cross_cuisine_parallels %}
-  <div class="divider"></div>
-  <div class="section">
-    <div class="section-label">Cross-Cuisine Parallels</div>
-    <ul class="item-list">
-      {% for item in recipe.full_content.cross_cuisine_parallels %}
-      <li class="item-entry">{{ item }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
-
-</div>
-
-<!-- ── Sourced by Provenance (FIX 1) ─────────────────────────────── -->
-{% if recipe_suppliers %}
-<div class="suppliers-section">
-  <div class="suppliers-eyebrow">Sourced by Provenance — Pat's Rule</div>
-  <div class="suppliers-grid">
-    {% for s in recipe_suppliers %}
-    <div class="supplier-card">
-      <div class="supplier-name">{{ s.name }}</div>
-      <div class="supplier-loc">
-        {%- if s.city %}{{ s.city }}{% if s.state_province %}, {% endif %}{% endif -%}
-        {%- if s.state_province %}{{ s.state_province }}{% endif -%}
-        {%- if s.country %} · {{ s.country }}{% endif -%}
-      </div>
-      {% if s.products %}
-      <div class="supplier-for-recipe">For this recipe:</div>
-      <ul class="supplier-products">
-        {% for p in s.products[:3] %}
-        <li class="supplier-product">
-          <span class="supplier-product-name">→ {{ p.name }}</span>
-          {%- if p.desc %} — {{ p.desc.split('.')[0] }}{% endif %}
-        </li>
+        {# Legacy inline markers (older records with step.markers list) #}
+        {% for marker in step_markers %}
+          {% set m_idx = step_idx ~ '_' ~ loop.index0 %}
+          <div class="r-marker-reveal" id="reveal-{{ m_idx }}">
+            <span class="r-marker-reveal-eyebrow">— the marker —</span>
+            <span class="r-marker-reveal-body">{{ marker.body or marker }}</span>
+          </div>
         {% endfor %}
-      </ul>
-      {% endif %}
-      {% if s.website %}
-      <a href="{{ s.website if s.website.startswith('http') else 'https://' + s.website }}"
-         class="supplier-link" target="_blank" rel="noopener">View Supplier →</a>
+        {# Reveal panel for technique_note #}
+        {% if step_note %}
+        <div class="r-marker-reveal" id="reveal-{{ step_idx }}">
+          <span class="r-marker-reveal-eyebrow">— the technique —</span>
+          <span class="r-marker-reveal-body">{{ step_note }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- ═══ 9. THE FLOURISH ═════════════════════════════════════ -->
+{% if flourish %}
+<div class="r-flourish">
+  <div class="r-rule"></div>
+  <span class="r-flourish-eyebrow">— {% if recipe_type != 'food' %}The Service{% else %}The Flourish{% endif %} —</span>
+  <p class="r-flourish-body">{{ flourish }}</p>
+  <div class="r-rule"></div>
+</div>
+{% endif %}
+
+<!-- ═══ 10. PAIRING BLOCK ═══════════════════════════════════ -->
+{% if pairings %}
+{% set first_pairing = pairings[0] %}
+<div class="r-pairing" id="r-pairing-block" onclick="togglePairings()">
+  <div class="r-pairing-collapsed">
+    <div class="r-pairing-icon">
+      {# Icon by pairing type #}
+      {% set pt = first_pairing.type if first_pairing is mapping else 'wine' %}
+      {% if pt == 'cocktail' %}
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 4h12l-5 7v5h2v2H8v-2h2v-5L5 4z" stroke="currentColor" stroke-width="1.2"/></svg>
+      {% elif pt == 'beer' %}
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="6" y="4" width="10" height="14" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M16 8h2v6h-2" stroke="currentColor" stroke-width="1.2"/></svg>
+      {% elif pt == 'food' %}
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.2"/><path d="M8 11h6M11 8v6" stroke="currentColor" stroke-width="1.2"/></svg>
+      {% else %}
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M7 4h8v2a5 5 0 01-8 0V4z" stroke="currentColor" stroke-width="1.2"/><path d="M11 6v12M8 18h6" stroke="currentColor" stroke-width="1.2"/></svg>
       {% endif %}
     </div>
+    <div class="r-pairing-text">
+      <span class="r-pairing-eyebrow">— {{ 'Beverage' if recipe_type == 'food' else 'Food' }} Pairing —</span>
+      <span class="r-pairing-name">{{ first_pairing.name if first_pairing is mapping else first_pairing }}</span>
+      {% if first_pairing is mapping and first_pairing.note %}
+        <span class="r-pairing-note">{{ first_pairing.note }}</span>
+      {% endif %}
+      {% if first_pairing is mapping and first_pairing.supplier_link %}
+        <span class="r-pairing-supplier" onclick="event.stopPropagation();openSupplierPanel('{{ first_pairing.supplier_link | e }}')">From {{ first_pairing.supplier_link }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if pairings | length > 1 %}
+  <div class="r-pairings-expanded" id="r-pairings-expanded" onclick="event.stopPropagation()">
+    {% for p in pairings %}
+    {% if loop.index0 > 0 %}
+    <div class="r-pairing-item" onclick="handlePairingTap('{{ loop.index0 }}')">
+      <div class="r-pairing-text">
+        <span class="r-pairing-name">{{ p.name if p is mapping else p }}</span>
+        {% if p is mapping and p.note %}<span class="r-pairing-note">{{ p.note }}</span>{% endif %}
+        {% if p is mapping and p.supplier_link %}
+          <span class="r-pairing-supplier" onclick="event.stopPropagation();openSupplierPanel('{{ p.supplier_link | e }}')">From {{ p.supplier_link }}</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
     {% endfor %}
   </div>
+  {% endif %}
+</div>
+{% elif recipe_suppliers %}
+{# Show suppliers from recipe page query as pairing-adjacent block #}
+{% endif %}
+
+<!-- ═══ 11. CROSS-CUISINE PARALLELS ════════════════════════ -->
+{% if parallels %}
+<div class="r-page">
+  <div class="r-section-hd">
+    <span class="r-section-title">Cross-cuisine parallels</span>
+    <span class="r-section-meta">— the thread —</span>
+  </div>
+  {% for p in parallels %}
+  <div class="r-parallel">
+    <span class="r-parallel-culture">{{ p.culture if p is mapping else '' }}</span>
+    <div>
+      <span class="r-parallel-dish">{{ p.dish if p is mapping else p }}</span>
+      <span class="r-parallel-note">{{ p.note if p is mapping else '' }}</span>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 {% endif %}
 
-<!-- ── Costing Panel ─────────────────────────────────────────────── -->
-{% if is_authenticated %}
-<div class="costing-panel" id="costingPanel" style="margin:1.5rem 2rem;border:1px solid rgba(201,168,76,0.08);border-radius:8px;background:rgba(14,34,51,0.4);overflow:hidden">
-  <button onclick="toggleCostingPanel()" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:none;border:none;cursor:pointer;color:#F5F1E9">
-    <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(201,168,76,0.5)">RECIPE COSTING</span>
-    <span id="costingToggle" style="color:rgba(201,168,76,0.4);font-size:0.8rem;transition:transform 0.3s">▼</span>
+<!-- ═══ POUR WITH — Beverage pairings from technique layer ═══ -->
+{% if suggested_beverages %}
+<div class="r-page" style="margin-top:24px">
+  <div class="r-section-hd">
+    <span class="r-section-title">Pour with</span>
+    <span class="r-section-meta">— from the cellar —</span>
+  </div>
+  <ul class="r-pour-list">
+    {% for bev in suggested_beverages %}
+    <li class="r-pour-row">
+      <a class="r-pour-link" href="/beverage/products/{{ bev.id }}">
+        <span class="r-pour-name">{{ bev.name }}</span>
+        {% if bev.region %}
+        <span class="r-pour-region"> · {{ bev.region }}</span>
+        {% endif %}
+      </a>
+      {% if bev.relationship_type %}
+      <span class="r-pour-relationship">{{ bev.relationship_type }}</span>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<!-- ═══ SUPPLIER SECTION (Pat's Rule — Global Sashimi Rule) ═══ -->
+{% if recipe_suppliers %}
+<div class="r-page" style="margin-top:24px">
+  <div class="r-section-hd">
+    <span class="r-section-title">Sourced by Provenance</span>
+    <span class="r-section-meta">— Pat's Rule —</span>
+  </div>
+  <ul class="r-supplier-list">
+  {% for s in recipe_suppliers %}
+  <li>
+  <button type="button" class="r-supplier-row{% if loop.index > 6 %} r-supplier-extra{% endif %}"
+          data-supplier-id="{{ s.id }}"
+          aria-expanded="false"
+          {% if loop.index > 6 %}style="display:none"{% endif %}>
+    <div class="r-supplier-head">
+      <div class="r-supplier-id">
+        <div class="r-supplier-name">{{ s.name }}</div>
+        <div class="r-supplier-loc">{{ s.city }}{% if s.state_province %}, {{ s.state_province }}{% endif %}</div>
+      </div>
+      <svg class="r-supplier-chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="r-supplier-body">
+      <div class="r-supplier-body-inner">
+        {% if s.products and s.products[0].desc %}
+        <p class="r-supplier-credit">{{ s.products[0].desc }}</p>
+        {% endif %}
+        {% if s.products %}
+        <div class="r-supplier-section">
+          <div class="r-supplier-section-label">— Carries —</div>
+          <ul class="r-supplier-products">
+            {% for product in s.products %}
+            <li>{{ product.name }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        <div class="r-supplier-footer">
+          <span class="r-supplier-loc">{{ s.city }}{% if s.state_province %}, {{ s.state_province }}{% endif %}{% if s.country %}, {{ s.country }}{% endif %}</span>
+          {% if s.website %}
+          <a class="r-supplier-link" href="{{ s.website }}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Visit supplier →</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </button>
-  <div id="costingContent" style="display:none;padding:0 20px 20px">
-    <div id="costingLoading" style="color:rgba(245,241,233,0.4);font-size:0.8rem;font-style:italic">Loading cost data…</div>
-    <div id="costingData" style="display:none">
-      <!-- Summary -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1.5rem;text-align:center">
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-bottom:4px">COST/PLATE</div>
-          <div id="costPerPlate" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#C9A84C">—</div>
-        </div>
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-bottom:4px">FOOD COST %</div>
-          <div id="foodCostPct" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#C9A84C">—</div>
-        </div>
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-bottom:4px">TARGET</div>
-          <div id="targetPct" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:rgba(245,241,233,0.5)">30%</div>
-        </div>
-      </div>
-      <!-- Breakdown table -->
-      <table id="costBreakdown" style="width:100%;border-collapse:collapse;font-size:0.75rem;color:rgba(245,241,233,0.6)">
-        <thead>
-          <tr style="border-bottom:1px solid rgba(201,168,76,0.1)">
-            <th style="text-align:left;padding:6px 0;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3);text-transform:uppercase">Ingredient</th>
-            <th style="text-align:right;padding:6px 0;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3)">Qty</th>
-            <th style="text-align:right;padding:6px 0;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3)">Unit Cost</th>
-            <th style="text-align:right;padding:6px 0;font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3)">Line</th>
-          </tr>
-        </thead>
-        <tbody id="costRows"></tbody>
-      </table>
-      <!-- Unpriced warning -->
-      <div id="unpricedWarning" style="display:none;margin-top:1rem;padding:10px 14px;background:rgba(245,180,80,0.08);border:1px solid rgba(245,180,80,0.15);border-radius:4px;font-size:0.75rem;color:rgba(245,180,80,0.7)">
-        <span id="unpricedCount">0</span> ingredients without price data. Scan an invoice to update prices.
-      </div>
-      <!-- Menu price input -->
-      <div style="margin-top:1.25rem;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-        <label style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3);text-transform:uppercase;white-space:nowrap">MENU PRICE $</label>
-        <input type="number" id="menuPriceInput" step="0.50" min="0" placeholder="0.00"
-          style="width:80px;background:rgba(245,241,233,0.05);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:6px 10px;color:#F5F1E9;font-family:'DM Sans',sans-serif;font-size:0.85rem"
-          onchange="updateMenuPrice()">
-        <label style="font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.3);text-transform:uppercase;white-space:nowrap">TARGET %</label>
-        <input type="number" id="targetInput" step="1" min="1" max="100" value="30"
-          style="width:60px;background:rgba(245,241,233,0.05);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:6px 10px;color:#F5F1E9;font-family:'DM Sans',sans-serif;font-size:0.85rem"
-          onchange="updateMenuPrice()">
-      </div>
-      <!-- Invoice scan -->
-      <div style="margin-top:1.5rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:4px;color:#C9A84C;font-family:'DM Sans',sans-serif;font-size:0.75rem;cursor:pointer;letter-spacing:0.03em">
-          📷 Update prices from invoice
-          <input type="file" accept="image/*" capture="environment" onchange="scanInvoice(this)" style="display:none">
-        </label>
-        <div id="scanStatus" style="display:none;font-size:0.75rem;color:rgba(201,168,76,0.5);font-style:italic"></div>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-(function() {
-  var _costLoaded = false;
-
-  window.toggleCostingPanel = function() {
-    var content = document.getElementById('costingContent');
-    var toggle = document.getElementById('costingToggle');
-    if (content.style.display === 'none') {
-      content.style.display = 'block';
-      toggle.style.transform = 'rotate(180deg)';
-      if (!_costLoaded) { loadCostingData(); _costLoaded = true; }
-    } else {
-      content.style.display = 'none';
-      toggle.style.transform = 'rotate(0deg)';
-    }
-  };
-
-  function loadCostingData() {
-    var slug = {{ recipe.slug | tojson }};
-    fetch('/api/costing/recipe/' + slug)
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        document.getElementById('costingLoading').style.display = 'none';
-        document.getElementById('costingData').style.display = 'block';
-
-        document.getElementById('costPerPlate').textContent =
-          data.cost_per_portion != null ? '$' + data.cost_per_portion.toFixed(2) : '—';
-
-        var pctEl = document.getElementById('foodCostPct');
-        if (data.actual_food_cost_pct != null) {
-          pctEl.textContent = data.actual_food_cost_pct + '%';
-          pctEl.style.color = data.over_target ? '#E8786A' : '#6ECB63';
-        }
-
-        document.getElementById('targetPct').textContent = (data.target_food_cost_pct || 30) + '%';
-        if (data.menu_price) document.getElementById('menuPriceInput').value = data.menu_price;
-        document.getElementById('targetInput').value = data.target_food_cost_pct || 30;
-
-        var tbody = document.getElementById('costRows');
-        tbody.innerHTML = '';
-        (data.breakdown || []).forEach(function(item) {
-          var tr = document.createElement('tr');
-          tr.style.borderBottom = '1px solid rgba(201,168,76,0.04)';
-          var priceStr = item.unit_price != null ? '$' + item.unit_price.toFixed(2) + '/' + item.price_unit : '—';
-          var lineStr = item.line_cost > 0 ? '$' + item.line_cost.toFixed(2) : '—';
-          var nameStyle = item.status === 'no_price_data' ? 'color:rgba(245,180,80,0.5)' : '';
-          var yieldNote = (item.yield_factor && item.yield_factor < 1)
-            ? ' <span style="color:rgba(201,168,76,0.3);font-size:0.65rem">(' + Math.round(item.yield_factor * 100) + '% yield)</span>'
-            : '';
-          tr.innerHTML =
-            '<td style="padding:5px 0;' + nameStyle + '">' + (item.ingredient || '') + yieldNote + '</td>' +
-            '<td style="text-align:right;padding:5px 0">' + (item.quantity || '') + ' ' + (item.unit || '') + '</td>' +
-            '<td style="text-align:right;padding:5px 0">' + priceStr + '</td>' +
-            '<td style="text-align:right;padding:5px 0;font-weight:500">' + lineStr + '</td>';
-          tbody.appendChild(tr);
-        });
-
-        var totalTr = document.createElement('tr');
-        totalTr.style.borderTop = '1px solid rgba(201,168,76,0.15)';
-        totalTr.innerHTML =
-          '<td colspan="3" style="padding:8px 0;font-family:\'DM Mono\',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(201,168,76,0.4);text-transform:uppercase">TOTAL (' + (data.portions || 4) + ' portions)</td>' +
-          '<td style="text-align:right;padding:8px 0;color:#C9A84C;font-weight:600">$' + (data.total_cost || 0).toFixed(2) + '</td>';
-        tbody.appendChild(totalTr);
-
-        if (data.unpriced_count > 0) {
-          document.getElementById('unpricedWarning').style.display = 'block';
-          document.getElementById('unpricedCount').textContent = data.unpriced_count;
-        }
-      })
-      .catch(function() {
-        document.getElementById('costingLoading').textContent = 'Unable to load cost data.';
-      });
-  }
-
-  window.updateMenuPrice = function() {
-    var slug = {{ recipe.slug | tojson }};
-    var menuPrice = parseFloat(document.getElementById('menuPriceInput').value) || 0;
-    var target = parseFloat(document.getElementById('targetInput').value) || 30;
-    fetch('/api/costing/recipe/' + slug + '/set-target', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({menu_price: menuPrice, target_food_cost_pct: target})
-    }).then(function() { _costLoaded = false; loadCostingData(); });
-  };
-
-  window.scanInvoice = function(input) {
-    if (!input.files || !input.files[0]) return;
-    var statusEl = document.getElementById('scanStatus');
-    statusEl.style.display = 'block';
-    statusEl.textContent = 'Scanning invoice…';
-    statusEl.style.color = 'rgba(201,168,76,0.5)';
-    var formData = new FormData();
-    formData.append('invoice', input.files[0]);
-    fetch('/api/costing/scan-invoice', {method: 'POST', body: formData})
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (data.success) {
-          statusEl.textContent = '✓ ' + data.items_extracted + ' items, ' + data.prices_updated + ' prices updated from ' + (data.supplier || 'invoice');
-          statusEl.style.color = '#6ECB63';
-          _costLoaded = false;
-          setTimeout(loadCostingData, 600);
-        } else {
-          statusEl.textContent = '✗ ' + (data.error || 'Scan failed');
-          statusEl.style.color = '#E8786A';
-        }
-      })
-      .catch(function(e) {
-        statusEl.textContent = '✗ Upload failed';
-        statusEl.style.color = '#E8786A';
-      });
-    input.value = '';
-  };
-})();
-</script>
-{% else %}
-<div style="margin:1.5rem 2rem;padding:1.5rem 20px;border:1px solid rgba(201,168,76,0.06);border-radius:8px;background:rgba(14,34,51,0.2);opacity:0.5">
-  <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.25em;color:rgba(201,168,76,0.3);text-transform:uppercase">RECIPE COSTING</div>
-  <p style="font-size:0.8rem;color:rgba(245,241,233,0.3);margin-top:0.5rem;line-height:1.5">Cost per plate · Food cost percentage · Invoice scanning</p>
+  </li>
+  {% endfor %}
+  </ul>
+  {% if recipe_suppliers|length > 6 %}
+  <button class="r-supplier-show-all" id="suppliers-expand-btn" onclick="expandSuppliers()">
+    Show all {{ recipe_suppliers|length }} suppliers ↓
+  </button>
+  {% endif %}
 </div>
 {% endif %}
 
-<!-- ── Footer ────────────────────────────────────────────────────── -->
-<div class="recipe-footer">
-  <a href="/auth/account" class="footer-back">← My Kitchen</a>
-  <span class="footer-wordmark">Provenance</span>
+<!-- ═══ 12. ACTION ROW ══════════════════════════════════════ -->
+<div class="r-actions">
+{% if recipe_type in ('food','') or not recipe_type %}
+  <button class="r-action-btn" onclick="handleAction('haccp','profession')">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
+    HACCP plan
+  </button>
+  <button class="r-action-btn" onclick="handleAction('notes','kitchen')">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
+    Kitchen notes
+  </button>
+  <button class="r-action-btn" onclick="handleAction('costing','kitchen')">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
+    Cost this recipe
+  </button>
+  <button class="r-action-btn" onclick="handleAction('scale','library')">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="1" fill="currentColor"/><path d="M5.5 1.5v2M5.5 7.5v2M1.5 5.5h2M7.5 5.5h2" stroke="currentColor" stroke-width="1.2"/></svg>
+    Scale recipe
+  </button>
+{% elif recipe_type == 'cocktail' %}
+  <button class="r-action-btn" onclick="handleAction('pour-cost','kitchen')">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+    Pour cost
+  </button>
+  <button class="r-action-btn" onclick="handleAction('notes','kitchen')">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+    Bar notes
+  </button>
+  <button class="r-action-btn" onclick="handleAction('scale','library')">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="1" fill="currentColor"/><path d="M5.5 1.5v2M5.5 7.5v2M1.5 5.5h2M7.5 5.5h2" stroke="currentColor" stroke-width="1.2"/></svg>
+    Scale build
+  </button>
+{% endif %}
 </div>
 
-<footer class="app-footer">
-  <div class="app-footer-grid">
-    <div class="app-footer-col">
-      <div class="app-footer-brand">Provenance</div>
-      <div class="app-footer-tagline">Culinary Lineage · Vancouver, BC</div>
-    </div>
-    <div class="app-footer-col">
-      <div class="app-footer-label">PLATFORM</div>
-      <a href="/recipes">Recipes</a>
-      <a href="/drinks">Drinks</a>
-      <a href="/cuisines">Cuisines</a>
-      <a href="/techniques/browse">Techniques</a>
-      <a href="/auth/account">My Kitchen</a>
-    </div>
-    <div class="app-footer-col">
-      <div class="app-footer-label">COMPANY</div>
-      <a href="/about">About</a>
-      <a href="/methodology">Our Standard</a>
-      <a href="/for-professionals">For Professionals</a>
-      <a href="/suppliers">Verified Suppliers</a>
-    </div>
-    <div class="app-footer-col">
-      <div class="app-footer-label">CONTACT</div>
-      <a href="mailto:info@provenance.kitchen">info@provenance.kitchen</a>
-    </div>
-  </div>
-  <div class="app-footer-bottom">
-    <span>© 2026 Provenance Culinary Lineage</span>
-    <span>The discipline of simplicity. The patience of craft.</span>
-  </div>
+<!-- ═══ 13. FOOTER ══════════════════════════════════════════ -->
+<footer class="r-footer">
+  <span class="r-footer-wordmark">Provenance</span>
+  <span class="r-footer-tagline">Every recipe, written the way the world's best chefs would write it — with the full technique knowledge layer active.</span>
 </footer>
 
-<!-- ── Fixed Action Bar (FIX 2) ─────────────────────────────────── -->
-<div class="action-bar">
-  <a href="/auth/account" class="recipe-btn btn-kitchen">← My Kitchen</a>
-  <button class="recipe-btn btn-haccp" id="btn-kitchen-notes" onclick="openSafetyPanel('kitchen-notes')">
-    Kitchen Notes
-  </button>
-  <button class="recipe-btn btn-haccp" id="btn-haccp" onclick="openSafetyPanel('haccp')">
-    Food Safety / HACCP
-  </button>
-  <a href="/api/haccp/{{ recipe.slug }}/pdf" class="recipe-btn btn-haccp" target="_blank" rel="noopener" title="Download HACCP PDF">↓ PDF</a>
-</div>
-
-<!-- ── Safety Slide Panel (FIX 2) ───────────────────────────────── -->
-<div class="safety-panel" id="safety-panel">
-  <div class="safety-panel-head">
-    <span class="safety-panel-title" id="safety-panel-title">Food Safety</span>
-    <button class="safety-panel-close" onclick="closeSafetyPanel()">✕ Close</button>
-  </div>
-  <div class="safety-panel-body" id="safety-panel-body">
-    <div class="safety-loading">Loading…</div>
-  </div>
-  <div class="safety-panel-allergens" id="safety-panel-allergens" style="display:none">
-    <div class="allergen-label">Allergens</div>
-    <div class="allergen-tags" id="allergen-tags"></div>
+<!-- ═══ SUPPLIER PANEL ══════════════════════════════════════ -->
+<div class="r-supplier-backdrop" id="supplier-backdrop" onclick="closeSupplierPanel()"></div>
+<div class="r-supplier-sheet" id="supplier-sheet">
+  <div class="r-supplier-drag"></div>
+  <button class="r-supplier-close" onclick="closeSupplierPanel()">Close ✕</button>
+  <div id="supplier-panel-content">
+    <div class="r-supplier-name" id="sp-name"></div>
+    <div class="r-supplier-loc" id="sp-loc"></div>
+    <div class="r-supplier-credit" id="sp-credit"></div>
+    <ul class="r-supplier-products" id="sp-products"></ul>
+    <div class="r-supplier-footer" id="sp-footer"></div>
   </div>
 </div>
 
+<!-- ═══ CONTENT PEEK PANEL ═══════════════════════════════════ -->
+<div class="r-peek-backdrop" id="peek-backdrop" onclick="closePeek()"></div>
+<div class="r-peek-sheet" id="peek-sheet">
+  <div class="r-peek-drag"></div>
+  <button class="r-peek-close" onclick="closePeek()">Close ✕</button>
+  <div class="r-peek-eyebrow" id="peek-eyebrow">Behind this door</div>
+  <div class="r-peek-title" id="peek-title"></div>
+  <div class="r-peek-desc" id="peek-desc"></div>
+  <div class="r-peek-preview">
+    <div class="r-peek-preview-inner" id="peek-preview-inner"></div>
+    <div class="r-peek-preview-label">A glimpse of what's inside</div>
+  </div>
+  <a href="/pricing" class="r-peek-cta" id="peek-cta">Open The Kitchen</a>
+  <span class="r-peek-sub">Less than a single cookbook</span>
+</div>
+
+<!-- Pre-load marker read state -->
 <script>
-// ── Injected recipe data for API calls ──────────────────────────
-var RECIPE_TITLE = {{ recipe.name | tojson }};
-var RECIPE_INGREDIENTS = (function() {
-  var raw = {{ (recipe.ingredients or []) | tojson }};
-  return raw.map(function(i) { return i.name || ''; }).filter(Boolean);
-})();
-var RECIPE_STEPS = (function() {
-  var raw = {{ (recipe.steps or []) | tojson }};
-  return raw.map(function(s) {
-    if (typeof s === 'string') return s;
-    return s.instruction || '';
-  }).filter(Boolean);
-})();
+const RECIPE_SLUG = {{ recipe.slug | tojson }};
+const USER_TIER = {{ user_tier | tojson }};
+const USER_ROLE = {{ user_role | tojson }};
+const IS_AUTHENTICATED = {{ 'true' if is_authenticated else 'false' }};
+const TIER_HIERARCHY = ['free','kitchen','library','profession','trade'];
 
-// ── Servings adjuster ──────────────────────────────────────────
-var baseServings = {{ recipe.servings or 4 }};
-var currentServings = baseServings;
-var displayEl = document.getElementById('servings-display');
-var btnMinus = document.getElementById('btn-minus');
-var btnPlus = document.getElementById('btn-plus');
+// Markers already read by this user
+let readMarkers = new Set();
+{% if is_authenticated %}
+fetch('/api/kitchen/markers-read/' + encodeURIComponent(RECIPE_SLUG))
+  .then(r => r.json())
+  .then(d => {
+    readMarkers = new Set(d.read || []);
+    // Apply read state to marker phrases
+    readMarkers.forEach(idx => {
+      const el = document.querySelector('[data-marker-idx="' + idx + '"]');
+      if (el) el.classList.add('r-marker--read');
+    });
+  }).catch(()=>{});
+{% endif %}
 
-document.querySelectorAll('#ing-list .ing-item').forEach(function(item) {
-  var amountEl = item.querySelector('.ing-amount');
-  if (!amountEl) return;
-  var base = item.getAttribute('data-base-count');
-  if (!base) return;
-  var unit = amountEl.textContent.trim().replace(base, '').trim();
-  item.setAttribute('data-unit', unit);
-});
+// ── Gold-star marker tap ─────────────────────────────────────
+function toggleMarker(idx, el) {
+  if (!IS_AUTHENTICATED) {
+    openPeek('marker', null, 'kitchen');
+    return;
+  }
+  if (!userMeetsRequirement('kitchen')) {
+    const preview = el ? (el.closest('.r-step-body') || el).textContent.trim().slice(0, 120) : '';
+    openPeek('marker', preview, 'kitchen');
+    return;
+  }
 
-function updateAmounts() {
-  if (!displayEl) return;
-  displayEl.textContent = currentServings;
-  var ratio = currentServings / baseServings;
-  document.querySelectorAll('#ing-list .ing-item').forEach(function(item) {
-    var base = item.getAttribute('data-base-count');
-    var amountEl = item.querySelector('.ing-amount');
-    if (!amountEl || !base) return;
-    var num = parseFloat(base);
-    if (isNaN(num)) return;
-    var unit = item.getAttribute('data-unit') || '';
-    var scaled = parseFloat((num * ratio).toFixed(2));
-    var formatted = scaled % 1 === 0 ? scaled.toString() : scaled.toString();
-    amountEl.textContent = unit ? (formatted + ' ' + unit) : formatted;
-  });
-}
-if (btnMinus) btnMinus.addEventListener('click', function() {
-  if (currentServings > 1) { currentServings--; updateAmounts(); }
-});
-if (btnPlus) btnPlus.addEventListener('click', function() {
-  if (currentServings < 20) { currentServings++; updateAmounts(); }
-});
+  const reveal = document.getElementById('reveal-' + idx);
+  if (!reveal) return;
+  reveal.classList.toggle('open');
+  el.classList.add('r-marker--read');
 
-// ── Pat's Rule supplier enrichment (non-blocking) ──────────────
-document.querySelectorAll('#ing-list .ing-item[data-product-name]').forEach(function(item) {
-  var name = item.getAttribute('data-product-name');
-  if (!name) return;
-  fetch('/api/ingredients/suppliers?product_name=' + encodeURIComponent(name))
-    .then(function(r) { return r.ok ? r.json() : null; })
-    .then(function(data) {
-      if (!data) return;
-      var supplier = data.origin || (data.providers && data.providers[0]);
-      if (!supplier) return;
-      var detail = item.querySelector('.ing-detail');
-      if (!detail) return;
-      var tag = document.createElement('span');
-      tag.className = 'ing-source';
-      var role = data.origin ? 'Origin' : 'Source';
-      var loc = [supplier.city, supplier.state_province].filter(Boolean).join(', ');
-      tag.textContent = role + ' · ' + supplier.name + (loc ? ' — ' + loc : '');
-      detail.appendChild(tag);
-    })
-    .catch(function() {});
-});
-
-// ── FIX 3: Technique note toggle ───────────────────────────────
-function toggleNote(btn) {
-  var step = btn.closest('.recipe-step');
-  var note = step ? step.querySelector('.technique-note') : null;
-  if (!note) return;
-  var isOpen = note.style.display !== 'none';
-  note.style.display = isOpen ? 'none' : 'block';
-  btn.textContent = isOpen ? 'Technique Note ↓' : 'Technique Note ↑';
-}
-
-// ── FIX 2: Safety panel ────────────────────────────────────────
-var safetyPanel = document.getElementById('safety-panel');
-var safetyBody = document.getElementById('safety-panel-body');
-var safetyTitle = document.getElementById('safety-panel-title');
-var safetyAllergens = document.getElementById('safety-panel-allergens');
-var allergenTags = document.getElementById('allergen-tags');
-var currentMode = null;
-
-function openSafetyPanel(mode) {
-  currentMode = mode;
-  var isHaccp = mode === 'haccp';
-
-  safetyTitle.textContent = isHaccp ? 'Food Safety / HACCP' : 'Kitchen Notes';
-  safetyBody.innerHTML = '<div class="safety-loading">Analysing recipe…</div>';
-  safetyAllergens.style.display = 'none';
-  allergenTags.innerHTML = '';
-
-  safetyPanel.classList.add('open');
-
-  var endpoint = isHaccp ? '/api/haccp' : '/api/kitchen-notes';
-  var payload = { title: RECIPE_TITLE, ingredients: RECIPE_INGREDIENTS, method_steps: RECIPE_STEPS };
-
-  var btn = document.getElementById(isHaccp ? 'btn-haccp' : 'btn-kitchen-notes');
-  if (btn) btn.disabled = true;
-
-  fetch(endpoint, {
+  // Persist read state
+  fetch('/api/kitchen/marker-read', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.error) {
-        safetyBody.textContent = 'Error: ' + data.error;
-        return;
-      }
-      var text = isHaccp ? (data.haccp || '') : (data.notes || '');
-      // Style section headers (lines ending with " —" or "—")
-      var formatted = text.replace(/^([A-Z][^\n]+?)\s*—/gm, function(m, label) {
-        return '◆ ' + label.trim() + ' —';
-      });
-      safetyBody.textContent = formatted;
-      if (isHaccp && data.allergens && data.allergens.length) {
-        allergenTags.innerHTML = data.allergens.map(function(a) {
-          return '<span class="allergen-tag">' + a + '</span>';
-        }).join('');
-        safetyAllergens.style.display = 'block';
-      }
-    })
-    .catch(function(err) {
-      safetyBody.textContent = 'Failed to load. Please try again.';
-    })
-    .finally(function() {
-      if (btn) btn.disabled = false;
-    });
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({slug: RECIPE_SLUG, marker_index: idx})
+  }).catch(()=>{});
 }
 
-function closeSafetyPanel() {
-  safetyPanel.classList.remove('open');
-  currentMode = null;
+// ── Tier check ───────────────────────────────────────────────
+function userMeetsRequirement(required) {
+  if (USER_ROLE === 'founder' || USER_ROLE === 'admin') {
+    return true;
+  }
+  if (!IS_AUTHENTICATED) return false;
+  const myLevel = TIER_HIERARCHY.indexOf(USER_TIER);
+  const reqLevel = TIER_HIERARCHY.indexOf(required);
+  return myLevel >= reqLevel;
 }
 
-// Close panel on Escape
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && safetyPanel.classList.contains('open')) closeSafetyPanel();
-});
-</script>
+// ── Action row ───────────────────────────────────────────────
+const ACTION_ENDPOINTS = {
+  'haccp': '/api/haccp',
+  'notes': '/api/kitchen-notes',
+  'costing': '/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG),
+  'scale': null,
+  'pour-cost': '/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG),
+};
 
-<!-- ── Photo Panel ─────────────────────────────────────────────── -->
-<div class="photo-panel" id="photoPanel" style="display:none">
-  <div class="photo-panel-inner">
-    <div class="pp-header">
-      <span class="pp-label">CHANGE PHOTO</span>
-      <button class="pp-close" onclick="document.getElementById('photoPanel').style.display='none'">✕</button>
-    </div>
+function handleAction(action, requiredTier) {
+  if (!IS_AUTHENTICATED) {
+    window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
+  if (!userMeetsRequirement(requiredTier)) {
+    openPeek(action, null, requiredTier);
+    return;
+  }
+  if (action === 'scale') {
+    openScaleModal();
+    return;
+  }
+  const endpoint = ACTION_ENDPOINTS[action];
+  if (!endpoint) return;
+  // Open appropriate modal based on action
+  if (action === 'notes') openKitchenNotesCard();
+  else if (action === 'costing' || action === 'pour-cost') openCostingModal();
+  else if (action === 'haccp') openHaccpBrief();
+}
 
-    <div class="pp-option">
-      <div class="pp-option-title">Generate with AI</div>
-      <div class="pp-option-desc">Flux creates a dark editorial photo matched to this recipe. Takes about 10 seconds.</div>
-      <button class="pp-btn" id="genBtn" onclick="ppGenerate()">Generate →</button>
-      <div class="pp-generating" id="ppGenerating" style="display:none">
-        <span class="pp-spinner">◌</span> Generating...
-      </div>
-    </div>
+// ── Pairing block ────────────────────────────────────────────
+function togglePairings() {
+  const expanded = document.getElementById('r-pairings-expanded');
+  if (!expanded) return;
+  expanded.classList.toggle('open');
+}
 
-    <div class="pp-divider">— or —</div>
+function handlePairingTap(idx) {
+  // Navigate to pairing target if we can determine it
+  // For now: no-op (expands inline per spec §12.5 two-click rule)
+}
 
-    <div class="pp-option">
-      <div class="pp-option-title">Use your own photo</div>
-      <div class="pp-option-desc">Paste any image URL from the web.</div>
-      <div class="pp-url-row">
-        <input type="url" id="ppUrlInput" class="pp-url-input" placeholder="https://..." autocomplete="off">
-        <button class="pp-btn" onclick="ppPreviewUrl()">Preview</button>
-      </div>
-    </div>
+// ── Supplier panel ───────────────────────────────────────────
+const RECIPE_SUPPLIERS = {{ recipe_suppliers | tojson }};
+// Detected/overridden user location (ISO region code or "global")
+// Override via ?loc=CA-BC for testing
+const USER_LOCATION = {{ user_location | tojson }};
 
-    <div class="pp-preview" id="ppPreview" style="display:none">
-      <img id="ppPreviewImg" src="" alt="Preview">
-      <div class="pp-preview-actions">
-        <button class="pp-keep" onclick="ppKeep()">Use this photo ✓</button>
-        <button class="pp-discard" onclick="ppDiscard()">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
+function expandSuppliers() {
+  document.querySelectorAll('.r-supplier-extra').forEach(el => { el.style.display = ''; });
+  const btn = document.getElementById('suppliers-expand-btn');
+  if (btn) btn.style.display = 'none';
+}
 
-<script>
+// ── Supplier accordion ───────────────────────────────────────────
 (function(){
-  var _slug = '{{ recipe.slug }}';
-  var _pendingUrl = null;
-  var _fromGenerate = false;
+  'use strict';
+  document.addEventListener('click', function(e) {
+    var row = e.target.closest('.r-supplier-row');
+    if (!row) return;
+    if (e.target.closest('.r-supplier-link')) return;
+    var isOpen = row.classList.toggle('is-open');
+    row.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+})();
 
-  window.ppGenerate = function(){
-    var btn = document.getElementById('genBtn');
-    var gen = document.getElementById('ppGenerating');
-    var preview = document.getElementById('ppPreview');
-    btn.style.display = 'none';
-    gen.style.display = 'block';
-    preview.style.display = 'none';
-    _fromGenerate = true;
+function openSupplierPanel(supplierName) {
+  const s = RECIPE_SUPPLIERS.find(r => r.name === supplierName);
+  if (!s) return;
+  populateSupplierPanel(s);
+}
 
-    fetch('/api/recipe/' + _slug + '/generate-image', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({})
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      gen.style.display = 'none';
-      btn.style.display = 'inline-block';
-      if(d.error){ alert('Generation failed: ' + d.error); return; }
-      _pendingUrl = d.image_url;
-      document.getElementById('ppPreviewImg').src = d.image_url;
-      preview.style.display = 'block';
-    })
-    .catch(function(){
-      gen.style.display = 'none';
-      btn.style.display = 'inline-block';
-      alert('Something went wrong. Please try again.');
-    });
-  };
+function openSupplierPanelFull(supplierId) {
+  const s = RECIPE_SUPPLIERS.find(r => String(r.id) === String(supplierId));
+  if (!s) return;
+  populateSupplierPanel(s);
+}
 
-  window.ppPreviewUrl = function(){
-    var url = document.getElementById('ppUrlInput').value.trim();
-    if(!url || !url.startsWith('http')){ alert('Please enter a valid URL'); return; }
-    _fromGenerate = false;
-    _pendingUrl = url;
-    document.getElementById('ppPreviewImg').src = url;
-    document.getElementById('ppPreview').style.display = 'block';
-  };
+function populateSupplierPanel(s) {
+  document.getElementById('sp-name').textContent = s.name || '';
+  document.getElementById('sp-loc').textContent =
+    [s.city, s.state_province, s.country].filter(Boolean).join(', ');
+  document.getElementById('sp-credit').textContent = s.products && s.products.length
+    ? s.products[0].desc || '' : '';
+  const ul = document.getElementById('sp-products');
+  ul.innerHTML = '';
+  (s.products || []).forEach(p => {
+    const li = document.createElement('li');
+    li.className = 'r-supplier-product';
+    li.textContent = p.name || '';
+    ul.appendChild(li);
+  });
+  document.getElementById('sp-footer').innerHTML =
+    s.website ? 'Visit <a href="' + s.website + '" target="_blank" rel="noopener">' + s.website + '</a>' : '';
+  document.getElementById('supplier-backdrop').classList.add('open');
+  document.getElementById('supplier-sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
 
-  window.ppKeep = function(){
-    if(!_pendingUrl) return;
-    if(_fromGenerate){
-      ppApplyHero(_pendingUrl);
-      document.getElementById('photoPanel').style.display = 'none';
+function closeSupplierPanel() {
+  document.getElementById('supplier-backdrop').classList.remove('open');
+  document.getElementById('supplier-sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Ingredient panel (simplified) ───────────────────────────
+function openIngredientPanel(ingredientName) {
+  const s = RECIPE_SUPPLIERS.find(r =>
+    r.products && r.products.some(p =>
+      p.name && p.name.toLowerCase().includes(ingredientName.toLowerCase())
+    )
+  );
+  if (s) { populateSupplierPanel(s); }
+}
+
+// ── Content peek panel ───────────────────────────────────────
+const PEEK_CONTENT = {
+  'haccp': {
+    title: 'HACCP safety plan — Profession plan feature',
+    desc: 'A complete hazard analysis built from this recipe — temperature control windows, cross-contamination checkpoints, and critical control points formatted for EHO and FDA inspection. Available on the Profession plan.',
+    preview: 'Step 1 — Receiving: Verify protein delivery temp ≤3°C. Reject if packaging compromised.\nStep 2 — Prep: Separate raw proteins from ready-to-eat on dedicated colour-coded boards.\nStep 3 — Cook: Internal temp 75°C sustained 15s. Probe centre of thickest part…',
+    cta: 'Open The Profession',
+  },
+  'notes': {
+    title: 'Your private kitchen notebook, attached to this recipe',
+    desc: 'Add mise en place timings, sourcing notes, plating reminders, service margin adjustments. Synced across devices, private to you.',
+    preview: 'Mise en place: Butter compound — day before. Reduce stock — 2 hrs ahead.\nService note: Rest 6 min covered, slice against grain.\nSourcing: Côte de Boeuf from Hills Foods, min 28-day dry-age…',
+    cta: 'Open The Kitchen',
+  },
+  'costing': {
+    title: 'Live food cost, margin, and yield analysis',
+    desc: 'Every ingredient priced against your supplier network. Adjust portion size, see margin move in real time. Export a costing sheet for your accounts.',
+    preview: 'Ingredient cost: £4.82 per portion\nGP at £28 menu price: 82.8%\nHighest cost line: Côte de Boeuf 220g — £3.10 (64%)\nYield loss factored: 18% trim…',
+    cta: 'Open The Kitchen',
+  },
+  'scale': {
+    title: 'Scale this recipe for any cover count',
+    desc: 'From a dinner for four to a banquet for four hundred — every quantity recalculated, with yield warnings on ingredients that don\'t scale linearly.',
+    preview: 'Original: 4 portions → Scale to: 48\nButter sauce: 80g → 896g (emulsion risk flag above 400g)\nRoasting time: +18min at full tray load\nSalt: scale by 0.85× (non-linear)…',
+    cta: 'Open The Library',
+  },
+  'pour-cost': {
+    title: 'Pour cost and margin analysis for this build',
+    desc: 'Spirit cost, modifier cost, dilution-adjusted ABV, recommended serve price. Updated against live supplier pricing.',
+    preview: 'Spirit cost: £1.40 (35ml @ £32/70cl)\nModifiers: £0.38\nTotal pour cost: £1.78\nAt £13 menu price: GP 86.3%…',
+    cta: 'Open The Kitchen',
+  },
+  'marker': {
+    title: 'The technique layer, unlocked',
+    desc: 'Every gold star on this recipe opens a chef\'s annotation — the "why" behind the step, the failure mode to avoid, the sensory cue that tells you it\'s working.',
+    preview: '★ Why this works: The Maillard reaction requires a dry surface — residual moisture creates steam and prevents crust formation. Pat protein completely dry and allow 10 min uncovered rest…',
+    cta: 'Open The Kitchen',
+  },
+};
+
+function openPeek(action, contextText, tier) {
+  const content = PEEK_CONTENT[action] || PEEK_CONTENT['marker'];
+  document.getElementById('peek-title').textContent = content.title;
+  document.getElementById('peek-desc').textContent = content.desc;
+  document.getElementById('peek-preview-inner').textContent = contextText || content.preview;
+  const ctaEl = document.getElementById('peek-cta');
+  ctaEl.textContent = content.cta;
+  ctaEl.href = '/pricing';
+  document.getElementById('peek-backdrop').classList.add('open');
+  document.getElementById('peek-sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePeek() {
+  document.getElementById('peek-backdrop').classList.remove('open');
+  document.getElementById('peek-sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('peek-sheet').classList.contains('open')) {
+    closePeek();
+  }
+});
+
+// ── Save / share ──────────────────────────────────────────────
+function toggleSave() {
+  const btn = document.getElementById('btn-save');
+  btn.classList.toggle('saved');
+  if (!IS_AUTHENTICATED) {
+    window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
+  // TODO: persist via API
+}
+
+function shareRecipe() {
+  if (navigator.share) {
+    navigator.share({ title: document.title, url: window.location.href }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(()=>{
+      alert('Link copied.');
+    }).catch(()=>{});
+  }
+}
+
+// ── Kitchen Notes Card ────────────────────────────────────────
+function openKitchenNotesCard() {
+  document.getElementById('kn-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadKitchenCard();
+}
+function closeNotesModal() {
+  document.getElementById('kn-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function loadKitchenCard() {
+  const body = document.getElementById('kn-card-body');
+  body.innerHTML = '';
+  ProvenanceProcessing.show({
+    messages: [
+      'Reviewing the recipe\u2026',
+      'Marking the safety notes\u2026',
+      'Setting the card\u2026'
+    ]
+  });
+  try {
+    const r = await fetch('/api/kitchen-notes/' + encodeURIComponent(RECIPE_SLUG));
+    const data = await r.json();
+    if (data.error) {
+      body.innerHTML = '<div class="kn-loading">' + _knEsc(data.error) + '</div>';
       return;
     }
-    fetch('/api/recipe/' + _slug + '/upload-image', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({image_url: _pendingUrl})
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      if(d.saved){ ppApplyHero(_pendingUrl); }
-      document.getElementById('photoPanel').style.display = 'none';
-    });
-  };
-
-  window.ppDiscard = function(){
-    _pendingUrl = null;
-    document.getElementById('ppPreview').style.display = 'none';
-    document.getElementById('ppUrlInput').value = '';
-  };
-
-  function ppApplyHero(url){
-    var hero = document.querySelector('.hero-img');
-    if(hero && hero.tagName === 'IMG'){
-      hero.src = url;
-    } else if(hero){
-      hero.style.backgroundImage = 'url(' + url + ')';
-    } else {
-      var heroDiv = document.querySelector('.hero');
-      if(heroDiv){
-        var img = document.createElement('img');
-        img.className = 'hero-img';
-        img.src = url;
-        img.alt = '';
-        heroDiv.insertBefore(img, heroDiv.firstChild);
-      }
-    }
+    renderKitchenCard(data);
+  } catch (e) {
+    body.innerHTML = '<div class="kn-loading">Could not load safety card.</div>';
+  } finally {
+    ProvenanceProcessing.hide();
   }
+}
+
+function renderKitchenCard(d) {
+  const body = document.getElementById('kn-card-body');
+  const sections = [
+    {key:'ccps',                label:'Critical Control Points', labelCls:'kn-ccp-label',   itemCls:'kn-ccp-item'},
+    {key:'temperatures',        label:'Temperature Windows',     labelCls:'kn-temp-label',  itemCls:'kn-temp-item'},
+    {key:'allergens',           label:'Allergens',               labelCls:'kn-allergen-label', pills:true},
+    {key:'cross_contamination', label:'Cross-contamination',     labelCls:'kn-xc-label',    itemCls:'kn-xc-item'},
+    {key:'shelf_life_signals',  label:'Shelf Life & Service',    labelCls:'kn-shelf-label', itemCls:'kn-shelf-item'},
+  ];
+  body.innerHTML = sections.map(s => {
+    const items = Array.isArray(d[s.key]) ? d[s.key] : [];
+    let content;
+    if (s.pills) {
+      content = items.length
+        ? `<div class="kn-allergen-section">${items.map(a => `<span class="kn-allergen-pill">${_knEsc(a)}</span>`).join('')}</div>`
+        : `<span class="kn-empty-section">None identified</span>`;
+    } else {
+      content = items.length
+        ? `<ul class="kn-items">${items.map(i => `<li class="kn-item ${s.itemCls}">${_knEsc(i)}</li>`).join('')}</ul>`
+        : `<span class="kn-empty-section">None identified</span>`;
+    }
+    return `<div class="kn-section"><div class="kn-section-label ${s.labelCls}">${s.label}</div>${content}</div>`;
+  }).join('');
+}
+
+function _knEsc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── HACCP Brief ───────────────────────────────────────────────
+let _haccpBrief = null;
+let _haccpSavedId = null;
+let _haccpVersion = null;
+let _haccpSigned = false;
+let _haccpSignedAt = null;
+let _haccpPicName = null;
+
+function _haccpTodayISO() { return new Date().toISOString().slice(0, 10); }
+function _haccpSixMonthsISO() { const d = new Date(); d.setMonth(d.getMonth() + 6); return d.toISOString().slice(0, 10); }
+function _haccpFmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso.includes('T') ? iso : iso + 'T00:00:00');
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+}
+
+function openHaccpBrief() {
+  document.getElementById('haccp-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  _haccpSetBody('<div class="kn-loading">Loading HACCP brief\u2026</div>');
+  _haccpUpdateHeaderBtns(false);
+  fetch('/api/haccp/latest/' + encodeURIComponent(RECIPE_SLUG))
+    .then(r => r.json())
+    .then(data => {
+      if (data.exists) {
+        _haccpBrief = data.brief; _haccpSavedId = data.id; _haccpVersion = data.version;
+        _haccpSigned = !!data.pic_signed_at; _haccpSignedAt = data.pic_signed_at; _haccpPicName = data.pic_name;
+        renderHaccpBrief(data.brief, data);
+      } else { _haccpGenerateFresh(); }
+    })
+    .catch(() => _haccpGenerateFresh());
+}
+
+function _haccpSetBody(html) { document.getElementById('haccp-card-body').innerHTML = html; }
+
+function _haccpCollect() {
+  const ingredients = [];
+  document.querySelectorAll('.r-ing-item').forEach(item => {
+    const name = (item.querySelector('.r-ing-name') || {}).innerText || '';
+    const amount = (item.querySelector('.r-ing-amount') || {}).innerText || '';
+    const line = [amount.trim(), name.trim()].filter(Boolean).join(' ');
+    if (line) ingredients.push(line);
+  });
+  const method_steps = [];
+  document.querySelectorAll('.r-step-body').forEach(el => { const t = el.innerText.trim(); if (t) method_steps.push(t); });
+  const title = ((document.querySelector('h1.r-hero-title') || {}).innerText || RECIPE_SLUG).trim();
+  return {ingredients, method_steps, title};
+}
+
+async function _haccpGenerateFresh() {
+  const {ingredients, method_steps, title} = _haccpCollect();
+  if (!ingredients.length && !method_steps.length) {
+    _haccpSetBody('<div class="kn-loading">No recipe data found on this page.</div>'); return;
+  }
+  _haccpSetBody('');
+  ProvenanceProcessing.show({
+    messages: [
+      'Reviewing the recipe\u2026',
+      'Charting the critical control points\u2026',
+      'Setting the brief\u2026'
+    ]
+  });
+  const ctrl = new AbortController();
+  const timeout = setTimeout(() => ctrl.abort(), 185000);
+  try {
+    const r = await fetch('/api/haccp', {
+      method: 'POST', headers: {'Content-Type': 'application/json'}, signal: ctrl.signal,
+      body: JSON.stringify({title, ingredients, method_steps, allergen_region: 'CA'})
+    });
+    clearTimeout(timeout);
+    if (r.status === 502) { const d = await r.json(); throw {status:502,data:d}; }
+    if (!r.ok) throw {status:r.status};
+    const data = await r.json();
+    _haccpBrief = data; _haccpSavedId = null; _haccpVersion = null;
+    _haccpSigned = false; _haccpSignedAt = null; _haccpPicName = null;
+    renderHaccpBrief(data, null);
+  } catch (err) {
+    clearTimeout(timeout);
+    if (err && err.name === 'AbortError') _haccpSetBody('<div class="kn-loading">HACCP generation is taking longer than expected. Refresh and try again.</div>');
+    else if (err && err.status === 502) _haccpSetBody('<div class="kn-loading">We could not generate a complete HACCP plan for this recipe. The recipe may be missing structural detail. Try again, or add more detail to the method.</div>');
+    else _haccpSetBody('<div class="kn-loading">Something went wrong. Try again in a moment.</div>');
+  } finally {
+    ProvenanceProcessing.hide();
+  }
+}
+
+function haccpGenerateNew() {
+  _haccpSavedId = null; _haccpVersion = null; _haccpSigned = false;
+  _haccpSignedAt = null; _haccpPicName = null;
+  _haccpGenerateFresh();
+}
+
+function closeHaccpModal() {
+  document.getElementById('haccp-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function _haccpUpdateHeaderBtns(isSigned) {
+  const c = document.getElementById('haccp-header-btns');
+  if (!c) return;
+  if (isSigned) {
+    c.innerHTML = `<button class="kn-print-btn haccp-btn-new" onclick="haccpGenerateNew()">Generate new version</button>
+      <button class="kn-print-btn" onclick="window.print()">Print</button>`;
+  } else {
+    c.innerHTML = `<button class="kn-print-btn haccp-btn-sign" onclick="haccpSign()">Sign &amp; finalise</button>
+      <button class="kn-print-btn" onclick="window.print()">Print</button>`;
+  }
+}
+
+function renderHaccpBrief(d, savedMeta) {
+  const isSigned = !!(savedMeta && savedMeta.pic_signed_at);
+  const edits = (savedMeta && savedMeta.edits) || {};
+  const today = _haccpTodayISO();
+  const vLabel = savedMeta ? ('Version\u00a0' + savedMeta.version) : 'Draft';
+  const genDate = savedMeta ? (_haccpFmtDate(savedMeta.saved_at) || 'Not yet drafted') : _haccpFmtDate(today);
+  _haccpUpdateHeaderBtns(isSigned);
+
+  let html = '';
+
+  // Draft watermark (print-only, CSS-driven)
+  if (!isSigned) html += '<div class="haccp-watermark-draft" aria-hidden="true">DRAFT \u2014 UNSIGNED</div>';
+
+  // A. Document control header
+  html += `<div class="kn-section haccp-doc-ctrl">
+    <div class="haccp-doc-ctrl-top">
+      <span class="haccp-version-badge ${isSigned ? 'haccp-version-signed' : 'haccp-version-draft'}">${isSigned ? vLabel + '\u00a0\u2014\u00a0SIGNED' : vLabel + '\u00a0\u2014\u00a0UNSIGNED DRAFT'}</span>
+    </div>
+    <div class="haccp-doc-ctrl-grid">
+      <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Generated</span><span class="haccp-doc-ctrl-value">${_knEsc(genDate)}</span></div>
+      <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Effective date</span>
+        ${isSigned ? `<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.effective_date || today))}</span>` : `<input type="date" class="haccp-input" id="haccp-eff-date" value="${edits.effective_date || today}">`}
+      </div>
+      <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Next review</span>
+        ${isSigned ? `<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.next_review_date || _haccpSixMonthsISO()))}</span>` : `<input type="date" class="haccp-input" id="haccp-review-date" value="${edits.next_review_date || _haccpSixMonthsISO()}">`}
+      </div>
+      ${isSigned ? `<div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at) || '—')}</span></div>` : ''}
+    </div>
+  </div>`;
+
+  // B. Equipment calibration
+  html += `<div class="kn-section">
+    <div class="kn-section-label" style="color:#1a3a5c">Equipment Calibration Verification</div>
+    <div class="haccp-doc-ctrl-grid">
+      <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-date">Thermometers calibrated</label>
+        ${isSigned ? `<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.calibration_date || '') || 'Not yet calibrated')}</span>` : `<input type="date" class="haccp-input" id="haccp-cal-date" value="${edits.calibration_date || ''}">`}
+      </div>
+      <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-by">Calibrated by</label>
+        ${isSigned ? `<span class="haccp-doc-ctrl-value">${_knEsc(edits.calibrated_by || '')}</span>` : `<input type="text" class="haccp-input" id="haccp-cal-by" placeholder="Full name" value="${_knEsc(edits.calibrated_by || '')}">`}
+      </div>
+    </div>
+  </div>`;
+
+  // Allergens
+  const allergens = d.allergens || {};
+  const detected = Array.isArray(allergens.detected) ? allergens.detected : [];
+  html += `<div class="kn-section">
+    <div class="kn-section-label kn-allergen-label">Allergens \u2014 ${_knEsc(allergens.region_label || allergens.region || '')}</div>
+    ${detected.length ? `<div class="kn-allergen-section">${detected.map(a => `<span class="kn-allergen-pill">${_knEsc(a)}</span>`).join('')}</div>` : '<span class="kn-empty-section">None identified</span>'}
+    ${allergens.rationale ? `<div class="haccp-rationale">${_knEsc(allergens.rationale)}</div>` : ''}
+  </div>`;
+
+  // Process flow
+  const flow = Array.isArray(d.process_flow) ? d.process_flow : [];
+  if (flow.length) html += `<div class="kn-section">
+    <div class="kn-section-label" style="color:#1a5276">Process Flow</div>
+    <div class="haccp-flow">${flow.map((s,i) => `<span class="haccp-flow-step">${i+1}. ${_knEsc(s.label||s.id||'')}</span>${i<flow.length-1?'<span class="haccp-flow-arrow">\u2192</span>':''}`).join('')}</div>
+  </div>`;
+
+  // Receiving criteria
+  const receiving = Array.isArray(d.receiving_criteria) ? d.receiving_criteria : [];
+  if (receiving.length) html += `<div class="kn-section">
+    <div class="kn-section-label" style="color:#145a32">Receiving Criteria</div>
+    <div class="haccp-receiving">${receiving.map(r => `<div class="haccp-receiving-item">
+      <div class="haccp-receiving-ingredient">${_knEsc(r.ingredient||'')}${r.delivery_temp_max_c!=null?` \u2014 max ${r.delivery_temp_max_c}\u00b0C`:''}</div>
+      <div class="haccp-receiving-detail"><strong>Accept:</strong> ${_knEsc(r.accept_criteria||'')}</div>
+      <div class="haccp-receiving-detail haccp-reject"><strong>Reject:</strong> ${_knEsc(r.reject_criteria||'')}</div>
+    </div>`).join('')}</div>
+  </div>`;
+
+  // CCP Table
+  const ccps = Array.isArray(d.ccp_table) ? d.ccp_table : [];
+  if (ccps.length) html += `<div class="kn-section">
+    <div class="kn-section-label kn-ccp-label">Critical Control Points</div>
+    <div class="haccp-table-wrap"><table class="haccp-table">
+      <thead><tr><th>Step</th><th>Hazard</th><th>Critical Limit</th><th>Monitoring</th><th>Corrective Action</th><th>Records</th></tr></thead>
+      <tbody>${ccps.map(ccp => `<tr>
+        <td><strong>${_knEsc(ccp.step||'')}</strong><br><span class="haccp-hazard-cat">${_knEsc(ccp.hazard_category||'')}</span></td>
+        <td>${_knEsc(ccp.hazard||ccp.ingredient_or_process||'')}</td>
+        <td class="haccp-limit">${_knEsc(ccp.critical_limit||'')}</td>
+        <td>${_knEsc(ccp.monitoring||'')}</td>
+        <td>${_knEsc(ccp.corrective_action||'')}</td>
+        <td>${_knEsc(ccp.records||'')}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+  </div>`;
+
+  // Non-CCP steps
+  const nonCcps = Array.isArray(d.non_ccp_steps) ? d.non_ccp_steps : [];
+  if (nonCcps.length) html += `<div class="kn-section">
+    <div class="kn-section-label" style="color:#5d6d7e">Non-CCP Steps</div>
+    <ul class="kn-items">${nonCcps.map(s => `<li class="kn-item kn-xc-item"><strong>${_knEsc(s.step||'')}</strong> \u2014 ${_knEsc(s.rationale||'')}</li>`).join('')}</ul>
+  </div>`;
+
+  // C. Allergen communication statement
+  const defaultAllergenComm = 'Allergen status is communicated to all kitchen staff at briefing prior to service. Front-of-house staff are briefed on allergen presence in this dish. Customers with allergies are notified verbally of cross-contamination risk and offered alternatives.';
+  html += `<div class="kn-section">
+    <div class="kn-section-label kn-allergen-label">Allergen Communication Statement</div>
+    ${isSigned ? `<div class="haccp-text-display">${_knEsc(edits.allergen_communication || defaultAllergenComm)}</div>`
+      : `<textarea class="haccp-textarea" id="haccp-allergen-comm" rows="3">${_knEsc(edits.allergen_communication || defaultAllergenComm)}</textarea>`}
+  </div>`;
+
+  // D. Record retention
+  html += `<div class="kn-section">
+    <div class="kn-section-label" style="color:#5d6d7e">Record Retention</div>
+    <div class="haccp-text-display">All HACCP records, monitoring logs, and corrective action documentation are retained for a minimum of 24 months from date of generation, per Safe Food for Canadians Regulations.</div>
+  </div>`;
+
+  // E. Sign-off block
+  if (isSigned) {
+    html += `<div class="kn-section">
+      <div class="kn-section-label kn-ccp-label">Sign-off \u2014 Person in Charge</div>
+      <div class="haccp-signoff-grid">
+        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">PIC Name</span><span class="haccp-doc-ctrl-value">${_knEsc(savedMeta.pic_name||'')}</span></div>
+        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Role</span><span class="haccp-doc-ctrl-value">${_knEsc(edits.signoff_role||'')}</span></div>
+        <div class="haccp-doc-ctrl-field haccp-sig-field"><span class="haccp-doc-ctrl-label">Signature</span><span class="haccp-signature-display">${_knEsc(edits.signature_text||savedMeta.pic_name||'')}</span></div>
+        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Date signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at) || '—')}</span></div>
+      </div>
+    </div>`;
+  } else {
+    html += `<div class="kn-section">
+      <div class="kn-section-label kn-ccp-label">Sign-off \u2014 Person in Charge</div>
+      <div class="haccp-signoff-note">Complete all fields to enable signing. Typed name acts as digital signature.</div>
+      <div class="haccp-signoff-grid">
+        <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-pic-name">PIC Name</label><input type="text" class="haccp-input" id="haccp-pic-name" placeholder="Full name" value="${_knEsc(edits.pic_name||'')}"></div>
+        <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-role">Role</label>
+          <select class="haccp-input" id="haccp-role">${['PIC','Executive Chef','Sous Chef','Kitchen Manager','Owner-Operator','Other'].map(r=>`<option value="${r}" ${(edits.signoff_role||'PIC')===r?'selected':''}>${r}</option>`).join('')}</select>
+        </div>
+        <div class="haccp-doc-ctrl-field haccp-sig-field"><label class="haccp-doc-ctrl-label" for="haccp-sig">Signature (type full name)</label><input type="text" class="haccp-input haccp-sig-input" id="haccp-sig" placeholder="Type full name as signature" value="${_knEsc(edits.signature_text||'')}"></div>
+        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Date signed</span><span class="haccp-doc-ctrl-value">${_haccpFmtDate(today)}</span></div>
+      </div>
+      <div class="haccp-validation-msg" id="haccp-val-msg">Please fill in: calibration date, calibrated by, PIC name, and signature.</div>
+    </div>`;
+  }
+
+  // Footer
+  if (d.footer_note) html += `<div class="kn-section"><div class="haccp-footer">${_knEsc(d.footer_note)}</div></div>`;
+
+  document.getElementById('haccp-card-body').innerHTML = html;
+}
+
+function haccpSign() {
+  const get = id => (document.getElementById(id) || {});
+  const calDate = get('haccp-cal-date').value || '';
+  const calBy = (get('haccp-cal-by').value || '').trim();
+  const picName = (get('haccp-pic-name').value || '').trim();
+  const role = get('haccp-role').value || 'PIC';
+  const sig = (get('haccp-sig').value || '').trim();
+  const effDate = get('haccp-eff-date').value || _haccpTodayISO();
+  const reviewDate = get('haccp-review-date').value || _haccpSixMonthsISO();
+  const allergenComm = (get('haccp-allergen-comm').value || '').trim();
+  const msg = document.getElementById('haccp-val-msg');
+  const missing = [];
+  if (!calDate) missing.push('thermometer calibration date');
+  if (!calBy)   missing.push('calibrated by name');
+  if (!picName) missing.push('PIC name');
+  if (!sig)     missing.push('signature');
+  if (missing.length) {
+    if (msg) {
+      msg.textContent = 'Please fill in: ' + missing.join(', ') + '.';
+      msg.style.display = 'block';
+    }
+    const firstMissingId = !calDate ? 'haccp-cal-date'
+                         : !calBy   ? 'haccp-cal-by'
+                         : !picName ? 'haccp-pic-name'
+                         : 'haccp-sig';
+    const el = document.getElementById(firstMissingId);
+    if (el) { el.scrollIntoView({behavior:'smooth', block:'center'}); el.focus(); }
+    return;
+  }
+  if (msg) msg.style.display = 'none';
+  const edits = {calibration_date:calDate, calibrated_by:calBy, signoff_role:role,
+    signature_text:sig, pic_name:picName, allergen_communication:allergenComm,
+    effective_date:effDate, next_review_date:reviewDate};
+  _haccpSetBody('<div class="kn-loading">Saving and signing\u2026</div>');
+  fetch('/api/haccp/save', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({recipe_slug:RECIPE_SLUG, brief:_haccpBrief, edits})
+  })
+  .then(r => r.json())
+  .then(saved => {
+    if (saved.error) throw new Error(saved.error);
+    _haccpSavedId = saved.id; _haccpVersion = saved.version;
+    return fetch('/api/haccp/sign', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id:saved.id, pic_name:picName})
+    });
+  })
+  .then(r => r.json())
+  .then(signed => {
+    if (signed.error) throw new Error(signed.error);
+    _haccpSigned = true; _haccpSignedAt = signed.pic_signed_at; _haccpPicName = picName;
+    renderHaccpBrief(_haccpBrief, {
+      id:_haccpSavedId, version:_haccpVersion, pic_name:picName,
+      pic_signed_at:signed.pic_signed_at, saved_at:signed.pic_signed_at, edits
+    });
+  })
+  .catch(err => _haccpSetBody('<div class="kn-loading">Sign failed \u2014 ' + _knEsc((err||{}).message||'Try again.') + '</div>'));
+}
+
+// ── Costing Modal ─────────────────────────────────────────────
+let _costingActiveTab = 'cost';
+let _pendingInvoice = null;   // holds scan result awaiting review
+
+function openCostingModal() {
+  document.getElementById('costing-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  costingTab('cost');
+}
+function closeCostingModal() {
+  document.getElementById('costing-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('haccp-overlay').classList.contains('open')) closeHaccpModal();
+    else if (document.getElementById('kn-overlay').classList.contains('open')) closeNotesModal();
+    else closeCostingModal();
+  }
+});
+
+function costingTab(tab) {
+  _costingActiveTab = tab;
+  ['cost','invoices','pricing'].forEach(t => {
+    document.getElementById('c-tab-' + t).style.display = (t === tab) ? '' : 'none';
+    const btn = document.querySelector('.c-tab[data-tab="' + t + '"]');
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+  if (tab === 'cost') loadCostBreakdown();
+  else if (tab === 'invoices') { _initInvoiceDZ(); loadInvoicesList(); }
+  else if (tab === 'pricing') loadPricingTable();
+}
+
+// ── Tab 1: Cost breakdown ─────────────────────────────────────
+async function loadCostBreakdown() {
+  const body = document.getElementById('c-cost-body');
+  body.innerHTML = '';
+  ProvenanceProcessing.show({
+    messages: ['Reading the ingredients…', 'Pricing the line items…', 'Tallying the plate cost…']
+  });
+  try {
+    const r = await fetch('/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG));
+    const data = await r.json();
+    renderCostBreakdown(data);
+  } catch (e) {
+    body.innerHTML = '<div class="c-empty">Could not load cost data.</div>';
+  } finally {
+    ProvenanceProcessing.hide();
+  }
+}
+
+function renderCostBreakdown(data) {
+  const body = document.getElementById('c-cost-body');
+  const breakdown = data.breakdown || [];
+  const priced = breakdown.filter(r => r.unit_price !== null && r.unit_price !== undefined);
+  const total = breakdown.length;
+  const pct = total ? Math.round(priced.length / total * 100) : 0;
+
+  const warnCount = data.unit_warning_count || 0;
+  const warnItems = data.unit_warning_items || [];
+  const verified = data.priced_count || 0;
+
+  let html = '';
+  if ((pct < 60 || warnCount > 0) && total > 0) {
+    const unverifiedNames = [...(data.unpriced_items || []), ...warnItems];
+    const nameList = unverifiedNames.slice(0, 4).map(n => `<em>${_esc(n)}</em>`).join(', ');
+    const more = unverifiedNames.length > 4 ? ` +${unverifiedNames.length - 4} more` : '';
+    html += `<div class="c-banner">
+      Cost is partial — ${verified} of ${total} ingredients have verified pricing.
+      ${unverifiedNames.length ? `Add prices for ${nameList}${more} to complete.` : ''}
+      <a onclick="costingTab('invoices')"> Scan an invoice</a> or
+      <a onclick="openManualPrice()"> set prices manually</a>.
+    </div>`;
+  }
+
+  html += `<table class="c-ing-table">
+    <thead><tr>
+      <th style="width:40%">Ingredient</th>
+      <th style="width:20%">Qty</th>
+      <th style="width:25%">Supplier / Price</th>
+      <th style="width:15%">Cost</th>
+    </tr></thead><tbody>`;
+
+  for (const r of breakdown) {
+    const hasPrice = r.unit_price !== null && r.unit_price !== undefined;
+    const needsUnitInfo = r.cost_warning === 'needs_unit_info';
+    const warn = (!needsUnitInfo && r.unit_estimate) ? `<div class="c-unit-warn">⚠ Unit estimate</div>` : '';
+    html += `<tr>
+      <td><div class="c-ing-name">${_esc(r.ingredient)}</div>${warn}</td>
+      <td><div class="c-ing-meta">${r.quantity} ${r.unit || ''}</div></td>
+      <td>`;
+    if (needsUnitInfo) {
+      html += `<div class="c-ing-supplier">${_esc(r.supplier || '')}${r.price_unit ? ` · ${r.currency||'CAD'}${r.unit_price?.toFixed(2)}/${r.price_unit}` : ''}</div>
+               <div class="c-unit-warn" style="font-style:italic;color:#9ca3af;font-size:0.8em">${_esc(r.cost_warning_message||'Pack size unknown')} <a onclick="openManualPrice('${_esc(r.ingredient)}')" style="color:#60a5fa;text-decoration:underline;cursor:pointer">Edit price</a></div>`;
+    } else if (hasPrice) {
+      html += `<div class="c-ing-supplier">${_esc(r.supplier || '')}${r.price_unit ? ` · ${r.currency||'CAD'}${r.unit_price?.toFixed(2)}/${r.price_unit}` : ''}</div>`;
+    } else {
+      html += `<div class="c-ing-nodata">No pricing yet — <a onclick="costingTab('invoices')">scan invoice</a></div>`;
+    }
+    html += `</td>
+      <td>${(hasPrice && !needsUnitInfo) ? `<strong>${(r.currency||'CAD')} ${(r.line_cost||0).toFixed(2)}</strong>` : '—'}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+
+  const totalCost = data.total_cost || 0;
+  const portions = data.portions || 4;
+  const cpp = data.cost_per_portion || 0;
+  const partialNote = warnCount > 0
+    ? `<div class="c-partial-note" style="font-size:0.8em;color:#9ca3af;margin-top:4px">Partial — ${verified} of ${total} ingredients verified</div>`
+    : '';
+  html += `<div class="c-totals">
+    <div class="c-totals-row">
+      <span class="c-totals-label">Total ingredient cost</span>
+      <span class="c-totals-value">CAD ${totalCost.toFixed(2)}</span>
+    </div>${partialNote}
+    <div class="c-totals-row">
+      <span class="c-totals-label">Cost per portion (${portions})</span>
+      <span class="c-totals-value">CAD ${cpp.toFixed(2)}</span>
+    </div>
+    <div class="c-menu-price-row">
+      <label for="c-menu-price">Menu price</label>
+      <input id="c-menu-price" class="c-menu-input" type="number" step="0.01" min="0"
+             value="${data.menu_price || ''}" placeholder="0.00"
+             oninput="updateGP(${cpp})">
+      <span class="c-gp-display" id="c-gp-display">${data.actual_food_cost_pct !== null ? `${data.actual_food_cost_pct}% food cost` : ''}</span>
+    </div>
+  </div>
+  <div class="c-actions">
+    <button class="c-btn c-btn-primary" onclick="exportCostPDF()">Export costing sheet</button>
+    <button class="c-btn" onclick="saveMenuPrice()">Save menu price</button>
+    <button class="c-btn" onclick="loadCostBreakdown()">Re-cost</button>
+    <span class="c-profession-note">Advanced costing — coming with The Profession</span>
+  </div>`;
+  body.innerHTML = html;
+}
+
+function updateGP(cpp) {
+  const mp = parseFloat(document.getElementById('c-menu-price').value) || 0;
+  const el = document.getElementById('c-gp-display');
+  if (mp > 0 && cpp > 0) {
+    const fc = (cpp / mp * 100).toFixed(1);
+    const gp = (100 - fc).toFixed(1);
+    el.textContent = `${fc}% food cost · ${gp}% GP`;
+  } else {
+    el.textContent = '';
+  }
+}
+
+function saveMenuPrice() {
+  const mp = parseFloat(document.getElementById('c-menu-price').value) || null;
+  fetch('/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG) + '/set-target', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({menu_price: mp, target_food_cost_pct: 30})
+  }).catch(()=>{});
+}
+
+function exportCostPDF() {
+  window.open('/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG) + '?format=pdf', '_blank');
+}
+
+// ── Tab 2: Invoices ───────────────────────────────────────────
+// ── Invoice upload — unified, multi-file, camera-primary ─────
+let _invoiceInput = null;
+let _invoiceQueue = [];
+
+function _ensureInvoiceInput() {
+  if (!_invoiceInput) {
+    _invoiceInput = document.createElement('input');
+    _invoiceInput.type = 'file';
+    _invoiceInput.accept = 'image/*,application/pdf';
+    _invoiceInput.setAttribute('capture', 'environment');
+    _invoiceInput.multiple = true;
+    _invoiceInput.style.display = 'none';
+    _invoiceInput.onchange = e => _addToInvoiceQueue(Array.from(e.target.files));
+    document.body.appendChild(_invoiceInput);
+  }
+}
+
+function _triggerInvoiceCapture() {
+  _ensureInvoiceInput();
+  _invoiceInput.value = '';
+  _invoiceInput.click();
+}
+
+function _addToInvoiceQueue(files) {
+  if (!files.length) return;
+  _invoiceQueue = _invoiceQueue.concat(files);
+  _renderQueueUI();
+}
+
+function _clearInvoiceQueue() {
+  _invoiceQueue = [];
+  _renderQueueUI();
+}
+
+function _renderQueueUI() {
+  const el = document.getElementById('c-inv-queue');
+  const label = document.getElementById('c-inv-queue-label');
+  if (!el) return;
+  if (!_invoiceQueue.length) { el.style.display = 'none'; return; }
+  const n = _invoiceQueue.length;
+  label.textContent = n === 1 ? '1 page queued' : `${n} pages queued`;
+  el.style.display = '';
+}
+
+function _processInvoiceQueue() {
+  if (!_invoiceQueue.length) return;
+  const files = _invoiceQueue.slice();
+  _invoiceQueue = [];
+  _renderQueueUI();
+  _uploadInvoiceFiles(files);
+}
+
+// Drop zone handlers
+function _dzEnter(e) {
+  e.preventDefault(); e.stopPropagation();
+  document.getElementById('c-inv-dropzone')?.classList.add('drag-over');
+}
+function _dzOver(e) {
+  e.preventDefault(); e.stopPropagation();
+  if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+}
+function _dzLeave(e) {
+  e.preventDefault(); e.stopPropagation();
+  const dz = document.getElementById('c-inv-dropzone');
+  if (dz && !dz.contains(e.relatedTarget)) dz.classList.remove('drag-over');
+}
+function _dzDrop(e) {
+  e.preventDefault(); e.stopPropagation();
+  document.getElementById('c-inv-dropzone')?.classList.remove('drag-over');
+  _addToInvoiceQueue(Array.from(e.dataTransfer.files));
+}
+
+// Initialise drop zone copy for mobile vs desktop
+function _initInvoiceDZ() {
+  const isMobile = navigator.maxTouchPoints > 0 || window.matchMedia('(pointer:coarse)').matches;
+  const mainEl = document.getElementById('c-dz-main');
+  const subEl = document.getElementById('c-dz-sub');
+  if (mainEl) mainEl.textContent = isMobile
+    ? 'Snap your first invoice'
+    : 'Drop your first invoice here';
+  if (subEl) subEl.textContent = isMobile
+    ? 'The camera opens when you tap below'
+    : 'Photo, scan, or PDF — any format works';
+}
+
+function _uploadInvoiceFiles(files) {
+  const scanArea = document.getElementById('c-inv-scanprogress');
+  const listArea = document.getElementById('c-inv-list');
+  const dz = document.getElementById('c-inv-dropzone');
+  scanArea.classList.add('active');
+  if (dz) dz.style.display = 'none';
+  listArea.style.display = 'none';
+
+  const fd = new FormData();
+  for (const f of files) fd.append('files[]', f);
+
+  fetch('/api/invoices/scan', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+      scanArea.classList.remove('active');
+      listArea.style.display = '';
+      if (data.error) { alert('Scan failed: ' + data.error); loadInvoicesList(); return; }
+      _pendingInvoice = data;
+      showInvoiceReview(data);
+    })
+    .catch(err => {
+      scanArea.classList.remove('active');
+      listArea.style.display = '';
+      alert('Upload failed: ' + err.message);
+      loadInvoicesList();
+    });
+}
+
+function showInvoiceReview(data) {
+  const listArea = document.getElementById('c-inv-list');
+  const lines = data.lines || [];
+  let html = `<div class="c-review-header">${_esc(data.supplier_name || 'Invoice')}</div>
+    <div class="c-review-meta">${data.invoice_date || ''} · ${lines.length} items · Total: ${data.currency||'CAD'} ${(data.invoice_total||0).toFixed ? (data.invoice_total||0).toFixed(2) : data.invoice_total || '—'}
+    ${data.auto_created_supplier ? ' · <em>New supplier created (unverified)</em>' : ''}</div>
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);padding-bottom:6px;border-bottom:0.5px solid var(--divider)">
+      Raw description &nbsp;&nbsp;&nbsp; Ingredient match &nbsp;&nbsp;&nbsp; Qty &nbsp; Price &nbsp; Conf.
+    </div>`;
+
+  for (const line of lines) {
+    const conf = line.match_confidence || 0;
+    const confLabel = conf >= 0.7 ? '✓' : conf >= 0.4 ? '~' : '?';
+    const confColor = conf >= 0.7 ? 'var(--gold)' : 'var(--text-muted)';
+    html += `<div class="c-line-row" data-line-id="${line.id}">
+      <div>
+        <div class="c-line-desc">${_esc(line.raw_description)}</div>
+        <input class="c-line-name-edit" value="${_esc(line.matched_ingredient_name || line.raw_description)}"
+               data-line="${line.id}" placeholder="Ingredient name for costing">
+      </div>
+      <div class="c-line-price">${line.quantity || ''} ${line.unit || ''}</div>
+      <div class="c-line-price">${line.unit_price !== null ? (data.currency||'CAD') + ' ' + (line.unit_price||0).toFixed(2) : '—'}</div>
+      <div><span class="c-confidence" style="color:${confColor}">${confLabel} ${Math.round(conf*100)}%</span></div>
+    </div>`;
+  }
+
+  html += `<div class="c-apply-bar">
+    <button class="c-btn" onclick="loadInvoicesList()">Cancel</button>
+    <button class="c-btn c-btn-primary" onclick="applyPendingInvoice()">Apply all to pricing ↗</button>
+  </div>`;
+  listArea.innerHTML = html;
+}
+
+function applyPendingInvoice() {
+  if (!_pendingInvoice) return;
+  const invoiceId = _pendingInvoice.invoice_id;
+  const lines = [];
+  document.querySelectorAll('.c-line-row').forEach(row => {
+    const lineId = row.dataset.lineId;
+    const input = row.querySelector('.c-line-name-edit');
+    const ingredientName = input ? input.value.trim() : '';
+    // Find price from _pendingInvoice.lines
+    const lineData = (_pendingInvoice.lines || []).find(l => l.id === lineId);
+    if (lineData && ingredientName && lineData.unit_price) {
+      lines.push({
+        line_id: lineId,
+        ingredient_name: ingredientName,
+        price_per_unit: lineData.unit_price,
+        unit: lineData.unit || 'each',
+      });
+    }
+  });
+  if (!lines.length) { alert('No confirmed lines to apply.'); return; }
+  fetch('/api/invoices/' + invoiceId + '/apply', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({lines})
+  })
+    .then(r => r.json())
+    .then(data => {
+      alert(`Applied ${data.applied} prices to your pricing table.`);
+      _pendingInvoice = null;
+      loadInvoicesList();
+      // Refresh cost tab if visible
+      if (_costingActiveTab === 'cost') loadCostBreakdown();
+    })
+    .catch(() => alert('Apply failed. Please try again.'));
+}
+
+function loadInvoicesList() {
+  const listArea = document.getElementById('c-inv-list');
+  listArea.innerHTML = '<div class="c-loading">Loading invoices…</div>';
+  fetch('/api/invoices')
+    .then(r => r.json())
+    .then(data => renderInvoicesList(data.invoices || []))
+    .catch(() => { listArea.innerHTML = '<div class="c-empty">Could not load invoices.</div>'; });
+}
+
+function renderInvoicesList(invoices) {
+  const listArea = document.getElementById('c-inv-list');
+  const dz = document.getElementById('c-inv-dropzone');
+  if (!invoices.length) {
+    if (dz) dz.style.display = '';
+    listArea.innerHTML = '';
+    return;
+  }
+  if (dz) dz.style.display = 'none';
+  let html = '';
+  for (const inv of invoices) {
+    const dateStr = inv.invoice_date || inv.created_at?.substring(0,10) || '';
+    const pgBadge = (inv.page_count > 1)
+      ? `<span class="c-inv-page-badge">${inv.page_count}pp</span>` : '';
+    html += `<div class="c-invoice-card" onclick="toggleInvoiceLines('${inv.id}', this)">
+      <div class="c-inv-header">
+        <span class="c-inv-supplier">${_esc(inv.supplier_name)}${pgBadge}</span>
+        <span class="c-inv-total">${inv.currency||'CAD'} ${inv.invoice_total ? inv.invoice_total.toFixed(2) : '—'}</span>
+      </div>
+      <div class="c-inv-meta">${dateStr}${inv.invoice_number ? ' · #' + _esc(inv.invoice_number) : ''} · ${inv.line_count} items</div>
+      <div class="c-inv-lines" id="inv-lines-${inv.id}">
+        <div class="c-loading" style="padding:10px 0">Loading…</div>
+      </div>
+    </div>`;
+  }
+  listArea.innerHTML = html;
+}
+
+function toggleInvoiceLines(invoiceId, card) {
+  const el = document.getElementById('inv-lines-' + invoiceId);
+  if (!el) return;
+  const isOpen = el.classList.toggle('open');
+  if (isOpen) {
+    fetch('/api/invoices/' + invoiceId + '/lines')
+      .then(r => r.json())
+      .then(data => {
+        const lines = data.lines || [];
+        if (!lines.length) { el.innerHTML = '<div style="font-size:11px;color:var(--text-muted);padding:6px 0">No lines stored.</div>'; return; }
+        let html = lines.map(l =>
+          `<div class="c-line-row">
+            <div><div class="c-line-desc">${_esc(l.raw_description)}</div>
+              <div class="c-line-match">${_esc(l.matched_ingredient_name || '')}</div></div>
+            <div class="c-line-price">${l.quantity||''} ${l.unit||''}</div>
+            <div class="c-line-price">${l.unit_price !== null ? (l.unit_price||0).toFixed(2) : '—'}</div>
+            <div><span class="c-confidence">${Math.round((l.match_confidence||0)*100)}%</span></div>
+          </div>`).join('');
+        html += `<div class="c-apply-bar">
+          <button class="c-btn c-btn-primary" onclick="reApplyInvoice('${invoiceId}')">Re-apply to pricing</button>
+        </div>`;
+        el.innerHTML = html;
+      })
+      .catch(() => { el.innerHTML = '<div style="font-size:11px;color:var(--text-muted)">Could not load lines.</div>'; });
+  }
+}
+
+function reApplyInvoice(invoiceId) {
+  fetch('/api/invoices/' + invoiceId + '/lines')
+    .then(r => r.json())
+    .then(data => {
+      _pendingInvoice = {
+        invoice_id: invoiceId,
+        supplier_name: data.supplier_name,
+        invoice_date: data.invoice_date,
+        lines: data.lines.map(l => ({
+          ...l,
+          matched_ingredient_name: l.matched_ingredient_name || l.raw_description,
+          match_confidence: l.match_confidence || 0,
+          confirmed: (l.match_confidence || 0) >= 0.7,
+        }))
+      };
+      showInvoiceReview(_pendingInvoice);
+    });
+}
+
+// ── Tab 3: Pricing ────────────────────────────────────────────
+function loadPricingTable() {
+  const body = document.getElementById('c-pricing-body');
+  body.innerHTML = '<div class="c-loading">Loading pricing table…</div>';
+  fetch('/api/pricing/user')
+    .then(r => r.json())
+    .then(data => renderPricingTable(data.pricing || []))
+    .catch(() => { body.innerHTML = '<div class="c-empty">Could not load pricing.</div>'; });
+}
+
+function renderPricingTable(rows) {
+  const body = document.getElementById('c-pricing-body');
+  if (!rows.length) {
+    body.innerHTML = `<div class="c-empty">No pricing data yet.<br>Scan an invoice or add prices manually.</div>
+      <div style="text-align:center;margin-top:16px">
+        <button class="c-btn c-btn-primary" onclick="openManualPrice()">Add price manually</button>
+      </div>`;
+    return;
+  }
+  let html = `<table class="c-pricing-table">
+    <thead><tr>
+      <th>Ingredient</th><th>Price</th><th>Unit</th><th>Supplier</th><th>Date</th><th>Source</th>
+    </tr></thead><tbody>`;
+  for (const r of rows) {
+    const dateStr = r.effective_date ? r.effective_date.substring(0,10) : '—';
+    const src = r.source === 'invoice'
+      ? `<span style="color:var(--gold-mid)">#${_esc(r.invoice_number || r.invoice_id?.substring(0,8) || 'inv')}</span>`
+      : `<em style="color:var(--text-muted)">manual</em>`;
+    html += `<tr>
+      <td>${_esc(r.ingredient_name)}</td>
+      <td style="font-family:var(--mono)">${(r.price_per_unit||0).toFixed(4)}</td>
+      <td style="font-family:var(--mono)">${_esc(r.unit)}</td>
+      <td>${_esc(r.supplier_name||'—')}</td>
+      <td style="font-family:var(--mono);font-size:10px">${dateStr}</td>
+      <td>${src}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  html += `<div style="margin-top:16px"><button class="c-btn c-btn-primary" onclick="openManualPrice()">Add / update price manually</button></div>`;
+  body.innerHTML = html;
+}
+
+function openManualPrice() {
+  const name = prompt('Ingredient name:');
+  if (!name) return;
+  const price = parseFloat(prompt(`Price per unit for "${name}":`));
+  if (isNaN(price)) return;
+  const unit = prompt('Unit (kg / each / case / L / etc.):', 'kg') || 'kg';
+  const supplier = prompt('Supplier name (optional):') || '';
+  fetch('/api/pricing/manual', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ingredient_name: name, price_per_unit: price, unit, supplier_name: supplier})
+  })
+    .then(r => r.json())
+    .then(d => {
+      if (d.success) {
+        loadPricingTable();
+        if (_costingActiveTab === 'cost') loadCostBreakdown();
+      }
+    })
+    .catch(()=>{});
+}
+
+function filterPricing(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('#c-pricing-body .c-pricing-table tbody tr').forEach(row => {
+    const name = (row.cells[0]?.textContent || '').toLowerCase();
+    row.style.display = (!q || name.includes(q)) ? '' : 'none';
+  });
+}
+
+function _esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function openScaleModal() {
+  const factor = parseFloat(prompt('Scale by factor (e.g. 2 = double, 0.5 = half):', '2'));
+  if (isNaN(factor)) return;
+  document.querySelectorAll('.r-ing-amount').forEach(el => {
+    const orig = el.dataset.orig || el.textContent;
+    el.dataset.orig = orig;
+    // Scale numbers in the text
+    el.textContent = orig.replace(/(\d+\.?\d*)/g, (m, n) => {
+      const scaled = parseFloat(n) * factor;
+      return scaled % 1 === 0 ? scaled : scaled.toFixed(1);
+    });
+  });
+}
+</script>
+
+<!-- ═══ KITCHEN NOTES CARD ═════════════════════════════════ -->
+<div id="kn-overlay" class="kn-overlay" onclick="if(event.target===this)closeNotesModal()">
+  <div class="kn-card">
+    <div class="kn-card-header">
+      <div>
+        <span class="kn-card-eyebrow">Kitchen Notes — Food Safety Card</span>
+        <span class="kn-card-name">{{ recipe.name }}</span>
+      </div>
+      <div class="kn-card-actions">
+        <button class="kn-print-btn" onclick="window.print()">Print card</button>
+        <button class="kn-close" onclick="closeNotesModal()">✕</button>
+      </div>
+    </div>
+    <div class="kn-card-body" id="kn-card-body">
+      <div class="kn-loading">One moment...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HACCP BRIEF MODAL ════════════════════════════════════ -->
+<div id="haccp-overlay" class="kn-overlay" onclick="if(event.target===this)closeHaccpModal()">
+  <div class="kn-card" style="max-width:800px">
+    <div class="kn-card-header">
+      <div>
+        <span class="kn-card-eyebrow">HACCP Brief — Codex Alimentarius CXC 1-1969</span>
+        <span class="kn-card-name">{{ recipe.name }}</span>
+      </div>
+      <div class="kn-card-actions">
+        <span id="haccp-header-btns"></span>
+        <button class="kn-close" onclick="closeHaccpModal()">✕</button>
+      </div>
+    </div>
+    <div class="kn-card-body" id="haccp-card-body">
+      <div class="kn-loading">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ COSTING MODAL ═══════════════════════════════════════ -->
+<div id="costing-overlay" class="c-overlay" onclick="if(event.target===this)closeCostingModal()">
+  <div class="c-modal">
+    <!-- Header -->
+    <div class="c-header">
+      <div class="c-header-top">
+        <span class="c-recipe-label">{{ recipe.name }}</span>
+        <button class="c-close" onclick="closeCostingModal()">✕</button>
+      </div>
+      <div class="c-tabs">
+        <button class="c-tab active" data-tab="cost" onclick="costingTab('cost')">Cost this recipe</button>
+        <button class="c-tab" data-tab="invoices" onclick="costingTab('invoices')">Invoices</button>
+        <button class="c-tab" data-tab="pricing" onclick="costingTab('pricing')">Pricing</button>
+      </div>
+    </div>
+
+    <!-- Tab 1: Cost breakdown -->
+    <div id="c-tab-cost" class="c-body">
+      <div id="c-cost-body"><div class="c-loading">Loading…</div></div>
+    </div>
+
+    <!-- Tab 2: Invoices -->
+    <div id="c-tab-invoices" class="c-body" style="display:none">
+      <!-- Primary action: camera on mobile, file picker on desktop -->
+      <div class="c-invoice-actions">
+        <button class="c-btn c-btn-primary" onclick="_triggerInvoiceCapture()">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="margin-right:4px;vertical-align:-1px">
+            <circle cx="5.5" cy="4" r="2.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M1 8.5c0-1.66 2.01-3 4.5-3s4.5 1.34 4.5 3" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+          <span class="c-btn-mobile">Scan invoice with camera</span>
+          <span class="c-btn-desktop">Scan invoice</span>
+        </button>
+      </div>
+      <!-- Queue indicator — shown when files staged but not yet submitted -->
+      <div id="c-inv-queue" class="c-inv-queue" style="display:none">
+        <span class="c-inv-queue-label" id="c-inv-queue-label"></span>
+        <button class="c-btn c-btn-primary" onclick="_processInvoiceQueue()">Process invoice →</button>
+        <button class="c-btn" onclick="_clearInvoiceQueue()">Clear</button>
+      </div>
+      <!-- Drop zone — visible in empty state -->
+      <div id="c-inv-dropzone" class="c-dropzone"
+           ondragenter="_dzEnter(event)" ondragover="_dzOver(event)"
+           ondragleave="_dzLeave(event)" ondrop="_dzDrop(event)"
+           onclick="_triggerInvoiceCapture()">
+        <div class="c-dz-icon">↓</div>
+        <div class="c-dz-main" id="c-dz-main">Drop your first invoice here</div>
+        <div class="c-dz-sub" id="c-dz-sub">Photo, scan, or PDF — any format works</div>
+      </div>
+      <!-- Scan in progress -->
+      <div id="c-inv-scanprogress" class="c-scan-progress">
+        <div class="c-scan-spinner"></div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)">
+          EXTRACTING SUPPLIER &amp; PRICING — THIS TAKES 10–20 SECONDS
+        </div>
+      </div>
+      <!-- Invoice list / review area -->
+      <div id="c-inv-list"></div>
+    </div>
+
+    <!-- Tab 3: Pricing -->
+    <div id="c-tab-pricing" class="c-body" style="display:none">
+      <div class="c-pricing-bar">
+        <input class="c-search-input" type="search" placeholder="Search ingredients…"
+               oninput="filterPricing(this.value)">
+        <button class="c-btn c-btn-primary" onclick="openManualPrice()">Add price</button>
+      </div>
+      <div id="c-pricing-body"><div class="c-loading">Loading…</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PROCESSING OVERLAY — same pattern as base.html ── -->
+<div id="provenanceProcessingOverlay" class="provenance-processing-overlay" role="status" aria-live="polite" aria-hidden="true">
+  <div class="provenance-processing-wordmark">PROVENANCE</div>
+  <div id="provenanceProcessingStatus" class="provenance-processing-status">Reading the page…</div>
+</div>
+<script>
+(function(){
+  'use strict';
+  var DEFAULTS={messages:['Reading the page…','Composing the entry…','Setting the type…'],holdMs:2800,fadeMs:600};
+  var overlayEl=null,statusEl=null,intervalId=null,fadeTimeoutId=null,messages=DEFAULTS.messages,messageIndex=0;
+  function ensureRefs(){if(!overlayEl)overlayEl=document.getElementById('provenanceProcessingOverlay');if(!statusEl)statusEl=document.getElementById('provenanceProcessingStatus');}
+  function setMessage(t){if(statusEl)statusEl.textContent=t;}
+  function cycleStatus(fadeMs){if(!statusEl)return;statusEl.classList.add('is-fading');fadeTimeoutId=setTimeout(function(){messageIndex=(messageIndex+1)%messages.length;setMessage(messages[messageIndex]);statusEl.classList.remove('is-fading');},fadeMs);}
+  function clearTimers(){if(intervalId){clearInterval(intervalId);intervalId=null;}if(fadeTimeoutId){clearTimeout(fadeTimeoutId);fadeTimeoutId=null;}}
+  window.ProvenanceProcessing={
+    show:function(opts){
+      ensureRefs();if(!overlayEl||!statusEl)return;
+      var cfg=Object.assign({},DEFAULTS,opts||{});
+      messages=(Array.isArray(cfg.messages)&&cfg.messages.length)?cfg.messages:DEFAULTS.messages;
+      messageIndex=0;clearTimers();
+      statusEl.classList.remove('is-fading');setMessage(messages[0]);
+      overlayEl.classList.add('is-active');overlayEl.setAttribute('aria-hidden','false');
+      var tickMs=cfg.holdMs+cfg.fadeMs;
+      intervalId=setInterval(function(){cycleStatus(cfg.fadeMs);},tickMs);
+    },
+    hide:function(){
+      ensureRefs();if(!overlayEl)return;
+      clearTimers();overlayEl.classList.remove('is-active');overlayEl.setAttribute('aria-hidden','true');
+    },
+    isActive:function(){ensureRefs();return overlayEl?overlayEl.classList.contains('is-active'):false;}
+  };
 })();
 </script>
 
-<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
-  <span>Add Provenance to your home screen</span>
-  <div>
-    <button onclick="installPWA()" style="background:rgba(201,168,76,0.12);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-right:8px">Install</button>
-    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(245,241,233,0.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
-  </div>
-</div>
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .catch(err => console.log('SW:', err));
-}
-let _pwaPrompt;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  _pwaPrompt = e;
-  if (!localStorage.getItem('pwa-dismissed')) {
-    document.getElementById('pwa-prompt').style.display = 'flex';
-  }
-});
-function installPWA() {
-  if (_pwaPrompt) {
-    _pwaPrompt.prompt();
-    _pwaPrompt.userChoice.then(() => {
-      document.getElementById('pwa-prompt').style.display = 'none';
-      _pwaPrompt = null;
-    });
-  }
-}
-function dismissPWA() {
-  document.getElementById('pwa-prompt').style.display = 'none';
-  localStorage.setItem('pwa-dismissed', 'true');
-}
-</script>
 </body>
 </html>

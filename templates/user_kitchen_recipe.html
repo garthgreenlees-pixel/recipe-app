@@ -1777,7 +1777,9 @@ function _haccpTodayISO() { return new Date().toISOString().slice(0,10); }
 function _haccpSixMonthsISO() { const d=new Date(); d.setMonth(d.getMonth()+6); return d.toISOString().slice(0,10); }
 function _haccpFmtDate(iso) {
   if (!iso) return '';
-  try { return new Date(iso.includes('T')?iso:iso+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); } catch(e){ return iso; }
+  const d = new Date(iso.includes('T')?iso:iso+'T00:00:00');
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
 }
 function _haccpSetBody(html) { document.getElementById('haccp-body').innerHTML = html; }
 function _haccpUpdateHeaderBtns(isSigned) {
@@ -1871,7 +1873,7 @@ function renderHaccpBrief(d, savedMeta) {
   const edits = (savedMeta && savedMeta.edits) || {};
   const today = _haccpTodayISO();
   const vLabel = savedMeta ? ('Version\u00a0' + savedMeta.version) : 'Draft';
-  const genDate = savedMeta ? _haccpFmtDate(savedMeta.saved_at) : _haccpFmtDate(today);
+  const genDate = savedMeta ? (_haccpFmtDate(savedMeta.saved_at) || 'Not yet drafted') : _haccpFmtDate(today);
   const S = 'haccp-section', SL = 'haccp-section-label';
   _haccpUpdateHeaderBtns(isSigned);
   let html = '';
@@ -1889,7 +1891,7 @@ function renderHaccpBrief(d, savedMeta) {
       <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Next review</span>
         ${isSigned?`<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.next_review_date||_haccpSixMonthsISO()))}</span>`:`<input type="date" class="haccp-input" id="haccp-review-date" value="${edits.next_review_date||_haccpSixMonthsISO()}">`}
       </div>
-      ${isSigned?`<div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at))}</span></div>`:''}
+      ${isSigned?`<div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at) || '—')}</span></div>`:''}
     </div>
   </div>`;
 
@@ -1898,7 +1900,7 @@ function renderHaccpBrief(d, savedMeta) {
     <div class="${SL}" style="color:#1a3a5c">Equipment Calibration Verification</div>
     <div class="haccp-doc-ctrl-grid">
       <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-date">Thermometers calibrated</label>
-        ${isSigned?`<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.calibration_date||''))}</span>`:`<input type="date" class="haccp-input" id="haccp-cal-date" value="${edits.calibration_date||''}">`}
+        ${isSigned?`<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.calibration_date||'')||'Not yet calibrated')}</span>`:`<input type="date" class="haccp-input" id="haccp-cal-date" value="${edits.calibration_date||''}">`}
       </div>
       <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-by">Calibrated by</label>
         ${isSigned?`<span class="haccp-doc-ctrl-value">${_knEsc(edits.calibrated_by||'')}</span>`:`<input type="text" class="haccp-input" id="haccp-cal-by" placeholder="Full name" value="${_knEsc(edits.calibrated_by||'')}">`}
@@ -1973,7 +1975,7 @@ function renderHaccpBrief(d, savedMeta) {
         <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">PIC Name</span><span class="haccp-doc-ctrl-value">${_knEsc(savedMeta.pic_name||'')}</span></div>
         <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Role</span><span class="haccp-doc-ctrl-value">${_knEsc(edits.signoff_role||'')}</span></div>
         <div class="haccp-doc-ctrl-field haccp-sig-field"><span class="haccp-doc-ctrl-label">Signature</span><span class="haccp-signature-display">${_knEsc(edits.signature_text||savedMeta.pic_name||'')}</span></div>
-        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Date signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at))}</span></div>
+        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Date signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at) || '—')}</span></div>
       </div>
     </div>`;
   } else {
