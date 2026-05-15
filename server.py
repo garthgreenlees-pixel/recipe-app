@@ -1017,7 +1017,7 @@ def index():
 def kitchen():
     user = get_current_user()
     if not user:
-        return redirect(url_for("auth_login") + "?next=/kitchen")
+        return _login_redirect()
     return send_file("kitchen.html")
 
 
@@ -4401,7 +4401,7 @@ def upload_user_recipe_image(slug):
 def recipe_editor(slug):
     user = get_current_user()
     if not user:
-        return redirect(f"/auth/login?next=/recipe/{slug}/edit")
+        return _login_redirect()
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
@@ -10435,6 +10435,23 @@ def inject_user():
 
 # ─── Auth routes ─────────────────────────────────────────────────────────────
 
+def _safe_next(default="/"):
+    """Sanitize ?next= param. Only accept relative paths — reject open-redirect attempts."""
+    nxt = request.args.get("next", "")
+    if (nxt
+            and nxt.startswith("/")
+            and not nxt.startswith("//")
+            and not nxt.lower().startswith("/http")):
+        return nxt
+    return default
+
+
+def _login_redirect():
+    """Redirect to login, preserving the current path as ?next=."""
+    path = _urllib_parse.quote(request.path, safe="/")
+    return redirect(f"/auth/login?next={path}")
+
+
 @app.route("/auth/signup", methods=["GET", "POST"])
 def auth_signup():
     if request.method == "GET":
@@ -10479,7 +10496,7 @@ def auth_signup():
         conn.close()
         session.permanent = True
         session["user_id"] = user_id
-        next_url = request.args.get("next", "/")
+        next_url = _safe_next(default="/")
         return redirect(next_url)
     except psycopg2.errors.UniqueViolation:
         return render_template("auth/signup.html", error="An account with that email already exists.")
@@ -10516,7 +10533,7 @@ def auth_login():
     session["user_id"] = user["id"]
     if request.form.get("remember_me") == "on":
         session["_remember"] = True
-    next_url = request.args.get("next", "/")
+    next_url = _safe_next(default="/")
     return redirect(next_url)
 
 
@@ -10530,7 +10547,7 @@ def auth_logout():
 def auth_account():
     user = get_current_user()
     if not user:
-        return redirect("/auth/login?next=/auth/account")
+        return _login_redirect()
     subscribed = request.args.get("subscribed") == "true"
     cancelled = request.args.get("cancelled") == "true"
     return render_template("auth/account.html", user=user, subscribed=subscribed, cancelled=cancelled)
@@ -10773,7 +10790,7 @@ def subscribe(tier, period="yearly"):
 
     user = get_current_user()
     if not user:
-        return redirect(f"/auth/login?next=/subscribe/{tier}/{period}")
+        return _login_redirect()
 
     if not user.get("stripe_customer_id"):
         customer = stripe.Customer.create(
@@ -10807,7 +10824,7 @@ def subscribe(tier, period="yearly"):
 def billing_portal():
     user = get_current_user()
     if not user or not user.get("stripe_customer_id"):
-        return redirect("/auth/login")
+        return _login_redirect()
 
     portal_session = stripe.billing_portal.Session.create(
         customer=user["stripe_customer_id"],
@@ -14516,7 +14533,7 @@ def atelier_compose():
 def atelier():
     user = get_current_user()
     if not user:
-        return redirect(url_for("auth_login") + "?next=/atelier")
+        return _login_redirect()
     if user.get("role") not in ("founder", "admin"):
         return redirect(url_for("kitchen"))
     return send_file("atelier.html")
