@@ -1665,7 +1665,7 @@ function renderCostBreakdown(data) {
     <div class="c-menu-price-row">
       <label for="c-menu-price">Menu price</label>
       <input id="c-menu-price" class="c-menu-input" type="number" step="0.01" min="0" value="${data.menu_price||''}" placeholder="0.00" oninput="updateGP(${cpp})">
-      <span class="c-gp-display" id="c-gp-display">${data.actual_food_cost_pct!==null?`${data.actual_food_cost_pct}% food cost`:''}</span>
+      <span class="c-gp-display" id="c-gp-display">${data.actual_food_cost_pct!=null?`${data.actual_food_cost_pct}% food cost`:''}</span>
     </div>
   </div>
   <div class="c-actions">
