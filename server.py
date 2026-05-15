@@ -54,7 +54,18 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-key")
 app.config["SESSION_COOKIE_SECURE"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
-app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 30  # 30 days
+app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 7   # 7-day default
+
+from flask.sessions import SecureCookieSessionInterface as _SCSessionInterface
+
+class _RememberMeSessionInterface(_SCSessionInterface):
+    """Extend cookie to 30 days when session['_remember'] is set, else use 7-day default."""
+    def get_expiration_time(self, app, session):
+        if session.get("_remember"):
+            return _dt.utcnow() + _timedelta(days=30)
+        return super().get_expiration_time(app, session)
+
+app.session_interface = _RememberMeSessionInterface()
 
 # ─── Stripe ───────────────────────────────────────────────────────────────────
 
@@ -2201,17 +2212,14 @@ def recipe_page(slug):
                 _norm, _ = _parse_yield(_recipe_dict["servings"])
                 if _norm:
                     _recipe_dict["servings_text"] = _norm
-            _ingredient_names = [
-                i.get("name", "") for i in (kitchen_recipe.get("ingredients") or [])
-                if isinstance(i, dict) and i.get("name")
-            ]
-            _sourced = _get_kitchen_recipe_suppliers(_ingredient_names, get_user_location())
+            _sourced = _get_kitchen_recipe_suppliers_from_markers(kitchen_recipe, get_user_location())
             return render_template(
                 "user_kitchen_recipe.html",
                 recipe=_recipe_dict,
                 user_tier=_user_tier,
                 user_role=_user_role,
                 is_authenticated=_is_auth,
+                current_user_id=user.get("id") if user else None,
                 pairings_for_recipe=_pairings,
                 has_pending_submission=_has_pending_sub,
                 origin_suppliers=_sourced["origin"],
@@ -2327,6 +2335,69 @@ def recipe_cook_mode(slug):
     if not recipe:
         return "Recipe not found", 404
     return render_template("cook_mode.html", recipe=dict(recipe))
+
+
+@app.route("/suggest-supplier", methods=["GET"])
+def suggest_supplier_form():
+    """Render the supplier suggestion form. Optional ?recipe=<slug> for context."""
+    recipe_slug = request.args.get("recipe", "")
+    recipe_title = ""
+    if recipe_slug and DATABASE_URL:
+        try:
+            conn = get_db()
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT title FROM user_kitchen_recipes WHERE slug = %s", (recipe_slug,))
+            row = cur.fetchone()
+            if row:
+                recipe_title = row["title"]
+            cur.close()
+            conn.close()
+        except Exception:
+            pass
+    return render_template("suggest_supplier.html", recipe_slug=recipe_slug, recipe_title=recipe_title)
+
+
+@app.route("/suggest-supplier", methods=["POST"])
+def suggest_supplier_submit():
+    """Process supplier suggestion and email Garth."""
+    supplier_name = (request.form.get("supplier_name") or "").strip()
+    supplier_website = (request.form.get("supplier_website") or "").strip()
+    what_they_make = (request.form.get("what_they_make") or "").strip()
+    chef_name = (request.form.get("chef_name") or "").strip()
+    chef_email = (request.form.get("chef_email") or "").strip()
+    recipe_slug = (request.form.get("recipe_slug") or "").strip()
+
+    if not supplier_name:
+        return render_template(
+            "suggest_supplier.html",
+            error="Supplier name is required.",
+            recipe_slug=recipe_slug,
+            recipe_title="",
+        ), 400
+
+    try:
+        from email_service import send_supplier_suggestion_email
+        send_supplier_suggestion_email({
+            "supplier_name": supplier_name,
+            "supplier_website": supplier_website,
+            "what_they_make": what_they_make,
+            "chef_name": chef_name,
+            "chef_email": chef_email,
+            "recipe_slug": recipe_slug,
+        })
+    except Exception as e:
+        app.logger.warning(f"[suggest_supplier_submit] email failed: {e}")
+        app.logger.info(
+            f"[suggest_supplier_submit] Supplier={supplier_name!r} "
+            f"Website={supplier_website!r} WhatTheyMake={what_they_make!r} "
+            f"Name={chef_name!r} Email={chef_email!r} Recipe={recipe_slug!r}"
+        )
+
+    return render_template(
+        "suggest_supplier_thanks.html",
+        supplier_name=supplier_name,
+        recipe_slug=recipe_slug,
+    )
 
 
 @app.route("/api/recipe/<slug>/re-enrich-pairings", methods=["POST"])
@@ -4337,7 +4408,8 @@ def recipe_editor(slug):
         cur.execute("""
             SELECT uuid, slug, title, preamble, ingredients, steps,
                    time_active, time_total, servings, tags,
-                   source_name, source_url, is_draft, has_image
+                   source_name, source_url, is_draft, has_image,
+                   quality_warnings
             FROM user_kitchen_recipes
             WHERE slug = %s AND user_id = %s
             LIMIT 1
@@ -4345,7 +4417,9 @@ def recipe_editor(slug):
         row = cur.fetchone()
         if not row:
             return redirect("/kitchen")
-        return render_template("recipe_editor.html", recipe=dict(row))
+        _row = dict(row)
+        _row["quality_warnings"] = _row.get("quality_warnings") or []
+        return render_template("recipe_editor.html", recipe=_row)
     finally:
         cur.close()
         conn.close()
@@ -5479,8 +5553,223 @@ def _supplier_in_region(row, region_code):
     return False
 
 
-def _get_kitchen_recipe_suppliers(ingredient_names, user_loc="global"):
+def _get_kitchen_recipe_suppliers_from_markers(recipe_dict, user_loc="global"):
     """
+    Build the Sourced section from the recipe's pre-resolved ingredient_origin_markers.
+    Each marker carries the supplier objects (id, name, city, state_province, country,
+    website, products) that were resolved at import time. We collect supplier IDs from
+    the markers, apply a pantry stop list and stem-based product filter, then do a
+    single DB query for role + service_region to classify ORIGIN vs PROVIDER.
+
+    Marker shape (from DB):
+      [{"ingredient_name": "Fresh-As Manuka Honey Chunk",
+        "suppliers": [{"id": 19, "name": "Purely Artisan Foods", ...}]}, ...]
+
+    Returns: {"origin": [supplier_dict, ...], "providers": [supplier_dict, ...]}
+    Paste 32.
+    """
+    if not DATABASE_URL:
+        return {"origin": [], "providers": []}
+
+    markers = recipe_dict.get("ingredient_origin_markers") or []
+    if not markers:
+        return {"origin": [], "providers": []}
+
+    region_code = None
+    if user_loc and user_loc != "global":
+        parts = user_loc.split("-", 1)
+        if len(parts) == 2:
+            region_code = parts[1]
+
+    # ── Pantry stop list — never meaningful as sourced ingredients ─────────────
+    _PANTRY_STOP = {
+        "water", "salt", "kosher salt", "sea salt", "flaky sea salt", "fine salt",
+        "pepper", "black pepper", "cracked black pepper", "white pepper",
+        "butter", "unsalted butter", "salted butter",
+        "oil", "olive oil", "vegetable oil", "neutral oil",
+        "flour", "all-purpose flour", "ap flour",
+        "sugar", "granulated sugar", "white sugar",
+        "ice", "ice water", "boiling water", "tamarind water",
+    }
+
+    # ── Helpers (same as paste 30 dedup layer, kept for product quality scoring) ─
+    def _product_formality_score(product_name):
+        n = (product_name or "").strip()
+        if not n:
+            return 0
+        score = len(n)
+        lower_n = n.lower()
+        if lower_n.startswith("fresh-as"):
+            score += 50
+        if lower_n.startswith("freeze-dried"):
+            score += 30
+        if "(" in n and ")" in n:
+            score += 20
+        if n[0].isupper():
+            score += 5
+        return score
+
+    def _ingredient_stem_local(product_name):
+        """Strip brand prefix + form suffix + plurals to reveal core ingredient."""
+        n = (product_name or "").lower().strip()
+        for prefix in ("fresh-as ", "freeze-dried ", "fresh as "):
+            if n.startswith(prefix):
+                n = n[len(prefix):]
+                break
+        for suffix in (" chunks", " chunk", " powder", " whole", " flakes", " flake",
+                       " juice", " sauce", " extract"):
+            if n.endswith(suffix):
+                n = n[:-len(suffix)]
+                break
+        if n.endswith("ies") and len(n) > 4:
+            n = n[:-3] + "y"
+        elif n.endswith("es") and len(n) > 3 and not n.endswith("oes"):
+            n = n[:-2]
+        elif n.endswith("s") and len(n) > 2 and not n.endswith("ss") and not n.endswith("us"):
+            n = n[:-1]
+        return n.strip()
+
+    # ── Read markers: collect supplier_id → set of ingredient names ───────────
+    # Marker shape: {"ingredient_name": "...", "suppliers": [{"id": N, ...}]}
+    supplier_ingredients = {}  # sid -> set of ingredient names this supplier is linked to
+
+    for m in markers:
+        if not isinstance(m, dict):
+            continue
+        ing_name = (m.get("ingredient_name") or "").strip()
+        if not ing_name or ing_name.lower() in _PANTRY_STOP:
+            continue
+        for s in (m.get("suppliers") or []):
+            if not isinstance(s, dict):
+                continue
+            sid = s.get("id")
+            if not sid:
+                continue
+            try:
+                sid = int(sid)
+            except (TypeError, ValueError):
+                continue
+            if sid not in supplier_ingredients:
+                supplier_ingredients[sid] = set()
+            supplier_ingredients[sid].add(ing_name)
+
+    if not supplier_ingredients:
+        return {"origin": [], "providers": []}
+
+    supplier_ids = list(supplier_ingredients.keys())
+
+    # ── Pre-compute ingredient stems per supplier ──────────────────────────────
+    # Used to filter which products to show: product_stem must overlap with
+    # at least one ingredient stem for that supplier in this recipe.
+    supplier_ingredient_stems = {}
+    for sid, ing_names in supplier_ingredients.items():
+        stems = set()
+        for n in ing_names:
+            st = _ingredient_stem_local(n)
+            if st:
+                stems.add(st)
+        supplier_ingredient_stems[sid] = stems
+
+    def _product_matches_recipe(product_name, ingredient_stems):
+        """True if product_stem overlaps with any ingredient_stem (substring check)."""
+        pstem = _ingredient_stem_local(product_name)
+        if not pstem:
+            return False
+        for istem in ingredient_stems:
+            if pstem == istem or pstem in istem or istem in pstem:
+                return True
+        return False
+
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        # One DB query: role + service_region + product catalog per supplier
+        cur.execute("""
+            SELECT
+                s.id, s.name, s.website, s.city, s.state_province, s.country,
+                s.service_region,
+                ps.role, ps.is_primary,
+                ip.name AS matched_product_name,
+                LEFT(ip.description, 200) AS product_desc
+            FROM suppliers s
+            LEFT JOIN product_suppliers ps ON ps.supplier_id = s.id
+            LEFT JOIN ingredient_products ip ON ip.id = ps.product_id
+            WHERE s.id = ANY(%s)
+              AND s.is_active = TRUE
+            ORDER BY s.id, ps.role, ps.is_primary DESC NULLS LAST, ip.name
+        """, (supplier_ids,))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        origin_map = {}
+        provider_map = {}
+
+        for row in rows:
+            sid = row["id"]
+            role = row.get("role")
+            pname = row.get("matched_product_name")
+
+            # Precision filter: only include products whose stem overlaps with
+            # the ingredient names this supplier is linked to in this recipe.
+            if pname and not _product_matches_recipe(
+                pname, supplier_ingredient_stems.get(sid, set())
+            ):
+                continue
+
+            if role == "ORIGIN":
+                target_map = origin_map
+                eligible = True
+            elif role == "PROVIDER":
+                target_map = provider_map
+                eligible = _supplier_in_region(row, region_code)
+            else:
+                # Supplier present in markers but no product_suppliers rows yet
+                target_map = provider_map
+                eligible = _supplier_in_region(row, region_code)
+
+            if not eligible:
+                continue
+
+            if sid not in target_map:
+                target_map[sid] = {
+                    "id": sid, "name": row["name"], "website": row["website"],
+                    "city": row["city"], "state_province": row["state_province"],
+                    "country": row["country"],
+                    "_products_by_stem": {},
+                }
+
+            if pname:
+                stem = _ingredient_stem_local(pname)
+                score = _product_formality_score(pname)
+                by_stem = target_map[sid]["_products_by_stem"]
+                if stem not in by_stem or score > by_stem[stem]["_score"]:
+                    by_stem[stem] = {
+                        "name": pname,
+                        "desc": row["product_desc"] or "",
+                        "_score": score,
+                    }
+
+        # Flatten _products_by_stem → products list
+        for sup in list(origin_map.values()) + list(provider_map.values()):
+            sup["products"] = [
+                {"name": v["name"], "desc": v["desc"]}
+                for v in sup["_products_by_stem"].values()
+            ]
+            del sup["_products_by_stem"]
+
+        return {"origin": list(origin_map.values()), "providers": list(provider_map.values())}
+    except Exception as e:
+        app.logger.warning(f"[_get_kitchen_recipe_suppliers_from_markers] failed: {e}")
+        return {"origin": [], "providers": []}
+
+
+def _get_kitchen_recipe_suppliers_LEGACY_DO_NOT_USE(ingredient_names, user_loc="global"):
+    """
+    LEGACY — superseded by _get_kitchen_recipe_suppliers_from_markers (paste 32).
+    Kept for reference during supplier infrastructure rework. DO NOT CALL.
+
     Fetch Origin (benchmark) and Provider (local) suppliers for a kitchen recipe.
     Returns: {"origin": [supplier_dict, ...], "providers": [supplier_dict, ...]}
 
@@ -5488,6 +5777,10 @@ def _get_kitchen_recipe_suppliers(ingredient_names, user_loc="global"):
     Provider = ps.role='PROVIDER' — hard-filtered to user's T1 region:
                s.state_province matches user's region code, OR
                region code appears explicitly in s.service_region (NOT nationwide_ umbrella)
+
+    Paste 22: T1 region filter.
+    Paste 29: full products list per supplier.
+    Paste 31: Python whole-word precision filter; SQL kept simple (ILIKE); pantry stop-list.
     """
     if not ingredient_names or not DATABASE_URL:
         return {"origin": [], "providers": []}
@@ -5502,11 +5795,67 @@ def _get_kitchen_recipe_suppliers(ingredient_names, user_loc="global"):
         conn = get_db()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         names = [n for n in ingredient_names[:20] if n]
-        patterns = [f"%{n}%" for n in names]
 
-        # Step 1: find product IDs matching ingredient names
+        # ── Pantry-basic stop list ─────────────────────────────────────────────
+        # These are never sourced as branded products and generate false matches.
+        _PANTRY_STOP = {
+            "water", "salt", "kosher salt", "sea salt", "flaky sea salt", "fine salt",
+            "pepper", "black pepper", "cracked black pepper", "white pepper",
+            "butter", "unsalted butter", "salted butter",
+            "oil", "olive oil", "vegetable oil", "neutral oil",
+            "flour", "all-purpose flour", "ap flour",
+            "sugar", "granulated sugar", "white sugar",
+            "ice", "ice water", "boiling water",
+        }
+        names = [n for n in names if n.strip().lower() not in _PANTRY_STOP]
+        if not names:
+            cur.close()
+            conn.close()
+            return {"origin": [], "providers": []}
+
+        # ── Helpers: formal-name preference dedup ─────────────────────────────
+        def _product_formality_score(product_name):
+            """Higher = more formal. Branded/longer names rank above generic stubs."""
+            n = (product_name or "").strip()
+            if not n:
+                return 0
+            score = len(n)
+            lower_n = n.lower()
+            if lower_n.startswith("fresh-as"):
+                score += 50
+            if lower_n.startswith("freeze-dried"):
+                score += 30
+            if "(" in n and ")" in n:
+                score += 20
+            if n[0].isupper():
+                score += 5
+            return score
+
+        def _ingredient_stem(product_name):
+            """Strip brand prefixes, form suffixes, and plurals to reveal the core ingredient."""
+            n = (product_name or "").lower().strip()
+            for prefix in ("fresh-as ", "freeze-dried ", "fresh as "):
+                if n.startswith(prefix):
+                    n = n[len(prefix):]
+                    break
+            for suffix in (" chunks", " chunk", " powder", " whole", " flakes", " flake"):
+                if n.endswith(suffix):
+                    n = n[:-len(suffix)]
+                    break
+            # Simple plural normalisation — raspberries→raspberry, flakes→flake, etc.
+            if n.endswith("ies") and len(n) > 4:
+                n = n[:-3] + "y"
+            elif n.endswith("es") and len(n) > 3 and not n.endswith("oes"):
+                n = n[:-2]
+            elif n.endswith("s") and len(n) > 2 and not n.endswith("ss") and not n.endswith("us"):
+                n = n[:-1]
+            return n.strip()
+
+        # ── Step 1: broad-match SQL — cast a wide net with ILIKE ──────────────
+        # SQL is intentionally permissive. Python filters for precision below.
+        patterns = [f"%{n}%" for n in names]
         cur.execute("""
-            SELECT DISTINCT ip.id AS product_id
+            SELECT DISTINCT ip.id AS product_id, ip.name AS product_name
             FROM ingredient_products ip
             WHERE ip.name ILIKE ANY(%s)
                OR EXISTS (
@@ -5514,27 +5863,62 @@ def _get_kitchen_recipe_suppliers(ingredient_names, user_loc="global"):
                    WHERE ri.nm ILIKE '%%' || ip.name || '%%'
                )
         """, (patterns, names))
-        product_ids = [r["product_id"] for r in cur.fetchall()]
+        product_rows = cur.fetchall()
+        product_ids = [r["product_id"] for r in product_rows]
+        product_id_to_name = {r["product_id"]: r["product_name"] for r in product_rows}
+
         if not product_ids:
             cur.close()
             conn.close()
             return {"origin": [], "providers": []}
 
-        # Step 2: fetch ORIGIN + PROVIDER suppliers for those products
+        # ── Python precision filter ────────────────────────────────────────────
+        # SQL matched substrings (e.g. "water" → "watermelon"). Python filters by
+        # whole significant-word overlap so only genuine matches survive.
+        def _normalize_for_match(text):
+            return _re.sub(r'[^\w\s\-]', ' ', (text or '').lower())
+
+        def _significant_words(text, min_len=4):
+            _STOP_WORDS = {
+                'with', 'from', 'into', 'about', 'each', 'small', 'medium',
+                'large', 'whole', 'half', 'plus', 'more', 'less', 'than',
+                'when', 'where', 'which', 'recipe', 'recipes', 'ingredient',
+                'ingredients', 'cooking', 'roast', 'roasted', 'piece', 'pieces',
+                'powder', 'flake', 'flakes', 'chunk', 'chunks',
+            }
+            words = _re.findall(r'\b[a-z][a-z\-]{' + str(min_len - 1) + r',}\b',
+                                _normalize_for_match(text))
+            return {w for w in words if w not in _STOP_WORDS}
+
+        recipe_words = set()
+        for ing_name in names:
+            recipe_words |= _significant_words(ing_name)
+
+        filtered_product_ids = [
+            pid for pid in product_ids
+            if bool(_significant_words(product_id_to_name.get(pid, '')) & recipe_words)
+        ]
+
+        if not filtered_product_ids:
+            cur.close()
+            conn.close()
+            return {"origin": [], "providers": []}
+
+        # ── Step 2: fetch ORIGIN + PROVIDER suppliers for those products ───────
         cur.execute("""
-            SELECT DISTINCT ON (s.id, ps.role)
+            SELECT
                 s.id, s.name, s.website, s.city, s.state_province, s.country,
                 s.service_region,
                 ps.role, ps.is_primary,
                 ip.name AS matched_product_name,
-                LEFT(ip.description, 120) AS product_desc
+                LEFT(ip.description, 200) AS product_desc
             FROM ingredient_products ip
             JOIN product_suppliers ps ON ip.id = ps.product_id
             JOIN suppliers s ON ps.supplier_id = s.id
             WHERE ip.id = ANY(%s)
               AND s.is_active = TRUE
-            ORDER BY s.id, ps.role, ps.is_primary DESC NULLS LAST
-        """, (product_ids,))
+            ORDER BY s.id, ps.role, ps.is_primary DESC NULLS LAST, ip.name
+        """, (filtered_product_ids,))
         rows = cur.fetchall()
         cur.close()
         conn.close()
@@ -5543,27 +5927,51 @@ def _get_kitchen_recipe_suppliers(ingredient_names, user_loc="global"):
         provider_map = {}
         for row in rows:
             sid = row["id"]
-            sup = {
-                "id": sid, "name": row["name"], "website": row["website"],
-                "city": row["city"], "state_province": row["state_province"],
-                "country": row["country"], "products": [],
-            }
-            if row["matched_product_name"]:
-                sup["products"].append({
-                    "name": row["matched_product_name"],
-                    "desc": row["product_desc"] or "",
-                })
-            if row["role"] == "ORIGIN":
-                if sid not in origin_map:
-                    origin_map[sid] = sup
-            elif row["role"] == "PROVIDER":
-                if _supplier_in_region(row, region_code):
-                    if sid not in provider_map:
-                        provider_map[sid] = sup
+            role = row["role"]
+            pname = row["matched_product_name"]
+
+            if role == "ORIGIN":
+                target_map = origin_map
+                eligible = True
+            elif role == "PROVIDER":
+                target_map = provider_map
+                eligible = _supplier_in_region(row, region_code)
+            else:
+                continue
+
+            if not eligible:
+                continue
+
+            if sid not in target_map:
+                target_map[sid] = {
+                    "id": sid, "name": row["name"], "website": row["website"],
+                    "city": row["city"], "state_province": row["state_province"],
+                    "country": row["country"],
+                    "_products_by_stem": {},
+                }
+
+            if pname:
+                stem = _ingredient_stem(pname)
+                score = _product_formality_score(pname)
+                by_stem = target_map[sid]["_products_by_stem"]
+                if stem not in by_stem or score > by_stem[stem]["_score"]:
+                    by_stem[stem] = {
+                        "name": pname,
+                        "desc": row["product_desc"] or "",
+                        "_score": score,
+                    }
+
+        # Flatten _products_by_stem → products list, drop helper key
+        for sup in list(origin_map.values()) + list(provider_map.values()):
+            sup["products"] = [
+                {"name": v["name"], "desc": v["desc"]}
+                for v in sup["_products_by_stem"].values()
+            ]
+            del sup["_products_by_stem"]
 
         return {"origin": list(origin_map.values()), "providers": list(provider_map.values())}
     except Exception as e:
-        app.logger.warning(f"[_get_kitchen_recipe_suppliers] failed: {e}")
+        app.logger.warning(f"[_get_kitchen_recipe_suppliers_LEGACY] failed: {e}")
         return {"origin": [], "providers": []}
 
 
@@ -10069,6 +10477,7 @@ def auth_signup():
             pass  # Never block signup over email failure
         cur.close()
         conn.close()
+        session.permanent = True
         session["user_id"] = user_id
         next_url = request.args.get("next", "/")
         return redirect(next_url)
@@ -10105,6 +10514,8 @@ def auth_login():
 
     session.permanent = True
     session["user_id"] = user["id"]
+    if request.form.get("remember_me") == "on":
+        session["_remember"] = True
     next_url = request.args.get("next", "/")
     return redirect(next_url)
 

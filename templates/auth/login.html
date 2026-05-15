@@ -51,6 +51,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms}
 .footer-links a:hover{color:#C9A84C}
 .footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+.forgot-link:hover{color:var(--gold) !important}
+.auth-success{background:rgba(60,140,80,0.12);border:1px solid rgba(60,140,80,0.25);border-radius:4px;padding:10px 14px;font-size:0.82rem;color:#70C080;margin-bottom:1.25rem}
 </style>
 </head>
 <body>
@@ -69,6 +71,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     <h1 class="auth-title">Welcome back</h1>
     <p class="auth-sub">New here? <a href="/auth/signup{% if request.args.get('next') %}?next={{ request.args.get('next') }}{% endif %}">Create an account →</a></p>
 
+    {% if request.args.get('reset') == '1' %}
+    <div class="auth-success">Password updated. You can now sign in with your new password.</div>
+    {% endif %}
+
     {% if error %}
     <div class="auth-error">{{ error }}</div>
     {% endif %}
@@ -81,6 +87,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
       <div class="field">
         <label>Password</label>
         <input type="password" name="password" placeholder="Your password" required autocomplete="current-password">
+        <div style="margin-top:0.5rem;text-align:right">
+          <a href="/auth/forgot-password" style="font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);text-decoration:none" class="forgot-link">Forgot password?</a>
+        </div>
+      </div>
+      <div style="margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem">
+        <input type="checkbox" name="remember_me" id="remember_me" value="on" style="accent-color:var(--gold);width:14px;height:14px;cursor:pointer">
+        <label for="remember_me" style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);cursor:pointer;margin:0">Remember me on this device</label>
       </div>
       <button type="submit" class="auth-btn">Sign In →</button>
     </form>
@@ -97,6 +110,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     <span class="footer-wm">Provenance</span>
   </div>
 </footer>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
+
 </body>
 </html>
