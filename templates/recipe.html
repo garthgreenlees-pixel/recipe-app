@@ -1428,7 +1428,7 @@ select.haccp-input{padding:3px 7px}
 <!-- ═══ 12. ACTION ROW ══════════════════════════════════════ -->
 <div class="r-actions">
 {% if recipe_type in ('food','') or not recipe_type %}
-  <button class="r-action-btn" onclick="handleAction('haccp','profession')">
+  <button class="r-action-btn" onclick="handleAction('haccp','kitchen')">
     <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
     HACCP plan
   </button>
@@ -2677,7 +2677,12 @@ function openScaleModal() {
         <span class="kn-card-name">{{ recipe.name }}</span>
       </div>
       <div class="kn-card-actions">
-        <span id="haccp-header-btns"></span>
+        {% if gate_for_tier('profession') == 'full_content' %}
+          <span id="haccp-header-btns"></span>
+        {% else %}
+          {% from '_partials/upgrade_prompt.html' import upgrade_prompt with context %}
+          {{ upgrade_prompt('profession', 'haccp') }}
+        {% endif %}
         <button class="kn-close" onclick="closeHaccpModal()">✕</button>
       </div>
     </div>

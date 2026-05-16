@@ -6311,6 +6311,7 @@ STANDARDS: Every critical limit must include a number and unit. Every CCP must s
 
 
 @app.route("/api/haccp", methods=["POST"])
+@requires_tier("profession")
 def haccp_analysis():
     print("[HACCP] route entered", flush=True)
     from datetime import datetime, timezone
@@ -6434,10 +6435,9 @@ def _apply_haccp_edits(brief, edits):
 
 
 @app.route("/api/haccp/save", methods=["POST"])
+@requires_tier("profession")
 def save_haccp_brief():
-    user = get_current_user()
-    if not user:
-        return jsonify({"error": "Login required"}), 401
+    user = get_current_user()  # safe — decorator verified user exists
     data = request.get_json() or {}
     brief = data.get("brief")
     edits = data.get("edits") or {}
@@ -6477,10 +6477,9 @@ def save_haccp_brief():
 
 
 @app.route("/api/haccp/latest/<recipe_slug>", methods=["GET"])
+@requires_tier("kitchen")
 def get_latest_haccp_brief(recipe_slug):
-    user = get_current_user()
-    if not user:
-        return jsonify({"exists": False, "reason": "not_logged_in"}), 200
+    user = get_current_user()  # safe — decorator verified user exists
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
@@ -6514,10 +6513,9 @@ def get_latest_haccp_brief(recipe_slug):
 
 
 @app.route("/api/haccp/history/<recipe_slug>", methods=["GET"])
+@requires_tier("kitchen")
 def get_haccp_history(recipe_slug):
-    user = get_current_user()
-    if not user:
-        return jsonify({"history": []}), 200
+    user = get_current_user()  # safe — decorator verified user exists
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
@@ -6539,10 +6537,9 @@ def get_haccp_history(recipe_slug):
 
 
 @app.route("/api/haccp/sign", methods=["POST"])
+@requires_tier("profession")
 def sign_haccp_brief():
-    user = get_current_user()
-    if not user:
-        return jsonify({"error": "Login required"}), 401
+    user = get_current_user()  # safe — decorator verified user exists
     data = request.get_json() or {}
     brief_id = data.get("id")
     pic_name = (data.get("pic_name") or "").strip()
@@ -6821,6 +6818,7 @@ Rules:
 
 
 @app.route("/api/haccp/<slug>/pdf")
+@requires_tier("profession")
 def haccp_pdf(slug):
     from weasyprint import HTML as WeasyHTML
     from datetime import datetime
