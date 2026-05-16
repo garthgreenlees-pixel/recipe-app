@@ -1679,9 +1679,14 @@ function renderCostBreakdown(data) {
     </div>
   </div>
   <div class="c-actions">
+    {% if gate_for_tier('profession') == 'full_content' %}
     <button class="c-btn c-btn-primary" onclick="exportCostPDF()">Export costing sheet</button>
     <button class="c-btn" onclick="saveMenuPrice()">Save menu price</button>
     <button class="c-btn" onclick="loadCostBreakdown()">Re-cost</button>
+    {% else %}
+    {% from '_partials/upgrade_prompt.html' import upgrade_prompt with context %}
+    {{ upgrade_prompt('profession', 'cost') }}
+    {% endif %}
   </div>`;
   body.innerHTML=html;
 }
@@ -2359,13 +2364,16 @@ document.addEventListener('keydown', e => {
       </div>
       <div class="c-tabs">
         <button class="c-tab active" data-tab="cost" onclick="costingTab('cost')">Cost this recipe</button>
+        {% if gate_for_tier('profession') == 'full_content' %}
         <button class="c-tab" data-tab="invoices" onclick="costingTab('invoices')">Invoices</button>
+        {% endif %}
         <button class="c-tab" data-tab="pricing" onclick="costingTab('pricing')">Pricing</button>
       </div>
     </div>
     <div id="c-tab-cost" class="c-body">
       <div id="c-cost-body"><div class="c-loading">Loading…</div></div>
     </div>
+    {% if gate_for_tier('profession') == 'full_content' %}
     <div id="c-tab-invoices" class="c-body" style="display:none">
       <div class="c-invoice-actions">
         <button class="c-btn c-btn-primary" onclick="_triggerInvoiceCapture()">
@@ -2390,6 +2398,7 @@ document.addEventListener('keydown', e => {
       </div>
       <div id="c-inv-list"></div>
     </div>
+    {% endif %}
     <div id="c-tab-pricing" class="c-body" style="display:none">
       <div class="c-pricing-bar">
         <input class="c-search-input" type="search" placeholder="Search ingredients…" oninput="filterPricing(this.value)">
