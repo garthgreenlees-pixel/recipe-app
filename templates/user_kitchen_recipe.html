@@ -1065,17 +1065,22 @@ select.haccp-input{padding:3px 7px}
         <span class="r-quality-tier-text">{{ recipe.quality_hierarchy.tier1 }}</span>
       </div>
       {% endif %}
-      {% if recipe.quality_hierarchy.tier2 %}
-      <div class="r-quality-tier">
-        <span class="r-quality-tier-label">Tier II — Secondary</span>
-        <span class="r-quality-tier-text">{{ recipe.quality_hierarchy.tier2 }}</span>
-      </div>
-      {% endif %}
-      {% if recipe.quality_hierarchy.tier3 %}
-      <div class="r-quality-tier">
-        <span class="r-quality-tier-label">Tier III — Finishing</span>
-        <span class="r-quality-tier-text">{{ recipe.quality_hierarchy.tier3 }}</span>
-      </div>
+      {% if gate_for_tier('library') == 'full_content' %}
+        {% if recipe.quality_hierarchy.tier2 %}
+        <div class="r-quality-tier">
+          <span class="r-quality-tier-label">Tier II — Secondary</span>
+          <span class="r-quality-tier-text">{{ recipe.quality_hierarchy.tier2 }}</span>
+        </div>
+        {% endif %}
+        {% if recipe.quality_hierarchy.tier3 %}
+        <div class="r-quality-tier">
+          <span class="r-quality-tier-label">Tier III — Finishing</span>
+          <span class="r-quality-tier-text">{{ recipe.quality_hierarchy.tier3 }}</span>
+        </div>
+        {% endif %}
+      {% else %}
+        {% from '_partials/upgrade_prompt.html' import upgrade_prompt with context %}
+        {{ upgrade_prompt('library', 'quality_hierarchy') }}
       {% endif %}
     </div>
   </div>
