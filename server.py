@@ -10589,7 +10589,7 @@ def auth_login():
     return redirect(next_url)
 
 
-@app.route("/auth/logout")
+@app.route("/auth/logout", methods=["POST"])
 def auth_logout():
     session.clear()
     return redirect("/")
