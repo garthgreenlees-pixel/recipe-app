@@ -1,0 +1,69 @@
+{# Tier-aware upgrade-prompt component — V4 Sprint 4.2 #}
+{# Renders when gate_for_tier() returns "preview_then_prompt". #}
+{# Reads `current_user` from Jinja context (injected by @app.context_processor). #}
+{# Callers MUST use `with context` on the import so the macro can see current_user. #}
+{# Usage: {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %} #}
+{#        {{ upgrade_prompt('library', 'quality_hierarchy') }} #}
+
+{% macro upgrade_prompt(required_tier, context='default') -%}
+{%- set door_names = {
+  'kitchen': 'The Kitchen',
+  'library': 'The Library',
+  'profession': 'The Profession',
+  'trade': 'The Trade'
+} -%}
+{%- set context_phrases = {
+  'haccp': 'to generate the HACCP brief',
+  'cost': 'to cost this recipe',
+  'beverage': 'to see the named producers',
+  'quality_hierarchy': 'to read the full Quality Hierarchy',
+  'default': 'for full access'
+} -%}
+{%- set door = door_names.get(required_tier, 'The Kitchen') -%}
+{%- set phrase = context_phrases.get(context, context_phrases['default']) -%}
+{%- if current_user -%}
+  {%- set target_url = '/pricing#' + required_tier -%}
+{%- else -%}
+  {%- set target_url = '/auth/signup?tier=' + required_tier -%}
+{%- endif -%}
+<style>
+  .upgrade-prompt {
+    border: 1px solid var(--line, #e5e3dd);
+    background: var(--cream-100, #f5f1e9);
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-family: var(--body, 'DM Sans', system-ui, sans-serif);
+  }
+  .upgrade-prompt__text {
+    margin: 0 0 0.75rem 0;
+    color: var(--charcoal-soft, #2a2a2a);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .upgrade-prompt__text strong {
+    font-family: var(--display, 'Playfair Display', serif);
+    font-style: italic;
+    font-weight: 500;
+    color: var(--charcoal, #1a1a1a);
+  }
+  .upgrade-prompt__cta {
+    display: inline-block;
+    font-family: var(--body, 'DM Sans', system-ui, sans-serif);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--charcoal, #1a1a1a);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold, #c9a84c);
+    padding-bottom: 2px;
+  }
+  .upgrade-prompt__cta:hover {
+    border-bottom-color: var(--charcoal, #1a1a1a);
+  }
+</style>
+<div class="upgrade-prompt" data-context="{{ context }}" data-required-tier="{{ required_tier }}">
+  <p class="upgrade-prompt__text">Open <strong>{{ door }}</strong> {{ phrase }}.</p>
+  <a href="{{ target_url }}" class="upgrade-prompt__cta">Open {{ door }}</a>
+</div>
+{%- endmacro %}
