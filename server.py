@@ -6855,6 +6855,53 @@ h2{{font-size:13px;margin-top:16px}}
         return jsonify(error=str(e)), 500
 
 
+# ── /api/stats — public counts cache (V4 Sprint 4.6) ──────────────────────
+_stats_cache = {"data": None, "timestamp": 0.0}
+_STATS_CACHE_TTL_SECONDS = 60
+
+
+@app.route("/api/stats")
+def api_stats():
+    """Public platform counts. 60-second server-side cache. No auth required."""
+    import time
+    now = time.monotonic()
+    if _stats_cache["data"] is not None and (now - _stats_cache["timestamp"]) < _STATS_CACHE_TTL_SECONDS:
+        return jsonify(_stats_cache["data"])
+
+    if not DATABASE_URL:
+        return jsonify({
+            "technique_count": None, "recipe_count": None, "beverage_count": None,
+            "supplier_count": None, "drink_count": None, "canon_count": None,
+            "route_count": 5,
+        })
+
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        counts = {}
+        queries = [
+            ("technique_count", "SELECT COUNT(*) FROM technique_references"),
+            ("recipe_count",    "SELECT COUNT(*) FROM recipes"),
+            ("beverage_count",  "SELECT COUNT(*) FROM beverage_products"),
+            ("supplier_count",  "SELECT COUNT(*) FROM suppliers WHERE is_active = TRUE"),
+            ("drink_count",     "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 500 Drinks%'"),
+            ("canon_count",     "SELECT COUNT(*) FROM canons WHERE status != 'archived'"),
+        ]
+        for key, sql in queries:
+            try:
+                cur.execute(sql)
+                counts[key] = cur.fetchone()[0]
+            except Exception:
+                counts[key] = None
+        counts["route_count"] = 5  # Five trade/spice routes — editorial fixed list, not a DB table
+
+        _stats_cache["data"] = counts
+        _stats_cache["timestamp"] = now
+        return jsonify(counts)
+    finally:
+        cur.close()
+
+
 @app.route("/api/export-pdf", methods=["POST"])
 def export_pdf():
     from weasyprint import HTML as WeasyHTML
