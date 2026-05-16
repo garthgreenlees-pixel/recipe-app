@@ -1215,11 +1215,11 @@ select.haccp-input{padding:3px 7px}
         <span class="r-accordion-eyebrow">Sourced by Provenance — Pat's Rule</span>
         <span class="r-accordion-summary">
           {% if _origin_count and _provider_count %}
-            {{ _origin_count }} origin · {{ _provider_count }} local — {{ _all_names }}
+            {{ _origin_count }} origin · {{ _provider_count }} local{% if gate_for_tier('library') == 'full_content' %} — {{ _all_names }}{% endif %}
           {% elif _origin_count %}
-            {{ _origin_count }} origin — {{ _all_names }}
+            {{ _origin_count }} origin{% if gate_for_tier('library') == 'full_content' %} — {{ _all_names }}{% endif %}
           {% elif _provider_count %}
-            {{ _provider_count }} local — {{ _all_names }}
+            {{ _provider_count }} local{% if gate_for_tier('library') == 'full_content' %} — {{ _all_names }}{% endif %}
           {% else %}
             Know a supplier who belongs here?
           {% endif %}
@@ -1228,6 +1228,7 @@ select.haccp-input{padding:3px 7px}
       <svg class="r-accordion-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
     </div>
     <div class="r-accordion-body" id="acc-sourced-body">
+      {% if gate_for_tier('library') == 'full_content' %}
       {% if origin_suppliers %}
       <p class="r-sourced-tier-label">The benchmark</p>
       <div class="r-suppliers" style="margin:0">
@@ -1259,6 +1260,10 @@ select.haccp-input{padding:3px 7px}
       <p class="r-sourced-empty">No verified local provider yet —
         <a href="/suggest-supplier?recipe={{ recipe.slug }}">suggest one →</a>
       </p>
+      {% endif %}
+      {% else %}
+      {% from '_partials/upgrade_prompt.html' import upgrade_prompt with context %}
+      {{ upgrade_prompt('library', 'beverage') }}
       {% endif %}
       <a href="/suggest-supplier?recipe={{ recipe.slug }}" class="r-invite-bar">
         <span class="r-invite-bar-text">Know a supplier who belongs here?</span>
