@@ -11529,11 +11529,9 @@ def get_recipe_cost(slug):
 
 
 @app.route("/api/costing/recipe/<slug>/set-target", methods=["POST"])
+@requires_tier("profession")
 def set_recipe_cost_target(slug):
     """Set the menu price and target food cost % for a recipe."""
-    user = get_current_user()
-    if not user:
-        return jsonify({"error": "Login required"}), 401
     data = request.get_json() or {}
     menu_price = data.get("menu_price")
     target_pct = data.get("target_food_cost_pct", 30.0)
@@ -11726,6 +11724,7 @@ def costing_compare(slug):
 
 
 @app.route("/api/invoices/scan", methods=["POST"])
+@requires_tier("profession")
 def invoices_scan():
     """Scan a supplier invoice (images or PDF, multi-page) via Claude Vision.
     Accepts files[] (multiple pages) or legacy single 'invoice' field.
@@ -11738,11 +11737,6 @@ def invoices_scan():
             f"files={list(request.files.keys())!r} len={request.content_length}"
         )
         user = get_current_user()
-        if not user:
-            return jsonify({"error": "Login required"}), 401
-        if not user_can_access("kitchen"):
-            return jsonify({"error": "Kitchen tier required"}), 403
-
         _CLAUDE_IMAGE_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
 
         # Collect uploaded files — support files[] (multi-page) or legacy 'invoice' (single)
@@ -12065,13 +12059,10 @@ def invoices_scan():
 
 
 @app.route("/api/invoices/<invoice_id>/apply", methods=["POST"])
+@requires_tier("profession")
 def invoices_apply(invoice_id):
     """Apply user-confirmed invoice lines to ingredient_pricing."""
     user = get_current_user()
-    if not user:
-        return jsonify({"error": "Login required"}), 401
-    if not user_can_access("kitchen"):
-        return jsonify({"error": "Kitchen tier required"}), 403
 
     data = request.get_json() or {}
     lines = data.get("lines", [])   # [{line_id, ingredient_name, price_per_unit, unit}]
@@ -12159,13 +12150,10 @@ def invoices_apply(invoice_id):
 
 
 @app.route("/api/invoices")
+@requires_tier("profession")
 def invoices_list():
     """List supplier invoices for the current user."""
     user = get_current_user()
-    if not user:
-        return jsonify({"error": "Login required"}), 401
-    if not user_can_access("kitchen"):
-        return jsonify({"error": "Kitchen tier required"}), 403
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("""
@@ -12199,13 +12187,10 @@ def invoices_list():
 
 
 @app.route("/api/invoices/<invoice_id>/lines")
+@requires_tier("profession")
 def invoice_lines(invoice_id):
     """Return all line items for a specific invoice (for review UI)."""
     user = get_current_user()
-    if not user:
-        return jsonify({"error": "Login required"}), 401
-    if not user_can_access("kitchen"):
-        return jsonify({"error": "Kitchen tier required"}), 403
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("SELECT supplier_name, invoice_date FROM supplier_invoices WHERE id = %s AND user_id = %s",
