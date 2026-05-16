@@ -268,7 +268,7 @@ body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:30
   <a href="/drinks">Drinks</a>
   <a href="/cuisines">Cuisines</a>
   <a href="/techniques/browse">Techniques</a>
-  <a href="/auth/account">My Kitchen</a>
+  <a href="/auth/account">MyKitchen</a>
   <a href="/about" class="mobile-nav-secondary">About</a>
   <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
 </nav>
@@ -302,17 +302,25 @@ body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:30
       <input type="text" id="techSearchInput" name="q" value="{{ q }}" placeholder="Search techniques…" oninput="tacQuery(this.value)" onkeydown="tacKeydown(event)" autocomplete="off">
       <div class="tac-dropdown" id="tacDropdown"></div>
     </div>
-    <select name="cuisine" class="filter-select {% if cuisine %}has-value{% endif %}" onchange="this.form.submit()">
+    <select name="cuisine" id="cuisine-filter"
+            class="filter-select{% if cuisine %} has-value{% endif %}"
+            data-lazy-api="/api/filter-options/cuisines"
+            data-lazy-populated="false"
+            onchange="this.form.submit()">
       <option value="">All Cuisines</option>
-      {% for c in all_cuisines %}
-      <option value="{{ c }}" {% if c == cuisine %}selected{% endif %}>{{ c }}</option>
-      {% endfor %}
+      {% if cuisine %}
+      <option value="{{ cuisine }}" selected>{{ cuisine }}</option>
+      {% endif %}
     </select>
-    <select name="category" class="filter-select {% if category %}has-value{% endif %}" onchange="this.form.submit()">
+    <select name="category" id="category-filter"
+            class="filter-select{% if category %} has-value{% endif %}"
+            data-lazy-api="/api/filter-options/categories"
+            data-lazy-populated="false"
+            onchange="this.form.submit()">
       <option value="">All Categories</option>
-      {% for cat in all_categories %}
-      <option value="{{ cat }}" {% if cat == category %}selected{% endif %}>{{ cat | replace('_',' ') | title }}</option>
-      {% endfor %}
+      {% if category %}
+      <option value="{{ category }}" selected>{{ category }}</option>
+      {% endif %}
     </select>
     <button type="submit" class="filter-btn">Search</button>
     {% if cuisine or category or q %}
@@ -467,11 +475,53 @@ function toggleMobileMenu(){
     <a href="/suppliers">Suppliers</a>
     <a href="/for-professionals">For Professionals</a>
     <a href="/methodology">Methodology</a>
-    <a href="/auth/account">My Kitchen</a>
+    <a href="/auth/account">MyKitchen</a>
     <a href="mailto:info@provenance.kitchen">Contact</a>
   </div>
   <span class="footer-wm">Provenance</span>
 </div>
+<script>
+// Lazy-populate <select data-lazy-api="…"> on first user interaction
+function lazyPopulateSelect(selectEl) {
+  if (!selectEl || selectEl.dataset.lazyPopulated === 'true') return;
+  if (!selectEl.dataset.lazyApi) return;
+  var populate = function() {
+    if (selectEl.dataset.lazyPopulated === 'true') return;
+    selectEl.dataset.lazyPopulated = 'true';
+    fetch(selectEl.dataset.lazyApi, {credentials: 'same-origin'})
+      .then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function(items) {
+        var currentValue = selectEl.value;
+        var placeholderText = selectEl.options[0] ? selectEl.options[0].textContent : 'All';
+        selectEl.innerHTML = '';
+        var ph = document.createElement('option');
+        ph.value = '';
+        ph.textContent = placeholderText;
+        selectEl.appendChild(ph);
+        for (var i = 0; i < items.length; i++) {
+          var opt = document.createElement('option');
+          opt.value = items[i];
+          opt.textContent = items[i];
+          if (items[i] === currentValue) opt.selected = true;
+          selectEl.appendChild(opt);
+        }
+      })
+      .catch(function(err) {
+        console.error('Lazy select failed:', selectEl.id || selectEl.name, err);
+        selectEl.dataset.lazyPopulated = 'false';
+      });
+  };
+  ['focus', 'mousedown', 'touchstart'].forEach(function(evt) {
+    selectEl.addEventListener(evt, populate, {once: true, passive: true});
+  });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('select[data-lazy-api]').forEach(lazyPopulateSelect);
+});
+</script>
 <div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
   <span>Add Provenance to your home screen</span>
   <div>
@@ -480,10 +530,6 @@ function toggleMobileMenu(){
   </div>
 </div>
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .catch(err => console.log('SW:', err));
-}
 let _pwaPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();

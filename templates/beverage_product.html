@@ -96,6 +96,33 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
 .context-badge{font-size:11px;font-weight:400;padding:3px 8px;border-radius:3px;letter-spacing:0.5px;background:var(--cream-dark);color:var(--text-secondary);border:1px solid var(--border);margin-left:6px}
 .abv{font-family:var(--mono);font-size:13px;color:var(--text-light)}
 @media(max-width:600px){.container{padding:32px 20px 60px}.breadcrumb{padding:10px 20px}}
+
+/* ── Use in — recipes that pair with this beverage ──────────────── */
+.bp-recipes-using{margin-top:3rem;padding-top:3rem;border-top:1px solid rgba(139,105,20,0.15)}
+.bp-section-eyebrow{
+  display:block;font-family:var(--mono);font-size:10px;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;
+}
+.bp-recipe-list{list-style:none;margin:0;padding:0}
+.bp-recipe-row{
+  display:flex;align-items:baseline;justify-content:space-between;gap:1.5rem;
+  padding:1rem 0;border-bottom:1px solid rgba(139,105,20,0.1);
+}
+.bp-recipe-row:last-child{border-bottom:none}
+.bp-recipe-link{
+  flex:1;color:var(--text);text-decoration:none;
+  font-family:var(--serif);font-size:1.05rem;line-height:1.4;
+  border-bottom:1px solid transparent;
+  transition:border-color 180ms ease,color 180ms ease;
+  padding-bottom:1px;
+}
+.bp-recipe-link:hover{color:var(--gold);border-bottom-color:rgba(139,105,20,0.4)}
+.bp-recipe-name{font-style:italic;font-weight:600}
+.bp-recipe-origin{color:var(--text-secondary);font-size:0.95rem}
+.bp-recipe-relationship{
+  flex-shrink:0;font-family:var(--mono);font-size:10px;
+  letter-spacing:1px;text-transform:uppercase;color:var(--text-light);
+}
 </style>
 <!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
@@ -141,7 +168,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
   <a href="/drinks">Drinks</a>
   <a href="/cuisines">Cuisines</a>
   <a href="/techniques/browse">Techniques</a>
-  <a href="/auth/account">My Kitchen</a>
+  <a href="/auth/account">MyKitchen</a>
   <a href="/about" class="mobile-nav-secondary">About</a>
   <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
 </nav>
@@ -232,6 +259,27 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
     <div class="vintage-chart" id="vintageChart"></div>
   </div>
   {% endif %}
+
+  {% if recipes_using %}
+  <div class="bp-recipes-using">
+    <span class="bp-section-eyebrow">Use in</span>
+    <ul class="bp-recipe-list">
+      {% for r in recipes_using %}
+      <li class="bp-recipe-row">
+        <a class="bp-recipe-link" href="/recipe/{{ r.slug }}">
+          <span class="bp-recipe-name">{{ r.name }}</span>
+          {% if r.origin %}
+          <span class="bp-recipe-origin"> · {{ r.origin }}</span>
+          {% endif %}
+        </a>
+        {% if r.relationship_type %}
+        <span class="bp-recipe-relationship">{{ r.relationship_type }}</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 </div>
 
 <div class="about-footer">
@@ -242,7 +290,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
     <a href="/suppliers">Suppliers</a>
     <a href="/for-professionals">For Professionals</a>
     <a href="/methodology">Methodology</a>
-    <a href="/auth/account">My Kitchen</a>
+    <a href="/auth/account">MyKitchen</a>
     <a href="mailto:info@provenance.kitchen">Contact</a>
   </div>
   <span class="footer-wm">Provenance</span>
@@ -293,10 +341,6 @@ function toggleMobileMenu(){
   </div>
 </div>
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .catch(err => console.log('SW:', err));
-}
 let _pwaPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();

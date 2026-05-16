@@ -242,7 +242,7 @@ main{padding-top:60px}
   <a href="/drinks">Drinks</a>
   <a href="/cuisines">Cuisines</a>
   <a href="/techniques/browse">Techniques</a>
-  <a href="/auth/account">My Kitchen</a>
+  <a href="/auth/account">MyKitchen</a>
   <a href="/about" class="mobile-nav-secondary">About</a>
   <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
 </nav>
@@ -281,21 +281,21 @@ main{padding-top:60px}
   <!-- What's Different -->
   <div class="about-section">
     <div class="section-label">What Makes Provenance Different</div>
-    <p class="about-body">Most culinary databases are built for home cooks. Provenance is built to the <strong>Sashimi Standard</strong>: every entry includes origin, quality hierarchy, sensory identification, cross-cuisine parallels, and the precise moment where execution lives or dies.</p>
+    <p class="about-body">Most culinary reference tools are built for home cooks. Provenance is built to the <strong>Sashimi Standard</strong>: every entry includes origin, quality hierarchy, sensory identification, cross-cuisine parallels, and the precise moment where execution lives or dies.</p>
     <p class="about-body" style="margin-top:1.25rem">This isn't crowdsourced. It isn't SEO content. It is a professional knowledge system built by a professional chef with 30 years of kitchen experience — and checked against the standards of international culinary examination bodies.</p>
   </div>
 
-  <!-- Platform Capabilities -->
+  <!-- What's Inside -->
   <div class="about-section">
-    <div class="section-label">Platform Capabilities</div>
+    <div class="section-label">What's Inside</div>
     <ul class="feature-list">
-      <li><div><strong>Technique Library</strong> — 12,106 indexed entries with cultural origin, execution notes, and cross-cuisine mappings</div></li>
+      <li><div><strong>Technique Library</strong> — 12,193 entries with cultural origin, execution notes, and cross-cuisine mappings</div></li>
       <li><div><strong>Recipe Intelligence</strong> — 686 recipes with full ingredient provenance, HACCP export, and supplier match</div></li>
-      <li><div><strong>Beverage Canon</strong> — 500 entries: wine, sake, spirits, coffee, beer, NA — with vintage data and pairing logic</div></li>
-      <li><div><strong>Supplier Network</strong> — 91 verified PNW suppliers with product-level links, region coverage, and origin tracking</div></li>
-      <li><div><strong>Kitchen Workspace</strong> — Scan, import, or compose recipes; get AI-powered enhancement with technique and sourcing overlays</div></li>
-      <li><div><strong>HACCP Export</strong> — Generate professional HACCP documentation from any recipe in the system</div></li>
-      <li><div><strong>Pairing Intelligence</strong> — 429 food–beverage pairings mapped by context, confidence, and bridge logic</div></li>
+      <li><div><strong>Beverage Canon</strong> — 3,654 entries: wine, sake, spirits, coffee, beer, NA — with vintage data and pairing logic</div></li>
+      <li><div><strong>Supplier Network</strong> — 91 verified suppliers with product-level links, region coverage, and origin tracking</div></li>
+      <li><div><strong>Kitchen Workspace</strong> — Scan, import, or compose recipes; get technique and sourcing context applied automatically</div></li>
+      <li><div><strong>HACCP Export</strong> — Generate professional HACCP documentation from any recipe in Provenance</div></li>
+      <li><div><strong>Pairing Intelligence</strong> — 15,000+ food–beverage pairings mapped by context, confidence, and bridge logic</div></li>
     </ul>
   </div>
 
@@ -312,7 +312,7 @@ main{padding-top:60px}
     <div class="pro-cta">
       <p>Professional access, institutional licensing, and partnership enquiries — reach us directly. We respond to every message.</p>
       <div class="cta-row">
-        <a href="/auth/account" class="cta-btn">Open My Kitchen →</a>
+        <a href="/auth/account" class="cta-btn">Open MyKitchen →</a>
         <a href="mailto:info@provenance.kitchen" class="cta-secondary">info@provenance.kitchen</a>
       </div>
     </div>
@@ -328,7 +328,7 @@ main{padding-top:60px}
     <a href="/recipes">Recipes</a>
     <a href="/techniques/browse">Techniques</a>
     <a href="/suppliers">Suppliers</a>
-    <a href="/auth/account">My Kitchen</a>
+    <a href="/auth/account">MyKitchen</a>
     <a href="mailto:info@provenance.kitchen">Contact</a>
   </div>
   <span class="footer-wm">Provenance</span>
@@ -351,10 +351,6 @@ function toggleMobileMenu(){
   </div>
 </div>
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .catch(err => console.log('SW:', err));
-}
 let _pwaPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();

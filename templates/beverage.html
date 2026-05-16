@@ -293,7 +293,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
   <a href="/drinks">Drinks</a>
   <a href="/cuisines">Cuisines</a>
   <a href="/techniques/browse">Techniques</a>
-  <a href="/auth/account">My Kitchen</a>
+  <a href="/auth/account">MyKitchen</a>
   <a href="/about" class="mobile-nav-secondary">About</a>
   <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
 </nav>
@@ -604,7 +604,7 @@ async function loadTradition(label, ...categories) {
     listEl.innerHTML = allRows.map(p => `
       <div class="pairing-card">
         <div class="pairing-type-label">${(p.category || '').replace(/_/g,' ')}</div>
-        <a href="/beverage/${esc(p.slug || p.id)}" class="pairing-beverage" style="text-decoration:none;color:inherit">${esc(p.name)}</a>
+        <a href="${p.slug ? '/beverage/' + esc(p.slug) : '/beverage/products/' + p.id}" class="pairing-beverage" style="text-decoration:none;color:inherit">${esc(p.name)}</a>
         ${p.description ? `<div class="pairing-logic">${esc(p.description.substring(0,180))}${p.description.length > 180 ? '…' : ''}</div>` : ''}
         <div class="pairing-badges">
           ${p.quality_tier ? `<span class="confidence-badge">${esc(p.quality_tier)}</span>` : ''}
@@ -706,7 +706,7 @@ function toggleMobileMenu(){
     <a href="/suppliers">Suppliers</a>
     <a href="/for-professionals">For Professionals</a>
     <a href="/methodology">Methodology</a>
-    <a href="/auth/account">My Kitchen</a>
+    <a href="/auth/account">MyKitchen</a>
     <a href="mailto:info@provenance.kitchen">Contact</a>
   </div>
   <span class="footer-wm">Provenance</span>
@@ -719,10 +719,6 @@ function toggleMobileMenu(){
   </div>
 </div>
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .catch(err => console.log('SW:', err));
-}
 let _pwaPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();

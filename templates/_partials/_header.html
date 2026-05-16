@@ -19,7 +19,7 @@
   <div class="nav-links nav-utility">
     <a href="/pricing">Pricing</a>
     {% if is_authenticated %}
-    <a href="/auth/account">My Kitchen</a>
+    <a href="/auth/account">MyKitchen</a>
     <div class="nav-caret-wrap">
       <button class="nav-caret-btn" onclick="toggleAuthorCaret()" aria-label="Account menu" aria-expanded="false" id="caretBtn">
         {{ current_user.display_name or 'Account' }} <span class="nav-caret-arrow" aria-hidden="true">▾</span>

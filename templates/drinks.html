@@ -309,7 +309,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
   <a href="/drinks">Drinks</a>
   <a href="/cuisines">Cuisines</a>
   <a href="/techniques/browse">Techniques</a>
-  <a href="/auth/account">My Kitchen</a>
+  <a href="/auth/account">MyKitchen</a>
   <a href="/about" class="mobile-nav-secondary">About</a>
   <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
 </nav>
@@ -597,7 +597,7 @@ function toggleMobileMenu(){
     <a href="/suppliers">Suppliers</a>
     <a href="/for-professionals">For Professionals</a>
     <a href="/methodology">Methodology</a>
-    <a href="/auth/account">My Kitchen</a>
+    <a href="/auth/account">MyKitchen</a>
     <a href="mailto:info@provenance.kitchen">Contact</a>
   </div>
   <span class="footer-wm">Provenance</span>
@@ -610,10 +610,6 @@ function toggleMobileMenu(){
   </div>
 </div>
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .catch(err => console.log('SW:', err));
-}
 let _pwaPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();

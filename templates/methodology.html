@@ -218,7 +218,7 @@ main{padding-top:60px}
   <a href="/drinks">Drinks</a>
   <a href="/cuisines">Cuisines</a>
   <a href="/techniques/browse">Techniques</a>
-  <a href="/auth/account">My Kitchen</a>
+  <a href="/auth/account">MyKitchen</a>
   <a href="/about" class="mobile-nav-secondary">About</a>
   <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
 </nav>
@@ -234,7 +234,7 @@ main{padding-top:60px}
   <!-- The Standard -->
   <div class="about-section">
     <div class="section-label">The Sashimi Standard</div>
-    <p class="about-body">Every entry in Provenance is evaluated against a single benchmark — named for the dish that most clearly exposes the gap between surface knowledge and real understanding. <strong>The Sashimi Standard</strong> asks: can you describe where this comes from, how to identify quality, what makes it exceptional, and where the execution moment is? If an entry cannot answer all four, it does not exist in the platform.</p>
+    <p class="about-body">Every entry in Provenance is evaluated against a single benchmark — named for the dish that most clearly exposes the gap between surface knowledge and real understanding. <strong>The Sashimi Standard</strong> asks: can you describe where this comes from, how to identify quality, what makes it exceptional, and where the execution moment is? If an entry cannot answer all four, it does not exist in Provenance.</p>
   </div>
 
   <!-- Five Pillars -->
@@ -343,7 +343,7 @@ main{padding-top:60px}
     <a href="/recipes">Recipes</a>
     <a href="/techniques/browse">Techniques</a>
     <a href="/suppliers">Suppliers</a>
-    <a href="/auth/account">My Kitchen</a>
+    <a href="/auth/account">MyKitchen</a>
     <a href="mailto:info@provenance.kitchen">Contact</a>
   </div>
   <span class="footer-wm">Provenance</span>
@@ -366,10 +366,6 @@ function toggleMobileMenu(){
   </div>
 </div>
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .catch(err => console.log('SW:', err));
-}
 let _pwaPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
