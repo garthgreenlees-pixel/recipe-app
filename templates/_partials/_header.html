@@ -26,8 +26,11 @@
       </button>
       <div class="nav-caret-menu" id="caretMenu" hidden>
         <a href="/auth/account" class="nav-caret-item">Account</a>
-        <a href="/kitchen" class="nav-caret-item">My Kitchen</a>
-        <a href="/auth/logout" class="nav-caret-item nav-caret-item--signout">Sign out</a>
+        <a href="/auth/account#billing" class="nav-caret-item">Billing</a>
+        <a href="/pricing" class="nav-caret-item">Upgrade</a>
+        <form method="POST" action="/auth/logout" class="nav-caret-leave-form">
+          <button type="submit" class="nav-caret-item nav-caret-item--leave">Leave</button>
+        </form>
       </div>
     </div>
     {% else %}
@@ -54,7 +57,9 @@
   <a href="/about" onclick="toggleMobileMenu()">About</a>
   {% if is_authenticated %}
   <a href="/auth/account" onclick="toggleMobileMenu()">{{ current_user.display_name or 'Account' }}</a>
-  <a href="/auth/logout" onclick="toggleMobileMenu()">Sign out</a>
+  <form method="POST" action="/auth/logout" class="mobile-menu-leave-form">
+    <button type="submit" onclick="toggleMobileMenu()" class="mobile-menu-leave-btn">Leave</button>
+  </form>
   {% else %}
   <a href="/auth/login" onclick="toggleMobileMenu()">Sign in</a>
   {% endif %}
