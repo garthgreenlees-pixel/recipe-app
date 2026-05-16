@@ -1,0 +1,61 @@
+{# Unified header partial — V4 Sprint 4.4 #}
+{# Wired into base.html via {% include '_partials/_header.html' %} #}
+{# Reads is_authenticated + current_user from context processor. #}
+
+<!-- ── NAV — single source of truth ── -->
+<nav class="site-nav">
+  <a href="/" class="nav-brand">
+    <span class="nav-leaf">P</span>
+    <span class="nav-name">Provenance</span>
+  </a>
+
+  <div class="nav-links nav-primary">
+    <a href="/canons-v2/">The Canon</a>
+    <a href="/drinks">The Atlases</a>
+    <a href="/techniques/browse">The Routes</a>
+    <a href="/kitchen">The Table</a>
+  </div>
+
+  <div class="nav-links nav-utility">
+    <a href="/pricing">Pricing</a>
+    {% if is_authenticated %}
+    <a href="/auth/account">My Kitchen</a>
+    <div class="nav-caret-wrap">
+      <button class="nav-caret-btn" onclick="toggleAuthorCaret()" aria-label="Account menu" aria-expanded="false" id="caretBtn">
+        {{ current_user.display_name or 'Account' }} <span class="nav-caret-arrow" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-caret-menu" id="caretMenu" hidden>
+        <a href="/auth/account" class="nav-caret-item">Account</a>
+        <a href="/kitchen" class="nav-caret-item">My Kitchen</a>
+        <a href="/auth/logout" class="nav-caret-item nav-caret-item--signout">Sign out</a>
+      </div>
+    </div>
+    {% else %}
+    <a href="/auth/login" class="nav-signin">Sign in</a>
+    {% endif %}
+  </div>
+
+  <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── MOBILE MENU — single source of truth ── -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMobileMenu()">Close ✕</button>
+  <a href="/canons-v2/" onclick="toggleMobileMenu()">The Canon</a>
+  <a href="/drinks" onclick="toggleMobileMenu()">The Atlases</a>
+  <a href="/techniques/browse" onclick="toggleMobileMenu()">The Routes</a>
+  <a href="/kitchen" onclick="toggleMobileMenu()">The Table</a>
+  <div class="mobile-menu-leave"></div>
+  <a href="/beverage" onclick="toggleMobileMenu()">Beverages</a>
+  <a href="/cuisines" onclick="toggleMobileMenu()">Cuisines</a>
+  <a href="/pricing" onclick="toggleMobileMenu()">Pricing</a>
+  <a href="/about" onclick="toggleMobileMenu()">About</a>
+  {% if is_authenticated %}
+  <a href="/auth/account" onclick="toggleMobileMenu()">{{ current_user.display_name or 'Account' }}</a>
+  <a href="/auth/logout" onclick="toggleMobileMenu()">Sign out</a>
+  {% else %}
+  <a href="/auth/login" onclick="toggleMobileMenu()">Sign in</a>
+  {% endif %}
+</div>

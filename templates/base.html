@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Provenance{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}The intelligence behind the recipe. 12,190 techniques across 50 cuisines.{% endblock %}">
+<meta name="robots" content="{% block meta_robots %}index, follow{% endblock %}">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
+
+<!-- PWA -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#0A0A09">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Provenance">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+
+<style>
+/* ═══════════════════════════════════════════════
+   PROVENANCE DESIGN SYSTEM — Single source of truth
+   All shared styles live here. Never duplicate these.
+   ═══════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0A0A09;
+  --surface: #111113;
+  --warm-dark: #0D0B08;
+  --cream: #F5F1E9;
+  --smoke: rgba(245,241,233,0.7);
+  --stone: rgba(245,241,233,0.45);
+  --gold: #C9A84C;
+  --gold-soft: rgba(201,168,76,0.6);
+  --gold-hint: rgba(201,168,76,0.08);
+  --border: rgba(201,168,76,0.1);
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --serif: 'Playfair Display', Georgia, serif;
+  --mono: 'DM Mono', 'Courier New', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  font-weight: 300;
+  background: var(--bg);
+  color: var(--smoke);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Paper grain — warmth over void */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  pointer-events: none;
+  z-index: 0;
+}
+
+a { color: var(--gold); text-decoration: none; }
+
+/* ── NAV ── */
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  height: 60px;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10,10,9,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.nav-leaf {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--gold);
+  line-height: 1;
+}
+.nav-name {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--cream);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--stone);
+  text-transform: uppercase;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.nav-links a:hover { color: var(--cream); }
+.nav-signin {
+  padding: 0.45rem 1.2rem !important;
+  border: 1px solid rgba(201,168,76,0.25) !important;
+  border-radius: 2px;
+  color: var(--gold) !important;
+  transition: all 0.2s !important;
+}
+.nav-signin:hover {
+  background: rgba(201,168,76,0.08) !important;
+  border-color: var(--gold) !important;
+}
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: var(--gold);
+  transition: all 0.3s;
+}
+
+/* ── MOBILE MENU ── */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  background: rgba(10,10,9,0.98);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.mobile-menu.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mobile-menu a {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--cream);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--gold); }
+.mobile-menu-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  background: none;
+  border: none;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--stone);
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+/* ── BOTTOM ACTION BAR — base provides empty slot ── */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 100;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,9,0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  gap: 0;
+}
+.bottom-bar-btn {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245,241,233,0.45);
+  background: none;
+  border: none;
+  border-right: 1px solid rgba(201,168,76,0.07);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+}
+.bottom-bar-btn:last-child { border-right: none; }
+.bottom-bar-btn:hover, .bottom-bar-btn.active {
+  color: var(--gold);
+  background: rgba(201,168,76,0.04);
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  border-top: 1px solid rgba(201,168,76,0.06);
+  padding: 4rem 2rem 2rem;
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  max-width: 960px;
+  margin: 0 auto 3rem;
+}
+.footer-logo {
+  font-family: var(--serif);
+  font-size: 2rem;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.footer-name {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+.footer-email {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--stone);
+}
+.footer-col-title {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-soft);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.footer-col a {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: var(--stone);
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.footer-col a:hover { color: var(--cream); }
+.footer-bottom {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  color: rgba(245,241,233,0.15);
+  border-top: 1px solid rgba(201,168,76,0.04);
+  padding-top: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal.visible > *:nth-child(1) { transition-delay: 0s; }
+.reveal.visible > *:nth-child(2) { transition-delay: 0.15s; }
+.reveal.visible > *:nth-child(3) { transition-delay: 0.2s; }
+.reveal.visible > *:nth-child(4) { transition-delay: 0.3s; }
+
+/* ── GOLD DOT PATTERN ── */
+.gold-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.4rem;
+  color: var(--gold);
+  flex-shrink: 0;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.gold-dot:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.5); }
+
+/* ── EXPANDING ROW PATTERN ── */
+.expand-row { cursor: pointer; user-select: none; }
+.expand-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, padding 0.3s ease;
+}
+.expand-row.open .expand-detail { max-height: 300px; }
+.expand-arrow { transition: transform 0.3s; font-size: 0.7rem; color: var(--stone); }
+.expand-row.open .expand-arrow { transform: rotate(180deg); }
+
+/* ── PURVEYOR NOTATION ── */
+.purveyor-note {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(201,168,76,0.06);
+}
+.purveyor-label {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  color: rgba(245,241,233,0.2);
+  text-transform: uppercase;
+}
+.purveyor-source {
+  font-size: 0.7rem;
+  color: rgba(201,168,76,0.35);
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: color 0.3s;
+}
+.purveyor-source:hover { color: var(--gold); }
+.purveyor-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  font-size: 0.7rem;
+  color: rgba(245,241,233,0.25);
+  line-height: 1.7;
+}
+.purveyor-detail.open { max-height: 80px; padding-top: 0.5rem; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+}
+@media (max-width: 700px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ── EMAIL VERIFICATION BANNER ── */
+.verify-banner {
+  position: fixed;
+  top: 60px;
+  left: 0; right: 0;
+  z-index: 190;
+  background: rgba(201,168,76,0.08);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  padding: 8px 2rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.7);
+  text-align: center;
+}
+.verify-banner a {
+  color: var(--gold);
+  text-decoration: underline;
+  margin-left: 1rem;
+}
+.verify-banner a:hover { opacity: 0.8; }
+
+/* ── PAGE-SPECIFIC STYLES — child templates inject here ── */
+{% block styles %}{% endblock %}
+
+/* ── V4 Sprint 4.4 — utility nav + author-caret ── */
+.nav-primary { gap: 1.5rem; }
+.nav-utility { gap: 1rem; margin-left: auto; align-items: center; }
+.nav-caret-wrap { position: relative; display: inline-flex; align-items: center; }
+.nav-caret-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--body, 'DM Sans', system-ui, sans-serif);
+  font-size: 0.85rem; color: var(--nav-text, rgba(255,255,255,0.85));
+  display: inline-flex; align-items: center; gap: 0.25rem; padding: 0;
+}
+.nav-caret-btn:hover { color: #fff; }
+.nav-caret-arrow { font-size: 0.65rem; transition: transform 0.15s; }
+.nav-caret-btn[aria-expanded="true"] .nav-caret-arrow { transform: rotate(180deg); }
+.nav-caret-menu {
+  position: absolute; top: calc(100% + 0.5rem); right: 0;
+  background: var(--charcoal, #1a1a1a); border: 1px solid rgba(255,255,255,0.12);
+  min-width: 9rem; z-index: 2000; display: flex; flex-direction: column;
+}
+.nav-caret-menu[hidden] { display: none; }
+.nav-caret-item {
+  padding: 0.6rem 1rem; font-size: 0.82rem; color: rgba(255,255,255,0.8);
+  text-decoration: none; white-space: nowrap;
+}
+.nav-caret-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.nav-caret-item--signout { border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.55); }
+.mobile-menu-leave {
+  height: 1px; background: rgba(255,255,255,0.12); margin: 0.5rem 0;
+}
+@media (max-width: 768px) {
+  .nav-utility { display: none; }
+}
+
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/processing_overlay.css') }}">
+
+<!-- Extra head content (canonical, OG image, additional fonts, JSON-LD) -->
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{% include '_partials/_header.html' %}
+
+<!-- ── EMAIL VERIFICATION BANNER ── -->
+{% if is_authenticated and current_user and not current_user.email_verified %}
+<div class="verify-banner" id="verifyBanner">
+  Verify your email to enable password recovery.
+  <a href="#" onclick="resendVerification(); return false;">Resend email</a>
+</div>
+{% endif %}
+
+<!-- ── PAGE CONTENT ── -->
+<main style="padding-top: {% block main_padding %}60px{% endblock %};">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ── BOTTOM ACTION BAR — empty in base, overridden by technique_base ── -->
+{% block bottom_bar %}{% endblock %}
+
+<!-- ── FOOTER — single source of truth ── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">P</div>
+      <div class="footer-name">Provenance</div>
+      <div class="footer-email">info@provenance.kitchen</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Explore</div>
+      <a href="/recipes">Recipes</a>
+      <a href="/beverage">Beverages</a>
+      <a href="/techniques/browse">Techniques</a>
+      <a href="/cuisines">Cuisines</a>
+      <a href="/suppliers">Suppliers</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <a href="/about">About</a>
+      <a href="/methodology">Methodology</a>
+      <a href="/for-professionals">For Professionals</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/terms">Terms</a>
+      <a href="/privacy">Privacy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Provenance · All rights reserved</div>
+</footer>
+
+<script>
+// ── Mobile menu ──
+function toggleMobileMenu() {
+  const m = document.getElementById('mobileMenu');
+  m.classList.toggle('open');
+  document.body.style.overflow = m.classList.contains('open') ? 'hidden' : '';
+}
+
+// ── Author-caret dropdown (V4 Sprint 4.4) ──
+function toggleAuthorCaret() {
+  const btn = document.getElementById('caretBtn');
+  const menu = document.getElementById('caretMenu');
+  if (!btn || !menu) return;
+  const isOpen = !menu.hidden;
+  menu.hidden = isOpen;
+  btn.setAttribute('aria-expanded', String(!isOpen));
+}
+document.addEventListener('click', function(e) {
+  const wrap = e.target.closest('.nav-caret-wrap');
+  if (!wrap) {
+    const menu = document.getElementById('caretMenu');
+    const btn = document.getElementById('caretBtn');
+    if (menu && !menu.hidden) {
+      menu.hidden = true;
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+  }
+});
+
+// ── Scroll reveal ──
+const _revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      _revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.05 });
+document.querySelectorAll('.reveal').forEach(el => _revealObserver.observe(el));
+setTimeout(() => {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+}, 2000);
+
+// ── Email verification banner ──
+function resendVerification() {
+  fetch('/api/auth/resend-verification', { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        _showBannerToast('Verification email sent. Check your inbox.');
+      } else {
+        _showBannerToast(data.error || 'Could not send email. Try again later.', true);
+      }
+    })
+    .catch(() => _showBannerToast('Could not send email. Try again later.', true));
+}
+
+function _showBannerToast(msg, isError) {
+  const toast = document.createElement('div');
+  toast.style.cssText = [
+    'position:fixed','bottom:80px','left:50%','transform:translateX(-50%)',
+    'background:' + (isError ? 'rgba(180,60,60,0.9)' : 'rgba(30,40,30,0.95)'),
+    'color:#F5F1E9','padding:10px 20px','border-radius:4px','font-family:var(--mono)',
+    'font-size:0.6rem','letter-spacing:0.1em','z-index:9999','pointer-events:none',
+    'border:1px solid ' + (isError ? 'rgba(180,60,60,0.4)' : 'rgba(201,168,76,0.2)'),
+  ].join(';');
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+
+</script>
+
+<!-- ── PROCESSING OVERLAY — reusable, call ProvenanceProcessing.show() / .hide() ── -->
+<div id="provenanceProcessingOverlay" class="provenance-processing-overlay" role="status" aria-live="polite" aria-hidden="true">
+  <div class="provenance-processing-wordmark">PROVENANCE</div>
+  <div id="provenanceProcessingStatus" class="provenance-processing-status">Reading the page…</div>
+</div>
+<script>
+(function(){
+  'use strict';
+  var DEFAULTS={messages:['Reading the page…','Composing the entry…','Setting the type…'],holdMs:2800,fadeMs:600};
+  var overlayEl=null,statusEl=null,intervalId=null,fadeTimeoutId=null,messages=DEFAULTS.messages,messageIndex=0;
+  function ensureRefs(){if(!overlayEl)overlayEl=document.getElementById('provenanceProcessingOverlay');if(!statusEl)statusEl=document.getElementById('provenanceProcessingStatus');}
+  function setMessage(t){if(statusEl)statusEl.textContent=t;}
+  function cycleStatus(fadeMs){if(!statusEl)return;statusEl.classList.add('is-fading');fadeTimeoutId=setTimeout(function(){messageIndex=(messageIndex+1)%messages.length;setMessage(messages[messageIndex]);statusEl.classList.remove('is-fading');},fadeMs);}
+  function clearTimers(){if(intervalId){clearInterval(intervalId);intervalId=null;}if(fadeTimeoutId){clearTimeout(fadeTimeoutId);fadeTimeoutId=null;}}
+  window.ProvenanceProcessing={
+    show:function(opts){
+      ensureRefs();if(!overlayEl||!statusEl)return;
+      var cfg=Object.assign({},DEFAULTS,opts||{});
+      messages=(Array.isArray(cfg.messages)&&cfg.messages.length)?cfg.messages:DEFAULTS.messages;
+      messageIndex=0;clearTimers();
+      statusEl.classList.remove('is-fading');setMessage(messages[0]);
+      overlayEl.classList.add('is-active');overlayEl.setAttribute('aria-hidden','false');
+      var tickMs=cfg.holdMs+cfg.fadeMs;
+      intervalId=setInterval(function(){cycleStatus(cfg.fadeMs);},tickMs);
+    },
+    hide:function(){
+      ensureRefs();if(!overlayEl)return;
+      clearTimers();overlayEl.classList.remove('is-active');overlayEl.setAttribute('aria-hidden','true');
+    },
+    isActive:function(){ensureRefs();return overlayEl?overlayEl.classList.contains('is-active'):false;}
+  };
+})();
+</script>
+
+<!-- Page-specific scripts -->
+{% block scripts %}{% endblock %}
+
+</body>
+</html>
