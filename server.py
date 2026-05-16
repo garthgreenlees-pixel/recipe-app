@@ -23,6 +23,7 @@ import collections
 import threading
 import queue as _queue
 from pathlib import Path
+from functools import wraps
 
 import io
 import time as _time
@@ -91,6 +92,25 @@ PRICE_MAP = {
 }
 
 TIER_HIERARCHY = ["free", "kitchen", "library", "profession", "trade"]
+
+
+def requires_tier(min_tier: str):
+    """
+    Route decorator. Returns 401 JSON if not logged in, 403 JSON if tier insufficient.
+    Usage: @requires_tier("kitchen")
+    """
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            user = get_current_user()
+            if not user:
+                return jsonify({"error": "Login required"}), 401
+            if not user_can_access(min_tier):
+                return jsonify({"error": f"{min_tier.title()} tier required"}), 403
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator
+
 
 # ─── Jinja2 Filters ───────────────────────────────────────────────────────────
 
@@ -9439,12 +9459,19 @@ def cuisines_page():
         return render_template("cuisines.html", cuisines=[], total_techniques=0)
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    # Limit to cuisines with ≥2 techniques and cap at 300 rows.
+    # The full origin field has ~9k distinct free-text values that inflate
+    # the DOM to 2.4 MB, preventing document_idle (Session D Finding 4.1).
+    # The V4 Sprint 10 wireframe-first rebuild will replace this with a
+    # curated canon hierarchy; this cap is the minimal 3.4 stability fix.
     cur.execute("""
         SELECT origin AS cuisine, COUNT(*) AS count
         FROM technique_references
         WHERE origin IS NOT NULL AND origin != ''
         GROUP BY origin
+        HAVING COUNT(*) >= 2
         ORDER BY count DESC
+        LIMIT 300
     """)
     cuisines = [dict(r) for r in cur.fetchall()]
     cur.execute("SELECT COUNT(*) AS count FROM technique_references")
@@ -10420,6 +10447,33 @@ def user_can_access(required_tier):
     user_level = TIER_HIERARCHY.index(user_tier) if user_tier in TIER_HIERARCHY else 0
     required_level = TIER_HIERARCHY.index(required_tier) if required_tier in TIER_HIERARCHY else 999
     return user_level >= required_level
+
+
+def gate_for_tier(required_tier: str) -> str:
+    """
+    Returns the render state for a tier-gated template region.
+    States: "full_content" | "preview_then_prompt" | "gate_block"
+    Use in Jinja: {% if gate_for_tier('library') == 'full_content' %}
+    """
+    user = get_current_user()
+    if required_tier == "free":
+        return "full_content"
+    if not user:
+        return "gate_block"
+    if user.get("role") in ("founder", "admin"):
+        return "full_content"
+    user_status = user.get("subscription_status", "inactive")
+    if user_status not in ("active", "past_due"):
+        return "gate_block"
+    user_tier = user.get("subscription_tier", "free")
+    user_level = TIER_HIERARCHY.index(user_tier) if user_tier in TIER_HIERARCHY else 0
+    required_level = TIER_HIERARCHY.index(required_tier) if required_tier in TIER_HIERARCHY else 999
+    if user_level >= required_level:
+        return "full_content"
+    return "preview_then_prompt"
+
+
+app.jinja_env.globals["gate_for_tier"] = gate_for_tier
 
 
 @app.context_processor
