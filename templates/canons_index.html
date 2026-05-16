@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Canon Library — Provenance{% endblock %}
+{% block meta_description %}Browse all culinary canons in the Provenance knowledge library. Italian, French, Japanese, Chinese, and more.{% endblock %}
+
+{% block content %}
+<div style="max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem">
+  <div style="margin-bottom:3rem">
+    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;color:var(--stone);text-transform:uppercase;margin-bottom:0.75rem">
+      <a href="/">Provenance</a> / Canon Library
+    </p>
+    <h1 style="font-family:var(--serif);font-size:2.5rem;font-weight:400;color:var(--cream);margin-bottom:1rem">Canon Library</h1>
+    <p style="color:var(--stone);max-width:600px">Provenance's culinary canons organise {{ stats.techniques }}+ techniques, traditions, and ingredients into named books. Each canon is a structured archive for a single cuisine or subject domain.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
+    {% for canon in canons %}
+    <a href="/canon/{{ canon.slug }}/" style="display:block;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;text-decoration:none;transition:border-color 0.2s"
+       onmouseover="this.style.borderColor='var(--gold-soft)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-family:var(--serif);font-size:1.15rem;color:var(--cream);margin-bottom:0.4rem">{{ canon.name }}</div>
+      {% if canon.description %}
+      <div style="font-size:0.82rem;color:var(--stone);margin-bottom:0.75rem;line-height:1.5">{{ canon.description[:100] }}{% if canon.description|length > 100 %}…{% endif %}</div>
+      {% endif %}
+      <div style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase">{{ canon.entry_count or 0 }} entries</div>
+    </a>
+    {% else %}
+    <p style="color:var(--stone)">No canons available.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

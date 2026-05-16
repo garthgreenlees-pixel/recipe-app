@@ -213,7 +213,7 @@ input[type=number].field-input{width:80px}
     <button onclick="toggleLoadPanel()" style="background:none;border:none;font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,168,76,0.45);cursor:pointer;padding:0;transition:color 180ms" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='rgba(201,168,76,0.45)'">Load Saved ↓</button>
   </div>
   <h1 class="hero-title">Programme Builder</h1>
-  <p class="hero-sub">Design a complete beverage programme from aperitif to digestif. Search 12,000+ techniques, receive pairing suggestions by logic type, export a formatted programme card.</p>
+  <p class="hero-sub">Design a complete beverage programme from aperitif to digestif. Search {{ stats.techniques }}+ techniques, receive pairing suggestions by logic type, export a formatted programme card.</p>
 </div>
 
 <!-- ─── BUILDER ─── -->
@@ -912,6 +912,6 @@ function toggleMobileMenu() {
   document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
 }
 </script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
+
 </body>
 </html>

@@ -6855,25 +6855,27 @@ h2{{font-size:13px;margin-top:16px}}
         return jsonify(error=str(e)), 500
 
 
-# ── /api/stats — public counts cache (V4 Sprint 4.6) ──────────────────────
+# ── Platform counts — shared by /api/stats and template context processor ──
 _stats_cache = {"data": None, "timestamp": 0.0}
 _STATS_CACHE_TTL_SECONDS = 60
 
 
-@app.route("/api/stats")
-def api_stats():
-    """Public platform counts. 60-second server-side cache. No auth required."""
+def _compute_platform_counts():
+    """Compute and cache platform counts. Returns dict with full *_count keys.
+    Shared by /api/stats (JSON) and inject_stats (template context).
+    60-second cache. (V4 Sprint 4.7)"""
     import time
     now = time.monotonic()
     if _stats_cache["data"] is not None and (now - _stats_cache["timestamp"]) < _STATS_CACHE_TTL_SECONDS:
-        return jsonify(_stats_cache["data"])
+        return _stats_cache["data"]
 
     if not DATABASE_URL:
-        return jsonify({
+        # Don't cache the no-DB fallback; let it retry if DB comes online
+        return {
             "technique_count": None, "recipe_count": None, "beverage_count": None,
             "supplier_count": None, "drink_count": None, "canon_count": None,
-            "route_count": 5,
-        })
+            "p1000_count": None, "route_count": 5,
+        }
 
     conn = get_db()
     cur = conn.cursor()
@@ -6886,6 +6888,7 @@ def api_stats():
             ("supplier_count",  "SELECT COUNT(*) FROM suppliers WHERE is_active = TRUE"),
             ("drink_count",     "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 500 Drinks%'"),
             ("canon_count",     "SELECT COUNT(*) FROM canons WHERE status != 'archived'"),
+            ("p1000_count",     "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 1000%'"),
         ]
         for key, sql in queries:
             try:
@@ -6897,9 +6900,34 @@ def api_stats():
 
         _stats_cache["data"] = counts
         _stats_cache["timestamp"] = now
-        return jsonify(counts)
+        return counts
     finally:
         cur.close()
+
+
+@app.route("/api/stats")
+def api_stats():
+    """Public platform counts. 60-second server-side cache. No auth required."""
+    return jsonify(_compute_platform_counts())
+
+
+@app.context_processor
+def inject_stats():
+    """Inject `stats` dict (short keys) into every template render.
+    Routes that pass their own `stats` kwarg override this via Flask precedence."""
+    counts = _compute_platform_counts()
+    return {
+        "stats": {
+            "techniques": counts.get("technique_count"),
+            "recipes":    counts.get("recipe_count"),
+            "beverages":  counts.get("beverage_count"),
+            "drinks":     counts.get("drink_count"),
+            "suppliers":  counts.get("supplier_count"),
+            "canons":     counts.get("canon_count"),
+            "routes":     counts.get("route_count"),
+            "p1000":      counts.get("p1000_count"),
+        }
+    }
 
 
 @app.route("/api/export-pdf", methods=["POST"])
