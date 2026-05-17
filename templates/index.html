@@ -184,6 +184,99 @@ body {
 @media (max-width: 768px) {
   .hp-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 }
+
+/* ── Carbonara comparison — V4 Sprint 5.5 ── */
+.hp-compare {
+  padding: 6rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.hp-compare-head {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.hp-compare-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.hp-compare-title {
+  font-family: var(--display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  color: var(--charcoal);
+  line-height: 1.15;
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.hp-compare-title .italic { font-style: italic; color: var(--charcoal-soft); }
+.hp-compare-lede {
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--charcoal-soft);
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.hp-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--line);
+}
+.hp-compare-col {
+  padding: 2.5rem;
+}
+.hp-compare-col--before {
+  background: var(--cream-50);
+  border-right: 1px solid var(--line);
+}
+.hp-compare-col--after {
+  background: var(--cream-100);
+}
+.hp-compare-col-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.hp-compare-col--before .hp-compare-col-label { color: var(--warm-gray); }
+.hp-compare-col--after  .hp-compare-col-label { color: var(--gold); }
+.hp-compare-col-dish {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--charcoal-soft);
+  margin-bottom: 1.5rem;
+}
+.hp-compare-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.hp-compare-list li {
+  font-family: var(--body);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: 6px 0;
+  border-bottom: 1px dotted var(--line-soft);
+  color: var(--charcoal-soft);
+}
+.hp-compare-list li:last-child { border-bottom: none; }
+/* Producer/origin specifics in the right column — gold, upright, medium weight */
+.hp-compare-col--after .hp-compare-list li { color: var(--charcoal); }
+.hp-compare-col--after .hp-compare-list em {
+  font-style: normal;
+  color: var(--gold);
+  font-weight: 500;
+}
+@media (max-width: 768px) {
+  .hp-compare-grid { grid-template-columns: 1fr; }
+  .hp-compare-col--before { border-right: none; border-bottom: 1px solid var(--line); }
+}
 </style>
 {% endblock %}
 
@@ -222,5 +315,38 @@ body {
     </div>
   </div>
 </section>
-<!-- Sections 5.5 through 5.9 fill in here: comparison, personas, table, method, footer -->
+<section class="hp-compare">
+  <div class="hp-compare-head">
+    <div class="hp-compare-eyebrow">The same dish</div>
+    <h2 class="hp-compare-title">Spaghetti alla Carbonara,<br><span class="italic">with and without Provenance.</span></h2>
+    <p class="hp-compare-lede">Two ingredient lists. The dish lives or dies in the second one.</p>
+  </div>
+  <div class="hp-compare-grid">
+    <div class="hp-compare-col hp-compare-col--before">
+      <div class="hp-compare-col-label">Without Provenance</div>
+      <div class="hp-compare-col-dish">Carbonara</div>
+      <ul class="hp-compare-list">
+        <li>200 g spaghetti</li>
+        <li>150 g guanciale</li>
+        <li>4 egg yolks</li>
+        <li>50 g pecorino, grated</li>
+        <li>Black pepper</li>
+        <li>Salt</li>
+      </ul>
+    </div>
+    <div class="hp-compare-col hp-compare-col--after">
+      <div class="hp-compare-col-label">Sourced by Provenance</div>
+      <div class="hp-compare-col-dish">Carbonara</div>
+      <ul class="hp-compare-list">
+        <li>200 g <em>Senatore Cappelli spaghetti, Pastificio Mancini</em></li>
+        <li>150 g <em>Suino Casertana guanciale, 24-month cure</em></li>
+        <li>4 <em>pastured egg yolks, Lazio</em></li>
+        <li>50 g <em>Pecorino Romano DOP, grated</em></li>
+        <li>Black pepper, Tellicherry, cracked</li>
+        <li>Mediterranean sea salt</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<!-- Sections 5.6 through 5.9 fill in here: personas, table, method, footer -->
 {% endblock %}
