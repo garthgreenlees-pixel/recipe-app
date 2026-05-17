@@ -277,6 +277,109 @@ body {
   .hp-compare-grid { grid-template-columns: 1fr; }
   .hp-compare-col--before { border-right: none; border-bottom: 1px solid var(--line); }
 }
+
+/* ── Personas block — V4 Sprint 5.6 ── */
+.hp-personas {
+  padding: 6rem 2rem;
+  background: var(--cream-50);
+}
+.hp-personas-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.hp-personas-head {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.hp-personas-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.hp-personas-title {
+  font-family: var(--display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  color: var(--charcoal);
+  line-height: 1.15;
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.hp-personas-title .italic { font-style: italic; color: var(--charcoal-soft); }
+.hp-personas-lede {
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--charcoal-soft);
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.hp-personas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+.hp-persona {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  background: var(--cream-100);
+  border: 1px solid var(--line-soft);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+  min-height: 360px;
+}
+.hp-persona:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+.hp-persona-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-bottom: 0.5rem;
+}
+.hp-persona-door {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  color: var(--charcoal);
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.hp-persona-price {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin-bottom: 1.25rem;
+}
+.hp-persona-desc {
+  font-family: var(--body);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--charcoal-soft);
+  flex-grow: 1;
+  margin: 0 0 1.5rem;
+}
+.hp-persona-cta {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--charcoal);
+}
+.hp-persona:hover .hp-persona-cta { color: var(--gold); }
+@media (max-width: 1024px) {
+  .hp-personas-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .hp-personas-grid { grid-template-columns: 1fr; }
+  .hp-persona { min-height: auto; }
+}
 </style>
 {% endblock %}
 
@@ -348,5 +451,44 @@ body {
     </div>
   </div>
 </section>
-<!-- Sections 5.6 through 5.9 fill in here: personas, table, method, footer -->
+<section class="hp-personas">
+  <div class="hp-personas-inner">
+    <div class="hp-personas-head">
+      <div class="hp-personas-eyebrow">Find your entry</div>
+      <h2 class="hp-personas-title">Who are you<br><span class="italic">at the table?</span></h2>
+      <p class="hp-personas-lede">The Four Doors map to four members. The right door is the one that opens to your work.</p>
+    </div>
+    <div class="hp-personas-grid">
+      <a href="/pricing#kitchen" class="hp-persona">
+        <div class="hp-persona-eyebrow">The Cook</div>
+        <div class="hp-persona-door">Open The Kitchen</div>
+        <div class="hp-persona-price">{# TODO Sprint 11: confirm pricing against /pricing rebuild #}From $49 / year</div>
+        <p class="hp-persona-desc">The home kitchen seat. Imports, your collection, the platform's named producers in every recipe you keep.</p>
+        <div class="hp-persona-cta">Door I →</div>
+      </a>
+      <a href="/pricing#library" class="hp-persona">
+        <div class="hp-persona-eyebrow">The Sommelier</div>
+        <div class="hp-persona-door">Open The Library</div>
+        <div class="hp-persona-price">{# TODO Sprint 11: confirm pricing against /pricing rebuild #}From $149 / year</div>
+        <p class="hp-persona-desc">The beverage canon at full depth — terroir, named producers, the Spice Routes, the service protocols.</p>
+        <div class="hp-persona-cta">Door II →</div>
+      </a>
+      <a href="/pricing#profession" class="hp-persona">
+        <div class="hp-persona-eyebrow">The Chef</div>
+        <div class="hp-persona-door">Open The Profession</div>
+        <div class="hp-persona-price">{# TODO Sprint 11: confirm pricing against /pricing rebuild #}From $299 / year</div>
+        <p class="hp-persona-desc">The working kitchen. HACCP briefs, recipe costing, Menu Builder with cross-recipe allergen matrix.</p>
+        <div class="hp-persona-cta">Door III →</div>
+      </a>
+      <a href="/pricing#trade" class="hp-persona">
+        <div class="hp-persona-eyebrow">The Supplier</div>
+        <div class="hp-persona-door">Open The Trade</div>
+        <div class="hp-persona-price">{# TODO Sprint 11: confirm pricing against /pricing rebuild #}From $999 / year</div>
+        <p class="hp-persona-desc">The marketplace seat. Producer portal, product listing, regional targeting, pairing intelligence analytics.</p>
+        <div class="hp-persona-cta">Door IV →</div>
+      </a>
+    </div>
+  </div>
+</section>
+<!-- Sections 5.7 through 5.9 fill in here: table band, method close, footer -->
 {% endblock %}
