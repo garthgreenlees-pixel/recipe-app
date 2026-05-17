@@ -96,9 +96,9 @@ body {
 .footer-col-title       { color: var(--warm-gray); }
 .footer-bottom          { color: var(--warm-gray-light); border-top-color: var(--line-soft); }
 
-/* ── Hero placeholder (full build in 5.3) ── */
+/* ── Hero — V4 Sprint 5.3 ── */
 .hp-hero {
-  padding: 6rem 2rem 4rem;
+  padding: 6rem 2rem 0;
 }
 .hp-hero h1 {
   font-family: var(--display);
@@ -109,12 +109,59 @@ body {
   font-weight: 500;
 }
 .hp-hero h1 .italic { font-style: italic; color: var(--charcoal-soft); }
+.hp-hero-lede {
+  font-family: var(--body);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  max-width: 720px;
+  color: var(--charcoal-soft);
+  margin: 1.5rem 0 2.5rem;
+  padding: 0 2rem;
+}
+.hp-hero-ctas {
+  display: flex;
+  gap: 1rem;
+  padding: 0 2rem 4rem;
+  flex-wrap: wrap;
+}
+.hp-cta {
+  font-family: var(--body);
+  font-size: 0.95rem;
+  padding: 0.85rem 1.5rem;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.hp-cta--ghost {
+  color: var(--charcoal-soft);
+  background: transparent;
+}
+.hp-cta--ghost:hover { color: var(--gold); }
+.hp-cta--outline {
+  color: var(--charcoal);
+  border-color: var(--line);
+  background: transparent;
+}
+.hp-cta--outline:hover { border-color: var(--charcoal); }
+.hp-cta--primary {
+  color: var(--cream-50);
+  background: var(--charcoal);
+  border-color: var(--charcoal);
+}
+.hp-cta--primary:hover { background: var(--gold); border-color: var(--gold); }
 </style>
 {% endblock %}
 
 {% block content %}
 <section class="hp-hero">
   <h1>Every ingredient has a provenance.<br><span class="italic">Every dish deserves to know it.</span></h1>
+  <p class="hp-hero-lede">A reference for the origin of ingredients, the lineage of techniques, and the canon of beverages. For the working kitchen and the curious diner alike.</p>
+  <div class="hp-hero-ctas">
+    <a href="/canons-v2/" class="hp-cta hp-cta--ghost">Open the Canon</a>
+    <a href="/pricing" class="hp-cta hp-cta--outline">Find your tier</a>
+    <a href="/kitchen" class="hp-cta hp-cta--primary">Begin in your kitchen →</a>
+  </div>
 </section>
-<!-- Sections 5.3 through 5.9 fill in here: hero CTAs, stats band, comparison, personas, table, method, footer -->
+<!-- Sections 5.4 through 5.9 fill in here: stats band, comparison, personas, table, method, footer -->
 {% endblock %}
