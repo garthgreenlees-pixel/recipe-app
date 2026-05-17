@@ -150,6 +150,40 @@ body {
   border-color: var(--charcoal);
 }
 .hp-cta--primary:hover { background: var(--gold); border-color: var(--gold); }
+
+/* ── Stats band — V4 Sprint 5.4 ── */
+.hp-stats {
+  padding: 4rem 2rem;
+  background: var(--cream-100);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+.hp-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.hp-stat { text-align: center; }
+.hp-stat-number {
+  font-family: var(--display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--charcoal);
+  line-height: 1;
+  font-weight: 500;
+}
+.hp-stat-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-top: 0.75rem;
+}
+@media (max-width: 768px) {
+  .hp-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}
 </style>
 {% endblock %}
 
@@ -163,5 +197,30 @@ body {
     <a href="/kitchen" class="hp-cta hp-cta--primary">Begin in your kitchen →</a>
   </div>
 </section>
-<!-- Sections 5.4 through 5.9 fill in here: stats band, comparison, personas, table, method, footer -->
+
+<section class="hp-stats">
+  <div class="hp-stats-grid">
+    <div class="hp-stat">
+      <div class="hp-stat-number">{{ "{:,}".format(stats.techniques) if stats.techniques else '—' }}</div>
+      <div class="hp-stat-label">Technique references</div>
+    </div>
+    <div class="hp-stat">
+      <div class="hp-stat-number">{{ "{:,}".format(stats.beverages) if stats.beverages else '—' }}</div>
+      <div class="hp-stat-label">Beverage entries</div>
+    </div>
+    <div class="hp-stat">
+      <div class="hp-stat-number">{{ "{:,}".format(stats.pairings) if stats.pairings else '—' }}</div>
+      <div class="hp-stat-label">Pairings mapped</div>
+    </div>
+    <div class="hp-stat">
+      <div class="hp-stat-number">{{ "{:,}".format(stats.p1000) if stats.p1000 else '—' }}</div>
+      <div class="hp-stat-label">Recipes at standard</div>
+    </div>
+    <div class="hp-stat">
+      <div class="hp-stat-number">{{ "{:,}".format(stats.suppliers) if stats.suppliers else '—' }}</div>
+      <div class="hp-stat-label">Verified suppliers</div>
+    </div>
+  </div>
+</section>
+<!-- Sections 5.5 through 5.9 fill in here: comparison, personas, table, method, footer -->
 {% endblock %}

@@ -6874,7 +6874,7 @@ def _compute_platform_counts():
         return {
             "technique_count": None, "recipe_count": None, "beverage_count": None,
             "supplier_count": None, "drink_count": None, "canon_count": None,
-            "p1000_count": None, "route_count": 5,
+            "p1000_count": None, "pairing_count": None, "route_count": 5,
         }
 
     conn = get_db()
@@ -6889,6 +6889,7 @@ def _compute_platform_counts():
             ("drink_count",     "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 500 Drinks%'"),
             ("canon_count",     "SELECT COUNT(*) FROM canons WHERE status != 'archived'"),
             ("p1000_count",     "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 1000%'"),
+            ("pairing_count",   "SELECT COUNT(*) FROM pairing_intelligence"),
         ]
         for key, sql in queries:
             try:
@@ -6926,6 +6927,7 @@ def inject_stats():
             "canons":     counts.get("canon_count"),
             "routes":     counts.get("route_count"),
             "p1000":      counts.get("p1000_count"),
+            "pairings":   counts.get("pairing_count"),
         }
     }
 
