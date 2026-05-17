@@ -475,6 +475,7 @@ a { color: var(--gold); text-decoration: none; }
 {% block bottom_bar %}{% endblock %}
 
 <!-- ── FOOTER — single source of truth ── -->
+{% block footer %}
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
@@ -502,6 +503,7 @@ a { color: var(--gold); text-decoration: none; }
   </div>
   <div class="footer-bottom">© 2026 Provenance · All rights reserved</div>
 </footer>
+{% endblock %}
 
 <script>
 // ── Mobile menu ──

@@ -380,6 +380,181 @@ body {
   .hp-personas-grid { grid-template-columns: 1fr; }
   .hp-persona { min-height: auto; }
 }
+
+/* ── The Table band — V4 Sprint 5.7 ── */
+.hp-table {
+  padding: 6rem 2rem;
+  background: var(--cream-100);
+  border-top: 1px solid var(--line-soft);
+}
+.hp-table-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.hp-table-img {
+  background: var(--cream-200, #EAE2CE);
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+}
+.hp-table-img-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--warm-gray);
+  text-align: center;
+  line-height: 1.6;
+  padding: 1rem;
+}
+.hp-table-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.hp-table-title {
+  font-family: var(--display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  color: var(--charcoal);
+  line-height: 1.15;
+  margin: 0 0 1.5rem;
+  font-weight: 500;
+}
+.hp-table-title .italic { font-style: italic; color: var(--charcoal-soft); }
+.hp-table-body p {
+  font-family: var(--body);
+  font-size: 1.125rem;
+  line-height: 1.65;
+  color: var(--charcoal-soft);
+  margin: 0 0 1rem;
+}
+.hp-table-credits strong { color: var(--charcoal); }
+.hp-table-cta {
+  font-family: var(--body);
+  font-size: 0.95rem;
+  color: var(--charcoal-soft);
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--gold);
+  padding-bottom: 2px;
+  display: inline-block;
+  margin-top: 1rem;
+}
+.hp-table-cta:hover { color: var(--charcoal); }
+@media (max-width: 768px) {
+  .hp-table-inner { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ── Method Close — V4 Sprint 5.7 ── */
+.hp-method {
+  padding: 6rem 2rem;
+  background: var(--cream-50);
+  border-top: 1px solid var(--line-soft);
+  text-align: center;
+}
+.hp-method-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.hp-method-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.hp-method-title {
+  font-family: var(--display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  color: var(--charcoal);
+  line-height: 1.15;
+  margin: 0 0 1.5rem;
+  font-weight: 500;
+}
+.hp-method-title .italic { font-style: italic; color: var(--charcoal-soft); }
+.hp-method-lede {
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--charcoal-soft);
+  line-height: 1.6;
+  margin: 0 auto 2.5rem;
+  max-width: 640px;
+}
+.hp-method-ctas {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── Homepage footer — V4 Sprint 5.7 ── */
+.hp-footer {
+  background: var(--charcoal);
+  color: var(--cream-100);
+  padding: 4rem 2rem 2rem;
+  border-top: 1px solid var(--charcoal-soft);
+}
+.hp-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--charcoal-soft);
+}
+.hp-footer-brand h5,
+.hp-footer-col h5 {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--cream-100);
+  margin: 0 0 1rem;
+  letter-spacing: 0.02em;
+}
+.hp-footer-brand-tagline {
+  font-family: var(--body);
+  font-size: 0.875rem;
+  color: var(--warm-gray-light);
+  line-height: 1.6;
+  max-width: 280px;
+}
+.hp-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.hp-footer-col ul li { margin-bottom: 0.5rem; }
+.hp-footer-col ul li a {
+  font-family: var(--body);
+  font-size: 0.875rem;
+  color: var(--warm-gray-light);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.hp-footer-col ul li a:hover { color: var(--cream-100); }
+.hp-footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--warm-gray);
+  letter-spacing: 0.04em;
+}
+@media (max-width: 768px) {
+  .hp-footer-inner { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+}
+@media (max-width: 480px) {
+  .hp-footer-inner { grid-template-columns: 1fr; }
+}
 </style>
 {% endblock %}
 
@@ -490,5 +665,75 @@ body {
     </div>
   </div>
 </section>
-<!-- Sections 5.7 through 5.9 fill in here: table band, method close, footer -->
+<section class="hp-table">
+  <div class="hp-table-inner">
+    <div class="hp-table-img">
+      <div class="hp-table-img-label">Image — Dinner Zero, Sunshine Coast<br>Founding partner: Purely Artisan</div>
+    </div>
+    <div class="hp-table-body">
+      <div class="hp-table-eyebrow">The seven dinners</div>
+      <h2 class="hp-table-title">From the database<br><span class="italic">to the table.</span></h2>
+      <p>The Provenance Table is the living artifact of the Pacific Migration Trail. Seven dinners. Two countries. One thesis: that techniques travel with people, and that a kitchen is a place where the journey resolves.</p>
+      <p class="hp-table-credits">Founding sponsor of Dinner Zero: <strong>Purely Artisan Foods</strong>. Wellington capstone: <strong>Monique Fiso</strong>.</p>
+      <a href="#" data-target-route="pacific-migration-trail" class="hp-table-cta">
+        {# TODO Sprint 10: wire to /route/pacific-migration-trail #}
+        Walk the trail →
+      </a>
+    </div>
+  </div>
+</section>
+<section class="hp-method">
+  <div class="hp-method-inner">
+    <div class="hp-method-eyebrow">The Empty Seat Method</div>
+    <h2 class="hp-method-title">Every entry,<br><span class="italic">tested from the chair of someone who knows nothing about it.</span></h2>
+    <p class="hp-method-lede">The chef testing the dish from the diner's chair. The author writing the entry from the reader's chair. The platform itself tested from the empty seat at the table.</p>
+    <div class="hp-method-ctas">
+      <a href="/methodology" class="hp-cta hp-cta--outline">Read the standard</a>
+      <a href="/methodology#sashimi-standard" class="hp-cta hp-cta--ghost">
+        {# TODO Sprint 10: confirm Sashimi Standard anchor destination on /methodology #}
+        The Sashimi Standard →
+      </a>
+    </div>
+  </div>
+</section>
+<!-- Homepage body complete per Foundation wireframe (V4 Sprint 5) -->
+{% endblock %}
+
+{% block footer %}
+<footer class="hp-footer">
+  <div class="hp-footer-inner">
+    <div class="hp-footer-brand">
+      <h5>Provenance</h5>
+      <p class="hp-footer-brand-tagline">A reference for the origin of ingredients, the lineage of techniques, and the canon of beverages.</p>
+    </div>
+    <div class="hp-footer-col">
+      <h5>Library</h5>
+      <ul>
+        <li><a href="/canons-v2/">The Canon</a></li>
+        <li><a href="#">{# TODO Sprint 7: wire to /atlases #}The Atlases</a></li>
+        <li><a href="#">{# TODO Sprint 7: wire to /routes #}The Routes</a></li>
+        <li><a href="/cuisines">Cuisines</a></li>
+      </ul>
+    </div>
+    <div class="hp-footer-col">
+      <h5>The Kitchen</h5>
+      <ul>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/for-professionals">For Professionals</a></li>
+        <li><a href="/methodology">Methodology</a></li>
+        <li><a href="/methodology#sashimi-standard">The Standard</a></li>
+      </ul>
+    </div>
+    <div class="hp-footer-col">
+      <h5>The House</h5>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/suppliers">Suppliers</a></li>
+        <li><a href="#">{# TODO Sprint 10: wire to /route/pacific-migration-trail #}The Provenance Table</a></li>
+        <li><a href="/auth/login">Sign in</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="hp-footer-bottom">© 2026 Provenance · All rights reserved</div>
+</footer>
 {% endblock %}
