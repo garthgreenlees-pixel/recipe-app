@@ -30,6 +30,15 @@
 </script>
 
 <style>
+/* ── Recipe-page CSS variable overrides (missing from base.html) ── */
+:root {
+  --text: #08080A;
+  --text-mid: #555;
+  --text-muted: #888;
+  --divider: rgba(0,0,0,0.1);
+  --didot: 'Playfair Display', Georgia, serif;
+}
+
 /* ── Recipe Detail — Sprint 6 ──────────────────────────── */
 .recipe-page {
   background: var(--cream-50);
@@ -264,6 +273,28 @@
 .r6-cost-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .r6-cost-table th, .r6-cost-table td { padding: 5px var(--s1); border-bottom: 1px dotted var(--line-soft); text-align: left; }
 .r6-cost-table tfoot td { font-weight: 600; border-top: 1px solid var(--line); border-bottom: none; }
+.r6-cost-banner { display: flex; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s2); padding: var(--s2); background: var(--cream-100); border: 1px solid var(--line); }
+.r6-cost-banner--over { border-color: rgba(180,60,60,0.3); background: rgba(180,60,60,0.04); }
+.r6-cost-stat { display: flex; flex-direction: column; gap: 2px; }
+.r6-cost-stat__label { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--warm-gray); }
+.r6-cost-stat__value { font-size: 15px; font-weight: 600; color: var(--charcoal); }
+.r6-cost-stat--over .r6-cost-stat__value { color: #c04040; }
+.r6-cost-badge { display: inline-block; font-family: var(--mono); font-size: 9px; padding: 1px 4px; border-radius: 2px; margin-left: 3px; vertical-align: middle; }
+.r6-cost-badge--est { background: var(--cream-200); color: var(--warm-gray); border: 1px solid var(--line-soft); }
+.r6-cost-badge--warn { background: rgba(180,100,0,0.1); color: #8a5000; border: 1px solid rgba(180,100,0,0.2); cursor: help; }
+.r6-cost-badge--user { background: rgba(100,150,80,0.1); color: #3d6b2e; border: 1px solid rgba(100,150,80,0.2); }
+.r6-cost-row--unpriced td { color: var(--warm-gray); }
+.r6-cost-row--warn td { color: #8a5000; }
+.r6-cost-no-data { color: var(--warm-gray); font-style: italic; }
+.r6-cost-note { font-size: 11px; color: var(--warm-gray); margin-top: var(--s1); font-style: italic; }
+.r6-cost-note--warn { color: #8a5000; }
+.r6-cost-form { display: flex; gap: var(--s2); align-items: flex-end; flex-wrap: wrap; margin-top: var(--s3); padding-top: var(--s2); border-top: 1px dotted var(--line-soft); }
+.r6-cost-form__row { display: flex; flex-direction: column; gap: 3px; }
+.r6-cost-form__row label { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--warm-gray); }
+.r6-cost-form__row input { width: 110px; padding: 5px 7px; border: 1px solid var(--line); background: #fff; font-size: 13px; font-family: var(--sans); color: var(--charcoal); }
+.r6-cost-form__btn { padding: 6px 14px; background: var(--gold); border: none; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; cursor: pointer; }
+.r6-cost-form__btn:hover { opacity: 0.85; }
+.r6-cost-per-portion { font-size: 11px; color: var(--warm-gray); margin-top: 3px; }
 
 /* empty state */
 .r6-empty {
@@ -285,8 +316,74 @@
 @media (max-width: 900px) {
   .r6-hero__title-block h1 { font-size: 36px; }
   .r6-parallels, .r6-pairings, .r6-tools-grid, .r6-suppliers { grid-template-columns: 1fr; }
-  .r6-crumb, .r6-hero, .r6-pillar, .r6-actions { padding-left: var(--s2); padding-right: var(--s2); }
+  .r6-crumb, .r6-hero, .r6-pillar, .r-actions { padding-left: var(--s2); padding-right: var(--s2); }
 }
+
+/* ── Action buttons row ─────────────────────────────── */
+.r-actions{display:flex;flex-wrap:wrap;gap:10px;padding:20px 40px;margin-top:18px;background:rgba(255,255,255,0.4);max-width:var(--max-w);margin-left:auto;margin-right:auto}
+.r-action-btn{display:flex;align-items:center;gap:6px;font-family:var(--serif);font-style:italic;font-size:11px;color:#5A2810;letter-spacing:0.5px;background:transparent;border:0.5px solid rgba(139,44,26,0.3);padding:8px 14px;border-radius:18px;cursor:pointer;transition:background 0.15s,border-color 0.15s}
+.r-action-btn:hover{background:rgba(254,242,240,0.6);border-color:var(--burgundy)}
+.r-action-btn svg{flex-shrink:0}
+
+/* ── Peek panel ─────────────────────────────────────── */
+.r-peek-backdrop{display:none;position:fixed;inset:0;z-index:400;background:rgba(20,18,16,0.45);backdrop-filter:blur(8px)}
+.r-peek-backdrop.open{display:block}
+.r-peek-sheet{position:fixed;bottom:0;left:0;right:0;z-index:401;max-height:80vh;overflow-y:auto;background:rgba(250,247,242,0.97);backdrop-filter:blur(40px);border-top:0.5px solid rgba(201,168,76,0.4);border-radius:18px 18px 0 0;padding:20px 20px 36px;visibility:hidden;pointer-events:none;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),visibility 0s linear 0.35s}
+.r-peek-sheet.open{visibility:visible;pointer-events:auto;transform:translateY(0);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),visibility 0s linear 0s}
+@media(min-width:768px){.r-peek-sheet{left:auto;right:20px;bottom:20px;width:400px;max-height:72vh;border-radius:12px;border:0.5px solid rgba(201,168,76,0.4);box-shadow:0 12px 40px rgba(28,25,23,0.18)}}
+.r-peek-drag{width:32px;height:3px;background:#D6D3D1;border-radius:2px;margin:0 auto 18px}
+@media(min-width:768px){.r-peek-drag{display:none}}
+.r-peek-close{position:absolute;top:14px;right:16px;background:none;border:none;cursor:pointer;font-family:var(--serif);font-size:11px;color:var(--text-muted)}
+.r-peek-eyebrow{font-family:var(--serif);font-style:italic;font-size:10.5px;letter-spacing:0.8px;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+.r-peek-title{font-family:var(--didot);font-style:italic;font-size:20px;color:var(--text);line-height:1.25;margin-bottom:8px}
+.r-peek-desc{font-family:var(--serif);font-size:13px;line-height:1.7;color:var(--text-mid);margin-bottom:16px}
+.r-peek-preview{border:0.5px solid rgba(201,168,76,0.25);border-radius:8px;padding:14px 16px;margin-bottom:18px;overflow:hidden;position:relative}
+.r-peek-preview-inner{font-family:var(--serif);font-size:12.5px;line-height:1.65;color:var(--text-mid);-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 30%,rgba(0,0,0,0));mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 30%,rgba(0,0,0,0));max-height:80px;overflow:hidden;filter:blur(1.5px);user-select:none;pointer-events:none}
+.r-peek-preview-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-style:italic;font-size:11px;color:var(--text-muted);backdrop-filter:blur(2px)}
+.r-peek-cta{display:block;width:100%;text-align:center;padding:13px;border-radius:8px;background:var(--burgundy);color:#FAF7F2;font-family:var(--serif);font-size:13px;letter-spacing:0.5px;text-decoration:none;transition:background 0.15s;border:none;cursor:pointer}
+.r-peek-cta:hover{background:#6D2215}
+.r-peek-sub{display:block;text-align:center;margin-top:10px;font-family:var(--serif);font-style:italic;font-size:11.5px;color:var(--text-muted)}
+
+/* ── Scale modal ─────────────────────────────────────── */
+.sc-overlay{position:fixed;inset:0;background:rgba(28,25,23,0.82);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px}
+.sc-overlay.open{display:flex}
+.sc-modal{background:var(--cream);width:100%;max-width:400px;border-radius:4px;overflow:hidden}
+.sc-header{border-bottom:0.5px solid var(--divider);padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.sc-title{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)}
+.sc-close{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-muted);padding:2px 4px}
+.sc-close:hover{color:var(--text)}
+.sc-body{padding:20px 16px 24px;display:flex;flex-direction:column;gap:16px}
+.sc-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sc-label{font-family:var(--serif);font-size:13px;color:var(--text-mid)}
+.sc-input-wrap{display:flex;align-items:center;gap:8px}
+.sc-btn{background:none;border:0.5px solid var(--divider);border-radius:2px;width:28px;height:28px;cursor:pointer;font-size:16px;color:var(--text-mid);display:flex;align-items:center;justify-content:center;line-height:1}
+.sc-btn:hover{border-color:var(--gold);color:var(--gold)}
+.sc-num{font-family:var(--didot);font-style:italic;font-size:20px;color:var(--text);min-width:36px;text-align:center}
+.sc-unit{font-family:var(--serif);font-size:13px;color:var(--text-muted)}
+.sc-factor{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--gold);text-align:center}
+.sc-apply{font-family:var(--mono);font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:var(--text);color:var(--cream);border:none;border-radius:2px;padding:10px 20px;cursor:pointer;width:100%}
+
+/* ── Kitchen Notes modal ─────────────────────────────── */
+.kn-overlay{position:fixed;inset:0;background:rgba(28,25,23,0.82);z-index:9000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px 0 32px}
+.kn-overlay.open{display:flex}
+.kn-modal{background:var(--cream);width:100%;max-width:620px;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;margin:auto}
+.kn-header{border-bottom:0.5px solid var(--divider);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--cream);z-index:1}
+.kn-title{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)}
+.kn-close{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-muted);padding:2px 4px}
+.kn-close:hover{color:var(--text)}
+.kn-body{padding:16px;display:flex;flex-direction:column;gap:12px;min-height:200px}
+.kn-empty{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);text-align:center;padding:32px 0}
+.kn-note{border:0.5px solid var(--divider);border-radius:3px;padding:10px 12px;background:var(--surface)}
+.kn-note-body{font-size:13px;line-height:1.6;color:var(--text);white-space:pre-wrap;word-break:break-word}
+.kn-note-body[contenteditable="true"]{outline:none;border-bottom:1px solid var(--gold)}
+.kn-note-meta{font-family:var(--mono);font-size:9px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:10px}
+.kn-note-btn{background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);padding:0}
+.kn-note-btn:hover{color:var(--burgundy)}
+.kn-compose{border-top:0.5px solid var(--divider);padding:14px 16px;display:flex;flex-direction:column;gap:8px;background:var(--cream);position:sticky;bottom:0}
+.kn-textarea{width:100%;min-height:72px;font-family:var(--serif);font-size:13px;line-height:1.6;color:var(--text);background:var(--surface);border:0.5px solid var(--divider);border-radius:3px;padding:8px 10px;resize:vertical}
+.kn-textarea:focus{outline:none;border-color:var(--gold)}
+.kn-add-btn{align-self:flex-end;font-family:var(--mono);font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:var(--text);color:var(--cream);border:none;border-radius:2px;padding:7px 14px;cursor:pointer}
+.kn-add-btn:hover{background:var(--burgundy)}
 </style>
 {% endblock %}
 
@@ -297,6 +394,14 @@
 {% set steps = recipe.steps or recipe.method or [] %}
 {% set ingredients = recipe.ingredients or [] %}
 {% set has_groups = ingredients and ingredients[0] is mapping and 'group' in ingredients[0] %}
+{# Parse JSONB servings field → integer portion count #}
+{% if cost_breakdown %}
+  {% set _portions = cost_breakdown.portions %}
+{% elif recipe.servings is iterable and recipe.servings is not string and recipe.servings %}
+  {% set _portions = (recipe.servings[0].count | int) if recipe.servings[0].count else 4 %}
+{% else %}
+  {% set _portions = 4 %}
+{% endif %}
 {% set sashimi = recipe.sashimi_standard or recipe.lives_or_dies %}
 {% set origin_text = recipe.origin_provenance or recipe.origin or (recipe.full_content.origin if recipe.full_content else None) or recipe.description %}
 {% set cross_parallels = recipe.cross_cuisine_parallels or [] %}
@@ -380,11 +485,11 @@
         <div class="r6-pillar__num">Pillar I</div>
         <h2>Ingredients</h2>
       </div>
-      <div class="r6-serves">
+      <div class="r6-serves" id="r6-serves-ctrl" data-slug="{{ recipe.slug }}" data-total-cost="{{ cost_breakdown.total_cost if cost_breakdown else 0 }}">
         Serves
-        <button class="r6-serves__btn" type="button">−</button>
-        <span>{{ recipe.servings or 4 }}</span>
-        <button class="r6-serves__btn" type="button">+</button>
+        <button class="r6-serves__btn" type="button" data-delta="-1">−</button>
+        <span id="r6-servings-count" data-base="{{ _portions }}">{{ _portions }}</span>
+        <button class="r6-serves__btn" type="button" data-delta="1">+</button>
       </div>
     </div>
     {% if ingredients %}
@@ -646,6 +751,26 @@
   </section>
   {% endif %}
 
+  {# ─── ACTION BUTTONS ROW ─── #}
+  <div class="r-actions">
+    <button class="r-action-btn" onclick="handleAction('haccp','profession')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
+      HACCP plan
+    </button>
+    <button class="r-action-btn" onclick="handleAction('notes','kitchen')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
+      Kitchen notes
+    </button>
+    <button class="r-action-btn" onclick="handleAction('costing','kitchen')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
+      Cost this recipe
+    </button>
+    <button class="r-action-btn" onclick="handleAction('scale','library')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="1" fill="currentColor"/><path d="M5.5 1.5v2M5.5 7.5v2M1.5 5.5h2M7.5 5.5h2" stroke="currentColor" stroke-width="1.2"/></svg>
+      Scale recipe
+    </button>
+  </div>
+
   {# ─── TOOLS & COMPLIANCE ─── #}
   <section class="r6-pillar" style="padding-bottom: var(--s6);">
     <div class="r6-pillar__head">
@@ -657,102 +782,7 @@
     </div>
     <div class="r6-tools-grid">
 
-      <details class="r6-tool">
-        <summary>
-          <div class="r6-tool__icon">▸ Kitchen Notes</div>
-          <div class="r6-tool__name">Notes for the cook</div>
-        </summary>
-        <div class="r6-tool__body">
-          {{ recipe.kitchen_notes or recipe.flourish or 'No kitchen notes recorded.' }}
-        </div>
-      </details>
 
-      <details class="r6-tool">
-        <summary>
-          <div class="r6-tool__icon r6-tool__icon--regulated">▸ HACCP Brief</div>
-          <div class="r6-tool__name">For the regulator</div>
-        </summary>
-        <div class="r6-tool__body">
-          {% if gate_for_tier('profession') == 'full_content' %}
-            {% if haccp_brief %}
-              {% include '_partials/_haccp_brief.html' %}
-            {% else %}
-              <div id="haccp-generate-panel">
-                <p style="font-size:13px;opacity:0.65;margin:0 0 var(--s2);">No HACCP brief on file for this recipe.</p>
-                <button class="r6-btn r6-btn--small" id="haccp-generate-btn" data-slug="{{ recipe.slug }}">Generate HACCP Brief</button>
-                <p id="haccp-generate-status" style="font-size:12px;opacity:0.7;margin:var(--s2) 0 0;display:none;"></p>
-              </div>
-              <script>
-              (function() {
-                var btn = document.getElementById('haccp-generate-btn');
-                if (!btn) return;
-                var status = document.getElementById('haccp-generate-status');
-                btn.addEventListener('click', function() {
-                  btn.disabled = true;
-                  btn.textContent = 'Generating…';
-                  status.style.display = 'block';
-                  status.textContent = 'Reading the recipe and building the brief — this takes about 30 seconds.';
-                  fetch('/api/haccp/generate-for-recipe', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({recipe_slug: btn.dataset.slug})
-                  })
-                  .then(function(r) { return r.json(); })
-                  .then(function(data) {
-                    if (data.error) throw new Error(data.error);
-                    location.reload();
-                  })
-                  .catch(function(err) {
-                    btn.disabled = false;
-                    btn.textContent = 'Generate HACCP Brief';
-                    status.textContent = 'Something went wrong — ' + err.message + '. Try again.';
-                  });
-                });
-              })();
-              </script>
-            {% endif %}
-          {% elif gate_for_tier('profession') == 'preview_then_prompt' %}
-            {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
-            {{ upgrade_prompt('profession', 'haccp') }}
-          {% endif %}
-        </div>
-      </details>
-
-      <details class="r6-tool">
-        <summary>
-          <div class="r6-tool__icon r6-tool__icon--cost">▸ Cost This Recipe</div>
-          <div class="r6-tool__name">Live per-ingredient cost</div>
-        </summary>
-        <div class="r6-tool__body">
-          {% if gate_for_tier('profession') == 'full_content' %}
-            {% if cost_breakdown %}
-              <table class="r6-cost-table">
-                <thead><tr><th>Ingredient</th><th>Unit cost</th><th>Line cost</th></tr></thead>
-                <tbody>
-                  {% for line in cost_breakdown.lines %}
-                    <tr>
-                      <td>{{ line.name }}</td>
-                      <td>${{ '%.2f' % line.unit_cost }}</td>
-                      <td>${{ '%.2f' % line.line_cost }}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td>Total</td><td></td>
-                    <td>${{ '%.2f' % cost_breakdown.total }}</td>
-                  </tr>
-                </tfoot>
-              </table>
-            {% else %}
-              Cost data not yet available for this recipe.
-            {% endif %}
-          {% elif gate_for_tier('profession') == 'preview_then_prompt' %}
-            {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
-            {{ upgrade_prompt('profession', 'cost') }}
-          {% endif %}
-        </div>
-      </details>
 
       <details class="r6-tool">
         <summary>
@@ -784,4 +814,246 @@
   </section>
 
 </div>
+<script src="/static/js/recipe-detail.js"></script>
+
+<!-- ═══ PEEK PANEL ══════════════════════════════════════ -->
+<div class="r-peek-backdrop" id="peek-backdrop" onclick="closePeek()"></div>
+<div class="r-peek-sheet" id="peek-sheet">
+  <div class="r-peek-drag"></div>
+  <button class="r-peek-close" onclick="closePeek()">Close ✕</button>
+  <div class="r-peek-eyebrow" id="peek-eyebrow">Behind this door</div>
+  <div class="r-peek-title" id="peek-title"></div>
+  <div class="r-peek-desc" id="peek-desc"></div>
+  <div class="r-peek-preview">
+    <div class="r-peek-preview-inner" id="peek-preview-inner"></div>
+    <div class="r-peek-preview-label">A glimpse of what's inside</div>
+  </div>
+  <a href="/pricing" class="r-peek-cta" id="peek-cta">Open The Kitchen</a>
+  <span class="r-peek-sub">Less than a single cookbook</span>
+</div>
+
+<!-- ═══ SCALE MODAL ══════════════════════════════════════ -->
+<div id="sc-overlay" class="sc-overlay" onclick="if(event.target===this)closeScaleModal()">
+  <div class="sc-modal">
+    <div class="sc-header">
+      <span class="sc-title">Scale recipe</span>
+      <button class="sc-close" onclick="closeScaleModal()">✕</button>
+    </div>
+    <div class="sc-body">
+      <div class="sc-row">
+        <span class="sc-label">Servings</span>
+        <div class="sc-input-wrap">
+          <button class="sc-btn" onclick="scStep(-1)">−</button>
+          <span class="sc-num" id="sc-num">{{ (recipe.servings_count or 4) | int }}</span>
+          <span class="sc-unit">servings</span>
+          <button class="sc-btn" onclick="scStep(1)">+</button>
+        </div>
+      </div>
+      <div id="sc-factor" class="sc-factor">Original yield</div>
+      <button class="sc-apply" onclick="scApply()">Apply scaling</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ KITCHEN NOTES MODAL ══════════════════════════════ -->
+<div id="kn-overlay" class="kn-overlay" onclick="if(event.target===this)closeNotesModal()">
+  <div class="kn-modal">
+    <div class="kn-header">
+      <span class="kn-title">Kitchen notes — {{ recipe.name or recipe.title }}</span>
+      <button class="kn-close" onclick="closeNotesModal()">✕</button>
+    </div>
+    <div class="kn-body" id="kn-body"></div>
+    <div class="kn-compose">
+      <textarea class="kn-textarea" id="kn-new-note" placeholder="Add a note — mise en place timings, sourcing reminders, service adjustments…" rows="3"></textarea>
+      <button class="kn-add-btn" onclick="knAddNote()">Add note</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const RECIPE_SLUG = {{ recipe.slug | tojson }};
+const USER_TIER = {{ user_tier | tojson }};
+const IS_AUTHENTICATED = {{ 'true' if is_authenticated else 'false' }};
+const TIER_HIERARCHY = ['free','kitchen','library','profession','trade'];
+const RECIPE_YIELD = {{ (recipe.servings_count or 1) | int }};
+
+function userMeetsRequirement(required) {
+  if (!IS_AUTHENTICATED) return false;
+  const myLevel = TIER_HIERARCHY.indexOf(USER_TIER);
+  const reqLevel = TIER_HIERARCHY.indexOf(required);
+  return myLevel >= reqLevel;
+}
+
+function handleAction(action, requiredTier) {
+  if (!IS_AUTHENTICATED) {
+    window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
+  if (!userMeetsRequirement(requiredTier)) {
+    openPeek(action, null, requiredTier);
+    return;
+  }
+  if (action === 'scale') { openScaleModal(); return; }
+  if (action === 'notes') { openNotesModal(); return; }
+  if (action === 'costing') { openCostingModal(); return; }
+  if (action === 'haccp') { openHaccpBrief(); return; }
+}
+
+const PEEK_CONTENT = {
+  'haccp': {title:'HACCP safety plan — Profession plan feature',desc:'A complete hazard analysis built from this recipe — temperature control windows, cross-contamination checkpoints, and critical control points formatted for EHO and FDA inspection. Available on the Profession plan.',preview:'Step 1 — Receiving: Verify protein delivery temp ≤3°C. Reject if packaging compromised.\nStep 2 — Prep: Separate raw proteins from ready-to-eat on dedicated colour-coded boards.',cta:'Upgrade to Profession'},
+  'notes': {title:'Your private kitchen notebook, attached to this recipe',desc:'Add mise en place timings, sourcing notes, plating reminders, service margin adjustments. Synced across devices, private to you.',preview:'Mise en place: Butter compound — day before. Reduce stock — 2 hrs ahead.\nService note: Rest 6 min covered, slice against grain.',cta:'Open The Kitchen'},
+  'costing': {title:'Live food cost, margin, and yield analysis',desc:'Every ingredient priced against your supplier network. Adjust portion size, see margin move in real time.',preview:'Ingredient cost: $4.82 per portion\nGP at $28 menu price: 82.8%\nYield loss factored: 18% trim…',cta:'Open The Kitchen'},
+  'scale': {title:'Scale this recipe for any cover count',desc:'From a dinner for four to a banquet for four hundred — every quantity recalculated.',preview:'Original: 4 portions → Scale to: 48\nButter sauce: 80g → 896g (emulsion risk flag above 400g)\nRoasting time: +18min at full tray load…',cta:'Open The Library'},
+};
+function openPeek(action, contextText, tier) {
+  const content = PEEK_CONTENT[action] || PEEK_CONTENT['notes'];
+  document.getElementById('peek-title').textContent = content.title;
+  document.getElementById('peek-desc').textContent = content.desc;
+  document.getElementById('peek-preview-inner').textContent = contextText || content.preview;
+  const ctaEl = document.getElementById('peek-cta');
+  ctaEl.textContent = content.cta;
+  ctaEl.href = '/pricing';
+  document.getElementById('peek-backdrop').classList.add('open');
+  document.getElementById('peek-sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePeek() {
+  document.getElementById('peek-backdrop').classList.remove('open');
+  document.getElementById('peek-sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Kitchen Notes Modal ───────────────────────────────
+function openNotesModal() {
+  document.getElementById('kn-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadNotes();
+}
+function closeNotesModal() {
+  document.getElementById('kn-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function _knFmt(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'})
+       + ' ' + d.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
+}
+function loadNotes() {
+  const body = document.getElementById('kn-body');
+  body.innerHTML = '<div class="kn-empty">Loading…</div>';
+  fetch('/api/kitchen-notes/' + encodeURIComponent(RECIPE_SLUG))
+    .then(r => r.json())
+    .then(notes => renderNotes(notes))
+    .catch(() => { body.innerHTML = '<div class="kn-empty">Could not load notes.</div>'; });
+}
+function renderNotes(notes) {
+  const body = document.getElementById('kn-body');
+  if (!notes.length) {
+    body.innerHTML = '<div class="kn-empty">No notes yet — add one below.</div>';
+    return;
+  }
+  body.innerHTML = notes.map(n => `
+    <div class="kn-note" id="kn-note-${n.id}">
+      <div class="kn-note-body" id="kn-body-${n.id}">${n.body.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
+      <div class="kn-note-meta">
+        <span>${_knFmt(n.created_at)}</span>
+        <button class="kn-note-btn" onclick="knEdit('${n.id}')">Edit</button>
+        <button class="kn-note-btn" onclick="knDelete('${n.id}')">Delete</button>
+        <button class="kn-note-btn" id="kn-save-${n.id}" style="display:none;color:var(--gold)" onclick="knSave('${n.id}')">Save</button>
+      </div>
+    </div>`).join('');
+}
+function knEdit(id) {
+  const el = document.getElementById('kn-body-' + id);
+  el.innerHTML = el.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+  el.contentEditable = 'true';
+  el.focus();
+  document.getElementById('kn-save-' + id).style.display = 'inline';
+}
+function knSave(id) {
+  const el = document.getElementById('kn-body-' + id);
+  const body = el.innerText.trim();
+  if (!body) return;
+  fetch('/api/kitchen-notes/note/' + id, {
+    method: 'PUT', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({body})
+  }).then(r => r.json()).then(() => loadNotes()).catch(() => alert('Save failed.'));
+}
+function knDelete(id) {
+  if (!confirm('Delete this note?')) return;
+  fetch('/api/kitchen-notes/note/' + id, {method:'DELETE'})
+    .then(() => loadNotes()).catch(() => alert('Delete failed.'));
+}
+function knAddNote() {
+  const ta = document.getElementById('kn-new-note');
+  const body = ta.value.trim();
+  if (!body) return;
+  fetch('/api/kitchen-notes', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({slug: RECIPE_SLUG, body})
+  }).then(r => r.json()).then(() => {
+    ta.value = '';
+    loadNotes();
+  }).catch(() => alert('Could not save note.'));
+}
+
+// ── Scale Modal ───────────────────────────────────────
+let _scCurrent = RECIPE_YIELD;
+function openScaleModal() {
+  _scCurrent = RECIPE_YIELD;
+  document.getElementById('sc-num').textContent = _scCurrent;
+  _scUpdateFactor();
+  document.getElementById('sc-overlay').classList.add('open');
+}
+function closeScaleModal() {
+  document.getElementById('sc-overlay').classList.remove('open');
+}
+function _scUpdateFactor() {
+  const factor = _scCurrent / RECIPE_YIELD;
+  const label = factor === 1 ? 'Original yield'
+    : `×${factor % 1 === 0 ? factor : factor.toFixed(2)} of original`;
+  document.getElementById('sc-factor').textContent = label;
+}
+function scStep(delta) {
+  const next = Math.max(1, _scCurrent + delta);
+  _scCurrent = next;
+  document.getElementById('sc-num').textContent = next;
+  _scUpdateFactor();
+}
+function scApply() {
+  const factor = _scCurrent / RECIPE_YIELD;
+  document.querySelectorAll('.r-ing-qty').forEach(el => {
+    const orig = el.dataset.orig !== undefined ? el.dataset.orig : el.textContent;
+    if (!el.dataset.orig) el.dataset.orig = orig;
+    el.textContent = orig.replace(/(\d+\.?\d*)/g, (m, n) => {
+      const s = parseFloat(n) * factor;
+      return s % 1 === 0 ? String(s) : s.toFixed(1);
+    });
+  });
+  const yieldEl = document.getElementById('r-meta-yield');
+  if (yieldEl) {
+    if (!yieldEl.dataset.origYield) yieldEl.dataset.origYield = yieldEl.textContent;
+    yieldEl.textContent = yieldEl.dataset.origYield.replace(/(\d+\.?\d*)/, (m, n) => {
+      const s = parseFloat(n) * factor;
+      return s % 1 === 0 ? String(s) : s.toFixed(1);
+    });
+  }
+  closeScaleModal();
+}
+
+// ── Stubs — replaced in Cycles D and E ───────────────
+function openHaccpBrief() { console.log('[Cycle D pending] openHaccpBrief'); }
+function openCostingModal() { console.log('[Cycle E pending] openCostingModal'); }
+
+// ── Escape key handler ────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const sc = document.getElementById('sc-overlay');
+  const kn = document.getElementById('kn-overlay');
+  const pk = document.getElementById('peek-sheet');
+  if (sc && sc.classList.contains('open')) { closeScaleModal(); return; }
+  if (kn && kn.classList.contains('open')) { closeNotesModal(); return; }
+  if (pk && pk.classList.contains('open')) { closePeek(); return; }
+});
+</script>
 {% endblock %}

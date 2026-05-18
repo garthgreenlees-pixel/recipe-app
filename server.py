@@ -1295,12 +1295,77 @@ def _get_or_build_haccp_brief(recipe, region):
     brief["_pic_name"] = row["pic_name"]
     brief["_pic_signed_at"] = row["pic_signed_at"].isoformat() if row["pic_signed_at"] else None
     brief["_generated_at"] = row["created_at"].isoformat() if row["created_at"] else None
+    brief["_edits"] = edits  # flat user edits (calibration, signoff fields, dates)
     return brief
 
 
 def _compute_recipe_cost(recipe, region):
-    """Recipe cost stub — returns None until cost breakdown is server-rendered."""
-    return None
+    """Server-render cost breakdown for recipe.html. Returns None if no ingredients."""
+    slug = recipe.get("slug", "")
+    ingredients = recipe.get("ingredients") or []
+    if isinstance(ingredients, str):
+        try:
+            ingredients = json.loads(ingredients)
+        except Exception:
+            ingredients = []
+    if not ingredients:
+        return None
+
+    user = get_current_user()
+    user_id = str(user["id"]) if user else None
+    use_user_pricing = user_id is not None and user_can_access("kitchen")
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    cur.execute("SELECT * FROM recipe_costs WHERE recipe_slug = %s", (slug,))
+    cached = cur.fetchone()
+
+    breakdown, total_cost, unpriced, unit_warning_items = _cost_ingredient_loop(
+        ingredients, user_id, use_user_pricing, cur
+    )
+
+    cur.close()
+    conn.close()
+
+    servings_raw = recipe.get("servings") or []
+    if isinstance(servings_raw, str):
+        try:
+            servings_raw = json.loads(servings_raw)
+        except Exception:
+            servings_raw = []
+    portions = 4
+    if isinstance(servings_raw, list) and servings_raw:
+        try:
+            portions = int(float(servings_raw[0].get("count", 4)))
+        except Exception:
+            portions = 4
+    elif isinstance(servings_raw, (int, float)):
+        portions = int(servings_raw)
+    portions = portions or 4
+
+    cost_per_portion = round(total_cost / portions, 2)
+    target_pct = float(cached["target_food_cost_pct"]) if cached and cached.get("target_food_cost_pct") else 30.0
+    menu_price = float(cached["menu_price"]) if cached and cached.get("menu_price") else None
+    actual_pct = round((cost_per_portion / menu_price) * 100, 1) if menu_price and menu_price > 0 else None
+    over_target = actual_pct > target_pct if actual_pct is not None else False
+
+    return {
+        "slug": slug,
+        "portions": portions,
+        "total_cost": round(total_cost, 2),
+        "cost_per_portion": cost_per_portion,
+        "target_food_cost_pct": target_pct,
+        "menu_price": menu_price,
+        "actual_food_cost_pct": actual_pct,
+        "over_target": over_target,
+        "priced_count": len(breakdown) - len(unpriced) - len(unit_warning_items),
+        "unpriced_count": len(unpriced),
+        "unpriced_items": unpriced,
+        "unit_warning_count": len(unit_warning_items),
+        "unit_warning_items": unit_warning_items,
+        "breakdown": breakdown,
+    }
 
 
 @app.route("/recipes")
@@ -11656,41 +11721,8 @@ def costing_scan_invoice_legacy():
     }), 410
 
 
-@app.route("/api/costing/recipe/<slug>")
-def get_recipe_cost(slug):
-    """Calculate cost breakdown for a recipe.
-    Library+ users: uses per-user ingredient_pricing first, falls back to global ingredient_prices.
-    Unauthenticated / sub-library: still works but uses only global prices.
-    """
-    user = get_current_user()
-    user_id = str(user["id"]) if user else None
-    use_user_pricing = user_id is not None and user_can_access("kitchen")
-
-    conn = get_db()
-    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-    cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (slug,))
-    recipe = cur.fetchone()
-    if not recipe:
-        cur.execute(
-            "SELECT * FROM user_kitchen_recipes WHERE slug = %s AND user_id = 1 LIMIT 1",
-            (slug,),
-        )
-        recipe = cur.fetchone()
-    if not recipe:
-        cur.close(); conn.close()
-        return jsonify({"error": "Recipe not found"}), 404
-
-    ingredients = recipe.get("ingredients") or []
-    if isinstance(ingredients, str):
-        try:
-            ingredients = json.loads(ingredients)
-        except Exception:
-            ingredients = []
-
-    cur.execute("SELECT * FROM recipe_costs WHERE recipe_slug = %s", (slug,))
-    cached = cur.fetchone()
-
+def _cost_ingredient_loop(ingredients, user_id, use_user_pricing, cur):
+    """Shared ingredient pricing loop. Returns (breakdown, total_cost, unpriced, unit_warning_items)."""
     breakdown = []
     total_cost = 0.0
     unpriced = []
@@ -11716,9 +11748,7 @@ def get_recipe_cost(slug):
         source = "global"
         unit_estimate = False
 
-        # === PHASE 4: NEW PATH (read from price_history via ingredient_aliases) ===
         if _read_new_model_enabled():
-            price_row = None
             master_id, was_resolved = _resolve_ingredient_master_id(cur, normalized)
             if was_resolved and use_user_pricing:
                 cur.execute("""
@@ -11746,10 +11776,7 @@ def get_recipe_cost(slug):
                 price_row = cur.fetchone()
                 if price_row:
                     source = "global"
-
-        # === OLD PATH (unchanged — runs when flag is off) ===
         else:
-            # 1. Per-user ingredient_pricing (Library+ users)
             if use_user_pricing:
                 cur.execute("""
                     SELECT ingredient_name, price_per_unit AS unit_price, unit,
@@ -11762,8 +11789,6 @@ def get_recipe_cost(slug):
                 price_row = cur.fetchone()
                 if price_row:
                     source = "user"
-
-            # 2. Fall back to global ingredient_prices
             if not price_row:
                 cur.execute("""
                     SELECT ingredient_name, unit_price, unit, yield_factor, effective_cost,
@@ -11777,15 +11802,11 @@ def get_recipe_cost(slug):
         if price_row:
             price_unit = price_row.get("unit", "each") or "each"
             raw_price = float(price_row.get("unit_price") or price_row.get("price_per_unit") or 0)
-            # Yield factor (only in global ingredient_prices)
             yf = float(price_row.get("yield_factor") or 1.0)
             effective = raw_price / yf if yf else raw_price
             supplier_name = price_row.get("supplier_name") or ""
             currency = price_row.get("currency") or "CAD"
 
-            # Unitless recipe quantities (e.g. "6 egg yolks" with unit="") are
-            # counted by the piece. Normalise here so costing_convert can apply
-            # count-family ratios (each→dozen, etc.) without short-circuiting.
             costing_unit = unit if unit else "each"
             ru_family = _unit_family(costing_unit)
             pu_family = _unit_family(price_unit)
@@ -11794,7 +11815,6 @@ def get_recipe_cost(slug):
             line_cost = 0.0
 
             if pu_family == 'count' and ru_family in ('weight', 'volume'):
-                # Supplier prices per case/each but recipe uses g/ml — need pack size lookup
                 pack_g = None
                 name_lower = name.lower()
                 pu_lower = price_unit.lower().strip()
@@ -11807,7 +11827,7 @@ def get_recipe_cost(slug):
                             else qty * _VL.get(unit.lower().strip(), 1)
                     cost_per_g = effective / pack_g
                     line_cost = round(cost_per_g * qty_g, 2)
-                    unit_estimate = True  # pack size from lookup, not invoice
+                    unit_estimate = True
                 else:
                     cost_warning = "needs_unit_info"
                     cost_warning_message = (
@@ -11819,9 +11839,6 @@ def get_recipe_cost(slug):
             else:
                 cqty, unit_estimate = costing_convert(qty, costing_unit, price_unit, name)
                 line_cost = round(cqty * effective, 2)
-                # Sanity check: cost_per_g > CAD 5/g = CAD 5000/kg almost certainly means
-                # a unit conversion error (e.g. case price treated as per-gram).
-                # Real saffron is ~CAD 30/g — the most expensive common kitchen ingredient.
                 if ru_family == 'weight' and effective > 0 and qty > 0:
                     qty_g = qty * _WT.get(unit.lower().strip(), 1)
                     if qty_g > 0:
@@ -11866,6 +11883,48 @@ def get_recipe_cost(slug):
                 "line_cost": 0,
                 "status": "no_price_data",
             })
+
+    return breakdown, total_cost, unpriced, unit_warning_items
+
+
+@app.route("/api/costing/recipe/<slug>")
+def get_recipe_cost(slug):
+    """Calculate cost breakdown for a recipe.
+    Library+ users: uses per-user ingredient_pricing first, falls back to global ingredient_prices.
+    Unauthenticated / sub-library: still works but uses only global prices.
+    """
+    user = get_current_user()
+    user_id = str(user["id"]) if user else None
+    use_user_pricing = user_id is not None and user_can_access("kitchen")
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (slug,))
+    recipe = cur.fetchone()
+    if not recipe:
+        cur.execute(
+            "SELECT * FROM user_kitchen_recipes WHERE slug = %s AND user_id = 1 LIMIT 1",
+            (slug,),
+        )
+        recipe = cur.fetchone()
+    if not recipe:
+        cur.close(); conn.close()
+        return jsonify({"error": "Recipe not found"}), 404
+
+    ingredients = recipe.get("ingredients") or []
+    if isinstance(ingredients, str):
+        try:
+            ingredients = json.loads(ingredients)
+        except Exception:
+            ingredients = []
+
+    cur.execute("SELECT * FROM recipe_costs WHERE recipe_slug = %s", (slug,))
+    cached = cur.fetchone()
+
+    breakdown, total_cost, unpriced, unit_warning_items = _cost_ingredient_loop(
+        ingredients, user_id, use_user_pricing, cur
+    )
 
     # servings is JSONB: [{"count": "4", "unit": "serve"}]
     servings_raw = recipe.get("servings") or []
