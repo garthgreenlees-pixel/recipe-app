@@ -298,7 +298,7 @@
 {% set ingredients = recipe.ingredients or [] %}
 {% set has_groups = ingredients and ingredients[0] is mapping and 'group' in ingredients[0] %}
 {% set sashimi = recipe.sashimi_standard or recipe.lives_or_dies %}
-{% set origin_text = recipe.origin_provenance or (recipe.full_content.origin if recipe.full_content else None) or recipe.description %}
+{% set origin_text = recipe.origin_provenance or recipe.origin or (recipe.full_content.origin if recipe.full_content else None) or recipe.description %}
 {% set cross_parallels = recipe.cross_cuisine_parallels or [] %}
 {% set trad_tags = recipe.tradition_tags or [] %}
 {% set cuisine_slug = (recipe.cuisine_canon or recipe.cuisine or '') | lower | replace(' ', '-') | replace('_', '-') %}
@@ -343,16 +343,19 @@
         {% endif %}
       </h1>
       <div class="r6-meta">
-        {% if recipe.active_time or (recipe.time and recipe.time.active) %}
-          <span>Active: {{ recipe.active_time or recipe.time.active }}</span>
+        {% set t_active = recipe.active_time or recipe.time_active or (recipe.time and recipe.time.active) %}
+        {% set t_total  = recipe.total_time  or recipe.time_total  or (recipe.time and recipe.time.total) %}
+        {% set t_serves = recipe.yield_desc or recipe.servings_text or (recipe.servings_count ~ ' serves' if recipe.servings_count else '') or (recipe.servings ~ ' serves' if recipe.servings else '') %}
+        {% if t_active %}
+          <span>Active: {{ t_active }}</span>
           <span class="r6-meta__div">·</span>
         {% endif %}
-        {% if recipe.total_time or (recipe.time and recipe.time.total) %}
-          <span>Total: {{ recipe.total_time or recipe.time.total }}</span>
+        {% if t_total %}
+          <span>Total: {{ t_total }}</span>
           <span class="r6-meta__div">·</span>
         {% endif %}
-        {% if recipe.yield_desc or recipe.servings %}
-          <span>{{ recipe.yield_desc or (recipe.servings ~ ' serves') }}</span>
+        {% if t_serves %}
+          <span>{{ t_serves }}</span>
         {% endif %}
       </div>
     </div>

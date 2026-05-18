@@ -1145,6 +1145,72 @@ def kitchen():
     )
 
 
+def _normalize_member_recipe(kitchen_recipe):
+    """Return a dict that matches the field names recipe.html expects.
+
+    Handles both legacy member recipes (flat steps/ingredients) and v3 recipes
+    (data in recipe_content_jsonb with ingredient_groups / method_steps).
+    Always adds image_url derived from has_image + uuid.
+    """
+    row = dict(kitchen_recipe)
+    content = row.get("recipe_content_jsonb") or {}
+
+    # Title
+    row.setdefault("name", row.get("title") or content.get("title") or "Untitled")
+
+    # Image URL
+    if row.get("has_image") and row.get("uuid"):
+        row["image_url"] = f"/images/{row['uuid']}/hero.jpg"
+    else:
+        row.setdefault("image_url", None)
+
+    # Cuisine — prefer content_jsonb, fall back to origin field
+    if not row.get("cuisine"):
+        row["cuisine"] = content.get("cuisine") or row.get("origin") or ""
+
+    # Ingredients — v3 uses ingredient_groups; legacy uses raw ingredients list
+    if not row.get("ingredients"):
+        grps = content.get("ingredient_groups", [])
+        if grps:
+            row["ingredients"] = [
+                {
+                    "group": g.get("group", ""),
+                    "items": [
+                        {"name": item.get("name", ""), "amount": item.get("amount", ""), "unit": ""}
+                        for item in g.get("items", [])
+                    ],
+                }
+                for g in grps
+            ]
+
+    # Steps — v3 uses method_steps; legacy uses steps
+    if not row.get("steps"):
+        m_steps = content.get("method_steps", [])
+        if m_steps:
+            row["steps"] = [
+                {"instruction": s.get("body", "") or s.get("title", "")}
+                for s in m_steps
+            ]
+
+    # Sensory tests — lives_or_dies already in row; v3 may use sensory_standard
+    if not row.get("sashimi_standard"):
+        row["sashimi_standard"] = (
+            row.get("lives_or_dies")
+            or content.get("sensory_standard")
+            or content.get("sashimi_standard")
+        )
+
+    # Origin / lineage
+    if not row.get("origin_provenance"):
+        row["origin_provenance"] = (
+            row.get("origin")
+            or content.get("origin")
+            or content.get("cultural_origin")
+        )
+
+    return row
+
+
 def _get_allergens_for_region(recipe, region):
     """Allergen detection stub — returns empty until allergen data lands in DB."""
     return []
@@ -2306,63 +2372,37 @@ def recipe_page(slug):
         cur.execute("SELECT * FROM user_kitchen_recipes WHERE slug = %s", (slug,))
         kitchen_recipe = cur.fetchone()
         if kitchen_recipe:
-            # v3 recipe cards use a dedicated Jinja template
-            if kitchen_recipe.get("template_version") == "v3":
-                cur.close()
-                conn.close()
-                recipe_data = kitchen_recipe.get("recipe_content_jsonb") or {}
-                _recipe_ld = json.dumps(_build_v3_recipe_jsonld(recipe_data), indent=2)
-                _faq_ld = json.dumps(_build_v3_faq_jsonld(recipe_data.get("faqs", [])), indent=2)
-                _crumb_ld = json.dumps(_build_v3_breadcrumb_jsonld(recipe_data), indent=2)
-                return render_template(
-                    "recipe_v3.html",
-                    recipe=recipe_data,
-                    recipe_jsonld=_recipe_ld,
-                    faq_jsonld=_faq_ld,
-                    breadcrumb_jsonld=_crumb_ld,
-                    recipe_user_id=kitchen_recipe.get("user_id"),
-                )
             user = get_current_user()
-            _user_tier = user.get("subscription_tier", "free") if user else "free"
-            _user_role = user.get("role", "") if user else ""
-            _is_auth = user is not None
-            _stored_pairings = kitchen_recipe.get("beverage_pairings")
-            _pairings = _stored_pairings if _stored_pairings else _find_pairings_for_user_recipe(kitchen_recipe.get("title", ""))
-            _has_pending_sub = False
-            try:
-                cur.execute(
-                    "SELECT id FROM recipe_submissions WHERE user_kitchen_recipe_id = %s AND status = 'pending' LIMIT 1",
-                    (kitchen_recipe["uuid"],)
-                )
-                _has_pending_sub = cur.fetchone() is not None
-            except Exception:
-                pass
-            cur.close()
-            conn.close()
-            _recipe_dict = dict(kitchen_recipe)
-            # Normalize yield text for display — fix bare "serve"/"serves" suffix
-            _st = (_recipe_dict.get("servings_text") or "").rstrip()
+            # Normalize yield text before anything else
+            _row = dict(kitchen_recipe)
+            _st = (_row.get("servings_text") or "").rstrip()
             for _bad in (" serves", " serve"):
                 if _st.endswith(_bad):
-                    _recipe_dict["servings_text"] = _st[:-len(_bad)].rstrip() + " servings"
+                    _row["servings_text"] = _st[:-len(_bad)].rstrip() + " servings"
                     break
-            # If servings_text is still empty, derive it from the JSONB array
-            if not _recipe_dict.get("servings_text") and _recipe_dict.get("servings"):
-                _norm, _ = _parse_yield(_recipe_dict["servings"])
-                if _norm:
-                    _recipe_dict["servings_text"] = _norm
+            if not _row.get("servings_text") and _row.get("servings"):
+                _norm_yield, _ = _parse_yield(_row["servings"])
+                if _norm_yield:
+                    _row["servings_text"] = _norm_yield
+            _recipe_dict = _normalize_member_recipe(_row)
+            # Pairings — stored JSONB first, then LLM-derived fallback
+            _stored_pairings = kitchen_recipe.get("beverage_pairings")
+            _pairings = _stored_pairings if _stored_pairings else _find_pairings_for_user_recipe(kitchen_recipe.get("title", ""))
             _sourced = _get_kitchen_recipe_suppliers_from_markers(kitchen_recipe, get_user_location())
+            _region = get_user_location() or "CA"
+            cur.close()
+            conn.close()
             return render_template(
-                "user_kitchen_recipe.html",
+                "recipe.html",
                 recipe=_recipe_dict,
-                user_tier=_user_tier,
-                user_role=_user_role,
-                is_authenticated=_is_auth,
-                current_user_id=user.get("id") if user else None,
-                pairings_for_recipe=_pairings,
-                has_pending_submission=_has_pending_sub,
-                origin_suppliers=_sourced["origin"],
-                provider_suppliers=_sourced["providers"],
+                pairings=_pairings,
+                recipe_suppliers=_sourced["origin"] + _sourced["providers"],
+                allergens=[],
+                haccp_brief=None,
+                cost_breakdown=None,
+                region=_region,
+                format_cuisine=_format_cuisine,
+                is_owner=bool(user and user.get("id") == kitchen_recipe.get("user_id")),
             )
         cur.close()
         conn.close()
