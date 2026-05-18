@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ recipe.name }} — Provenance</title>
-<meta name="description" content="{{ ((recipe.sashimi_standard or recipe.description or '') | truncate(155, true, '')) }}">
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.name }} — Provenance{% endblock %}
+
+{% block meta_description %}{{ recipe.name }} — a {{ format_cuisine(recipe.cuisine_canon or recipe.cuisine) }} recipe at Sashimi standard. Seven pillars, named producers, the technique in full.{% endblock %}
+
+{% block meta_robots %}{% if is_owner %}noindex{% else %}index, follow{% endif %}{% endblock %}
+
+{% block extra_head %}
+{# ── Schema + OG ── #}
 <link rel="canonical" href="https://provenance.kitchen/recipe/{{ recipe.slug }}">
 <meta property="og:title" content="{{ recipe.name }} — Provenance">
-<meta property="og:description" content="{{ ((recipe.description or '') | truncate(160, true, '')) }}">
+<meta property="og:description" content="{{ (recipe.description or recipe.sashimi_standard or '') | truncate(160, true, '') }}">
 <meta property="og:image" content="{{ recipe.image_url or 'https://provenance.kitchen/static/img/og-default.jpg' }}">
 <meta property="og:url" content="https://provenance.kitchen/recipe/{{ recipe.slug }}">
 <meta property="og:type" content="article">
@@ -19,2792 +22,731 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": {{ recipe.name | tojson }},
-  "description": {{ (recipe.description or '') | truncate(300) | tojson }},
+  "description": {{ (recipe.description or recipe.sashimi_standard or '') | truncate(300) | tojson }},
   "author": { "@type": "Organization", "name": "Provenance" },
-  "url": "https://provenance.kitchen/recipe/{{ recipe.slug }}"
+  "url": "https://provenance.kitchen/recipe/{{ recipe.slug }}"{% if recipe.image_url %},
+  "image": {{ recipe.image_url | tojson }}{% endif %}
 }
 </script>
-
-<!-- GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
-
-<!-- Fonts: Georgia (system), Playfair Display (Didot sub) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 
 <style>
-/* ═══════════════════════════════════════════════
-   PROVENANCE RECIPE TEMPLATE v2
-   Editorial register. Cream/burgundy/gold.
-   ═══════════════════════════════════════════════ */
+/* ── Recipe Detail — Sprint 6 ──────────────────────────── */
+.recipe-page {
+  background: var(--cream-50);
+  min-height: 100vh;
+  color: var(--charcoal);
+}
+.recipe-page a { color: var(--charcoal); }
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* breadcrumb */
+.r6-crumb {
+  max-width: 1100px; margin: 0 auto; padding: var(--s2) var(--s4) 0;
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--warm-gray);
+}
+.r6-crumb a { color: var(--warm-gray); text-decoration: none; }
+.r6-crumb a:hover { color: var(--gold); }
 
-:root{
-  --cream:#F0EDE8;
-  --cream-bright:#FAF7F2;
-  --cream-mid:#EBE7E2;
-  --gold:#C9A84C;
-  --gold-mid:#A8966B;
-  --gold-faint:rgba(201,168,76,0.18);
-  --burgundy:#8B2C1A;
-  --burgundy-deep:#5A2810;
-  --burgundy-pale:rgba(254,242,240,0.8);
-  --text:#1C1917;
-  --text-mid:#444441;
-  --text-muted:#888780;
-  --divider:#E7E5E4;
-  --divider-warm:rgba(168,150,107,0.4);
-  --max-w:680px;
-  --serif:Georgia,'Times New Roman',serif;
-  --didot:'Playfair Display',Georgia,serif;
-  --mono:'SF Mono','Roboto Mono','Courier New',monospace;
-  --surface:#F7F5F0;
+/* chips */
+.r6-chips { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: var(--s1); }
+.r6-allergen {
+  font-family: var(--mono); font-size: 9px; font-weight: 500;
+  padding: 3px 7px; border: 1px solid var(--line); background: var(--cream-100);
+  color: var(--charcoal-soft); text-transform: uppercase; letter-spacing: 0.12em;
 }
+.r6-tier-chip {
+  font-family: var(--mono); font-size: 9px; font-weight: 600; padding: 3px 8px;
+  text-transform: uppercase; letter-spacing: 0.14em;
+}
+.r6-tier-chip--kitchen  { background: #EFF3EC; color: #4A5C35; border: 1px solid #C2D1B8; }
+.r6-tier-chip--library  { background: #EBF0F5; color: #2E5070; border: 1px solid #B0C8DB; }
+.r6-tier-chip--profession { background: #F5EFE9; color: #6B3C20; border: 1px solid #D4B090; }
 
-html{-webkit-font-smoothing:antialiased;background:var(--cream);color:var(--text)}
-body{font-family:var(--serif);font-size:14px;line-height:1.7;background:var(--cream);color:var(--text);padding-bottom:60px}
+/* hero */
+.r6-hero { max-width: 1100px; margin: 0 auto; padding: var(--s4); }
+.r6-hero__image {
+  aspect-ratio: 16/9; background: var(--cream-200); margin-bottom: var(--s4);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.r6-hero__image img { width: 100%; height: 100%; object-fit: cover; }
+.r6-hero__placeholder {
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray-light);
+  text-transform: uppercase; letter-spacing: 0.14em;
+}
+.r6-hero__title-block { text-align: center; max-width: 760px; margin: 0 auto; }
+.r6-cuisine {
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--gold); font-weight: 600; margin-bottom: var(--s2);
+}
+.r6-hero__title-block h1 {
+  font-family: var(--display); font-size: 52px; font-weight: 500; line-height: 1.06;
+  margin-bottom: var(--s2); color: var(--charcoal);
+}
+.r6-hero__title-block h1 em { font-style: italic; color: var(--charcoal-soft); }
+.r6-meta {
+  font-family: var(--mono); font-size: 12px; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--warm-gray);
+  display: flex; gap: var(--s2); justify-content: center; flex-wrap: wrap;
+  margin-bottom: var(--s2);
+}
+.r6-meta__div { color: var(--line); }
 
-/* ── 1. TOP BAR ─────────────────────────────────────────── */
-.r-top-bar{
-  position:sticky;top:0;left:0;right:0;z-index:200;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 20px;
-  background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);
-  border-bottom:0.5px solid var(--divider);
+/* action row */
+.r6-actions {
+  display: flex; gap: var(--s1); padding: var(--s3) 0; border-bottom: 1px solid var(--line);
+  flex-wrap: wrap; justify-content: center; max-width: 1100px; margin: 0 auto;
+  padding-left: var(--s4); padding-right: var(--s4);
 }
-.r-top-back{
-  display:flex;align-items:center;gap:6px;
-  text-decoration:none;color:var(--text-muted);
-  font-family:var(--serif);font-size:11px;font-style:italic;
-  letter-spacing:0.2px;transition:color 0.15s;
+.r6-btn {
+  font-family: var(--mono); font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.12em; padding: 9px 18px; text-decoration: none;
+  border: 1px solid var(--charcoal); background: var(--charcoal); color: var(--cream-50);
+  transition: all 0.15s;
 }
-.r-top-back:hover{color:var(--text)}
-.r-top-back svg{flex-shrink:0}
-.r-top-wordmark{
-  font-family:var(--serif);font-size:11px;letter-spacing:5px;
-  text-transform:uppercase;color:var(--text-muted);
-  pointer-events:none;user-select:none;
-}
-.r-top-actions{display:flex;align-items:center;gap:14px}
-.r-top-btn{
-  background:none;border:none;cursor:pointer;
-  color:var(--text-muted);padding:2px;
-  transition:color 0.15s;display:flex;align-items:center;
-}
-.r-top-btn:hover{color:var(--text)}
-.r-top-btn.saved{color:var(--burgundy)}
+.r6-btn:hover { background: var(--charcoal-soft); border-color: var(--charcoal-soft); color: var(--cream-50); }
+.r6-btn--ghost { background: transparent; color: var(--charcoal); }
+.r6-btn--ghost:hover { border-color: var(--gold); color: var(--charcoal); background: transparent; }
 
-/* ── 2. HERO BAND ──────────────────────────────────────── */
-.r-hero{
-  position:relative;width:100%;
-  height:280px;overflow:hidden;
+/* pillar layout */
+.r6-pillar {
+  max-width: 1100px; margin: 0 auto; padding: var(--s5) var(--s4);
+  border-bottom: 1px solid var(--line);
 }
-@media(min-width:768px){.r-hero{height:360px}}
-.r-hero-photo{
-  width:100%;height:100%;
-  object-fit:cover;object-position:center;
-  display:block;
+.r6-pillar__head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: var(--s3); gap: var(--s3); flex-wrap: wrap;
 }
-.r-hero-veil{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 50%,rgba(20,18,16,0.55) 100%);
+.r6-pillar__num {
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--gold); font-weight: 600; margin-bottom: 6px;
 }
-/* Cream fallback hero */
-.r-hero-cream{
-  width:100%;height:100%;
-  background:var(--cream-mid);
-  position:relative;
-  display:flex;align-items:flex-end;
+.r6-pillar h2 {
+  font-family: var(--display); font-size: 32px; font-style: italic;
+  font-weight: 500; color: var(--charcoal);
 }
-.r-hero-cream-texture{
-  position:absolute;inset:0;
-  background:repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 60px,
-    rgba(232,222,194,0.06) 60px,
-    rgba(232,222,194,0.06) 61px
-  );
-}
-.r-hero-ornament{
-  position:absolute;top:18px;right:24px;
-  font-family:var(--didot);font-size:64px;font-style:italic;
-  color:rgba(168,150,107,0.12);line-height:1;
-  pointer-events:none;user-select:none;
-}
-.r-hero-content{
-  position:absolute;
-  bottom:0;left:0;right:0;
-  padding:48px 24px 20px 24px;
-}
-.r-hero-eyebrow{
-  font-family:var(--serif);font-size:9px;font-style:italic;
-  letter-spacing:5px;text-transform:uppercase;
-  margin-bottom:8px;display:block;
-}
-.r-hero-eyebrow--photo{color:rgba(250,247,242,0.85)}
-.r-hero-eyebrow--cream{color:#A8857A}
-.r-hero-title{
-  font-family:var(--didot);font-weight:400;font-style:italic;
-  font-size:34px;letter-spacing:-0.01em;line-height:1.05;
-  margin-bottom:8px;
-}
-@media(min-width:768px){.r-hero-title{font-size:42px}}
-.r-hero-title--photo{color:#FAF7F2}
-.r-hero-title--cream{color:var(--text)}
-.r-hero-subtitle{
-  font-family:var(--serif);font-style:italic;
-  font-size:11.5px;letter-spacing:0.3px;line-height:1.5;
-}
-.r-hero-subtitle--photo{color:rgba(250,247,242,0.85)}
-.r-hero-subtitle--cream{color:var(--burgundy-deep)}
-
-/* ── 3. META ROW ───────────────────────────────────────── */
-.r-meta-row{
-  display:grid;
-  background:rgba(255,255,255,0.5);
-  border-bottom:0.5px solid var(--divider);
-  max-width:100%;
-}
-.r-meta-row--4{grid-template-columns:repeat(4,1fr)}
-.r-meta-row--3{grid-template-columns:repeat(3,1fr)}
-.r-meta-cell{
-  padding:12px 14px;text-align:center;
-  border-right:0.5px solid var(--divider);
-}
-.r-meta-cell:last-child{border-right:none}
-.r-meta-label{
-  display:block;
-  font-family:var(--serif);font-size:8.5px;font-style:italic;
-  letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--gold-mid);margin-bottom:3px;
-}
-.r-meta-value{
-  display:block;
-  font-family:var(--serif);font-size:11.5px;
-  letter-spacing:0.2px;line-height:1.3;color:var(--text);
-}
-.r-meta-markers{
-  font-style:italic;color:#A8857A;
+.r6-pillar__badge {
+  font-family: var(--mono); font-size: 10px; color: var(--warm-gray);
+  text-transform: uppercase; letter-spacing: 0.12em;
 }
 
-/* ── PAGE MAX-WIDTH WRAPPER ────────────────────────────── */
-.r-page{max-width:var(--max-w);margin:0 auto;padding:0 20px}
+/* ingredients */
+.r6-ing-group { margin-bottom: var(--s3); }
+.r6-ing-group-name {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--gold); margin-bottom: var(--s1);
+}
+.r6-ing {
+  display: grid; grid-template-columns: 100px 1fr;
+  gap: var(--s2); padding: var(--s1) 0;
+  border-bottom: 1px dotted var(--line-soft); font-size: 14px;
+  align-items: baseline;
+}
+.r6-ing__qty { font-family: var(--mono); font-size: 12px; color: var(--warm-gray); }
+.r6-ing__name { color: var(--charcoal); }
 
-/* ── SECTION HEADER ────────────────────────────────────── */
-.r-section-hd{
-  display:flex;align-items:baseline;justify-content:space-between;
-  padding-bottom:8px;
-  border-bottom:0.5px solid var(--divider);
-  margin:24px 0 14px;
+/* serves control */
+.r6-serves {
+  font-family: var(--mono); font-size: 12px; color: var(--charcoal-soft);
+  display: flex; align-items: center; gap: var(--s1);
 }
-.r-section-title{
-  font-family:var(--didot);font-style:italic;
-  font-size:18px;color:var(--text);letter-spacing:-0.01em;
-}
-.r-section-meta{
-  font-family:var(--serif);font-size:9.5px;font-style:italic;
-  letter-spacing:2px;text-transform:uppercase;color:var(--gold-mid);
-}
-
-/* ── GOLD RULE (centered, 60px) ─────────────────────────── */
-.r-rule{
-  display:flex;justify-content:center;margin:8px 0;
-}
-.r-rule::before{
-  content:'';display:block;width:60px;height:0.5px;background:var(--gold);
-}
-
-/* ── 4. SASHIMI STANDARD LINE ──────────────────────────── */
-.r-sashimi{
-  margin-top:24px;padding:0 20px;
-  max-width:var(--max-w);margin-left:auto;margin-right:auto;
-}
-.r-sashimi-eyebrow{
-  display:block;text-align:center;
-  font-family:var(--serif);font-size:9px;font-style:italic;
-  letter-spacing:3px;text-transform:uppercase;
-  color:var(--gold-mid);margin-bottom:10px;
-}
-.r-sashimi-body{
-  font-family:var(--serif);font-style:italic;
-  font-size:14px;line-height:1.7;letter-spacing:0.15px;
-  color:var(--text);
-}
-@media(min-width:768px){.r-sashimi-body{font-size:14.5px}}
-
-/* ── 5. ORIGIN & PROVENANCE ────────────────────────────── */
-.r-origin{
-  position:relative;
-  border:0.5px solid var(--divider-warm);
-  background:rgba(255,255,255,0.4);
-  border-radius:8px;
-  padding:18px 20px 20px 26px;
-  margin-top:24px;
-  overflow:hidden;
-  max-width:var(--max-w);margin-left:auto;margin-right:auto;
-}
-.r-origin-accent{
-  position:absolute;top:0;left:0;bottom:0;width:3px;
-  background:linear-gradient(180deg,#C9A84C 0%,#A8966B 100%);
-  border-radius:8px 0 0 8px;
-}
-.r-origin-eyebrow{
-  display:block;
-  font-family:var(--serif);font-size:9px;font-style:italic;
-  letter-spacing:3px;text-transform:uppercase;
-  color:var(--gold-mid);margin-bottom:10px;
-}
-.r-origin-body{
-  font-family:var(--serif);font-size:13px;line-height:1.7;
-  letter-spacing:0.1px;color:var(--text);
-}
-.r-origin-body em{color:var(--burgundy-deep)}
-
-/* ── 6. TRADITION TAGS ─────────────────────────────────── */
-.r-tags{
-  display:flex;flex-wrap:wrap;gap:6px;
-  padding:18px 20px 4px;
-  max-width:var(--max-w);margin:0 auto;
-}
-.r-tag{
-  font-family:var(--serif);font-size:9.5px;font-style:italic;
-  color:var(--burgundy-deep);
-  background:rgba(254,242,240,0.8);
-  padding:5px 11px;border-radius:14px;
-  letter-spacing:0.4px;
-  border:0.5px solid rgba(139,44,26,0.15);
+.r6-serves__btn {
+  font-family: var(--mono); font-size: 13px; padding: 3px 10px;
+  border: 1px solid var(--line); background: var(--cream-50); cursor: pointer;
+  color: var(--charcoal);
 }
 
-/* ── 7. INGREDIENTS ────────────────────────────────────── */
-.r-ing-group{margin-bottom:18px}
-.r-ing-group-name{
-  display:block;
-  font-family:var(--serif);font-size:10px;font-style:italic;
-  color:var(--burgundy-deep);letter-spacing:2px;text-transform:uppercase;
-  margin-bottom:8px;padding-bottom:5px;
-  border-bottom:0.5px dotted var(--divider-warm);
+/* method */
+.r6-step { display: flex; gap: var(--s3); padding: var(--s3) 0; border-bottom: 1px dotted var(--line-soft); }
+.r6-step__num {
+  font-family: var(--display); font-style: italic; font-size: 32px;
+  color: var(--gold); line-height: 1; min-width: 40px;
 }
-.r-ing-item{
-  display:flex;justify-content:space-between;align-items:baseline;
-  padding:6px 0;border-bottom:0.5px solid rgba(231,229,228,0.5);
-}
-.r-ing-item:last-child{border-bottom:none}
-.r-ing-name{
-  font-family:var(--serif);font-size:13px;color:var(--text);
-  line-height:1.4;padding-right:12px;
-}
-.r-ing-name--linked{
-  border-bottom:0.5px dotted rgba(139,44,26,0.4);
-  cursor:pointer;
-}
-.r-ing-amount{
-  font-family:var(--serif);font-style:italic;font-size:12.5px;
-  color:var(--burgundy-deep);font-variant-numeric:tabular-nums;
-  letter-spacing:0.2px;white-space:nowrap;flex-shrink:0;
+.r6-step__body { flex: 1; }
+.r6-step__text { font-size: 15px; line-height: 1.65; margin-bottom: var(--s1); }
+.r6-step__note {
+  font-family: var(--mono); font-size: 11px; padding: var(--s1) var(--s2);
+  background: var(--cream-100); border-left: 2px solid var(--gold-soft);
+  color: var(--charcoal-soft); margin-top: var(--s1);
 }
 
-/* ── 8. METHOD ─────────────────────────────────────────── */
-.r-step{
-  display:flex;gap:14px;
-  padding:0 0 18px 0;
+/* quality hierarchy table */
+.r6-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.r6-table th {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--warm-gray); text-align: left;
+  padding: var(--s1) var(--s2); border-bottom: 1px solid var(--line);
 }
-.r-step-num{
-  font-family:var(--didot);font-style:italic;font-size:24px;
-  color:var(--gold-mid);line-height:1;flex-shrink:0;width:28px;
-  padding-top:4px;
-}
-.r-step-body{
-  flex:1;
-  font-family:var(--serif);font-size:13.5px;color:var(--text);
-  line-height:1.75;letter-spacing:0.1px;
-}
-@media(min-width:768px){.r-step-body{font-size:14px}}
+.r6-table td { padding: var(--s2); border-bottom: 1px dotted var(--line-soft); vertical-align: top; }
+.r6-table__swap { font-style: italic; color: var(--charcoal-soft); font-size: 13px; }
 
-/* Gold star markers */
-.r-marker{
-  font-style:italic;color:#9A7A2E;font-weight:500;
-  background:linear-gradient(180deg,transparent 65%,var(--gold-faint) 65%);
-  border-bottom:0.5px dotted var(--gold);
-  padding:0 1px;cursor:pointer;position:relative;
-  display:inline;
+/* lives-or-dies panel */
+.r6-lod {
+  background: var(--charcoal); color: var(--cream-50);
+  padding: var(--s4) var(--s5); border-left: 4px solid var(--gold);
 }
-.r-marker sup{
-  font-size:9px;vertical-align:super;font-style:normal;
-  color:var(--gold);letter-spacing:0;font-weight:400;
+.r6-lod__eyebrow {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.18em; color: rgba(201,168,76,0.8); margin-bottom: var(--s2);
 }
-.r-marker--read{border-bottom:0.5px solid var(--gold)}
-.r-marker-reveal{
-  display:none;
-  margin-top:8px;padding:10px 14px;
-  background:rgba(254,247,232,0.7);
-  border-left:2px solid var(--gold);
-  border-radius:0 6px 6px 0;
-}
-.r-marker-reveal.open{display:block}
-.r-marker-reveal-eyebrow{
-  display:block;
-  font-family:var(--serif);font-size:8.5px;font-style:italic;
-  letter-spacing:2px;text-transform:uppercase;
-  color:var(--gold-mid);font-weight:500;margin-bottom:4px;
-}
-.r-marker-reveal-body{
-  font-family:var(--serif);font-style:italic;font-size:11.5px;
-  color:var(--burgundy-deep);line-height:1.6;letter-spacing:0.1px;
+.r6-lod__body {
+  font-family: var(--display); font-style: italic;
+  font-size: 19px; line-height: 1.55;
 }
 
-/* ── 9. THE FLOURISH ───────────────────────────────────── */
-.r-flourish{
-  padding:24px 20px 0;
-  max-width:var(--max-w);margin:0 auto;
+/* parallels */
+.r6-parallels { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--s2); margin-bottom: var(--s3); }
+.r6-parallel {
+  padding: var(--s3); border: 1px solid var(--line-soft); background: var(--cream-50);
+  text-decoration: none; color: inherit;
 }
-.r-flourish-eyebrow{
-  display:block;text-align:center;
-  font-family:var(--serif);font-size:9px;font-style:italic;
-  letter-spacing:4px;text-transform:uppercase;
-  color:var(--gold-mid);margin-bottom:10px;
+.r6-parallel__cuisine {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--gold); margin-bottom: 6px;
 }
-.r-flourish-body{
-  font-family:var(--serif);font-style:italic;
-  font-size:13.5px;line-height:1.75;letter-spacing:0.15px;
-  color:var(--text);
+.r6-parallel__name { font-family: var(--display); font-size: 17px; font-style: italic; }
+
+/* pairings */
+.r6-pairings { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--s2); }
+.r6-pairing { padding: var(--s3); border: 1px solid var(--line-soft); background: var(--cream-50); }
+.r6-pairing__role {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.14em; padding-bottom: 6px; margin-bottom: var(--s1);
+  border-bottom: 1px solid var(--line-soft);
+}
+.r6-pairing__role--complement { color: var(--gold); }
+.r6-pairing__role--contrast   { color: var(--burgundy); }
+.r6-pairing__region {
+  font-family: var(--mono); font-size: 10px; color: var(--warm-gray);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--s1);
+}
+.r6-pairing__name { font-family: var(--display); font-size: 18px; font-style: italic; margin-bottom: var(--s1); }
+
+/* lineage */
+.r6-lineage { max-width: 780px; font-size: 15px; line-height: 1.7; color: var(--charcoal); }
+.r6-lineage p { margin-bottom: var(--s2); }
+.r6-lineage__cited {
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
+  text-transform: uppercase; letter-spacing: 0.12em; margin-top: var(--s2);
 }
 
-/* ── 10. PAIRING BLOCK ─────────────────────────────────── */
-.r-pairing{
-  margin:24px 20px 0;
-  background:rgba(90,40,16,0.06);
-  border:0.5px solid rgba(90,40,16,0.2);
-  border-radius:8px;
-  max-width:calc(var(--max-w) - 40px);
-  cursor:pointer;
+/* supplier section */
+.r6-suppliers { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--s2); }
+.r6-supplier {
+  padding: var(--s3); border: 1px solid var(--line-soft); background: var(--cream-50);
 }
-.r-pairing-collapsed{
-  display:flex;gap:14px;align-items:flex-start;
-  padding:16px 18px;
+.r6-supplier__name { font-family: var(--display); font-size: 17px; font-style: italic; margin-bottom: 4px; }
+.r6-supplier__loc {
+  font-family: var(--mono); font-size: 10px; color: var(--warm-gray);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--s1);
 }
-.r-pairing-icon{
-  width:36px;height:36px;border-radius:50%;
-  background:rgba(90,40,16,0.12);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
+.r6-supplier__products { font-size: 12px; color: var(--charcoal-soft); }
+
+/* tools */
+.r6-tools-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--s2); }
+.r6-tool {
+  padding: 0; background: var(--cream-50); border: 1px solid var(--line-soft);
 }
-.r-pairing-icon svg{color:var(--burgundy-deep)}
-.r-pairing-text{flex:1}
-.r-pairing-eyebrow{
-  display:block;
-  font-family:var(--serif);font-size:9px;font-style:italic;
-  letter-spacing:3px;text-transform:uppercase;
-  color:var(--burgundy-deep);margin-bottom:4px;
+.r6-tool > summary {
+  padding: var(--s3); cursor: pointer; list-style: none;
 }
-.r-pairing-name{
-  display:block;
-  font-family:var(--didot);font-style:italic;
-  font-size:15px;color:var(--text);
-  letter-spacing:0;line-height:1.3;margin-bottom:3px;
+.r6-tool > summary::-webkit-details-marker { display: none; }
+.r6-tool__icon {
+  font-family: var(--mono); font-size: 10px; color: var(--charcoal); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 6px;
 }
-.r-pairing-note{
-  display:block;
-  font-family:var(--serif);font-style:italic;
-  font-size:11px;color:var(--burgundy-deep);
-  line-height:1.5;letter-spacing:0.1px;
+.r6-tool__icon--regulated { color: var(--terracotta); }
+.r6-tool__icon--cost      { color: var(--gold); }
+.r6-tool__name { font-family: var(--display); font-size: 18px; font-style: italic; }
+.r6-tool__body {
+  padding: 0 var(--s3) var(--s3); font-size: 13px;
+  color: var(--charcoal-soft); line-height: 1.6;
 }
-.r-pairing-supplier{
-  display:block;
-  font-family:var(--serif);font-style:italic;
-  font-size:10.5px;color:var(--burgundy-deep);
-  letter-spacing:0.1px;margin-top:4px;
-  text-decoration:underline;text-decoration-style:dotted;
-  cursor:pointer;
-}
-/* Expanded pairings list */
-.r-pairings-expanded{
-  display:none;border-top:0.5px solid rgba(90,40,16,0.15);
-}
-.r-pairings-expanded.open{display:block}
-.r-pairing-item{
-  display:flex;gap:14px;align-items:flex-start;
-  padding:14px 18px;
-  border-bottom:0.5px solid rgba(90,40,16,0.08);
-  cursor:pointer;
-}
-.r-pairing-item:last-child{border-bottom:none}
-.r-pairing-item:hover{background:rgba(90,40,16,0.04)}
-/* Cocktail build sheet */
-.r-build-sheet{
-  margin:8px 14px 14px 14px;padding:12px;
-  background:rgba(254,247,232,0.5);
-  border-radius:6px;border-left:2px solid var(--gold);
-}
-.r-build-row{
-  font-family:var(--serif);font-size:11.5px;line-height:1.6;color:var(--text);
-  padding:3px 0;
-}
-.r-build-label{
-  font-family:var(--serif);font-size:8.5px;font-style:italic;
-  letter-spacing:2px;text-transform:uppercase;color:var(--gold-mid);
-  display:inline-block;min-width:60px;
+.r6-cost-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.r6-cost-table th, .r6-cost-table td { padding: 5px var(--s1); border-bottom: 1px dotted var(--line-soft); text-align: left; }
+.r6-cost-table tfoot td { font-weight: 600; border-top: 1px solid var(--line); border-bottom: none; }
+
+/* empty state */
+.r6-empty {
+  padding: var(--s4); border: 1px dashed var(--line);
+  background: var(--cream-100); color: var(--warm-gray);
+  font-style: italic; text-align: center; font-size: 14px;
 }
 
-/* ── 11. CROSS-CUISINE PARALLELS ───────────────────────── */
-.r-parallel{
-  display:grid;grid-template-columns:90px 1fr;gap:14px;
-  align-items:start;
-  padding:14px 0;
-  border-bottom:0.5px solid var(--divider);
-}
-.r-parallel:last-child{border-bottom:none}
-.r-parallel-culture{
-  font-family:var(--serif);font-style:italic;
-  font-size:11px;color:var(--burgundy-deep);
-  letter-spacing:1px;text-transform:uppercase;
-  font-weight:500;padding-top:2px;
-}
-.r-parallel-dish{
-  display:block;
-  font-family:var(--serif);font-style:italic;
-  font-size:12.5px;color:var(--text);
-  font-weight:500;margin-bottom:3px;
-}
-.r-parallel-note{
-  font-family:var(--serif);font-size:12px;color:#444441;line-height:1.65;
+/* tradition tags */
+.r6-tags { max-width: 1100px; margin: 0 auto; padding: 0 var(--s4) var(--s3); display: flex; flex-wrap: wrap; gap: 6px; }
+.r6-tag {
+  font-family: var(--mono); font-size: 9px; font-weight: 500; padding: 3px 8px;
+  border: 1px solid var(--line); color: var(--warm-gray); text-transform: uppercase; letter-spacing: 0.12em;
 }
 
-/* ── 12. ACTION ROW ────────────────────────────────────── */
-.r-actions{
-  display:flex;gap:8px;flex-wrap:wrap;
-  padding:18px 20px 20px;
-  border-top:0.5px solid var(--divider);
-  margin-top:18px;
-  background:rgba(255,255,255,0.4);
-  max-width:var(--max-w);margin-left:auto;margin-right:auto;
-}
-.r-action-btn{
-  display:flex;align-items:center;gap:6px;
-  font-family:var(--serif);font-style:italic;font-size:11px;
-  color:var(--burgundy-deep);letter-spacing:0.5px;
-  background:transparent;
-  border:0.5px solid rgba(139,44,26,0.3);
-  padding:8px 14px;border-radius:18px;
-  cursor:pointer;transition:background 0.15s,border-color 0.15s;
-}
-.r-action-btn:hover{
-  background:rgba(254,242,240,0.6);
-  border-color:var(--burgundy);
-}
-.r-action-btn svg{flex-shrink:0}
+/* gold link */
+.r6-gold-link { border-bottom: 1px solid var(--gold); color: var(--charcoal); text-decoration: none; }
 
-/* ── 13. FOOTER ────────────────────────────────────────── */
-.r-footer{
-  padding:18px 20px 22px;
-  text-align:center;
-  border-top:0.5px solid var(--divider);
-  background:rgba(255,255,255,0.3);
-}
-.r-footer-wordmark{
-  display:block;
-  font-family:var(--didot);font-style:italic;
-  font-size:11px;letter-spacing:6px;
-  color:var(--gold-mid);font-weight:500;
-}
-.r-footer-tagline{
-  display:block;
-  font-family:var(--serif);font-style:italic;
-  font-size:10.5px;color:var(--text-muted);
-  letter-spacing:0.3px;line-height:1.5;
-  margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;
-}
-
-/* ── Pour with — beverage pairings ──────────────────────────────── */
-.r-pour-list{list-style:none;margin:0;padding:0}
-.r-pour-row{
-  display:flex;align-items:baseline;justify-content:space-between;gap:1.5rem;
-  padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.06);
-}
-.r-pour-row:last-child{border-bottom:none}
-.r-pour-link{
-  flex:1;color:inherit;text-decoration:none;
-  font-family:'Playfair Display',Georgia,serif;
-  font-size:1.05rem;line-height:1.4;
-  border-bottom:1px solid transparent;
-  transition:border-color 180ms ease,color 180ms ease;
-  padding-bottom:1px;align-self:flex-start;
-}
-.r-pour-link:hover{color:rgba(201,168,76,1);border-bottom-color:rgba(201,168,76,0.6)}
-.r-pour-name{font-style:italic;font-weight:500}
-.r-pour-region{font-style:italic;color:rgba(26,24,21,0.55);font-size:0.95rem}
-.r-pour-relationship{
-  flex-shrink:0;
-  font-family:'DM Mono','IBM Plex Mono',monospace;
-  font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;
-  color:rgba(26,24,21,0.45);
-}
-
-/* ── Supplier accordion — South Sea ──────────────────────────────── */
-.r-supplier-list{list-style:none;margin:0;padding:0}
-.r-supplier-row{
-  position:relative;display:block;width:100%;
-  padding:1.4rem 0 1.4rem 1.5rem;
-  background:transparent;border:none;
-  border-bottom:1px solid rgba(201,168,76,0.06);
-  text-align:left;cursor:pointer;color:inherit;font-family:inherit;
-  transition:border-color 200ms ease,transform 120ms ease;
-  -webkit-tap-highlight-color:transparent;
-}
-.r-supplier-row:last-of-type{border-bottom:none}
-.r-supplier-row:hover,.r-supplier-row:focus-visible{
-  border-bottom-color:rgba(201,168,76,0.18);outline:none;
-}
-.r-supplier-row:active{transform:translateY(1px)}
-.r-supplier-row::before{
-  content:'';position:absolute;left:0;top:50%;
-  width:2px;height:0;background:rgba(201,168,76,0.85);
-  transform:translateY(-50%);
-  transition:height 240ms cubic-bezier(0.22,0.61,0.36,1);
-}
-.r-supplier-row:hover::before,.r-supplier-row:focus-visible::before,.r-supplier-row.is-open::before{height:70%}
-.r-supplier-head{display:flex;align-items:baseline;justify-content:space-between;gap:1.5rem}
-.r-supplier-id{flex:1;min-width:0}
-.r-supplier-name{
-  font-family:'Playfair Display',Georgia,serif;font-style:italic;
-  font-size:1.15rem;font-weight:normal;color:#1a1815;
-  margin:0 0 0.25rem;line-height:1.25;
-}
-.r-supplier-loc{
-  font-family:'DM Mono','IBM Plex Mono',monospace;
-  font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;
-  color:rgba(26,24,21,0.45);
-}
-.r-supplier-chevron{
-  flex-shrink:0;width:12px;height:12px;
-  color:rgba(201,168,76,0.7);
-  transition:transform 280ms cubic-bezier(0.22,0.61,0.36,1),color 200ms ease;
-}
-.r-supplier-row:hover .r-supplier-chevron,.r-supplier-row.is-open .r-supplier-chevron{color:rgba(201,168,76,1)}
-.r-supplier-row.is-open .r-supplier-chevron{transform:rotate(180deg)}
-.r-supplier-body{
-  overflow:hidden;max-height:0;opacity:0;margin-top:0;
-  transition:max-height 320ms cubic-bezier(0.22,0.61,0.36,1),opacity 200ms ease,margin-top 280ms cubic-bezier(0.22,0.61,0.36,1);
-}
-.r-supplier-row.is-open .r-supplier-body{max-height:800px;opacity:1;margin-top:1.5rem}
-.r-supplier-body-inner{padding:0 1rem 0.5rem 0}
-.r-supplier-credit{
-  font-family:'Playfair Display',Georgia,serif;font-style:italic;
-  font-size:0.9rem;line-height:1.6;color:rgba(26,24,21,0.62);
-  margin:0 0 1.5rem;padding-left:1rem;
-  border-left:1px solid rgba(201,168,76,0.25);
-}
-.r-supplier-section{margin-bottom:1.25rem}
-.r-supplier-section:last-child{margin-bottom:0}
-.r-supplier-section-label{
-  font-family:'DM Mono','IBM Plex Mono',monospace;
-  font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;
-  color:rgba(26,24,21,0.4);margin-bottom:0.5rem;
-}
-.r-supplier-products{
-  font-family:'Playfair Display',Georgia,serif;
-  font-size:0.95rem;line-height:1.55;color:rgba(26,24,21,0.85);
-  margin:0;padding:0;list-style:none;
-}
-.r-supplier-products li{padding:0.15rem 0}
-.r-supplier-footer{
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  margin-top:1.25rem;padding-top:1.25rem;
-  border-top:1px solid rgba(201,168,76,0.1);
-}
-.r-supplier-link{
-  font-family:'DM Mono','IBM Plex Mono',monospace;
-  font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;
-  color:rgba(201,168,76,0.95);text-decoration:none;
-  border-bottom:1px solid rgba(201,168,76,0.4);padding-bottom:2px;
-  transition:border-color 180ms ease;
-}
-.r-supplier-link:hover{border-bottom-color:rgba(201,168,76,1)}
-.r-supplier-show-all{
-  margin-top:1.5rem;background:transparent;border:none;padding:0.5rem 0;
-  font-family:'DM Mono','IBM Plex Mono',monospace;
-  font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;
-  color:rgba(26,24,21,0.5);cursor:pointer;transition:color 180ms ease;
-}
-.r-supplier-show-all:hover{color:rgba(201,168,76,1)}
-@media(prefers-reduced-motion:reduce){
-  .r-supplier-row,.r-supplier-row::before,.r-supplier-chevron,.r-supplier-body{transition:none}
-}
-
-/* ── SUPPLIER PANEL (legacy modal — orphaned) ──────────────────── */
-.r-supplier-backdrop{
-  display:none;position:fixed;inset:0;z-index:300;
-  background:rgba(20,18,16,0.45);backdrop-filter:blur(8px);
-}
-.r-supplier-backdrop.open{display:block}
-.r-supplier-sheet{
-  position:fixed;bottom:0;left:0;right:0;z-index:301;
-  max-height:75vh;overflow-y:auto;
-  background:rgba(250,247,242,0.96);backdrop-filter:blur(40px);
-  border-top:0.5px solid rgba(201,168,76,0.4);
-  border-radius:18px 18px 0 0;
-  padding:20px 20px 30px;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(100%);
-  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.35s;
-}
-.r-supplier-sheet.open{
-  visibility:visible;
-  pointer-events:auto;
-  transform:translateY(0);
-  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0s;
-}
-@media(min-width:768px){
-  .r-supplier-sheet{
-    left:auto;right:20px;bottom:20px;
-    width:380px;max-height:70vh;
-    border-radius:12px;
-    border:0.5px solid rgba(201,168,76,0.4);
-    box-shadow:0 12px 40px rgba(28,25,23,0.18);
-  }
-}
-.r-supplier-drag{
-  width:32px;height:3px;
-  background:#D6D3D1;border-radius:2px;
-  margin:0 auto 18px;
-}
-@media(min-width:768px){.r-supplier-drag{display:none}}
-.r-supplier-close{
-  position:absolute;top:14px;right:16px;
-  background:none;border:none;cursor:pointer;
-  font-family:var(--serif);font-size:11px;
-  color:var(--text-muted);
-}
-.r-supplier-name{
-  font-family:var(--didot);font-style:italic;
-  font-size:22px;color:var(--text);margin-bottom:4px;
-}
-.r-supplier-loc{
-  font-family:var(--serif);font-style:italic;
-  font-size:11px;color:var(--text-muted);margin-bottom:14px;
-}
-.r-supplier-credit{
-  font-family:var(--serif);font-size:13px;
-  line-height:1.65;color:var(--text);margin-bottom:12px;
-}
-.r-supplier-products{list-style:none;padding:0}
-.r-supplier-product{
-  padding:6px 0;border-bottom:0.5px solid rgba(231,229,228,0.6);
-  font-family:var(--serif);font-size:12px;color:var(--text-mid);line-height:1.5;
-}
-.r-supplier-product:last-child{border-bottom:none}
-.r-supplier-footer{
-  margin-top:16px;padding-top:12px;
-  border-top:0.5px solid var(--divider);
-  font-family:var(--serif);font-style:italic;
-  font-size:11px;color:var(--text-muted);
-}
-
-/* ── CONTENT PEEK PANEL ────────────────────────────────── */
-.r-peek-backdrop{
-  display:none;position:fixed;inset:0;z-index:400;
-  background:rgba(20,18,16,0.45);backdrop-filter:blur(8px);
-}
-.r-peek-backdrop.open{display:block}
-.r-peek-sheet{
-  position:fixed;bottom:0;left:0;right:0;z-index:401;
-  max-height:80vh;overflow-y:auto;
-  background:rgba(250,247,242,0.97);backdrop-filter:blur(40px);
-  border-top:0.5px solid rgba(201,168,76,0.4);
-  border-radius:18px 18px 0 0;
-  padding:20px 20px 36px;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(100%);
-  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.35s;
-}
-.r-peek-sheet.open{
-  visibility:visible;
-  pointer-events:auto;
-  transform:translateY(0);
-  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0s;
-}
-@media(min-width:768px){
-  .r-peek-sheet{
-    left:auto;right:20px;bottom:20px;
-    width:400px;max-height:72vh;
-    border-radius:12px;
-    border:0.5px solid rgba(201,168,76,0.4);
-    box-shadow:0 12px 40px rgba(28,25,23,0.18);
-  }
-}
-.r-peek-drag{
-  width:32px;height:3px;background:#D6D3D1;border-radius:2px;
-  margin:0 auto 18px;
-}
-@media(min-width:768px){.r-peek-drag{display:none}}
-.r-peek-close{
-  position:absolute;top:14px;right:16px;
-  background:none;border:none;cursor:pointer;
-  font-family:var(--serif);font-size:11px;color:var(--text-muted);
-}
-.r-peek-eyebrow{
-  font-family:var(--serif);font-style:italic;
-  font-size:10.5px;letter-spacing:0.8px;color:var(--gold);
-  text-transform:uppercase;margin-bottom:6px;
-}
-.r-peek-title{
-  font-family:var(--didot);font-style:italic;
-  font-size:20px;color:var(--text);line-height:1.25;margin-bottom:8px;
-}
-.r-peek-desc{
-  font-family:var(--serif);font-size:13px;line-height:1.7;
-  color:var(--text-mid);margin-bottom:16px;
-}
-.r-peek-preview{
-  border:0.5px solid rgba(201,168,76,0.25);border-radius:8px;
-  padding:14px 16px;margin-bottom:18px;overflow:hidden;
-  position:relative;
-}
-.r-peek-preview-inner{
-  font-family:var(--serif);font-size:12.5px;line-height:1.65;
-  color:var(--text-mid);
-  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 30%,rgba(0,0,0,0));
-  mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 30%,rgba(0,0,0,0));
-  max-height:80px;overflow:hidden;
-  filter:blur(1.5px);
-  user-select:none;pointer-events:none;
-}
-.r-peek-preview-label{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-style:italic;font-size:11px;color:var(--text-muted);
-  backdrop-filter:blur(2px);
-}
-.r-peek-cta{
-  display:block;width:100%;text-align:center;
-  padding:13px;border-radius:8px;
-  background:var(--burgundy);color:#FAF7F2;
-  font-family:var(--serif);font-size:13px;letter-spacing:0.5px;
-  text-decoration:none;transition:background 0.15s;border:none;cursor:pointer;
-}
-.r-peek-cta:hover{background:#6D2215}
-.r-peek-sub{
-  display:block;text-align:center;margin-top:10px;
-  font-family:var(--serif);font-style:italic;font-size:11.5px;
-  color:var(--text-muted);
-}
-
-/* ── PRINT ─────────────────────────────────────────────── */
-@media print{
-  .r-top-bar,.r-hero-veil,.r-actions,.r-supplier-backdrop,.r-peek-backdrop{display:none!important}
-  body{background:#fff;color:#000;font-size:11pt}
-  .r-page{max-width:100%;padding:0}
-  .r-pairing{display:none}
-}
-/* ── Costing Modal ───────────────────────────────────── */
-.c-overlay{position:fixed;inset:0;background:rgba(28,25,23,0.82);z-index:9000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px 0 32px}
-.c-overlay.open{display:flex}
-.c-modal{background:var(--cream);width:100%;max-width:700px;min-height:60vh;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;margin:auto}
-.c-header{border-bottom:0.5px solid var(--divider);padding:14px 16px 0;display:flex;flex-direction:column;gap:10px;position:sticky;top:0;background:var(--cream);z-index:1}
-.c-header-top{display:flex;align-items:center;justify-content:space-between}
-.c-recipe-label{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)}
-.c-close{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-muted);padding:2px 4px}
-.c-close:hover{color:var(--text)}
-.c-tabs{display:flex;gap:0;border-top:0.5px solid var(--divider);margin-left:-16px;margin-right:-16px;padding:0 16px}
-.c-tab{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:10px 12px 9px;border-bottom:2px solid transparent;margin-bottom:-0.5px}
-.c-tab.active{color:var(--text);border-bottom-color:var(--gold)}
-.c-tab:hover:not(.active){color:var(--text-mid)}
-.c-body{padding:20px 16px;flex:1;overflow-y:auto}
-/* cost tab */
-.c-banner{background:var(--gold-faint);border:0.5px solid var(--divider-warm);border-radius:3px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:var(--text-mid)}
-.c-banner a{color:var(--gold);cursor:pointer;text-decoration:none}
-.c-ing-table{width:100%;border-collapse:collapse}
-.c-ing-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);padding:0 0 8px;text-align:left;border-bottom:0.5px solid var(--divider)}
-.c-ing-table th:last-child{text-align:right}
-.c-ing-table td{padding:8px 0;border-bottom:0.5px solid var(--divider);font-size:13px;vertical-align:top}
-.c-ing-table td:last-child{text-align:right}
-.c-ing-name{font-family:var(--serif);color:var(--text)}
-.c-ing-meta{font-size:10px;color:var(--text-muted);font-style:italic}
-.c-ing-supplier{font-size:10px;color:var(--text-muted)}
-.c-ing-nodata{font-size:11px;color:var(--text-muted);font-style:italic}
-.c-ing-nodata a{color:var(--gold);cursor:pointer}
-.c-unit-warn{font-size:9px;color:var(--gold-mid);font-style:italic}
-.c-totals{margin-top:16px;padding:12px 0 0;border-top:0.5px solid var(--divider)}
-.c-totals-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px}
-.c-totals-label{color:var(--text-mid);font-family:var(--serif)}
-.c-totals-value{font-family:var(--didot);font-size:15px;color:var(--text)}
-.c-menu-price-row{display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--divider)}
-.c-menu-price-row label{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)}
-.c-menu-input{border:0.5px solid var(--divider-warm);background:var(--cream-bright);font-family:var(--serif);font-size:14px;color:var(--text);padding:4px 8px;width:80px;border-radius:2px}
-.c-gp-display{font-family:var(--mono);font-size:11px;color:var(--text-mid)}
-.c-actions{display:flex;gap:10px;margin-top:16px;padding-top:12px;border-top:0.5px solid var(--divider)}
-.c-btn{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;padding:8px 14px;border:0.5px solid var(--divider-warm);background:none;cursor:pointer;color:var(--text-mid);border-radius:2px}
-.c-btn:hover{background:var(--gold-faint);color:var(--text)}
-.c-btn-primary{border-color:var(--gold);color:var(--gold)}
-.c-btn-primary:hover{background:var(--gold-faint)}
-.c-profession-note{font-size:10px;color:var(--text-muted);font-style:italic;margin-left:auto;align-self:center}
-/* invoices tab */
-.c-invoice-actions{display:flex;gap:10px;margin-bottom:12px}
-.c-dropzone{
-  border:1.5px dashed var(--divider-warm);border-radius:8px;
-  min-height:200px;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:8px;cursor:pointer;padding:32px 20px;
-  transition:border-color 0.15s,background 0.15s;margin:4px 0 16px;
-}
-.c-dropzone:hover,.c-dropzone.drag-over{border-color:var(--gold);background:var(--gold-faint)}
-.c-dz-icon{font-size:26px;color:var(--text-muted);line-height:1}
-.c-dz-main{font-family:var(--didot);font-style:italic;font-size:15px;color:var(--text);text-align:center}
-.c-dz-sub{font-size:11px;color:var(--text-muted);font-style:italic;text-align:center}
-.c-inv-queue{display:flex;align-items:center;gap:8px;padding:8px 0 12px;border-bottom:0.5px solid var(--divider);margin-bottom:12px;flex-wrap:wrap}
-.c-inv-queue-label{font-family:var(--mono);font-size:11px;color:var(--text-mid);flex:1;min-width:120px}
-.c-inv-page-badge{font-family:var(--mono);font-size:9px;letter-spacing:0.05em;text-transform:uppercase;background:var(--gold-faint);color:var(--gold-mid);padding:1px 5px;border-radius:2px;margin-left:4px;vertical-align:middle}
-.c-btn-mobile{display:none}.c-btn-desktop{display:inline}
-@media(pointer:coarse){.c-btn-mobile{display:inline}.c-btn-desktop{display:none}}
-.c-invoice-card{border-bottom:0.5px solid var(--divider);padding:10px 0;cursor:pointer}
-.c-invoice-card:hover{background:var(--gold-faint)}
-.c-inv-header{display:flex;justify-content:space-between;align-items:baseline}
-.c-inv-supplier{font-family:var(--didot);font-style:italic;font-size:14px;color:var(--text)}
-.c-inv-total{font-size:13px;color:var(--text)}
-.c-inv-meta{font-size:10px;color:var(--text-muted);font-family:var(--mono);letter-spacing:0.05em;text-transform:uppercase;margin-top:2px}
-.c-inv-lines{padding:8px 0 4px;display:none}
-.c-inv-lines.open{display:block}
-.c-line-row{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--divider);font-size:12px;align-items:center}
-.c-line-desc{color:var(--text)}
-.c-line-match{font-style:italic;color:var(--text-muted);font-size:11px}
-.c-line-price{font-family:var(--mono);font-size:11px;color:var(--text-mid)}
-.c-confidence{font-size:9px;border-radius:2px;padding:1px 4px;background:var(--gold-faint);color:var(--gold-mid);font-family:var(--mono)}
-.c-line-name-edit{border:0.5px solid var(--divider);background:var(--cream-bright);font-family:var(--serif);font-size:12px;color:var(--text);padding:2px 6px;width:100%;border-radius:2px}
-.c-apply-bar{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--divider);display:flex;justify-content:flex-end;gap:8px}
-/* pricing tab */
-.c-pricing-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px}
-.c-search-input{flex:1;border:0.5px solid var(--divider-warm);background:var(--cream-bright);font-family:var(--serif);font-size:13px;color:var(--text);padding:6px 10px;border-radius:2px}
-.c-pricing-table{width:100%;border-collapse:collapse}
-.c-pricing-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);padding:0 4px 8px;text-align:left;border-bottom:0.5px solid var(--divider)}
-.c-pricing-table td{padding:7px 4px;border-bottom:0.5px solid var(--divider);font-size:12px;vertical-align:middle}
-.c-pricing-table tr:hover td{background:var(--gold-faint)}
-/* loading / empty */
-.c-loading{padding:40px;text-align:center;color:var(--text-muted);font-style:italic;font-size:13px}
-.c-empty{padding:32px 0;text-align:center;color:var(--text-muted);font-size:13px;font-style:italic}
-/* upload progress */
-.c-scan-progress{display:none;padding:24px;text-align:center}
-.c-scan-progress.active{display:block}
-.c-scan-spinner{width:24px;height:24px;border:2px solid var(--divider);border-top-color:var(--gold);border-radius:50%;animation:cspin 0.8s linear infinite;margin:0 auto 12px}
-@keyframes cspin{to{transform:rotate(360deg)}}
-/* review screen */
-.c-review-header{font-family:var(--didot);font-style:italic;font-size:16px;color:var(--text);margin-bottom:4px}
-.c-review-meta{font-size:11px;color:var(--text-muted);margin-bottom:14px}
-/* ── Kitchen Notes Card ──────────────────────────────── */
-.kn-overlay{position:fixed;inset:0;background:rgba(28,25,23,0.82);z-index:9000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px 16px 40px}
-.kn-overlay.open{display:flex}
-.kn-card{background:#fff;width:100%;max-width:600px;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;margin:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18)}
-.kn-card-header{border-bottom:2px solid var(--text);padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;background:#fff;position:sticky;top:0;z-index:1}
-.kn-card-eyebrow{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:5px}
-.kn-card-name{font-family:var(--didot);font-style:italic;font-size:19px;color:var(--text);display:block;line-height:1.2}
-.kn-card-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:12px;padding-top:2px}
-.kn-print-btn{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;background:transparent;color:var(--text-muted);border:0.5px solid var(--divider);border-radius:2px;padding:5px 10px;cursor:pointer;white-space:nowrap}
-.kn-print-btn:hover{border-color:var(--text);color:var(--text)}
-.kn-close{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-muted);padding:2px 4px;line-height:1}
-.kn-close:hover{color:var(--text)}
-.kn-card-body{display:flex;flex-direction:column;color:#1c1917;font-size:13px}
-.kn-loading{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);text-align:center;padding:44px 0}
-.kn-section{border-bottom:0.5px solid var(--divider);padding:14px 20px}
-.kn-section:last-child{border-bottom:none;padding-bottom:22px}
-.kn-section-label{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px;font-weight:600;color:#1c1917}
-.kn-ccp-label{color:#b03a2e}
-.kn-temp-label{color:#1a5276}
-.kn-allergen-label{color:#784212}
-.kn-xc-label{color:#145a32}
-.kn-shelf-label{color:#4a235a}
-.kn-items{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
-.kn-item{font-size:13px;line-height:1.55;color:#1c1917;font-weight:400;padding-left:16px;position:relative}
-.kn-item::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%}
-.kn-ccp-item::before{background:#b03a2e}
-.kn-temp-item::before{background:#1a5276}
-.kn-xc-item::before{background:#145a32}
-.kn-shelf-item::before{background:#4a235a}
-.kn-allergen-section{display:flex;flex-wrap:wrap;gap:6px;padding-top:2px}
-.kn-allergen-pill{font-family:var(--mono);font-size:9px;letter-spacing:0.07em;text-transform:uppercase;background:#fdf6e3;border:0.5px solid #c9941a;color:#5a2d0a;font-weight:600;border-radius:2px;padding:4px 9px}
-.kn-empty-section{font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:0.05em}
-@media print{
-  @page{size:A5;margin:12mm}
-  body{background:white}
-  .kn-overlay{position:static;background:none;padding:0;display:block!important;overflow:visible}
-  body>*:not(#kn-overlay):not(#haccp-overlay){display:none!important}
-  #kn-overlay:not(.open){display:none!important}
-  #haccp-overlay:not(.open){display:none!important}
-  .kn-card{box-shadow:none;border:none;border-radius:0;max-width:100%;padding:0}
-  .kn-card-header{position:static;border-bottom:0.5pt solid #1c1917;padding-bottom:6mm;margin-bottom:6mm}
-  .kn-print-btn,.kn-close{display:none!important}
-  .kn-card-eyebrow,.kn-card-name{color:#1c1917}
-  .kn-card-body{font-size:11pt;line-height:1.5}
-  .kn-section{page-break-inside:avoid;margin-bottom:5mm}
-  .kn-item{font-size:11pt;line-height:1.4}
-  .haccp-table{font-size:9pt}
-  .haccp-table th,.haccp-table td{padding:4px 5px}
-  .haccp-table-wrap{overflow:visible}
-}
-/* ── HACCP brief extras ──────────────────────────────────────────── */
-.haccp-rationale{font-size:11px;color:var(--text-muted);margin-top:8px;font-style:italic;line-height:1.5}
-.haccp-flow{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:4px}
-.haccp-flow-step{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;background:#f0f4f8;border:0.5px solid #b8cdd9;border-radius:2px;padding:3px 8px;color:#1a5276}
-.haccp-flow-arrow{color:var(--text-muted);font-size:11px;padding:0 1px}
-.haccp-receiving-item{margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid var(--divider)}
-.haccp-receiving-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.haccp-receiving-ingredient{font-weight:600;font-size:12px;color:#145a32;margin-bottom:4px}
-.haccp-receiving-detail{font-size:12px;line-height:1.5;margin-bottom:2px;color:#1c1917}
-.haccp-reject{color:#b03a2e}
-.haccp-table-wrap{overflow-x:auto;margin-top:4px}
-.haccp-table{width:100%;border-collapse:collapse;font-size:11px;line-height:1.45}
-.haccp-table th{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);border-bottom:1.5px solid var(--divider);padding:5px 8px;text-align:left;white-space:nowrap}
-.haccp-table td{border-bottom:0.5px solid var(--divider);padding:7px 8px;vertical-align:top;color:#1c1917}
-.haccp-table tr:last-child td{border-bottom:none}
-.haccp-limit{font-weight:600;color:#b03a2e;min-width:100px}
-.haccp-hazard-cat{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
-.haccp-footer{font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:0.05em;line-height:1.6;font-style:italic}
-/* ── HACCP compliance wrapper ────────────────────────────────────── */
-.haccp-doc-ctrl{background:var(--surface)}
-.haccp-doc-ctrl-top{margin-bottom:10px}
-.haccp-version-badge{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;border-radius:2px;padding:3px 9px;display:inline-block}
-.haccp-version-draft{background:#fff0ed;border:0.5px solid #b03a2e;color:#b03a2e}
-.haccp-version-signed{background:#edf7f0;border:0.5px solid #145a32;color:#145a32}
-.haccp-doc-ctrl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px 20px;margin-top:8px}
-.haccp-doc-ctrl-field{display:flex;flex-direction:column;gap:4px}
-.haccp-doc-ctrl-label{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)}
-.haccp-doc-ctrl-value{font-size:12px;color:var(--text)}
-.haccp-input{font-family:var(--mono);font-size:11px;border:0.5px solid var(--divider);border-radius:2px;padding:4px 7px;background:#fff;color:var(--text);width:100%;box-sizing:border-box}
-.haccp-input:focus{outline:none;border-color:#1a5276}
-select.haccp-input{padding:3px 7px}
-.haccp-textarea{width:100%;font-family:var(--serif);font-size:12px;line-height:1.6;color:var(--text);border:0.5px solid var(--divider);border-radius:2px;padding:8px 10px;resize:vertical;background:#fff;box-sizing:border-box;min-height:72px}
-.haccp-textarea:focus{outline:none;border-color:#1a5276}
-.haccp-text-display{font-size:12px;line-height:1.6;color:var(--text)}
-.haccp-signoff-note{font-family:var(--mono);font-size:9px;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.04em}
-.haccp-signoff-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
-.haccp-sig-field{grid-column:1/-1}
-.haccp-sig-input{font-style:italic}
-.haccp-signature-display{font-size:17px;font-style:italic;font-family:Georgia,'Times New Roman',serif;color:var(--text);line-height:1.3;border-bottom:0.5px solid var(--divider);padding-bottom:2px;display:inline-block;min-width:160px}
-.haccp-btn-sign{background:var(--text)!important;color:var(--cream)!important;border-color:var(--text)!important;font-weight:600}
-.haccp-btn-sign:hover{background:var(--burgundy)!important;border-color:var(--burgundy)!important}
-.haccp-btn-new{color:#1a5276!important;border-color:#1a5276!important}
-.haccp-validation-msg{font-family:var(--mono);font-size:9px;color:#b03a2e;letter-spacing:0.04em;margin-top:6px;display:none}
-.haccp-watermark-draft{display:none}
-@media print{
-  .haccp-watermark-draft{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);font-family:var(--mono,monospace);font-size:52pt;color:rgba(176,58,46,0.09);pointer-events:none;z-index:9999;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap}
-  .haccp-input,.haccp-textarea,.haccp-validation-msg{display:none!important}
-  .haccp-doc-ctrl-value,.haccp-text-display,.haccp-signature-display{display:block}
-  .haccp-btn-sign,.haccp-btn-new{display:none!important}
-  .haccp-signoff-blank{display:block;border-bottom:0.5px solid #1c1917;min-width:120px;height:18px}
+@media (max-width: 900px) {
+  .r6-hero__title-block h1 { font-size: 36px; }
+  .r6-parallels, .r6-pairings, .r6-tools-grid, .r6-suppliers { grid-template-columns: 1fr; }
+  .r6-crumb, .r6-hero, .r6-pillar, .r6-actions { padding-left: var(--s2); padding-right: var(--s2); }
 }
 </style>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/processing_overlay.css') }}">
-</head>
-<body>
+{% endblock %}
 
-{# ── Computed helpers ── #}
-{% set has_photo = recipe.image_url %}
-{% set recipe_type = recipe.recipe_type or 'food' %}
-{% set is_editorial = recipe.editorial_showcase %}
-{% set sashimi = recipe.sashimi_standard %}
-{% set origin = recipe.origin_provenance or (recipe.full_content.origin if recipe.full_content else None) %}
+{% block content %}
+{# ── pre-compute helpers ── #}
+{% set recipe_name = recipe.name or recipe.title or 'Untitled' %}
+{% set cuisine_display = format_cuisine(recipe.cuisine_canon or recipe.cuisine) %}
+{% set steps = recipe.steps or recipe.method or [] %}
+{% set ingredients = recipe.ingredients or [] %}
+{% set has_groups = ingredients and ingredients[0] is mapping and 'group' in ingredients[0] %}
+{% set sashimi = recipe.sashimi_standard or recipe.lives_or_dies %}
+{% set origin_text = recipe.origin_provenance or (recipe.full_content.origin if recipe.full_content else None) or recipe.description %}
+{% set cross_parallels = recipe.cross_cuisine_parallels or [] %}
 {% set trad_tags = recipe.tradition_tags or [] %}
-{% set flourish = recipe.flourish %}
-{% set pairings = recipe.pairings or [] %}
-{% set parallels = recipe.cross_cuisine_parallels or [] %}
-{% set markers_data = recipe.markers or [] %}
+{% set cuisine_slug = (recipe.cuisine_canon or recipe.cuisine or '') | lower | replace(' ', '-') | replace('_', '-') %}
 
-{# Determine hero text colors based on photo/cream state #}
-{% if has_photo %}
-  {% set eyebrow_cls = 'r-hero-eyebrow--photo' %}
-  {% set title_cls = 'r-hero-title--photo' %}
-  {% set subtitle_cls = 'r-hero-subtitle--photo' %}
-{% else %}
-  {% set eyebrow_cls = 'r-hero-eyebrow--cream' %}
-  {% set title_cls = 'r-hero-title--cream' %}
-  {% set subtitle_cls = 'r-hero-subtitle--cream' %}
-{% endif %}
+<div class="recipe-page">
 
-{# Eyebrow text #}
-{% if recipe.eyebrow_override %}
-  {% set eyebrow_text = recipe.eyebrow_override %}
-{% elif is_editorial %}
-  {% set eyebrow_text = '— Transcendent Recipe —' %}
-{% elif recipe.cuisine_canon %}
-  {% set eyebrow_text = '— Of the ' ~ recipe.cuisine_canon ~ ' Canon —' %}
-{% elif recipe_type == 'cocktail' %}
-  {% set eyebrow_text = '— Cocktail —' %}
-{% elif recipe_type == 'wine' %}
-  {% set eyebrow_text = '— Wine —' %}
-{% elif recipe_type == 'beer' %}
-  {% set eyebrow_text = '— Beer —' %}
-{% elif recipe_type == 'coffee_tea_na' %}
-  {% set eyebrow_text = '— Coffee & Tea —' %}
-{% elif is_authenticated %}
-  {% set eyebrow_text = '— Your Kitchen —' %}
-{% else %}
-  {% set eyebrow_text = '— Provenance —' %}
-{% endif %}
-
-{# Count gold-star markers in method steps #}
-{% set ns = namespace(marker_count=0) %}
-{% for step in (recipe.steps or recipe.method or []) %}
-  {% if step is mapping and step.markers %}
-    {% set ns.marker_count = ns.marker_count + (step.markers | length) %}
-  {% endif %}
-{% endfor %}
-
-<!-- ═══ 1. TOP BAR ════════════════════════════════════════ -->
-<header class="r-top-bar">
-  <a href="{{ '/kitchen' if is_authenticated else '/recipes' }}" class="r-top-back">
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.2"/></svg>
-    back to kitchen
-  </a>
-  <span class="r-top-wordmark">Provenance</span>
-  <div class="r-top-actions">
-    <button class="r-top-btn" id="btn-save" title="Save" onclick="toggleSave()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h10v12l-5-3-5 3V2z" stroke="currentColor" stroke-width="1.2"/></svg>
-    </button>
-    <button class="r-top-btn" title="Share" onclick="shareRecipe()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="12" cy="3" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="4" cy="8" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="13" r="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 7l5-3M5.5 9l5 3" stroke="currentColor" stroke-width="1.2"/></svg>
-    </button>
-    <button class="r-top-btn" title="Print" onclick="window.print()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="5" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M5 5V3h6v2M5 12v1h6v-1" stroke="currentColor" stroke-width="1.2"/><circle cx="11.5" cy="8.5" r="0.5" fill="currentColor"/></svg>
-    </button>
-  </div>
-</header>
-
-<!-- ═══ 2. HERO BAND ════════════════════════════════════════ -->
-<div class="r-hero">
-{% if has_photo %}
-  <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" class="r-hero-photo">
-  <div class="r-hero-veil"></div>
-{% else %}
-  <div class="r-hero-cream">
-    <div class="r-hero-cream-texture"></div>
-    {% if recipe.cuisine_canon %}
-      <div class="r-hero-ornament">{{ recipe.cuisine_canon[0] }}</div>
-    {% endif %}
-  </div>
-{% endif %}
-  <div class="r-hero-content">
-    <span class="r-hero-eyebrow {{ eyebrow_cls }}">{{ eyebrow_text }}</span>
-    <h1 class="r-hero-title {{ title_cls }}">{{ recipe.name }}</h1>
-    {% if recipe.subtitle %}
-      <p class="r-hero-subtitle {{ subtitle_cls }}">{{ recipe.subtitle }}</p>
-    {% endif %}
-  </div>
-</div>
-
-<!-- ═══ 3. META ROW ════════════════════════════════════════ -->
-{% if recipe_type == 'cocktail' %}
-<div class="r-meta-row r-meta-row--4">
-  <div class="r-meta-cell"><span class="r-meta-label">Glass</span><span class="r-meta-value">{{ recipe.glass or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Ice</span><span class="r-meta-value">{{ recipe.ice_spec or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Build</span><span class="r-meta-value">{{ recipe.build_method or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">ABV</span><span class="r-meta-value">{{ recipe.abv or '—' }}</span></div>
-</div>
-{% elif recipe_type == 'wine' %}
-<div class="r-meta-row r-meta-row--4">
-  <div class="r-meta-cell"><span class="r-meta-label">Vintage</span><span class="r-meta-value">{{ recipe.vintage or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Region</span><span class="r-meta-value">{{ recipe.wine_region or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Producer</span><span class="r-meta-value">{{ recipe.producer or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Window</span><span class="r-meta-value">{{ recipe.drinking_window or '—' }}</span></div>
-</div>
-{% elif recipe_type == 'beer' %}
-<div class="r-meta-row r-meta-row--4">
-  <div class="r-meta-cell"><span class="r-meta-label">Style</span><span class="r-meta-value">{{ recipe.style or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Brewery</span><span class="r-meta-value">{{ recipe.brewery or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">ABV / IBU</span><span class="r-meta-value">{{ recipe.abv_ibu or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Serve</span><span class="r-meta-value">{{ recipe.serving_temp or '—' }}</span></div>
-</div>
-{% elif recipe_type == 'coffee_tea_na' %}
-<div class="r-meta-row r-meta-row--4">
-  <div class="r-meta-cell"><span class="r-meta-label">Method</span><span class="r-meta-value">{{ recipe.brew_method or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Yield</span><span class="r-meta-value">{{ recipe.yield_volume or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Time</span><span class="r-meta-value">{{ recipe.brew_time or '—' }}</span></div>
-  <div class="r-meta-cell"><span class="r-meta-label">Origin</span><span class="r-meta-value">{{ recipe.origin_estate or recipe.cuisine or '—' }}</span></div>
-</div>
-{% else %}
-  {# Food recipe — show 4 cells if we have markers, 3 if not #}
-  {% if ns.marker_count > 0 %}
-  <div class="r-meta-row r-meta-row--4">
-    <div class="r-meta-cell"><span class="r-meta-label">Yield</span><span class="r-meta-value">{{ recipe.yield_desc or (recipe.servings ~ ' serves' if recipe.servings else '—') }}</span></div>
-    <div class="r-meta-cell"><span class="r-meta-label">Active</span><span class="r-meta-value">{{ recipe.active_time or (recipe.time.active if recipe.time else '—') or '—' }}</span></div>
-    <div class="r-meta-cell"><span class="r-meta-label">Total</span><span class="r-meta-value">{{ recipe.total_time or (recipe.time.total if recipe.time else '—') or '—' }}</span></div>
-    <div class="r-meta-cell"><span class="r-meta-label">Markers</span><span class="r-meta-value r-meta-markers">{{ ns.marker_count }} ★, tap to read</span></div>
-  </div>
-  {% else %}
-  <div class="r-meta-row r-meta-row--3">
-    <div class="r-meta-cell"><span class="r-meta-label">Yield</span><span class="r-meta-value">{{ recipe.yield_desc or (recipe.servings ~ ' serves' if recipe.servings else '—') }}</span></div>
-    <div class="r-meta-cell"><span class="r-meta-label">Active</span><span class="r-meta-value">{{ recipe.active_time or (recipe.time.active if recipe.time else '—') or '—' }}</span></div>
-    <div class="r-meta-cell"><span class="r-meta-label">Total</span><span class="r-meta-value">{{ recipe.total_time or (recipe.time.total if recipe.time else '—') or '—' }}</span></div>
-  </div>
-  {% endif %}
-{% endif %}
-
-<!-- ═══ 4. SASHIMI STANDARD LINE ═══════════════════════════ -->
-{% if sashimi %}
-<div class="r-sashimi">
-  <div class="r-rule"></div>
-  <span class="r-sashimi-eyebrow">— Where the {{ 'drink' if recipe_type != 'food' else 'dish' }} lives or dies —</span>
-  <p class="r-sashimi-body">{{ sashimi }}</p>
-  <div class="r-rule"></div>
-</div>
-{% endif %}
-
-<!-- ═══ 5. ORIGIN & PROVENANCE ══════════════════════════════ -->
-{% if origin %}
-<div class="r-page" style="margin-top:24px">
-  <div class="r-origin">
-    <div class="r-origin-accent"></div>
-    <span class="r-origin-eyebrow">— Origin &amp; Provenance —</span>
-    <div class="r-origin-body">{{ origin | safe }}</div>
-  </div>
-</div>
-{% endif %}
-
-<!-- ═══ 6. TRADITION TAGS ═══════════════════════════════════ -->
-{% if trad_tags %}
-<div class="r-tags">
-  {% for tag in trad_tags %}<span class="r-tag">{{ tag }}</span>{% endfor %}
-</div>
-{% endif %}
-
-<!-- ═══ 7. INGREDIENTS ══════════════════════════════════════ -->
-{% set raw_ingredients = recipe.ingredients %}
-{% if raw_ingredients %}
-<div class="r-page">
-  <div class="r-section-hd">
-    <span class="r-section-title">Ingredients</span>
-    {# Count groups #}
-    {% set ing_list = raw_ingredients if raw_ingredients is iterable else [] %}
-    {% set has_groups = ing_list and ing_list[0] is mapping and ing_list[0].items is defined and 'group' in ing_list[0] %}
-    {% if has_groups %}
-      <span class="r-section-meta">— {{ ing_list | length }} components —</span>
-    {% endif %}
-  </div>
-
-  {% if has_groups %}
-    {# Grouped ingredients #}
-    {% for grp in ing_list %}
-      <div class="r-ing-group">
-        {% if grp.group %}<span class="r-ing-group-name">{{ grp.group }}</span>{% endif %}
-        {% for ing in (grp.items or []) %}
-          <div class="r-ing-item">
-            <span class="r-ing-name{% if ing.technique_link or ing.supplier_link %} r-ing-name--linked{% endif %}"
-              {% if ing.technique_link or ing.supplier_link %}onclick="openIngredientPanel('{{ ing.name | e }}')"{% endif %}>{{ ing.name }}</span>
-            <span class="r-ing-amount">{{ ing.amount }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
-          </div>
-        {% endfor %}
-      </div>
-    {% endfor %}
-  {% else %}
-    {# Flat ingredient list #}
-    <div class="r-ing-group">
-      {% for ing in ing_list %}
-        {% if ing is mapping %}
-          <div class="r-ing-item">
-            <span class="r-ing-name">{{ ing.name or ing.get('ingredient', '') }}</span>
-            <span class="r-ing-amount">
-              {{ ing.count or ing.amount or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}{% if ing.info %} ({{ ing.info }}){% endif %}
-            </span>
-          </div>
-        {% else %}
-          <div class="r-ing-item"><span class="r-ing-name">{{ ing }}</span><span class="r-ing-amount"></span></div>
-        {% endif %}
+  {# ─── BREADCRUMB + CHIPS ─── #}
+  <div class="r6-crumb">
+    <a href="/">home</a> ·
+    {% if cuisine_slug %}<a href="/cuisines/{{ cuisine_slug }}">{{ cuisine_display }}</a> · {% endif %}
+    <span>{{ recipe_name }}</span>
+    {% if allergens or is_owner %}
+    <div class="r6-chips" style="margin-top: var(--s1);">
+      {% if is_owner %}<span class="r6-tier-chip r6-tier-chip--kitchen">Your recipe</span>{% endif %}
+      {% for a in allergens %}
+        <span class="r6-allergen">{{ a.label }}</span>
       {% endfor %}
     </div>
-  {% endif %}
-</div>
-{% endif %}
-
-<!-- ═══ 8. METHOD ═══════════════════════════════════════════ -->
-{% set raw_steps = recipe.steps or recipe.method %}
-{% if raw_steps %}
-<div class="r-page">
-  {% set method_label = 'Tasting &amp; Service' if recipe_type in ('wine','beer') else 'Method' %}
-  <div class="r-section-hd">
-    <span class="r-section-title">{{ method_label | safe }}</span>
-    <span class="r-section-meta">— gold ★ marks the science —</span>
+    {% endif %}
   </div>
 
-  <div id="r-steps-container">
-  {% for step in raw_steps %}
-    {% set step_idx = loop.index0 %}
-    {% set step_text = step.instruction if step is mapping and step.instruction else (step.body if step is mapping and step.body else (step.enhanced if step is mapping and step.enhanced else (step.text if step is mapping and step.text else (step if step is not mapping else '')))) %}
-    {% set step_markers = step.markers if step is mapping and step.markers else [] %}
-    {% set step_note = step.technique_note if step is mapping and step.technique_note else '' %}
-    <div class="r-step" data-step="{{ step_idx }}">
-      <div class="r-step-num">{{ loop.index }}</div>
-      <div class="r-step-body">
-        {{ step_text | safe }}
-        {# Gold-star trigger for technique_note (new schema) #}
-        {% if step_note %}
-        <span class="r-marker" data-marker-idx="{{ step_idx }}" onclick="toggleMarker('{{ step_idx }}', this)"> ★</span>
+  {# ─── HERO ─── #}
+  <section class="r6-hero">
+    <div class="r6-hero__image">
+      {% if recipe.image_url %}
+        <img src="{{ recipe.image_url }}" alt="{{ recipe_name }}">
+      {% else %}
+        <div class="r6-hero__placeholder">{{ recipe_name }}</div>
+      {% endif %}
+    </div>
+    <div class="r6-hero__title-block">
+      <div class="r6-cuisine">{{ cuisine_display }}</div>
+      <h1>
+        {% if ' — ' in recipe_name %}
+          {% set parts = recipe_name.split(' — ', 1) %}
+          {{ parts[0] }}<br><em>— {{ parts[1] }}</em>
+        {% elif ', with' in recipe_name %}
+          {% set parts = recipe_name.split(', with', 1) %}
+          {{ parts[0] }}<br><em>, with{{ parts[1] }}</em>
+        {% else %}
+          {{ recipe_name }}
         {% endif %}
-        {# Legacy inline markers (older records with step.markers list) #}
-        {% for marker in step_markers %}
-          {% set m_idx = step_idx ~ '_' ~ loop.index0 %}
-          <div class="r-marker-reveal" id="reveal-{{ m_idx }}">
-            <span class="r-marker-reveal-eyebrow">— the marker —</span>
-            <span class="r-marker-reveal-body">{{ marker.body or marker }}</span>
+      </h1>
+      <div class="r6-meta">
+        {% if recipe.active_time or (recipe.time and recipe.time.active) %}
+          <span>Active: {{ recipe.active_time or recipe.time.active }}</span>
+          <span class="r6-meta__div">·</span>
+        {% endif %}
+        {% if recipe.total_time or (recipe.time and recipe.time.total) %}
+          <span>Total: {{ recipe.total_time or recipe.time.total }}</span>
+          <span class="r6-meta__div">·</span>
+        {% endif %}
+        {% if recipe.yield_desc or recipe.servings %}
+          <span>{{ recipe.yield_desc or (recipe.servings ~ ' serves') }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {# ─── ACTION ROW ─── #}
+  <div class="r6-actions">
+    <a href="/recipe/{{ recipe.slug }}/cook" class="r6-btn">Cook Mode →</a>
+    <a href="#" class="r6-btn r6-btn--ghost" data-action="save">Save</a>
+    <a href="{{ url_for('suggest_supplier') }}?recipe={{ recipe.slug }}" class="r6-btn r6-btn--ghost">Suggest a supplier</a>
+    <a href="#" class="r6-btn r6-btn--ghost" onclick="window.print(); return false;">Print</a>
+    <a href="#" class="r6-btn r6-btn--ghost" data-action="share">Share</a>
+    {% if is_owner %}
+      <a href="/recipe/{{ recipe.slug }}/edit" class="r6-btn r6-btn--ghost">Edit</a>
+    {% endif %}
+  </div>
+
+  {# ─── PILLAR I — INGREDIENTS ─── #}
+  <section class="r6-pillar">
+    <div class="r6-pillar__head">
+      <div>
+        <div class="r6-pillar__num">Pillar I</div>
+        <h2>Ingredients</h2>
+      </div>
+      <div class="r6-serves">
+        Serves
+        <button class="r6-serves__btn" type="button">−</button>
+        <span>{{ recipe.servings or 4 }}</span>
+        <button class="r6-serves__btn" type="button">+</button>
+      </div>
+    </div>
+    {% if ingredients %}
+      {% if has_groups %}
+        {% for grp in ingredients %}
+          <div class="r6-ing-group">
+            {% if grp.group %}<div class="r6-ing-group-name">{{ grp.group }}</div>{% endif %}
+            {% for ing in (grp.items or []) %}
+              <div class="r6-ing">
+                <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
+                <span class="r6-ing__name">{{ ing.name }}</span>
+              </div>
+            {% endfor %}
           </div>
         {% endfor %}
-        {# Reveal panel for technique_note #}
-        {% if step_note %}
-        <div class="r-marker-reveal" id="reveal-{{ step_idx }}">
-          <span class="r-marker-reveal-eyebrow">— the technique —</span>
-          <span class="r-marker-reveal-body">{{ step_note }}</span>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-  {% endfor %}
-  </div>
-</div>
-{% endif %}
-
-<!-- ═══ 9. THE FLOURISH ═════════════════════════════════════ -->
-{% if flourish %}
-<div class="r-flourish">
-  <div class="r-rule"></div>
-  <span class="r-flourish-eyebrow">— {% if recipe_type != 'food' %}The Service{% else %}The Flourish{% endif %} —</span>
-  <p class="r-flourish-body">{{ flourish }}</p>
-  <div class="r-rule"></div>
-</div>
-{% endif %}
-
-<!-- ═══ 10. PAIRING BLOCK ═══════════════════════════════════ -->
-{% if pairings %}
-{% set first_pairing = pairings[0] %}
-<div class="r-pairing" id="r-pairing-block" onclick="togglePairings()">
-  <div class="r-pairing-collapsed">
-    <div class="r-pairing-icon">
-      {# Icon by pairing type #}
-      {% set pt = first_pairing.type if first_pairing is mapping else 'wine' %}
-      {% if pt == 'cocktail' %}
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 4h12l-5 7v5h2v2H8v-2h2v-5L5 4z" stroke="currentColor" stroke-width="1.2"/></svg>
-      {% elif pt == 'beer' %}
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="6" y="4" width="10" height="14" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M16 8h2v6h-2" stroke="currentColor" stroke-width="1.2"/></svg>
-      {% elif pt == 'food' %}
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.2"/><path d="M8 11h6M11 8v6" stroke="currentColor" stroke-width="1.2"/></svg>
       {% else %}
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M7 4h8v2a5 5 0 01-8 0V4z" stroke="currentColor" stroke-width="1.2"/><path d="M11 6v12M8 18h6" stroke="currentColor" stroke-width="1.2"/></svg>
-      {% endif %}
-    </div>
-    <div class="r-pairing-text">
-      <span class="r-pairing-eyebrow">— {{ 'Beverage' if recipe_type == 'food' else 'Food' }} Pairing —</span>
-      <span class="r-pairing-name">{{ first_pairing.name if first_pairing is mapping else first_pairing }}</span>
-      {% if first_pairing is mapping and first_pairing.note %}
-        <span class="r-pairing-note">{{ first_pairing.note }}</span>
-      {% endif %}
-      {% if first_pairing is mapping and first_pairing.supplier_link %}
-        <span class="r-pairing-supplier" onclick="event.stopPropagation();openSupplierPanel('{{ first_pairing.supplier_link | e }}')">From {{ first_pairing.supplier_link }}</span>
-      {% endif %}
-    </div>
-  </div>
-
-  {% if pairings | length > 1 %}
-  <div class="r-pairings-expanded" id="r-pairings-expanded" onclick="event.stopPropagation()">
-    {% for p in pairings %}
-    {% if loop.index0 > 0 %}
-    <div class="r-pairing-item" onclick="handlePairingTap('{{ loop.index0 }}')">
-      <div class="r-pairing-text">
-        <span class="r-pairing-name">{{ p.name if p is mapping else p }}</span>
-        {% if p is mapping and p.note %}<span class="r-pairing-note">{{ p.note }}</span>{% endif %}
-        {% if p is mapping and p.supplier_link %}
-          <span class="r-pairing-supplier" onclick="event.stopPropagation();openSupplierPanel('{{ p.supplier_link | e }}')">From {{ p.supplier_link }}</span>
-        {% endif %}
-      </div>
-    </div>
-    {% endif %}
-    {% endfor %}
-  </div>
-  {% endif %}
-</div>
-{% elif recipe_suppliers %}
-{# Show suppliers from recipe page query as pairing-adjacent block #}
-{% endif %}
-
-<!-- ═══ 11. CROSS-CUISINE PARALLELS ════════════════════════ -->
-{% if parallels %}
-<div class="r-page">
-  <div class="r-section-hd">
-    <span class="r-section-title">Cross-cuisine parallels</span>
-    <span class="r-section-meta">— the thread —</span>
-  </div>
-  {% for p in parallels %}
-  <div class="r-parallel">
-    <span class="r-parallel-culture">{{ p.culture if p is mapping else '' }}</span>
-    <div>
-      <span class="r-parallel-dish">{{ p.dish if p is mapping else p }}</span>
-      <span class="r-parallel-note">{{ p.note if p is mapping else '' }}</span>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-{% endif %}
-
-<!-- ═══ POUR WITH — Beverage pairings from technique layer ═══ -->
-{% if suggested_beverages %}
-<div class="r-page" style="margin-top:24px">
-  <div class="r-section-hd">
-    <span class="r-section-title">Pour with</span>
-    <span class="r-section-meta">— from the cellar —</span>
-  </div>
-  <ul class="r-pour-list">
-    {% for bev in suggested_beverages %}
-    <li class="r-pour-row">
-      <a class="r-pour-link" href="/beverage/products/{{ bev.id }}">
-        <span class="r-pour-name">{{ bev.name }}</span>
-        {% if bev.region %}
-        <span class="r-pour-region"> · {{ bev.region }}</span>
-        {% endif %}
-      </a>
-      {% if bev.relationship_type %}
-      <span class="r-pour-relationship">{{ bev.relationship_type }}</span>
-      {% endif %}
-    </li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
-
-<!-- ═══ SUPPLIER SECTION (Pat's Rule — Global Sashimi Rule) ═══ -->
-{% if recipe_suppliers %}
-<div class="r-page" style="margin-top:24px">
-  <div class="r-section-hd">
-    <span class="r-section-title">Sourced by Provenance</span>
-    <span class="r-section-meta">— Pat's Rule —</span>
-  </div>
-  <ul class="r-supplier-list">
-  {% for s in recipe_suppliers %}
-  <li>
-  <button type="button" class="r-supplier-row{% if loop.index > 6 %} r-supplier-extra{% endif %}"
-          data-supplier-id="{{ s.id }}"
-          aria-expanded="false"
-          {% if loop.index > 6 %}style="display:none"{% endif %}>
-    <div class="r-supplier-head">
-      <div class="r-supplier-id">
-        <div class="r-supplier-name">{{ s.name }}</div>
-        <div class="r-supplier-loc">{{ s.city }}{% if s.state_province %}, {{ s.state_province }}{% endif %}</div>
-      </div>
-      <svg class="r-supplier-chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="r-supplier-body">
-      <div class="r-supplier-body-inner">
-        {% if s.products and s.products[0].desc %}
-        <p class="r-supplier-credit">{{ s.products[0].desc }}</p>
-        {% endif %}
-        {% if s.products %}
-        <div class="r-supplier-section">
-          <div class="r-supplier-section-label">— Carries —</div>
-          <ul class="r-supplier-products">
-            {% for product in s.products %}
-            <li>{{ product.name }}</li>
-            {% endfor %}
-          </ul>
+        <div class="r6-ing-group">
+          {% for ing in ingredients %}
+            {% if ing is mapping %}
+              <div class="r6-ing">
+                <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
+                <span class="r6-ing__name">{{ ing.name or ing.get('ingredient', '') }}</span>
+              </div>
+            {% else %}
+              <div class="r6-ing">
+                <span class="r6-ing__qty"></span>
+                <span class="r6-ing__name">{{ ing }}</span>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
+      {% endif %}
+    {% else %}
+      <div class="r6-empty">No ingredients recorded yet.</div>
+    {% endif %}
+  </section>
+
+  {# ─── PILLAR II — METHOD ─── #}
+  <section class="r6-pillar">
+    <div class="r6-pillar__head">
+      <div>
+        <div class="r6-pillar__num">Pillar II</div>
+        <h2>Method</h2>
+      </div>
+      {% if steps %}<div class="r6-pillar__badge">{{ steps | length }} steps</div>{% endif %}
+    </div>
+    {% if steps %}
+      {% for step in steps %}
+        {% if step is mapping %}
+          {% set text = step.instruction or step.body or step.enhanced or step.text or '' %}
+          {% set note = step.technique_note or '' %}
+        {% else %}
+          {% set text = step %}
+          {% set note = '' %}
         {% endif %}
-        <div class="r-supplier-footer">
-          <span class="r-supplier-loc">{{ s.city }}{% if s.state_province %}, {{ s.state_province }}{% endif %}{% if s.country %}, {{ s.country }}{% endif %}</span>
-          {% if s.website %}
-          <a class="r-supplier-link" href="{{ s.website }}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Visit supplier →</a>
+        <div class="r6-step">
+          <div class="r6-step__num">{{ loop.index }}.</div>
+          <div class="r6-step__body">
+            <div class="r6-step__text">{{ text | safe }}</div>
+            {% if note %}
+              <div class="r6-step__note">Technique — {{ note }}</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="r6-empty">No method recorded yet.</div>
+    {% endif %}
+  </section>
+
+  {# ─── PILLAR III — QUALITY HIERARCHY (Library+) ─── #}
+  <section class="r6-pillar">
+    <div class="r6-pillar__head">
+      <div>
+        <div class="r6-pillar__num">Pillar III</div>
+        <h2>Quality Hierarchy</h2>
+      </div>
+      <div class="r6-pillar__badge"><span class="r6-tier-chip r6-tier-chip--library">Library+</span></div>
+    </div>
+    {% set qh = recipe.quality_hierarchy or [] %}
+    {% if gate_for_tier('library') == 'full_content' %}
+      {% if qh %}
+        <table class="r6-table">
+          <thead>
+            <tr>
+              <th>Ingredient</th><th>Reserve</th><th>House</th><th>What the swap costs</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in qh %}
+              <tr>
+                <td>{{ row.ingredient }}</td>
+                <td>{{ row.reserve }}</td>
+                <td>{{ row.house }}</td>
+                <td class="r6-table__swap">{{ row.swap_cost }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="r6-empty">Quality hierarchy not yet recorded for this recipe.</div>
+      {% endif %}
+    {% elif gate_for_tier('library') == 'preview_then_prompt' %}
+      {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
+      {{ upgrade_prompt('library', 'quality_hierarchy') }}
+    {% endif %}
+  </section>
+
+  {# ─── PILLAR IV — SENSORY TESTS ─── #}
+  <section class="r6-pillar">
+    <div class="r6-pillar__head">
+      <div>
+        <div class="r6-pillar__num">Pillar IV</div>
+        <h2>Sensory Tests</h2>
+      </div>
+    </div>
+    {% if sashimi %}
+      <div class="r6-lod">
+        <div class="r6-lod__eyebrow">Where the dish lives or dies</div>
+        <div class="r6-lod__body">{{ sashimi }}</div>
+      </div>
+    {% else %}
+      <div class="r6-empty">No sensory tests recorded yet.</div>
+    {% endif %}
+  </section>
+
+  {# ─── PILLAR V — CROSS-CUISINE PARALLELS (Library+ for deductive grid) ─── #}
+  <section class="r6-pillar">
+    <div class="r6-pillar__head">
+      <div>
+        <div class="r6-pillar__num">Pillar V</div>
+        <h2>Cross-Cuisine Parallels</h2>
+      </div>
+      <div class="r6-pillar__badge"><span class="r6-tier-chip r6-tier-chip--library">Library+ for full grid</span></div>
+    </div>
+    {% if cross_parallels %}
+      <div class="r6-parallels">
+        {% for p in cross_parallels %}
+          <a href="/techniques/{{ p.slug or '#' }}" class="r6-parallel">
+            <div class="r6-parallel__cuisine">{{ format_cuisine(p.cuisine or p.tradition) }}</div>
+            <div class="r6-parallel__name">{{ p.name }}</div>
+          </a>
+        {% endfor %}
+      </div>
+      {% if gate_for_tier('library') == 'full_content' %}
+        {% if recipe.deductive_grid %}
+          <div class="r6-step__note" style="margin-top: var(--s2);">
+            <strong>The deductive grid:</strong> {{ recipe.deductive_grid }}
+          </div>
+        {% endif %}
+      {% elif gate_for_tier('library') == 'preview_then_prompt' %}
+        {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
+        {{ upgrade_prompt('library', 'default') }}
+      {% endif %}
+    {% else %}
+      <div class="r6-empty">No cross-cuisine parallels recorded yet.</div>
+    {% endif %}
+  </section>
+
+  {# ─── PILLAR VI — BEVERAGE PAIRINGS (Library+ for named producers) ─── #}
+  <section class="r6-pillar">
+    <div class="r6-pillar__head">
+      <div>
+        <div class="r6-pillar__num">Pillar VI</div>
+        <h2>Beverage Pairings</h2>
+      </div>
+      <div class="r6-pillar__badge"><span class="r6-tier-chip r6-tier-chip--library">Library+ for named producers</span></div>
+    </div>
+    {% set beverage_list = pairings or recipe.pairings or [] %}
+    {% if beverage_list %}
+      <div class="r6-pairings">
+        {% for p in beverage_list %}
+          {% set role = p.relationship_type or p.role or 'complement' %}
+          <div class="r6-pairing">
+            <div class="r6-pairing__role r6-pairing__role--{{ role }}">{{ role | title }}</div>
+            {% if p.region %}<div class="r6-pairing__region">{{ p.region }}</div>{% endif %}
+            <div class="r6-pairing__name">{{ p.name }}</div>
+            {% if gate_for_tier('library') == 'full_content' %}
+              {% if p.origin_producer or p.local_provider %}
+                <div style="font-family: var(--mono); font-size: 11px; color: var(--charcoal-soft); margin-top: 4px;">
+                  {% if p.origin_producer %}<a href="#" class="r6-gold-link">{{ p.origin_producer }}</a>{% endif %}
+                  {% if p.local_provider %} · <a href="#" class="r6-gold-link">{{ p.local_provider }}</a>{% endif %}
+                </div>
+              {% endif %}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="r6-empty">No beverage pairings recorded yet.</div>
+    {% endif %}
+  </section>
+
+  {# ─── PILLAR VII — ORIGIN & LINEAGE ─── #}
+  <section class="r6-pillar">
+    <div class="r6-pillar__head">
+      <div>
+        <div class="r6-pillar__num">Pillar VII</div>
+        <h2>Origin &amp; Lineage</h2>
+      </div>
+    </div>
+    {% if origin_text %}
+      <div class="r6-lineage">
+        {% if '<p>' in origin_text %}
+          {{ origin_text | safe }}
+        {% else %}
+          <p>{{ origin_text }}</p>
+        {% endif %}
+        {% if recipe.tradition_tags %}
+          <div class="r6-lineage__cited">Tradition: {{ recipe.tradition_tags | join(' · ') }}</div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="r6-empty">
+        No lineage yet for this recipe.
+        {% if is_owner %}
+          <br><a href="/recipe/{{ recipe.slug }}/edit#lineage" class="r6-gold-link" style="font-size:12px;">Add your story →</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </section>
+
+  {# ─── TRADITION TAGS ─── #}
+  {% if trad_tags %}
+    <div class="r6-tags">
+      {% for tag in trad_tags %}<span class="r6-tag">{{ tag }}</span>{% endfor %}
+    </div>
+  {% endif %}
+
+  {# ─── SUPPLIER PANEL ─── #}
+  {% if recipe_suppliers %}
+  <section class="r6-pillar">
+    <div class="r6-pillar__head">
+      <div>
+        <div class="r6-pillar__num">Sourcing</div>
+        <h2>Where to find these ingredients</h2>
+      </div>
+      <div class="r6-pillar__badge">Region: {{ region }}</div>
+    </div>
+    <div class="r6-suppliers">
+      {% for sup in recipe_suppliers[:6] %}
+        <div class="r6-supplier">
+          <div class="r6-supplier__name">
+            {% if sup.website %}
+              <a href="{{ sup.website }}" target="_blank" rel="noopener" class="r6-gold-link">{{ sup.name }}</a>
+            {% else %}
+              {{ sup.name }}
+            {% endif %}
+          </div>
+          {% if sup.city or sup.country %}
+            <div class="r6-supplier__loc">{{ [sup.city, sup.state_province, sup.country] | select | join(', ') }}</div>
+          {% endif %}
+          {% if sup.products %}
+            <div class="r6-supplier__products">{{ sup.products | map(attribute='name') | list | join(' · ') | truncate(80) }}</div>
           {% endif %}
         </div>
-      </div>
+      {% endfor %}
     </div>
-  </button>
-  </li>
-  {% endfor %}
-  </ul>
-  {% if recipe_suppliers|length > 6 %}
-  <button class="r-supplier-show-all" id="suppliers-expand-btn" onclick="expandSuppliers()">
-    Show all {{ recipe_suppliers|length }} suppliers ↓
-  </button>
+  </section>
   {% endif %}
-</div>
-{% endif %}
 
-<!-- ═══ 12. ACTION ROW ══════════════════════════════════════ -->
-<div class="r-actions">
-{% if recipe_type in ('food','') or not recipe_type %}
-  <button class="r-action-btn" onclick="handleAction('haccp','kitchen')">
-    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
-    HACCP plan
-  </button>
-  <button class="r-action-btn" onclick="handleAction('notes','kitchen')">
-    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
-    Kitchen notes
-  </button>
-  <button class="r-action-btn" onclick="handleAction('costing','kitchen')">
-    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
-    Cost this recipe
-  </button>
-  <button class="r-action-btn" onclick="handleAction('scale','library')">
-    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="1" fill="currentColor"/><path d="M5.5 1.5v2M5.5 7.5v2M1.5 5.5h2M7.5 5.5h2" stroke="currentColor" stroke-width="1.2"/></svg>
-    Scale recipe
-  </button>
-{% elif recipe_type == 'cocktail' %}
-  <button class="r-action-btn" onclick="handleAction('pour-cost','kitchen')">
-    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
-    Pour cost
-  </button>
-  <button class="r-action-btn" onclick="handleAction('notes','kitchen')">
-    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
-    Bar notes
-  </button>
-  <button class="r-action-btn" onclick="handleAction('scale','library')">
-    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="1" fill="currentColor"/><path d="M5.5 1.5v2M5.5 7.5v2M1.5 5.5h2M7.5 5.5h2" stroke="currentColor" stroke-width="1.2"/></svg>
-    Scale build
-  </button>
-{% endif %}
-</div>
-
-<!-- ═══ 13. FOOTER ══════════════════════════════════════════ -->
-<footer class="r-footer">
-  <span class="r-footer-wordmark">Provenance</span>
-  <span class="r-footer-tagline">Every recipe, written the way the world's best chefs would write it — with the full technique knowledge layer active.</span>
-</footer>
-
-<!-- ═══ SUPPLIER PANEL ══════════════════════════════════════ -->
-<div class="r-supplier-backdrop" id="supplier-backdrop" onclick="closeSupplierPanel()"></div>
-<div class="r-supplier-sheet" id="supplier-sheet">
-  <div class="r-supplier-drag"></div>
-  <button class="r-supplier-close" onclick="closeSupplierPanel()">Close ✕</button>
-  <div id="supplier-panel-content">
-    <div class="r-supplier-name" id="sp-name"></div>
-    <div class="r-supplier-loc" id="sp-loc"></div>
-    <div class="r-supplier-credit" id="sp-credit"></div>
-    <ul class="r-supplier-products" id="sp-products"></ul>
-    <div class="r-supplier-footer" id="sp-footer"></div>
-  </div>
-</div>
-
-<!-- ═══ CONTENT PEEK PANEL ═══════════════════════════════════ -->
-<div class="r-peek-backdrop" id="peek-backdrop" onclick="closePeek()"></div>
-<div class="r-peek-sheet" id="peek-sheet">
-  <div class="r-peek-drag"></div>
-  <button class="r-peek-close" onclick="closePeek()">Close ✕</button>
-  <div class="r-peek-eyebrow" id="peek-eyebrow">Behind this door</div>
-  <div class="r-peek-title" id="peek-title"></div>
-  <div class="r-peek-desc" id="peek-desc"></div>
-  <div class="r-peek-preview">
-    <div class="r-peek-preview-inner" id="peek-preview-inner"></div>
-    <div class="r-peek-preview-label">A glimpse of what's inside</div>
-  </div>
-  <a href="/pricing" class="r-peek-cta" id="peek-cta">Open The Kitchen</a>
-  <span class="r-peek-sub">Less than a single cookbook</span>
-</div>
-
-<!-- Pre-load marker read state -->
-<script>
-const RECIPE_SLUG = {{ recipe.slug | tojson }};
-const USER_TIER = {{ user_tier | tojson }};
-const USER_ROLE = {{ user_role | tojson }};
-const IS_AUTHENTICATED = {{ 'true' if is_authenticated else 'false' }};
-const TIER_HIERARCHY = ['free','kitchen','library','profession','trade'];
-
-// Markers already read by this user
-let readMarkers = new Set();
-{% if is_authenticated %}
-fetch('/api/kitchen/markers-read/' + encodeURIComponent(RECIPE_SLUG))
-  .then(r => r.json())
-  .then(d => {
-    readMarkers = new Set(d.read || []);
-    // Apply read state to marker phrases
-    readMarkers.forEach(idx => {
-      const el = document.querySelector('[data-marker-idx="' + idx + '"]');
-      if (el) el.classList.add('r-marker--read');
-    });
-  }).catch(()=>{});
-{% endif %}
-
-// ── Gold-star marker tap ─────────────────────────────────────
-function toggleMarker(idx, el) {
-  if (!IS_AUTHENTICATED) {
-    openPeek('marker', null, 'kitchen');
-    return;
-  }
-  if (!userMeetsRequirement('kitchen')) {
-    const preview = el ? (el.closest('.r-step-body') || el).textContent.trim().slice(0, 120) : '';
-    openPeek('marker', preview, 'kitchen');
-    return;
-  }
-
-  const reveal = document.getElementById('reveal-' + idx);
-  if (!reveal) return;
-  reveal.classList.toggle('open');
-  el.classList.add('r-marker--read');
-
-  // Persist read state
-  fetch('/api/kitchen/marker-read', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({slug: RECIPE_SLUG, marker_index: idx})
-  }).catch(()=>{});
-}
-
-// ── Tier check ───────────────────────────────────────────────
-function userMeetsRequirement(required) {
-  if (USER_ROLE === 'founder' || USER_ROLE === 'admin') {
-    return true;
-  }
-  if (!IS_AUTHENTICATED) return false;
-  const myLevel = TIER_HIERARCHY.indexOf(USER_TIER);
-  const reqLevel = TIER_HIERARCHY.indexOf(required);
-  return myLevel >= reqLevel;
-}
-
-// ── Action row ───────────────────────────────────────────────
-const ACTION_ENDPOINTS = {
-  'haccp': '/api/haccp',
-  'notes': '/api/kitchen-notes',
-  'costing': '/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG),
-  'scale': null,
-  'pour-cost': '/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG),
-};
-
-function handleAction(action, requiredTier) {
-  if (!IS_AUTHENTICATED) {
-    window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
-    return;
-  }
-  if (!userMeetsRequirement(requiredTier)) {
-    openPeek(action, null, requiredTier);
-    return;
-  }
-  if (action === 'scale') {
-    openScaleModal();
-    return;
-  }
-  const endpoint = ACTION_ENDPOINTS[action];
-  if (!endpoint) return;
-  // Open appropriate modal based on action
-  if (action === 'notes') openKitchenNotesCard();
-  else if (action === 'costing' || action === 'pour-cost') openCostingModal();
-  else if (action === 'haccp') openHaccpBrief();
-}
-
-// ── Pairing block ────────────────────────────────────────────
-function togglePairings() {
-  const expanded = document.getElementById('r-pairings-expanded');
-  if (!expanded) return;
-  expanded.classList.toggle('open');
-}
-
-function handlePairingTap(idx) {
-  // Navigate to pairing target if we can determine it
-  // For now: no-op (expands inline per spec §12.5 two-click rule)
-}
-
-// ── Supplier panel ───────────────────────────────────────────
-const RECIPE_SUPPLIERS = {{ recipe_suppliers | tojson }};
-// Detected/overridden user location (ISO region code or "global")
-// Override via ?loc=CA-BC for testing
-const USER_LOCATION = {{ user_location | tojson }};
-
-function expandSuppliers() {
-  document.querySelectorAll('.r-supplier-extra').forEach(el => { el.style.display = ''; });
-  const btn = document.getElementById('suppliers-expand-btn');
-  if (btn) btn.style.display = 'none';
-}
-
-// ── Supplier accordion ───────────────────────────────────────────
-(function(){
-  'use strict';
-  document.addEventListener('click', function(e) {
-    var row = e.target.closest('.r-supplier-row');
-    if (!row) return;
-    if (e.target.closest('.r-supplier-link')) return;
-    var isOpen = row.classList.toggle('is-open');
-    row.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  });
-})();
-
-function openSupplierPanel(supplierName) {
-  const s = RECIPE_SUPPLIERS.find(r => r.name === supplierName);
-  if (!s) return;
-  populateSupplierPanel(s);
-}
-
-function openSupplierPanelFull(supplierId) {
-  const s = RECIPE_SUPPLIERS.find(r => String(r.id) === String(supplierId));
-  if (!s) return;
-  populateSupplierPanel(s);
-}
-
-function populateSupplierPanel(s) {
-  document.getElementById('sp-name').textContent = s.name || '';
-  document.getElementById('sp-loc').textContent =
-    [s.city, s.state_province, s.country].filter(Boolean).join(', ');
-  document.getElementById('sp-credit').textContent = s.products && s.products.length
-    ? s.products[0].desc || '' : '';
-  const ul = document.getElementById('sp-products');
-  ul.innerHTML = '';
-  (s.products || []).forEach(p => {
-    const li = document.createElement('li');
-    li.className = 'r-supplier-product';
-    li.textContent = p.name || '';
-    ul.appendChild(li);
-  });
-  document.getElementById('sp-footer').innerHTML =
-    s.website ? 'Visit <a href="' + s.website + '" target="_blank" rel="noopener">' + s.website + '</a>' : '';
-  document.getElementById('supplier-backdrop').classList.add('open');
-  document.getElementById('supplier-sheet').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeSupplierPanel() {
-  document.getElementById('supplier-backdrop').classList.remove('open');
-  document.getElementById('supplier-sheet').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-// ── Ingredient panel (simplified) ───────────────────────────
-function openIngredientPanel(ingredientName) {
-  const s = RECIPE_SUPPLIERS.find(r =>
-    r.products && r.products.some(p =>
-      p.name && p.name.toLowerCase().includes(ingredientName.toLowerCase())
-    )
-  );
-  if (s) { populateSupplierPanel(s); }
-}
-
-// ── Content peek panel ───────────────────────────────────────
-const PEEK_CONTENT = {
-  'haccp': {
-    title: 'HACCP safety plan — Profession plan feature',
-    desc: 'A complete hazard analysis built from this recipe — temperature control windows, cross-contamination checkpoints, and critical control points formatted for EHO and FDA inspection. Available on the Profession plan.',
-    preview: 'Step 1 — Receiving: Verify protein delivery temp ≤3°C. Reject if packaging compromised.\nStep 2 — Prep: Separate raw proteins from ready-to-eat on dedicated colour-coded boards.\nStep 3 — Cook: Internal temp 75°C sustained 15s. Probe centre of thickest part…',
-    cta: 'Open The Profession',
-  },
-  'notes': {
-    title: 'Your private kitchen notebook, attached to this recipe',
-    desc: 'Add mise en place timings, sourcing notes, plating reminders, service margin adjustments. Synced across devices, private to you.',
-    preview: 'Mise en place: Butter compound — day before. Reduce stock — 2 hrs ahead.\nService note: Rest 6 min covered, slice against grain.\nSourcing: Côte de Boeuf from Hills Foods, min 28-day dry-age…',
-    cta: 'Open The Kitchen',
-  },
-  'costing': {
-    title: 'Live food cost, margin, and yield analysis',
-    desc: 'Every ingredient priced against your supplier network. Adjust portion size, see margin move in real time. Export a costing sheet for your accounts.',
-    preview: 'Ingredient cost: £4.82 per portion\nGP at £28 menu price: 82.8%\nHighest cost line: Côte de Boeuf 220g — £3.10 (64%)\nYield loss factored: 18% trim…',
-    cta: 'Open The Kitchen',
-  },
-  'scale': {
-    title: 'Scale this recipe for any cover count',
-    desc: 'From a dinner for four to a banquet for four hundred — every quantity recalculated, with yield warnings on ingredients that don\'t scale linearly.',
-    preview: 'Original: 4 portions → Scale to: 48\nButter sauce: 80g → 896g (emulsion risk flag above 400g)\nRoasting time: +18min at full tray load\nSalt: scale by 0.85× (non-linear)…',
-    cta: 'Open The Library',
-  },
-  'pour-cost': {
-    title: 'Pour cost and margin analysis for this build',
-    desc: 'Spirit cost, modifier cost, dilution-adjusted ABV, recommended serve price. Updated against live supplier pricing.',
-    preview: 'Spirit cost: £1.40 (35ml @ £32/70cl)\nModifiers: £0.38\nTotal pour cost: £1.78\nAt £13 menu price: GP 86.3%…',
-    cta: 'Open The Kitchen',
-  },
-  'marker': {
-    title: 'The technique layer, unlocked',
-    desc: 'Every gold star on this recipe opens a chef\'s annotation — the "why" behind the step, the failure mode to avoid, the sensory cue that tells you it\'s working.',
-    preview: '★ Why this works: The Maillard reaction requires a dry surface — residual moisture creates steam and prevents crust formation. Pat protein completely dry and allow 10 min uncovered rest…',
-    cta: 'Open The Kitchen',
-  },
-};
-
-function openPeek(action, contextText, tier) {
-  const content = PEEK_CONTENT[action] || PEEK_CONTENT['marker'];
-  document.getElementById('peek-title').textContent = content.title;
-  document.getElementById('peek-desc').textContent = content.desc;
-  document.getElementById('peek-preview-inner').textContent = contextText || content.preview;
-  const ctaEl = document.getElementById('peek-cta');
-  ctaEl.textContent = content.cta;
-  ctaEl.href = '/pricing';
-  document.getElementById('peek-backdrop').classList.add('open');
-  document.getElementById('peek-sheet').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closePeek() {
-  document.getElementById('peek-backdrop').classList.remove('open');
-  document.getElementById('peek-sheet').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && document.getElementById('peek-sheet').classList.contains('open')) {
-    closePeek();
-  }
-});
-
-// ── Save / share ──────────────────────────────────────────────
-function toggleSave() {
-  const btn = document.getElementById('btn-save');
-  btn.classList.toggle('saved');
-  if (!IS_AUTHENTICATED) {
-    window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
-    return;
-  }
-  // TODO: persist via API
-}
-
-function shareRecipe() {
-  if (navigator.share) {
-    navigator.share({ title: document.title, url: window.location.href }).catch(()=>{});
-  } else {
-    navigator.clipboard.writeText(window.location.href).then(()=>{
-      alert('Link copied.');
-    }).catch(()=>{});
-  }
-}
-
-// ── Kitchen Notes Card ────────────────────────────────────────
-function openKitchenNotesCard() {
-  document.getElementById('kn-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  loadKitchenCard();
-}
-function closeNotesModal() {
-  document.getElementById('kn-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-async function loadKitchenCard() {
-  const body = document.getElementById('kn-card-body');
-  body.innerHTML = '';
-  ProvenanceProcessing.show({
-    messages: [
-      'Reviewing the recipe\u2026',
-      'Marking the safety notes\u2026',
-      'Setting the card\u2026'
-    ]
-  });
-  try {
-    const r = await fetch('/api/kitchen-notes/' + encodeURIComponent(RECIPE_SLUG));
-    const data = await r.json();
-    if (data.error) {
-      body.innerHTML = '<div class="kn-loading">' + _knEsc(data.error) + '</div>';
-      return;
-    }
-    renderKitchenCard(data);
-  } catch (e) {
-    body.innerHTML = '<div class="kn-loading">Could not load safety card.</div>';
-  } finally {
-    ProvenanceProcessing.hide();
-  }
-}
-
-function renderKitchenCard(d) {
-  const body = document.getElementById('kn-card-body');
-  const sections = [
-    {key:'ccps',                label:'Critical Control Points', labelCls:'kn-ccp-label',   itemCls:'kn-ccp-item'},
-    {key:'temperatures',        label:'Temperature Windows',     labelCls:'kn-temp-label',  itemCls:'kn-temp-item'},
-    {key:'allergens',           label:'Allergens',               labelCls:'kn-allergen-label', pills:true},
-    {key:'cross_contamination', label:'Cross-contamination',     labelCls:'kn-xc-label',    itemCls:'kn-xc-item'},
-    {key:'shelf_life_signals',  label:'Shelf Life & Service',    labelCls:'kn-shelf-label', itemCls:'kn-shelf-item'},
-  ];
-  body.innerHTML = sections.map(s => {
-    const items = Array.isArray(d[s.key]) ? d[s.key] : [];
-    let content;
-    if (s.pills) {
-      content = items.length
-        ? `<div class="kn-allergen-section">${items.map(a => `<span class="kn-allergen-pill">${_knEsc(a)}</span>`).join('')}</div>`
-        : `<span class="kn-empty-section">None identified</span>`;
-    } else {
-      content = items.length
-        ? `<ul class="kn-items">${items.map(i => `<li class="kn-item ${s.itemCls}">${_knEsc(i)}</li>`).join('')}</ul>`
-        : `<span class="kn-empty-section">None identified</span>`;
-    }
-    return `<div class="kn-section"><div class="kn-section-label ${s.labelCls}">${s.label}</div>${content}</div>`;
-  }).join('');
-}
-
-function _knEsc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ── HACCP Brief ───────────────────────────────────────────────
-let _haccpBrief = null;
-let _haccpSavedId = null;
-let _haccpVersion = null;
-let _haccpSigned = false;
-let _haccpSignedAt = null;
-let _haccpPicName = null;
-
-function _haccpTodayISO() { return new Date().toISOString().slice(0, 10); }
-function _haccpSixMonthsISO() { const d = new Date(); d.setMonth(d.getMonth() + 6); return d.toISOString().slice(0, 10); }
-function _haccpFmtDate(iso) {
-  if (!iso) return '';
-  const d = new Date(iso.includes('T') ? iso : iso + 'T00:00:00');
-  if (isNaN(d)) return '';
-  return d.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
-}
-
-function openHaccpBrief() {
-  document.getElementById('haccp-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  _haccpSetBody('<div class="kn-loading">Loading HACCP brief\u2026</div>');
-  _haccpUpdateHeaderBtns(false);
-  fetch('/api/haccp/latest/' + encodeURIComponent(RECIPE_SLUG))
-    .then(r => r.json())
-    .then(data => {
-      if (data.exists) {
-        _haccpBrief = data.brief; _haccpSavedId = data.id; _haccpVersion = data.version;
-        _haccpSigned = !!data.pic_signed_at; _haccpSignedAt = data.pic_signed_at; _haccpPicName = data.pic_name;
-        renderHaccpBrief(data.brief, data);
-      } else { _haccpGenerateFresh(); }
-    })
-    .catch(() => _haccpGenerateFresh());
-}
-
-function _haccpSetBody(html) { document.getElementById('haccp-card-body').innerHTML = html; }
-
-function _haccpCollect() {
-  const ingredients = [];
-  document.querySelectorAll('.r-ing-item').forEach(item => {
-    const name = (item.querySelector('.r-ing-name') || {}).innerText || '';
-    const amount = (item.querySelector('.r-ing-amount') || {}).innerText || '';
-    const line = [amount.trim(), name.trim()].filter(Boolean).join(' ');
-    if (line) ingredients.push(line);
-  });
-  const method_steps = [];
-  document.querySelectorAll('.r-step-body').forEach(el => { const t = el.innerText.trim(); if (t) method_steps.push(t); });
-  const title = ((document.querySelector('h1.r-hero-title') || {}).innerText || RECIPE_SLUG).trim();
-  return {ingredients, method_steps, title};
-}
-
-async function _haccpGenerateFresh() {
-  const {ingredients, method_steps, title} = _haccpCollect();
-  if (!ingredients.length && !method_steps.length) {
-    _haccpSetBody('<div class="kn-loading">No recipe data found on this page.</div>'); return;
-  }
-  _haccpSetBody('');
-  ProvenanceProcessing.show({
-    messages: [
-      'Reviewing the recipe\u2026',
-      'Charting the critical control points\u2026',
-      'Setting the brief\u2026'
-    ]
-  });
-  const ctrl = new AbortController();
-  const timeout = setTimeout(() => ctrl.abort(), 185000);
-  try {
-    const r = await fetch('/api/haccp', {
-      method: 'POST', headers: {'Content-Type': 'application/json'}, signal: ctrl.signal,
-      body: JSON.stringify({title, ingredients, method_steps, allergen_region: 'CA'})
-    });
-    clearTimeout(timeout);
-    if (r.status === 502) { const d = await r.json(); throw {status:502,data:d}; }
-    if (!r.ok) throw {status:r.status};
-    const data = await r.json();
-    _haccpBrief = data; _haccpSavedId = null; _haccpVersion = null;
-    _haccpSigned = false; _haccpSignedAt = null; _haccpPicName = null;
-    renderHaccpBrief(data, null);
-  } catch (err) {
-    clearTimeout(timeout);
-    if (err && err.name === 'AbortError') _haccpSetBody('<div class="kn-loading">HACCP generation is taking longer than expected. Refresh and try again.</div>');
-    else if (err && err.status === 502) _haccpSetBody('<div class="kn-loading">We could not generate a complete HACCP plan for this recipe. The recipe may be missing structural detail. Try again, or add more detail to the method.</div>');
-    else _haccpSetBody('<div class="kn-loading">Something went wrong. Try again in a moment.</div>');
-  } finally {
-    ProvenanceProcessing.hide();
-  }
-}
-
-function haccpGenerateNew() {
-  _haccpSavedId = null; _haccpVersion = null; _haccpSigned = false;
-  _haccpSignedAt = null; _haccpPicName = null;
-  _haccpGenerateFresh();
-}
-
-function closeHaccpModal() {
-  document.getElementById('haccp-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function _haccpUpdateHeaderBtns(isSigned) {
-  const c = document.getElementById('haccp-header-btns');
-  if (!c) return;
-  if (isSigned) {
-    c.innerHTML = `<button class="kn-print-btn haccp-btn-new" onclick="haccpGenerateNew()">Generate new version</button>
-      <button class="kn-print-btn" onclick="window.print()">Print</button>`;
-  } else {
-    c.innerHTML = `<button class="kn-print-btn haccp-btn-sign" onclick="haccpSign()">Sign &amp; finalise</button>
-      <button class="kn-print-btn" onclick="window.print()">Print</button>`;
-  }
-}
-
-function renderHaccpBrief(d, savedMeta) {
-  const isSigned = !!(savedMeta && savedMeta.pic_signed_at);
-  const edits = (savedMeta && savedMeta.edits) || {};
-  const today = _haccpTodayISO();
-  const vLabel = savedMeta ? ('Version\u00a0' + savedMeta.version) : 'Draft';
-  const genDate = savedMeta ? (_haccpFmtDate(savedMeta.saved_at) || 'Not yet drafted') : _haccpFmtDate(today);
-  _haccpUpdateHeaderBtns(isSigned);
-
-  let html = '';
-
-  // Draft watermark (print-only, CSS-driven)
-  if (!isSigned) html += '<div class="haccp-watermark-draft" aria-hidden="true">DRAFT \u2014 UNSIGNED</div>';
-
-  // A. Document control header
-  html += `<div class="kn-section haccp-doc-ctrl">
-    <div class="haccp-doc-ctrl-top">
-      <span class="haccp-version-badge ${isSigned ? 'haccp-version-signed' : 'haccp-version-draft'}">${isSigned ? vLabel + '\u00a0\u2014\u00a0SIGNED' : vLabel + '\u00a0\u2014\u00a0UNSIGNED DRAFT'}</span>
+  {# ─── TOOLS & COMPLIANCE ─── #}
+  <section class="r6-pillar" style="padding-bottom: var(--s6);">
+    <div class="r6-pillar__head">
+      <div>
+        <div class="r6-pillar__num">Tools &amp; Compliance</div>
+        <h2>The working layer</h2>
+      </div>
+      <div class="r6-pillar__badge"><span class="r6-tier-chip r6-tier-chip--profession">Profession+ for HACCP and Cost</span></div>
     </div>
-    <div class="haccp-doc-ctrl-grid">
-      <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Generated</span><span class="haccp-doc-ctrl-value">${_knEsc(genDate)}</span></div>
-      <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Effective date</span>
-        ${isSigned ? `<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.effective_date || today))}</span>` : `<input type="date" class="haccp-input" id="haccp-eff-date" value="${edits.effective_date || today}">`}
-      </div>
-      <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Next review</span>
-        ${isSigned ? `<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.next_review_date || _haccpSixMonthsISO()))}</span>` : `<input type="date" class="haccp-input" id="haccp-review-date" value="${edits.next_review_date || _haccpSixMonthsISO()}">`}
-      </div>
-      ${isSigned ? `<div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at) || '—')}</span></div>` : ''}
-    </div>
-  </div>`;
+    <div class="r6-tools-grid">
 
-  // B. Equipment calibration
-  html += `<div class="kn-section">
-    <div class="kn-section-label" style="color:#1a3a5c">Equipment Calibration Verification</div>
-    <div class="haccp-doc-ctrl-grid">
-      <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-date">Thermometers calibrated</label>
-        ${isSigned ? `<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.calibration_date || '') || 'Not yet calibrated')}</span>` : `<input type="date" class="haccp-input" id="haccp-cal-date" value="${edits.calibration_date || ''}">`}
-      </div>
-      <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-by">Calibrated by</label>
-        ${isSigned ? `<span class="haccp-doc-ctrl-value">${_knEsc(edits.calibrated_by || '')}</span>` : `<input type="text" class="haccp-input" id="haccp-cal-by" placeholder="Full name" value="${_knEsc(edits.calibrated_by || '')}">`}
-      </div>
-    </div>
-  </div>`;
-
-  // Allergens
-  const allergens = d.allergens || {};
-  const detected = Array.isArray(allergens.detected) ? allergens.detected : [];
-  html += `<div class="kn-section">
-    <div class="kn-section-label kn-allergen-label">Allergens \u2014 ${_knEsc(allergens.region_label || allergens.region || '')}</div>
-    ${detected.length ? `<div class="kn-allergen-section">${detected.map(a => `<span class="kn-allergen-pill">${_knEsc(a)}</span>`).join('')}</div>` : '<span class="kn-empty-section">None identified</span>'}
-    ${allergens.rationale ? `<div class="haccp-rationale">${_knEsc(allergens.rationale)}</div>` : ''}
-  </div>`;
-
-  // Process flow
-  const flow = Array.isArray(d.process_flow) ? d.process_flow : [];
-  if (flow.length) html += `<div class="kn-section">
-    <div class="kn-section-label" style="color:#1a5276">Process Flow</div>
-    <div class="haccp-flow">${flow.map((s,i) => `<span class="haccp-flow-step">${i+1}. ${_knEsc(s.label||s.id||'')}</span>${i<flow.length-1?'<span class="haccp-flow-arrow">\u2192</span>':''}`).join('')}</div>
-  </div>`;
-
-  // Receiving criteria
-  const receiving = Array.isArray(d.receiving_criteria) ? d.receiving_criteria : [];
-  if (receiving.length) html += `<div class="kn-section">
-    <div class="kn-section-label" style="color:#145a32">Receiving Criteria</div>
-    <div class="haccp-receiving">${receiving.map(r => `<div class="haccp-receiving-item">
-      <div class="haccp-receiving-ingredient">${_knEsc(r.ingredient||'')}${r.delivery_temp_max_c!=null?` \u2014 max ${r.delivery_temp_max_c}\u00b0C`:''}</div>
-      <div class="haccp-receiving-detail"><strong>Accept:</strong> ${_knEsc(r.accept_criteria||'')}</div>
-      <div class="haccp-receiving-detail haccp-reject"><strong>Reject:</strong> ${_knEsc(r.reject_criteria||'')}</div>
-    </div>`).join('')}</div>
-  </div>`;
-
-  // CCP Table
-  const ccps = Array.isArray(d.ccp_table) ? d.ccp_table : [];
-  if (ccps.length) html += `<div class="kn-section">
-    <div class="kn-section-label kn-ccp-label">Critical Control Points</div>
-    <div class="haccp-table-wrap"><table class="haccp-table">
-      <thead><tr><th>Step</th><th>Hazard</th><th>Critical Limit</th><th>Monitoring</th><th>Corrective Action</th><th>Records</th></tr></thead>
-      <tbody>${ccps.map(ccp => `<tr>
-        <td><strong>${_knEsc(ccp.step||'')}</strong><br><span class="haccp-hazard-cat">${_knEsc(ccp.hazard_category||'')}</span></td>
-        <td>${_knEsc(ccp.hazard||ccp.ingredient_or_process||'')}</td>
-        <td class="haccp-limit">${_knEsc(ccp.critical_limit||'')}</td>
-        <td>${_knEsc(ccp.monitoring||'')}</td>
-        <td>${_knEsc(ccp.corrective_action||'')}</td>
-        <td>${_knEsc(ccp.records||'')}</td>
-      </tr>`).join('')}</tbody>
-    </table></div>
-  </div>`;
-
-  // Non-CCP steps
-  const nonCcps = Array.isArray(d.non_ccp_steps) ? d.non_ccp_steps : [];
-  if (nonCcps.length) html += `<div class="kn-section">
-    <div class="kn-section-label" style="color:#5d6d7e">Non-CCP Steps</div>
-    <ul class="kn-items">${nonCcps.map(s => `<li class="kn-item kn-xc-item"><strong>${_knEsc(s.step||'')}</strong> \u2014 ${_knEsc(s.rationale||'')}</li>`).join('')}</ul>
-  </div>`;
-
-  // C. Allergen communication statement
-  const defaultAllergenComm = 'Allergen status is communicated to all kitchen staff at briefing prior to service. Front-of-house staff are briefed on allergen presence in this dish. Customers with allergies are notified verbally of cross-contamination risk and offered alternatives.';
-  html += `<div class="kn-section">
-    <div class="kn-section-label kn-allergen-label">Allergen Communication Statement</div>
-    ${isSigned ? `<div class="haccp-text-display">${_knEsc(edits.allergen_communication || defaultAllergenComm)}</div>`
-      : `<textarea class="haccp-textarea" id="haccp-allergen-comm" rows="3">${_knEsc(edits.allergen_communication || defaultAllergenComm)}</textarea>`}
-  </div>`;
-
-  // D. Record retention
-  html += `<div class="kn-section">
-    <div class="kn-section-label" style="color:#5d6d7e">Record Retention</div>
-    <div class="haccp-text-display">All HACCP records, monitoring logs, and corrective action documentation are retained for a minimum of 24 months from date of generation, per Safe Food for Canadians Regulations.</div>
-  </div>`;
-
-  // E. Sign-off block
-  if (isSigned) {
-    html += `<div class="kn-section">
-      <div class="kn-section-label kn-ccp-label">Sign-off \u2014 Person in Charge</div>
-      <div class="haccp-signoff-grid">
-        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">PIC Name</span><span class="haccp-doc-ctrl-value">${_knEsc(savedMeta.pic_name||'')}</span></div>
-        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Role</span><span class="haccp-doc-ctrl-value">${_knEsc(edits.signoff_role||'')}</span></div>
-        <div class="haccp-doc-ctrl-field haccp-sig-field"><span class="haccp-doc-ctrl-label">Signature</span><span class="haccp-signature-display">${_knEsc(edits.signature_text||savedMeta.pic_name||'')}</span></div>
-        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Date signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at) || '—')}</span></div>
-      </div>
-    </div>`;
-  } else {
-    html += `<div class="kn-section">
-      <div class="kn-section-label kn-ccp-label">Sign-off \u2014 Person in Charge</div>
-      <div class="haccp-signoff-note">Complete all fields to enable signing. Typed name acts as digital signature.</div>
-      <div class="haccp-signoff-grid">
-        <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-pic-name">PIC Name</label><input type="text" class="haccp-input" id="haccp-pic-name" placeholder="Full name" value="${_knEsc(edits.pic_name||'')}"></div>
-        <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-role">Role</label>
-          <select class="haccp-input" id="haccp-role">${['PIC','Executive Chef','Sous Chef','Kitchen Manager','Owner-Operator','Other'].map(r=>`<option value="${r}" ${(edits.signoff_role||'PIC')===r?'selected':''}>${r}</option>`).join('')}</select>
+      <details class="r6-tool">
+        <summary>
+          <div class="r6-tool__icon">▸ Kitchen Notes</div>
+          <div class="r6-tool__name">Notes for the cook</div>
+        </summary>
+        <div class="r6-tool__body">
+          {{ recipe.kitchen_notes or recipe.flourish or 'No kitchen notes recorded.' }}
         </div>
-        <div class="haccp-doc-ctrl-field haccp-sig-field"><label class="haccp-doc-ctrl-label" for="haccp-sig">Signature (type full name)</label><input type="text" class="haccp-input haccp-sig-input" id="haccp-sig" placeholder="Type full name as signature" value="${_knEsc(edits.signature_text||'')}"></div>
-        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Date signed</span><span class="haccp-doc-ctrl-value">${_haccpFmtDate(today)}</span></div>
-      </div>
-      <div class="haccp-validation-msg" id="haccp-val-msg">Please fill in: calibration date, calibrated by, PIC name, and signature.</div>
-    </div>`;
-  }
+      </details>
 
-  // Footer
-  if (d.footer_note) html += `<div class="kn-section"><div class="haccp-footer">${_knEsc(d.footer_note)}</div></div>`;
-
-  document.getElementById('haccp-card-body').innerHTML = html;
-}
-
-function haccpSign() {
-  const get = id => (document.getElementById(id) || {});
-  const calDate = get('haccp-cal-date').value || '';
-  const calBy = (get('haccp-cal-by').value || '').trim();
-  const picName = (get('haccp-pic-name').value || '').trim();
-  const role = get('haccp-role').value || 'PIC';
-  const sig = (get('haccp-sig').value || '').trim();
-  const effDate = get('haccp-eff-date').value || _haccpTodayISO();
-  const reviewDate = get('haccp-review-date').value || _haccpSixMonthsISO();
-  const allergenComm = (get('haccp-allergen-comm').value || '').trim();
-  const msg = document.getElementById('haccp-val-msg');
-  const missing = [];
-  if (!calDate) missing.push('thermometer calibration date');
-  if (!calBy)   missing.push('calibrated by name');
-  if (!picName) missing.push('PIC name');
-  if (!sig)     missing.push('signature');
-  if (missing.length) {
-    if (msg) {
-      msg.textContent = 'Please fill in: ' + missing.join(', ') + '.';
-      msg.style.display = 'block';
-    }
-    const firstMissingId = !calDate ? 'haccp-cal-date'
-                         : !calBy   ? 'haccp-cal-by'
-                         : !picName ? 'haccp-pic-name'
-                         : 'haccp-sig';
-    const el = document.getElementById(firstMissingId);
-    if (el) { el.scrollIntoView({behavior:'smooth', block:'center'}); el.focus(); }
-    return;
-  }
-  if (msg) msg.style.display = 'none';
-  const edits = {calibration_date:calDate, calibrated_by:calBy, signoff_role:role,
-    signature_text:sig, pic_name:picName, allergen_communication:allergenComm,
-    effective_date:effDate, next_review_date:reviewDate};
-  _haccpSetBody('<div class="kn-loading">Saving and signing\u2026</div>');
-  fetch('/api/haccp/save', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({recipe_slug:RECIPE_SLUG, brief:_haccpBrief, edits})
-  })
-  .then(r => r.json())
-  .then(saved => {
-    if (saved.error) throw new Error(saved.error);
-    _haccpSavedId = saved.id; _haccpVersion = saved.version;
-    return fetch('/api/haccp/sign', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({id:saved.id, pic_name:picName})
-    });
-  })
-  .then(r => r.json())
-  .then(signed => {
-    if (signed.error) throw new Error(signed.error);
-    _haccpSigned = true; _haccpSignedAt = signed.pic_signed_at; _haccpPicName = picName;
-    renderHaccpBrief(_haccpBrief, {
-      id:_haccpSavedId, version:_haccpVersion, pic_name:picName,
-      pic_signed_at:signed.pic_signed_at, saved_at:signed.pic_signed_at, edits
-    });
-  })
-  .catch(err => _haccpSetBody('<div class="kn-loading">Sign failed \u2014 ' + _knEsc((err||{}).message||'Try again.') + '</div>'));
-}
-
-// ── Costing Modal ─────────────────────────────────────────────
-let _costingActiveTab = 'cost';
-let _pendingInvoice = null;   // holds scan result awaiting review
-
-function openCostingModal() {
-  document.getElementById('costing-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  costingTab('cost');
-}
-function closeCostingModal() {
-  document.getElementById('costing-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    if (document.getElementById('haccp-overlay').classList.contains('open')) closeHaccpModal();
-    else if (document.getElementById('kn-overlay').classList.contains('open')) closeNotesModal();
-    else closeCostingModal();
-  }
-});
-
-function costingTab(tab) {
-  _costingActiveTab = tab;
-  ['cost','invoices','pricing'].forEach(t => {
-    document.getElementById('c-tab-' + t).style.display = (t === tab) ? '' : 'none';
-    const btn = document.querySelector('.c-tab[data-tab="' + t + '"]');
-    if (btn) btn.classList.toggle('active', t === tab);
-  });
-  if (tab === 'cost') loadCostBreakdown();
-  else if (tab === 'invoices') { _initInvoiceDZ(); loadInvoicesList(); }
-  else if (tab === 'pricing') loadPricingTable();
-}
-
-// ── Tab 1: Cost breakdown ─────────────────────────────────────
-async function loadCostBreakdown() {
-  const body = document.getElementById('c-cost-body');
-  body.innerHTML = '';
-  ProvenanceProcessing.show({
-    messages: ['Reading the ingredients…', 'Pricing the line items…', 'Tallying the plate cost…']
-  });
-  try {
-    const r = await fetch('/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG));
-    const data = await r.json();
-    renderCostBreakdown(data);
-  } catch (e) {
-    body.innerHTML = '<div class="c-empty">Could not load cost data.</div>';
-  } finally {
-    ProvenanceProcessing.hide();
-  }
-}
-
-function renderCostBreakdown(data) {
-  const body = document.getElementById('c-cost-body');
-  const breakdown = data.breakdown || [];
-  const priced = breakdown.filter(r => r.unit_price !== null && r.unit_price !== undefined);
-  const total = breakdown.length;
-  const pct = total ? Math.round(priced.length / total * 100) : 0;
-
-  const warnCount = data.unit_warning_count || 0;
-  const warnItems = data.unit_warning_items || [];
-  const verified = data.priced_count || 0;
-
-  let html = '';
-  if ((pct < 60 || warnCount > 0) && total > 0) {
-    const unverifiedNames = [...(data.unpriced_items || []), ...warnItems];
-    const nameList = unverifiedNames.slice(0, 4).map(n => `<em>${_esc(n)}</em>`).join(', ');
-    const more = unverifiedNames.length > 4 ? ` +${unverifiedNames.length - 4} more` : '';
-    html += `<div class="c-banner">
-      Cost is partial — ${verified} of ${total} ingredients have verified pricing.
-      ${unverifiedNames.length ? `Add prices for ${nameList}${more} to complete.` : ''}
-      <a onclick="costingTab('invoices')"> Scan an invoice</a> or
-      <a onclick="openManualPrice()"> set prices manually</a>.
-    </div>`;
-  }
-
-  html += `<table class="c-ing-table">
-    <thead><tr>
-      <th style="width:40%">Ingredient</th>
-      <th style="width:20%">Qty</th>
-      <th style="width:25%">Supplier / Price</th>
-      <th style="width:15%">Cost</th>
-    </tr></thead><tbody>`;
-
-  for (const r of breakdown) {
-    const hasPrice = r.unit_price !== null && r.unit_price !== undefined;
-    const needsUnitInfo = r.cost_warning === 'needs_unit_info';
-    const warn = (!needsUnitInfo && r.unit_estimate) ? `<div class="c-unit-warn">⚠ Unit estimate</div>` : '';
-    html += `<tr>
-      <td><div class="c-ing-name">${_esc(r.ingredient)}</div>${warn}</td>
-      <td><div class="c-ing-meta">${r.quantity} ${r.unit || ''}</div></td>
-      <td>`;
-    if (needsUnitInfo) {
-      html += `<div class="c-ing-supplier">${_esc(r.supplier || '')}${r.price_unit ? ` · ${r.currency||'CAD'}${r.unit_price?.toFixed(2)}/${r.price_unit}` : ''}</div>
-               <div class="c-unit-warn" style="font-style:italic;color:#9ca3af;font-size:0.8em">${_esc(r.cost_warning_message||'Pack size unknown')} <a onclick="openManualPrice('${_esc(r.ingredient)}')" style="color:#60a5fa;text-decoration:underline;cursor:pointer">Edit price</a></div>`;
-    } else if (hasPrice) {
-      html += `<div class="c-ing-supplier">${_esc(r.supplier || '')}${r.price_unit ? ` · ${r.currency||'CAD'}${r.unit_price?.toFixed(2)}/${r.price_unit}` : ''}</div>`;
-    } else {
-      html += `<div class="c-ing-nodata">No pricing yet — <a onclick="costingTab('invoices')">scan invoice</a></div>`;
-    }
-    html += `</td>
-      <td>${(hasPrice && !needsUnitInfo) ? `<strong>${(r.currency||'CAD')} ${(r.line_cost||0).toFixed(2)}</strong>` : '—'}</td>
-    </tr>`;
-  }
-  html += '</tbody></table>';
-
-  const totalCost = data.total_cost || 0;
-  const portions = data.portions || 4;
-  const cpp = data.cost_per_portion || 0;
-  const partialNote = warnCount > 0
-    ? `<div class="c-partial-note" style="font-size:0.8em;color:#9ca3af;margin-top:4px">Partial — ${verified} of ${total} ingredients verified</div>`
-    : '';
-  html += `<div class="c-totals">
-    <div class="c-totals-row">
-      <span class="c-totals-label">Total ingredient cost</span>
-      <span class="c-totals-value">CAD ${totalCost.toFixed(2)}</span>
-    </div>${partialNote}
-    <div class="c-totals-row">
-      <span class="c-totals-label">Cost per portion (${portions})</span>
-      <span class="c-totals-value">CAD ${cpp.toFixed(2)}</span>
-    </div>
-    <div class="c-menu-price-row">
-      <label for="c-menu-price">Menu price</label>
-      <input id="c-menu-price" class="c-menu-input" type="number" step="0.01" min="0"
-             value="${data.menu_price || ''}" placeholder="0.00"
-             oninput="updateGP(${cpp})">
-      <span class="c-gp-display" id="c-gp-display">${data.actual_food_cost_pct != null ? `${data.actual_food_cost_pct}% food cost` : ''}</span>
-    </div>
-  </div>
-  <div class="c-actions">
-    {% if gate_for_tier('profession') == 'full_content' %}
-    <button class="c-btn c-btn-primary" onclick="exportCostPDF()">Export costing sheet</button>
-    <button class="c-btn" onclick="saveMenuPrice()">Save menu price</button>
-    <button class="c-btn" onclick="loadCostBreakdown()">Re-cost</button>
-    {% else %}
-    {% from '_partials/upgrade_prompt.html' import upgrade_prompt with context %}
-    {{ upgrade_prompt('profession', 'cost') }}
-    {% endif %}
-  </div>`;
-  body.innerHTML = html;
-}
-
-function updateGP(cpp) {
-  const mp = parseFloat(document.getElementById('c-menu-price').value) || 0;
-  const el = document.getElementById('c-gp-display');
-  if (mp > 0 && cpp > 0) {
-    const fc = (cpp / mp * 100).toFixed(1);
-    const gp = (100 - fc).toFixed(1);
-    el.textContent = `${fc}% food cost · ${gp}% GP`;
-  } else {
-    el.textContent = '';
-  }
-}
-
-function saveMenuPrice() {
-  const mp = parseFloat(document.getElementById('c-menu-price').value) || null;
-  fetch('/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG) + '/set-target', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({menu_price: mp, target_food_cost_pct: 30})
-  }).catch(()=>{});
-}
-
-function exportCostPDF() {
-  window.open('/api/costing/recipe/' + encodeURIComponent(RECIPE_SLUG) + '?format=pdf', '_blank');
-}
-
-// ── Tab 2: Invoices ───────────────────────────────────────────
-// ── Invoice upload — unified, multi-file, camera-primary ─────
-let _invoiceInput = null;
-let _invoiceQueue = [];
-
-function _ensureInvoiceInput() {
-  if (!_invoiceInput) {
-    _invoiceInput = document.createElement('input');
-    _invoiceInput.type = 'file';
-    _invoiceInput.accept = 'image/*,application/pdf';
-    _invoiceInput.setAttribute('capture', 'environment');
-    _invoiceInput.multiple = true;
-    _invoiceInput.style.display = 'none';
-    _invoiceInput.onchange = e => _addToInvoiceQueue(Array.from(e.target.files));
-    document.body.appendChild(_invoiceInput);
-  }
-}
-
-function _triggerInvoiceCapture() {
-  _ensureInvoiceInput();
-  _invoiceInput.value = '';
-  _invoiceInput.click();
-}
-
-function _addToInvoiceQueue(files) {
-  if (!files.length) return;
-  _invoiceQueue = _invoiceQueue.concat(files);
-  _renderQueueUI();
-}
-
-function _clearInvoiceQueue() {
-  _invoiceQueue = [];
-  _renderQueueUI();
-}
-
-function _renderQueueUI() {
-  const el = document.getElementById('c-inv-queue');
-  const label = document.getElementById('c-inv-queue-label');
-  if (!el) return;
-  if (!_invoiceQueue.length) { el.style.display = 'none'; return; }
-  const n = _invoiceQueue.length;
-  label.textContent = n === 1 ? '1 page queued' : `${n} pages queued`;
-  el.style.display = '';
-}
-
-function _processInvoiceQueue() {
-  if (!_invoiceQueue.length) return;
-  const files = _invoiceQueue.slice();
-  _invoiceQueue = [];
-  _renderQueueUI();
-  _uploadInvoiceFiles(files);
-}
-
-// Drop zone handlers
-function _dzEnter(e) {
-  e.preventDefault(); e.stopPropagation();
-  document.getElementById('c-inv-dropzone')?.classList.add('drag-over');
-}
-function _dzOver(e) {
-  e.preventDefault(); e.stopPropagation();
-  if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
-}
-function _dzLeave(e) {
-  e.preventDefault(); e.stopPropagation();
-  const dz = document.getElementById('c-inv-dropzone');
-  if (dz && !dz.contains(e.relatedTarget)) dz.classList.remove('drag-over');
-}
-function _dzDrop(e) {
-  e.preventDefault(); e.stopPropagation();
-  document.getElementById('c-inv-dropzone')?.classList.remove('drag-over');
-  _addToInvoiceQueue(Array.from(e.dataTransfer.files));
-}
-
-// Initialise drop zone copy for mobile vs desktop
-function _initInvoiceDZ() {
-  const isMobile = navigator.maxTouchPoints > 0 || window.matchMedia('(pointer:coarse)').matches;
-  const mainEl = document.getElementById('c-dz-main');
-  const subEl = document.getElementById('c-dz-sub');
-  if (mainEl) mainEl.textContent = isMobile
-    ? 'Snap your first invoice'
-    : 'Drop your first invoice here';
-  if (subEl) subEl.textContent = isMobile
-    ? 'The camera opens when you tap below'
-    : 'Photo, scan, or PDF — any format works';
-}
-
-function _uploadInvoiceFiles(files) {
-  const scanArea = document.getElementById('c-inv-scanprogress');
-  const listArea = document.getElementById('c-inv-list');
-  const dz = document.getElementById('c-inv-dropzone');
-  scanArea.classList.add('active');
-  if (dz) dz.style.display = 'none';
-  listArea.style.display = 'none';
-
-  const fd = new FormData();
-  for (const f of files) fd.append('files[]', f);
-
-  fetch('/api/invoices/scan', { method: 'POST', body: fd })
-    .then(r => r.json())
-    .then(data => {
-      scanArea.classList.remove('active');
-      listArea.style.display = '';
-      if (data.error) { alert('Scan failed: ' + data.error); loadInvoicesList(); return; }
-      _pendingInvoice = data;
-      showInvoiceReview(data);
-    })
-    .catch(err => {
-      scanArea.classList.remove('active');
-      listArea.style.display = '';
-      alert('Upload failed: ' + err.message);
-      loadInvoicesList();
-    });
-}
-
-function showInvoiceReview(data) {
-  const listArea = document.getElementById('c-inv-list');
-  const lines = data.lines || [];
-  let html = `<div class="c-review-header">${_esc(data.supplier_name || 'Invoice')}</div>
-    <div class="c-review-meta">${data.invoice_date || ''} · ${lines.length} items · Total: ${data.currency||'CAD'} ${(data.invoice_total||0).toFixed ? (data.invoice_total||0).toFixed(2) : data.invoice_total || '—'}
-    ${data.auto_created_supplier ? ' · <em>New supplier created (unverified)</em>' : ''}</div>
-    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);padding-bottom:6px;border-bottom:0.5px solid var(--divider)">
-      Raw description &nbsp;&nbsp;&nbsp; Ingredient match &nbsp;&nbsp;&nbsp; Qty &nbsp; Price &nbsp; Conf.
-    </div>`;
-
-  for (const line of lines) {
-    const conf = line.match_confidence || 0;
-    const confLabel = conf >= 0.7 ? '✓' : conf >= 0.4 ? '~' : '?';
-    const confColor = conf >= 0.7 ? 'var(--gold)' : 'var(--text-muted)';
-    html += `<div class="c-line-row" data-line-id="${line.id}">
-      <div>
-        <div class="c-line-desc">${_esc(line.raw_description)}</div>
-        <input class="c-line-name-edit" value="${_esc(line.matched_ingredient_name || line.raw_description)}"
-               data-line="${line.id}" placeholder="Ingredient name for costing">
-      </div>
-      <div class="c-line-price">${line.quantity || ''} ${line.unit || ''}</div>
-      <div class="c-line-price">${line.unit_price !== null ? (data.currency||'CAD') + ' ' + (line.unit_price||0).toFixed(2) : '—'}</div>
-      <div><span class="c-confidence" style="color:${confColor}">${confLabel} ${Math.round(conf*100)}%</span></div>
-    </div>`;
-  }
-
-  html += `<div class="c-apply-bar">
-    <button class="c-btn" onclick="loadInvoicesList()">Cancel</button>
-    <button class="c-btn c-btn-primary" onclick="applyPendingInvoice()">Apply all to pricing ↗</button>
-  </div>`;
-  listArea.innerHTML = html;
-}
-
-function applyPendingInvoice() {
-  if (!_pendingInvoice) return;
-  const invoiceId = _pendingInvoice.invoice_id;
-  const lines = [];
-  document.querySelectorAll('.c-line-row').forEach(row => {
-    const lineId = row.dataset.lineId;
-    const input = row.querySelector('.c-line-name-edit');
-    const ingredientName = input ? input.value.trim() : '';
-    // Find price from _pendingInvoice.lines
-    const lineData = (_pendingInvoice.lines || []).find(l => l.id === lineId);
-    if (lineData && ingredientName && lineData.unit_price) {
-      lines.push({
-        line_id: lineId,
-        ingredient_name: ingredientName,
-        price_per_unit: lineData.unit_price,
-        unit: lineData.unit || 'each',
-      });
-    }
-  });
-  if (!lines.length) { alert('No confirmed lines to apply.'); return; }
-  fetch('/api/invoices/' + invoiceId + '/apply', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({lines})
-  })
-    .then(r => r.json())
-    .then(data => {
-      alert(`Applied ${data.applied} prices to your pricing table.`);
-      _pendingInvoice = null;
-      loadInvoicesList();
-      // Refresh cost tab if visible
-      if (_costingActiveTab === 'cost') loadCostBreakdown();
-    })
-    .catch(() => alert('Apply failed. Please try again.'));
-}
-
-function loadInvoicesList() {
-  const listArea = document.getElementById('c-inv-list');
-  listArea.innerHTML = '<div class="c-loading">Loading invoices…</div>';
-  fetch('/api/invoices')
-    .then(r => r.json())
-    .then(data => renderInvoicesList(data.invoices || []))
-    .catch(() => { listArea.innerHTML = '<div class="c-empty">Could not load invoices.</div>'; });
-}
-
-function renderInvoicesList(invoices) {
-  const listArea = document.getElementById('c-inv-list');
-  const dz = document.getElementById('c-inv-dropzone');
-  if (!invoices.length) {
-    if (dz) dz.style.display = '';
-    listArea.innerHTML = '';
-    return;
-  }
-  if (dz) dz.style.display = 'none';
-  let html = '';
-  for (const inv of invoices) {
-    const dateStr = inv.invoice_date || inv.created_at?.substring(0,10) || '';
-    const pgBadge = (inv.page_count > 1)
-      ? `<span class="c-inv-page-badge">${inv.page_count}pp</span>` : '';
-    html += `<div class="c-invoice-card" onclick="toggleInvoiceLines('${inv.id}', this)">
-      <div class="c-inv-header">
-        <span class="c-inv-supplier">${_esc(inv.supplier_name)}${pgBadge}</span>
-        <span class="c-inv-total">${inv.currency||'CAD'} ${inv.invoice_total ? inv.invoice_total.toFixed(2) : '—'}</span>
-      </div>
-      <div class="c-inv-meta">${dateStr}${inv.invoice_number ? ' · #' + _esc(inv.invoice_number) : ''} · ${inv.line_count} items</div>
-      <div class="c-inv-lines" id="inv-lines-${inv.id}">
-        <div class="c-loading" style="padding:10px 0">Loading…</div>
-      </div>
-    </div>`;
-  }
-  listArea.innerHTML = html;
-}
-
-function toggleInvoiceLines(invoiceId, card) {
-  const el = document.getElementById('inv-lines-' + invoiceId);
-  if (!el) return;
-  const isOpen = el.classList.toggle('open');
-  if (isOpen) {
-    fetch('/api/invoices/' + invoiceId + '/lines')
-      .then(r => r.json())
-      .then(data => {
-        const lines = data.lines || [];
-        if (!lines.length) { el.innerHTML = '<div style="font-size:11px;color:var(--text-muted);padding:6px 0">No lines stored.</div>'; return; }
-        let html = lines.map(l =>
-          `<div class="c-line-row">
-            <div><div class="c-line-desc">${_esc(l.raw_description)}</div>
-              <div class="c-line-match">${_esc(l.matched_ingredient_name || '')}</div></div>
-            <div class="c-line-price">${l.quantity||''} ${l.unit||''}</div>
-            <div class="c-line-price">${l.unit_price !== null ? (l.unit_price||0).toFixed(2) : '—'}</div>
-            <div><span class="c-confidence">${Math.round((l.match_confidence||0)*100)}%</span></div>
-          </div>`).join('');
-        html += `<div class="c-apply-bar">
-          <button class="c-btn c-btn-primary" onclick="reApplyInvoice('${invoiceId}')">Re-apply to pricing</button>
-        </div>`;
-        el.innerHTML = html;
-      })
-      .catch(() => { el.innerHTML = '<div style="font-size:11px;color:var(--text-muted)">Could not load lines.</div>'; });
-  }
-}
-
-function reApplyInvoice(invoiceId) {
-  fetch('/api/invoices/' + invoiceId + '/lines')
-    .then(r => r.json())
-    .then(data => {
-      _pendingInvoice = {
-        invoice_id: invoiceId,
-        supplier_name: data.supplier_name,
-        invoice_date: data.invoice_date,
-        lines: data.lines.map(l => ({
-          ...l,
-          matched_ingredient_name: l.matched_ingredient_name || l.raw_description,
-          match_confidence: l.match_confidence || 0,
-          confirmed: (l.match_confidence || 0) >= 0.7,
-        }))
-      };
-      showInvoiceReview(_pendingInvoice);
-    });
-}
-
-// ── Tab 3: Pricing ────────────────────────────────────────────
-function loadPricingTable() {
-  const body = document.getElementById('c-pricing-body');
-  body.innerHTML = '<div class="c-loading">Loading pricing table…</div>';
-  fetch('/api/pricing/user')
-    .then(r => r.json())
-    .then(data => renderPricingTable(data.pricing || []))
-    .catch(() => { body.innerHTML = '<div class="c-empty">Could not load pricing.</div>'; });
-}
-
-function renderPricingTable(rows) {
-  const body = document.getElementById('c-pricing-body');
-  if (!rows.length) {
-    body.innerHTML = `<div class="c-empty">No pricing data yet.<br>Scan an invoice or add prices manually.</div>
-      <div style="text-align:center;margin-top:16px">
-        <button class="c-btn c-btn-primary" onclick="openManualPrice()">Add price manually</button>
-      </div>`;
-    return;
-  }
-  let html = `<table class="c-pricing-table">
-    <thead><tr>
-      <th>Ingredient</th><th>Price</th><th>Unit</th><th>Supplier</th><th>Date</th><th>Source</th>
-    </tr></thead><tbody>`;
-  for (const r of rows) {
-    const dateStr = r.effective_date ? r.effective_date.substring(0,10) : '—';
-    const src = r.source === 'invoice'
-      ? `<span style="color:var(--gold-mid)">#${_esc(r.invoice_number || r.invoice_id?.substring(0,8) || 'inv')}</span>`
-      : `<em style="color:var(--text-muted)">manual</em>`;
-    html += `<tr>
-      <td>${_esc(r.ingredient_name)}</td>
-      <td style="font-family:var(--mono)">${(r.price_per_unit||0).toFixed(4)}</td>
-      <td style="font-family:var(--mono)">${_esc(r.unit)}</td>
-      <td>${_esc(r.supplier_name||'—')}</td>
-      <td style="font-family:var(--mono);font-size:10px">${dateStr}</td>
-      <td>${src}</td>
-    </tr>`;
-  }
-  html += '</tbody></table>';
-  html += `<div style="margin-top:16px"><button class="c-btn c-btn-primary" onclick="openManualPrice()">Add / update price manually</button></div>`;
-  body.innerHTML = html;
-}
-
-function openManualPrice() {
-  const name = prompt('Ingredient name:');
-  if (!name) return;
-  const price = parseFloat(prompt(`Price per unit for "${name}":`));
-  if (isNaN(price)) return;
-  const unit = prompt('Unit (kg / each / case / L / etc.):', 'kg') || 'kg';
-  const supplier = prompt('Supplier name (optional):') || '';
-  fetch('/api/pricing/manual', {
-    method: 'PUT',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ingredient_name: name, price_per_unit: price, unit, supplier_name: supplier})
-  })
-    .then(r => r.json())
-    .then(d => {
-      if (d.success) {
-        loadPricingTable();
-        if (_costingActiveTab === 'cost') loadCostBreakdown();
-      }
-    })
-    .catch(()=>{});
-}
-
-function filterPricing(query) {
-  const q = query.toLowerCase();
-  document.querySelectorAll('#c-pricing-body .c-pricing-table tbody tr').forEach(row => {
-    const name = (row.cells[0]?.textContent || '').toLowerCase();
-    row.style.display = (!q || name.includes(q)) ? '' : 'none';
-  });
-}
-
-function _esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function openScaleModal() {
-  const factor = parseFloat(prompt('Scale by factor (e.g. 2 = double, 0.5 = half):', '2'));
-  if (isNaN(factor)) return;
-  document.querySelectorAll('.r-ing-amount').forEach(el => {
-    const orig = el.dataset.orig || el.textContent;
-    el.dataset.orig = orig;
-    // Scale numbers in the text
-    el.textContent = orig.replace(/(\d+\.?\d*)/g, (m, n) => {
-      const scaled = parseFloat(n) * factor;
-      return scaled % 1 === 0 ? scaled : scaled.toFixed(1);
-    });
-  });
-}
-</script>
-
-<!-- ═══ KITCHEN NOTES CARD ═════════════════════════════════ -->
-<div id="kn-overlay" class="kn-overlay" onclick="if(event.target===this)closeNotesModal()">
-  <div class="kn-card">
-    <div class="kn-card-header">
-      <div>
-        <span class="kn-card-eyebrow">Kitchen Notes — Food Safety Card</span>
-        <span class="kn-card-name">{{ recipe.name }}</span>
-      </div>
-      <div class="kn-card-actions">
-        <button class="kn-print-btn" onclick="window.print()">Print card</button>
-        <button class="kn-close" onclick="closeNotesModal()">✕</button>
-      </div>
-    </div>
-    <div class="kn-card-body" id="kn-card-body">
-      <div class="kn-loading">One moment...</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ HACCP BRIEF MODAL ════════════════════════════════════ -->
-<div id="haccp-overlay" class="kn-overlay" onclick="if(event.target===this)closeHaccpModal()">
-  <div class="kn-card" style="max-width:800px">
-    <div class="kn-card-header">
-      <div>
-        <span class="kn-card-eyebrow">HACCP Brief — Codex Alimentarius CXC 1-1969</span>
-        <span class="kn-card-name">{{ recipe.name }}</span>
-      </div>
-      <div class="kn-card-actions">
-        {% if gate_for_tier('profession') == 'full_content' %}
-          <span id="haccp-header-btns"></span>
-        {% else %}
-          {% from '_partials/upgrade_prompt.html' import upgrade_prompt with context %}
-          {{ upgrade_prompt('profession', 'haccp') }}
-        {% endif %}
-        <button class="kn-close" onclick="closeHaccpModal()">✕</button>
-      </div>
-    </div>
-    <div class="kn-card-body" id="haccp-card-body">
-      <div class="kn-loading">Loading…</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ COSTING MODAL ═══════════════════════════════════════ -->
-<div id="costing-overlay" class="c-overlay" onclick="if(event.target===this)closeCostingModal()">
-  <div class="c-modal">
-    <!-- Header -->
-    <div class="c-header">
-      <div class="c-header-top">
-        <span class="c-recipe-label">{{ recipe.name }}</span>
-        <button class="c-close" onclick="closeCostingModal()">✕</button>
-      </div>
-      <div class="c-tabs">
-        <button class="c-tab active" data-tab="cost" onclick="costingTab('cost')">Cost this recipe</button>
-        {% if gate_for_tier('profession') == 'full_content' %}
-        <button class="c-tab" data-tab="invoices" onclick="costingTab('invoices')">Invoices</button>
-        {% endif %}
-        <button class="c-tab" data-tab="pricing" onclick="costingTab('pricing')">Pricing</button>
-      </div>
-    </div>
-
-    <!-- Tab 1: Cost breakdown -->
-    <div id="c-tab-cost" class="c-body">
-      <div id="c-cost-body"><div class="c-loading">Loading…</div></div>
-    </div>
-
-    <!-- Tab 2: Invoices -->
-    {% if gate_for_tier('profession') == 'full_content' %}
-    <div id="c-tab-invoices" class="c-body" style="display:none">
-      <!-- Primary action: camera on mobile, file picker on desktop -->
-      <div class="c-invoice-actions">
-        <button class="c-btn c-btn-primary" onclick="_triggerInvoiceCapture()">
-          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="margin-right:4px;vertical-align:-1px">
-            <circle cx="5.5" cy="4" r="2.5" stroke="currentColor" stroke-width="1.2"/>
-            <path d="M1 8.5c0-1.66 2.01-3 4.5-3s4.5 1.34 4.5 3" stroke="currentColor" stroke-width="1.2"/>
-          </svg>
-          <span class="c-btn-mobile">Scan invoice with camera</span>
-          <span class="c-btn-desktop">Scan invoice</span>
-        </button>
-      </div>
-      <!-- Queue indicator — shown when files staged but not yet submitted -->
-      <div id="c-inv-queue" class="c-inv-queue" style="display:none">
-        <span class="c-inv-queue-label" id="c-inv-queue-label"></span>
-        <button class="c-btn c-btn-primary" onclick="_processInvoiceQueue()">Process invoice →</button>
-        <button class="c-btn" onclick="_clearInvoiceQueue()">Clear</button>
-      </div>
-      <!-- Drop zone — visible in empty state -->
-      <div id="c-inv-dropzone" class="c-dropzone"
-           ondragenter="_dzEnter(event)" ondragover="_dzOver(event)"
-           ondragleave="_dzLeave(event)" ondrop="_dzDrop(event)"
-           onclick="_triggerInvoiceCapture()">
-        <div class="c-dz-icon">↓</div>
-        <div class="c-dz-main" id="c-dz-main">Drop your first invoice here</div>
-        <div class="c-dz-sub" id="c-dz-sub">Photo, scan, or PDF — any format works</div>
-      </div>
-      <!-- Scan in progress -->
-      <div id="c-inv-scanprogress" class="c-scan-progress">
-        <div class="c-scan-spinner"></div>
-        <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted)">
-          EXTRACTING SUPPLIER &amp; PRICING — THIS TAKES 10–20 SECONDS
+      <details class="r6-tool">
+        <summary>
+          <div class="r6-tool__icon r6-tool__icon--regulated">▸ HACCP Brief</div>
+          <div class="r6-tool__name">For the regulator</div>
+        </summary>
+        <div class="r6-tool__body">
+          {% if gate_for_tier('profession') == 'full_content' %}
+            {% if haccp_brief %}
+              {{ haccp_brief.html | safe }}
+            {% else %}
+              No HACCP brief generated yet for this recipe.
+            {% endif %}
+          {% elif gate_for_tier('profession') == 'preview_then_prompt' %}
+            {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
+            {{ upgrade_prompt('profession', 'haccp') }}
+          {% endif %}
         </div>
-      </div>
-      <!-- Invoice list / review area -->
-      <div id="c-inv-list"></div>
+      </details>
+
+      <details class="r6-tool">
+        <summary>
+          <div class="r6-tool__icon r6-tool__icon--cost">▸ Cost This Recipe</div>
+          <div class="r6-tool__name">Live per-ingredient cost</div>
+        </summary>
+        <div class="r6-tool__body">
+          {% if gate_for_tier('profession') == 'full_content' %}
+            {% if cost_breakdown %}
+              <table class="r6-cost-table">
+                <thead><tr><th>Ingredient</th><th>Unit cost</th><th>Line cost</th></tr></thead>
+                <tbody>
+                  {% for line in cost_breakdown.lines %}
+                    <tr>
+                      <td>{{ line.name }}</td>
+                      <td>${{ '%.2f' % line.unit_cost }}</td>
+                      <td>${{ '%.2f' % line.line_cost }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>Total</td><td></td>
+                    <td>${{ '%.2f' % cost_breakdown.total }}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            {% else %}
+              Cost data not yet available for this recipe.
+            {% endif %}
+          {% elif gate_for_tier('profession') == 'preview_then_prompt' %}
+            {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
+            {{ upgrade_prompt('profession', 'cost') }}
+          {% endif %}
+        </div>
+      </details>
+
+      <details class="r6-tool">
+        <summary>
+          <div class="r6-tool__icon">▸ Tools Required</div>
+          <div class="r6-tool__name">Equipment list</div>
+        </summary>
+        <div class="r6-tool__body">
+          {% set tools_seen = [] %}
+          {% for step in steps %}
+            {% if step is mapping and step.tools %}
+              {% for t in step.tools %}
+                {% if t.name not in tools_seen %}
+                  {% set _ = tools_seen.append(t.name) %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+          {% if tools_seen %}
+            <ul style="padding-left: var(--s2);">
+              {% for t in tools_seen %}<li>{{ t }}</li>{% endfor %}
+            </ul>
+          {% else %}
+            No tools listed in the method.
+          {% endif %}
+        </div>
+      </details>
+
     </div>
-    {% endif %}
+  </section>
 
-    <!-- Tab 3: Pricing -->
-    <div id="c-tab-pricing" class="c-body" style="display:none">
-      <div class="c-pricing-bar">
-        <input class="c-search-input" type="search" placeholder="Search ingredients…"
-               oninput="filterPricing(this.value)">
-        <button class="c-btn c-btn-primary" onclick="openManualPrice()">Add price</button>
-      </div>
-      <div id="c-pricing-body"><div class="c-loading">Loading…</div></div>
-    </div>
-  </div>
 </div>
-
-<!-- ── PROCESSING OVERLAY — same pattern as base.html ── -->
-<div id="provenanceProcessingOverlay" class="provenance-processing-overlay" role="status" aria-live="polite" aria-hidden="true">
-  <div class="provenance-processing-wordmark">PROVENANCE</div>
-  <div id="provenanceProcessingStatus" class="provenance-processing-status">Reading the page…</div>
-</div>
-<script>
-(function(){
-  'use strict';
-  var DEFAULTS={messages:['Reading the page…','Composing the entry…','Setting the type…'],holdMs:2800,fadeMs:600};
-  var overlayEl=null,statusEl=null,intervalId=null,fadeTimeoutId=null,messages=DEFAULTS.messages,messageIndex=0;
-  function ensureRefs(){if(!overlayEl)overlayEl=document.getElementById('provenanceProcessingOverlay');if(!statusEl)statusEl=document.getElementById('provenanceProcessingStatus');}
-  function setMessage(t){if(statusEl)statusEl.textContent=t;}
-  function cycleStatus(fadeMs){if(!statusEl)return;statusEl.classList.add('is-fading');fadeTimeoutId=setTimeout(function(){messageIndex=(messageIndex+1)%messages.length;setMessage(messages[messageIndex]);statusEl.classList.remove('is-fading');},fadeMs);}
-  function clearTimers(){if(intervalId){clearInterval(intervalId);intervalId=null;}if(fadeTimeoutId){clearTimeout(fadeTimeoutId);fadeTimeoutId=null;}}
-  window.ProvenanceProcessing={
-    show:function(opts){
-      ensureRefs();if(!overlayEl||!statusEl)return;
-      var cfg=Object.assign({},DEFAULTS,opts||{});
-      messages=(Array.isArray(cfg.messages)&&cfg.messages.length)?cfg.messages:DEFAULTS.messages;
-      messageIndex=0;clearTimers();
-      statusEl.classList.remove('is-fading');setMessage(messages[0]);
-      overlayEl.classList.add('is-active');overlayEl.setAttribute('aria-hidden','false');
-      var tickMs=cfg.holdMs+cfg.fadeMs;
-      intervalId=setInterval(function(){cycleStatus(cfg.fadeMs);},tickMs);
-    },
-    hide:function(){
-      ensureRefs();if(!overlayEl)return;
-      clearTimers();overlayEl.classList.remove('is-active');overlayEl.setAttribute('aria-hidden','true');
-    },
-    isActive:function(){ensureRefs();return overlayEl?overlayEl.classList.contains('is-active'):false;}
-  };
-})();
-</script>
-
-</body>
-</html>
+{% endblock %}

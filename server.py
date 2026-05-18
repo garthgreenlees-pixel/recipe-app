@@ -1145,6 +1145,21 @@ def kitchen():
     )
 
 
+def _get_allergens_for_region(recipe, region):
+    """Allergen detection stub — returns empty until allergen data lands in DB."""
+    return []
+
+
+def _get_or_build_haccp_brief(recipe, region):
+    """HACCP brief stub — returns None until wired to server-rendered flow."""
+    return None
+
+
+def _compute_recipe_cost(recipe, region):
+    """Recipe cost stub — returns None until cost breakdown is server-rendered."""
+    return None
+
+
 @app.route("/recipes")
 def recipes_page():
     return send_file("recipes.html")
@@ -2420,10 +2435,22 @@ def recipe_page(slug):
 
     cur.close()
     conn.close()
-    return render_template("recipe.html", recipe=recipe,
-                           recipe_suppliers=recipe_suppliers,
-                           suggested_beverages=suggested_beverages,
-                           user_location=user_loc)
+    _region = user_loc or "CA"
+    _user = get_current_user()
+    return render_template(
+        "recipe.html",
+        recipe=recipe,
+        recipe_suppliers=recipe_suppliers,
+        suggested_beverages=suggested_beverages,
+        user_location=user_loc,
+        pairings=suggested_beverages,
+        allergens=_get_allergens_for_region(recipe, _region),
+        haccp_brief=_get_or_build_haccp_brief(recipe, _region),
+        cost_breakdown=_compute_recipe_cost(recipe, _region),
+        region=_region,
+        format_cuisine=_format_cuisine,
+        is_owner=bool(_user and recipe.get("user_id") and _user.get("id") == recipe.get("user_id")),
+    )
 
 
 @app.route("/recipe/<slug>/cook")
