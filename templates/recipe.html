@@ -392,7 +392,7 @@
         {% for grp in ingredients %}
           <div class="r6-ing-group">
             {% if grp.group %}<div class="r6-ing-group-name">{{ grp.group }}</div>{% endif %}
-            {% for ing in (grp.items or []) %}
+            {% for ing in (grp.get('items') or []) %}
               <div class="r6-ing">
                 <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
                 <span class="r6-ing__name">{{ ing.name }}</span>
