@@ -1,0 +1,174 @@
+/* Recipe Card Template — locked component CSS
+   Lifted from Provenance_Recipe_Card_Template.html.
+   Edit this file surgically. Do not duplicate these classes elsewhere. */
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--s3);
+}
+
+.recipe-card {
+  background: var(--cream-50);
+  border: 1px solid var(--line-soft);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.recipe-card:hover {
+  border-color: var(--gold-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(31, 27, 22, 0.06);
+  border-bottom: 1px solid var(--gold-soft);
+}
+
+.recipe-card__image {
+  aspect-ratio: 4 / 3;
+  background: var(--cream-200);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--warm-gray-light);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.recipe-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recipe-card__tag {
+  position: absolute;
+  top: var(--s1);
+  left: var(--s1);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 4px 8px;
+  background: var(--cream-50);
+  border: 1px solid var(--line-soft);
+  color: var(--charcoal);
+}
+
+.recipe-card__tag--imported {
+  background: var(--cream-50);
+  color: var(--warm-gray);
+  border-color: var(--line);
+}
+
+.recipe-card__tag--enhanced {
+  background: var(--gold);
+  color: var(--cream-50);
+  border-color: var(--gold);
+}
+
+.recipe-card__tag--canon {
+  background: var(--charcoal);
+  color: var(--cream-50);
+  border-color: var(--charcoal);
+}
+
+.recipe-card__tag--composed {
+  background: var(--burgundy);
+  color: var(--cream-50);
+  border-color: var(--burgundy);
+}
+
+.recipe-card__tag--member {
+  background: var(--cream-100);
+  color: var(--charcoal);
+  border-color: var(--gold-soft);
+}
+
+.recipe-card__haccp {
+  position: absolute;
+  top: var(--s1);
+  right: var(--s1);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 4px 8px;
+  background: var(--terracotta);
+  color: var(--cream-50);
+}
+
+.recipe-card__body {
+  padding: var(--s2) var(--s3);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-card__cuisine {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.recipe-card__title {
+  font-family: var(--display);
+  font-size: 19px;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin-bottom: var(--s1);
+  flex: 1;
+}
+
+.recipe-card__title .italic {
+  font-style: italic;
+  color: var(--charcoal-soft);
+}
+
+.recipe-card__meta {
+  display: flex;
+  gap: var(--s2);
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--warm-gray);
+  padding-top: var(--s2);
+  border-top: 1px dotted var(--line-soft);
+  flex-wrap: wrap;
+}
+
+.recipe-card__meta__divider {
+  color: var(--line);
+}
+
+.recipe-card__pillars {
+  display: flex;
+  gap: 2px;
+  padding: 0 var(--s3) var(--s2);
+}
+
+.recipe-card__pillar-dot {
+  flex: 1;
+  height: 2px;
+  background: var(--line-soft);
+}
+
+.recipe-card__pillar-dot.is-filled {
+  background: var(--gold);
+}

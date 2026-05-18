@@ -45,6 +45,31 @@
   --sans: 'DM Sans', system-ui, sans-serif;
   --serif: 'Playfair Display', Georgia, serif;
   --mono: 'DM Mono', 'Courier New', monospace;
+
+  /* Wireframe light-theme tokens — used by cards.css and light-bg pages */
+  --cream-50: #FAF7F1;
+  --cream-100: #F4EFE4;
+  --cream-200: #EAE2CE;
+  --line: #C9C0B0;
+  --line-soft: #DDD3BE;
+  --charcoal: #1F1B16;
+  --charcoal-soft: #3A332B;
+  --warm-gray: #6B6258;
+  --warm-gray-light: #948B7F;
+  --burgundy: #7A2E2E;
+  --terracotta: #A0522D;
+  --display: 'Playfair Display', Georgia, serif;
+  --body: 'DM Sans', system-ui, sans-serif;
+
+  /* Spacing — 8px baseline */
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 48px;
+  --s6: 64px;
+  --s7: 96px;
+  --s8: 128px;
 }
 
 html { scroll-behavior: smooth; }
@@ -450,6 +475,7 @@ a { color: var(--gold); text-decoration: none; }
 
 </style>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/processing_overlay.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
 
 <!-- Extra head content (canonical, OG image, additional fonts, JSON-LD) -->
 {% block extra_head %}{% endblock %}
