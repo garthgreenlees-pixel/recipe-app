@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}MyKitchen — Provenance{% endblock %}
+
+{% block meta_description %}Your kitchen — your imported recipes, the ones you've worked on, and the ones you've saved from the Canon.{% endblock %}
+
+{% block meta_robots %}noindex{% endblock %}
+
+{% block content %}
+<div class="kitchen">
+
+  {# ─── HELLO BAND ─── #}
+  <section class="kitchen__hello">
+    <h1>Your kitchen.</h1>
+    <div class="kitchen__count">
+      {{ recipe_total }} {% if recipe_total == 1 %}recipe{% else %}recipes{% endif %}
+      {% set at_standard = recipes_by_state.enhanced | selectattr('pillars_filled', 'equalto', 7) | list | length
+                         + recipes_by_state.canon_saved | length %}
+      {% if at_standard > 0 %} · {{ at_standard }} at Sashimi standard{% endif %}
+    </div>
+  </section>
+
+  {# ─── ADD A RECIPE ─── #}
+  <section class="kitchen__add-section">
+    <div class="kitchen__eyebrow">Add a recipe</div>
+    <div class="kitchen__add">
+      <a href="#" class="kitchen__add-tile" data-modal="scan">
+        <div class="kitchen__add-tile__icon">▸ Scan</div>
+        <div class="kitchen__add-tile__name">Scan a page</div>
+        <div class="kitchen__add-tile__desc">Camera or upload. Single page or multi-page from a cookbook.</div>
+      </a>
+      <a href="#" class="kitchen__add-tile" data-modal="import">
+        <div class="kitchen__add-tile__icon">▸ Import</div>
+        <div class="kitchen__add-tile__name">Import a recipe</div>
+        <div class="kitchen__add-tile__desc">PDF, a link, or paste plain text. One door, three sources.</div>
+      </a>
+      <a href="#" class="kitchen__add-tile" data-modal="write">
+        <div class="kitchen__add-tile__icon">▸ Write</div>
+        <div class="kitchen__add-tile__name">Write from scratch</div>
+        <div class="kitchen__add-tile__desc">A blank recipe editor. For the dish that lives in your head.</div>
+      </a>
+    </div>
+  </section>
+
+  {% if recipe_total == 0 %}
+
+  {# ─── EMPTY STATE ─── #}
+  <section class="kitchen__empty">
+    <div class="kitchen__eyebrow">Your kitchen is empty.</div>
+    <h2>Open a door<br><span class="kitchen__italic">to start the collection.</span></h2>
+    <p class="kitchen__empty__lede">Three ways in — scan a page out of a cookbook, import a recipe from a link or a PDF, or write your own.</p>
+    <div class="kitchen__empty__ctas">
+      <a href="#" class="k-btn" data-modal="scan">Scan a page</a>
+      <a href="#" class="k-btn k-btn--ghost" data-modal="import">Import a recipe</a>
+      <a href="#" class="k-btn k-btn--ghost" data-modal="write">Write from scratch</a>
+    </div>
+  </section>
+
+  {% else %}
+
+  {# ─── TOOLBAR ─── #}
+  <section class="kitchen__toolbar">
+    <div class="kitchen__toolbar__left">
+      <form method="get" action="/kitchen/search" class="kitchen__search">
+        <span class="kitchen__search__icon">◔</span>
+        <input type="text" name="q" placeholder="Search your recipes — name, cuisine, ingredient…" value="{{ request.args.get('q', '') }}">
+      </form>
+    </div>
+    <div class="kitchen__toolbar__right">
+      <button class="kitchen__dropdown" data-control="view">View — <strong>Cards</strong> ▾</button>
+      <button class="kitchen__dropdown" data-control="sort">Sort — <strong>Newest</strong> ▾</button>
+    </div>
+  </section>
+
+  {# ─── GROUP: IMPORTED ─── #}
+  {% if recipes_by_state.imported %}
+  <div class="kitchen__group-head">
+    <h3>Imported · just landed</h3>
+    <div class="kitchen__group-count">{{ recipes_by_state.imported | length }} {% if recipes_by_state.imported | length == 1 %}recipe{% else %}recipes{% endif %}</div>
+  </div>
+  <div class="cards-grid">
+    {% for recipe in recipes_by_state.imported %}
+      {% include '_partials/_recipe_card.html' %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# ─── GROUP: ENHANCED ─── #}
+  {% if recipes_by_state.enhanced %}
+  <div class="kitchen__group-head">
+    <h3>Enhanced · you've worked on these</h3>
+    <div class="kitchen__group-count">{{ recipes_by_state.enhanced | length }} {% if recipes_by_state.enhanced | length == 1 %}recipe{% else %}recipes{% endif %}</div>
+  </div>
+  <div class="cards-grid">
+    {% for recipe in recipes_by_state.enhanced %}
+      {% include '_partials/_recipe_card.html' %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# ─── GROUP: CANON-SAVED ─── #}
+  {% if recipes_by_state.canon_saved %}
+  <div class="kitchen__group-head">
+    <h3>Saved from The Canon</h3>
+    <div class="kitchen__group-count">{{ recipes_by_state.canon_saved | length }} {% if recipes_by_state.canon_saved | length == 1 %}recipe{% else %}recipes{% endif %}</div>
+  </div>
+  <div class="cards-grid">
+    {% for recipe in recipes_by_state.canon_saved %}
+      {% include '_partials/_recipe_card.html' %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% endif %}{# end if recipe_total > 0 #}
+
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  .kitchen { max-width: 1200px; margin: 0 auto; padding: var(--s5) var(--s4); }
+
+  .kitchen__hello { padding-bottom: var(--s4); border-bottom: 1px solid var(--line); margin-bottom: var(--s4); }
+  .kitchen__hello h1 { font-family: var(--display); font-size: 44px; font-weight: 500; margin-bottom: var(--s1); color: var(--charcoal); }
+  .kitchen__count { font-family: var(--mono); font-size: 13px; color: var(--warm-gray); }
+
+  .kitchen__eyebrow { font-family: var(--mono); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: var(--warm-gray); margin-bottom: var(--s2); }
+  .kitchen__italic { font-style: italic; }
+
+  .kitchen__add-section { margin-bottom: var(--s4); }
+  .kitchen__add { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
+  .kitchen__add-tile { padding: var(--s3); border: 1.5px dashed var(--line); background: var(--cream-100); text-decoration: none; display: flex; flex-direction: column; gap: var(--s1); color: var(--charcoal); transition: all 0.2s; }
+  .kitchen__add-tile:hover { border-color: var(--gold); border-style: solid; }
+  .kitchen__add-tile__icon { font-family: var(--mono); font-size: 11px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; }
+  .kitchen__add-tile__name { font-family: var(--display); font-size: 22px; font-style: italic; color: var(--charcoal); }
+  .kitchen__add-tile__desc { font-size: 13px; color: var(--charcoal-soft); line-height: 1.5; }
+
+  .kitchen__toolbar { display: flex; justify-content: space-between; align-items: center; padding: var(--s2) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s4); }
+  .kitchen__toolbar__left { flex: 1; }
+  .kitchen__toolbar__right { display: flex; gap: var(--s2); align-items: center; }
+  .kitchen__search { display: flex; align-items: center; gap: var(--s1); border: 1px solid var(--line); background: var(--cream-50); padding: 6px 12px; min-width: 320px; }
+  .kitchen__search input { border: none; background: transparent; flex: 1; outline: none; font-family: var(--body); font-size: 14px; color: var(--charcoal); }
+  .kitchen__search__icon { color: var(--warm-gray); }
+  .kitchen__dropdown { font-family: var(--mono); font-size: 11px; color: var(--charcoal-soft); text-transform: uppercase; letter-spacing: 0.12em; padding: 8px 12px; border: 1px solid var(--line); background: var(--cream-50); cursor: pointer; }
+  .kitchen__dropdown strong { color: var(--charcoal); font-weight: 600; }
+
+  .kitchen__group-head { display: flex; align-items: baseline; justify-content: space-between; margin-top: var(--s4); margin-bottom: var(--s2); padding-bottom: var(--s1); border-bottom: 1px solid var(--line); }
+  .kitchen__group-head h3 { font-family: var(--display); font-size: 24px; font-style: italic; font-weight: 500; color: var(--charcoal); }
+  .kitchen__group-count { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); text-transform: uppercase; letter-spacing: 0.14em; }
+
+  .kitchen__empty { padding: var(--s6) var(--s4); background: var(--cream-100); border: 1.5px dashed var(--line); text-align: center; margin-top: var(--s3); }
+  .kitchen__empty h2 { font-family: var(--display); font-size: 32px; font-weight: 500; margin: var(--s2) 0; color: var(--charcoal); }
+  .kitchen__empty__lede { font-size: 18px; color: var(--charcoal-soft); max-width: 560px; margin: 0 auto var(--s3); line-height: 1.55; }
+  .kitchen__empty__ctas { display: flex; gap: var(--s2); justify-content: center; flex-wrap: wrap; }
+
+  .k-btn { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; padding: 10px 20px; background: var(--charcoal); color: var(--cream-50); text-decoration: none; border: 1px solid var(--charcoal); }
+  .k-btn--ghost { background: transparent; color: var(--charcoal); border-color: var(--line); }
+  .k-btn--ghost:hover { border-color: var(--gold); }
+
+  @media (max-width: 900px) {
+    .kitchen__add { grid-template-columns: 1fr; }
+    .kitchen__toolbar { flex-direction: column; align-items: stretch; }
+    .kitchen__search { min-width: auto; }
+    .kitchen__hello h1 { font-size: 32px; }
+  }
+</style>
+{% endblock %}

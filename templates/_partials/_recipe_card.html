@@ -1,0 +1,53 @@
+{# Recipe card — uses locked Recipe Card Template classes (static/css/cards.css).
+   Expects `recipe` dict in scope with keys:
+     slug, title, image_url, cuisine, state, pillars_filled,
+     time_display, serves, requires_haccp.
+   Caller must pass `format_cuisine` as a template variable. #}
+
+{% set pillars_filled = recipe.pillars_filled if recipe.pillars_filled is defined else 0 %}
+{% set card_state = recipe.state | default('imported') %}
+
+<a href="{{ url_for('recipe_page', slug=recipe.slug) }}" class="recipe-card">
+  <div class="recipe-card__image">
+    {% if recipe.image_url %}
+      <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy">
+    {% else %}
+      <span>{{ recipe.title }}</span>
+    {% endif %}
+    <span class="recipe-card__tag recipe-card__tag--{{ card_state }}">
+      {{ card_state | title }} · {{ pillars_filled }} of 7
+    </span>
+    {% if recipe.requires_haccp %}
+      <span class="recipe-card__haccp">HACCP</span>
+    {% endif %}
+  </div>
+  <div class="recipe-card__body">
+    <div class="recipe-card__cuisine">{{ format_cuisine(recipe.cuisine) }}</div>
+    <div class="recipe-card__title">
+      {% set title = recipe.title | default('') %}
+      {% if ' — ' in title %}
+        {% set parts = title.split(' — ', 1) %}
+        {{ parts[0] }}<br><span class="italic">— {{ parts[1] }}</span>
+      {% elif ', with' in title %}
+        {% set parts = title.split(', with', 1) %}
+        {{ parts[0] }}<br><span class="italic">, with{{ parts[1] }}</span>
+      {% else %}
+        {{ title }}
+      {% endif %}
+    </div>
+    <div class="recipe-card__meta">
+      {% if recipe.time_display %}
+        <span>{{ recipe.time_display }}</span>
+        {% if recipe.serves %}<span class="recipe-card__meta__divider">·</span>{% endif %}
+      {% endif %}
+      {% if recipe.serves %}
+        <span>Serves {{ recipe.serves }}</span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="recipe-card__pillars">
+    {% for i in range(1, 8) %}
+      <div class="recipe-card__pillar-dot{% if i <= pillars_filled %} is-filled{% endif %}"></div>
+    {% endfor %}
+  </div>
+</a>

@@ -1025,6 +1025,98 @@ if not os.environ.get("SKIP_INIT_DB"):
 
 # ─── Static files ────────────────────────────────────────────────────────────
 
+def _format_cuisine(raw):
+    """Normalise a cuisine DB key for display.
+
+    INDIGENOUS_AUSTRALIAN → 'Indigenous Australian'
+    FRENCH_BURGUNDY       → 'French · Burgundy'
+    None / '' / 'MY KITCHEN' placeholders → 'Uncategorised'
+    """
+    if not raw or not str(raw).strip():
+        return "Uncategorised"
+    s = str(raw).strip()
+    if s.upper() in ("MY KITCHEN", "MY_KITCHEN", "MYKITCHEN"):
+        return "Uncategorised"
+    parts = s.replace("_", " ").split()
+    if len(parts) == 1:
+        return parts[0].title()
+    return " · ".join(p.title() for p in parts)
+
+
+def _query_user_recipes(user_id, state="imported"):
+    """Return a list of card-ready dicts from user_kitchen_recipes for one user.
+
+    State is derived (no DB column): 'enhanced' when recipe_content_jsonb is
+    populated or template_version is 'v3'; 'imported' otherwise.
+    """
+    if not DATABASE_URL:
+        return []
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT uuid, title, slug, has_image, origin, time_total,
+                   servings_count, servings_text, template_version,
+                   recipe_content_jsonb,
+                   quality_hierarchy, sensory_tests, cross_cuisine_parallels,
+                   lives_or_dies, beverage_pairings, ingredients, steps
+            FROM user_kitchen_recipes
+            WHERE user_id = %s AND is_draft = FALSE AND slug IS NOT NULL
+            ORDER BY updated_at DESC
+        """, (user_id,))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        out = []
+        for r in rows:
+            is_enhanced = (
+                r.get("template_version") == "v3"
+                or (r.get("recipe_content_jsonb") is not None)
+            )
+            row_state = "enhanced" if is_enhanced else "imported"
+            if row_state != state:
+                continue
+            # Pillar fill count: ingredients, steps, quality_hierarchy,
+            # sensory_tests, cross_cuisine_parallels, lives_or_dies, beverage_pairings
+            filled = sum([
+                bool(r.get("ingredients")),
+                bool(r.get("steps") or (r.get("recipe_content_jsonb") or {}).get("steps")),
+                bool(r.get("quality_hierarchy")),
+                bool(r.get("sensory_tests")),
+                bool(r.get("cross_cuisine_parallels")),
+                bool(r.get("lives_or_dies")),
+                bool(r.get("beverage_pairings")),
+            ])
+            # Cuisine: prefer content_jsonb cuisine key, fall back to origin
+            content = r.get("recipe_content_jsonb") or {}
+            cuisine = content.get("cuisine") or r.get("origin") or ""
+            # Time: prefer content_jsonb, fall back to raw text field
+            time_raw = content.get("time_total") or r.get("time_total") or ""
+            serves_raw = r.get("servings_count") or r.get("servings_text") or ""
+            image_url = f"/images/{r['uuid']}/hero.jpg" if r.get("has_image") else None
+            out.append({
+                "uuid": r["uuid"],
+                "slug": r["slug"],
+                "title": r.get("title") or "Untitled",
+                "image_url": image_url,
+                "cuisine": cuisine,
+                "state": row_state,
+                "pillars_filled": filled,
+                "time_display": time_raw,
+                "serves": serves_raw,
+                "requires_haccp": False,
+            })
+        return out
+    except Exception as e:
+        app.logger.warning(f"_query_user_recipes failed: {e}")
+        return []
+
+
+def _query_user_saved_canon_recipes(user_id):
+    """Return canon recipes saved by the user. Feature not yet built — returns empty."""
+    return []
+
+
 @app.route("/")
 def index():
     user = get_current_user()
@@ -1038,7 +1130,19 @@ def kitchen():
     user = get_current_user()
     if not user:
         return _login_redirect()
-    return send_file("kitchen.html")
+    user_id = user["id"]
+    recipes_by_state = {
+        "imported": _query_user_recipes(user_id, state="imported"),
+        "enhanced": _query_user_recipes(user_id, state="enhanced"),
+        "canon_saved": _query_user_saved_canon_recipes(user_id),
+    }
+    total = sum(len(v) for v in recipes_by_state.values())
+    return render_template(
+        "kitchen.html",
+        recipes_by_state=recipes_by_state,
+        recipe_total=total,
+        format_cuisine=_format_cuisine,
+    )
 
 
 @app.route("/recipes")
