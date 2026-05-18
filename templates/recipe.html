@@ -365,7 +365,7 @@
   <div class="r6-actions">
     <a href="/recipe/{{ recipe.slug }}/cook" class="r6-btn">Cook Mode →</a>
     <a href="#" class="r6-btn r6-btn--ghost" data-action="save">Save</a>
-    <a href="{{ url_for('suggest_supplier') }}?recipe={{ recipe.slug }}" class="r6-btn r6-btn--ghost">Suggest a supplier</a>
+    <a href="{{ url_for('suggest_supplier_form') }}?recipe={{ recipe.slug }}" class="r6-btn r6-btn--ghost">Suggest a supplier</a>
     <a href="#" class="r6-btn r6-btn--ghost" onclick="window.print(); return false;">Print</a>
     <a href="#" class="r6-btn r6-btn--ghost" data-action="share">Share</a>
     {% if is_owner %}
