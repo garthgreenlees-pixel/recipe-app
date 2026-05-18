@@ -1258,7 +1258,7 @@ def _generate_haccp_brief_internal(title, ingredients, method_steps, allergen_re
 
 
 def _get_or_build_haccp_brief(recipe, region):
-    """Look up or generate a HACCP brief for this recipe at Profession tier."""
+    """Look up a saved HACCP brief for this recipe at Profession tier. Never auto-generates."""
     if not user_can_access("profession"):
         return None
     user = get_current_user()
@@ -1267,7 +1267,6 @@ def _get_or_build_haccp_brief(recipe, region):
     recipe_slug = recipe.get("slug") or recipe.get("recipe_slug")
     if not recipe_slug:
         return None
-
     try:
         conn = get_db()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1282,81 +1281,20 @@ def _get_or_build_haccp_brief(recipe, region):
         conn.close()
     except Exception:
         return None
-
-    if row:
-        brief = row["brief_json"]
-        if isinstance(brief, str):
-            brief = json.loads(brief)
-        edits = row["edits_json"] or {}
-        if isinstance(edits, str):
-            edits = json.loads(edits)
-        brief = _apply_haccp_edits(brief, edits)
-        brief["_db_id"] = row["id"]
-        brief["_version"] = row["version"]
-        brief["_pic_name"] = row["pic_name"]
-        brief["_pic_signed_at"] = row["pic_signed_at"].isoformat() if row["pic_signed_at"] else None
-        brief["_generated_at"] = row["created_at"].isoformat() if row["created_at"] else None
-        return brief
-
-    # No saved brief — generate a fresh draft
-    title = recipe.get("name") or recipe.get("title") or "Untitled"
-    ingredients = recipe.get("ingredients") or []
-    if isinstance(ingredients, str):
-        try:
-            ingredients = json.loads(ingredients)
-        except Exception:
-            ingredients = []
-    steps = recipe.get("steps") or []
-    if isinstance(steps, str):
-        try:
-            steps = json.loads(steps)
-        except Exception:
-            steps = []
-    if not ingredients and not steps:
+    if not row:
         return None
-
-    allergen_region = HACCP_DEFAULT_REGION
-    if user.get("haccp_allergen_region"):
-        r = user["haccp_allergen_region"].upper()
-        if r in HACCP_ALLERGEN_REGIONS:
-            allergen_region = r
-
-    brief = _generate_haccp_brief_internal(title, ingredients, steps, allergen_region)
-    if not brief:
-        return None
-
-    db_id = None
-    db_version = 1
-    db_created_at = None
-    try:
-        conn2 = psycopg2.connect(DATABASE_URL_WRITE)
-        conn2.autocommit = True
-        cur2 = conn2.cursor()
-        cur2.execute("""
-            INSERT INTO haccp_briefs
-                (user_id, recipe_slug, recipe_name, version, schema_version,
-                 allergen_region, brief_json, edits_json)
-            VALUES (%s, %s, %s, 1, %s, %s, %s, '{}')
-            RETURNING id, version, created_at
-        """, (
-            user["id"], recipe_slug, title,
-            brief.get("schema_version", "1.0"), allergen_region,
-            json.dumps(brief),
-        ))
-        saved = cur2.fetchone()
-        cur2.close()
-        conn2.close()
-        db_id = saved[0]
-        db_version = saved[1]
-        db_created_at = saved[2].isoformat() if saved[2] else None
-    except Exception as e:
-        app.logger.warning(f"[HACCP] failed to save generated brief for {recipe_slug}: {e}")
-
-    brief["_db_id"] = db_id
-    brief["_version"] = db_version
-    brief["_pic_name"] = None
-    brief["_pic_signed_at"] = None
-    brief["_generated_at"] = db_created_at
+    brief = row["brief_json"]
+    if isinstance(brief, str):
+        brief = json.loads(brief)
+    edits = row["edits_json"] or {}
+    if isinstance(edits, str):
+        edits = json.loads(edits)
+    brief = _apply_haccp_edits(brief, edits)
+    brief["_db_id"] = row["id"]
+    brief["_version"] = row["version"]
+    brief["_pic_name"] = row["pic_name"]
+    brief["_pic_signed_at"] = row["pic_signed_at"].isoformat() if row["pic_signed_at"] else None
+    brief["_generated_at"] = row["created_at"].isoformat() if row["created_at"] else None
     return brief
 
 
@@ -6742,6 +6680,86 @@ def _apply_haccp_edits(brief, edits):
                 if fld in rc_edits[ing]:
                     row[fld] = rc_edits[ing][fld]
     return out
+
+
+@app.route("/api/haccp/generate-for-recipe", methods=["POST"])
+@requires_tier("profession")
+def haccp_generate_for_recipe():
+    """Generate and save a HACCP brief for a recipe by slug. Called by the on-demand button."""
+    user = get_current_user()
+    data = request.get_json() or {}
+    recipe_slug = data.get("recipe_slug", "").strip()
+    if not recipe_slug:
+        return jsonify({"error": "recipe_slug required"}), 400
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (recipe_slug,))
+    recipe = cur.fetchone()
+    if not recipe:
+        cur.execute(
+            "SELECT * FROM user_kitchen_recipes WHERE slug = %s AND user_id = %s LIMIT 1",
+            (recipe_slug, user["id"]),
+        )
+        recipe = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    if not recipe:
+        return jsonify({"error": "Recipe not found"}), 404
+
+    title = recipe.get("name") or recipe.get("title") or "Untitled"
+    ingredients = recipe.get("ingredients") or []
+    if isinstance(ingredients, str):
+        try:
+            ingredients = json.loads(ingredients)
+        except Exception:
+            ingredients = []
+    steps = recipe.get("steps") or []
+    if isinstance(steps, str):
+        try:
+            steps = json.loads(steps)
+        except Exception:
+            steps = []
+
+    allergen_region = HACCP_DEFAULT_REGION
+    if user.get("haccp_allergen_region"):
+        r = user["haccp_allergen_region"].upper()
+        if r in HACCP_ALLERGEN_REGIONS:
+            allergen_region = r
+
+    brief = _generate_haccp_brief_internal(title, ingredients, steps, allergen_region)
+    if not brief:
+        return jsonify({"error": "Brief generation failed — please try again."}), 502
+
+    try:
+        conn2 = psycopg2.connect(DATABASE_URL_WRITE)
+        conn2.autocommit = True
+        cur2 = conn2.cursor()
+        cur2.execute(
+            "SELECT COALESCE(MAX(version), 0) + 1 FROM haccp_briefs WHERE user_id = %s AND recipe_slug = %s",
+            (user["id"], recipe_slug),
+        )
+        next_version = cur2.fetchone()[0]
+        cur2.execute("""
+            INSERT INTO haccp_briefs
+                (user_id, recipe_slug, recipe_name, version, schema_version,
+                 allergen_region, brief_json, edits_json)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, '{}')
+            RETURNING id
+        """, (
+            user["id"], recipe_slug, title, next_version,
+            brief.get("schema_version", "1.0"), allergen_region,
+            json.dumps(brief),
+        ))
+        brief_id = cur2.fetchone()[0]
+        cur2.close()
+        conn2.close()
+    except Exception as e:
+        app.logger.error(f"[HACCP] save failed after generation for {recipe_slug}: {e}")
+        return jsonify({"error": "Brief generated but could not be saved — please try again."}), 500
+
+    return jsonify({"ok": True, "brief_id": brief_id})
 
 
 @app.route("/api/haccp/save", methods=["POST"])
