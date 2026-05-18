@@ -675,9 +675,9 @@
         <div class="r6-tool__body">
           {% if gate_for_tier('profession') == 'full_content' %}
             {% if haccp_brief %}
-              {{ haccp_brief.html | safe }}
+              {% include '_partials/_haccp_brief.html' %}
             {% else %}
-              No HACCP brief generated yet for this recipe.
+              <p style="opacity:0.6;font-size:13px;">No HACCP brief generated yet for this recipe.</p>
             {% endif %}
           {% elif gate_for_tier('profession') == 'preview_then_prompt' %}
             {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
