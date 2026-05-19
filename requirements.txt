@@ -12,3 +12,4 @@ weasyprint
 fal-client
 beautifulsoup4
 stripe
+resend

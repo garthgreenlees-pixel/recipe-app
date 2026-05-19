@@ -47,6 +47,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .auth-btn{width:100%;padding:12px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);border-radius:4px;color:var(--gold);font-family:var(--sans);font-size:0.875rem;font-weight:400;letter-spacing:0.04em;cursor:pointer;transition:background 200ms,border-color 200ms}
 .auth-btn:hover{background:rgba(201,168,76,0.2);border-color:rgba(201,168,76,0.5)}
 .auth-divider{text-align:center;margin-top:1.5rem;font-size:0.8rem;color:var(--text-light)}
+.auth-divider a{color:var(--gold);text-decoration:none}
+.auth-divider a:hover{text-decoration:underline}
 .about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem}
 .footer-links{display:flex;gap:2rem;flex-wrap:wrap}
 .footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms}
@@ -91,7 +93,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     </form>
 
     <p class="auth-divider">
-      By signing up you agree to use test card 4242 4242 4242 4242 while in beta.
+      By creating an account you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.
     </p>
   </div>
 </div>
@@ -106,6 +108,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     <span class="footer-wm">Provenance</span>
   </div>
 </footer>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
+
 </body>
 </html>

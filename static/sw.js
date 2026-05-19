@@ -1,48 +1,32 @@
-const CACHE_NAME = 'provenance-v1';
-const PRECACHE_URLS = [
-  '/',
-  '/techniques/browse',
-  '/beverage',
-  '/recipes'
-];
+// Self-destruct service worker.
+// Replaces the previous SW that was incorrectly intercepting POST requests
+// and causing /api/* routes to hang. This file unregisters itself on install
+// and clears all caches, then never intercepts another fetch.
 
-// Install: cache the shell
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(PRECACHE_URLS))
-      .then(() => self.skipWaiting())
-  );
+self.addEventListener('install', () => {
+  self.skipWaiting();
 });
 
-// Activate: clean old caches
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(names =>
-      Promise.all(
-        names.filter(name => name !== CACHE_NAME)
-          .map(name => caches.delete(name))
-      )
-    ).then(() => self.clients.claim())
-  );
+self.addEventListener('activate', async (event) => {
+  event.waitUntil((async () => {
+    // Clear all caches this SW may have created
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    } catch (e) {}
+
+    // Unregister this SW so future page loads don't use it
+    try {
+      await self.registration.unregister();
+    } catch (e) {}
+
+    // Tell every open tab to reload so they pick up a clean state
+    try {
+      const clients = await self.clients.matchAll({type: 'window'});
+      clients.forEach(c => c.navigate(c.url));
+    } catch (e) {}
+  })());
 });
 
-// Fetch: network-first with cache fallback
-self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-  if (event.request.url.includes('/api/')) return;
-
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        if (response.ok) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, clone);
-          });
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request))
-  );
-});
+// Critical: do NOT add a 'fetch' event handler.
+// Without one, the browser bypasses this SW for all network requests.
