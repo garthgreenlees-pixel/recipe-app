@@ -11734,7 +11734,10 @@ def _cost_ingredient_loop(ingredients, user_id, use_user_pricing, cur):
         unit = ""
         if isinstance(ing, dict):
             name = ing.get("name") or ing.get("ingredient") or ""
-            qty = float(ing.get("quantity") or ing.get("amount") or ing.get("count") or 0)
+            try:
+                qty = float(ing.get("quantity") or ing.get("amount") or ing.get("count") or 0)
+            except (ValueError, TypeError):
+                qty = 0.0
             unit = ing.get("unit") or ""
         elif isinstance(ing, str):
             name = ing
