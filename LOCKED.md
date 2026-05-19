@@ -44,7 +44,7 @@ Location: `templates/user_kitchen_recipe.html`
 | Quality Hierarchy section | LOCKED | Auto-generates on import. |
 | Sensory Tests section | LOCKED | Auto-generates on import. |
 | Cross-cuisine Parallels (collapsed accordion) | LOCKED | Paste 4. |
-| Sourced By Provenance — Pat's Rule two-tier | LOCKED | Paste 22. "The benchmark" (ORIGIN, region-agnostic) + "Find it locally" (PROVIDER, T1 region-filtered). Empty-state CTA is paste 23 (WIP). |
+| Sourced By Provenance — Pat's Rule two-tier | LOCKED | Paste 22. "The benchmark" (ORIGIN, region-agnostic) + "Find it locally" (PROVIDER, T1 region-filtered). Persistent invite bar (paste 28) renders at accordion bottom regardless of supplier count. |
 | TO DRINK pairings section | LOCKED | Paste 24. Three constraints enforced: one non-alcoholic floor, category diversity (no two alike), specific named drinks with real producers. COMPLEMENT / BRIDGE / CONTRAST tier eyebrows. Null-slot fallback to "→ pairing not yet matched" renders cleanly. Provider attachment to bottle shops awaits Perry's data. |
 | QUESTIONS / FAQ accordion | LOCKED | Pastes 9 + 20. |
 | Action buttons row (HACCP / Kitchen notes / Cost this recipe / Scale recipe) | LOCKED | Each opens its respective modal. |
@@ -75,9 +75,10 @@ Location: `server.py`
 | `_enrich_beverage_pairings()` | LOCKED | Paste 24. LLM (Haiku) generates 3 pairings with post-validation: non-alcoholic floor + category diversity + specific named drinks. Re-prompts once on failure; nulls bad slots on second failure. |
 | `POST /api/recipe/<slug>/re-enrich-pairings` | LOCKED | Paste 24. Founder/admin only. Re-runs pairing enrichment for an existing kitchen recipe; writes result to `beverage_pairings` JSONB. |
 | Yield text normalizer (ranges and plural) | LOCKED | Paste 19. |
-| `_get_kitchen_recipe_suppliers()` + `_supplier_in_region()` | LOCKED | Paste 22. T1 region filter: state match OR explicit region in service_region OR Western_Canada umbrella for BC/AB/SK/MB. Filtering done in Python, not SQL. |
+| `_get_kitchen_recipe_suppliers_from_markers()` + `_supplier_in_region()` | LOCKED | Paste 22 + paste 29 + paste 32. Reads pre-resolved `ingredient_origin_markers` JSONB (set at import time) instead of fuzzy-matching at render time. Pantry stop list filters noise ingredients ("salt", "water"). Stem-on-stem substring filter removes false-positive products (watermelon when recipe has manuka honey). One DB query for role + service_region only. T1 region filter (paste 22). ~~Pastes 30, 30a (SQL regex — silently threw in production) and paste 31 (ILIKE fuzzy match) superseded by paste 32.~~ |
 | Sashimi Pipeline (Quality Hierarchy + Sensory Tests + Cross-cuisine Parallels + ORIGIN & PROVENANCE auto-context + Sourced base query) | LOCKED | Pre-existing. Runs on every import. |
 | `backfill_enrichments.py` | LOCKED | Paste 20 backfill script. Run with `DATABASE_URL` + `DATABASE_URL_WRITE` env vars. Supports `--dry-run`, `--limit N`, `--force`. |
+| `GET /suggest-supplier` + `POST /suggest-supplier` | LOCKED | Paste 28. Form page + submission handler. Emails garth.greenlees@gmail.com via Resend. `reply_to` set to chef_email if provided. Always logs submission even if email fails. |
 
 ### Database schema
 
@@ -143,15 +144,15 @@ These ship next. Each promotes to LOCKED once verified on the live URL.
 - Paste 17 — Sashimi italic Georgia + gold rules; remove ★ from method section heading; bio click-expand wiring
 - Paste 18 — Edit modal with hero image swap + 5 core text fields (Title / Subtitle / Tradition tags / Sashimi line / Personal origin)
 - Paste 21 — Brand voice enforcement in auto-generated content (banned phrases, six protected words, post-validation pass)
-- Paste 23 — Sourced section empty-state ("no matching suppliers indexed yet — request one →")
+- ~~Paste 23 — Sourced section empty-state — superseded by paste 28 persistent invite bar (LOCKED 2026-05-09).~~
 - Paste 25 — Audit becomes invisible hand (AI proposals on flagged issues with Accept / Reject / Edit, applied via Edit pipeline)
-
 ## Pending lock review
 
 Components that may belong in LOCKED but haven't been verified across enough recipes to formally promote:
 
 - Brand voice enforcement (paste 21) — once shipped and one full import cycle confirms no banned phrases appear in auto-generated content, promote.
 - ~~Beverage pairing constraints (paste 24) — PROMOTED TO LOCKED 2026-05-09.~~
+- ~~Suggest-a-supplier invite bar + form (paste 28) — PROMOTED TO LOCKED 2026-05-09.~~
 - Audit invisible hand (paste 25) — needs separate review process given scope.
 
 ---
