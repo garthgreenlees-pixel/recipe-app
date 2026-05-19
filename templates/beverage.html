@@ -380,62 +380,17 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
       </div>
     </div>
 
-    <!-- Right: Browse by World Region -->
+    <!-- Right: Browse by Country -->
     <div class="browse-col">
-      <div class="section-label">Browse by World Region</div>
+      <div class="section-label">Browse by Country</div>
       <div class="world-region-list">
-        <a href="/beverage" class="region-list-item populated">
+        {% for country_name, count in country_cards %}
+        <button class="region-list-item populated" onclick="loadCountry({{ country_name|tojson }})" style="background:none;border:none;cursor:pointer;text-align:left;width:100%;padding:0">
           <span class="region-list-dot"></span>
-          <span>Pacific Northwest</span>
-        </a>
-        <a href="/beverage" class="region-list-item populated">
-          <span class="region-list-dot"></span>
-          <span>USA</span>
-        </a>
-        <a href="/beverage" class="region-list-item populated">
-          <span class="region-list-dot"></span>
-          <span>France</span>
-        </a>
-        <a href="/beverage" class="region-list-item populated">
-          <span class="region-list-dot"></span>
-          <span>Italy</span>
-        </a>
-        <a href="/beverage" class="region-list-item populated">
-          <span class="region-list-dot"></span>
-          <span>Spain</span>
-        </a>
-        <a href="/beverage" class="region-list-item populated">
-          <span class="region-list-dot"></span>
-          <span>Germany</span>
-        </a>
-        <a href="/beverage" class="region-list-item populated">
-          <span class="region-list-dot"></span>
-          <span>Japan</span>
-        </a>
-        <a href="/beverage" class="region-list-item populated">
-          <span class="region-list-dot"></span>
-          <span>Australia</span>
-        </a>
-        <a href="/beverage" class="region-list-item populated">
-          <span class="region-list-dot"></span>
-          <span>South America</span>
-        </a>
-        <a href="/beverage" class="region-list-item populated">
-          <span class="region-list-dot"></span>
-          <span>Mediterranean</span>
-        </a>
-        <div class="region-list-item coming">
-          <span class="region-list-dot"></span>
-          <span>Portuguese Colonial Trail</span>
-        </div>
-        <div class="region-list-item coming">
-          <span class="region-list-dot"></span>
-          <span>Pacific Migration Trail</span>
-        </div>
-        <div class="region-list-item coming">
-          <span class="region-list-dot"></span>
-          <span>West African Diaspora Trail</span>
-        </div>
+          <span>{{ country_name }}</span>
+          <span style="margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:0.5px">{{ count }}</span>
+        </button>
+        {% endfor %}
       </div>
     </div>
 
@@ -571,6 +526,12 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
     {% endif %}
   </div>
 
+  <!-- Country results panel (populated by loadCountry()) -->
+  <div id="country-results" class="pairing-results" style="display:none;margin-top:32px">
+    <div class="section-label" id="country-results-label"></div>
+    <div id="country-results-list"></div>
+  </div>
+
 </div>
 
 <script>
@@ -602,6 +563,39 @@ async function loadTradition(label, ...categories) {
       return;
     }
     listEl.innerHTML = allRows.map(p => `
+      <div class="pairing-card">
+        <div class="pairing-type-label">${(p.category || '').replace(/_/g,' ')}</div>
+        <a href="${p.slug ? '/beverage/' + esc(p.slug) : '/beverage/products/' + p.id}" class="pairing-beverage" style="text-decoration:none;color:inherit">${esc(p.name)}</a>
+        ${p.description ? `<div class="pairing-logic">${esc(p.description.substring(0,180))}${p.description.length > 180 ? '…' : ''}</div>` : ''}
+        <div class="pairing-badges">
+          ${p.quality_tier ? `<span class="confidence-badge">${esc(p.quality_tier)}</span>` : ''}
+          ${p.region_name ? `<span class="context-badge">${esc(p.region_name)}</span>` : ''}
+        </div>
+      </div>`).join('');
+  } catch (e) {
+    listEl.innerHTML = '<div class="empty-state">Could not load beverages.</div>';
+  }
+}
+
+async function loadCountry(countryName) {
+  const resultsEl = document.getElementById('country-results');
+  const labelEl = document.getElementById('country-results-label');
+  const listEl = document.getElementById('country-results-list');
+
+  resultsEl.style.display = '';
+  labelEl.textContent = countryName;
+  listEl.innerHTML = '<div class="loading">Loading…</div>';
+  resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
+
+  try {
+    const res = await fetch('/api/beverage/products?country=' + encodeURIComponent(countryName) + '&limit=50');
+    if (!res.ok) throw new Error();
+    const rows = await res.json();
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="empty-state">No beverages found for this country yet.</div>';
+      return;
+    }
+    listEl.innerHTML = rows.map(p => `
       <div class="pairing-card">
         <div class="pairing-type-label">${(p.category || '').replace(/_/g,' ')}</div>
         <a href="${p.slug ? '/beverage/' + esc(p.slug) : '/beverage/products/' + p.id}" class="pairing-beverage" style="text-decoration:none;color:inherit">${esc(p.name)}</a>

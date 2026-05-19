@@ -93,6 +93,15 @@ PRICE_MAP = {
 
 TIER_HIERARCHY = ["free", "kitchen", "library", "profession", "trade"]
 
+# CMS Certified+Advanced Sommelier curriculum countries.
+# Order is editorial — Europe first, then the Americas, then the Pacific.
+CMS_COUNTRIES = [
+    "France", "Italy", "Spain", "Germany", "Portugal",
+    "Austria", "Greece", "Hungary",
+    "United States", "Canada", "Argentina", "Chile",
+    "Australia", "New Zealand", "South Africa", "Japan",
+]
+
 
 def requires_tier(min_tier: str):
     """
@@ -8899,6 +8908,7 @@ def beverage_products_list():
     category = request.args.get("category", "").strip()
     region_id = request.args.get("region_id", type=int)
     quality_tier = request.args.get("quality_tier", "").strip()
+    country = request.args.get("country", "").strip()
     limit = request.args.get("limit", 100, type=int)
     offset = request.args.get("offset", 0, type=int)
 
@@ -8912,6 +8922,9 @@ def beverage_products_list():
     if quality_tier:
         query += " AND bp.quality_tier = %s"
         params.append(quality_tier)
+    if country:
+        query += " AND br.country ILIKE %s"
+        params.append(country)
 
     query += " ORDER BY bp.name LIMIT %s OFFSET %s"
     params.extend([min(limit, 500), offset])
@@ -9571,6 +9584,17 @@ def beverage_browse():
         if trad:
             tradition_counts[trad] += int(cat_row['count'])
 
+    # Country product counts for CMS-grounded country cards
+    cur.execute("""
+        SELECT br.country, COUNT(DISTINCT bp.id) AS product_count
+        FROM beverage_regions br
+        LEFT JOIN beverage_products bp ON bp.region_id = br.id
+        WHERE br.country IS NOT NULL AND br.country != ''
+        GROUP BY br.country
+    """)
+    country_counts = {r["country"]: int(r["product_count"]) for r in cur.fetchall()}
+    country_cards = [(name, country_counts[name]) for name in CMS_COUNTRIES if country_counts.get(name, 0) > 0]
+
     cur.close()
     conn.close()
 
@@ -9583,6 +9607,7 @@ def beverage_browse():
         total_producers=total_producers,
         total_pairings=total_pairings,
         tradition_counts=tradition_counts,
+        country_cards=country_cards,
     )
 
 
