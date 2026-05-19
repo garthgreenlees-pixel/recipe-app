@@ -1,191 +1,506 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Enhance Any Recipe — Add Technique Depth | Provenance</title>
-<meta name="description" content="Paste a recipe URL from anywhere. Provenance matches it to professional technique entries that explain the why behind every step.">
+{% extends "base.html" %}
+
+{% block title %}Enhance a Recipe — Provenance{% endblock %}
+{% block meta_description %}Add technique depth to any recipe. Paste a URL, scan a cookbook page, upload a PDF, or write from scratch.{% endblock %}
+
+{% block extra_head %}
 <link rel="canonical" href="https://provenance.kitchen/enhance">
 <meta property="og:title" content="Enhance Any Recipe | Provenance">
-<meta property="og:description" content="Paste a recipe URL. Provenance matches it to professional technique entries that explain the why behind every step.">
+<meta property="og:description" content="Add technique depth to any recipe. Paste a URL, scan a cookbook page, or write from scratch.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://provenance.kitchen/enhance">
-<meta property="og:site_name" content="Provenance">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Enhance Any Recipe | Provenance">
-<meta name="twitter:description" content="Paste a recipe URL. Provenance matches it to professional technique entries.">
-<link rel="manifest" href="/static/manifest.json">
-<meta name="theme-color" content="#08080A">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
-  --text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);
-  --border:rgba(201,168,76,0.20);--bg:#08080A;--surface:#131210;
-  --serif:'Cormorant Garamond',Georgia,serif;
-  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-  --mono:'DM Mono',monospace;
+<meta name="twitter:description" content="Add technique depth to any recipe. Paste a URL, scan a cookbook page, or write from scratch.">
+{% endblock %}
+
+{% block styles %}
+.enhance-hero {
+  text-align: center;
+  padding: 4rem 2rem 3rem;
+  max-width: 720px;
+  margin: 0 auto;
 }
-html{-webkit-font-smoothing:antialiased}
-body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
-.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
-.nav-links{display:flex;align-items:center;gap:2rem}
-.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
-.nav-links a:hover{color:#C9A84C}
-.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
-.nav-p:hover{border-color:#C9A84C}
-.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
-.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
-.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
-.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
-.mobile-nav-overlay.active{display:block}
-.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
-.mobile-nav.active{right:0}
-.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
-.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
-.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
-@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
-.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
-.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
-.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
-.footer-links a:hover{color:#C9A84C}
-.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
-.hero{padding:80px 32px 60px;max-width:720px;margin:0 auto;text-align:center}
-.hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
-.hero-title{font-family:var(--serif);font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:-1px;margin-bottom:16px;line-height:1.15}
-.hero-sub{font-size:16px;color:var(--text-secondary);font-weight:300;max-width:540px;margin:0 auto 40px;line-height:1.7}
-.form-container{max-width:620px;margin:0 auto;padding:0 32px 80px}
-.input-group{display:flex;gap:0;margin-bottom:16px}
-.url-input{flex:1;background:#131210;border:1px solid rgba(201,168,76,0.25);border-right:none;border-radius:6px 0 0 6px;padding:14px 18px;font-family:var(--sans);font-size:14px;color:var(--text);font-weight:300;outline:none;transition:border-color 0.2s}
-.url-input:focus{border-color:rgba(201,168,76,0.5)}
-.url-input::placeholder{color:rgba(245,241,233,0.25)}
-.submit-btn{background:var(--gold);border:none;border-radius:0 6px 6px 0;padding:14px 24px;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#08080A;cursor:pointer;font-weight:500;white-space:nowrap;transition:opacity 0.2s}
-.submit-btn:hover{opacity:0.85}
-.submit-btn:active{opacity:0.7}
-.error-msg{background:rgba(220,60,60,0.08);border:1px solid rgba(220,60,60,0.2);border-radius:6px;padding:12px 16px;font-size:13px;color:rgba(245,100,100,0.9);margin-bottom:16px}
-.hint{font-size:12px;color:var(--text-light);text-align:center;line-height:1.6}
-.hint a{color:rgba(201,168,76,0.6);text-decoration:none}
-.hint a:hover{color:var(--gold)}
-.feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:48px;padding-top:48px;border-top:1px solid rgba(201,168,76,0.08)}
-.feature-item{text-align:center}
-.feature-num{font-family:var(--serif);font-size:32px;font-weight:400;color:rgba(201,168,76,0.3);margin-bottom:8px}
-.feature-label{font-size:12px;color:var(--text-secondary);line-height:1.5}
-@media(max-width:640px){.hero{padding:60px 16px 40px}.form-container{padding:0 16px 60px}.input-group{flex-direction:column}.url-input{border-right:1px solid rgba(201,168,76,0.25);border-bottom:none;border-radius:6px 6px 0 0}.submit-btn{border-radius:0 0 6px 6px}}
-</style>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
-</head>
-<body>
+.enhance-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  margin-bottom: 1.2rem;
+}
+.enhance-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+.enhance-sub {
+  font-size: 1rem;
+  color: var(--smoke);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto;
+}
 
-<nav class="nav">
-  <a href="/" class="nav-wordmark">Provenance</a>
-  <div class="nav-links">
-    <a href="/recipes">Recipes</a>
-    <a href="/drinks">Drinks</a>
-    <a href="/cuisines">Cuisines</a>
-    <a href="/techniques/browse">Techniques</a>
-    <a href="/about">About</a>
-    <a href="/suppliers">Suppliers</a>
-    {% if is_authenticated %}
-    <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
-    {% else %}
-    <a href="/auth/login">Sign In</a>
-    {% endif %}
-  </div>
-  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
-<nav class="mobile-nav" id="mobileNav">
-  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
-  <a href="/recipes">Recipes</a>
-  <a href="/drinks">Drinks</a>
-  <a href="/cuisines">Cuisines</a>
-  <a href="/techniques/browse">Techniques</a>
-  <a href="/about" class="mobile-nav-secondary">About</a>
-  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
-  {% if is_authenticated %}
-  <a href="/auth/account" class="mobile-nav-secondary">{{ current_user.display_name or 'Account' }}</a>
-  {% else %}
-  <a href="/auth/login" class="mobile-nav-secondary">Sign In</a>
-  {% endif %}
-</nav>
+/* ── GRID ── */
+.enhance-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 2rem 5rem;
+}
+.enhance-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+/* First 3 cards: 2 of 6 columns each = full row */
+.e-card:nth-child(-n+3) { grid-column: span 2; }
+/* Last 2 cards: 3 of 6 columns each = full row */
+.e-card:nth-child(n+4) { grid-column: span 3; }
 
-<div class="hero">
-  <div class="hero-eyebrow">Recipe Enhancer</div>
-  <h1 class="hero-title">You have the recipe.<br>Now understand it.</h1>
-  <p class="hero-sub">Paste a recipe URL from any recipe site. Provenance finds the professional technique entries that explain the why behind every step.</p>
+/* ── CARD ── */
+.e-card {
+  background: var(--bg);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: background 0.2s;
+}
+.e-card:hover { background: rgba(201,168,76,0.02); }
+.e-num {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  color: rgba(201,168,76,0.4);
+  text-transform: uppercase;
+}
+.e-title {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 1.2;
+}
+.e-desc {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--smoke);
+  line-height: 1.7;
+  flex: 1;
+}
+
+/* ── INPUTS ── */
+.e-input-row {
+  display: flex;
+  gap: 0;
+}
+.e-url-input {
+  flex: 1;
+  background: rgba(245,241,233,0.04);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-right: none;
+  border-radius: 3px 0 0 3px;
+  padding: 0.8rem 1rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--cream);
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.e-url-input:focus { border-color: rgba(201,168,76,0.4); }
+.e-url-input::placeholder { color: rgba(245,241,233,0.2); }
+.e-btn {
+  background: var(--gold);
+  border: none;
+  border-radius: 0 3px 3px 0;
+  padding: 0.8rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #08080A;
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.e-btn:hover { opacity: 0.85; }
+.e-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.e-btn-solo {
+  background: none;
+  border: 1px solid rgba(201,168,76,0.22);
+  border-radius: 3px;
+  padding: 0.8rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+.e-btn-solo:hover { background: rgba(201,168,76,0.06); border-color: var(--gold); }
+.e-btn-solo:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* File upload */
+.e-file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.4rem;
+  border: 1px solid rgba(201,168,76,0.22);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+.e-file-label:hover { background: rgba(201,168,76,0.06); border-color: var(--gold); }
+input[type="file"] { display: none; }
+.e-file-chosen {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.05em;
+  color: rgba(245,241,233,0.35);
+  margin-top: 0.4rem;
+}
+
+/* Textarea */
+.e-textarea {
+  width: 100%;
+  background: rgba(245,241,233,0.04);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 3px;
+  padding: 0.8rem 1rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--cream);
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+.e-textarea:focus { border-color: rgba(201,168,76,0.4); }
+.e-textarea::placeholder { color: rgba(245,241,233,0.2); }
+
+/* Error / status messages */
+.e-error {
+  background: rgba(220,60,60,0.08);
+  border: 1px solid rgba(220,60,60,0.2);
+  border-radius: 3px;
+  padding: 0.7rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.05em;
+  color: rgba(245,100,100,0.9);
+}
+.e-status {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  color: rgba(201,168,76,0.5);
+  min-height: 1.2em;
+}
+.e-hint {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.04em;
+  color: rgba(245,241,233,0.2);
+  line-height: 1.6;
+}
+
+/* Scan result */
+.e-result {
+  background: rgba(201,168,76,0.04);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 3px;
+  padding: 1rem;
+  display: none;
+}
+.e-result.show { display: block; }
+.e-result-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+.e-result-body {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--smoke);
+  line-height: 1.6;
+}
+
+/* Write card textarea group */
+.e-write-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+@media (max-width: 680px) {
+  .enhance-grid { grid-template-columns: 1fr; }
+  .enhance-grid .e-card { grid-column: span 1 !important; }
+  .enhance-wrap { padding: 0 1rem 3rem; }
+}
+{% endblock %}
+
+{% block content %}
+
+<div class="enhance-hero">
+  <div class="enhance-eyebrow">Recipe Enhancer</div>
+  <h1 class="enhance-title">You have the recipe.<br>Now understand it.</h1>
+  <p class="enhance-sub">Four ways to add the professional technique intelligence behind any dish.</p>
 </div>
 
-<div class="form-container">
+<div class="enhance-wrap">
+
   {% if error %}
-  <div class="error-msg">{{ error }}</div>
+  <div class="e-error" style="margin-bottom:1.5rem">{{ error }}</div>
   {% endif %}
 
-  <form method="POST" action="/enhance">
-    <div class="input-group">
-      <input
-        type="url"
-        name="url"
-        class="url-input"
-        placeholder="https://cooking.nytimes.com/recipes/..."
-        required
-        autocomplete="off"
-        spellcheck="false"
-      >
-      <button type="submit" class="submit-btn">Enhance →</button>
-    </div>
-  </form>
+  <div class="enhance-grid">
 
-  <p class="hint">Works with any recipe site with structured markup. Paste the URL, we fetch the recipe, you keep the result.</p>
+    <!-- 001 — PASTE A URL -->
+    <div class="e-card">
+      <div class="e-num">001</div>
+      <div class="e-title">Paste a URL</div>
+      <p class="e-desc">Paste any recipe link. We'll fetch it, extract the technique, and build the provenance layer on top.</p>
+      <form method="POST" action="/enhance">
+        <div class="e-input-row">
+          <input
+            type="url"
+            name="url"
+            class="e-url-input"
+            placeholder="https://example.com/recipe..."
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button type="submit" class="e-btn">Enhance →</button>
+        </div>
+      </form>
+      <div class="e-hint">Works with any recipe URL with structured markup.</div>
+    </div>
 
-  <div class="feature-grid">
-    <div class="feature-item">
-      <div class="feature-num">12k+</div>
-      <div class="feature-label">Technique entries across every major cuisine tradition</div>
+    <!-- 002 — SCAN A COOKBOOK -->
+    <div class="e-card">
+      <div class="e-num">002</div>
+      <div class="e-title">Scan a Cookbook</div>
+      <p class="e-desc">Upload a photo of a cookbook page or handwritten recipe card. We'll read it and build the Provenance version.</p>
+      <div>
+        <label class="e-file-label" for="scan-input">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="3" width="11" height="8" rx="1" stroke="#C9A84C" stroke-width="1"/><path d="M4 3V2a1 1 0 011-1h3a1 1 0 011 1v1" stroke="#C9A84C" stroke-width="1"/><circle cx="6.5" cy="7" r="1.8" stroke="#C9A84C" stroke-width="1"/></svg>
+          Choose image
+        </label>
+        <input type="file" id="scan-input" accept="image/*" capture="environment">
+        <div class="e-file-chosen" id="scan-chosen">No file chosen</div>
+      </div>
+      <button class="e-btn-solo" id="scan-btn" disabled onclick="submitScan()">Scan →</button>
+      <div class="e-status" id="scan-status"></div>
+      <div class="e-result" id="scan-result">
+        <div class="e-result-title" id="scan-result-title"></div>
+        <div class="e-result-body" id="scan-result-body"></div>
+      </div>
+      <div class="e-hint">Accepts JPG, PNG, HEIC. Camera or photo library.</div>
     </div>
-    <div class="feature-item">
-      <div class="feature-num">Why</div>
-      <div class="feature-label">Every match links to a "Why It Works" companion page</div>
+
+    <!-- 003 — UPLOAD A PDF -->
+    <div class="e-card">
+      <div class="e-num">003</div>
+      <div class="e-title">Upload a PDF</div>
+      <p class="e-desc">Have a PDF cookbook or recipe collection? Upload it and we'll extract the techniques and build the provenance layer.</p>
+      <div>
+        <label class="e-file-label" for="pdf-input">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 1h5l3 3v8H3V1z" stroke="#C9A84C" stroke-width="1"/><path d="M8 1v3h3" stroke="#C9A84C" stroke-width="1"/><path d="M5 6h3M5 8h3M5 10h2" stroke="#C9A84C" stroke-width="0.8"/></svg>
+          Choose PDF
+        </label>
+        <input type="file" id="pdf-input" accept="application/pdf">
+        <div class="e-file-chosen" id="pdf-chosen">No file chosen</div>
+      </div>
+      <button class="e-btn-solo" id="pdf-btn" disabled onclick="submitPdf()">Upload →</button>
+      <div class="e-status" id="pdf-status"></div>
+      <div class="e-hint">PDF extraction is in active development. Upload to join the queue.</div>
     </div>
-    <div class="feature-item">
-      <div class="feature-num">Pro</div>
-      <div class="feature-label">Professional-depth explanations, not recipe introductions</div>
+
+    <!-- 004 — WRITE FROM SCRATCH -->
+    <div class="e-card">
+      <div class="e-num">004</div>
+      <div class="e-title">Write from Scratch</div>
+      <p class="e-desc">Name the dish and describe what you do. We'll build the canonical version — technique, ingredients, provenance notation.</p>
+      <div class="e-write-group">
+        <input
+          type="text"
+          class="e-url-input"
+          id="write-name"
+          placeholder="Recipe name (e.g. Tonkotsu Ramen)"
+          style="border-right: 1px solid rgba(201,168,76,0.18); border-radius: 3px;"
+        >
+        <textarea
+          class="e-textarea"
+          id="write-method"
+          placeholder="Describe the method, ingredients, and any details you know. Plain language is fine."
+        ></textarea>
+      </div>
+      <button class="e-btn-solo" id="write-btn" onclick="submitWrite()">Create →</button>
+      <div class="e-status" id="write-status"></div>
+      <div class="e-hint">Text enhancement is in active development. Submissions are queued for review.</div>
     </div>
+
+    <!-- 005 — SCAN AN INVOICE -->
+    <div class="e-card" style="border-left: 2px solid rgba(201,168,76,0.18);">
+      <div class="e-num">005</div>
+      <div class="e-title">Scan an Invoice</div>
+      <p class="e-desc">Photograph a supplier invoice. We'll read every line item, extract ingredient prices, and update your recipe costs automatically. No competitor does this.</p>
+      <div>
+        <label class="e-file-label" for="invoice-input">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="3" width="11" height="8" rx="1" stroke="#C9A84C" stroke-width="1"/><path d="M4 3V2a1 1 0 011-1h3a1 1 0 011 1v1" stroke="#C9A84C" stroke-width="1"/><circle cx="6.5" cy="7" r="1.8" stroke="#C9A84C" stroke-width="1"/></svg>
+          Photograph invoice
+        </label>
+        <input type="file" id="invoice-input" accept="image/*" capture="environment">
+        <div class="e-file-chosen" id="invoice-chosen">No file chosen</div>
+      </div>
+      <button class="e-btn-solo" id="invoice-btn" disabled onclick="submitInvoice()">Scan prices →</button>
+      <div class="e-status" id="invoice-status"></div>
+      <div class="e-result" id="invoice-result">
+        <div class="e-result-title" id="invoice-result-title"></div>
+        <div class="e-result-body" id="invoice-result-body"></div>
+      </div>
+      <div class="e-hint">Requires an account. Prices are saved to your ingredient database and applied automatically to recipe costing.</div>
+    </div>
+
   </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
 <script>
-function toggleMobileMenu(){
-  var nav=document.getElementById('mobileNav');
-  var overlay=document.getElementById('mobileNavOverlay');
-  nav.classList.toggle('active');
-  overlay.classList.toggle('active');
-  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
+// ── Scan file picker ──
+document.getElementById('scan-input').addEventListener('change', function() {
+  const f = this.files[0];
+  if (f) {
+    document.getElementById('scan-chosen').textContent = f.name;
+    document.getElementById('scan-btn').disabled = false;
+  }
+});
+
+// ── PDF file picker ──
+document.getElementById('pdf-input').addEventListener('change', function() {
+  const f = this.files[0];
+  if (f) {
+    document.getElementById('pdf-chosen').textContent = f.name;
+    document.getElementById('pdf-btn').disabled = false;
+  }
+});
+
+// ── Scan submit ──
+async function submitScan() {
+  const file = document.getElementById('scan-input').files[0];
+  if (!file) return;
+  const btn = document.getElementById('scan-btn');
+  const status = document.getElementById('scan-status');
+  btn.disabled = true;
+  status.textContent = 'Reading image…';
+  try {
+    const fd = new FormData();
+    fd.append('image0', file);
+    const r = await fetch('/api/scan', { method: 'POST', body: fd });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Scan failed');
+    const title = data.title || 'Recipe extracted';
+    const steps = (data.steps || []).length;
+    const ings = (data.ingredients || []).length;
+    document.getElementById('scan-result-title').textContent = title;
+    document.getElementById('scan-result-body').textContent =
+      `${ings} ingredient${ings !== 1 ? 's' : ''} · ${steps} step${steps !== 1 ? 's' : ''} extracted. Technique matching coming next.`;
+    document.getElementById('scan-result').classList.add('show');
+    status.textContent = 'Scan complete.';
+  } catch(err) {
+    status.textContent = 'Error: ' + err.message;
+    btn.disabled = false;
+  }
+}
+
+// ── PDF submit ──
+function submitPdf() {
+  const btn = document.getElementById('pdf-btn');
+  const status = document.getElementById('pdf-status');
+  btn.disabled = true;
+  status.textContent = 'PDF received. Extraction is in development — we'll process this soon.';
+}
+
+// ── Write submit ──
+function submitWrite() {
+  const name = document.getElementById('write-name').value.trim();
+  const method = document.getElementById('write-method').value.trim();
+  const status = document.getElementById('write-status');
+  if (!name && !method) {
+    status.textContent = 'Please enter a recipe name or method.';
+    return;
+  }
+  document.getElementById('write-btn').disabled = true;
+  status.textContent = 'Received. Write-from-scratch enhancement is in active development — your submission is queued.';
+}
+
+// ── Invoice file picker ──
+document.getElementById('invoice-input').addEventListener('change', function() {
+  const f = this.files[0];
+  if (f) {
+    document.getElementById('invoice-chosen').textContent = f.name;
+    document.getElementById('invoice-btn').disabled = false;
+  }
+});
+
+// ── Invoice scan submit ──
+async function submitInvoice() {
+  const file = document.getElementById('invoice-input').files[0];
+  if (!file) return;
+  const btn = document.getElementById('invoice-btn');
+  const status = document.getElementById('invoice-status');
+  btn.disabled = true;
+  status.textContent = 'Scanning invoice…';
+  try {
+    const fd = new FormData();
+    fd.append('invoice', file);
+    const r = await fetch('/api/costing/scan-invoice', { method: 'POST', body: fd });
+    const data = await r.json();
+    if (r.status === 401) {
+      status.textContent = '';
+      document.getElementById('invoice-result-title').textContent = 'Sign in required';
+      document.getElementById('invoice-result-body').innerHTML = 'Please <a href="/auth/login" style="color:var(--gold)">sign in</a> to use invoice scanning.';
+      document.getElementById('invoice-result').classList.add('show');
+      btn.disabled = false;
+      return;
+    }
+    if (data.error) throw new Error(data.error);
+    const count = (data.items_saved || data.line_items || []).length || data.items_count || 0;
+    document.getElementById('invoice-result-title').textContent = 'Invoice scanned';
+    document.getElementById('invoice-result-body').textContent =
+      `${count} ingredient price${count !== 1 ? 's' : ''} extracted and saved to your database. Recipe costs will update automatically.`;
+    document.getElementById('invoice-result').classList.add('show');
+    status.textContent = 'Done.';
+  } catch(err) {
+    status.textContent = 'Error: ' + err.message;
+    btn.disabled = false;
+  }
 }
 </script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
-
-<div class="about-footer">
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/recipes">Recipes</a>
-    <a href="/techniques/browse">Techniques</a>
-    <a href="/suppliers">Suppliers</a>
-    <a href="/for-professionals">For Professionals</a>
-    <a href="/methodology">Methodology</a>
-    <a href="/pricing">Pricing</a>
-    <a href="mailto:info@provenance.kitchen">Contact</a>
-  </div>
-  <span class="footer-wm">Provenance</span>
-</div>
-</body>
-</html>
+{% endblock %}

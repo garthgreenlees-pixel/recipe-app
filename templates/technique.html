@@ -1,237 +1,205 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ technique.name }} — Provenance Technique Library</title>
-<meta name="description" content="{{ technique.description[:155] if technique.description else '' }}">
+{% extends "technique_base.html" %}
+
+{% block title %}{{ technique.name }} — Provenance Technique Library{% endblock %}
+{% block meta_description %}{{ technique.description[:155] if technique.description else 'Professional culinary technique documentation. Every tradition mapped.' }}{% endblock %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="canonical" href="{{ canonical_url }}">
 <meta property="og:title" content="{{ technique.name }} — Provenance Technique Library">
 <meta property="og:description" content="{{ technique.description[:160] if technique.description else '' }}">
 <meta property="og:type" content="article">
 <meta property="og:url" content="{{ canonical_url }}">
-<meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
-<meta property="og:site_name" content="Provenance">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="{{ technique.name }} — Provenance Technique Library">
-<meta name="twitter:description" content="{{ technique.description[:160] if technique.description|length > 160 else technique.description }}">
+{% if technique.image_url %}<meta property="og:image" content="{{ technique.image_url }}">{% endif %}
+<meta name="twitter:card" content="summary_large_image">
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": {{ technique.name | tojson }},
-  "description": {{ technique.description | tojson }},
+  "description": {{ technique.description | tojson if technique.description else '""' }},
   "step": [
     {% if technique.key_principles %}
-    {
-      "@type": "HowToSection",
-      "name": "Key Principles",
-      "itemListElement": [
-        {% for line in technique.key_principles.split('\n') if line.strip() %}
-        {"@type": "HowToStep", "text": {{ line.strip() | tojson }}}{% if not loop.last %},{% endif %}
-        {% endfor %}
-      ]
-    }{% if technique.pro_tips %},{% endif %}
+    {"@type":"HowToSection","name":"Key Principles","itemListElement":[
+      {% for line in technique.key_principles.split('\n') if line.strip() %}
+      {"@type":"HowToStep","text":{{ line.strip() | tojson }}}{% if not loop.last %},{% endif %}
+      {% endfor %}
+    ]}{% if technique.pro_tips %},{% endif %}
     {% endif %}
     {% if technique.pro_tips %}
-    {
-      "@type": "HowToSection",
-      "name": "Pro Tips",
-      "itemListElement": [
-        {% for line in technique.pro_tips.split('\n') if line.strip() %}
-        {"@type": "HowToStep", "text": {{ line.strip() | tojson }}}{% if not loop.last %},{% endif %}
-        {% endfor %}
-      ]
-    }
+    {"@type":"HowToSection","name":"Pro Tips","itemListElement":[
+      {% for line in technique.pro_tips.split('\n') if line.strip() %}
+      {"@type":"HowToStep","text":{{ line.strip() | tojson }}}{% if not loop.last %},{% endif %}
+      {% endfor %}
+    ]}
     {% endif %}
   ]
 }
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#C9A84C;--gold-light:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
-  --cream:#F5F1E9;--cream-dark:#1A1816;
-  --text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);
-  --border:rgba(201,168,76,0.20);
-  --bg:#08080A;--surface:#131210;
-  --serif:'Cormorant Garamond',Georgia,serif;
-  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-  --mono:'DM Mono',monospace;
-}
-html{-webkit-font-smoothing:antialiased}
-body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
-.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
-.nav-links{display:flex;align-items:center;gap:2rem}
-.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
-.nav-links a:hover{color:#C9A84C}
-.nav-links .nav-active{color:rgba(201,168,76,0.75)}
-.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
-.nav-p:hover{border-color:#C9A84C}
-.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
-.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
-.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
-.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
-.mobile-nav-overlay.active{display:block}
-.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
-.mobile-nav.active{right:0}
-.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
-.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
-.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
-@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
-.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
-.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
-.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
-.footer-links a:hover{color:#C9A84C}
-.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
-.breadcrumb{padding:12px 32px;font-size:13px;color:var(--text-light);border-bottom:1px solid var(--border);background:#08080A}
-.breadcrumb a{color:var(--text-secondary);text-decoration:none}
-.breadcrumb a:hover{color:var(--gold)}
-.breadcrumb span{margin:0 8px;opacity:0.4}
-.container{max-width:860px;margin:0 auto;padding:48px 32px 80px}
-.technique-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.technique-category{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
-.technique-tier{font-family:var(--mono);font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-light);background:var(--cream-dark);padding:3px 8px;border-radius:4px}
-.technique-authority{font-family:var(--mono);font-size:11px;color:var(--text-light)}
-.technique-title{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-1px;margin-bottom:16px}
-.technique-origin{font-size:14px;color:var(--text-secondary);font-weight:300;margin-bottom:32px}
-.section{margin-bottom:36px}
-.section-label{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.section-label::after{content:'';flex:1;height:1px;background:var(--gold-border)}
-.technique-desc{font-size:16px;color:var(--text-secondary);font-weight:300;line-height:1.75;max-width:680px}
-.technique-text{font-size:15px;color:var(--text-secondary);font-weight:300;line-height:1.75;white-space:pre-wrap;max-width:680px}
-.flavour-context{font-size:15px;color:var(--text-secondary);font-style:italic;line-height:1.7;padding:16px 20px;border-left:3px solid var(--gold-border);background:var(--gold-bg);border-radius:0 6px 6px 0;max-width:620px}
-.related-list{display:flex;flex-wrap:wrap;gap:8px}
-.related-tag{font-family:var(--mono);font-size:12px;color:var(--text-secondary);background:rgba(201,168,76,0.06);border:1px solid var(--border);padding:4px 12px;border-radius:20px;text-decoration:none;transition:all 0.15s}
-.related-tag:hover{color:var(--gold);border-color:var(--gold-border);background:var(--gold-bg)}
-.source-book{font-size:13px;color:var(--text-light);font-style:italic}
-.cross-cuisine-tag{font-family:var(--mono);font-size:11px;color:var(--text-secondary);background:rgba(255,255,255,0.05);padding:3px 10px;border-radius:4px;display:inline-block;margin:2px}
-.parallels-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
-.parallels-item{font-size:14px;color:var(--text-secondary);line-height:1.65;padding-left:16px;position:relative}
-.parallels-item::before{content:'—';position:absolute;left:0;color:var(--gold,#8B6914);font-size:12px;top:2px}
-@media(max-width:640px){
-  .container{padding:32px 16px 60px}
-  .breadcrumb{padding:10px 16px}
-}
 
-/* ── TECHNIQUE HERO IMAGE ── */
-.tech-hero{position:relative;height:380px;overflow:hidden}
-.tech-hero img{width:100%;height:100%;object-fit:cover;display:block}
-.tech-hero-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(8,8,10,0.15) 0%,rgba(8,8,10,0.55) 60%,rgba(8,8,10,0.97) 100%);
+{% if technique.flavour_context or technique.common_mistakes or technique.species_precision %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% set _faq_sep = namespace(first=true) %}
+    {% if technique.flavour_context %}
+    {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
+    {"@type":"Question","name":{{ ("Why does " + technique.name + " taste the way it does?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ technique.flavour_context[:500] | tojson }}}}
+    {% endif %}
+    {% if technique.common_mistakes %}
+    {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
+    {"@type":"Question","name":{{ ("What are common mistakes when making " + technique.name + "?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ technique.common_mistakes[:500] | tojson }}}}
+    {% endif %}
+    {% if technique.species_precision %}
+    {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
+    {"@type":"Question","name":{{ ("What ingredients should I use for " + technique.name + "?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ technique.species_precision[:500] | tojson }}}}
+    {% endif %}
+  ]
 }
-@media(max-width:640px){.tech-hero{height:240px}}
-
-/* ── STICKY BOTTOM BAR ── */
-body{padding-bottom:60px}
-.tech-bar{
-  position:fixed;bottom:0;left:0;right:0;z-index:500;
-  height:52px;display:flex;align-items:center;
-  background:rgba(8,8,10,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-top:1px solid rgba(201,168,76,0.12);
-}
-.tech-bar-btn{
-  flex:1;height:100%;display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:0.5rem;letter-spacing:0.18em;text-transform:uppercase;
-  color:rgba(245,241,233,0.45);background:none;border:none;
-  border-right:1px solid rgba(201,168,76,0.07);
-  cursor:pointer;text-decoration:none;transition:color 0.2s,background 0.2s;
-}
-.tech-bar-btn:last-child{border-right:none}
-.tech-bar-btn:hover,.tech-bar-btn.active{color:var(--gold);background:rgba(201,168,76,0.04)}
-
-/* ── SLIDE-UP PANELS ── */
-.tech-panel{
-  position:fixed;bottom:52px;left:0;right:0;z-index:499;
-  background:#0D0C0A;border-top:1px solid rgba(201,168,76,0.14);
-  max-height:55vh;overflow-y:auto;
-  transform:translateY(102%);transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
-}
-.tech-panel.open{transform:translateY(0)}
-.tech-panel-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0.85rem 1.5rem;border-bottom:1px solid rgba(201,168,76,0.07);
-  position:sticky;top:0;background:#0D0C0A;z-index:1;
-}
-.tech-panel-title{
-  font-family:var(--mono);font-size:0.5rem;letter-spacing:0.22em;
-  text-transform:uppercase;color:var(--gold);
-}
-.tech-panel-close{
-  background:none;border:none;color:rgba(245,241,233,0.3);
-  cursor:pointer;font-size:1.1rem;padding:0;line-height:1;
-  transition:color 0.2s;
-}
-.tech-panel-close:hover{color:var(--cream)}
-.tech-panel-body{
-  padding:1.5rem;
-  font-family:var(--sans);font-weight:300;font-size:0.85rem;
-  color:rgba(245,241,233,0.62);line-height:1.75;
-  white-space:pre-wrap;min-height:100px;
-}
-.panel-prompt{
-  display:flex;flex-direction:column;align-items:flex-start;gap:0.75rem;
-}
-.panel-generate-btn{
-  display:inline-flex;align-items:center;gap:0.5rem;
-  padding:0.65rem 1.5rem;
-  border:1px solid rgba(201,168,76,0.22);border-radius:3px;
-  background:none;color:var(--gold);
-  font-family:var(--mono);font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;
-  cursor:pointer;transition:all 0.2s;
-}
-.panel-generate-btn:hover{background:rgba(201,168,76,0.08);border-color:var(--gold)}
-.panel-generate-btn:disabled{opacity:0.35;cursor:not-allowed}
-.panel-hint{
-  font-family:var(--mono);font-size:0.5rem;letter-spacing:0.05em;
-  color:rgba(245,241,233,0.22);
-}
-.panel-loading{
-  display:inline-flex;align-items:center;gap:0.6rem;
-  font-family:var(--mono);font-size:0.55rem;letter-spacing:0.1em;
-  color:rgba(201,168,76,0.5);
-}
-.panel-loading::before{
-  content:'';width:13px;height:13px;
-  border:1px solid rgba(201,168,76,0.25);border-top-color:var(--gold);
-  border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.panel-allergens{
-  margin-top:1rem;padding:0.75rem 1rem;
-  border:1px solid rgba(201,168,76,0.08);border-radius:4px;
-  font-family:var(--mono);font-size:0.5rem;letter-spacing:0.08em;
-  color:rgba(245,241,233,0.35);
-}
-.panel-allergen-tag{
-  display:inline-block;margin:0.15rem 0.3rem 0.15rem 0;
-  padding:0.15rem 0.5rem;background:rgba(220,80,60,0.08);
-  border:1px solid rgba(220,80,60,0.2);border-radius:3px;
-  color:rgba(220,130,100,0.7);font-size:0.5rem;letter-spacing:0.06em;
-}
-</style>
-<!-- Google Analytics GA4 — replace G-4G21HCX2D0 with your Measurement ID from analytics.google.com -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-4G21HCX2D0');
 </script>
-<!-- PWA -->
-<link rel="manifest" href="/static/manifest.json">
-<meta name="theme-color" content="#08080A">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Provenance">
-<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-</head>
-<body>
+{% endif %}
+
+{% if technique_pairings_editorial or technique_pairings_partial %}
+{% set _all_bp = technique_pairings_editorial + technique_pairings_partial %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": {{ technique.name | tojson }},
+  "suggestedBeverage": [
+    {% for p in _all_bp if p.product_name %}
+    {% if not loop.first %},{% endif %}
+    {
+      "@type": "BeveragePairing",
+      "name": {{ p.product_name | tojson }}
+      {% if p.producer_name %},"producer": {{ p.producer_name | tojson }}{% endif %}
+      {% if p.pairing_type %},"pairingType": {{ p.pairing_type | tojson }}{% endif %}
+      {% if p.pairing_rationale %},"description": {{ p.pairing_rationale | tojson }}{% endif %}
+      {% if p.product_slug %},"url": {{ ("https://provenance.kitchen/beverage/" + p.product_slug) | tojson }}{% endif %}
+    }
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+/* ── TECHNIQUE PAGE — unique styles ── */
+:root {
+  --gold-bg: rgba(201,168,76,0.08);
+  --gold-border: rgba(201,168,76,0.20);
+  --text: #F5F1E9;
+  --text-secondary: rgba(245,241,233,0.70);
+  --text-light: rgba(245,241,233,0.45);
+  --surface: #131210;
+  --serif-alt: 'Cormorant Garamond', Georgia, serif;
+}
+
+.breadcrumb { padding: 12px 32px; font-size: 13px; color: var(--text-light); border-bottom: 1px solid var(--gold-border); background: var(--bg); }
+.breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb span { margin: 0 8px; opacity: 0.4; }
+.container { max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
+
+/* Technique header */
+.technique-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.technique-category { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+.technique-tier { font-family: var(--mono); font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-light); background: #1A1816; padding: 3px 8px; border-radius: 4px; }
+.technique-authority { font-family: var(--mono); font-size: 11px; color: var(--text-light); }
+.technique-title { font-family: var(--serif-alt); font-size: clamp(28px,4vw,44px); font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; color: var(--text); }
+.technique-origin { font-size: 14px; color: var(--text-secondary); font-weight: 300; margin-bottom: 32px; font-style: italic; }
+
+/* Sections */
+.section { margin-bottom: 36px; }
+.section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--gold-border); }
+.technique-desc { font-size: 16px; color: var(--text-secondary); font-weight: 300; line-height: 1.75; max-width: 680px; }
+.technique-text { font-size: 15px; color: var(--text-secondary); font-weight: 300; line-height: 1.75; white-space: pre-wrap; max-width: 680px; }
+.flavour-context { font-size: 15px; color: var(--text-secondary); font-style: italic; line-height: 1.7; padding: 16px 20px; border-left: 3px solid var(--gold-border); background: var(--gold-bg); border-radius: 0 6px 6px 0; max-width: 620px; }
+.related-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.related-tag { font-family: var(--mono); font-size: 12px; color: var(--text-secondary); background: rgba(201,168,76,0.06); border: 1px solid var(--gold-border); padding: 4px 12px; border-radius: 20px; text-decoration: none; transition: all 0.15s; }
+.related-tag:hover { color: var(--gold); border-color: var(--gold-border); background: var(--gold-bg); }
+.source-book { font-size: 13px; color: var(--text-light); font-style: italic; }
+.parallels-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.parallels-item { font-size: 14px; color: var(--text-secondary); line-height: 1.65; padding-left: 16px; position: relative; }
+.parallels-item::before { content: '—'; position: absolute; left: 0; color: var(--gold); font-size: 12px; top: 2px; }
+
+/* Hero image */
+.tech-hero { position: relative; height: 380px; overflow: hidden; }
+.tech-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tech-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,9,0.15) 0%, rgba(10,10,9,0.55) 60%, rgba(10,10,9,0.97) 100%); }
+
+/* Related section */
+.related-section { background: #0E0D0B; border-top: 1px solid var(--gold-border); padding: 48px 32px 64px; margin-top: 0; }
+.related-section-inner { max-width: 860px; margin: 0 auto; }
+.related-cuisine-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 8px; }
+.related-cuisine-label { font-family: var(--serif-alt); font-size: 22px; font-weight: 600; color: var(--text); }
+.related-cuisine-link { font-size: 13px; color: var(--gold); text-decoration: none; font-weight: 400; border-bottom: 1px solid var(--gold-border); padding-bottom: 1px; transition: border-color 0.15s; }
+.related-cuisine-link:hover { border-color: var(--gold); }
+.related-section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.related-section-label::after { content: ''; flex: 1; height: 1px; background: var(--gold-border); }
+.related-cards { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 12px; margin-bottom: 40px; }
+.related-card { background: #131210; border: 1px solid rgba(201,168,76,0.12); border-radius: 8px; padding: 18px 18px 14px; text-decoration: none; color: var(--text); transition: all 0.18s; display: block; }
+.related-card:hover { border-color: var(--gold-border); box-shadow: 0 4px 16px rgba(201,168,76,0.08); }
+.related-card-cat { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.related-card-name { font-family: var(--serif-alt); font-size: 17px; font-weight: 600; margin-bottom: 6px; line-height: 1.2; }
+.related-card:hover .related-card-name { color: var(--gold); }
+.related-card-desc { font-size: 12px; color: var(--text-secondary); font-weight: 300; line-height: 1.5; margin-bottom: 10px; }
+.related-card-arrow { font-size: 14px; color: var(--text-light); display: block; }
+.related-card:hover .related-card-arrow { color: var(--gold); }
+.pairing-suggestion { background: #131210; border: 1px solid rgba(201,168,76,0.12); border-radius: 8px; padding: 20px 24px; border-left: 3px solid var(--gold-border); }
+.pairing-suggestion-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.pairing-suggestion-text { font-size: 14px; color: var(--text-secondary); font-style: italic; line-height: 1.65; margin-bottom: 12px; }
+.pairing-suggestion-link { font-size: 13px; color: var(--gold); text-decoration: none; }
+.pairing-suggestion-link:hover { text-decoration: underline; }
+
+/* Technique–Beverage Pairings */
+.tbp-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px; }
+.tbp-item { display: flex; flex-direction: column; gap: 5px; }
+
+/* Editorial / reviewed pairings — full gold underline matching ingredient pattern */
+.tbp-link {
+  display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 6px;
+  text-decoration: none; color: var(--text-secondary);
+  border-bottom: 1px solid #C9A84C; padding-bottom: 1px;
+  transition: border-color 0.15s, color 0.15s; width: fit-content;
+}
+.tbp-link:hover { border-bottom-color: #E8C97A; color: var(--text); }
+
+/* Partial pairings — muted gold, italic */
+.tbp-link--partial { border-bottom-color: #8A7A4A; color: rgba(245,241,233,0.55); }
+.tbp-link--partial:hover { border-bottom-color: #B8A46A; color: var(--text-secondary); }
+
+.tbp-producer { font-size: 14px; font-weight: 400; }
+.tbp-wine     { font-size: 14px; font-style: italic; }
+.tbp-badge {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.8px;
+  text-transform: uppercase; color: rgba(201,168,76,0.55);
+  padding: 2px 6px; border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 3px; font-style: normal; white-space: nowrap;
+}
+.tbp-rationale {
+  font-size: 13px; color: var(--text-light); font-style: italic;
+  line-height: 1.65; margin: 0; padding-left: 2px; max-width: 580px;
+}
+.tbp-rationale--partial { opacity: 0.65; }
+.tbp-unverified { font-size: 11px; opacity: 0.45; font-style: normal; margin-left: 5px; }
+
+@media (max-width: 640px) {
+  .container { padding: 32px 16px 60px; }
+  .breadcrumb { padding: 10px 16px; }
+  .tech-hero { height: 240px; }
+  .related-section { padding: 36px 16px 48px; }
+  .related-cards { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% block content %}
 {% set house_ns = namespace(tier=none) %}
 {% if technique.quality_hierarchy %}
   {% for _qh in technique.quality_hierarchy %}
@@ -240,43 +208,6 @@ body{padding-bottom:60px}
     {% endif %}
   {% endfor %}
 {% endif %}
-
-<nav class="nav">
-  <a href="/" class="nav-wordmark">Provenance</a>
-  <div class="nav-links">
-    <a href="/recipes">Recipes</a>
-    <a href="/drinks">Drinks</a>
-    <a href="/cuisines">Cuisines</a>
-    <a href="/techniques/browse" class="nav-active">Techniques</a>
-    <a href="/about">About</a>
-    <a href="/suppliers">Suppliers</a>
-    {% if is_authenticated %}
-    <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
-    {% else %}
-    <a href="/auth/login">Sign In</a>
-    {% endif %}
-  </div>
-  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
-<nav class="mobile-nav" id="mobileNav">
-  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
-  <a href="/recipes">Recipes</a>
-  <a href="/drinks">Drinks</a>
-  <a href="/cuisines">Cuisines</a>
-  <a href="/techniques/browse">Techniques</a>
-  {% if is_authenticated %}
-  <a href="/auth/account">{{ current_user.display_name or 'Account' }}</a>
-  <a href="/auth/logout" class="mobile-nav-secondary">Sign Out</a>
-  {% else %}
-  <a href="/auth/login">Sign In</a>
-  <a href="/auth/signup" class="mobile-nav-secondary">Create Account</a>
-  {% endif %}
-  <a href="/about" class="mobile-nav-secondary">About</a>
-  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
-</nav>
 
 {% if technique.image_url %}
 <div class="tech-hero">
@@ -319,6 +250,53 @@ body{padding-bottom:60px}
   </div>
   {% endif %}
 
+  {# ── TECHNIQUE–BEVERAGE PAIRINGS ───────────────────────────────��─────────── #}
+  {% if technique_pairings_editorial or technique_pairings_partial %}
+  <div class="section" id="technique-beverage-pairings">
+    <div class="section-label">Wine &amp; Beverage Pairings</div>
+    <ul class="tbp-list">
+
+      {# Editorial + reviewed — full gold underline #}
+      {% for p in technique_pairings_editorial %}
+      <li class="tbp-item">
+        {% if p.product_slug %}
+        <a href="/beverage/{{ p.product_slug }}" class="tbp-link">
+        {% else %}
+        <span class="tbp-link" style="cursor:default;pointer-events:none">
+        {% endif %}
+          {% if p.producer_name %}<span class="tbp-producer">{{ p.producer_name }}</span>{% endif %}
+          {% if p.product_name %}<span class="tbp-wine">{{ p.product_name }}</span>{% endif %}
+          <span class="tbp-badge">{{ p.pairing_type | replace('_',' ') }}</span>
+        {% if p.product_slug %}</a>{% else %}</span>{% endif %}
+        {% if p.pairing_rationale %}
+        <p class="tbp-rationale">{{ p.pairing_rationale }}</p>
+        {% endif %}
+      </li>
+      {% endfor %}
+
+      {# Partial (auto-inferred) — muted italic with (unverified) flag; cap at 8 #}
+      {% for p in technique_pairings_partial[:8] %}
+      <li class="tbp-item">
+        {% if p.product_slug %}
+        <a href="/beverage/{{ p.product_slug }}" class="tbp-link tbp-link--partial">
+        {% else %}
+        <span class="tbp-link tbp-link--partial" style="cursor:default;pointer-events:none">
+        {% endif %}
+          {% if p.producer_name %}<span class="tbp-producer">{{ p.producer_name }}</span>{% endif %}
+          {% if p.product_name %}<span class="tbp-wine">{{ p.product_name }}</span>{% endif %}
+          <span class="tbp-badge">{{ p.pairing_type | replace('_',' ') }}</span>
+        {% if p.product_slug %}</a>{% else %}</span>{% endif %}
+        {% if p.pairing_rationale %}
+        <p class="tbp-rationale tbp-rationale--partial">{{ p.pairing_rationale }}<span class="tbp-unverified">(unverified)</span></p>
+        {% endif %}
+      </li>
+      {% endfor %}
+
+    </ul>
+  </div>
+  {% endif %}
+  {# Total=0: no section rendered — existing Beverage Pairing Note in related section serves as fallback #}
+
   {% if technique.key_principles %}
   <div class="section">
     <div class="section-label">Key Principles</div>
@@ -352,7 +330,15 @@ body{padding-bottom:60px}
     <div class="section-label">Cross-Cuisine Parallels</div>
     <ul class="parallels-list">
       {% for item in technique.cross_cuisine_parallels %}
-      <li class="parallels-item">{{ item | linkify_cuisines }}</li>
+        {% if item is mapping %}
+          <li class="parallels-item">
+            {% if item.connection %}{{ item.connection | linkify_cuisines }}{% endif %}
+            {% if item.technique %} → <a href="/technique/{{ item.technique | lower }}" class="related-tag">{{ item.technique }}</a>{% endif %}
+            {% if item.cuisine %} <span class="cuisine-tag">{{ item.cuisine }}</span>{% endif %}
+          </li>
+        {% else %}
+          <li class="parallels-item">{{ item | linkify_cuisines }}</li>
+        {% endif %}
       {% endfor %}
     </ul>
   </div>
@@ -363,13 +349,19 @@ body{padding-bottom:60px}
     <div class="section-label">Related Techniques</div>
     <div class="related-list">
       {% for item in technique.related_techniques %}
-      <span class="related-tag">{{ item }}</span>
+        {% if item is mapping %}
+          {% if item.entry_id %}
+            <a href="/technique/{{ item.entry_id | lower }}" class="related-tag">{{ item.entry_id }}</a>
+          {% endif %}
+        {% else %}
+          <span class="related-tag">{{ item }}</span>
+        {% endif %}
       {% endfor %}
     </div>
   </div>
   {% endif %}
 
-  {# ── Door 1: Kitchen — quality hierarchy, sensory tests, species precision ── #}
+  {# ── Kitchen tier: quality hierarchy, sensory tests, species precision ── #}
   {% if user_tier != 'free' %}
 
     {% if technique.quality_hierarchy %}
@@ -416,6 +408,13 @@ body{padding-bottom:60px}
     </div>
     {% endif %}
 
+    {% if technique.lives_or_dies %}
+    <div class="section">
+      <div class="section-label">Where the Dish Lives or Dies</div>
+      <p class="technique-text">{{ technique.lives_or_dies }}</p>
+    </div>
+    {% endif %}
+
     {% if technique.species_precision %}
     <div class="section">
       <div class="section-label">Species Precision</div>
@@ -423,18 +422,38 @@ body{padding-bottom:60px}
     </div>
     {% endif %}
 
+    {# ── Pat's Rule — ingredient list (gold underline, links to /suppliers) ── #}
+    {% if technique_ingredients %}
+    <div class="section">
+      <div class="section-label">Ingredient Standards</div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+        {% for ing in technique_ingredients %}
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;align-items:baseline;gap:10px">
+          <a href="/suppliers?ingredient={{ ing.ingredient_name | urlencode }}&region={{ user_region | urlencode }}"
+             style="color:var(--text-secondary);text-decoration:none;border-bottom:1px solid #C9A84C">{{ ing.ingredient_name }}</a>
+          {% if ing.origin_brand %}
+          <span style="font-size:12px;color:var(--text-light);font-style:italic">{{ ing.origin_brand }}</span>
+          {% endif %}
+          {% if ing.tier %}
+          <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:rgba(201,168,76,0.5)">{{ ing.tier }}</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
   {% else %}
 
-    {# Frosted glass gate #}
     {% if technique.quality_hierarchy or technique.sensory_tests or technique.species_precision %}
     <div style="position:relative;margin-top:2.5rem;padding:2rem;border:1px solid rgba(201,168,76,0.08);border-radius:8px;background:rgba(245,241,233,0.02)">
       <div style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:rgba(201,168,76,0.35);text-transform:uppercase;margin-bottom:1rem">
-        Quality Hierarchy · Sensory Tests · Species Precision
+        Quality Hierarchy · Sensory Tests · Species Precision · Ingredient Standards
       </div>
       <p style="font-size:0.85rem;color:rgba(245,241,233,0.4);line-height:1.6;margin-bottom:1.5rem">
-        The complete technique entry — including what separates Reserve from House, the sensory cues that tell you when it's right, and the exact ingredients at species precision.
+        The complete technique entry — including what separates Reserve from House, the sensory cues that tell you when it's right, the exact ingredients at species precision, and verified suppliers filtered to your region.
       </p>
-      <a href="/subscribe/kitchen" style="display:inline-block;padding:8px 20px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:4px;color:#C9A84C;font-family:'DM Sans',sans-serif;font-size:0.8rem;text-decoration:none;letter-spacing:0.05em">
+      <a href="/subscribe/kitchen" style="display:inline-block;padding:8px 20px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:4px;color:#C9A84C;font-family:var(--sans);font-size:0.8rem;text-decoration:none;letter-spacing:0.05em">
         Open The Kitchen — $4.99/month
       </a>
     </div>
@@ -445,14 +464,12 @@ body{padding-bottom:60px}
   {% if technique.flavour_context or technique.common_mistakes or technique.species_precision %}
   <section style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08)">
     <h3 style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:rgba(245,241,233,0.35);text-transform:uppercase;margin-bottom:1.5rem">Common Questions</h3>
-
     {% if technique.flavour_context %}
     <details style="margin-bottom:1rem">
       <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">Why does {{ technique.name }} taste the way it does?</summary>
       <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.flavour_context[:400] }}</p>
     </details>
     {% endif %}
-
     {% if house_ns.tier %}
     <details style="margin-bottom:1rem">
       <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What are common mistakes when making {{ technique.name }}?</summary>
@@ -464,14 +481,12 @@ body{padding-bottom:60px}
       <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.common_mistakes[:400] }}</p>
     </details>
     {% endif %}
-
     {% if technique.species_precision %}
     <details style="margin-bottom:1rem">
       <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What ingredients should I use for {{ technique.name }}?</summary>
       <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.species_precision[:400] }}</p>
     </details>
     {% endif %}
-
     {% if technique.cross_cuisine_parallels and technique.cross_cuisine_parallels|length > 0 %}
     <details style="margin-bottom:1rem">
       <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What dishes are similar to {{ technique.name }}?</summary>
@@ -483,17 +498,16 @@ body{padding-bottom:60px}
 
 </div>
 
+{# ── RELATED SECTION ── #}
 {% if related_techniques or technique.origin %}
 <div class="related-section">
   <div class="related-section-inner">
-
     {% if technique.origin %}
     <div class="related-cuisine-bar">
       <span class="related-cuisine-label">{{ technique.origin }} Cuisine</span>
       <a href="/techniques/browse?cuisine={{ technique.origin | urlencode }}" class="related-cuisine-link">Browse all {{ technique.origin }} techniques →</a>
     </div>
     {% endif %}
-
     {% if related_techniques %}
     <div class="related-section-label">More from {{ technique.origin or 'this cuisine' }}</div>
     <div class="related-cards">
@@ -509,151 +523,38 @@ body{padding-bottom:60px}
       {% endfor %}
     </div>
     {% endif %}
-
-    {% if technique.flavour_context %}
+    {% if technique.flavour_context and not (technique_pairings_editorial or technique_pairings_partial) %}
     <div class="pairing-suggestion">
       <div class="pairing-suggestion-label">Beverage Pairing Note</div>
       <p class="pairing-suggestion-text">{{ technique.flavour_context }}</p>
       <a href="/beverage" class="pairing-suggestion-link">Explore beverage terroir →</a>
     </div>
     {% endif %}
-
   </div>
 </div>
 {% endif %}
 
-<style>
-.related-section{
-  background:#0E0D0B;border-top:1px solid var(--border);
-  padding:48px 32px 64px;margin-top:0;
-}
-.related-section-inner{max-width:860px;margin:0 auto}
-.related-cuisine-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:28px;flex-wrap:wrap;gap:8px;
-}
-.related-cuisine-label{
-  font-family:var(--serif);font-size:22px;font-weight:600;color:var(--text);
-}
-.related-cuisine-link{
-  font-size:13px;color:var(--gold);text-decoration:none;font-weight:400;
-  border-bottom:1px solid var(--gold-border);padding-bottom:1px;transition:border-color 0.15s;
-}
-.related-cuisine-link:hover{border-color:var(--gold)}
-.related-section-label{
-  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px;
-}
-.related-section-label::after{content:'';flex:1;height:1px;background:var(--gold-border)}
-.related-cards{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;
-  margin-bottom:40px;
-}
-.related-card{
-  background:#131210;border:1px solid rgba(201,168,76,0.12);border-radius:8px;
-  padding:18px 18px 14px;text-decoration:none;color:var(--text);
-  transition:all 0.18s;display:block;
-}
-.related-card:hover{border-color:var(--gold-border);box-shadow:0 4px 16px rgba(201,168,76,0.08)}
-.related-card-cat{
-  font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
-  color:var(--gold);margin-bottom:6px;
-}
-.related-card-name{
-  font-family:var(--serif);font-size:17px;font-weight:600;margin-bottom:6px;line-height:1.2;
-}
-.related-card:hover .related-card-name{color:var(--gold)}
-.related-card-desc{
-  font-size:12px;color:var(--text-secondary);font-weight:300;line-height:1.5;margin-bottom:10px;
-}
-.related-card-arrow{font-size:14px;color:var(--text-light);display:block}
-.related-card:hover .related-card-arrow{color:var(--gold)}
-.pairing-suggestion{
-  background:#131210;border:1px solid rgba(201,168,76,0.12);border-radius:8px;
-  padding:20px 24px;border-left:3px solid var(--gold-border);
-}
-.pairing-suggestion-label{
-  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--gold);margin-bottom:8px;
-}
-.pairing-suggestion-text{
-  font-size:14px;color:var(--text-secondary);font-style:italic;line-height:1.65;margin-bottom:12px;
-}
-.pairing-suggestion-link{
-  font-size:13px;color:var(--gold);text-decoration:none;font-weight:400;
-}
-.pairing-suggestion-link:hover{text-decoration:underline}
-@media(max-width:640px){
-  .related-section{padding:36px 16px 48px}
-  .related-cards{grid-template-columns:1fr}
-}
-</style>
-
-<script>
-function toggleMobileMenu(){
-  var nav=document.getElementById('mobileNav');
-  var overlay=document.getElementById('mobileNavOverlay');
-  nav.classList.toggle('active');
-  overlay.classList.toggle('active');
-  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
-}
-</script>
-
-<div class="about-footer">
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/recipes">Recipes</a>
-    <a href="/techniques/browse">Techniques</a>
-    <a href="/suppliers">Suppliers</a>
-    <a href="/for-professionals">For Professionals</a>
-    <a href="/methodology">Methodology</a>
-    <a href="/auth/account">My Kitchen</a>
-    <a href="mailto:info@provenance.kitchen">Contact</a>
+{# ── HACCP SLIDE PANEL — opened by technique_base.html bottom bar ── #}
+<div class="slide-panel" id="tech-panel-haccp">
+  <div class="slide-panel-header">
+    <span class="slide-panel-title">Food Safety / HACCP — {{ technique.name }}</span>
+    <button class="slide-panel-close" onclick="toggleTechPanel('haccp')">✕</button>
   </div>
-  <span class="footer-wm">Provenance</span>
+  <div class="slide-panel-body" id="haccp-body" data-recipe-slug="{{ technique.slug }}">
+    <div class="panel-prompt">
+      <div class="panel-hint">Generates a structured HACCP brief with CCPs, decision trees, allergen flags, and Codex CXC 1-1969 sign-off.</div>
+      <button class="panel-generate-btn" id="haccp-btn" onclick="generateHACCP()">Generate HACCP Brief</button>
+    </div>
+  </div>
 </div>
 
-{% if technique.flavour_context or technique.common_mistakes or technique.species_precision %}
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {% set _faq_sep = namespace(first=true) %}
-        {% if technique.flavour_context %}
-        {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
-        {"@type":"Question","name":{{ ("Why does " + technique.name + " taste the way it does?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ technique.flavour_context[:500] | tojson }}}}
-        {% endif %}
-        {% if house_ns.tier %}
-        {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
-        {"@type":"Question","name":{{ ("What are common mistakes when making " + technique.name + "?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ house_ns.tier.get('criteria', '')[:500] | tojson }}}}
-        {% elif technique.common_mistakes %}
-        {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
-        {"@type":"Question","name":{{ ("What are common mistakes when making " + technique.name + "?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ technique.common_mistakes[:500] | tojson }}}}
-        {% endif %}
-        {% if technique.species_precision %}
-        {% if not _faq_sep.first %},{% endif %}{% set _faq_sep.first = false %}
-        {"@type":"Question","name":{{ ("What ingredients should I use for " + technique.name + "?") | tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ technique.species_precision[:500] | tojson }}}}
-        {% endif %}
-    ]
-}
-</script>
-{% endif %}
-
-<!-- ── STICKY BOTTOM BAR ── -->
-<div class="tech-bar">
-  <a href="/auth/account" class="tech-bar-btn">← My Kitchen</a>
-  <button class="tech-bar-btn" id="btn-notes" onclick="togglePanel('notes')">Kitchen Notes</button>
-  <button class="tech-bar-btn" id="btn-haccp" onclick="togglePanel('haccp')">Food Safety / HACCP</button>
-</div>
-
-<!-- Kitchen Notes panel -->
-<div class="tech-panel" id="panel-notes">
-  <div class="tech-panel-header">
-    <span class="tech-panel-title">Kitchen Notes — {{ technique.name }}</span>
-    <button class="tech-panel-close" onclick="togglePanel('notes')">✕</button>
+{# ── KITCHEN NOTES SLIDE PANEL ── #}
+<div class="slide-panel" id="tech-panel-notes">
+  <div class="slide-panel-header">
+    <span class="slide-panel-title">Kitchen Notes — {{ technique.name }}</span>
+    <button class="slide-panel-close" onclick="toggleTechPanel('notes')">✕</button>
   </div>
-  <div class="tech-panel-body" id="notes-body">
+  <div class="slide-panel-body" id="notes-body">
     <div class="panel-prompt">
       <div class="panel-hint">Generates a laminated-pass-style reference card for your kitchen team.</div>
       <button class="panel-generate-btn" id="notes-btn" onclick="generateNotes()">Generate Kitchen Notes</button>
@@ -661,24 +562,31 @@ function toggleMobileMenu(){
   </div>
 </div>
 
-<!-- HACCP panel -->
-<div class="tech-panel" id="panel-haccp">
-  <div class="tech-panel-header">
-    <span class="tech-panel-title">Food Safety / HACCP — {{ technique.name }}</span>
-    <button class="tech-panel-close" onclick="togglePanel('haccp')">✕</button>
+{# ── RECIPE COSTING SLIDE PANEL ── #}
+<div class="slide-panel" id="tech-panel-costing">
+  <div class="slide-panel-header">
+    <span class="slide-panel-title">Recipe Costing — {{ technique.name }}</span>
+    <button class="slide-panel-close" onclick="toggleTechPanel('costing')">✕</button>
   </div>
-  <div class="tech-panel-body" id="haccp-body">
+  <div class="slide-panel-body" id="costing-body">
     <div class="panel-prompt">
-      <div class="panel-hint">Generates a professional HACCP brief with CCPs, temperature targets, and allergen flags.</div>
-      <button class="panel-generate-btn" id="haccp-btn" onclick="generateHACCP()">Generate HACCP Brief</button>
+      <div class="panel-hint">Calculates ingredient costs from your on-file supplier prices.</div>
+      <button class="panel-generate-btn" id="costing-btn" onclick="loadCosting()">Load Cost Breakdown</button>
     </div>
   </div>
 </div>
 
+{# Hidden file input for invoice scanning — off-screen (not display:none, for iOS compat) #}
+<input type="file" id="costing-invoice-input" accept="image/jpeg,image/png,image/gif,image/webp,image/*" style="opacity:0;position:absolute;top:-9999px;left:-9999px;width:1px;height:1px">
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
 <script>
 // ── Technique data for API calls ──
 const TDATA = {
   title: {{ technique.name | tojson }},
+  slug: {{ technique.slug | tojson }},
   description: {{ (technique.description or '') | tojson }},
   key_principles: {{ (technique.key_principles or '') | tojson }},
   species_precision: {{ (technique.species_precision or '') | tojson }},
@@ -697,21 +605,6 @@ function buildPayload() {
   return { title: TDATA.title, ingredients, method_steps: steps };
 }
 
-// ── Panel toggle ──
-let activePanel = null;
-function togglePanel(id) {
-  const panel = document.getElementById('panel-' + id);
-  const btn = document.getElementById('btn-' + id);
-  if (activePanel && activePanel !== id) {
-    document.getElementById('panel-' + activePanel).classList.remove('open');
-    document.getElementById('btn-' + activePanel).classList.remove('active');
-  }
-  const isOpen = panel.classList.contains('open');
-  panel.classList.toggle('open');
-  btn.classList.toggle('active', !isOpen);
-  activePanel = !isOpen ? id : null;
-}
-
 // ── Kitchen Notes ──
 let notesGenerated = false;
 async function generateNotes() {
@@ -719,7 +612,10 @@ async function generateNotes() {
   const body = document.getElementById('notes-body');
   const btn = document.getElementById('notes-btn');
   btn.disabled = true;
-  body.innerHTML = '<span class="panel-loading">Generating kitchen notes…</span>';
+  body.innerHTML = '';
+  ProvenanceProcessing.show({
+    messages: ['Reviewing the technique…', 'Marking the safety notes…', 'Setting the card…']
+  });
   try {
     const res = await fetch('/api/kitchen-notes', {
       method: 'POST',
@@ -733,73 +629,528 @@ async function generateNotes() {
   } catch(e) {
     body.innerHTML = '<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">Could not generate notes. Try again.</span>';
     btn.disabled = false;
+  } finally {
+    ProvenanceProcessing.hide();
   }
 }
 
-// ── HACCP ──
-let haccpGenerated = false;
-async function generateHACCP() {
-  if (haccpGenerated) return;
-  const body = document.getElementById('haccp-body');
-  const btn = document.getElementById('haccp-btn');
+// ── Recipe Costing ──
+let costingLoaded = false;
+
+async function loadCosting() {
+  if (costingLoaded) return;
+  const body = document.getElementById('costing-body');
+  const btn = document.getElementById('costing-btn');
   btn.disabled = true;
-  body.innerHTML = '<span class="panel-loading">Generating HACCP brief…</span>';
+  body.innerHTML = '<span class="panel-loading">Loading cost breakdown…</span>';
   try {
-    const res = await fetch('/api/haccp', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildPayload())
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    let html = '<div>' + data.haccp.replace(/\n/g,'<br>') + '</div>';
-    if (data.allergens && data.allergens.length) {
-      html += '<div class="panel-allergens">Allergens detected: ' +
-        data.allergens.map(a => `<span class="panel-allergen-tag">${a}</span>`).join('') +
-        '</div>';
+    const res = await fetch('/api/costing/recipe/' + TDATA.slug);
+    const d = await res.json();
+    if (d.error && res.status === 404) {
+      body.innerHTML = renderCostingEmpty();
+      setupCostingInvoice();
+      return;
     }
+    if (d.error) throw new Error(d.error);
+
+    const allUnpriced = d.priced_count === 0;
+    if (allUnpriced) {
+      body.innerHTML = renderCostingEmpty();
+      setupCostingInvoice();
+      return;
+    }
+
+    const currency = (d.breakdown.find(r => r.currency) || {}).currency || 'CAD';
+    const fmt = v => v != null ? currency + ' ' + v.toFixed(2) : '—';
+    const pctColor = d.over_target ? 'over' : '';
+
+    let html = `<div class="costing-summary">
+      <div class="costing-kv">
+        <span class="costing-label">Cost per plate</span>
+        <span class="costing-value">${fmt(d.cost_per_portion)}</span>
+        <span class="costing-value-sm">${d.portions} portion${d.portions !== 1 ? 's' : ''}</span>
+      </div>`;
+    if (d.menu_price) {
+      html += `<div class="costing-kv">
+        <span class="costing-label">Food cost %</span>
+        <span class="costing-value ${pctColor}">${d.actual_food_cost_pct != null ? d.actual_food_cost_pct + '%' : '—'}</span>
+        <span class="costing-value-sm">target ${d.target_food_cost_pct}%</span>
+      </div>`;
+    }
+    html += `<div class="costing-kv">
+      <span class="costing-label">Total batch cost</span>
+      <span class="costing-value-sm" style="font-size:1rem;color:var(--smoke)">${fmt(d.total_cost)}</span>
+      <span class="costing-value-sm">${d.priced_count}/${d.breakdown.length} ingredients priced</span>
+    </div></div>`;
+
+    html += `<table class="costing-table"><thead><tr>
+      <th>Ingredient</th><th>Qty</th><th>Cost</th></tr></thead><tbody>`;
+    d.breakdown.forEach(row => {
+      const priced = row.line_cost > 0;
+      html += `<tr>
+        <td${priced ? '' : ' class="costing-unpriced"'}>${esc(row.ingredient)}</td>
+        <td${priced ? '' : ' class="costing-unpriced"'}>${row.quantity || ''} ${esc(row.unit || '')}</td>
+        <td>${priced ? fmt(row.line_cost) : '<span class="costing-unpriced">no price</span>'}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+
+    html += `<div class="costing-target-row">
+      <span class="costing-target-label">Menu price</span>
+      <input type="number" class="costing-target-input" id="costing-menu-price" value="${d.menu_price || ''}" placeholder="0.00" step="0.01" min="0">
+      <span class="costing-target-label">Target food cost %</span>
+      <input type="number" class="costing-target-input" id="costing-target-pct" value="${d.target_food_cost_pct || 30}" min="1" max="100">
+      <button class="costing-set-btn" onclick="saveCostingTarget()">Save</button>
+    </div>`;
+
+    html += `<button class="costing-scan-link" onclick="document.getElementById('costing-invoice-input').click()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2.5" width="10" height="7" rx="1" stroke="#C9A84C" stroke-width="0.9"/><path d="M3.5 2.5V2a1 1 0 011-1h3a1 1 0 011 1v.5" stroke="#C9A84C" stroke-width="0.9"/><circle cx="6" cy="6" r="1.6" stroke="#C9A84C" stroke-width="0.9"/></svg>
+      Scan an invoice to update prices
+    </button>`;
+
     body.innerHTML = html;
-    haccpGenerated = true;
+    setupCostingInvoice();
+    costingLoaded = true;
   } catch(e) {
-    body.innerHTML = '<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">Could not generate HACCP brief. Try again.</span>';
+    body.innerHTML = '<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">Could not load cost data. ' + e.message + '</span>';
     btn.disabled = false;
   }
 }
-</script>
 
-<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,10,0.96);border-top:1px solid rgba(201,168,76,0.15);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,241,233,0.7);z-index:9999;justify-content:space-between;align-items:center">
-  <span>Add Provenance to your home screen</span>
-  <div>
-    <button onclick="installPWA()" style="background:rgba(201,168,76,0.12);color:#C9A84C;border:1px solid rgba(201,168,76,0.3);padding:6px 14px;border-radius:4px;font-size:12px;cursor:pointer;margin-right:8px">Install</button>
-    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(245,241,233,0.4);cursor:pointer;font-size:16px;line-height:1">✕</button>
-  </div>
-</div>
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .catch(err => console.log('SW:', err));
+function renderCostingEmpty() {
+  return `<div class="costing-empty">
+    <div class="costing-empty-text">No ingredient prices on file for this recipe.<br>Scan a supplier invoice to get started.</div>
+    <button class="panel-generate-btn" onclick="document.getElementById('costing-invoice-input').click()">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="3" width="11" height="8" rx="1" stroke="#C9A84C" stroke-width="1"/><path d="M4 3V2a1 1 0 011-1h3a1 1 0 011 1v1" stroke="#C9A84C" stroke-width="1"/><circle cx="6.5" cy="7" r="1.8" stroke="#C9A84C" stroke-width="1"/></svg>
+      Scan Invoice
+    </button>
+  </div>`;
 }
-let _pwaPrompt;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  _pwaPrompt = e;
-  if (!localStorage.getItem('pwa-dismissed')) {
-    document.getElementById('pwa-prompt').style.display = 'flex';
+
+async function uploadInvoice(file) {
+  if (!file) return;
+  const body = document.getElementById('costing-body');
+  body.innerHTML = '<span class="panel-loading">Reading invoice…</span>';
+
+  // Use FileReader so we can send raw base64 (no data-URI prefix) via JSON
+  const reader = new FileReader();
+  reader.onerror = () => {
+    body.innerHTML = '<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">Could not read file. Please try again.</span>';
+  };
+  reader.onload = async function(e) {
+    const raw = e.target.result; // "data:image/jpeg;base64,/9j/..."
+    const base64 = raw.includes(',') ? raw.split(',')[1] : raw;
+    const mediaType = raw.includes(':') ? raw.split(':')[1].split(';')[0] : 'image/jpeg';
+
+  try {
+    const r = await fetch('/api/costing/scan-invoice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: base64, media_type: mediaType })
+    });
+    const data = await r.json();
+
+    if (r.status === 401) {
+      body.innerHTML = '<div style="padding:1rem;font-size:0.85rem;color:rgba(245,241,233,0.4)">Please <a href="/auth/login" style="color:var(--gold)">sign in</a> to scan invoices.</div>';
+      return;
+    }
+    if (data.error) throw new Error(data.error);
+
+    const count = data.prices_updated || 0;
+    let html = `<div style="color:var(--gold);font-family:var(--mono);font-size:0.55rem;letter-spacing:0.1em;margin-bottom:0.75rem">✓ INVOICE SCANNED — ${count} price${count !== 1 ? 's' : ''} updated</div>`;
+
+    if (data.supplier) {
+      html += `<div style="font-family:var(--mono);font-size:0.5rem;color:rgba(245,241,233,0.35);margin-bottom:1rem;letter-spacing:0.08em">${esc(data.supplier)}</div>`;
+    }
+
+    if (data.items && data.items.length) {
+      const curr = data.currency || 'CAD';
+      html += '<div style="margin-bottom:1rem">';
+      data.items.forEach(item => {
+        const price = item.unit_price != null
+          ? curr + ' ' + parseFloat(item.unit_price).toFixed(2) + '/' + (item.quantity_unit || 'unit')
+          : '—';
+        html += `<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid rgba(201,168,76,0.04);font-size:0.8rem">
+          <span style="color:var(--cream)">${esc(item.item_name || '')}</span>
+          <span style="color:var(--gold);font-family:var(--mono);font-size:0.7rem">${esc(price)}</span>
+        </div>`;
+      });
+      html += '</div>';
+    }
+
+    html += `<button class="costing-set-btn" onclick="costingLoaded=false;loadCosting()">Reload cost breakdown →</button>`;
+    body.innerHTML = html;
+
+  } catch(err) {
+    body.innerHTML = `<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">Invoice scan failed: ${esc(err.message)}</span>
+      <br><button class="costing-scan-link" style="margin-top:0.8rem" onclick="document.getElementById('costing-invoice-input').click()">Try again</button>`;
   }
-});
-function installPWA() {
-  if (_pwaPrompt) {
-    _pwaPrompt.prompt();
-    _pwaPrompt.userChoice.then(() => {
-      document.getElementById('pwa-prompt').style.display = 'none';
-      _pwaPrompt = null;
+  }; // end reader.onload
+  reader.readAsDataURL(file);
+}
+
+function setupCostingInvoice() {
+  const input = document.getElementById('costing-invoice-input');
+  if (!input._bound) {
+    input._bound = true;
+    input.addEventListener('change', function() {
+      if (this.files[0]) uploadInvoice(this.files[0]);
+      this.value = ''; // reset so same file can be re-selected
+    });
+  }
+
+  // Drag and drop on the costing panel
+  const panel = document.getElementById('tech-panel-costing');
+  if (panel && !panel._ddBound) {
+    panel._ddBound = true;
+    panel.addEventListener('dragover', e => {
+      e.preventDefault();
+      panel.style.borderTopColor = 'rgba(201,168,76,0.4)';
+    });
+    panel.addEventListener('dragleave', () => {
+      panel.style.borderTopColor = '';
+    });
+    panel.addEventListener('drop', e => {
+      e.preventDefault();
+      panel.style.borderTopColor = '';
+      if (e.dataTransfer.files.length) uploadInvoice(e.dataTransfer.files[0]);
     });
   }
 }
-function dismissPWA() {
-  document.getElementById('pwa-prompt').style.display = 'none';
-  localStorage.setItem('pwa-dismissed', 'true');
+
+async function saveCostingTarget() {
+  const price = parseFloat(document.getElementById('costing-menu-price').value) || 0;
+  const pct = parseFloat(document.getElementById('costing-target-pct').value) || 30;
+  try {
+    await fetch('/api/costing/recipe/' + TDATA.slug + '/set-target', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ menu_price: price, target_food_cost_pct: pct })
+    });
+    costingLoaded = false;
+    loadCosting();
+  } catch(e) { /* silent */ }
+}
+
+// Bind invoice input and drag-drop on load (not just after panel opens)
+setupCostingInvoice();
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── HACCP — Structured Brief (Codex CXC 1-1969) ──
+const HACCP_ALLERGEN_REGIONS = {
+  "US": { label: "United States (Big 9)", allergens: ["milk","eggs","fish","crustacean_shellfish","tree_nuts","peanuts","wheat","soy","sesame"] },
+  "EU": { label: "European Union / United Kingdom (Big 14)", allergens: ["cereals_containing_gluten","crustaceans","eggs","fish","peanuts","soybeans","milk","nuts","celery","mustard","sesame_seeds","sulphites","lupin","molluscs"] },
+  "CA": { label: "Canada (Priority 11)", allergens: ["eggs","milk","mustard","peanuts","crustaceans_molluscs","fish","sesame","soy","sulphites","tree_nuts","wheat_triticale"] },
+  "AU_NZ": { label: "Australia / New Zealand (10)", allergens: ["cereals_containing_gluten","crustacea","egg","fish","milk","peanuts","sesame_seeds","soybeans","tree_nuts","lupin"] }
+};
+
+window._currentHACCPBrief = null;
+window._currentHACCPEdits = {};
+window._currentHACCPRegion = 'EU';
+
+async function generateHACCP(forceRegenerate = false) {
+  const body = document.getElementById('haccp-body');
+  const recipeSlug = body?.dataset.recipeSlug || window.location.pathname.split('/').pop();
+  if (!body) return;
+
+  if (!forceRegenerate) {
+    body.innerHTML = '<span class="panel-loading">Loading…</span>';
+    try {
+      const res = await fetch('/api/haccp/latest/' + encodeURIComponent(recipeSlug), {credentials: 'include'});
+      const saved = await res.json();
+      if (saved.exists && saved.brief) {
+        saved.brief._savedRecord = {
+          id: saved.id, version: saved.version, saved_at: saved.saved_at,
+          pic_name: saved.pic_name, pic_signed_at: saved.pic_signed_at
+        };
+        window._currentHACCPBrief = saved.brief;
+        window._currentHACCPEdits = saved.edits || {};
+        window._currentHACCPRegion = (saved.brief.allergens?.region || 'EU').toUpperCase();
+        body.innerHTML = renderHACCPBrief(saved.brief);
+        attachHACCPInteractivity(body);
+        return;
+      }
+    } catch (e) { /* fall through to generate */ }
+  }
+
+  body.innerHTML = '';
+  ProvenanceProcessing.show({
+    messages: ['Reviewing the technique…', 'Charting the critical control points…', 'Setting the brief…']
+  });
+  try {
+    const res = await fetch('/api/haccp', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({...buildPayload(), allergen_region: window._currentHACCPRegion})
+    });
+    const data = await res.json();
+    if (!res.ok) { body.innerHTML = renderHACCPError(data); return; }
+    window._currentHACCPBrief = data;
+    window._currentHACCPEdits = {};
+    body.innerHTML = renderHACCPBrief(data);
+    attachHACCPInteractivity(body);
+  } catch(e) {
+    body.innerHTML = renderHACCPError({error: 'Network error', detail: e.message});
+  } finally {
+    ProvenanceProcessing.hide();
+  }
+}
+
+function renderHACCPError(data) {
+  const regen = data.regenerate_recommended
+    ? '<button class="panel-generate-btn" onclick="generateHACCP()">Try Again</button>'
+    : '';
+  return `<div class="haccp-error"><strong>${escapeHtml(data.error||'Error')}</strong><p>${escapeHtml(data.detail||'')}</p>${regen}</div>`;
+}
+
+function renderHACCPBrief(b) {
+  const generatedDate = b.generated_at
+    ? new Date(b.generated_at).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'}) : '';
+  return `
+    <article class="haccp-brief">
+      <header class="haccp-header">
+        <div class="haccp-recipe-title">${escapeHtml(b.recipe_name)}</div>
+        <div class="haccp-meta">
+          <span class="haccp-meta-item">HACCP Brief</span><span class="haccp-meta-sep">·</span>
+          <span class="haccp-meta-item">v${escapeHtml(b.schema_version)}</span><span class="haccp-meta-sep">·</span>
+          <span class="haccp-meta-item">Generated ${escapeHtml(generatedDate)}</span>
+        </div>
+      </header>
+      <div class="haccp-actions" id="haccp-actions">${renderHACCPActions(b)}</div>
+      <section class="haccp-section haccp-allergens">
+        <h3 class="haccp-section-title">Allergens</h3>
+        <div class="haccp-allergen-region">${escapeHtml(b.allergens.region_label||b.allergens.region)}</div>
+        <div class="haccp-allergen-pills">${renderAllergenPills(b.allergens)}</div>
+        ${b.allergens.rationale?`<p class="haccp-allergen-rationale">${escapeHtml(b.allergens.rationale)}</p>`:''}
+      </section>
+      <section class="haccp-section haccp-flow">
+        <h3 class="haccp-section-title">Process Flow</h3>
+        <ol class="haccp-flow-stepper">${renderProcessFlow(b.process_flow)}</ol>
+      </section>
+      ${(b.receiving_criteria&&b.receiving_criteria.length)?`
+        <section class="haccp-section haccp-receiving">
+          <h3 class="haccp-section-title">Receiving Criteria</h3>
+          ${renderReceivingCriteria(b.receiving_criteria)}
+        </section>`:''}
+      <section class="haccp-section haccp-ccps">
+        <h3 class="haccp-section-title">Critical Control Points</h3>
+        <div class="haccp-ccp-table-wrap">
+          <table class="haccp-ccp-table" role="table">
+            <thead><tr><th>Step</th><th>Hazard</th><th>Critical Limit</th><th>Monitoring</th><th>Corrective Action</th><th>Records</th></tr></thead>
+            <tbody>${(b.ccp_table||[]).map((r,i)=>renderCCPRow(r,i)).join('')}</tbody>
+          </table>
+        </div>
+      </section>
+      ${(b.non_ccp_steps&&b.non_ccp_steps.length)?renderNonCCPSteps(b.non_ccp_steps):''}
+      <section class="haccp-section haccp-signoff">
+        <h3 class="haccp-section-title">Person In Charge Sign-Off</h3>
+        <div class="haccp-signoff-line">
+          <div class="haccp-signoff-field"><label>Name</label><div class="haccp-signoff-blank"></div></div>
+          <div class="haccp-signoff-field"><label>Signature</label><div class="haccp-signoff-blank"></div></div>
+          <div class="haccp-signoff-field"><label>Date</label><div class="haccp-signoff-blank"></div></div>
+        </div>
+      </section>
+      <footer class="haccp-footer">${escapeHtml(b.footer_note||'Brief structure follows Codex Alimentarius CXC 1-1969 (General Principles of Food Hygiene). Implementation is the responsibility of the operator.')}</footer>
+    </article>`;
+}
+
+function renderAllergenPills(allergens) {
+  const detected = new Set((allergens.detected||[]).map(a=>a.toLowerCase()));
+  const regionList = HACCP_ALLERGEN_REGIONS[allergens.region]||null;
+  const fullList = regionList ? regionList.allergens : allergens.detected;
+  return fullList.map(a => {
+    const isDetected = detected.has(a.toLowerCase());
+    const cls = isDetected ? 'haccp-pill haccp-pill-detected' : 'haccp-pill haccp-pill-clear';
+    return `<span class="${cls}">${escapeHtml(a.replace(/_/g,' '))}</span>`;
+  }).join('');
+}
+
+function renderProcessFlow(flow) {
+  return (flow||[]).map((s,i)=>`
+    <li class="haccp-flow-step">
+      <span class="haccp-flow-number">${i+1}</span>
+      <span class="haccp-flow-label">${escapeHtml(s.label)}</span>
+    </li>`).join('');
+}
+
+function renderReceivingCriteria(items) {
+  return `<ul class="haccp-receiving-list">${items.map(it=>`
+    <li class="haccp-receiving-item">
+      <strong>${escapeHtml(it.ingredient)}</strong>
+      ${it.delivery_temp_max_c!=null?`<span class="haccp-temp-tag">≤${it.delivery_temp_max_c}°C</span>`:''}
+      <div class="haccp-receiving-accept"><span class="haccp-label">Accept:</span> <span data-editable="receiving_criteria:${escapeHtml(it.ingredient)}:accept_criteria">${escapeHtml(it.accept_criteria||'')}</span></div>
+      <div class="haccp-receiving-reject"><span class="haccp-label">Reject:</span> <span data-editable="receiving_criteria:${escapeHtml(it.ingredient)}:reject_criteria">${escapeHtml(it.reject_criteria||'')}</span></div>
+    </li>`).join('')}</ul>`;
+}
+
+function renderCCPRow(row, idx) {
+  const dt = row.decision_tree||{};
+  const dtId = `haccp-dt-${idx}`;
+  return `
+    <tr class="haccp-ccp-row">
+      <td data-label="Step">
+        <strong>${escapeHtml(row.step)}</strong>
+        <div class="haccp-ccp-target">${escapeHtml(row.ingredient_or_process||'')}</div>
+        <button class="haccp-dt-toggle" type="button" aria-expanded="false" aria-controls="${dtId}">Why is this a CCP? ▾</button>
+      </td>
+      <td data-label="Hazard">
+        <span class="haccp-hazard-cat haccp-hazard-${(row.hazard_category||'').toLowerCase()}">${escapeHtml(row.hazard_category||'')}</span>
+        <div class="haccp-hazard-detail">${escapeHtml(row.hazard||'')}</div>
+      </td>
+      <td data-label="Critical Limit">${escapeHtml(row.critical_limit||'')}</td>
+      <td data-label="Monitoring" data-editable="ccp_table:${escapeHtml(row.step_id||'')}:monitoring">${escapeHtml(row.monitoring||'')}</td>
+      <td data-label="Corrective Action" data-editable="ccp_table:${escapeHtml(row.step_id||'')}:corrective_action">${escapeHtml(row.corrective_action||'')}</td>
+      <td data-label="Records" data-editable="ccp_table:${escapeHtml(row.step_id||'')}:records">${escapeHtml(row.records||'')}</td>
+    </tr>
+    <tr class="haccp-dt-row" id="${dtId}" hidden>
+      <td colspan="6">
+        <div class="haccp-dt-panel">
+          <div class="haccp-dt-title">Codex Decision Tree (CXC 1-1969)</div>
+          <ol class="haccp-dt-list">
+            ${renderDTQuestion("Q1. Do preventive control measures exist for this hazard at this step?",dt.q1_control_measures_exist)}
+            ${renderDTQuestion("Q2. Is this step specifically designed to eliminate or reduce the hazard to an acceptable level?",dt.q2_step_designed_to_eliminate)}
+            ${renderDTQuestion("Q3. Could contamination occur in excess of acceptable levels, or could it increase to unacceptable levels?",dt.q3_contamination_could_exceed)}
+            ${renderDTQuestion("Q4. Will a subsequent step eliminate the hazard or reduce its likelihood to acceptable levels?",dt.q4_subsequent_step_eliminates)}
+          </ol>
+          ${dt.conclusion?`<div class="haccp-dt-conclusion"><strong>Conclusion:</strong> ${escapeHtml(dt.conclusion)}</div>`:''}
+        </div>
+      </td>
+    </tr>`;
+}
+
+function renderDTQuestion(question, answerObj) {
+  if (!answerObj) return '';
+  const ans = answerObj.answer||'';
+  const ansClass = ans.toLowerCase().startsWith('y') ? 'haccp-dt-yes'
+                 : ans.toLowerCase().startsWith('n') ? 'haccp-dt-no' : 'haccp-dt-na';
+  return `<li class="haccp-dt-q">
+    <div class="haccp-dt-question">${escapeHtml(question)}</div>
+    <div class="haccp-dt-answer ${ansClass}">${escapeHtml(ans)}</div>
+    <div class="haccp-dt-rationale">${escapeHtml(answerObj.rationale||'')}</div>
+  </li>`;
+}
+
+function renderNonCCPSteps(steps) {
+  return `<section class="haccp-section haccp-non-ccp">
+    <h3 class="haccp-section-title">Non-CCP Steps</h3>
+    <ul class="haccp-non-ccp-list">${steps.map(s=>`<li><strong>${escapeHtml(s.step)}</strong> — ${escapeHtml(s.rationale)}</li>`).join('')}</ul>
+  </section>`;
+}
+
+function attachHACCPInteractivity(root) {
+  root.querySelectorAll('.haccp-dt-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.getAttribute('aria-controls'));
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      btn.textContent = isOpen ? 'Why is this a CCP? ▾' : 'Hide reasoning ▴';
+      if (target) target.hidden = isOpen;
+    });
+  });
+}
+
+function renderHACCPActions(b) {
+  const isSaved = !!b._savedRecord;
+  const ver = b._savedRecord ? `v${b._savedRecord.version}` : 'unsaved';
+  const savedAt = b._savedRecord
+    ? new Date(b._savedRecord.saved_at).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'})
+    : '';
+  const status = isSaved
+    ? `<span class="haccp-status-saved">Saved · ${ver} · ${escapeHtml(savedAt)}</span>`
+    : `<span class="haccp-status-draft">Draft · not saved</span>`;
+  const region = (b.allergens?.region || 'EU').toUpperCase();
+  return `
+    <div class="haccp-status-row">
+      ${status}
+      <select class="haccp-region-select" onchange="changeHACCPRegion(this.value)">
+        <option value="EU" ${region==='EU'?'selected':''}>EU (Big 14)</option>
+        <option value="US" ${region==='US'?'selected':''}>US (Big 9)</option>
+        <option value="CA" ${region==='CA'?'selected':''}>Canada (11)</option>
+        <option value="AU_NZ" ${region==='AU_NZ'?'selected':''}>AU/NZ (10)</option>
+      </select>
+    </div>
+    <div class="haccp-toolbar">
+      <button class="haccp-action haccp-action-primary" onclick="saveHACCPBrief()">Save</button>
+      <button class="haccp-action" onclick="printHACCPBrief()">Print</button>
+      <button class="haccp-action" onclick="regenerateHACCPBrief()">Regenerate</button>
+      <button class="haccp-action" onclick="toggleHACCPEditMode()">Edit</button>
+    </div>`;
+}
+
+async function saveHACCPBrief() {
+  const brief = window._currentHACCPBrief;
+  if (!brief) return;
+  const body = document.getElementById('haccp-body');
+  const slug = brief.recipe_slug || body?.dataset.recipeSlug;
+  try {
+    const res = await fetch('/api/haccp/save', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({brief: {...brief, recipe_slug: slug}, edits: window._currentHACCPEdits || {}})
+    });
+    const data = await res.json();
+    if (!res.ok) { alert('Save failed: ' + (data.error || 'unknown')); return; }
+    brief._savedRecord = {id: data.id, version: data.version, saved_at: data.saved_at};
+    const actions = document.getElementById('haccp-actions');
+    if (actions) actions.innerHTML = renderHACCPActions(brief);
+  } catch (e) {
+    alert('Save failed: ' + e.message);
+  }
+}
+
+function printHACCPBrief() {
+  document.body.classList.add('haccp-printing');
+  window.print();
+  setTimeout(() => document.body.classList.remove('haccp-printing'), 1000);
+}
+
+async function regenerateHACCPBrief() {
+  if (!confirm('Generate a fresh brief? Unsaved changes will be lost. Saved versions are kept.')) return;
+  await generateHACCP(true);
+}
+
+async function changeHACCPRegion(newRegion) {
+  if (!confirm('Switch allergen region to ' + newRegion + ' and regenerate?')) {
+    const sel = document.querySelector('.haccp-region-select');
+    if (sel) sel.value = window._currentHACCPRegion;
+    return;
+  }
+  window._currentHACCPRegion = newRegion;
+  await generateHACCP(true);
+}
+
+function toggleHACCPEditMode() {
+  const root = document.querySelector('.haccp-brief');
+  if (!root) return;
+  const isEditing = root.classList.toggle('haccp-edit-mode');
+  if (isEditing) {
+    root.querySelectorAll('[data-editable]').forEach(el => {
+      el.setAttribute('contenteditable', 'true');
+      el.addEventListener('input', captureHACCPEdit);
+    });
+  } else {
+    root.querySelectorAll('[data-editable]').forEach(el => el.removeAttribute('contenteditable'));
+  }
+}
+
+function captureHACCPEdit(ev) {
+  const path = ev.target.getAttribute('data-editable');
+  if (!path) return;
+  const [section, key, field] = path.split(':');
+  const text = ev.target.innerText.trim();
+  window._currentHACCPEdits[section] = window._currentHACCPEdits[section] || {};
+  window._currentHACCPEdits[section][key] = window._currentHACCPEdits[section][key] || {};
+  window._currentHACCPEdits[section][key][field] = text;
+}
+
+function escapeHtml(s) {
+  if (s==null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
 </script>
-</body>
-</html>
+{% endblock %}

@@ -1,1090 +1,553 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Provenance — The Intelligence Behind the Recipe</title>
-<meta name="description" content="The professional kitchen intelligence system. Every tradition mapped. Every technique documented. Every recipe — the definitive version.">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://provenance.kitchen/">
-<meta property="og:title" content="Provenance — The Intelligence Behind the Recipe">
-<meta property="og:description" content="Every tradition mapped. Every technique documented. Every recipe — the definitive version.">
-<meta property="og:url" content="https://provenance.kitchen/">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://v3b.fal.media/files/b/0a96077e/V3bkLXGyKnTn5bdgoIOUm_ebf310fc548b49debee0cd1fcf05be91.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Provenance — The Intelligence Behind the Recipe">
-<meta name="twitter:description" content="Every tradition mapped. Every technique documented. Every recipe — the definitive version.">
-<meta name="twitter:image" content="https://v3b.fal.media/files/b/0a96077e/V3bkLXGyKnTn5bdgoIOUm_ebf310fc548b49debee0cd1fcf05be91.jpg">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
-<link rel="manifest" href="/static/manifest.json">
-<meta name="theme-color" content="#08080A">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Provenance">
-<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-:root {
-  --bg: #08080A;
-  --surface: #111113;
-  --warm-dark: #0D0B08;
-  --cream: #F5F1E9;
-  --smoke: rgba(245,241,233,0.7);
-  --stone: rgba(245,241,233,0.45);
-  --gold: #C9A84C;
-  --gold-soft: rgba(201,168,76,0.6);
-  --gold-hint: rgba(201,168,76,0.08);
-  --border: rgba(201,168,76,0.1);
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--cream);
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-weight: 300;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-a { color: inherit; text-decoration: none; }
-
-/* ── TEXTURE GRAIN ── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.015;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── NAV ── */
-.site-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
-  height: 60px;
-  padding: 0 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(8,8,10,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(201,168,76,0.08);
-}
-
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.nav-leaf {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  font-weight: 400;
-  color: var(--gold);
-  line-height: 1;
-}
-
-.nav-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem;
-  font-weight: 400;
-  color: var(--cream);
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.nav-links a {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  color: var(--smoke);
-  text-transform: uppercase;
-  transition: color 0.2s;
-}
-
-.nav-links a:hover { color: var(--cream); }
-
-.nav-signin {
-  padding: 0.45rem 1.2rem;
-  border: 1px solid rgba(201,168,76,0.25);
-  border-radius: 2px;
-  color: var(--gold) !important;
-  transition: all 0.2s !important;
-}
-
-.nav-signin:hover {
-  background: rgba(201,168,76,0.08) !important;
-  border-color: var(--gold) !important;
-}
-
-.nav-hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.nav-hamburger span {
-  display: block;
-  width: 22px;
-  height: 1px;
-  background: var(--gold);
-  transition: all 0.3s;
-}
-
-/* Mobile overlay */
-.mobile-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 190;
-  background: var(--bg);
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5rem;
-}
-
-.mobile-overlay.open { display: flex; }
-
-.mobile-overlay a {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  font-weight: 400;
-  color: var(--cream);
-  transition: color 0.2s;
-}
-
-.mobile-overlay a:hover { color: var(--gold); }
-
-.mobile-close {
-  position: absolute;
-  top: 1.5rem;
-  right: 2rem;
-  background: none;
-  border: none;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  color: var(--stone);
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
-/* ── REVEAL ANIMATIONS ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 1s ease, transform 1s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reveal.visible > *:nth-child(1) { transition-delay: 0s; }
-.reveal.visible > *:nth-child(2) { transition-delay: 0.15s; }
-.reveal.visible > *:nth-child(3) { transition-delay: 0.2s; }
-.reveal.visible > *:nth-child(4) { transition-delay: 0.3s; }
-
-/* ── HERO ── */
-.hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.hero-bg {
-  position: absolute;
-  inset: -20px;
-  background-image: url('https://v3b.fal.media/files/b/0a96077e/V3bkLXGyKnTn5bdgoIOUm_ebf310fc548b49debee0cd1fcf05be91.jpg');
-  background-size: cover;
-  background-position: center;
-  animation: kenburns 25s ease-in-out infinite alternate;
-  z-index: 0;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(8,8,10,0.3) 0%,
-    rgba(8,8,10,0.5) 40%,
-    rgba(8,8,10,0.85) 80%,
-    var(--bg) 100%
-  );
-  z-index: 1;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: 700px;
-  padding: 0 2rem;
-}
-
-@keyframes kenburns {
-  0% { transform: scale(1.0); }
-  100% { transform: scale(1.08); }
-}
-
-.hero-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.35em;
-  color: var(--gold-soft);
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
-}
-
-.hero-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-weight: 400;
-  color: var(--cream);
-  letter-spacing: -0.02em;
-  margin-bottom: 1rem;
-}
-
-.hero-tagline {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
-  color: var(--smoke);
-  margin-bottom: 0.75rem;
-}
-
-.hero-sub {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  font-size: 0.9rem;
-  color: var(--stone);
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
-}
-
-.hero-doors {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-
-.hero-door {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  color: var(--gold);
-  text-decoration: none;
-  padding: 0.9rem 2.5rem;
-  border: 1px solid rgba(201,168,76,0.3);
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-.hero-door:hover {
-  background: rgba(201,168,76,0.08);
-  border-color: var(--gold);
-  transform: translateY(-2px);
-}
-
-.hero-stats {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.2em;
-  color: var(--stone);
-  text-transform: uppercase;
-}
-
-.hero-scroll {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  text-align: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.5rem;
-  letter-spacing: 0.3em;
-  color: var(--stone);
-  text-transform: uppercase;
-}
-
-.scroll-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(180deg, var(--gold-soft), transparent);
-  margin: 0.5rem auto 0;
-}
-
-/* ── DOORS SECTION ── */
-.doors-section {
-  padding: 5rem 0 3rem;
-}
-
-.doors-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.door {
-  position: relative;
-  height: 350px;
-  border-radius: 4px;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  text-decoration: none;
-  transition: transform 0.4s ease;
-}
-
-.door:hover { transform: translateY(-4px); }
-.door:hover .door-bg { transform: scale(1.03); }
-
-.door-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.6s ease;
-}
-
-.door-bg-cook {
-  background-image: url('https://v3b.fal.media/files/b/0a9608a5/ed4aplGzU4IzBnbTMIXKI_f601d7820e4d429aa259a59218b31694.jpg');
-}
-
-.door-bg-pour {
-  background-image: url('https://v3b.fal.media/files/b/0a960125/l8AxK-1-yKyVibQ9btlLQ_2cceee8b917845fc9eb2d5986e85a013.jpg');
-}
-
-.door-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(8,8,10,0.05) 0%,
-    rgba(8,8,10,0.75) 60%,
-    rgba(8,8,10,0.92) 100%
-  );
-}
-
-.door-content {
-  position: relative;
-  z-index: 1;
-  padding: 2rem;
-}
-
-.door-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.5rem;
-  letter-spacing: 0.3em;
-  color: var(--gold-soft);
-  display: block;
-}
-
-.door-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.2rem;
-  font-weight: 400;
-  color: var(--cream);
-  margin: 0.5rem 0;
-}
-
-.door-desc {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  font-size: 0.85rem;
-  color: var(--smoke);
-  line-height: 1.7;
-  margin-bottom: 1.2rem;
-  max-width: 320px;
-}
-
-.door-cta {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  color: var(--gold);
-}
-
-/* ── CREATE SECTION ── */
-.create-section {
-  text-align: center;
-  padding: 4rem 2rem;
-}
-
-.create-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 1rem 2.5rem;
-  border: 1px solid rgba(201,168,76,0.25);
-  border-radius: 3px;
-  color: var(--gold);
-  text-decoration: none;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  transition: all 0.3s ease;
-}
-
-.create-btn:hover {
-  background: rgba(201,168,76,0.06);
-  border-color: rgba(201,168,76,0.5);
-  transform: translateY(-2px);
-}
-
-.create-plus {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid rgba(201,168,76,0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  color: var(--gold);
-  flex-shrink: 0;
-}
-
-.create-sub {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.15em;
-  color: var(--stone);
-  margin-top: 1rem;
-  text-transform: uppercase;
-}
-
-/* ── PROOF SECTION ── */
-.proof-section {
-  border-top: 1px solid rgba(201,168,76,0.05);
-  border-bottom: 1px solid rgba(201,168,76,0.05);
-}
-
-.proof-inner {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 5rem 2rem;
-}
-
-.section-num {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.5rem;
-  letter-spacing: 0.35em;
-  color: var(--gold-soft);
-  margin-bottom: 2rem;
-  text-transform: uppercase;
-}
-
-.proof-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 400;
-  color: var(--cream);
-  line-height: 1.3;
-  margin-bottom: 3rem;
-}
-
-.proof-title em {
-  color: var(--gold);
-  font-style: italic;
-}
-
-.proof-dish-img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 1.5rem;
-  display: block;
-}
-
-.proof-dish-meta {
-  margin-bottom: 1.5rem;
-}
-
-.proof-origin {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.5rem;
-  letter-spacing: 0.25em;
-  color: var(--gold-soft);
-  text-transform: uppercase;
-  display: block;
-}
-
-.proof-dish-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.8rem;
-  color: var(--cream);
-  margin: 0.3rem 0 0;
-  font-weight: 400;
-}
-
-/* Gold dots / expanding ingredients */
-.proof-ingredients {
-  margin-bottom: 1rem;
-}
-
-.ing-row {
-  cursor: pointer;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid rgba(201,168,76,0.04);
-  user-select: none;
-}
-
-.ing-main {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.gold-dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid rgba(201,168,76,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.4rem;
-  color: var(--gold);
-  flex-shrink: 0;
-  transition: all 0.3s;
-}
-
-.ing-row:hover .gold-dot,
-.ing-row.open .gold-dot {
-  background: rgba(201,168,76,0.1);
-  border-color: rgba(201,168,76,0.5);
-}
-
-.ing-name {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.95rem;
-  color: var(--cream);
-  flex: 1;
-}
-
-.ing-arrow {
-  font-size: 0.7rem;
-  color: var(--stone);
-  transition: transform 0.3s;
-  flex-shrink: 0;
-}
-
-.ing-row.open .ing-arrow { transform: rotate(180deg); }
-
-.ing-detail {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, padding 0.3s ease, margin-top 0.3s ease;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  font-size: 0.8rem;
-  font-style: italic;
-  color: var(--smoke);
-  line-height: 1.8;
-  padding-left: 2rem;
-  border-left: 2px solid rgba(201,168,76,0.1);
-  margin-left: 10px;
-}
-
-.ing-row.open .ing-detail {
-  max-height: 200px;
-  padding: 0.8rem 0 0.8rem 2rem;
-  margin-top: 0.5rem;
-}
-
-/* Purveyor */
-.purveyor {
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(201,168,76,0.06);
-}
-
-.purveyor-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.5rem;
-  letter-spacing: 0.15em;
-  color: rgba(245,241,233,0.2);
-  text-transform: uppercase;
-}
-
-.purveyor-link {
-  font-size: 0.7rem;
-  color: rgba(201,168,76,0.35);
-  cursor: pointer;
-  margin-left: 0.5rem;
-  transition: color 0.3s;
-}
-
-.purveyor-link:hover { color: var(--gold); }
-
-.purveyor-detail {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, padding-top 0.3s ease;
-  font-size: 0.7rem;
-  color: rgba(245,241,233,0.25);
-  line-height: 1.7;
-}
-
-.purveyor-detail.open {
-  max-height: 80px;
-  padding-top: 0.5rem;
-}
-
-.purveyor-email { color: rgba(201,168,76,0.25); }
-
-/* ── DEPTH SECTION ── */
-.depth-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
-}
-
-.depth-card {
-  padding: 2.5rem 2rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--gold-hint);
-  text-decoration: none;
-  display: block;
-  transition: border-color 0.3s, transform 0.4s;
-}
-
-.depth-card:hover {
-  border-color: rgba(201,168,76,0.25);
-  transform: translateY(-3px);
-}
-
-.depth-num {
-  display: block;
-  font-family: 'Playfair Display', serif;
-  font-size: 2.5rem;
-  color: rgba(201,168,76,0.2);
-  margin-bottom: 0.5rem;
-  line-height: 1;
-}
-
-.depth-label {
-  display: block;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.2em;
-  color: var(--gold-soft);
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
-.depth-desc {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  font-size: 0.85rem;
-  color: var(--smoke);
-  line-height: 1.7;
-}
-
-.depth-link {
-  display: inline-block;
-  margin-top: 1.5rem;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  color: var(--gold);
-}
-
-/* ── FOOTER ── */
-.site-footer {
-  border-top: 1px solid rgba(201,168,76,0.06);
-  padding: 4rem 2rem 2rem;
-}
-
-.footer-inner {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 3rem;
-  max-width: 960px;
-  margin: 0 auto 3rem;
-}
-
-.footer-logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  color: var(--gold);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
-
-.footer-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem;
-  color: var(--cream);
-  margin-bottom: 0.5rem;
-}
-
-.footer-email {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
-  color: var(--stone);
-}
-
-.footer-col-title {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.5rem;
-  letter-spacing: 0.25em;
-  color: var(--gold-soft);
-  text-transform: uppercase;
-  margin-bottom: 1.2rem;
-}
-
-.footer-col {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.footer-col a {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  font-size: 0.85rem;
-  color: var(--stone);
-  transition: color 0.2s;
-}
-
-.footer-col a:hover { color: var(--cream); }
-
-.footer-bottom {
-  text-align: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.5rem;
-  letter-spacing: 0.15em;
-  color: rgba(245,241,233,0.15);
-  border-top: 1px solid rgba(201,168,76,0.04);
-  padding-top: 2rem;
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 700px) {
-  .nav-links { display: none; }
-  .nav-hamburger { display: flex; }
-  .doors-grid { grid-template-columns: 1fr; }
-  .depth-grid { grid-template-columns: 1fr; padding: 2rem; }
-  .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
-  .hero-door { padding: 0.8rem 1.8rem; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Provenance — Kitchen Intelligence for Serious Restaurants</title>
+
+  <meta name="description" content="The professional kitchen intelligence system. Provenance tracks ingredient origin, technique lineage, and beverage canon for chefs, sommeliers, and restaurant teams.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://provenance.kitchen/">
+
+  <meta property="og:title" content="Provenance — Kitchen Intelligence">
+  <meta property="og:description" content="The professional kitchen intelligence system for provenance-driven kitchens.">
+  <meta property="og:url" content="https://provenance.kitchen/">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Provenance — Kitchen Intelligence">
+  <meta name="twitter:description" content="The professional kitchen intelligence system for provenance-driven kitchens.">
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-4G21HCX2D0');
+  </script>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#08080A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Provenance">
+  <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08080A;
+      --cream: #F5F1E9;
+      --gold: #C9A84C;
+      --gold-dim: rgba(201,168,76,0.45);
+      --muted: #9C9A93;
+      --border: rgba(74,72,64,0.3);
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --mono: 'DM Mono', 'Courier New', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: var(--sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 60px; padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(8,8,10,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-wordmark {
+      font-family: var(--serif); font-size: 1.1rem; font-weight: 400;
+      color: var(--cream); text-decoration: none; flex-shrink: 0;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 2rem;
+    }
+    .nav-links a {
+      font-family: var(--sans); font-weight: 300; font-size: 11px;
+      color: var(--muted); text-decoration: none; letter-spacing: 0.04em;
+      transition: color 200ms;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-right { display: flex; align-items: center; gap: 1.2rem; }
+    .nav-auth {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--gold); text-decoration: none;
+      border: 1px solid var(--gold-dim); padding: 6px 14px; border-radius: 2px;
+      transition: border-color 200ms;
+    }
+    .nav-auth:hover { border-color: var(--gold); }
+    .mobile-menu-btn {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 8px;
+    }
+    .mobile-menu-btn span {
+      display: block; width: 24px; height: 2px;
+      background: var(--cream); transition: all 0.3s;
+    }
+    .mobile-nav-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 300;
+    }
+    .mobile-nav-overlay.active { display: block; }
+    .mobile-nav {
+      position: fixed; top: 0; right: -280px; width: 280px; height: 100vh;
+      background: #1A1816; border-left: 1px solid rgba(201,168,76,0.2);
+      padding: 2rem 1.5rem; z-index: 400; transition: right 0.3s ease;
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .mobile-nav.active { right: 0; }
+    .mobile-nav a {
+      display: block; padding: 1rem 0;
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      color: var(--cream); text-decoration: none;
+      font-family: var(--sans); font-weight: 300; font-size: 1.1rem;
+      letter-spacing: 0.05em;
+    }
+    .mobile-nav a.secondary { color: rgba(245,241,233,0.45); font-size: 0.9rem; margin-top: 0.5rem; }
+    .mobile-nav-close {
+      align-self: flex-end; background: none; border: none;
+      color: rgba(245,241,233,0.45); font-size: 1.2rem;
+      cursor: pointer; margin-bottom: 1.5rem; padding: 0;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 100px 2rem 5rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 45%,
+        rgba(201,168,76,0.05) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold); opacity: 0.75;
+      margin-bottom: 2rem;
+    }
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5.5vw, 4rem);
+      font-weight: 400; line-height: 1.18;
+      color: var(--cream); max-width: 800px;
+      margin-bottom: 1.5rem;
+    }
+    .hero-headline em {
+      font-style: italic; color: rgba(245,241,233,0.65);
+    }
+    .hero-sub {
+      font-family: var(--sans); font-weight: 300; font-size: 1rem;
+      color: var(--muted); max-width: 500px; line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+    .search-wrap {
+      display: flex; max-width: 560px; width: 100%;
+      border: 1px solid rgba(201,168,76,0.28); border-radius: 3px;
+      background: rgba(255,255,255,0.025);
+      transition: border-color 300ms;
+    }
+    .search-wrap:focus-within { border-color: rgba(201,168,76,0.65); }
+    .search-input {
+      flex: 1; padding: 14px 18px;
+      background: transparent; border: none; outline: none;
+      font-family: var(--sans); font-weight: 300; font-size: 15px;
+      color: var(--cream);
+    }
+    .search-input::placeholder { color: rgba(156,154,147,0.55); }
+    .search-btn {
+      padding: 14px 22px;
+      background: none; border: none;
+      border-left: 1px solid rgba(201,168,76,0.18);
+      cursor: pointer; color: var(--gold);
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; transition: background 200ms; flex-shrink: 0;
+    }
+    .search-btn:hover { background: rgba(201,168,76,0.06); }
+    .hero-hint {
+      margin-top: 1.2rem;
+      font-family: var(--mono); font-size: 9px; letter-spacing: 1.2px;
+      color: rgba(156,154,147,0.45); text-transform: uppercase;
+    }
+
+    /* ── FOUR DOORS ── */
+    .doors-section {
+      padding: 7rem 2rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .doors-header {
+      text-align: center; margin-bottom: 4rem;
+    }
+    .section-eyebrow {
+      display: block;
+      font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--gold); opacity: 0.65;
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+      font-weight: 400; color: var(--cream); line-height: 1.2;
+    }
+    .doors-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1px; background: rgba(74,72,64,0.25);
+    }
+    .door {
+      background: var(--bg); padding: 3rem 2.5rem;
+      position: relative; overflow: hidden;
+      text-decoration: none; display: block;
+      transition: background 250ms;
+    }
+    .door::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 380ms ease;
+    }
+    .door:hover { background: rgba(201,168,76,0.025); }
+    .door:hover::after { transform: scaleX(1); }
+    .door-verb {
+      display: block;
+      font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold); opacity: 0.55;
+      margin-bottom: 1.2rem;
+    }
+    .door-title {
+      font-family: var(--serif); font-size: 1.7rem; font-weight: 400;
+      color: var(--cream); margin-bottom: 1rem; line-height: 1.1;
+    }
+    .door-body {
+      font-family: var(--sans); font-weight: 300; font-size: 0.875rem;
+      color: var(--muted); line-height: 1.7; max-width: 340px;
+    }
+    .door-arrow {
+      position: absolute; bottom: 2rem; right: 2rem;
+      font-family: var(--mono); font-size: 11px; color: var(--gold);
+      opacity: 0.35; transition: opacity 250ms, transform 250ms;
+    }
+    .door:hover .door-arrow { opacity: 0.85; transform: translateX(5px); }
+
+    /* ── PROOF ── */
+    .proof-section {
+      border-top: 1px solid var(--border);
+      padding: 7rem 2rem;
+    }
+    .proof-inner { max-width: 960px; margin: 0 auto; }
+    .proof-header { text-align: center; margin-bottom: 4rem; }
+    .proof-header .section-title { max-width: 680px; margin: 0 auto; }
+
+    .proof-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--border);
+    }
+    .proof-col { background: var(--bg); padding: 3rem 2.5rem; }
+    .proof-col-label {
+      display: block;
+      font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 1.8rem;
+    }
+    .proof-col.before .proof-col-label { color: rgba(156,154,147,0.45); }
+    .proof-col.after  .proof-col-label { color: var(--gold); }
+    .proof-col-title {
+      font-family: var(--serif); font-size: 1.1rem; font-weight: 400;
+      line-height: 1.3; margin-bottom: 2rem;
+    }
+    .proof-col.before .proof-col-title { color: rgba(245,241,233,0.4); }
+    .proof-col.after  .proof-col-title { color: var(--cream); }
+    .proof-item {
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(74,72,64,0.22);
+      font-family: var(--sans); font-size: 0.85rem; line-height: 1.5;
+    }
+    .proof-item:last-child { border-bottom: none; }
+    .proof-col.before .proof-item { color: rgba(156,154,147,0.65); }
+    .proof-col.after  .proof-item { color: var(--cream); }
+    .origin-tag {
+      display: block; margin-top: 0.25rem;
+      font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.9px;
+      text-transform: uppercase; color: var(--gold); opacity: 0.65;
+    }
+    .proof-note {
+      text-align: center; margin-top: 3rem;
+      font-family: var(--sans); font-weight: 300; font-size: 0.9rem;
+      color: var(--muted); max-width: 560px;
+      margin-left: auto; margin-right: auto; line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1100px; margin: 0 auto; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .footer-links a {
+      font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #6B6962; text-decoration: none;
+      transition: color 180ms;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-wm {
+      font-family: var(--serif); font-size: 13px;
+      font-weight: 400; color: #3A3835;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-right .nav-auth { display: none; }
+      .mobile-menu-btn { display: flex; }
+      .doors-grid { grid-template-columns: 1fr; }
+      .proof-grid { grid-template-columns: 1fr; }
+      .door { padding: 2.5rem 1.5rem; }
+      .proof-col { padding: 2rem 1.5rem; }
+      .proof-col.before { order: 2; border-top: 1px solid var(--border); }
+      .proof-col.after  { order: 1; }
+    }
+    @media (max-width: 480px) {
+      .hero-headline { font-size: 2rem; }
+      .search-wrap { flex-direction: column; }
+      .search-btn { border-left: none; border-top: 1px solid rgba(201,168,76,0.18); }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Mobile overlay -->
-<div class="mobile-overlay" id="mobileMenu">
-  <button class="mobile-close" onclick="toggleMenu()">Close ✕</button>
-  <a href="/kitchen" onclick="toggleMenu()">Cook</a>
-  <a href="/drinks" onclick="toggleMenu()">Pour</a>
-  <a href="/techniques/browse" onclick="toggleMenu()">Techniques</a>
-  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
-  <a href="/auth/login" onclick="toggleMenu()">Sign In</a>
-</div>
-
-<!-- Nav -->
-<nav class="site-nav">
-  <a href="/" class="nav-brand">
-    <span class="nav-leaf">P</span>
-    <span class="nav-name">Provenance</span>
-  </a>
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
   <div class="nav-links">
-    <a href="/kitchen">Cook</a>
-    <a href="/drinks">Pour</a>
-    <a href="/techniques/browse">Techniques</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/drinks">Drinks</a>
     <a href="/pricing">Pricing</a>
-    <a href="/auth/login" class="nav-signin">Sign In</a>
+    <a href="/kitchen">My Kitchen</a>
   </div>
-  <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="nav-right">
+    <a href="/auth/login" class="nav-auth" id="nav-auth-link">Sign In</a>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMobileMenu()">&#x2715;</button>
+  <a href="/recipes">Recipes</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/techniques/browse">Techniques</a>
+  <a href="/for-professionals">For Professionals</a>
+  <a href="/kitchen">My Kitchen</a>
+  <a href="/about" class="secondary">About</a>
+  <a href="/suppliers" class="secondary">Suppliers</a>
 </nav>
 
-<!-- SECTION 1: HERO -->
+<!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-label">Culinary Lineage</div>
-    <h1 class="hero-title">Provenance</h1>
-    <p class="hero-tagline">The intelligence behind the recipe.</p>
-    <p class="hero-sub">Every tradition mapped. Every technique documented.<br>
-    Every recipe — the definitive version.</p>
-    <div class="hero-doors">
-      <a href="/kitchen" class="hero-door">Cook →</a>
-      <a href="/drinks" class="hero-door">Pour →</a>
-    </div>
-    <div class="hero-stats">12,190 techniques · 748 beverages · 50 cuisines</div>
+  <p class="hero-eyebrow">The Empty Seat Method</p>
+  <h1 class="hero-headline">
+    Every ingredient has a provenance.<br>
+    <em>Every dish deserves to know it.</em>
+  </h1>
+  <p class="hero-sub">The professional kitchen intelligence system for restaurants that take origin, technique, and beverage canon seriously.</p>
+
+  <div class="search-wrap">
+    <input type="text" id="heroSearch" class="search-input"
+           placeholder="Search techniques, ingredients, origins&#x2026;"
+           autocomplete="off"
+           onkeydown="if(event.key==='Enter') handleSearch()">
+    <button class="search-btn" onclick="handleSearch()">Search &#x2192;</button>
   </div>
-  <div class="hero-scroll"><div class="scroll-line"></div></div>
+  <p class="hero-hint">Try: Carbonara &middot; Miso &middot; Koji &middot; Chawanmushi &middot; Dashi</p>
 </section>
 
-<!-- SECTION 2: THE TWO DOORS -->
-<section class="doors-section reveal">
+<!-- FOUR DOORS -->
+<section class="doors-section">
+  <div class="doors-header">
+    <span class="section-eyebrow">Who are you at the table?</span>
+    <h2 class="section-title">Find your entry point</h2>
+  </div>
+
   <div class="doors-grid">
-    <a href="/kitchen" class="door">
-      <div class="door-bg door-bg-cook"></div>
-      <div class="door-gradient"></div>
-      <div class="door-content">
-        <span class="door-label">001</span>
-        <h2 class="door-title">Cook</h2>
-        <p class="door-desc">Your recipes, enhanced. Import from any URL,
-        scan a cookbook page, or write from scratch. The technique intelligence
-        reveals itself underneath every ingredient.</p>
-        <span class="door-cta">Enter the kitchen →</span>
-      </div>
+    <a href="/recipes" class="door">
+      <span class="door-verb">I Cook</span>
+      <h3 class="door-title">The Cook</h3>
+      <p class="door-body">Recipes indexed by technique lineage, regional origin, and ingredient provenance. Every dish with a traceable past and a defensible method.</p>
+      <span class="door-arrow">&#x2192;</span>
     </a>
+
     <a href="/drinks" class="door">
-      <div class="door-bg door-bg-pour"></div>
-      <div class="door-gradient"></div>
-      <div class="door-content">
-        <span class="door-label">002</span>
-        <h2 class="door-title">Pour</h2>
-        <p class="door-desc">Your drinks, noted. Cocktails, wine, spirits,
-        sake. Build your collection, find pairings, understand why
-        each one works.</p>
-        <span class="door-cta">Enter the bar →</span>
-      </div>
+      <span class="door-verb">I Pour</span>
+      <h3 class="door-title">The Sommelier</h3>
+      <p class="door-body">229 beverage regions. 730 products with vintage notes, terroir origin, cross-tradition parallels, and pairing intelligence built for table service.</p>
+      <span class="door-arrow">&#x2192;</span>
+    </a>
+
+    <a href="/for-professionals" class="door">
+      <span class="door-verb">I Manage</span>
+      <h3 class="door-title">The Chef</h3>
+      <p class="door-body">Kitchen standards, procurement intelligence, and supplier verification. The back-of-house intelligence layer that professionals actually need.</p>
+      <span class="door-arrow">&#x2192;</span>
+    </a>
+
+    <a href="/suppliers" class="door">
+      <span class="door-verb">I Supply</span>
+      <h3 class="door-title">The Supplier</h3>
+      <p class="door-body">Connect with verified specialty purveyors across North America. Source with confidence, serve with context, build relationships that last a season.</p>
+      <span class="door-arrow">&#x2192;</span>
     </a>
   </div>
 </section>
 
-<!-- SECTION 3: CREATE -->
-<section class="create-section reveal">
-  <a href="/enhance" class="create-btn">
-    <span class="create-plus">+</span>
-    Create a recipe
-  </a>
-  <p class="create-sub">Paste a URL · Scan a cookbook · Write from scratch</p>
-</section>
-
-<!-- SECTION 4: THE PROOF -->
-<section class="proof-section reveal">
+<!-- PROOF -->
+<section class="proof-section">
   <div class="proof-inner">
-    <div class="section-num">003</div>
-    <h2 class="proof-title">
-      What happens when you<br>
-      add <em>Provenance.</em>
-    </h2>
+    <div class="proof-header">
+      <span class="section-eyebrow">The Difference</span>
+      <h2 class="section-title">Spaghetti alla Carbonara &#x2014; the same dish, with and without Provenance</h2>
+    </div>
 
-    <div class="proof-dish">
-      <img class="proof-dish-img"
-        src="https://v3b.fal.media/files/b/0a96077e/V3bkLXGyKnTn5bdgoIOUm_ebf310fc548b49debee0cd1fcf05be91.jpg"
-        alt="Mexican Ceviche"
-        loading="lazy">
-
-      <div class="proof-dish-meta">
-        <span class="proof-origin">Pacific Coast of Mexico — Sinaloa · Nayarit · Jalisco</span>
-        <h3 class="proof-dish-name">Ceviche</h3>
+    <div class="proof-grid">
+      <div class="proof-col before">
+        <span class="proof-col-label">Without Provenance</span>
+        <h3 class="proof-col-title">Guanciale, cured pork cheek, eggs, Pecorino, black pepper, pasta</h3>
+        <div class="proof-item">Guanciale, 200g</div>
+        <div class="proof-item">Eggs, 4 whole + 4 yolks</div>
+        <div class="proof-item">Pecorino Romano, 80g</div>
+        <div class="proof-item">Spaghetti, 400g</div>
+        <div class="proof-item">Black pepper, to taste</div>
       </div>
 
-      <div class="proof-ingredients">
-
-        <div class="ing-row" onclick="this.classList.toggle('open')">
-          <div class="ing-main">
-            <span class="gold-dot">●</span>
-            <span class="ing-name">White-fleshed fish, 1.5cm dice</span>
-            <span class="ing-arrow">▾</span>
-          </div>
-          <div class="ing-detail">
-            The acid does not cook the fish — it denatures it. Lime juice at pH 2.0–2.5 breaks the surface proteins to opaque and firm within 10–12 minutes. The cut matters: 1.5cm exposes enough surface for the cure without overcooking the interior. Beyond 30 minutes, the fish becomes rubbery and the acid flavour turns sharp.
-          </div>
+      <div class="proof-col after">
+        <span class="proof-col-label">With Provenance</span>
+        <h3 class="proof-col-title">Suino Casertana guanciale, pastured eggs, DOP Pecorino, Senatore Cappelli spaghetti</h3>
+        <div class="proof-item">
+          Guanciale di Suino Casertana, 200g
+          <span class="origin-tag">Latium, Italy &middot; Air-cured 120 days &middot; Slow Food Presidium breed</span>
         </div>
-
-        <div class="ing-row" onclick="this.classList.toggle('open')">
-          <div class="ing-main">
-            <span class="gold-dot">●</span>
-            <span class="ing-name">Mexican Key lime, freshly squeezed</span>
-            <span class="ing-arrow">▾</span>
-          </div>
-          <div class="ing-detail">
-            Never pre-squeezed. Enzymatic degradation begins within 20 minutes of cutting — the brightness fades, the bite turns flat. Squeeze to order, cure to order. Key lime has a more floral, less aggressive acidity than Persian lime; this is not interchangeable in the Mexican tradition.
-          </div>
+        <div class="proof-item">
+          Eggs, 4 whole + 4 yolks
+          <span class="origin-tag">Pastured hen &middot; 190+ days &middot; High-yolk omega-3 &middot; SCA Grade A</span>
         </div>
-
-        <div class="ing-row" onclick="this.classList.toggle('open')">
-          <div class="ing-main">
-            <span class="gold-dot">●</span>
-            <span class="ing-name">Jalapeño, seeded</span>
-            <span class="ing-arrow">▾</span>
-          </div>
-          <div class="ing-detail">
-            Mexican ceviche uses jalapeño rather than the ají amarillo of Peruvian tradition — producing a greener, fresher heat profile without the fruity complexity of Andean chillies. Remove seeds and membrane for controlled heat. Leave both for full intensity. Add at the last moment — jalapeño continues to release heat as it sits in the acid.
-          </div>
+        <div class="proof-item">
+          Pecorino Romano DOP, 80g
+          <span class="origin-tag">Sardinia &middot; Latte crudo di Sarda &middot; 5-month cave age &middot; No rind</span>
         </div>
-
-        <div class="ing-row" onclick="this.classList.toggle('open')">
-          <div class="ing-main">
-            <span class="gold-dot">●</span>
-            <span class="ing-name">Plum tomato, 5mm dice, drained</span>
-            <span class="ing-arrow">▾</span>
-          </div>
-          <div class="ing-detail">
-            The defining mark of Mexican (not Peruvian) ceviche. Tomato adds body and natural sweetness that balances the acid. Dice small — tomato must not overwhelm the fish. Drain excess water before adding; undrained tomato dilutes the tiger's milk and weakens the cure.
-          </div>
+        <div class="proof-item">
+          Spaghetti n&#xB0;5, 400g
+          <span class="origin-tag">Senatore Cappelli durum &middot; Bronze-die extruded &middot; Slow-dried 48h at 45&#xB0;C</span>
         </div>
-
-        <div class="ing-row" onclick="this.classList.toggle('open')">
-          <div class="ing-main">
-            <span class="gold-dot">●</span>
-            <span class="ing-name">Fresh coriander, bruised</span>
-            <span class="ing-arrow">▾</span>
-          </div>
-          <div class="ing-detail">
-            Added last, just before service. Bruise gently rather than chopping finely — the essential oils release slowly through the eating window rather than all at once. Finely chopped coriander oxidises quickly and turns bitter. Whole leaves and torn sprigs hold through the 30-minute service window.
-          </div>
-        </div>
-
-      </div>
-
-      <div class="purveyor">
-        <span class="purveyor-label">Sashimi-grade fish</span>
-        <span class="purveyor-link" onclick="this.nextElementSibling.classList.toggle('open')">
-          Catalina Offshore Products ›
-        </span>
-        <div class="purveyor-detail">
-          San Diego, CA · catalinaop.com<br>
-          <span class="purveyor-email">Direct-to-chef sashimi-grade sourcing. Wild-caught, parasite-free certified, overnight delivery.</span>
+        <div class="proof-item">
+          Tellicherry black pepper, freshly cracked
+          <span class="origin-tag">Piper nigrum, Malabar Coast &middot; Fully ripe harvest &middot; Graded 4.5mm+</span>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- SECTION 5: THE DEPTH -->
-<section class="depth-section reveal">
-  <div class="depth-grid">
-    <a href="/techniques/browse" class="depth-card">
-      <span class="depth-num">12,190</span>
-      <span class="depth-label">Techniques</span>
-      <p class="depth-desc">From dashi to duck confit. Every method documented to examination grade.</p>
-      <span class="depth-link">Browse →</span>
-    </a>
-    <a href="/beverage" class="depth-card">
-      <span class="depth-num">748</span>
-      <span class="depth-label">Beverages</span>
-      <p class="depth-desc">Wine, spirits, sake, coffee, tea. Every tradition traced to its terroir.</p>
-      <span class="depth-link">Explore →</span>
-    </a>
-    <a href="/for-professionals" class="depth-card">
-      <span class="depth-num">●</span>
-      <span class="depth-label">For Professionals</span>
-      <p class="depth-desc">Recipe costing. HACCP. Invoice scanning. The back-of-house layer.</p>
-      <span class="depth-link">Learn more →</span>
-    </a>
+    <p class="proof-note">Provenance stores this intelligence once &#x2014; and surfaces it every time the dish appears on a menu, in a recipe card, or in a staff briefing. One system. Every plate.</p>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <div class="footer-logo">P</div>
-      <div class="footer-name">Provenance</div>
-      <div class="footer-email">info@provenance.kitchen</div>
-    </div>
-    <div class="footer-col">
-      <div class="footer-col-title">Explore</div>
+<footer>
+  <div class="site-footer">
+    <div class="footer-links">
+      <a href="/">Home</a>
       <a href="/recipes">Recipes</a>
-      <a href="/beverage">Beverages</a>
       <a href="/techniques/browse">Techniques</a>
-      <a href="/cuisines">Cuisines</a>
       <a href="/suppliers">Suppliers</a>
-    </div>
-    <div class="footer-col">
-      <div class="footer-col-title">Company</div>
-      <a href="/about">About</a>
-      <a href="/methodology">Methodology</a>
       <a href="/for-professionals">For Professionals</a>
-      <a href="/pricing">Pricing</a>
+      <a href="/methodology">Methodology</a>
+      <a href="/kitchen">My Kitchen</a>
+      <a href="mailto:info@provenance.kitchen">Contact</a>
     </div>
+    <span class="footer-wm">Provenance</span>
   </div>
-  <div class="footer-bottom">© 2026 Provenance · All rights reserved</div>
 </footer>
+
+<!-- PWA install prompt -->
+<div id="pwa-prompt" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1A1816;border-top:1px solid rgba(201,168,76,0.2);padding:1rem 1.5rem;z-index:500;align-items:center;justify-content:space-between;gap:1rem;">
+  <span style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:14px;color:#F5F1E9;">Add Provenance to your home screen</span>
+  <div style="display:flex;gap:0.75rem;">
+    <button onclick="installPWA()" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#C9A84C;background:none;border:1px solid rgba(201,168,76,0.4);padding:8px 16px;cursor:pointer;border-radius:2px;">Install</button>
+    <button onclick="dismissPWA()" style="background:none;border:none;color:rgba(156,154,147,0.6);font-size:1.1rem;cursor:pointer;padding:4px 8px;">&#x2715;</button>
+  </div>
+</div>
 
 <script>
 // Mobile menu
-function toggleMenu() {
-  document.getElementById('mobileMenu').classList.toggle('open');
-  document.body.style.overflow =
-    document.getElementById('mobileMenu').classList.contains('open') ? 'hidden' : '';
+function toggleMobileMenu(){
+  var nav = document.getElementById('mobileNav');
+  var overlay = document.getElementById('mobileNavOverlay');
+  nav.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
 }
 
-// Scroll reveal
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
+// Search routing
+function handleSearch(){
+  var q = document.getElementById('heroSearch').value.trim();
+  if (!q) return;
+  window.location.href = '/techniques/browse?q=' + encodeURIComponent(q);
+}
+
+// Auth detection: swap "Sign In" → "Account" if logged in
+fetch('/api/me', {credentials: 'include'})
+  .then(function(r){ if (r.ok) return r.json(); })
+  .then(function(data){
+    if (data && data.id) {
+      var el = document.getElementById('nav-auth-link');
+      if (el) { el.textContent = 'Account'; el.href = '/auth/account'; }
     }
-  });
-}, { threshold: 0.05 });
+  })
+  .catch(function(){});
 
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// Fallback: force reveal after 2s in case observer never fires
-setTimeout(() => {
-  document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-}, 2000);
-
-// Nav scroll tint
-window.addEventListener('scroll', () => {
-  const nav = document.querySelector('.site-nav');
-  nav.style.borderBottomColor = window.scrollY > 80
-    ? 'rgba(201,168,76,0.12)'
-    : 'rgba(201,168,76,0.08)';
-}, { passive: true });
-
-// Service worker
+// PWA service worker
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/static/sw.js').catch(() => {});
-  });
+  navigator.serviceWorker.register('/sw.js').catch(function(err){ console.log('SW:', err); });
+}
+
+// PWA install prompt
+var pwaPromptEvent = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  pwaPromptEvent = e;
+  if (!localStorage.getItem('pwa-dismissed')) {
+    var el = document.getElementById('pwa-prompt');
+    if (el) el.style.display = 'flex';
+  }
+});
+function installPWA(){
+  if (pwaPromptEvent) pwaPromptEvent.prompt();
+  document.getElementById('pwa-prompt').style.display = 'none';
+}
+function dismissPWA(){
+  document.getElementById('pwa-prompt').style.display = 'none';
+  localStorage.setItem('pwa-dismissed', '1');
 }
 </script>
 
