@@ -1370,7 +1370,7 @@ def _compute_recipe_cost(recipe, region):
 
 @app.route("/recipes")
 def recipes_page():
-    return send_file("recipes.html")
+    return render_template("recipes.html")
 
 
 PHOTO_SASHIMI_RULES = """

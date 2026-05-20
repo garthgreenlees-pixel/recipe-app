@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Provenance 1000 — Browse Recipes & Drinks</title>
-<meta name="description" content="Browse the Provenance 1000 — curated recipes, techniques, and drinks from every major culinary tradition.">
+{% extends "base.html" %}
+
+{% block title %}Recipes — Provenance{% endblock %}
+
+{% block extra_head %}
 <link rel="canonical" href="https://provenance.kitchen/recipes">
 <meta property="og:title" content="Recipes — Provenance">
 <meta property="og:description" content="Browse the Provenance 1000 — curated recipes, techniques, and drinks from every major culinary tradition.">
@@ -16,56 +14,9 @@
 <meta name="twitter:title" content="Recipes — Provenance">
 <meta name="twitter:description" content="Browse the Provenance 1000 — curated recipes, techniques, and drinks from every major culinary tradition.">
 <meta name="twitter:image" content="https://provenance.kitchen/static/img/og-default.jpg">
-<link rel="manifest" href="/static/manifest.json">
-<meta name="theme-color" content="#0A0A09">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0A0A09;--surface:#0F0F0E;
-  --cream:#F4F1E8;--smoke:#9C9A93;--stone:#6B6962;
-  --gold:#C9A84C;--gold-faint:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.2);
-  --border:rgba(74,72,64,0.3);
-  --serif:'Playfair Display',Georgia,serif;
-  --sans:'DM Sans',-apple-system,sans-serif;
-  --mono:'DM Mono',monospace;
-}
-html{-webkit-font-smoothing:antialiased}
-body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight:300;line-height:1.6;padding-top:60px}
+{% endblock %}
 
-/* ── Header ──────────────────────────────────────────── */
-#hdr{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  height:60px;padding:0 2rem;
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(10,10,9,0.94);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-}
-.hdr-back{
-  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
-  text-transform:uppercase;color:var(--stone);text-decoration:none;
-  transition:color 180ms;
-}
-.hdr-back:hover{color:var(--gold)}
-.hdr-wm{
-  font-family:var(--serif);font-size:1.1rem;font-weight:400;
-  color:var(--cream);text-decoration:none;
-}
-.hdr-nav{display:flex;gap:1.5rem}
-.hdr-nav a{
-  font-family:var(--sans);font-weight:300;font-size:11px;
-  color:var(--stone);text-decoration:none;letter-spacing:0.04em;transition:color 200ms;
-}
-.hdr-nav a:hover{color:var(--gold)}
-@media(max-width:680px){.hdr-nav{display:none}}
-
+{% block styles %}
 /* ── Page header ─────────────────────────────────────── */
 #page-head{
   background:var(--bg);
@@ -197,27 +148,6 @@ body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight
 }
 .drinks-cta:hover{color:var(--gold)}
 
-/* ─── Footer ─── */
-.app-footer{background:#0E0D0B;border-top:1px solid rgba(201,168,76,0.12);padding:4rem 4rem 2rem;margin-top:auto}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
-.footer-brand{font-family:'Playfair Display',serif;font-size:1.3rem;color:#F5F1E9;margin-bottom:0.5rem}
-.footer-tagline{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:rgba(245,241,233,0.35);text-transform:uppercase}
-.footer-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.25em;color:#C9A84C;text-transform:uppercase;margin-bottom:1rem}
-.footer-col a{display:block;color:rgba(245,241,233,0.55);font-size:0.85rem;font-weight:300;text-decoration:none;padding:0.3rem 0;transition:color 0.2s}
-.footer-col a:hover{color:#F5F1E9}
-.footer-bottom{display:flex;justify-content:space-between;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08);font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.15em;color:rgba(245,241,233,0.2);text-transform:uppercase}
-@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}.app-footer{padding:3rem 1.5rem 2rem}.footer-bottom{flex-direction:column;gap:0.5rem}}
-/* ─── Mobile Nav ─── */
-.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
-.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
-.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
-.mobile-nav-overlay.active{display:block}
-.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
-.mobile-nav.active{right:0}
-.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
-.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
-.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
-@media(max-width:680px){.hdr-nav{display:none}.main-nav{display:none}.mobile-menu-btn{display:flex}}
 /* ── Autocomplete ──────────────────────────────────────── */
 .ac-wrap{position:relative;flex:1;min-width:0}
 .ac-wrap .search-input{width:100%}
@@ -240,36 +170,9 @@ body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight
   font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;
   color:rgba(201,168,76,0.6);flex-shrink:0;min-width:52px;text-align:right;
 }
-</style>
-</head>
-<body>
+{% endblock %}
 
-<!-- ── Header ───────────────────────────────────────────────────── -->
-<div id="hdr">
-  <a href="/auth/account" class="hdr-back">← My Account</a>
-  <a href="/" class="hdr-wm">Provenance</a>
-  <nav class="hdr-nav main-nav">
-    <a href="/drinks">Drinks</a>
-    <a href="/cuisines">Cuisines</a>
-    <a href="/techniques/browse">Techniques</a>
-  </nav>
-  <button class="mobile-menu-btn" aria-label="Open navigation" onclick="toggleMobileMenu()" id="mobileMenuBtn">
-    <span></span><span></span><span></span>
-  </button>
-</div>
-<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
-<nav class="mobile-nav" id="mobileNav">
-  <button class="mobile-nav-close" onclick="toggleMobileMenu()" aria-label="Close navigation">✕</button>
-  <a href="/recipes">Recipes</a>
-  <a href="/drinks">Drinks</a>
-  <a href="/cuisines">Cuisines</a>
-  <a href="/techniques/browse">Techniques</a>
-  <a href="/auth/account">My Account</a>
-  <a href="/about" class="mobile-nav-secondary">About</a>
-  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
-</nav>
-
-<!-- ── Page Header ──────────────────────────────────────────────── -->
+{% block content %}
 <div id="page-head">
   <div style="max-width:1440px;margin:0 auto">
     <div class="page-eyebrow">Provenance 1000</div>
@@ -293,7 +196,6 @@ body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight
   </div>
 </div>
 
-<!-- ── Recipes Tab ───────────────────────────────────────────────── -->
 <div id="panelRecipes" class="grid-section">
   <div class="p-grid" id="recipesGrid"></div>
   <div class="load-more" id="recipesLoadMore" style="display:none">
@@ -301,52 +203,14 @@ body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-weight
   </div>
 </div>
 
-<!-- ── Drinks Tab ────────────────────────────────────────────────── -->
 <div id="panelDrinks" class="grid-section" style="display:none">
   <div class="p-grid" id="drinksGrid"></div>
   <a href="/drinks" class="drinks-cta">Explore the Beverage Room →</a>
 </div>
+{% endblock %}
 
-<footer class="app-footer">
-  <div class="footer-grid">
-    <div class="footer-col">
-      <div class="footer-brand">Provenance</div>
-      <div class="footer-tagline">Culinary Lineage · Vancouver, BC</div>
-    </div>
-    <div class="footer-col">
-      <div class="footer-label">PLATFORM</div>
-      <a href="/recipes">Recipes</a>
-      <a href="/drinks">Drinks</a>
-      <a href="/cuisines">Cuisines</a>
-      <a href="/techniques/browse">Techniques</a>
-      <a href="/auth/account">My Account</a>
-    </div>
-    <div class="footer-col">
-      <div class="footer-label">COMPANY</div>
-      <a href="/about">About</a>
-      <a href="/methodology">Our Standard</a>
-      <a href="/for-professionals">For Professionals</a>
-      <a href="/suppliers">Verified Suppliers</a>
-    </div>
-    <div class="footer-col">
-      <div class="footer-label">CONTACT</div>
-      <a href="mailto:info@provenance.kitchen">info@provenance.kitchen</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Provenance Culinary Lineage</span>
-    <span>The discipline of simplicity. The patience of craft.</span>
-  </div>
-</footer>
-
+{% block scripts %}
 <script>
-function toggleMobileMenu(){
-  var nav=document.getElementById('mobileNav');
-  var overlay=document.getElementById('mobileNavOverlay');
-  nav.classList.toggle('active');
-  overlay.classList.toggle('active');
-  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
-}
 (function() {
   'use strict';
 
@@ -417,7 +281,7 @@ function toggleMobileMenu(){
 
   // ── Render recipes ─────────────────────────────────────────────
   function catLabel(cat) {
-    return (cat || '').replace(/^Provenance 1000\s*[\u2014-]\s*/, '') || '';
+    return (cat || '').replace(/^Provenance 1000\s*[—-]\s*/, '') || '';
   }
 
   function makeRecipeCard(r) {
@@ -487,7 +351,7 @@ function toggleMobileMenu(){
 
     var cat = document.createElement('div');
     cat.className = 'p-card-cat';
-    cat.textContent = (d.category || '').replace(/^Provenance 500 Drinks\s*[\u2014-]\s*/, '') || '';
+    cat.textContent = (d.category || '').replace(/^Provenance 500 Drinks\s*[—-]\s*/, '') || '';
 
     var name = document.createElement('div');
     name.className = 'p-card-name';
@@ -591,7 +455,6 @@ function toggleMobileMenu(){
   };
 
 })();
-
 </script>
 
 <script>
@@ -684,5 +547,4 @@ function toggleMobileMenu(){
 })();
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
-</body>
-</html>
+{% endblock %}
