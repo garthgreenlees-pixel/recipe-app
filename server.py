@@ -11823,9 +11823,13 @@ def _cost_ingredient_loop(ingredients, user_id, use_user_pricing, cur):
                     FROM ingredient_pricing
                     WHERE user_id = %s AND is_active = true
                       AND ingredient_name ILIKE %s
-                    ORDER BY effective_date DESC LIMIT 1
+                    ORDER BY effective_date DESC LIMIT 5
                 """, (user_id, f"%{normalized}%"))
-                price_row = cur.fetchone()
+                _wb = _re.compile(rf'\b{_re.escape(normalized)}\b', _re.IGNORECASE)
+                price_row = next(
+                    (c for c in cur.fetchall() if _wb.search(c['ingredient_name'])),
+                    None
+                )
                 if price_row:
                     source = "user"
             if not price_row:
@@ -11834,9 +11838,13 @@ def _cost_ingredient_loop(ingredients, user_id, use_user_pricing, cur):
                            supplier_name, currency
                     FROM ingredient_prices
                     WHERE ingredient_name_normalized ILIKE %s
-                    ORDER BY updated_at DESC LIMIT 1
+                    ORDER BY updated_at DESC LIMIT 5
                 """, (f"%{normalized}%",))
-                price_row = cur.fetchone()
+                _wb = _re.compile(rf'\b{_re.escape(normalized)}\b', _re.IGNORECASE)
+                price_row = next(
+                    (c for c in cur.fetchall() if _wb.search(c['ingredient_name'])),
+                    None
+                )
 
         if price_row:
             price_unit = price_row.get("unit", "each") or "each"
