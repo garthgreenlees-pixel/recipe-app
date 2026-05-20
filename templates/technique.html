@@ -467,7 +467,7 @@
     {% if technique.flavour_context %}
     <details style="margin-bottom:1rem">
       <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">Why does {{ technique.name }} taste the way it does?</summary>
-      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.flavour_context[:400] }}</p>
+      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.flavour_context }}</p>
     </details>
     {% endif %}
     {% if house_ns.tier %}
@@ -478,7 +478,7 @@
     {% elif technique.common_mistakes %}
     <details style="margin-bottom:1rem">
       <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What are common mistakes when making {{ technique.name }}?</summary>
-      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.common_mistakes[:400] }}</p>
+      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.common_mistakes }}</p>
     </details>
     {% endif %}
     {% if technique.species_precision %}
