@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pricing — Provenance</title>
-<meta name="description" content="Four doors into Provenance. Start free and open further when you're ready.">
+{% extends "base.html" %}
+
+{% block title %}Pricing — Provenance{% endblock %}
+
+{% block extra_head %}
 <link rel="canonical" href="https://provenance.kitchen/pricing">
 <meta property="og:title" content="Pricing — Provenance">
 <meta property="og:description" content="Four doors into Provenance. Start free and open further when you're ready.">
@@ -14,49 +12,16 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pricing — Provenance">
 <meta name="twitter:description" content="Four doors into Provenance. Start free and open further when you're ready.">
-<link rel="manifest" href="/static/manifest.json">
-<meta name="theme-color" content="#08080A">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
-  --cream:#F5F1E9;--text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);
-  --border:rgba(201,168,76,0.20);--bg:#08080A;--surface:#131210;
-  --serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',monospace;
-}
-html{-webkit-font-smoothing:antialiased}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3)}
-.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none}
-.nav-links{display:flex;align-items:center;gap:2rem}
-.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms}
-.nav-links a:hover{color:#C9A84C}
-.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
-.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
-.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
-.mobile-nav-overlay.active{display:block}
-.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
-.mobile-nav.active{right:0}
-.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
-.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
-.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
-@media(max-width:768px){.nav-links{display:none}.mobile-menu-btn{display:flex}}
+{% endblock %}
 
+{% block styles %}
 .hero{max-width:780px;margin:0 auto;padding:4rem 2rem 2rem;text-align:center}
 .hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
 .hero-title{font-family:var(--serif);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;letter-spacing:-1px;margin-bottom:1rem}
-.hero-sub{font-size:1rem;color:var(--text-light);max-width:480px;margin:0 auto}
+.hero-sub{font-size:1rem;color:var(--stone);max-width:480px;margin:0 auto}
 
 .toggle-wrap{display:flex;align-items:center;justify-content:center;gap:1rem;margin:2.5rem auto 3rem}
-.toggle-label{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light)}
+.toggle-label{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--stone)}
 .toggle{position:relative;width:44px;height:24px;cursor:pointer}
 .toggle input{opacity:0;width:0;height:0}
 .toggle-track{position:absolute;inset:0;background:rgba(255,255,255,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;transition:background 200ms}
@@ -73,16 +38,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .card.featured{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.04)}
 .card-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem}
 .card-name{font-family:var(--serif);font-size:1.5rem;font-weight:700;letter-spacing:-0.5px;margin-bottom:1.25rem}
-.card-price-yr{font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--text)}
-.card-price-mo{font-size:0.78rem;color:var(--text-light);margin-top:0.2rem;margin-bottom:1.5rem}
-.card-price-yr .per{font-family:var(--sans);font-size:0.85rem;font-weight:300;color:var(--text-light)}
-
+.card-price-yr{font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--cream)}
+.card-price-mo{font-size:0.78rem;color:var(--stone);margin-top:0.2rem;margin-bottom:1.5rem}
+.card-price-yr .per{font-family:var(--sans);font-size:0.85rem;font-weight:300;color:var(--stone)}
 .card-rule{border:none;border-top:1px solid rgba(201,168,76,0.08);margin:1.25rem 0}
-
 .card-features{list-style:none;padding:0;margin:0 0 1.75rem;display:flex;flex-direction:column;gap:0.6rem;flex:1}
-.card-features li{font-size:0.82rem;color:var(--text-secondary);padding-left:1.1rem;position:relative}
+.card-features li{font-size:0.82rem;color:var(--smoke);padding-left:1.1rem;position:relative}
 .card-features li::before{content:'—';position:absolute;left:0;color:var(--gold);font-size:11px;top:1px}
-
 .card-btn{display:block;text-align:center;padding:10px 16px;border-radius:4px;font-family:var(--sans);font-size:0.82rem;font-weight:400;letter-spacing:0.05em;text-decoration:none;transition:all 200ms}
 .card-btn-outline{background:transparent;border:1px solid rgba(201,168,76,0.25);color:rgba(201,168,76,0.8)}
 .card-btn-outline:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.45);color:var(--gold)}
@@ -92,53 +54,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .faq{max-width:680px;margin:0 auto;padding:0 2rem 5rem}
 .faq-title{font-family:var(--serif);font-size:1.5rem;font-weight:600;margin-bottom:2rem;text-align:center}
 .faq-item{border-bottom:1px solid rgba(201,168,76,0.08);padding:1.25rem 0}
-.faq-q{font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.5rem}
-.faq-a{font-size:0.82rem;color:var(--text-light);line-height:1.7}
+.faq-q{font-size:0.9rem;color:var(--smoke);margin-bottom:0.5rem}
+.faq-a{font-size:0.82rem;color:var(--stone);line-height:1.7}
+{% endblock %}
 
-.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem}
-.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
-.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms}
-.footer-links a:hover{color:#C9A84C}
-.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
-</style>
-</head>
-<body>
-<nav class="nav">
-  <a href="/" class="nav-wordmark">Provenance</a>
-  <div class="nav-links">
-    <a href="/recipes">Recipes</a>
-    <a href="/drinks">Drinks</a>
-    <a href="/cuisines">Cuisines</a>
-    <a href="/techniques/browse">Techniques</a>
-    <a href="/about">About</a>
-    <a href="/suppliers">Suppliers</a>
-    {% if is_authenticated %}
-    <a href="/auth/account">{{ current_user.display_name or 'Account' }}</a>
-    {% else %}
-    <a href="/auth/login">Sign In</a>
-    {% endif %}
-  </div>
-  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
-<nav class="mobile-nav" id="mobileNav">
-  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
-  <a href="/recipes">Recipes</a>
-  <a href="/drinks">Drinks</a>
-  <a href="/cuisines">Cuisines</a>
-  <a href="/techniques/browse">Techniques</a>
-  <a href="/about" class="mobile-nav-secondary">About</a>
-  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
-  <a href="/pricing" class="mobile-nav-secondary">Pricing</a>
-  {% if is_authenticated %}
-  <a href="/auth/account" class="mobile-nav-secondary">{{ current_user.display_name or 'Account' }}</a>
-  {% else %}
-  <a href="/auth/login" class="mobile-nav-secondary">Sign In</a>
-  {% endif %}
-</nav>
-
+{% block content %}
 <div class="hero">
   <div class="hero-eyebrow">Four Doors</div>
   <h1 class="hero-title">The bread is on the table.<br>The room is beautiful.</h1>
@@ -260,23 +180,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     <div class="faq-a">The Profession tier is built for working kitchens — programme builder, supplier sourcing, costing tools. The Trade tier adds a self-service portal for producers and suppliers who want to list products.</div>
   </div>
 </div>
+{% endblock %}
 
-<footer>
-  <div class="about-footer">
-    <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="/recipes">Recipes</a>
-      <a href="/techniques/browse">Techniques</a>
-      <a href="/suppliers">Suppliers</a>
-      <a href="/for-professionals">For Professionals</a>
-      <a href="/methodology">Methodology</a>
-      <a href="/pricing">Pricing</a>
-      <a href="mailto:info@provenance.kitchen">Contact</a>
-    </div>
-    <span class="footer-wm">Provenance</span>
-  </div>
-</footer>
-
+{% block scripts %}
 <script>
 const PRICES = {
   kitchen:    { yearly: '$49/year',  monthly: '$4.99/month' },
@@ -291,30 +197,17 @@ function toggleBilling(isYearly) {
     const prEl = document.getElementById('price-' + tier);
     const subEl = document.getElementById('price-' + tier + '-sub');
     const btn = document.getElementById('btn-' + tier);
-
     if (isYearly) {
       const yr = PRICES[tier].yearly;
-      const perYear = yr.replace('/year', '');
-      prEl.innerHTML = perYear + '<span class="per">/year</span>';
+      prEl.innerHTML = yr.replace('/year', '') + '<span class="per">/year</span>';
       subEl.textContent = 'or ' + PRICES[tier].monthly;
     } else {
       const mo = PRICES[tier].monthly;
       prEl.innerHTML = mo.replace('/month', '') + '<span class="per">/month</span>';
       subEl.textContent = 'billed monthly';
     }
-
     btn.href = btn.dataset[period];
   });
 }
-
-function toggleMobileMenu() {
-  var nav = document.getElementById('mobileNav');
-  var overlay = document.getElementById('mobileNavOverlay');
-  nav.classList.toggle('active');
-  overlay.classList.toggle('active');
-  document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
-}
 </script>
-
-</body>
-</html>
+{% endblock %}
