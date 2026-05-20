@@ -12175,10 +12175,10 @@ def get_recipe_cost(slug):
 
     cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (slug,))
     recipe = cur.fetchone()
-    if not recipe:
+    if not recipe and user_id:
         cur.execute(
-            "SELECT * FROM user_kitchen_recipes WHERE slug = %s AND user_id = 1 LIMIT 1",
-            (slug,),
+            "SELECT * FROM user_kitchen_recipes WHERE slug = %s AND user_id = %s LIMIT 1",
+            (slug, user_id),
         )
         recipe = cur.fetchone()
     if not recipe:
