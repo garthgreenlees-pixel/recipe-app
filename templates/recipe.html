@@ -501,6 +501,9 @@ select.haccp-input{padding:3px 7px}
 .c-invoice-actions{display:flex;gap:10px;margin-bottom:12px}
 .c-dropzone{border:1.5px dashed var(--divider-warm);border-radius:8px;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;padding:32px 20px;transition:border-color 0.15s,background 0.15s;margin:4px 0 16px}
 .c-dropzone:hover,.c-dropzone.drag-over{border-color:var(--gold);background:var(--gold-faint)}
+.c-dropzone.c-dropzone-compact{min-height:64px;padding:12px 20px;gap:4px}
+.c-dropzone.c-dropzone-compact .c-dz-main{font-size:13px}
+.c-dropzone.c-dropzone-compact .c-dz-sub{font-size:11px}
 .c-dz-icon{font-size:26px;color:var(--text-muted);line-height:1}
 .c-dz-main{font-family:var(--didot);font-style:italic;font-size:15px;color:var(--text);text-align:center}
 .c-dz-sub{font-size:11px;color:var(--text-muted);font-style:italic;text-align:center}
@@ -1718,8 +1721,8 @@ function loadInvoicesList(){const listArea=document.getElementById('c-inv-list')
 function renderInvoicesList(invoices){
   const listArea=document.getElementById('c-inv-list');
   const dz=document.getElementById('c-inv-dropzone');
-  if(!invoices.length){if(dz)dz.style.display='';listArea.innerHTML='';return;}
-  if(dz)dz.style.display='none';
+  if(dz){dz.style.display='';dz.classList.toggle('c-dropzone-compact',invoices.length>0);}
+  if(!invoices.length){listArea.innerHTML='';return;}
   let html='';
   for(const inv of invoices){const dateStr=inv.invoice_date||inv.created_at?.substring(0,10)||'';const pgBadge=(inv.page_count>1)?`<span class="c-inv-page-badge">${inv.page_count}pp</span>`:'';html+=`<div class="c-invoice-card" onclick="toggleInvoiceLines('${inv.id}',this)"><div class="c-inv-header"><span class="c-inv-supplier">${_esc(inv.supplier_name)}${pgBadge}</span><span class="c-inv-total">${inv.currency||'CAD'} ${inv.invoice_total?inv.invoice_total.toFixed(2):'—'}</span></div><div class="c-inv-meta">${dateStr}${inv.invoice_number?' · #'+_esc(inv.invoice_number):''} · ${inv.line_count} items</div><div class="c-inv-lines" id="inv-lines-${inv.id}"><div class="c-loading" style="padding:10px 0">Loading…</div></div></div>`;}
   listArea.innerHTML=html;
