@@ -2560,7 +2560,14 @@ def recipe_page(slug):
         conn.close()
         return "Recipe not found", 404
 
-    # Find suppliers (ORIGIN and PROVIDER) linked to this recipe's ingredients by name
+    # Find suppliers linked to this recipe's ingredients.
+    # Forward ILIKE only: product name contains the ingredient token.
+    # The reverse arm ("ingredient contains product name") is dropped — it was the
+    # primary source of false positives (e.g. product "Tomato" matching "tomato paste").
+    # Form-mismatch disqualifier: if the matched product carries a specificity word
+    # (paste, powder, aged, dried, smoked, fermented) that the recipe ingredient
+    # doesn't, the match is discarded.
+    # Confidence: the ingredient token must cover ≥60% of the shorter of the two names.
     recipe_suppliers = []
     user_loc = get_user_location()
     try:
@@ -2568,8 +2575,6 @@ def recipe_page(slug):
         ingredient_names = [ing.get("name", "") for ing in ingredients if ing.get("name")]
         if ingredient_names:
             patterns = [f"%{n}%" for n in ingredient_names[:20]]
-            # Bidirectional: product name contains ingredient fragment OR
-            # ingredient name contains product name (e.g. "fresh spearmint" contains "mint")
             cur.execute("""
                 SELECT DISTINCT ON (s.id, ip.name)
                     s.id, s.name, s.website, s.city, s.state_province, s.country,
@@ -2579,19 +2584,26 @@ def recipe_page(slug):
                 FROM ingredient_products ip
                 JOIN product_suppliers ps ON ip.id = ps.product_id
                 JOIN suppliers s ON ps.supplier_id = s.id
-                WHERE (
-                    ip.name ILIKE ANY(%s)
-                    OR EXISTS (
-                        SELECT 1 FROM unnest(%s::text[]) AS ri(nm)
-                        WHERE ri.nm ILIKE '%%' || ip.name || '%%'
-                    )
-                )
+                WHERE ip.name ILIKE ANY(%s)
                 ORDER BY s.id, ip.name, s.name
-            """, (patterns, ingredient_names[:20]))
+            """, (patterns,))
             rows = cur.fetchall()
-            # Group products by supplier
+
+            _FORM_WORDS = {"paste", "powder", "aged", "dried", "smoked", "fermented"}
+
+            def _match_ok(ing, prod):
+                il, pl = ing.lower(), prod.lower()
+                for fw in _FORM_WORDS:
+                    if fw in pl and fw not in il:
+                        return False
+                shorter = min(len(il), len(pl))
+                return shorter > 0 and len(il) / shorter >= 0.6
+
             supplier_map = {}
             for row in rows:
+                prod_name = row['product_name'] or ''
+                if not any(_match_ok(ing, prod_name) for ing in ingredient_names):
+                    continue
                 sid = row['id']
                 if sid not in supplier_map:
                     supplier_map[sid] = {
@@ -2601,9 +2613,9 @@ def recipe_page(slug):
                         'service_region': list(row['service_region'] or []),
                         'products': []
                     }
-                if row['product_name']:
+                if prod_name:
                     supplier_map[sid]['products'].append({
-                        'name': row['product_name'],
+                        'name': prod_name,
                         'desc': row['product_desc'] or ''
                     })
             # Assign proximity tier then sort (tier ASC, name ASC)
