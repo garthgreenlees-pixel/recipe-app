@@ -888,7 +888,7 @@ select.haccp-input{padding:3px 7px}
         <div class="r6-supplier">
           <div class="r6-supplier__name">
             {% if sup.website %}
-              <a href="{{ sup.website }}" target="_blank" rel="noopener" class="r6-gold-link">{{ sup.name }}</a>
+              <a href="{{ sup.website if sup.website.startswith('http') else 'https://' + sup.website }}" target="_blank" rel="noopener" class="r6-gold-link">{{ sup.name }}</a>
             {% else %}
               {{ sup.name }}
             {% endif %}
