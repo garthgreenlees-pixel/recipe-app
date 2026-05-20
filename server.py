@@ -7330,6 +7330,15 @@ def _render_costing_pdf(data):
             )
         elif origin_producer:
             provider_html = f'<div class="provider__origin">{_esc(origin_producer)}</div>'
+        elif local_provider:
+            price_line = (
+                f'<div class="provider__local-meta">{_esc(local_provider_price)}</div>'
+                if local_provider_price else ''
+            )
+            provider_html = (
+                f'<div class="provider__origin">{_esc(local_provider)}</div>'
+                f'{price_line}'
+            )
         else:
             provider_html = '<div class="provider__origin provider__origin--empty">—</div>'
 
@@ -7432,16 +7441,17 @@ table.ingredient-table tbody tr:last-child td {{ border-bottom: none; }}
 .provider__origin {{ font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 10pt; color: #4a3f33; line-height: 1.35; }}
 .provider__origin--empty {{ color: #b4b2a9; }}
 .provider__local {{ font-family: 'DM Mono', monospace; font-size: 9pt; font-weight: 400; color: #807462; line-height: 1.35; margin-top: 1mm; padding-left: 6mm; letter-spacing: 0.02em; }}
+.provider__local-meta {{ font-family: 'DM Mono', monospace; font-size: 9pt; font-weight: 400; color: #807462; line-height: 1.35; margin-top: 1mm; letter-spacing: 0.02em; }}
 
 .line-cost {{ font-family: 'DM Mono', monospace; font-size: 10pt; font-weight: 400; color: #1f1b16; text-align: right; line-height: 1.35; }}
 
-.totals {{ margin-top: 8mm; }}
+.totals {{ margin-top: 8mm; page-break-inside: avoid; }}
 .totals__row {{ display: flex; justify-content: space-between; padding: 1.5mm 4mm; font-size: 11pt; color: #1f1b16; }}
 .totals__row--primary {{ font-family: 'DM Mono', monospace; font-size: 11pt; font-weight: 500; padding-top: 3mm; border-top: 1px solid #C9A84C; margin-top: 1mm; }}
 .totals__row--primary .totals__label {{ font-family: 'DM Mono', monospace; font-weight: 500; }}
 .totals__row .totals__value {{ font-family: 'DM Mono', monospace; }}
 
-.menu-price-block {{ margin-top: 6mm; background: #ece6d7; border-left: 3px solid #d9bf75; padding: 4mm 5mm; font-family: 'DM Mono', monospace; font-size: 10pt; color: #4a3f33; }}
+.menu-price-block {{ margin-top: 6mm; background: #ece6d7; border-left: 3px solid #d9bf75; padding: 4mm 5mm; font-family: 'DM Mono', monospace; font-size: 10pt; color: #4a3f33; page-break-inside: avoid; }}
 .menu-price-block__row {{ display: flex; justify-content: space-between; padding: 1mm 0; }}
 .menu-price-block__row__value--filled {{ color: #1f1b16; font-weight: 500; }}
 </style>
@@ -12248,7 +12258,7 @@ def get_recipe_cost(slug):
 
     if fmt == "pdf":
         pdf_payload = {
-            "recipe": recipe.get("name", slug),
+            "recipe": recipe.get("name") or recipe.get("title") or slug,
             "slug": slug,
             "portions": portions,
             "total_cost": total_cost,
@@ -12257,7 +12267,17 @@ def get_recipe_cost(slug):
             "food_cost_pct": actual_pct,
             "target_food_cost_pct": target_pct,
             "tier_label": "Profession tier",
-            "breakdown": breakdown,
+            "breakdown": [
+                {
+                    **row,
+                    "local_provider": row.get("supplier_name") or row.get("supplier"),
+                    "local_provider_price": (
+                        f"CAD {row['unit_price']:.2f}/{row.get('price_unit') or row.get('unit', 'each')}"
+                        if row.get("unit_price") is not None else None
+                    ),
+                }
+                for row in breakdown
+            ],
         }
         filename = f"costing-{slug}-{_dt.now().strftime('%Y-%m-%d')}.pdf"
         pdf_bytes = _render_costing_pdf(pdf_payload)
