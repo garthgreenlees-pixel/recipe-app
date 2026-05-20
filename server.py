@@ -2391,11 +2391,13 @@ def _suggested_beverages_for_recipe(recipe_name, cur, limit=4):
             bp.id,
             bp.name,
             br.name AS region,
+            bpr.name AS origin_producer,
             tbp.pairing_type AS relationship_type
         FROM technique_references tr
         JOIN technique_beverage_pairings tbp ON tbp.technique_id = tr.id
         JOIN beverage_products bp ON bp.id = tbp.beverage_product_id
         LEFT JOIN beverage_regions br ON br.id = bp.region_id
+        LEFT JOIN beverage_producers bpr ON bpr.id = bp.producer_id
         WHERE {conditions}
         ORDER BY bp.name ASC
         LIMIT %s
