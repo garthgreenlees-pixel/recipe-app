@@ -2188,7 +2188,8 @@ def get_proximity_tier(s_country, s_state, s_city, s_service_regions, user_loc):
 def get_user_location():
     """Resolve requesting user's ISO region code (e.g. 'CA-BC').
 
-    Priority: ?loc= query param (dev/test) → stored user preference → 'global'
+    Priority: ?loc= query param (dev/test) → stored user preference →
+              Accept-Language country code → 'global'
     """
     loc = request.args.get("loc", "").strip()
     if loc:
@@ -2196,6 +2197,15 @@ def get_user_location():
     user = get_current_user()
     if user and user.get("user_location"):
         return str(user["user_location"]).upper()
+    # Parse Accept-Language header for country code.
+    # e.g. "en-CA,en-US;q=0.9,en;q=0.8" → "CA"
+    al = request.headers.get("Accept-Language", "")
+    for tag in _re.split(r"[,;]", al):
+        tag = tag.strip().split(";")[0].strip()
+        if "-" in tag:
+            country = tag.split("-")[-1].upper()
+            if len(country) == 2 and country.isalpha():
+                return country
     return "global"
 
 
