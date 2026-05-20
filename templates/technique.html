@@ -523,13 +523,6 @@
       {% endfor %}
     </div>
     {% endif %}
-    {% if technique.flavour_context and not (technique_pairings_editorial or technique_pairings_partial) %}
-    <div class="pairing-suggestion">
-      <div class="pairing-suggestion-label">Beverage Pairing Note</div>
-      <p class="pairing-suggestion-text">{{ technique.flavour_context }}</p>
-      <a href="/beverage" class="pairing-suggestion-link">Explore beverage terroir →</a>
-    </div>
-    {% endif %}
   </div>
 </div>
 {% endif %}
