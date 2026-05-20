@@ -1014,6 +1014,12 @@ def init_db():
         CREATE INDEX IF NOT EXISTS idx_recipe_submissions_recipe_status
         ON recipe_submissions(user_kitchen_recipe_id, status)
     """)
+    for stmt in [
+        "ALTER TABLE ingredient_aliases ADD COLUMN IF NOT EXISTS confidence NUMERIC(3,2)",
+        "ALTER TABLE ingredient_aliases ADD COLUMN IF NOT EXISTS reasoning TEXT",
+        "ALTER TABLE ingredient_aliases ADD COLUMN IF NOT EXISTS approved_at TIMESTAMP",
+    ]:
+        cur.execute(stmt)
     cur.close()
     conn.close()
 
@@ -12080,6 +12086,51 @@ def _cost_ingredient_loop(ingredients, user_id, use_user_pricing, cur):
                     (c for c in cur.fetchall() if _wb.search(c['ingredient_name'])),
                     None
                 )
+            if not price_row:
+                # Alias bridge: resolve recipe term to canonical name via ingredient_aliases,
+                # then retry both pricing tables with the canonical name.
+                _master_id, _was_resolved = _resolve_ingredient_master_id(cur, normalized)
+                if _was_resolved:
+                    cur.execute(
+                        "SELECT canonical_name FROM ingredient_master WHERE id = %s",
+                        (_master_id,)
+                    )
+                    _cr = cur.fetchone()
+                    _canon = (
+                        (_cr['canonical_name'] if isinstance(_cr, dict) else _cr[0])
+                        if _cr else None
+                    )
+                    if _canon and _canon.lower() != normalized:
+                        _cn = _canon.lower().strip()
+                        if use_user_pricing:
+                            cur.execute("""
+                                SELECT ingredient_name, price_per_unit AS unit_price, unit,
+                                       supplier_name, 'CAD' AS currency
+                                FROM ingredient_pricing
+                                WHERE user_id = %s AND is_active = true
+                                  AND ingredient_name ILIKE %s
+                                ORDER BY effective_date DESC LIMIT 5
+                            """, (user_id, f"%{_cn}%"))
+                            _wb5 = _re.compile(rf'\b{_re.escape(_cn)}\b', _re.IGNORECASE)
+                            price_row = next(
+                                (c for c in cur.fetchall() if _wb5.search(c['ingredient_name'])),
+                                None
+                            )
+                            if price_row:
+                                source = "user"
+                        if not price_row:
+                            cur.execute("""
+                                SELECT ingredient_name, unit_price, unit, yield_factor, effective_cost,
+                                       supplier_name, currency
+                                FROM ingredient_prices
+                                WHERE ingredient_name_normalized ILIKE %s
+                                ORDER BY updated_at DESC LIMIT 5
+                            """, (f"%{_cn}%",))
+                            _wb6 = _re.compile(rf'\b{_re.escape(_cn)}\b', _re.IGNORECASE)
+                            price_row = next(
+                                (c for c in cur.fetchall() if _wb6.search(c['ingredient_name'])),
+                                None
+                            )
 
         if price_row:
             price_unit = price_row.get("unit", "each") or "each"
