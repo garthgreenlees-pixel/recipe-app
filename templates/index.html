@@ -494,67 +494,6 @@ body {
   flex-wrap: wrap;
 }
 
-/* ── Homepage footer — V4 Sprint 5.7 ── */
-.hp-footer {
-  background: var(--charcoal);
-  color: var(--cream-100);
-  padding: 4rem 2rem 2rem;
-  border-top: 1px solid var(--charcoal-soft);
-}
-.hp-footer-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 3rem;
-  padding-bottom: 3rem;
-  border-bottom: 1px solid var(--charcoal-soft);
-}
-.hp-footer-brand h5,
-.hp-footer-col h5 {
-  font-family: var(--display);
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--cream-100);
-  margin: 0 0 1rem;
-  letter-spacing: 0.02em;
-}
-.hp-footer-brand-tagline {
-  font-family: var(--body);
-  font-size: 0.875rem;
-  color: var(--warm-gray-light);
-  line-height: 1.6;
-  max-width: 280px;
-}
-.hp-footer-col ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.hp-footer-col ul li { margin-bottom: 0.5rem; }
-.hp-footer-col ul li a {
-  font-family: var(--body);
-  font-size: 0.875rem;
-  color: var(--warm-gray-light);
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-.hp-footer-col ul li a:hover { color: var(--cream-100); }
-.hp-footer-bottom {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 1.5rem;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--warm-gray);
-  letter-spacing: 0.04em;
-}
-@media (max-width: 768px) {
-  .hp-footer-inner { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-}
-@media (max-width: 480px) {
-  .hp-footer-inner { grid-template-columns: 1fr; }
-}
 </style>
 {% endblock %}
 
@@ -699,41 +638,3 @@ body {
 <!-- Homepage body complete per Foundation wireframe (V4 Sprint 5) -->
 {% endblock %}
 
-{% block footer %}
-<footer class="hp-footer">
-  <div class="hp-footer-inner">
-    <div class="hp-footer-brand">
-      <h5>Provenance</h5>
-      <p class="hp-footer-brand-tagline">A reference for the origin of ingredients, the lineage of techniques, and the canon of beverages.</p>
-    </div>
-    <div class="hp-footer-col">
-      <h5>Library</h5>
-      <ul>
-        <li><a href="/canons-v2/">The Canon</a></li>
-        <li><a href="#">{# TODO Sprint 7: wire to /atlases #}The Atlases</a></li>
-        <li><a href="#">{# TODO Sprint 7: wire to /routes #}The Routes</a></li>
-        <li><a href="/cuisines">Cuisines</a></li>
-      </ul>
-    </div>
-    <div class="hp-footer-col">
-      <h5>The Kitchen</h5>
-      <ul>
-        <li><a href="/pricing">Pricing</a></li>
-        <li><a href="/for-professionals">For Professionals</a></li>
-        <li><a href="/methodology">Methodology</a></li>
-        <li><a href="/methodology#sashimi-standard">The Standard</a></li>
-      </ul>
-    </div>
-    <div class="hp-footer-col">
-      <h5>The House</h5>
-      <ul>
-        <li><a href="/about">About</a></li>
-        <li><a href="/suppliers">Suppliers</a></li>
-        <li><a href="#">{# TODO Sprint 10: wire to /route/pacific-migration-trail #}The Provenance Table</a></li>
-        <li><a href="/auth/login">Sign in</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="hp-footer-bottom">© 2026 Provenance · All rights reserved</div>
-</footer>
-{% endblock %}
