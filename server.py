@@ -7272,6 +7272,231 @@ h2{{font-size:13px;margin-top:16px}}
         return jsonify(error=str(e)), 500
 
 
+def _render_costing_pdf(data):
+    """Render a costing sheet PDF per Provenance Printable Doctrine.
+
+    Expects `data` dict with keys: recipe, slug, portions, total_cost,
+    cost_per_portion, menu_price (optional), food_cost_pct (optional),
+    target_food_cost_pct (optional), breakdown (list of rows).
+
+    Each breakdown row should have: ingredient (or ingredient_name),
+    quantity, unit, line_cost. Optional per-row: ingredient_origin,
+    origin_producer, local_provider, local_provider_region,
+    local_provider_price.
+
+    Returns PDF bytes.
+    """
+    from weasyprint import HTML as WeasyHTML
+    from datetime import datetime
+    from html import escape
+
+    def _esc(v):
+        return escape(str(v)) if v is not None else ''
+
+    now = datetime.now()
+    date_human = now.strftime('%-d %B %Y')
+    gen_stamp = now.strftime('%-d %B %Y · %H:%M')
+    portions = data.get('portions') or 4
+    breakdown = data.get('breakdown') or []
+    menu_price = data.get('menu_price')
+    food_cost_pct = data.get('food_cost_pct')
+    target_food_cost_pct = data.get('target_food_cost_pct', 30.0)
+    tier_label = data.get('tier_label', 'Profession tier')
+    recipe_name = data.get('recipe', data.get('slug', 'Recipe'))
+    title_italic = data.get('title_italic', '')
+
+    # Build ingredient table rows per doctrine §9
+    rows_html = []
+    for row in breakdown:
+        ing_name = _esc(row.get('ingredient') or row.get('ingredient_name', ''))
+        ing_origin_text = _esc(row.get('ingredient_origin', ''))
+        qty = _esc(row.get('quantity', ''))
+        unit = _esc(row.get('unit', ''))
+        line_cost = row.get('line_cost')
+        line_cost_str = f"CAD {line_cost:.2f}" if line_cost is not None else "—"
+
+        origin_producer = row.get('origin_producer')
+        local_provider = row.get('local_provider')
+        local_provider_region = row.get('local_provider_region')
+        local_provider_price = row.get('local_provider_price')
+
+        # Doctrine §9: em-dash when neither origin nor provider exists;
+        # origin alone when origin exists but local provider doesn't;
+        # both stacked when both exist.
+        if origin_producer and local_provider:
+            provider_html = (
+                f'<div class="provider__origin">{_esc(origin_producer)}</div>'
+                f'<div class="provider__local">↳ {_esc(local_provider_region or "")} · {_esc(local_provider_price or "")}</div>'
+            )
+        elif origin_producer:
+            provider_html = f'<div class="provider__origin">{_esc(origin_producer)}</div>'
+        else:
+            provider_html = '<div class="provider__origin provider__origin--empty">—</div>'
+
+        origin_subline = (
+            f'<div class="ingredient__origin">{ing_origin_text}</div>'
+            if ing_origin_text else ''
+        )
+
+        rows_html.append(f"""
+        <tr>
+          <td>
+            <div class="ingredient__name">{ing_name}</div>
+            {origin_subline}
+          </td>
+          <td class="ingredient__qty">{qty} {unit}</td>
+          <td>{provider_html}</td>
+          <td class="line-cost">{line_cost_str}</td>
+        </tr>""")
+    rows_joined = ''.join(rows_html)
+
+    # Build totals + menu price block per doctrine §10
+    total_cost = data.get('total_cost') or 0.0
+    cost_per_portion = data.get('cost_per_portion') or 0.0
+
+    menu_price_block = ''
+    if menu_price is not None:
+        fc_line = (
+            f'<div class="menu-price-block__row"><span>Food cost</span>'
+            f'<span class="menu-price-block__row__value--filled">{food_cost_pct:.1f}%</span></div>'
+        ) if food_cost_pct is not None else ''
+        menu_price_block = f"""
+        <div class="menu-price-block">
+          <div class="menu-price-block__row"><span>Menu price</span><span class="menu-price-block__row__value--filled">CAD {menu_price:.2f}</span></div>
+          {fc_line}
+          <div class="menu-price-block__row"><span>Target food cost</span><span>&le; {target_food_cost_pct:.1f}%</span></div>
+        </div>"""
+
+    title_italic_html = (
+        f'<br><span class="title__italic">{_esc(title_italic)}</span>'
+        if title_italic else ''
+    )
+
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Costing Sheet — {_esc(recipe_name)}</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=DM+Sans:wght@300;500&family=DM+Mono:wght@400;500&display=swap');
+
+@page {{
+  size: A4;
+  margin: 2cm;
+  @bottom-left {{
+    content: "PROVENANCE · provenance.kitchen";
+    font-family: 'DM Mono', monospace; font-size: 8pt; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #807462;
+  }}
+  @bottom-center {{
+    content: "/recipe/{_esc(data.get('slug', ''))}   ·   Page " counter(page) " of " counter(pages);
+    font-family: 'DM Mono', monospace; font-size: 8pt; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #807462;
+  }}
+  @bottom-right {{
+    content: "Generated {gen_stamp}";
+    font-family: 'DM Mono', monospace; font-size: 8pt; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #807462;
+  }}
+}}
+
+body {{ font-family: 'DM Sans', sans-serif; font-weight: 300; color: #1f1b16; margin: 0; padding: 0; }}
+
+.header {{ display: flex; justify-content: space-between; align-items: baseline; font-family: 'DM Mono', monospace; font-size: 10pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }}
+.header__wordmark {{ color: #C9A84C; }}
+.header__doctype {{ color: #1f1b16; }}
+
+.title {{ font-family: 'Playfair Display', Georgia, serif; font-size: 22pt; font-weight: 400; letter-spacing: -0.005em; line-height: 1.15; margin: 5mm 0 0 0; color: #1f1b16; }}
+.title__italic {{ font-style: italic; color: #4a3f33; }}
+
+.gold-rule {{ width: 1.5cm; height: 1px; background: #C9A84C; margin: 6mm 0; border: none; }}
+
+.meta-strip {{ font-family: 'DM Mono', monospace; font-size: 9pt; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #807462; margin-bottom: 12mm; }}
+.meta-strip__divider {{ color: #c4b89e; margin: 0 2mm; }}
+
+.section__head {{ display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4mm; }}
+.section__head h2 {{ font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 14pt; font-weight: 400; color: #1f1b16; margin: 0; }}
+.section__head__meta {{ font-family: 'DM Mono', monospace; font-size: 9pt; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #807462; }}
+
+table.ingredient-table {{ width: 100%; background: #F5F1E9; border: 1px solid #d9d0b6; border-collapse: collapse; }}
+table.ingredient-table thead {{ background: #ece6d7; }}
+table.ingredient-table thead th {{ font-family: 'DM Mono', monospace; font-size: 9pt; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #807462; text-align: left; padding: 2.5mm 4mm; border-bottom: 1px solid #d9d0b6; }}
+table.ingredient-table thead th.col-cost {{ text-align: right; }}
+table.ingredient-table tbody td {{ padding: 3mm 4mm; border-bottom: 1px dotted #d9d0b6; vertical-align: top; }}
+table.ingredient-table tbody tr:last-child td {{ border-bottom: none; }}
+
+.ingredient__name {{ font-family: 'DM Sans', sans-serif; font-size: 11pt; font-weight: 300; color: #1f1b16; line-height: 1.35; }}
+.ingredient__origin {{ font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 10pt; color: #4a3f33; line-height: 1.35; margin-top: 1mm; }}
+.ingredient__qty {{ font-family: 'DM Mono', monospace; font-size: 10pt; font-weight: 400; color: #1f1b16; line-height: 1.35; }}
+
+.provider__origin {{ font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 10pt; color: #4a3f33; line-height: 1.35; }}
+.provider__origin--empty {{ color: #b4b2a9; }}
+.provider__local {{ font-family: 'DM Mono', monospace; font-size: 9pt; font-weight: 400; color: #807462; line-height: 1.35; margin-top: 1mm; padding-left: 6mm; letter-spacing: 0.02em; }}
+
+.line-cost {{ font-family: 'DM Mono', monospace; font-size: 10pt; font-weight: 400; color: #1f1b16; text-align: right; line-height: 1.35; }}
+
+.totals {{ margin-top: 8mm; }}
+.totals__row {{ display: flex; justify-content: space-between; padding: 1.5mm 4mm; font-size: 11pt; color: #1f1b16; }}
+.totals__row--primary {{ font-family: 'DM Mono', monospace; font-size: 11pt; font-weight: 500; padding-top: 3mm; border-top: 1px solid #C9A84C; margin-top: 1mm; }}
+.totals__row--primary .totals__label {{ font-family: 'DM Mono', monospace; font-weight: 500; }}
+.totals__row .totals__value {{ font-family: 'DM Mono', monospace; }}
+
+.menu-price-block {{ margin-top: 6mm; background: #ece6d7; border-left: 3px solid #d9bf75; padding: 4mm 5mm; font-family: 'DM Mono', monospace; font-size: 10pt; color: #4a3f33; }}
+.menu-price-block__row {{ display: flex; justify-content: space-between; padding: 1mm 0; }}
+.menu-price-block__row__value--filled {{ color: #1f1b16; font-weight: 500; }}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header__wordmark">PROVENANCE</span>
+  <span class="header__doctype">COSTING SHEET</span>
+</div>
+
+<h1 class="title">{_esc(recipe_name)}{title_italic_html}</h1>
+
+<hr class="gold-rule">
+
+<div class="meta-strip">
+  <span>{date_human}</span><span class="meta-strip__divider">·</span><span>/recipe/{_esc(data.get('slug', ''))}</span><span class="meta-strip__divider">·</span><span>Portions · {portions}</span><span class="meta-strip__divider">·</span><span>{_esc(tier_label)}</span>
+</div>
+
+<div class="section__head">
+  <h2>Ingredient cost · at {portions} portions</h2>
+  <span class="section__head__meta">Pat's Rule applied</span>
+</div>
+
+<table class="ingredient-table">
+  <thead>
+    <tr>
+      <th style="width: 42%;">Ingredient · origin</th>
+      <th style="width: 14%;">Quantity</th>
+      <th style="width: 30%;">Provider</th>
+      <th class="col-cost" style="width: 14%;">Line cost</th>
+    </tr>
+  </thead>
+  <tbody>{rows_joined}</tbody>
+</table>
+
+<div class="totals">
+  <div class="totals__row totals__row--primary">
+    <span class="totals__label">Total ingredient cost</span>
+    <span class="totals__value">CAD {total_cost:.2f}</span>
+  </div>
+  <div class="totals__row">
+    <span>Cost per portion ({portions})</span>
+    <span class="totals__value">CAD {cost_per_portion:.2f}</span>
+  </div>
+</div>
+
+{menu_price_block}
+
+</body>
+</html>"""
+
+    return WeasyHTML(string=html_content).write_pdf()
+
+
 # ── Platform counts — shared by /api/stats and template context processor ──
 _stats_cache = {"data": None, "timestamp": 0.0}
 _STATS_CACHE_TTL_SECONDS = 60
@@ -11940,6 +12165,7 @@ def get_recipe_cost(slug):
     Library+ users: uses per-user ingredient_pricing first, falls back to global ingredient_prices.
     Unauthenticated / sub-library: still works but uses only global prices.
     """
+    fmt = request.args.get("format", "").lower()
     user = get_current_user()
     user_id = str(user["id"]) if user else None
     use_user_pricing = user_id is not None and user_can_access("kitchen")
@@ -12019,6 +12245,28 @@ def get_recipe_cost(slug):
 
     cur.close()
     conn.close()
+
+    if fmt == "pdf":
+        pdf_payload = {
+            "recipe": recipe.get("name", slug),
+            "slug": slug,
+            "portions": portions,
+            "total_cost": total_cost,
+            "cost_per_portion": cost_per_portion,
+            "menu_price": menu_price,
+            "food_cost_pct": actual_pct,
+            "target_food_cost_pct": target_pct,
+            "tier_label": "Profession tier",
+            "breakdown": breakdown,
+        }
+        filename = f"costing-{slug}-{_dt.now().strftime('%Y-%m-%d')}.pdf"
+        pdf_bytes = _render_costing_pdf(pdf_payload)
+        return send_file(
+            io.BytesIO(pdf_bytes),
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=filename,
+        )
 
     return jsonify({
         "recipe": recipe.get("name", slug),
