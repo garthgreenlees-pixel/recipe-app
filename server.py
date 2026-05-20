@@ -9820,6 +9820,17 @@ def technique_page(slug):
 
     cur.close()
     conn.close()
+
+    # Derive a short cuisine label from origin for the cuisine browse link.
+    # Split on first comma, period-space, or em-dash; hide if >30 chars,
+    # contains digits, or still contains an em-dash after splitting.
+    cuisine_label = None
+    _origin = technique.get('origin') or ''
+    if _origin:
+        _first = _re.split(r',|\. | — ', _origin, maxsplit=1)[0].strip()
+        if _first and len(_first) <= 30 and not any(c.isdigit() for c in _first) and '—' not in _first:
+            cuisine_label = _first
+
     canonical_url = f"https://provenance.kitchen/technique/{slug}"
     return render_template("technique.html",
         technique=technique,
@@ -9830,6 +9841,7 @@ def technique_page(slug):
         technique_ingredients=technique_ingredients,
         technique_pairings_editorial=technique_pairings_editorial,
         technique_pairings_partial=technique_pairings_partial,
+        cuisine_label=cuisine_label,
     )
 
 

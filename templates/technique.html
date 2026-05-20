@@ -499,13 +499,13 @@
 </div>
 
 {# ── RELATED SECTION ── #}
-{% if related_techniques or technique.origin %}
+{% if related_techniques or cuisine_label %}
 <div class="related-section">
   <div class="related-section-inner">
-    {% if technique.origin %}
+    {% if cuisine_label %}
     <div class="related-cuisine-bar">
-      <span class="related-cuisine-label">{{ technique.origin }} Cuisine</span>
-      <a href="/techniques/browse?cuisine={{ technique.origin | urlencode }}" class="related-cuisine-link">Browse all {{ technique.origin }} techniques →</a>
+      <span class="related-cuisine-label">{{ cuisine_label }} Cuisine</span>
+      <a href="/techniques/browse?cuisine={{ cuisine_label | urlencode }}" class="related-cuisine-link">Browse all {{ cuisine_label }} techniques →</a>
     </div>
     {% endif %}
     {% if related_techniques %}
