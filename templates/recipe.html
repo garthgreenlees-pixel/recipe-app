@@ -1566,7 +1566,8 @@ function closeCostingModal() {
 function costingTab(tab) {
   _costingActiveTab = tab;
   ['cost','invoices','pricing'].forEach(t => {
-    document.getElementById('c-tab-' + t).style.display = (t===tab)?'':'none';
+    const el = document.getElementById('c-tab-' + t);
+    if (el) el.style.display = (t===tab) ? '' : 'none';
     const btn = document.querySelector('.c-tab[data-tab="' + t + '"]');
     if (btn) btn.classList.toggle('active', t===tab);
   });
