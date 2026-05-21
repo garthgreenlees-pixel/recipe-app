@@ -12138,6 +12138,53 @@ def _cost_ingredient_loop(ingredients, user_id, use_user_pricing, cur):
                                 (c for c in cur.fetchall() if _wb6.search(c['ingredient_name'])),
                                 None
                             )
+                    if not price_row and _master_id is not None:
+                        # Alias retry: walk every alias of the resolved master and
+                        # retry pricing tables with each alias text. First hit wins.
+                        _canon_lower = _canon.lower().strip() if _canon else ''
+                        cur.execute("""
+                            SELECT alias FROM ingredient_aliases
+                            WHERE ingredient_id = %s
+                              AND ingredient_id IS NOT NULL
+                              AND alias_lower != %s
+                              AND alias_lower != %s
+                        """, (_master_id, normalized, _canon_lower))
+                        for _alias_row in cur.fetchall():
+                            _at = (
+                                _alias_row['alias'] if isinstance(_alias_row, dict) else _alias_row[0]
+                            ).lower().strip()
+                            if use_user_pricing:
+                                cur.execute("""
+                                    SELECT ingredient_name, price_per_unit AS unit_price, unit,
+                                           supplier_name, 'CAD' AS currency
+                                    FROM ingredient_pricing
+                                    WHERE user_id = %s AND is_active = true
+                                      AND ingredient_name ILIKE %s
+                                    ORDER BY effective_date DESC LIMIT 5
+                                """, (user_id, f"%{_at}%"))
+                                _wba = _re.compile(rf'\b{_re.escape(_at)}\b', _re.IGNORECASE)
+                                price_row = next(
+                                    (c for c in cur.fetchall() if _wba.search(c['ingredient_name'])),
+                                    None
+                                )
+                                if price_row:
+                                    source = "user"
+                                    break
+                            if not price_row:
+                                cur.execute("""
+                                    SELECT ingredient_name, unit_price, unit, yield_factor, effective_cost,
+                                           supplier_name, currency
+                                    FROM ingredient_prices
+                                    WHERE ingredient_name_normalized ILIKE %s
+                                    ORDER BY updated_at DESC LIMIT 5
+                                """, (f"%{_at}%",))
+                                _wba = _re.compile(rf'\b{_re.escape(_at)}\b', _re.IGNORECASE)
+                                price_row = next(
+                                    (c for c in cur.fetchall() if _wba.search(c['ingredient_name'])),
+                                    None
+                                )
+                                if price_row:
+                                    break
 
         if price_row:
             price_unit = price_row.get("unit", "each") or "each"
