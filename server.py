@@ -1020,6 +1020,13 @@ def init_db():
         "ALTER TABLE ingredient_aliases ADD COLUMN IF NOT EXISTS approved_at TIMESTAMP",
     ]:
         cur.execute(stmt)
+    cur.execute("ALTER TABLE ingredient_aliases DROP CONSTRAINT IF EXISTS ingredient_aliases_source_check")
+    cur.execute("""
+        ALTER TABLE ingredient_aliases
+        ADD CONSTRAINT ingredient_aliases_source_check
+        CHECK (source IN ('canonical', 'recipe', 'invoice',
+                          'user', 'legacy_pricing', 'ai_seed'))
+    """)
     cur.close()
     conn.close()
 

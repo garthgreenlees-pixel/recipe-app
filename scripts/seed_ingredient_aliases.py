@@ -145,15 +145,14 @@ def cmd_apply(args):
             cur.execute(
                 """
                 INSERT INTO ingredient_aliases
-                    (ingredient_id, alias, alias_lower, source, confidence,
+                    (ingredient_id, alias, source, confidence,
                      reasoning, approved_at, created_at)
-                VALUES (%s, %s, %s, 'ai_seed', %s, %s, NOW(), NOW())
+                VALUES (%s, %s, 'ai_seed', %s, %s, NOW(), NOW())
                 ON CONFLICT (alias_lower) DO NOTHING
                 """,
                 (
                     primary_id,
                     m["name"],
-                    m["name"].lower(),
                     float(confidence),
                     reasoning,
                 ),
