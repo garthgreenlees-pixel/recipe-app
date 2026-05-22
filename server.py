@@ -12927,8 +12927,8 @@ def pricing_manual():
     user = get_current_user()
     if not user:
         return jsonify({"error": "Login required"}), 401
-    if not user_can_access("kitchen"):
-        return jsonify({"error": "Kitchen tier required"}), 403
+    if not user_can_access("profession"):
+        return jsonify({"error": "Profession tier required"}), 403
     data = request.get_json() or {}
     ingredient_name = (data.get("ingredient_name") or "").strip()
     price_per_unit = data.get("price_per_unit")
@@ -12967,6 +12967,121 @@ def pricing_manual():
     conn.close()
     return jsonify({"success": True, "ingredient_name": ingredient_name,
                     "price_per_unit": float(price_per_unit), "unit": unit})
+
+
+# ─── Ingredient catalog helpers (Cycle B.3) ──────────────────────────────────
+
+@app.route("/api/ingredients/near-matches")
+@requires_tier("profession")
+def ingredients_near_matches():
+    """Return up to 3 catalog entries similar to ?name=X, excluding chef-dismissed pairs."""
+    name = (request.args.get("name") or "").strip()
+    if not name:
+        return jsonify({"matches": []})
+    user = get_current_user()
+    user_id = user["id"]
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute("""
+            SELECT m.id, m.canonical_name,
+                   ROUND(similarity(LOWER(m.canonical_name), LOWER(%s))::numeric, 3) AS score
+            FROM ingredient_master m
+            WHERE similarity(LOWER(m.canonical_name), LOWER(%s)) > 0.4
+              AND NOT EXISTS (
+                SELECT 1 FROM ingredient_duplicate_dismissals d
+                WHERE d.user_id = %s
+                  AND (d.master_id_a = m.id OR d.master_id_b = m.id)
+              )
+            ORDER BY score DESC
+            LIMIT 3
+        """, (name, name, user_id))
+        rows = cur.fetchall()
+        matches = [{"id": r["id"], "canonical_name": r["canonical_name"],
+                    "score": float(r["score"])} for r in rows]
+    except Exception:
+        # pg_trgm unavailable — fall back to ILIKE substring
+        app.logger.warning("near-matches: pg_trgm unavailable, using ILIKE fallback")
+        cur.execute("""
+            SELECT id, canonical_name, 0.5 AS score
+            FROM ingredient_master
+            WHERE LOWER(canonical_name) LIKE %s
+              AND NOT EXISTS (
+                SELECT 1 FROM ingredient_duplicate_dismissals d
+                WHERE d.user_id = %s
+                  AND (d.master_id_a = ingredient_master.id OR d.master_id_b = ingredient_master.id)
+              )
+            ORDER BY length(canonical_name) ASC
+            LIMIT 3
+        """, (f"%{name.lower()}%", user_id))
+        rows = cur.fetchall()
+        matches = [{"id": r["id"], "canonical_name": r["canonical_name"],
+                    "score": float(r["score"])} for r in rows]
+    cur.close()
+    conn.close()
+    return jsonify({"matches": matches})
+
+
+@app.route("/api/ingredients/add-to-catalog", methods=["POST"])
+@requires_tier("profession")
+def ingredients_add_to_catalog():
+    """Create a new ingredient_master entry from a chef-typed name."""
+    data = request.get_json() or {}
+    name = (data.get("name") or "").strip()
+    if not name:
+        return jsonify({"error": "name is required"}), 400
+    if len(name) > 200:
+        return jsonify({"error": "name must be 200 characters or fewer"}), 400
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    # Avoid exact-duplicate canonical names
+    cur.execute("SELECT id, canonical_name FROM ingredient_master WHERE LOWER(canonical_name) = LOWER(%s) LIMIT 1", (name,))
+    existing = cur.fetchone()
+    if existing:
+        cur.close(); conn.close()
+        return jsonify({"id": existing["id"], "canonical_name": existing["canonical_name"], "already_existed": True})
+    cur.execute("""
+        INSERT INTO ingredient_master (canonical_name, is_active, created_at, updated_at)
+        VALUES (%s, true, NOW(), NOW())
+        RETURNING id, canonical_name
+    """, (name,))
+    row = cur.fetchone()
+    # Register canonical alias so the resolver can find it immediately
+    cur.execute("""
+        INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+        VALUES (%s, %s, 'user')
+        ON CONFLICT (alias_lower) DO NOTHING
+    """, (row["id"], name))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"id": row["id"], "canonical_name": row["canonical_name"], "already_existed": False})
+
+
+@app.route("/api/ingredients/dismiss-duplicate", methods=["POST"])
+@requires_tier("profession")
+def ingredients_dismiss_duplicate():
+    """Record a chef's decision that two catalog entries are not duplicates."""
+    data = request.get_json() or {}
+    try:
+        id_a = int(data.get("master_id_a", 0))
+        id_b = int(data.get("master_id_b", 0))
+    except (TypeError, ValueError):
+        return jsonify({"error": "master_id_a and master_id_b must be integers"}), 400
+    if not id_a or not id_b or id_a == id_b:
+        return jsonify({"error": "Two distinct master IDs required"}), 400
+    user = get_current_user()
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO ingredient_duplicate_dismissals (user_id, master_id_a, master_id_b)
+        VALUES (%s, LEAST(%s,%s), GREATEST(%s,%s))
+        ON CONFLICT (user_id, master_id_a, master_id_b) DO NOTHING
+    """, (user["id"], id_a, id_b, id_a, id_b))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"dismissed": True})
 
 
 # ─── OPT3 Canon routes ───────────────────────────────────────────────────────
