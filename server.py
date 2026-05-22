@@ -1027,6 +1027,50 @@ def init_db():
         CHECK (source IN ('canonical', 'recipe', 'invoice',
                           'user', 'legacy_pricing', 'ai_seed'))
     """)
+    # ── Duplicate resolution (Cycle B.2) ──────────────────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS ingredient_duplicate_candidates (
+            id               SERIAL PRIMARY KEY,
+            master_id_a      INTEGER NOT NULL REFERENCES ingredient_master(id),
+            master_id_b      INTEGER NOT NULL REFERENCES ingredient_master(id),
+            similarity_score NUMERIC(4,3) NULL,
+            source           TEXT NOT NULL DEFAULT 'sprint_7d_audit',
+            created_at       TIMESTAMP DEFAULT NOW(),
+            CHECK (master_id_a < master_id_b),
+            UNIQUE (master_id_a, master_id_b)
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_dup_candidates_a
+        ON ingredient_duplicate_candidates(master_id_a)
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_dup_candidates_b
+        ON ingredient_duplicate_candidates(master_id_b)
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS ingredient_duplicate_dismissals (
+            id           SERIAL PRIMARY KEY,
+            user_id      INTEGER NOT NULL REFERENCES users(id),
+            master_id_a  INTEGER NOT NULL REFERENCES ingredient_master(id),
+            master_id_b  INTEGER NOT NULL REFERENCES ingredient_master(id),
+            dismissed_at TIMESTAMP DEFAULT NOW(),
+            CHECK (master_id_a < master_id_b),
+            UNIQUE (user_id, master_id_a, master_id_b)
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_dup_dismissals_user
+        ON ingredient_duplicate_dismissals(user_id)
+    """)
+    cur.execute("""
+        ALTER TABLE ingredient_master
+        ADD COLUMN IF NOT EXISTS variant_of INTEGER NULL REFERENCES ingredient_master(id)
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_ingredient_master_variant_of
+        ON ingredient_master(variant_of) WHERE variant_of IS NOT NULL
+    """)
     cur.close()
     conn.close()
 
