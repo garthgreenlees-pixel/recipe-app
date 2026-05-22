@@ -11985,15 +11985,6 @@ def _dw_resolve_supplier_id(cur, supplier_name):
     return None, False
 
 
-def _dual_write_enabled():
-    """Single source of truth for the dual-write feature flag."""
-    return os.environ.get("DUAL_WRITE_INGREDIENT_MODEL", "0") == "1"
-
-
-def _read_new_model_enabled():
-    """Phase 4 feature flag. True = costing reads from price_history. Default OFF."""
-    return os.environ.get("READ_NEW_INGREDIENT_MODEL", "0") == "1"
-
 
 @app.route("/api/costing/scan-invoice", methods=["POST"])
 def costing_scan_invoice_legacy():
@@ -12035,156 +12026,33 @@ def _cost_ingredient_loop(ingredients, user_id, use_user_pricing, cur):
         source = "global"
         unit_estimate = False
 
-        if _read_new_model_enabled():
-            master_id, was_resolved = _resolve_ingredient_master_id(cur, normalized)
-            if was_resolved and use_user_pricing:
-                cur.execute("""
-                    SELECT %s AS ingredient_name, price_per_unit AS unit_price, unit,
-                           supplier_name, currency
-                    FROM price_history
-                    WHERE ingredient_id = %s AND user_id = %s
-                      AND source IN ('invoice', 'manual', 'backfill_legacy')
-                    ORDER BY effective_date DESC, created_at DESC
-                    LIMIT 1
-                """, (normalized, master_id, user_id))
-                price_row = cur.fetchone()
-                if price_row:
-                    source = "user"
-            if was_resolved and not price_row:
-                cur.execute("""
-                    SELECT %s AS ingredient_name, price_per_unit AS unit_price, unit,
-                           yield_factor, NULL AS effective_cost,
-                           supplier_name, currency
-                    FROM price_history
-                    WHERE ingredient_id = %s AND is_global = true
-                    ORDER BY effective_date DESC, created_at DESC
-                    LIMIT 1
-                """, (normalized, master_id))
-                price_row = cur.fetchone()
-                if price_row:
-                    source = "global"
-        else:
-            if use_user_pricing:
-                cur.execute("""
-                    SELECT ingredient_name, price_per_unit AS unit_price, unit,
-                           supplier_name, 'CAD' AS currency
-                    FROM ingredient_pricing
-                    WHERE user_id = %s AND is_active = true
-                      AND ingredient_name ILIKE %s
-                    ORDER BY effective_date DESC LIMIT 5
-                """, (user_id, f"%{normalized}%"))
-                _wb = _re.compile(rf'\b{_re.escape(normalized)}\b', _re.IGNORECASE)
-                price_row = next(
-                    (c for c in cur.fetchall() if _wb.search(c['ingredient_name'])),
-                    None
-                )
-                if price_row:
-                    source = "user"
-            if not price_row:
-                cur.execute("""
-                    SELECT ingredient_name, unit_price, unit, yield_factor, effective_cost,
-                           supplier_name, currency
-                    FROM ingredient_prices
-                    WHERE ingredient_name_normalized ILIKE %s
-                    ORDER BY updated_at DESC LIMIT 5
-                """, (f"%{normalized}%",))
-                _wb = _re.compile(rf'\b{_re.escape(normalized)}\b', _re.IGNORECASE)
-                price_row = next(
-                    (c for c in cur.fetchall() if _wb.search(c['ingredient_name'])),
-                    None
-                )
-            if not price_row:
-                # Alias bridge: resolve recipe term to canonical name via ingredient_aliases,
-                # then retry both pricing tables with the canonical name.
-                _master_id, _was_resolved = _resolve_ingredient_master_id(cur, normalized)
-                if _was_resolved:
-                    cur.execute(
-                        "SELECT canonical_name FROM ingredient_master WHERE id = %s",
-                        (_master_id,)
-                    )
-                    _cr = cur.fetchone()
-                    _canon = (
-                        (_cr['canonical_name'] if isinstance(_cr, dict) else _cr[0])
-                        if _cr else None
-                    )
-                    if _canon and _canon.lower() != normalized:
-                        _cn = _canon.lower().strip()
-                        if use_user_pricing:
-                            cur.execute("""
-                                SELECT ingredient_name, price_per_unit AS unit_price, unit,
-                                       supplier_name, 'CAD' AS currency
-                                FROM ingredient_pricing
-                                WHERE user_id = %s AND is_active = true
-                                  AND ingredient_name ILIKE %s
-                                ORDER BY effective_date DESC LIMIT 5
-                            """, (user_id, f"%{_cn}%"))
-                            _wb5 = _re.compile(rf'\b{_re.escape(_cn)}\b', _re.IGNORECASE)
-                            price_row = next(
-                                (c for c in cur.fetchall() if _wb5.search(c['ingredient_name'])),
-                                None
-                            )
-                            if price_row:
-                                source = "user"
-                        if not price_row:
-                            cur.execute("""
-                                SELECT ingredient_name, unit_price, unit, yield_factor, effective_cost,
-                                       supplier_name, currency
-                                FROM ingredient_prices
-                                WHERE ingredient_name_normalized ILIKE %s
-                                ORDER BY updated_at DESC LIMIT 5
-                            """, (f"%{_cn}%",))
-                            _wb6 = _re.compile(rf'\b{_re.escape(_cn)}\b', _re.IGNORECASE)
-                            price_row = next(
-                                (c for c in cur.fetchall() if _wb6.search(c['ingredient_name'])),
-                                None
-                            )
-                    if not price_row and _master_id is not None:
-                        # Alias retry: walk every alias of the resolved master and
-                        # retry pricing tables with each alias text. First hit wins.
-                        _canon_lower = _canon.lower().strip() if _canon else ''
-                        cur.execute("""
-                            SELECT alias FROM ingredient_aliases
-                            WHERE ingredient_id = %s
-                              AND ingredient_id IS NOT NULL
-                              AND alias_lower != %s
-                              AND alias_lower != %s
-                        """, (_master_id, normalized, _canon_lower))
-                        for _alias_row in cur.fetchall():
-                            _at = (
-                                _alias_row['alias'] if isinstance(_alias_row, dict) else _alias_row[0]
-                            ).lower().strip()
-                            if use_user_pricing:
-                                cur.execute("""
-                                    SELECT ingredient_name, price_per_unit AS unit_price, unit,
-                                           supplier_name, 'CAD' AS currency
-                                    FROM ingredient_pricing
-                                    WHERE user_id = %s AND is_active = true
-                                      AND ingredient_name ILIKE %s
-                                    ORDER BY effective_date DESC LIMIT 5
-                                """, (user_id, f"%{_at}%"))
-                                _wba = _re.compile(rf'\b{_re.escape(_at)}\b', _re.IGNORECASE)
-                                price_row = next(
-                                    (c for c in cur.fetchall() if _wba.search(c['ingredient_name'])),
-                                    None
-                                )
-                                if price_row:
-                                    source = "user"
-                                    break
-                            if not price_row:
-                                cur.execute("""
-                                    SELECT ingredient_name, unit_price, unit, yield_factor, effective_cost,
-                                           supplier_name, currency
-                                    FROM ingredient_prices
-                                    WHERE ingredient_name_normalized ILIKE %s
-                                    ORDER BY updated_at DESC LIMIT 5
-                                """, (f"%{_at}%",))
-                                _wba = _re.compile(rf'\b{_re.escape(_at)}\b', _re.IGNORECASE)
-                                price_row = next(
-                                    (c for c in cur.fetchall() if _wba.search(c['ingredient_name'])),
-                                    None
-                                )
-                                if price_row:
-                                    break
+        master_id, was_resolved = _resolve_ingredient_master_id(cur, normalized)
+        if was_resolved and use_user_pricing:
+            cur.execute("""
+                SELECT %s AS ingredient_name, price_per_unit AS unit_price, unit,
+                       supplier_name, currency
+                FROM price_history
+                WHERE ingredient_id = %s AND user_id = %s
+                  AND source IN ('invoice', 'manual', 'backfill_legacy')
+                ORDER BY effective_date DESC, created_at DESC
+                LIMIT 1
+            """, (normalized, master_id, str(user_id) if user_id is not None else None))
+            price_row = cur.fetchone()
+            if price_row:
+                source = "user"
+        if was_resolved and not price_row:
+            cur.execute("""
+                SELECT %s AS ingredient_name, price_per_unit AS unit_price, unit,
+                       yield_factor, NULL AS effective_cost,
+                       supplier_name, currency
+                FROM price_history
+                WHERE ingredient_id = %s AND is_global = true
+                ORDER BY effective_date DESC, created_at DESC
+                LIMIT 1
+            """, (normalized, master_id))
+            price_row = cur.fetchone()
+            if price_row:
+                source = "global"
 
         if price_row:
             price_unit = price_row.get("unit", "each") or "each"
@@ -12277,7 +12145,7 @@ def _cost_ingredient_loop(ingredients, user_id, use_user_pricing, cur):
 @app.route("/api/costing/recipe/<slug>")
 def get_recipe_cost(slug):
     """Calculate cost breakdown for a recipe.
-    Library+ users: uses per-user ingredient_pricing first, falls back to global ingredient_prices.
+    Library+ users: uses per-user price_history first, falls back to global price_history rows.
     Unauthenticated / sub-library: still works but uses only global prices.
     """
     fmt = request.args.get("format", "").lower()
@@ -12484,128 +12352,6 @@ def weekly_cost_summary():
     })
 
 
-# ─── Costing Engine v2 routes ────────────────────────────────────────────────
-
-
-@app.route("/api/internal/costing-compare/<slug>", methods=["GET"])
-def costing_compare(slug):
-    """
-    Phase 3 admin-only endpoint: returns old-model and new-model costing side-by-side.
-    Used to verify dual-write parity before Phase 4 read switchover.
-    Requires X-Admin-Token header matching ADMIN_TOKEN env var.
-    """
-    expected = os.environ.get("ADMIN_TOKEN")
-    provided = request.headers.get("X-Admin-Token")
-    if not expected or not provided or provided != expected:
-        return jsonify({"error": "unauthorized"}), 401
-
-    user_id = request.args.get("user_id")
-    if not user_id:
-        return jsonify({"error": "user_id query param required"}), 400
-
-    conn = get_db()
-    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-    try:
-        cur.execute("SELECT id, name, ingredients FROM recipes WHERE slug = %s", (slug,))
-        recipe = cur.fetchone()
-        if not recipe:
-            cur.close(); conn.close()
-            return jsonify({"error": f"recipe '{slug}' not found"}), 404
-
-        # Old model: count of active pricing rows for this user
-        cur.execute("""
-            SELECT COUNT(*) AS old_active_prices
-            FROM ingredient_pricing
-            WHERE user_id = %s AND is_active = true
-        """, (user_id,))
-        old_summary = dict(cur.fetchone())
-
-        # New model: count of price_history rows for this user (live writes only)
-        cur.execute("""
-            SELECT COUNT(*) AS new_priced_rows
-            FROM price_history
-            WHERE user_id = %s AND source IN ('invoice', 'manual')
-        """, (user_id,))
-        new_summary = dict(cur.fetchone())
-
-        # Per-ingredient resolution check
-        recipe_ings = recipe["ingredients"] if isinstance(recipe["ingredients"], list) else []
-        per_ingredient = []
-        for ing in recipe_ings[:50]:
-            ing_name = ing.get("name") if isinstance(ing, dict) else str(ing)
-            if not ing_name:
-                continue
-
-            # Old model: ILIKE against ingredient_pricing
-            cur.execute("""
-                SELECT price_per_unit, unit, supplier_name
-                FROM ingredient_pricing
-                WHERE user_id = %s AND is_active = true
-                  AND ingredient_name ILIKE %s
-                ORDER BY effective_date DESC LIMIT 1
-            """, (user_id, f"%{ing_name}%"))
-            old_match = cur.fetchone()
-
-            # New model: alias resolution + price_history
-            master_id, was_resolved = _resolve_ingredient_master_id(cur, ing_name)
-            new_match = None
-            if was_resolved:
-                cur.execute("""
-                    SELECT price_per_unit, unit, supplier_name, currency
-                    FROM price_history
-                    WHERE ingredient_id = %s AND user_id = %s
-                    ORDER BY effective_date DESC LIMIT 1
-                """, (master_id, user_id))
-                new_match = cur.fetchone()
-
-            if old_match and new_match:
-                try:
-                    parity = ("match"
-                              if abs(float(old_match["price_per_unit"]) - float(new_match["price_per_unit"])) < 0.01
-                              else "diff")
-                except Exception:
-                    parity = "diff"
-            elif old_match:
-                parity = "old_only"
-            elif new_match:
-                parity = "new_only"
-            else:
-                parity = "neither"
-
-            per_ingredient.append({
-                "ingredient": ing_name,
-                "old_model": dict(old_match) if old_match else None,
-                "new_model_master_id": master_id,
-                "new_model_resolved": was_resolved,
-                "new_model_price": dict(new_match) if new_match else None,
-                "parity": parity,
-            })
-
-        parity_counts = {}
-        for p in per_ingredient:
-            parity_counts[p["parity"]] = parity_counts.get(p["parity"], 0) + 1
-
-        cur.close(); conn.close()
-        return jsonify({
-            "recipe_slug": slug,
-            "recipe_name": recipe["name"],
-            "user_id": user_id,
-            "old_model_summary": old_summary,
-            "new_model_summary": new_summary,
-            "ingredient_count": len(per_ingredient),
-            "parity_summary": parity_counts,
-            "per_ingredient": per_ingredient,
-        })
-    except Exception:
-        import traceback
-        app.logger.error(f"[costing-compare] error: {traceback.format_exc()}")
-        try:
-            cur.close(); conn.close()
-        except Exception:
-            pass
-        return jsonify({"error": "internal error"}), 500
-
 
 @app.route("/api/invoices/scan", methods=["POST"])
 @requires_tier("profession")
@@ -12787,16 +12533,13 @@ def invoices_scan():
         supplier_id = None
         sup_found_existing = False
 
-        # === PHASE 3 DUAL-WRITE: try alias-based resolution first ===
-        if _dual_write_enabled():
-            try:
-                resolved_id, was_resolved = _dw_resolve_supplier_id(cur, supplier_name)
-                if was_resolved:
-                    supplier_id = resolved_id
-                    sup_found_existing = True
-                    app.logger.info(f"[dual-write] supplier '{supplier_name}' resolved via aliases -> id={supplier_id}")
-            except Exception as e:
-                app.logger.warning(f"[dual-write] supplier alias lookup failed: {e}")
+        try:
+            resolved_id, was_resolved = _dw_resolve_supplier_id(cur, supplier_name)
+            if was_resolved:
+                supplier_id = resolved_id
+                sup_found_existing = True
+        except Exception as e:
+            app.logger.warning(f"[scan] supplier alias lookup failed: {e}")
 
         # Original exact/prefix match (fallback)
         if supplier_id is None:
@@ -12822,16 +12565,14 @@ def invoices_scan():
                 new_row = cur.fetchone()
                 if new_row:
                     supplier_id = new_row["id"]
-                    # === PHASE 3 DUAL-WRITE: also insert into supplier_aliases ===
-                    if _dual_write_enabled():
-                        try:
-                            cur.execute("""
-                                INSERT INTO supplier_aliases (supplier_id, alias, source)
-                                VALUES (%s, %s, 'invoice')
-                                ON CONFLICT (alias_lower) DO NOTHING
-                            """, (supplier_id, supplier_name))
-                        except Exception as e:
-                            app.logger.warning(f"[dual-write] supplier_aliases insert failed: {e}")
+                    try:
+                        cur.execute("""
+                            INSERT INTO supplier_aliases (supplier_id, alias, source)
+                            VALUES (%s, %s, 'invoice')
+                            ON CONFLICT (alias_lower) DO NOTHING
+                        """, (supplier_id, supplier_name))
+                    except Exception as e:
+                        app.logger.warning(f"[scan] supplier_aliases insert failed: {e}")
                 else:
                     cur.execute("SELECT id FROM suppliers WHERE name = %s", (supplier_name,))
                     r = cur.fetchone()
@@ -12874,24 +12615,22 @@ def invoices_scan():
             matched_id = matched_row["id"] if matched_row else None
             matched_name = matched_row["name"] if matched_row else None
 
-            # === PHASE 3 DUAL-WRITE: resolve to ingredient_master and record alias ===
-            if _dual_write_enabled():
-                try:
-                    ingredient_master_id, was_resolved = _resolve_ingredient_master_id(cur, raw_desc)
-                    if was_resolved and raw_desc:
-                        cur.execute("""
-                            INSERT INTO ingredient_aliases (ingredient_id, alias, source)
-                            VALUES (%s, %s, 'invoice')
-                            ON CONFLICT (alias_lower) DO NOTHING
-                        """, (ingredient_master_id, raw_desc))
-                    elif raw_desc:
-                        cur.execute("""
-                            INSERT INTO ingredient_aliases (ingredient_id, alias, source)
-                            VALUES (NULL, %s, 'invoice')
-                            ON CONFLICT (alias_lower) DO NOTHING
-                        """, (raw_desc,))
-                except Exception as e:
-                    app.logger.warning(f"[dual-write] ingredient resolution failed for '{raw_desc}': {e}")
+            try:
+                ingredient_master_id, was_resolved = _resolve_ingredient_master_id(cur, raw_desc)
+                if was_resolved and raw_desc:
+                    cur.execute("""
+                        INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+                        VALUES (%s, %s, 'invoice')
+                        ON CONFLICT (alias_lower) DO NOTHING
+                    """, (ingredient_master_id, raw_desc))
+                elif raw_desc:
+                    cur.execute("""
+                        INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+                        VALUES (NULL, %s, 'invoice')
+                        ON CONFLICT (alias_lower) DO NOTHING
+                    """, (raw_desc,))
+            except Exception as e:
+                app.logger.warning(f"[scan] ingredient resolution failed for '{raw_desc}': {e}")
 
             cur.execute("""
                 INSERT INTO supplier_invoice_lines
@@ -12945,7 +12684,7 @@ def invoices_scan():
 @app.route("/api/invoices/<invoice_id>/apply", methods=["POST"])
 @requires_tier("profession")
 def invoices_apply(invoice_id):
-    """Apply user-confirmed invoice lines to ingredient_pricing."""
+    """Apply user-confirmed invoice lines to price_history."""
     user = get_current_user()
 
     data = request.get_json() or {}
@@ -12978,54 +12717,37 @@ def invoices_apply(invoice_id):
         if not ingredient_name or price_per_unit is None:
             skipped += 1
             continue
-        # Mark previous active rows for this user+ingredient as inactive
+        master_id, was_resolved = _resolve_ingredient_master_id(cur, ingredient_name)
+        if not was_resolved:
+            app.logger.info(f"[apply] '{ingredient_name}' unresolved — skipping")
+            skipped += 1
+            continue
         cur.execute("""
-            UPDATE ingredient_pricing SET is_active = false
-            WHERE user_id = %s AND ingredient_name ILIKE %s AND is_active = true
-        """, (str(user["id"]), ingredient_name))
-        # Insert new active row
+            SELECT COALESCE(currency, 'CAD') AS currency
+            FROM supplier_invoices WHERE id = %s
+        """, (invoice_id,))
+        curr_row = cur.fetchone()
+        currency = curr_row["currency"] if curr_row else "CAD"
         cur.execute("""
-            INSERT INTO ingredient_pricing
-                (user_id, ingredient_name, supplier_id, supplier_name,
-                 price_per_unit, unit, invoice_id, invoice_line_id, effective_date, is_active)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, true)
-        """, (str(user["id"]), ingredient_name, supplier_id, supplier_name,
-              float(price_per_unit), unit, invoice_id, line_id, effective_date))
-        # === PHASE 3 DUAL-WRITE: also insert into price_history ===
-        if _dual_write_enabled():
-            try:
-                master_id, was_resolved = _resolve_ingredient_master_id(cur, ingredient_name)
-                if not was_resolved:
-                    app.logger.info(f"[dual-write] apply: '{ingredient_name}' unresolved — skipping price_history INSERT")
-                else:
-                    cur.execute("""
-                        SELECT COALESCE(currency, 'CAD') AS currency
-                        FROM supplier_invoices WHERE id = %s
-                    """, (invoice_id,))
-                    curr_row = cur.fetchone()
-                    currency = curr_row["currency"] if curr_row else "CAD"
-                    cur.execute("""
-                        INSERT INTO price_history (
-                            ingredient_id, user_id, is_global,
-                            supplier_id, supplier_name,
-                            price_per_unit, unit, currency, yield_factor,
-                            invoice_id, invoice_line_id,
-                            effective_date, source
-                        )
-                        VALUES (%s, %s, false, %s, %s, %s, %s, %s, 1.0, %s, %s, %s, 'invoice')
-                    """, (
-                        master_id, str(user["id"]),
-                        supplier_id, supplier_name,
-                        float(price_per_unit), unit, currency,
-                        invoice_id, line_id, effective_date
-                    ))
-                    cur.execute("""
-                        INSERT INTO ingredient_aliases (ingredient_id, alias, source)
-                        VALUES (%s, %s, 'invoice')
-                        ON CONFLICT (alias_lower) DO NOTHING
-                    """, (master_id, ingredient_name))
-            except Exception as e:
-                app.logger.warning(f"[dual-write] price_history INSERT (apply) failed for '{ingredient_name}': {e}")
+            INSERT INTO price_history (
+                ingredient_id, user_id, is_global,
+                supplier_id, supplier_name,
+                price_per_unit, unit, currency, yield_factor,
+                invoice_id, invoice_line_id,
+                effective_date, source
+            )
+            VALUES (%s, %s, false, %s, %s, %s, %s, %s, 1.0, %s, %s, %s, 'invoice')
+        """, (
+            master_id, str(user["id"]),
+            supplier_id, supplier_name,
+            float(price_per_unit), unit, currency,
+            invoice_id, line_id, effective_date
+        ))
+        cur.execute("""
+            INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+            VALUES (%s, %s, 'invoice')
+            ON CONFLICT (alias_lower) DO NOTHING
+        """, (master_id, ingredient_name))
         applied += 1
 
     cur.close()
@@ -13121,34 +12843,21 @@ def pricing_user():
         return jsonify({"error": "Kitchen tier required"}), 403
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    if _read_new_model_enabled():
-        # NEW PATH: read from price_history
-        cur.execute("""
-            SELECT
-                ph.id::text AS id,
-                COALESCE(im.canonical_name,
-                         'Unknown ingredient (master_id ' || ph.ingredient_id || ')')
-                    AS ingredient_name,
-                ph.price_per_unit, ph.unit, ph.supplier_name,
-                ph.effective_date, ph.invoice_id::text AS invoice_id, ph.created_at,
-                ph.source
-            FROM price_history ph
-            LEFT JOIN ingredient_master im ON im.id = ph.ingredient_id
-            WHERE ph.user_id = %s
-              AND ph.source IN ('invoice', 'manual', 'backfill_legacy')
-            ORDER BY ph.effective_date DESC, im.canonical_name ASC
-        """, (str(user["id"]),))
-    else:
-        # OLD PATH (unchanged)
-        cur.execute("""
-            SELECT ip.id, ip.ingredient_name, ip.price_per_unit, ip.unit,
-                   ip.supplier_name, ip.effective_date, ip.invoice_id, ip.created_at,
-                   si.invoice_number
-            FROM ingredient_pricing ip
-            LEFT JOIN supplier_invoices si ON si.id = ip.invoice_id
-            WHERE ip.user_id = %s AND ip.is_active = true
-            ORDER BY ip.ingredient_name ASC
-        """, (str(user["id"]),))
+    cur.execute("""
+        SELECT
+            ph.id::text AS id,
+            COALESCE(im.canonical_name,
+                     'Unknown ingredient (master_id ' || ph.ingredient_id || ')')
+                AS ingredient_name,
+            ph.price_per_unit, ph.unit, ph.supplier_name,
+            ph.effective_date, ph.invoice_id::text AS invoice_id, ph.created_at,
+            ph.source
+        FROM price_history ph
+        LEFT JOIN ingredient_master im ON im.id = ph.ingredient_id
+        WHERE ph.user_id = %s
+          AND ph.source IN ('invoice', 'manual', 'backfill_legacy')
+        ORDER BY ph.effective_date DESC, im.canonical_name ASC
+    """, (str(user["id"]),))
     rows = cur.fetchall()
     pricing = []
     for r in rows:
@@ -13186,46 +12895,30 @@ def pricing_manual():
     import datetime
     conn = get_db()
     cur = conn.cursor()
+    master_id, was_resolved = _resolve_ingredient_master_id(cur, ingredient_name)
+    if not was_resolved:
+        cur.close(); conn.close()
+        return jsonify({"error": f"'{ingredient_name}' is not in the ingredient catalog — add it first."}), 422
+    currency = data.get('currency', 'CAD')
     cur.execute("""
-        UPDATE ingredient_pricing SET is_active = false
-        WHERE user_id = %s AND ingredient_name ILIKE %s AND is_active = true
-    """, (str(user["id"]), ingredient_name))
+        INSERT INTO price_history (
+            ingredient_id, user_id, is_global,
+            supplier_name,
+            price_per_unit, unit, currency, yield_factor,
+            effective_date, source
+        )
+        VALUES (%s, %s, false, %s, %s, %s, %s, 1.0, %s, 'manual')
+    """, (
+        master_id, str(user["id"]),
+        supplier_name,
+        float(price_per_unit), unit, currency,
+        datetime.date.today()
+    ))
     cur.execute("""
-        INSERT INTO ingredient_pricing
-            (user_id, ingredient_name, supplier_name, price_per_unit, unit,
-             effective_date, is_active)
-        VALUES (%s, %s, %s, %s, %s, %s, true)
-    """, (str(user["id"]), ingredient_name, supplier_name,
-          float(price_per_unit), unit, datetime.date.today()))
-    # === PHASE 3 DUAL-WRITE: also insert into price_history ===
-    if _dual_write_enabled():
-        try:
-            master_id, was_resolved = _resolve_ingredient_master_id(cur, ingredient_name)
-            if not was_resolved:
-                app.logger.info(f"[dual-write] manual: '{ingredient_name}' unresolved — skipping price_history INSERT")
-            else:
-                currency = data.get('currency', 'CAD')
-                cur.execute("""
-                    INSERT INTO price_history (
-                        ingredient_id, user_id, is_global,
-                        supplier_name,
-                        price_per_unit, unit, currency, yield_factor,
-                        effective_date, source
-                    )
-                    VALUES (%s, %s, false, %s, %s, %s, %s, 1.0, %s, 'manual')
-                """, (
-                    master_id, str(user["id"]),
-                    supplier_name,
-                    float(price_per_unit), unit, currency,
-                    datetime.date.today()
-                ))
-                cur.execute("""
-                    INSERT INTO ingredient_aliases (ingredient_id, alias, source)
-                    VALUES (%s, %s, 'user')
-                    ON CONFLICT (alias_lower) DO NOTHING
-                """, (master_id, ingredient_name))
-        except Exception as e:
-            app.logger.warning(f"[dual-write] price_history INSERT (manual) failed for '{ingredient_name}': {e}")
+        INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+        VALUES (%s, %s, 'user')
+        ON CONFLICT (alias_lower) DO NOTHING
+    """, (master_id, ingredient_name))
     cur.close()
     conn.close()
     return jsonify({"success": True, "ingredient_name": ingredient_name,
