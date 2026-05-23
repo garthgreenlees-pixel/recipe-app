@@ -549,6 +549,25 @@ select.haccp-input{padding:3px 7px}
 .c-nm-btn{width:100%;background:none;border:0.5px solid var(--divider);border-radius:2px;padding:8px 10px;text-align:left;cursor:pointer;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;color:var(--charcoal);font-size:12px}
 .c-nm-btn:hover{border-color:var(--gold-mid);background:var(--gold-faint)}
 .c-nm-score-bar{display:inline-block;height:3px;background:var(--gold-mid);opacity:0.6;border-radius:1px;min-width:4px}
+/* ── Typeahead dropdown (Cycle B.4) ── */
+.c-ta-wrap{position:relative}
+.c-ta-dropdown{position:absolute;top:100%;left:0;right:0;background:#fff;border:0.5px solid var(--divider);border-top:none;border-radius:0 0 3px 3px;z-index:10;max-height:180px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+.c-ta-item{padding:8px 10px;font-size:12px;color:var(--charcoal);cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--divider)}
+.c-ta-item:last-child{border-bottom:none}
+.c-ta-item:hover,.c-ta-item.c-ta-active{background:var(--gold-faint)}
+.c-ta-item--addnew{color:var(--gold-mid);font-family:var(--mono);font-size:10px;letter-spacing:0.04em}
+.c-ta-score{font-size:9px;color:var(--text-muted);font-family:var(--mono)}
+/* ── Invoice skipped-lines panel (Cycle B.4) ── */
+.c-skipped-panel{margin-top:12px;border:0.5px solid var(--divider);border-radius:3px;overflow:hidden}
+.c-skipped-header{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:var(--cream-100)}
+.c-skipped-header-text{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;color:var(--charcoal)}
+.c-skipped-header-count{font-family:var(--mono);font-size:9px;color:var(--text-muted)}
+.c-skipped-body{display:none}
+.c-skipped-body.open{display:block}
+.c-skipped-line{padding:10px 12px;border-top:0.5px solid var(--divider)}
+.c-skipped-line-name{font-size:12px;color:var(--charcoal);margin-bottom:6px}
+.c-skipped-line-actions{display:flex;gap:6px;flex-wrap:wrap}
+.c-skipped-line-resolve{position:relative}
 .c-scan-progress{display:none;padding:24px;text-align:center}
 .c-scan-progress.active{display:block}
 .c-scan-spinner{width:24px;height:24px;border:2px solid var(--divider);border-top-color:var(--gold);border-radius:50%;animation:cspin 0.8s linear infinite;margin:0 auto 12px}
@@ -1729,7 +1748,24 @@ function applyPendingInvoice(){
   if(!lines.length){alert('No confirmed lines to apply.');return;}
   fetch('/api/invoices/'+invoiceId+'/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lines})})
     .then(r=>r.json())
-    .then(data=>{alert(`Applied ${data.applied} prices to your pricing table.`);_pendingInvoice=null;loadInvoicesList();if(_costingActiveTab==='cost')loadCostBreakdown();})
+    .then(data=>{
+      _pendingInvoice=null;
+      if(_costingActiveTab==='cost')loadCostBreakdown();
+      if(data.skipped>0&&data.skipped_lines?.length){
+        const listArea=document.getElementById('c-inv-list');
+        if(listArea){
+          const msg=document.createElement('div');
+          msg.style.cssText='padding:10px 12px;font-family:var(--mono);font-size:10px;color:var(--charcoal);letter-spacing:0.04em';
+          msg.textContent=`Applied ${data.applied} line${data.applied!==1?'s':''}.`;
+          listArea.innerHTML='';
+          listArea.appendChild(msg);
+          _renderSkippedLines(data.invoice_id,data.skipped_lines);
+        }
+      } else {
+        loadInvoicesList();
+      }
+      if(data.applied>0)loadPricingTable();
+    })
     .catch(()=>alert('Apply failed. Please try again.'));
 }
 function loadInvoicesList(){const listArea=document.getElementById('c-inv-list');listArea.innerHTML='<div class="c-loading">Loading invoices…</div>';fetch('/api/invoices').then(r=>r.json()).then(data=>renderInvoicesList(data.invoices||[])).catch(()=>{listArea.innerHTML='<div class="c-empty">Could not load invoices.</div>';});}
@@ -1769,7 +1805,10 @@ function _showManualForm(){
     <div class="c-manual-title">Add a price manually</div>
     <div class="c-manual-row">
       <label class="c-manual-label">Ingredient</label>
-      <input id="c-mp-name" class="c-manual-input" placeholder="Ingredient name" value="${_esc(p.name||'')}">
+      <div class="c-ta-wrap">
+        <input id="c-mp-name" class="c-manual-input" placeholder="Ingredient name" value="${_esc(p.name||'')}" autocomplete="off">
+        <div id="c-ta-dropdown" class="c-ta-dropdown" style="display:none"></div>
+      </div>
     </div>
     <div class="c-manual-row c-manual-row--split">
       <div><label class="c-manual-label">Price per unit</label>
@@ -1790,7 +1829,7 @@ function _showManualForm(){
   </div>`;
   panel.style.display='';
   body.style.display='none';
-  setTimeout(()=>document.getElementById('c-mp-name')?.focus(),50);
+  setTimeout(()=>{document.getElementById('c-mp-name')?.focus();_initTypeahead();},50);
 }
 function _closeManualPanel(){
   _manualEntry=null;
@@ -1865,6 +1904,169 @@ function _addToNewCatalog(){
       body:JSON.stringify({ingredient_name:entry.name,price_per_unit:entry.price,unit:entry.unit,supplier_name:entry.supplier})}))
     .then(r=>{if(!r.ok)throw new Error('Price save failed after catalog add');return r.json();})
     .then(()=>{_closeManualPanel();loadPricingTable();if(_costingActiveTab==='cost')loadCostBreakdown();})
+    .catch(err=>alert('Error: '+err.message));
+}
+// ── Typeahead (Cycle B.4) ─────────────────────────────
+let _taTimer=null,_taMatches=[],_taActiveIdx=-1;
+function _initTypeahead(){
+  const inp=document.getElementById('c-mp-name');
+  if(!inp)return;
+  inp.addEventListener('input',_taOnInput);
+  inp.addEventListener('keydown',_taOnKeydown);
+  inp.addEventListener('blur',()=>setTimeout(_taClose,150));
+  document.addEventListener('click',_taClickOutside,{once:false});
+}
+function _taOnInput(){
+  clearTimeout(_taTimer);
+  const val=(document.getElementById('c-mp-name')?.value||'').trim();
+  if(val.length<2){_taClose();return;}
+  _taTimer=setTimeout(()=>_taFetch(val),200);
+}
+function _taFetch(name){
+  fetch('/api/ingredients/near-matches?name='+encodeURIComponent(name))
+    .then(r=>r.json())
+    .then(d=>{_taMatches=d.matches||[];_taRender(name);})
+    .catch(()=>{_taMatches=[];_taRender(name);});
+}
+function _taRender(typed){
+  const dd=document.getElementById('c-ta-dropdown');
+  if(!dd)return;
+  _taActiveIdx=-1;
+  let html=_taMatches.map((m,i)=>{
+    const pct=Math.round(m.score*100);
+    return `<div class="c-ta-item" data-idx="${i}" onmousedown="_taPick(${i})" title="${pct}% match">
+      <span>${_esc(m.canonical_name)}</span>
+      <span class="c-ta-score">${pct}%</span>
+    </div>`;
+  }).join('');
+  html+=`<div class="c-ta-item c-ta-item--addnew" onmousedown="_taAddNew(${JSON.stringify(typed)})">+ Add &ldquo;${_esc(typed)}&rdquo; as new</div>`;
+  dd.innerHTML=html;
+  dd.style.display='';
+}
+function _taPick(idx){
+  const m=_taMatches[idx];
+  if(!m)return;
+  const inp=document.getElementById('c-mp-name');
+  if(inp)inp.value=m.canonical_name;
+  _taClose();
+  setTimeout(()=>document.getElementById('c-mp-price')?.focus(),30);
+}
+function _taAddNew(typed){
+  _taClose();
+  // Store name and let the normal submit path handle it via add-to-catalog
+  const inp=document.getElementById('c-mp-name');
+  if(inp)inp.value=typed;
+  // Submit: pricing_manual will 422, then _showNearMatches → _addToNewCatalog
+  // Shortcut: call _addToNewCatalog directly if _manualEntry price is set
+  const price=parseFloat(document.getElementById('c-mp-price')?.value||'');
+  if(!isNaN(price)&&price>0){
+    const unit=(document.getElementById('c-mp-unit')?.value||'').trim()||'kg';
+    const supplier=(document.getElementById('c-mp-supplier')?.value||'').trim();
+    _manualEntry={name:typed,price,unit,supplier};
+    _addToNewCatalog();
+  } else {
+    // Price not yet filled — just close the dropdown, let chef fill it
+  }
+}
+function _taOnKeydown(e){
+  const dd=document.getElementById('c-ta-dropdown');
+  if(!dd||dd.style.display==='none')return;
+  const items=dd.querySelectorAll('.c-ta-item');
+  if(e.key==='ArrowDown'){e.preventDefault();_taActiveIdx=Math.min(_taActiveIdx+1,items.length-1);_taHighlight(items);}
+  else if(e.key==='ArrowUp'){e.preventDefault();_taActiveIdx=Math.max(_taActiveIdx-1,0);_taHighlight(items);}
+  else if(e.key==='Enter'&&_taActiveIdx>=0){e.preventDefault();items[_taActiveIdx]?.dispatchEvent(new MouseEvent('mousedown'));}
+  else if(e.key==='Escape'){_taClose();}
+}
+function _taHighlight(items){
+  items.forEach((el,i)=>el.classList.toggle('c-ta-active',i===_taActiveIdx));
+}
+function _taClose(){
+  const dd=document.getElementById('c-ta-dropdown');
+  if(dd)dd.style.display='none';
+  _taActiveIdx=-1;
+}
+function _taClickOutside(e){
+  const dd=document.getElementById('c-ta-dropdown');
+  const inp=document.getElementById('c-mp-name');
+  if(dd&&inp&&!dd.contains(e.target)&&e.target!==inp)_taClose();
+}
+// ── Invoice skipped-lines panel (Cycle B.4) ──────────
+function _renderSkippedLines(invoiceId,lines){
+  const listArea=document.getElementById('c-inv-list');
+  const count=lines.length;
+  let lineHtml=lines.map(l=>`
+    <div class="c-skipped-line" id="skl-${_esc(l.line_id||'')}">
+      <div class="c-skipped-line-name">${_esc(l.ingredient_name)}</div>
+      <div class="c-skipped-line-actions">
+        <div class="c-skipped-line-resolve">
+          <input class="c-manual-input" style="width:180px;font-size:11px" placeholder="Search catalog…"
+            oninput="_sklTypeahead(this,'${_esc(l.line_id||'')}','${_esc(invoiceId)}')"
+            onkeydown="_sklKeydown(event,this,'${_esc(l.line_id||'')}','${_esc(invoiceId)}')">
+          <div class="c-ta-dropdown" style="display:none;width:260px"></div>
+        </div>
+        <button class="c-btn" onclick="_sklAddNew('${_esc(l.line_id||'')}','${_esc(invoiceId)}','${_esc(l.ingredient_name)}',${l.price_per_unit||0},'${_esc(l.unit||'each')}')">Add as new</button>
+        <button class="c-btn" style="color:var(--text-muted)" onclick="document.getElementById('skl-${_esc(l.line_id||'')}')?.remove();_sklCheckDone()">Skip</button>
+      </div>
+    </div>`).join('');
+  const panel=document.createElement('div');
+  panel.className='c-skipped-panel';
+  panel.id='c-skipped-panel';
+  panel.innerHTML=`
+    <div class="c-skipped-header" onclick="this.nextElementSibling.classList.toggle('open')">
+      <span class="c-skipped-header-text">${count} line${count>1?'s':''} couldn&rsquo;t be matched to your catalog</span>
+      <span class="c-skipped-header-count">▾ expand</span>
+    </div>
+    <div class="c-skipped-body">${lineHtml}</div>`;
+  listArea.innerHTML='';
+  listArea.appendChild(panel);
+}
+function _sklCheckDone(){
+  const panel=document.getElementById('c-skipped-panel');
+  if(panel&&panel.querySelectorAll('.c-skipped-line').length===0){
+    panel.remove();loadInvoicesList();
+  }
+}
+let _sklTimers={};
+function _sklTypeahead(inp,lineId,invoiceId){
+  clearTimeout(_sklTimers[lineId]);
+  const val=inp.value.trim();
+  const dd=inp.nextElementSibling;
+  if(val.length<2){if(dd)dd.style.display='none';return;}
+  _sklTimers[lineId]=setTimeout(()=>{
+    fetch('/api/ingredients/near-matches?name='+encodeURIComponent(val))
+      .then(r=>r.json())
+      .then(data=>{
+        if(!dd)return;
+        const rows=(data.matches||[]).map(m=>
+          `<div class="c-ta-item" onmousedown="_sklPick('${_esc(lineId)}','${_esc(invoiceId)}',${m.id},'${_esc(m.canonical_name)}')">
+            <span>${_esc(m.canonical_name)}</span><span class="c-ta-score">${Math.round(m.score*100)}%</span>
+          </div>`).join('');
+        dd.innerHTML=rows||'<div class="c-ta-item" style="color:var(--text-muted);font-size:11px">No close matches</div>';
+        dd.style.display='';
+      })
+      .catch(()=>{if(dd)dd.style.display='none';});
+  },200);
+}
+function _sklKeydown(e,inp,lineId,invoiceId){
+  if(e.key==='Escape'){inp.nextElementSibling.style.display='none';}
+}
+function _sklPick(lineId,invoiceId,masterId,canonicalName){
+  const row=document.getElementById('skl-'+lineId);
+  if(row){const dd=row.querySelector('.c-ta-dropdown');if(dd)dd.style.display='none';}
+  fetch('/api/invoices/'+invoiceId+'/resolve-line',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({line_id:lineId,master_id:masterId})})
+    .then(r=>{if(!r.ok)throw new Error('Resolve failed');return r.json();})
+    .then(()=>{row?.remove();_sklCheckDone();loadPricingTable();})
+    .catch(err=>alert('Could not resolve: '+err.message));
+}
+function _sklAddNew(lineId,invoiceId,name,price,unit){
+  fetch('/api/ingredients/add-to-catalog',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name})})
+    .then(r=>{if(!r.ok)throw new Error('Add failed');return r.json();})
+    .then(d=>fetch('/api/invoices/'+invoiceId+'/resolve-line',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({line_id:lineId,master_id:d.id})}))
+    .then(r=>{if(!r.ok)throw new Error('Resolve failed');return r.json();})
+    .then(()=>{document.getElementById('skl-'+lineId)?.remove();_sklCheckDone();loadPricingTable();})
     .catch(err=>alert('Error: '+err.message));
 }
 function filterPricing(query){const q=query.toLowerCase();document.querySelectorAll('#c-pricing-body .c-pricing-table tbody tr').forEach(row=>{const name=(row.cells[0]?.textContent||'').toLowerCase();row.style.display=(!q||name.includes(q))?'':'none';});}

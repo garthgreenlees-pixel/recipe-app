@@ -12752,6 +12752,7 @@ def invoices_apply(invoice_id):
     supplier_name = inv["supplier_name"]
     applied = 0
     skipped = 0
+    skipped_lines = []
 
     for line in lines:
         ingredient_name = (line.get("ingredient_name") or "").strip()
@@ -12765,6 +12766,10 @@ def invoices_apply(invoice_id):
         if not was_resolved:
             app.logger.info(f"[apply] '{ingredient_name}' unresolved — skipping")
             skipped += 1
+            skipped_lines.append({"line_id": str(line_id) if line_id else None,
+                                   "ingredient_name": ingredient_name,
+                                   "price_per_unit": float(price_per_unit) if price_per_unit is not None else None,
+                                   "unit": unit, "supplier_name": supplier_name})
             continue
         cur.execute("""
             SELECT COALESCE(currency, 'CAD') AS currency
@@ -12796,7 +12801,8 @@ def invoices_apply(invoice_id):
 
     cur.close()
     conn.close()
-    return jsonify({"applied": applied, "skipped": skipped})
+    return jsonify({"applied": applied, "skipped": skipped,
+                    "skipped_lines": skipped_lines, "invoice_id": str(invoice_id)})
 
 
 @app.route("/api/invoices")
@@ -13082,6 +13088,59 @@ def ingredients_dismiss_duplicate():
     cur.close()
     conn.close()
     return jsonify({"dismissed": True})
+
+
+@app.route("/api/invoices/<invoice_id>/resolve-line", methods=["POST"])
+@requires_tier("profession")
+def invoices_resolve_line(invoice_id):
+    """Resolve a previously-skipped invoice line to a catalog master, then write price_history."""
+    import datetime
+    data = request.get_json() or {}
+    line_id = data.get("line_id")
+    master_id = data.get("master_id")
+    if not line_id or not master_id:
+        return jsonify({"error": "line_id and master_id required"}), 400
+    user = get_current_user()
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    # Verify invoice belongs to user
+    cur.execute("SELECT * FROM supplier_invoices WHERE id = %s AND user_id = %s",
+                (invoice_id, str(user["id"])))
+    inv = cur.fetchone()
+    if not inv:
+        cur.close(); conn.close()
+        return jsonify({"error": "Invoice not found"}), 404
+    # Look up the original line for price/unit data
+    cur.execute("SELECT unit_price, unit, raw_description FROM supplier_invoice_lines WHERE id = %s AND invoice_id = %s",
+                (line_id, invoice_id))
+    sil = cur.fetchone()
+    price_per_unit = float(sil["unit_price"]) if sil and sil["unit_price"] is not None else data.get("price_per_unit", 0)
+    unit = (sil["unit"] if sil and sil["unit"] else data.get("unit", "each")) or "each"
+    ingredient_name = sil["raw_description"] if sil else data.get("ingredient_name", "")
+    effective_date = inv["invoice_date"] or datetime.date.today().isoformat()
+    currency = inv.get("currency") or "CAD"
+    supplier_id = inv["supplier_id"]
+    supplier_name = inv["supplier_name"]
+    cur.execute("""
+        INSERT INTO price_history (
+            ingredient_id, user_id, is_global,
+            supplier_id, supplier_name,
+            price_per_unit, unit, currency, yield_factor,
+            invoice_id, invoice_line_id,
+            effective_date, source
+        )
+        VALUES (%s, %s, false, %s, %s, %s, %s, %s, 1.0, %s, %s, %s, 'invoice')
+    """, (master_id, str(user["id"]), supplier_id, supplier_name,
+          price_per_unit, unit, currency, invoice_id, line_id, effective_date))
+    cur.execute("""
+        INSERT INTO ingredient_aliases (ingredient_id, alias, source)
+        VALUES (%s, %s, 'invoice')
+        ON CONFLICT (alias_lower) DO NOTHING
+    """, (master_id, ingredient_name))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"resolved": True})
 
 
 # ─── OPT3 Canon routes ───────────────────────────────────────────────────────
