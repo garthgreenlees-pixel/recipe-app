@@ -12945,10 +12945,16 @@ def pricing_manual():
     import datetime
     conn = get_db()
     cur = conn.cursor()
-    master_id, was_resolved = _resolve_ingredient_master_id(cur, ingredient_name)
-    if not was_resolved:
+    cur.execute("""
+        SELECT id FROM ingredient_master
+        WHERE LOWER(canonical_name) = LOWER(%s) AND is_active = TRUE
+        LIMIT 1
+    """, (ingredient_name,))
+    row = cur.fetchone()
+    if not row:
         cur.close(); conn.close()
         return jsonify({"error": f"'{ingredient_name}' is not in the ingredient catalog — add it first."}), 422
+    master_id = row[0]
     currency = data.get('currency', 'CAD')
     cur.execute("""
         INSERT INTO price_history (
@@ -12990,10 +12996,17 @@ def ingredients_near_matches():
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         cur.execute("""
+            WITH q AS (
+                SELECT LOWER(SPLIT_PART(%s, ' ', 1)) AS first_word,
+                       LOWER(%s) AS full_query
+            )
             SELECT m.id, m.canonical_name,
-                   ROUND(similarity(LOWER(m.canonical_name), LOWER(%s))::numeric, 3) AS score
-            FROM ingredient_master m
-            WHERE similarity(LOWER(m.canonical_name), LOWER(%s)) > 0.4
+                   ROUND(similarity(LOWER(m.canonical_name), q.full_query)::numeric, 3) AS score
+            FROM ingredient_master m, q
+            WHERE (
+                LOWER(m.canonical_name) LIKE '%%' || q.first_word || '%%'
+                OR similarity(LOWER(SPLIT_PART(m.canonical_name, ' ', 1)), q.first_word) > 0.5
+            )
               AND NOT EXISTS (
                 SELECT 1 FROM ingredient_duplicate_dismissals d
                 WHERE d.user_id = %s
