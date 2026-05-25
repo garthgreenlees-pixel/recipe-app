@@ -444,11 +444,11 @@ function submitPdf() {
   const btn = document.getElementById('pdf-btn');
   const status = document.getElementById('pdf-status');
   btn.disabled = true;
-  status.textContent = 'PDF received. Extraction is in development — we'll process this soon.';
+  status.textContent = "PDF received. Extraction is in development — we'll process this soon.";
 }
 
 // ── Write submit ──
-function submitWrite() {
+async function submitWrite() {
   const name = document.getElementById('write-name').value.trim();
   const method = document.getElementById('write-method').value.trim();
   const status = document.getElementById('write-status');
@@ -456,8 +456,24 @@ function submitWrite() {
     status.textContent = 'Please enter a recipe name or method.';
     return;
   }
-  document.getElementById('write-btn').disabled = true;
-  status.textContent = 'Received. Write-from-scratch enhancement is in active development — your submission is queued.';
+  const btn = document.getElementById('write-btn');
+  btn.disabled = true;
+  status.textContent = 'Creating recipe…';
+  try {
+    const r1 = await fetch('/api/recipes/new', { method: 'POST' });
+    if (!r1.ok) throw new Error('Could not create recipe (' + r1.status + ')');
+    const draft = await r1.json();
+    const r2 = await fetch('/api/recipes/' + draft.uuid, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: name || 'Untitled Recipe', preamble: method })
+    });
+    if (!r2.ok) throw new Error('Could not save recipe (' + r2.status + ')');
+    window.location = '/recipe/' + draft.slug + '/edit';
+  } catch (err) {
+    status.textContent = 'Error: ' + err.message;
+    btn.disabled = false;
+  }
 }
 
 // ── Invoice file picker ──
