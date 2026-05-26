@@ -36,7 +36,7 @@ def _normalize_fractions(line):
     frac_chars = ''.join(_UNICODE_FRACTIONS.keys())
     def _mixed(m):
         return f'{int(m.group(1)) + _UNICODE_FRACTIONS[m.group(2)]:g}'
-    line = re.sub(r'(\d+)\s+([' + frac_chars + r'])', _mixed, line)
+    line = re.sub(r'(\d+)\s*([' + frac_chars + r'])', _mixed, line)
     for ch, val in _UNICODE_FRACTIONS.items():
         line = line.replace(ch, f'{val:g}')
     return line
@@ -143,7 +143,10 @@ def main():
             count = (ing.get('count') or '').strip()
             name = (ing.get('name') or '').strip()
 
-            # Heuristic: empty count AND fraction anywhere in name → re-parse
+            unit = (ing.get('unit') or '').strip()
+
+            # Case A: empty count AND fraction in name → re-parse name directly.
+            # Covers: '½ cup onions', '⅛ tsp gochugaru', '1½ cups wine' stored whole.
             if not count and has_unicode_fraction(name):
                 reparsed = _parse_ingredient_line(name)
                 if reparsed and reparsed.get('count'):
@@ -161,6 +164,28 @@ def main():
                     print(f"  [{row['slug']}]  AFTER: count={new_ing['count']!r} unit={new_ing['unit']!r} name={new_ing['name']!r}")
                 else:
                     new_ingredients.append(ing)
+
+            # Case B: count present, unit empty, name starts with a fraction char.
+            # Covers: '1 ½ tbsp soy sauce' parsed as count='1', name='½ tbsp soy sauce'.
+            elif count and not unit and name and name[0] in FRACTION_CHARS:
+                reconstructed = count + ' ' + name
+                reparsed = _parse_ingredient_line(reconstructed)
+                if reparsed and reparsed.get('count') and reparsed.get('unit'):
+                    new_ing = {
+                        'count': reparsed['count'],
+                        'unit': reparsed.get('unit', ''),
+                        'name': reparsed['name'],
+                        'info': ing.get('info', ''),
+                        'group': ing.get('group', ''),
+                    }
+                    new_ingredients.append(new_ing)
+                    recipe_changed = True
+                    total_ingredients_fixed += 1
+                    print(f"  [{row['slug']}] BEFORE: count={count!r} unit='' name={name!r}")
+                    print(f"  [{row['slug']}]  AFTER: count={new_ing['count']!r} unit={new_ing['unit']!r} name={new_ing['name']!r}")
+                else:
+                    new_ingredients.append(ing)
+
             else:
                 new_ingredients.append(ing)
 

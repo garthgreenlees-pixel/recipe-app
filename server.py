@@ -3383,7 +3383,7 @@ def _normalize_fractions(line: str) -> str:
     frac_chars = ''.join(_UNICODE_FRACTIONS.keys())
     def _mixed(m):
         return f'{int(m.group(1)) + _UNICODE_FRACTIONS[m.group(2)]:g}'
-    line = _re.sub(r'(\d+)\s+([' + frac_chars + r'])', _mixed, line)
+    line = _re.sub(r'(\d+)\s*([' + frac_chars + r'])', _mixed, line)
     for ch, val in _UNICODE_FRACTIONS.items():
         line = line.replace(ch, f'{val:g}')
     return line
