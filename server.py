@@ -55,7 +55,7 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-key")
 app.config["SESSION_COOKIE_SECURE"] = not bool(os.environ.get("LOCAL_DEV"))
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
-app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 7   # 7-day default
+app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 30  # 30-day default
 
 from flask.sessions import SecureCookieSessionInterface as _SCSessionInterface
 
