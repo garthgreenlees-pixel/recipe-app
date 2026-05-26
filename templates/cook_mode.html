@@ -23,6 +23,7 @@
   --divider:rgba(245,241,233,0.1);
   --serif:Georgia,'Times New Roman',serif;
   --didot:'Playfair Display',Georgia,serif;
+  --gold-soft:#D4B679;
   --max-w:600px;
 }
 
@@ -139,6 +140,11 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   font-family:var(--serif);font-size:13px;
   font-style:italic;color:var(--cream-muted);margin-left:4px;
 }
+.cm-ing-heading{
+  font-family:var(--didot);font-size:13px;font-style:italic;
+  color:var(--gold-soft);letter-spacing:0.04em;
+  padding:16px 0 4px;display:block;
+}
 
 /* ── METHOD ───────────────────────────────────────────── */
 .cm-step{
@@ -240,6 +246,11 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   <p class="cm-section-head">Ingredients</p>
   <ul class="cm-ing-list">
     {% for ing in recipe.ingredients %}
+    {% if ing is mapping and ing.group == 'heading' %}
+    <li class="cm-ing-heading">{{ ing.name or '' }}</li>
+    {% elif ing is not mapping and ing[:3] == '## ' %}
+    <li class="cm-ing-heading">{{ ing[3:] }}</li>
+    {% else %}
     <li class="cm-ing-row">
       <span class="cm-ing-qty">
         {% if ing is mapping %}{{ ing.count or '' }}{% if ing.unit %}&thinsp;{{ ing.unit }}{% endif %}{% endif %}
@@ -249,6 +260,7 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
         {% if ing is mapping and ing.info %}<span class="cm-ing-info">({{ ing.info }})</span>{% endif %}
       </span>
     </li>
+    {% endif %}
     {% endfor %}
   </ul>
 </div>
