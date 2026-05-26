@@ -75,6 +75,44 @@
   .kmodal__submit:disabled { opacity: 0.5; cursor: not-allowed; }
   .kmodal__status { font-size: 13px; color: var(--charcoal-soft, #4A4743); padding: 8px 0; }
   .kmodal__status.is-error { color: #B94040; }
+  /* ── PDF modal ── */
+  .kmodal--pdf { max-width: 860px; max-height: 90vh; overflow-y: auto; }
+  .pdf-drop-area { border: 1.5px dashed var(--line, #E4DFDA); background: var(--cream-100, #F5F0E8); padding: 2rem; text-align: center; cursor: pointer; font-size: 13px; color: var(--charcoal-soft); line-height: 1.6; margin-bottom: 1rem; }
+  .pdf-drop-area:hover, .pdf-drop-area.drag-over { border-color: var(--gold, #C9A84C); }
+  .pdf-drop-area small { font-size: 11px; color: var(--warm-gray); }
+  .pdf-progress { margin: 0.75rem 0; }
+  .pdf-progress-label { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); margin-bottom: 0.4rem; }
+  .pdf-progress-bar { height: 3px; background: rgba(201,168,76,0.15); }
+  .pdf-progress-fill { height: 100%; background: var(--gold, #C9A84C); transition: width 300ms; }
+  .pdf-page-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 6px; margin: 0.75rem 0; max-height: 260px; overflow-y: auto; }
+  .pdf-page-thumb { position: relative; cursor: pointer; border: 2px solid transparent; }
+  .pdf-page-thumb.deselected { opacity: 0.45; }
+  .pdf-page-thumb:not(.deselected) { border-color: var(--gold, #C9A84C); }
+  .pdf-page-thumb img { width: 100%; display: block; }
+  .pdf-page-thumb .page-num { position: absolute; bottom: 0; left: 0; font-family: var(--mono); font-size: 9px; background: rgba(20,18,14,0.7); color: #fff; padding: 1px 4px; }
+  .pdf-page-thumb .page-check { position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.2); font-size: 10px; text-align: center; line-height: 16px; cursor: pointer; }
+  .pdf-page-thumb .page-check.checked { background: var(--gold, #C9A84C); color: var(--charcoal); }
+  .pdf-page-thumb .page-status { display: none; }
+  .pdf-select-header { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .pdf-range-input { flex: 1; min-width: 180px; border: 1px solid var(--line); background: var(--cream-100); padding: 7px 10px; font-size: 13px; font-family: var(--mono); color: var(--charcoal); outline: none; }
+  .pdf-range-input:focus { border-color: var(--gold); }
+  .pdf-select-btns { display: flex; gap: 4px; }
+  .pdf-select-btns button { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; padding: 6px 10px; border: 1px solid var(--line); background: transparent; cursor: pointer; color: var(--charcoal-soft); }
+  .pdf-select-btns button:hover { border-color: var(--gold); }
+  .pdf-select-count { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); }
+  .pdf-actions { margin-top: 0.75rem; }
+  .pdf-recipe-group { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-bottom: 1px solid var(--line); }
+  .pdf-recipe-group h4 { font-size: 13px; font-family: var(--display); font-weight: 500; flex: 1; }
+  .pdf-recipe-group small { font-family: var(--mono); font-size: 10px; color: var(--warm-gray); }
+  .pdf-recipe-group img { width: 36px; height: 36px; object-fit: cover; border-radius: 2px; }
+  .pdf-recipe-group .group-thumbs { display: flex; gap: 3px; }
+  .pdf-recipe-group .group-remove { background: none; border: none; font-size: 14px; color: var(--warm-gray); cursor: pointer; padding: 0 4px; }
+  .pdf-recipe-group .group-remove:hover { color: #B94040; }
+  .pdf-review-item { border-bottom: 1px solid var(--line); padding: 0.75rem 0; display: flex; flex-direction: column; gap: 0.35rem; }
+  .pdf-review-item h4 { font-size: 13px; font-family: var(--display); font-weight: 500; margin-bottom: 0.25rem; }
+  .pdf-review-item label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--warm-gray); }
+  .pdf-review-item input, .pdf-review-item textarea { border: 1px solid var(--line); background: var(--cream-100); padding: 6px 8px; font-size: 12px; color: var(--charcoal); width: 100%; box-sizing: border-box; font-family: var(--mono); resize: vertical; }
+  .pdf-review-item textarea { rows: 4; min-height: 60px; }
 </style>
 {% endblock %}
 
@@ -226,13 +264,56 @@
     </div>
   </div>
 
-  {# IMPORT A PDF — stub; full flow lands in Phase B #}
-  <div id="modal-pdf" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="modal-pdf-title" hidden>
+  {# IMPORT A PDF — full flow (Phase B) #}
+  <div id="modal-pdf" class="kmodal kmodal--pdf" role="dialog" aria-modal="true" aria-labelledby="modal-pdf-title" hidden>
     <button class="kmodal__close" data-close-modal aria-label="Close">✕</button>
     <div class="kmodal__eyebrow">▸ PDF</div>
     <h2 class="kmodal__title" id="modal-pdf-title">Import a PDF</h2>
-    <p class="kmodal__lede">The PDF flow is on its way — page picker, classification, full extraction.</p>
-    <p style="font-family:var(--mono);font-size:11px;color:var(--warm-gray);padding:1rem 0;">Coming in the next cycle.</p>
+
+    <div id="pdfUploadSection">
+      <div class="pdf-drop-area" id="pdfUploadArea" onclick="document.getElementById('pdfFileInput').click()">
+        <div>Click or drag a PDF cookbook here<br><small>Pages render in your browser</small></div>
+        <input type="file" id="pdfFileInput" accept=".pdf" style="display:none">
+      </div>
+    </div>
+
+    <div class="pdf-progress" id="pdfProgress" style="display:none">
+      <div class="pdf-progress-label" id="pdfProgressLabel">Rendering pages…</div>
+      <div class="pdf-progress-bar"><div class="pdf-progress-fill" id="pdfProgressFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="pdf-page-grid" id="pdfPageGrid"></div>
+
+    <div id="pdfSelectSection" style="display:none">
+      <div class="pdf-select-header">
+        <input class="pdf-range-input" type="text" id="pdfRangeInput" placeholder="e.g. 1-50 or 10-25, 40-60" oninput="applyRangeInput()">
+        <div class="pdf-select-btns">
+          <button type="button" onclick="pdfSelectAll()">All</button>
+          <button type="button" onclick="pdfSelectNone()">None</button>
+        </div>
+        <span class="pdf-select-count" id="pdfSelectCount"></span>
+      </div>
+      <div class="pdf-actions">
+        <button type="button" class="kmodal__submit" id="pdfClassifyBtn" onclick="startClassification()" disabled>Classify Selected Pages →</button>
+      </div>
+    </div>
+
+    <div id="pdfClassifySection" style="display:none">
+      <div class="kmodal__label" style="margin-bottom:0.5rem;display:block">Identified Recipes</div>
+      <div id="pdfRecipeGroups"></div>
+      <div class="pdf-actions">
+        <button type="button" class="kmodal__submit" id="pdfExtractBtn" onclick="extractAllRecipes()">Extract All Recipes →</button>
+      </div>
+    </div>
+
+    <div id="pdfReviewSection" style="display:none">
+      <div class="kmodal__label" style="margin-bottom:0.5rem;display:block">Review Before Saving</div>
+      <div id="pdfReviewList"></div>
+      <div class="pdf-actions">
+        <div id="pdfSaveStatus" class="kmodal__status" hidden></div>
+        <button type="button" class="kmodal__submit" id="pdfSaveAllBtn" onclick="bulkSaveRecipes()">Save All to MyKitchen →</button>
+      </div>
+    </div>
   </div>
 
 </div>
