@@ -53,6 +53,25 @@
     .kitchen__search { min-width: auto; }
     .kitchen__hello h1 { font-size: 32px; }
   }
+
+  /* ── Modal overlay ── */
+  .kmodal-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.72); z-index: 900; display: none; align-items: center; justify-content: center; }
+  .kmodal-overlay.is-open { display: flex; }
+  .kmodal { position: relative; background: var(--cream-50, #FAFAF7); border: 1px solid var(--line, #E4DFDA); max-width: 520px; width: calc(100% - 3rem); padding: var(--s5, 2.5rem) var(--s4, 2rem); }
+  .kmodal__close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 14px; color: var(--warm-gray, #8A8580); cursor: pointer; padding: 4px 8px; }
+  .kmodal__close:hover { color: var(--charcoal, #1A1916); }
+  .kmodal__eyebrow { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: var(--gold, #C9A84C); margin-bottom: 0.5rem; }
+  .kmodal__title { font-family: var(--display); font-size: 26px; font-style: italic; font-weight: 500; color: var(--charcoal, #1A1916); margin-bottom: 0.75rem; }
+  .kmodal__lede { font-size: 14px; color: var(--charcoal-soft, #4A4743); line-height: 1.55; margin-bottom: 1.5rem; }
+  .kmodal__form { display: flex; flex-direction: column; gap: 0.75rem; }
+  .kmodal__label { font-family: var(--mono); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray, #8A8580); }
+  .kmodal__input, .kmodal__textarea { border: 1px solid var(--line, #E4DFDA); background: var(--cream-100, #F5F0E8); padding: 10px 12px; font-family: var(--body); font-size: 14px; color: var(--charcoal, #1A1916); outline: none; resize: vertical; width: 100%; box-sizing: border-box; }
+  .kmodal__input:focus, .kmodal__textarea:focus { border-color: var(--gold, #C9A84C); }
+  .kmodal__submit { font-family: var(--mono); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; padding: 12px 20px; background: var(--charcoal, #1A1916); color: var(--cream-50, #FAFAF7); border: 1px solid var(--charcoal, #1A1916); cursor: pointer; align-self: flex-start; }
+  .kmodal__submit:hover { background: var(--gold, #C9A84C); border-color: var(--gold, #C9A84C); color: var(--charcoal, #1A1916); }
+  .kmodal__submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .kmodal__status { font-size: 13px; color: var(--charcoal-soft, #4A4743); padding: 8px 0; }
+  .kmodal__status.is-error { color: #B94040; }
 </style>
 {% endblock %}
 
@@ -164,4 +183,52 @@
   {% endif %}{# end if recipe_total > 0 #}
 
 </div>
+
+{# ─── MODALS ─── #}
+<div id="kitchen-overlay" class="kmodal-overlay" aria-hidden="true">
+
+  {# SCAN A PAGE #}
+  <div id="modal-scan" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="modal-scan-title" hidden>
+    <button class="kmodal__close" data-close-modal aria-label="Close">✕</button>
+    <div class="kmodal__eyebrow">▸ Scan</div>
+    <h2 class="kmodal__title" id="modal-scan-title">Scan a page</h2>
+    <p class="kmodal__lede">Paste the URL of a recipe page. Provenance will fetch and parse it into your editor.</p>
+    <form class="kmodal__form" method="post" action="/enhance">
+      <label class="kmodal__label" for="scan-url">Page URL</label>
+      <input id="scan-url" class="kmodal__input" type="url" name="url" placeholder="https://…" required>
+      <button type="submit" class="kmodal__submit">Scan this page →</button>
+    </form>
+  </div>
+
+  {# IMPORT A RECIPE #}
+  <div id="modal-import" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="modal-import-title" hidden>
+    <button class="kmodal__close" data-close-modal aria-label="Close">✕</button>
+    <div class="kmodal__eyebrow">▸ Import</div>
+    <h2 class="kmodal__title" id="modal-import-title">Import a recipe</h2>
+    <p class="kmodal__lede">Paste plain text — from a PDF, a message, or anywhere else. Provenance reads it and opens the editor.</p>
+    <div class="kmodal__form">
+      <label class="kmodal__label" for="import-text">Recipe text</label>
+      <textarea id="import-text" class="kmodal__textarea" rows="8" placeholder="Paste recipe text here…"></textarea>
+      <div id="import-status" class="kmodal__status" hidden></div>
+      <button type="button" class="kmodal__submit" id="btn-import">Import →</button>
+    </div>
+  </div>
+
+  {# WRITE FROM SCRATCH #}
+  <div id="modal-write" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="modal-write-title" hidden>
+    <button class="kmodal__close" data-close-modal aria-label="Close">✕</button>
+    <div class="kmodal__eyebrow">▸ Write</div>
+    <h2 class="kmodal__title" id="modal-write-title">Write from scratch</h2>
+    <p class="kmodal__lede">Opens a blank editor — title, ingredients, method. The dish that lives in your head.</p>
+    <div class="kmodal__form">
+      <div id="write-status" class="kmodal__status" hidden></div>
+      <button type="button" class="kmodal__submit" id="btn-write">Open blank editor →</button>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/kitchen.js') }}"></script>
 {% endblock %}

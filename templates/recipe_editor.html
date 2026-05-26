@@ -57,7 +57,7 @@
     <label class="editor-label">Ingredients</label>
     <div class="editor-help">One per line — e.g. "200g spaghetti", "1 cup flour", "2 large eggs". Use "## Section" to group.</div>
     <textarea id="editIngredients" class="editor-textarea editor-mono" rows="12"
-              placeholder="200g spaghetti&#10;6 egg yolks&#10;80g Pecorino Romano&#10;150g guanciale">{% if recipe.ingredients %}{% for i in recipe.ingredients %}{% if i is string %}{{ i }}{% elif i.group == 'heading' %}## {{ i.name }}{% else %}{{ i.count }}{% if i.count and i.unit %} {% endif %}{{ i.unit }}{% if (i.count or i.unit) and i.name %} {% endif %}{{ i.name }}{% if i.info %}, {{ i.info }}{% endif %}{% endif %}
+              placeholder="200g chicken breast&#10;2 tbsp olive oil&#10;3 garlic cloves, crushed&#10;1 lemon, zested and juiced">{% if recipe.ingredients %}{% for i in recipe.ingredients %}{% if i is string %}{{ i }}{% elif i.group == 'heading' %}## {{ i.name }}{% else %}{{ i.count }}{% if i.count and i.unit %} {% endif %}{{ i.unit }}{% if (i.count or i.unit) and i.name %} {% endif %}{{ i.name }}{% if i.info %}, {{ i.info }}{% endif %}{% endif %}
 {% endfor %}{% endif %}</textarea>
   </section>
 
@@ -65,7 +65,7 @@
     <label class="editor-label">Method</label>
     <div class="editor-help">One step per line. Numbering is added automatically.</div>
     <textarea id="editSteps" class="editor-textarea editor-mono" rows="12"
-              placeholder="Boil pasta in well-salted water&#10;Whisk yolks with grated cheese and pepper&#10;Fry guanciale until crisp, reserve fat&#10;Combine off heat with pasta water to emulsify">{% if recipe.steps %}{% for s in recipe.steps %}{{ s }}
+              placeholder="Season chicken and bring to room temperature&#10;Heat oil in a heavy pan over medium-high&#10;Sear 4 min each side until golden&#10;Rest 5 min before slicing">{% if recipe.steps %}{% for s in recipe.steps %}{{ s }}
 {% endfor %}{% endif %}</textarea>
   </section>
 

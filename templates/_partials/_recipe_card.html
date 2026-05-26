@@ -10,7 +10,7 @@
 <a href="{{ url_for('recipe_page', slug=recipe.slug) }}" class="recipe-card">
   <div class="recipe-card__image">
     {% if recipe.image_url %}
-      <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy">
+      <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy" onerror="this.onerror=null;this.src='/static/img/recipe-placeholder.svg'">
     {% else %}
       <span>{{ recipe.title }}</span>
     {% endif %}
