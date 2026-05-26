@@ -43,7 +43,7 @@ var pdfExtracted = [];
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 
-  // ── Scan a page — image → /api/scan → /api/recipes/new → PUT → redirect ──
+  // ── Scan a page — image → /api/scan → /api/recipes (full pipeline) → redirect ──
   var btnScan = document.getElementById('btn-scan');
   if (btnScan) {
     btnScan.addEventListener('click', function () {
@@ -68,28 +68,29 @@ var pdfExtracted = [];
         .then(function (res) {
           if (!res.ok) throw new Error(res.data.error || 'Scan failed');
           var recipe = res.data;
-          status.textContent = 'Scan complete — saving…';
+          btnScan.textContent = 'Building your recipe…';
+          status.textContent = 'Scan complete — building recipe…';
           status.hidden = false;
-          return fetch('/api/recipes/new', { method: 'POST' })
-            .then(function (r2) { return r2.json(); })
-            .then(function (draft) {
-              if (!draft.uuid) throw new Error('Could not create recipe draft');
-              return fetch('/api/recipes/' + draft.uuid, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  title: recipe.title || 'Untitled Recipe',
-                  preamble: recipe.preamble || '',
-                  tags: recipe.tags || [],
-                  time: recipe.time || {},
-                  servings: recipe.servings || [],
-                  ingredients: recipe.ingredients || [],
-                  steps: recipe.steps || [],
-                  source: recipe.source_book || {}
-                })
-              }).then(function () {
-                window.location.href = '/recipe/' + draft.slug + '/edit';
-              });
+          return fetch('/api/recipes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: recipe.title || 'Untitled Recipe',
+              preamble: recipe.preamble || '',
+              tags: recipe.tags || [],
+              time: recipe.time || {},
+              servings: recipe.servings || [],
+              ingredients: recipe.ingredients || [],
+              steps: recipe.steps || [],
+              source_book: recipe.source_book || {},
+              _images_b64: recipe._images_b64 || [],
+              _images_media_types: recipe._images_media_types || []
+            })
+          })
+            .then(function (r2) { return r2.json().then(function (d) { return { ok: r2.ok, data: d }; }); })
+            .then(function (res2) {
+              if (!res2.ok) throw new Error(res2.data.error || 'Save failed');
+              window.location.href = '/recipe/' + res2.data.slug + '/edit';
             });
         })
         .catch(function (err) {
