@@ -2603,11 +2603,19 @@ def recipe_page(slug):
             _region = get_user_location() or "CA"
             cur.close()
             conn.close()
+            # Deduplicate: a supplier with both ORIGIN and PROVIDER rows in product_suppliers
+            # can appear in both lists. Origin classification wins (appears first).
+            _seen_sids = set()
+            _deduped_suppliers = []
+            for _sup in _sourced["origin"] + _sourced["providers"]:
+                if _sup.get("id") not in _seen_sids:
+                    _seen_sids.add(_sup.get("id"))
+                    _deduped_suppliers.append(_sup)
             return render_template(
                 "recipe.html",
                 recipe=_recipe_dict,
                 pairings=_pairings,
-                recipe_suppliers=_sourced["origin"] + _sourced["providers"],
+                recipe_suppliers=_deduped_suppliers,
                 allergens=[],
                 haccp_brief=None,
                 cost_breakdown=None,
@@ -2677,6 +2685,16 @@ def recipe_page(slug):
                         'name': prod_name,
                         'desc': row['product_desc'] or ''
                     })
+            # Deduplicate products within each supplier (DB may have duplicate entries)
+            for sup in supplier_map.values():
+                seen_products = set()
+                deduped = []
+                for p in sup['products']:
+                    key = p['name'].lower()
+                    if key not in seen_products:
+                        seen_products.add(key)
+                        deduped.append(p)
+                sup['products'] = deduped
             # Assign proximity tier then sort (tier ASC, name ASC)
             for sup in supplier_map.values():
                 sup['tier'] = get_proximity_tier(
