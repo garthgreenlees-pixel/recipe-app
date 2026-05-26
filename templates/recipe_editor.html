@@ -38,7 +38,7 @@
     <div>
       <label class="editor-label">Servings</label>
       <input type="text" id="editServings" class="editor-input"
-             value="{% if recipe.servings %}{% if recipe.servings is string %}{{ recipe.servings }}{% else %}{{ recipe.servings | join(', ') if recipe.servings else '' }}{% endif %}{% endif %}"
+             value="{% set _s = recipe.servings %}{% if _s is string %}{{ _s }}{% elif _s and _s[0] is mapping %}{{ ((_s[0].count or '') ~ (' ' ~ _s[0].unit if _s[0].unit else '')) | trim }}{% elif _s %}{{ _s | join(', ') }}{% endif %}"
              placeholder="4">
     </div>
     <div>
