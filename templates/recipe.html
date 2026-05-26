@@ -881,11 +881,11 @@ select.haccp-input{padding:3px 7px}
     {% if beverage_list %}
       <div class="r6-pairings">
         {% for p in beverage_list %}
-          {% set role = p.relationship_type or p.role or 'complement' %}
+          {% set role = p.relationship_type or p.role or p.pairing_type or 'complement' %}
           <div class="r6-pairing">
             <div class="r6-pairing__role r6-pairing__role--{{ role }}">{{ role | title }}</div>
             {% if p.region %}<div class="r6-pairing__region">{{ p.region }}</div>{% endif %}
-            <div class="r6-pairing__name">{{ p.name }}</div>
+            <div class="r6-pairing__name">{{ p.name or p.beverage_name }}</div>
             {% if gate_for_tier('library') == 'full_content' %}
               {% if p.origin_producer or p.local_provider %}
                 <div style="font-family: var(--mono); font-size: 11px; color: var(--charcoal-soft); margin-top: 4px;">
