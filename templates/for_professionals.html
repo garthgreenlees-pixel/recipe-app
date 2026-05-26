@@ -295,7 +295,7 @@ main{padding-top:60px}
       <li><div><strong>Supplier Network</strong> — {{ stats.suppliers }} verified suppliers with product-level links, region coverage, and origin tracking</div></li>
       <li><div><strong>Kitchen Workspace</strong> — Scan, import, or compose recipes; get technique and sourcing context applied automatically</div></li>
       <li><div><strong>HACCP Export</strong> — Generate professional HACCP documentation from any recipe in Provenance</div></li>
-      <li><div><strong>Pairing Intelligence</strong> — 15,000+ food–beverage pairings mapped by context, confidence, and bridge logic</div></li>
+      <li><div><strong>Pairing Intelligence</strong> — {{ "{:,}".format(stats.pairings) if stats.pairings else '—' }} food–beverage pairings mapped by context, confidence, and bridge logic</div></li>
     </ul>
   </div>
 

@@ -7584,6 +7584,7 @@ def _compute_platform_counts():
             "technique_count": None, "recipe_count": None, "beverage_count": None,
             "supplier_count": None, "drink_count": None, "canon_count": None,
             "p1000_count": None, "pairing_count": None, "route_count": 5,
+            "service_protocol_count": None,
         }
 
     conn = get_db()
@@ -7597,8 +7598,9 @@ def _compute_platform_counts():
             ("supplier_count",  "SELECT COUNT(*) FROM suppliers WHERE is_active = TRUE"),
             ("drink_count",     "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 500 Drinks%'"),
             ("canon_count",     "SELECT COUNT(*) FROM canons WHERE status != 'archived'"),
-            ("p1000_count",     "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 1000%'"),
-            ("pairing_count",   "SELECT COUNT(*) FROM pairing_intelligence"),
+            ("p1000_count",              "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 1000%'"),
+            ("pairing_count",            "SELECT COUNT(*) FROM pairing_intelligence"),
+            ("service_protocol_count",   "SELECT COUNT(*) FROM service_protocols"),
         ]
         for key, sql in queries:
             try:
@@ -7635,8 +7637,9 @@ def inject_stats():
             "suppliers":  counts.get("supplier_count"),
             "canons":     counts.get("canon_count"),
             "routes":     counts.get("route_count"),
-            "p1000":      counts.get("p1000_count"),
-            "pairings":   counts.get("pairing_count"),
+            "p1000":              counts.get("p1000_count"),
+            "pairings":           counts.get("pairing_count"),
+            "service_protocols":  counts.get("service_protocol_count"),
         }
     }
 
@@ -10388,11 +10391,11 @@ def api_filter_categories():
 @app.route("/drinks")
 def drinks_page():
     if not DATABASE_URL:
-        return render_template("drinks_home.html", categories=[], total_drinks=363, p500_total=0)
+        return render_template("drinks_home.html", categories=[], total_drinks=None, p500_total=None)
     try:
         conn = get_db()
     except psycopg2.OperationalError:
-        return render_template("drinks_home.html", categories=[], total_drinks=363, p500_total=0)
+        return render_template("drinks_home.html", categories=[], total_drinks=None, p500_total=None)
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("""
         SELECT category, COUNT(*) AS count
