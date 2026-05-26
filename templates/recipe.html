@@ -641,7 +641,14 @@ select.haccp-input{padding:3px 7px}
       <div class="r6-meta">
         {% set t_active = recipe.active_time or recipe.time_active or (recipe.time and recipe.time.active) %}
         {% set t_total  = recipe.total_time  or recipe.time_total  or (recipe.time and recipe.time.total) %}
-        {% set t_serves = recipe.yield_desc or recipe.servings_text or (recipe.servings_count ~ ' serves' if recipe.servings_count else '') or (recipe.servings ~ ' serves' if recipe.servings else '') %}
+        {# Resolve servings to a display string — handles array, legacy string, and empty #}
+        {% set _s = recipe.servings %}
+        {% if _s is string %}{% set _s_text = _s %}
+        {% elif _s and _s[0] is mapping %}{% set _s_text = ((_s[0].count or '') ~ (' ' ~ _s[0].unit if _s[0].unit else '')) | trim %}
+        {% elif _s %}{% set _s_text = _s | join(', ') %}
+        {% else %}{% set _s_text = '' %}
+        {% endif %}
+        {% set t_serves = recipe.yield_desc or recipe.servings_text or (recipe.servings_count ~ ' serves' if recipe.servings_count else '') or _s_text %}
         {% if t_active %}
           <span>Active: {{ t_active }}</span>
           <span class="r6-meta__div">·</span>
