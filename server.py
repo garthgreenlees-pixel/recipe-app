@@ -3366,11 +3366,34 @@ def make_kitchen_slug(title: str, uuid_prefix: str) -> str:
     return f"{base}-{uuid_prefix.lower()[:6]}"
 
 
+# Unicode vulgar fraction → decimal value. Used by _normalize_fractions.
+_UNICODE_FRACTIONS = {
+    '½': 0.5,   '¼': 0.25,  '¾': 0.75,
+    '⅓': 1/3,   '⅔': 2/3,
+    '⅕': 0.2,   '⅖': 0.4,   '⅗': 0.6,   '⅘': 0.8,
+    '⅙': 1/6,   '⅚': 5/6,
+    '⅛': 0.125, '⅜': 0.375, '⅝': 0.625, '⅞': 0.875,
+    '⅐': 1/7,   '⅑': 1/9,   '⅒': 0.1,
+}
+
+def _normalize_fractions(line: str) -> str:
+    """Convert '1 ½' → '1.5' and standalone '½' → '0.5' before the regex tokeniser runs."""
+    if not line:
+        return line
+    frac_chars = ''.join(_UNICODE_FRACTIONS.keys())
+    def _mixed(m):
+        return f'{int(m.group(1)) + _UNICODE_FRACTIONS[m.group(2)]:g}'
+    line = _re.sub(r'(\d+)\s+([' + frac_chars + r'])', _mixed, line)
+    for ch, val in _UNICODE_FRACTIONS.items():
+        line = line.replace(ch, f'{val:g}')
+    return line
+
+
 def _parse_ingredient_line(line):
     """Parse a free-text ingredient line into structured form.
     Returns dict: {count, unit, name, info, group} or None for empty lines.
     """
-    line = (line or "").strip()
+    line = _normalize_fractions((line or "").strip())
     if not line:
         return None
     # Group heading
