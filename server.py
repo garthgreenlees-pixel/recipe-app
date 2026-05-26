@@ -13467,7 +13467,7 @@ def technique_beverage_pairings(technique_id):
 def _admin_guard():
     """Redirect to login if no active session."""
     if not session.get("user_id"):
-        return redirect("/auth/login")
+        return _login_redirect()
     return None
 
 
