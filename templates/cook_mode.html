@@ -166,6 +166,10 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   font-family:var(--serif);font-size:17px;line-height:1.65;
   color:var(--cream);
 }
+.cm-step-note{
+  font-family:var(--didot);font-size:12px;font-style:italic;
+  color:var(--cream-muted);line-height:1.5;margin-top:6px;
+}
 
 /* ── DIVIDER ──────────────────────────────────────────── */
 .cm-ornament{
@@ -279,7 +283,10 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   {% set step_text = step if step is not mapping else (step.text or step.instruction or step.body or '') %}
   <li class="cm-step" id="cmstep-{{ loop.index0 }}" onclick="focusStep({{ loop.index0 }}, {{ method_steps | length }})">
     <span class="cm-step-num">{{ loop.index }}</span>
-    <span class="cm-step-text">{{ step_text }}</span>
+    <div>
+      <span class="cm-step-text">{{ step_text }}</span>
+      {% if step is mapping %}{% set _note = step.technique_note or step.insight or '' %}{% if _note %}<div class="cm-step-note">{{ _note }}</div>{% endif %}{% endif %}
+    </div>
   </li>
   {% endfor %}
   </ol>
