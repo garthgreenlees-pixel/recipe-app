@@ -2758,6 +2758,15 @@ def recipe_cook_mode(slug):
             _norm, _ = _parse_yield(_recipe_dict["servings"])
             if _norm:
                 _recipe_dict["servings_text"] = _norm
+        # Prefer enhanced_steps when available — normalize to {instruction, insight} shape
+        # so the template accessor (step.instruction) works for both data sources.
+        _enhanced = _recipe_dict.get("enhanced_steps")
+        if _enhanced and isinstance(_enhanced, list) and len(_enhanced) > 0:
+            _recipe_dict["steps"] = [
+                {"instruction": s.get("enhanced_step", ""), "insight": s.get("insight", "")}
+                if isinstance(s, dict) else {"instruction": str(s), "insight": ""}
+                for s in _enhanced
+            ]
         return render_template("cook_mode.html", recipe=_recipe_dict)
     # Fall back to public recipes table
     cur.execute("SELECT * FROM recipes WHERE slug = %s", (slug,))
