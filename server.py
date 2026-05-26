@@ -5903,7 +5903,11 @@ def _enrich_faqs(title, ingredients_text, steps_text):
 
 
 def _match_suppliers_for_ingredients(ingredient_names):
-    """Reusable supplier matching. Returns list of supplier dicts with products[]."""
+    """Reusable supplier matching. Returns list of supplier dicts with products[].
+
+    Mirrors canon recipe page Path B guards: forward-only ILIKE, _FORM_WORDS
+    disqualifier, and _match_ok() 60%-coverage check.
+    """
     if not ingredient_names or not DATABASE_URL:
         return []
     try:
@@ -5919,18 +5923,26 @@ def _match_suppliers_for_ingredients(ingredient_names):
             FROM ingredient_products ip
             JOIN product_suppliers ps ON ip.id = ps.product_id
             JOIN suppliers s ON ps.supplier_id = s.id
-            WHERE (
-                ip.name ILIKE ANY(%s)
-                OR EXISTS (
-                    SELECT 1 FROM unnest(%s::text[]) AS ri(nm)
-                    WHERE ri.nm ILIKE '%%' || ip.name || '%%'
-                )
-            )
+            WHERE ip.name ILIKE ANY(%s)
             ORDER BY s.id, ip.name, s.name
-        """, (patterns, names))
+        """, (patterns,))
         rows = cur.fetchall()
+
+        _FORM_WORDS = {"paste", "powder", "aged", "dried", "smoked", "fermented"}
+
+        def _match_ok(ing, prod):
+            il, pl = ing.lower(), prod.lower()
+            for fw in _FORM_WORDS:
+                if fw in pl and fw not in il:
+                    return False
+            shorter = min(len(il), len(pl))
+            return shorter > 0 and len(il) / shorter >= 0.6
+
         supplier_map = {}
         for row in rows:
+            prod_name = row['product_name'] or ''
+            if not any(_match_ok(ing, prod_name) for ing in names):
+                continue
             sid = row['id']
             if sid not in supplier_map:
                 supplier_map[sid] = {
@@ -5938,9 +5950,9 @@ def _match_suppliers_for_ingredients(ingredient_names):
                     'city': row['city'], 'state_province': row['state_province'],
                     'country': row['country'], 'products': [],
                 }
-            if row['product_name']:
+            if prod_name:
                 supplier_map[sid]['products'].append({
-                    'name': row['product_name'],
+                    'name': prod_name,
                     'desc': row['product_desc'] or '',
                 })
         cur.close()
