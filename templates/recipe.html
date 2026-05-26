@@ -583,7 +583,7 @@ select.haccp-input{padding:3px 7px}
 {% set cuisine_display = format_cuisine(recipe.cuisine_canon or recipe.cuisine) %}
 {% set steps = recipe.steps or recipe.method or [] %}
 {% set ingredients = recipe.ingredients or [] %}
-{% set has_groups = ingredients and ingredients[0] is mapping and 'group' in ingredients[0] %}
+{% set has_groups = ingredients and ingredients[0] is mapping and 'items' in ingredients[0] %}
 {# Parse JSONB servings field → integer portion count #}
 {% if cost_breakdown %}
   {% set _portions = cost_breakdown.portions %}
