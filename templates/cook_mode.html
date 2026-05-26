@@ -219,12 +219,16 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
 <!-- META STRIP -->
 {% set _parts = [] %}
 {% set _srv = recipe.servings_text or '' %}
-{% if not _srv and recipe.servings and recipe.servings | length > 0 %}
-  {% set _s0 = recipe.servings[0] %}
-  {% if _s0 is mapping %}
-    {% set _srv = (_s0.count | string) + ((' ' + _s0.unit) if _s0.unit else '') %}
-  {% else %}
-    {% set _srv = _s0 | string %}
+{% if not _srv and recipe.servings %}
+  {% if recipe.servings is not number and recipe.servings | length > 0 %}
+    {% set _s0 = recipe.servings[0] %}
+    {% if _s0 is mapping %}
+      {% set _srv = (_s0.count | string) + ((' ' + _s0.unit) if _s0.unit else '') %}
+    {% else %}
+      {% set _srv = _s0 | string %}
+    {% endif %}
+  {% elif recipe.servings is number %}
+    {% set _srv = recipe.servings | string %}
   {% endif %}
 {% endif %}
 {% if _srv %}{% set _ = _parts.append(_srv) %}{% endif %}
