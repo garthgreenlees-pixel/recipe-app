@@ -147,6 +147,7 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
 }
 
 /* ── METHOD ───────────────────────────────────────────── */
+.cm-step-list{list-style:none;padding:0;margin:0}
 .cm-step{
   display:flex;gap:18px;padding:20px 0;
   border-bottom:0.5px solid var(--divider);
@@ -273,13 +274,15 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
 {% if method_steps and method_steps | length > 0 %}
 <div class="cm-section">
   <p class="cm-section-head">Method</p>
+  <ol class="cm-step-list">
   {% for step in method_steps %}
   {% set step_text = step if step is not mapping else (step.text or step.instruction or step.body or '') %}
-  <div class="cm-step" id="cmstep-{{ loop.index0 }}" onclick="focusStep({{ loop.index0 }}, {{ method_steps | length }})">
+  <li class="cm-step" id="cmstep-{{ loop.index0 }}" onclick="focusStep({{ loop.index0 }}, {{ method_steps | length }})">
     <span class="cm-step-num">{{ loop.index }}</span>
     <span class="cm-step-text">{{ step_text }}</span>
-  </div>
+  </li>
   {% endfor %}
+  </ol>
 </div>
 {% endif %}
 
