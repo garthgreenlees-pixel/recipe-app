@@ -597,6 +597,7 @@ select.haccp-input{padding:3px 7px}
 {% set cross_parallels = recipe.cross_cuisine_parallels or [] %}
 {% set trad_tags = recipe.tradition_tags or [] %}
 {% set cuisine_slug = (recipe.cuisine_canon or recipe.cuisine or '') | lower | replace(' ', '-') | replace('_', '-') %}
+{% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
 
 <div class="recipe-page">
 
@@ -783,8 +784,29 @@ select.haccp-input{padding:3px 7px}
         <div class="r6-empty">Quality hierarchy not yet recorded for this recipe.</div>
       {% endif %}
     {% elif gate_for_tier('library') == 'preview_then_prompt' %}
-      {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
-      {{ upgrade_prompt('library', 'quality_hierarchy') }}
+      {% call upgrade_prompt('library', 'quality_hierarchy') %}
+        {% if qh %}
+          <table class="r6-table">
+            <thead>
+              <tr>
+                <th>Ingredient</th><th>Reserve</th><th>House</th><th>What the swap costs</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in qh %}
+                <tr>
+                  <td>{{ row.ingredient }}</td>
+                  <td>{{ row.reserve }}</td>
+                  <td>{{ row.house }}</td>
+                  <td class="r6-table__swap">{{ row.swap_cost }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      {% endcall %}
+    {% else %}
+      {{ upgrade_prompt('kitchen', 'visitor') }}
     {% endif %}
   </section>
 
@@ -831,8 +853,15 @@ select.haccp-input{padding:3px 7px}
           </div>
         {% endif %}
       {% elif gate_for_tier('library') == 'preview_then_prompt' %}
-        {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
-        {{ upgrade_prompt('library', 'default') }}
+        {% call upgrade_prompt('library', 'default') %}
+          {% if recipe.deductive_grid %}
+            <div class="r6-step__note" style="margin-top: var(--s2);">
+              <strong>The deductive grid:</strong> {{ recipe.deductive_grid }}
+            </div>
+          {% endif %}
+        {% endcall %}
+      {% else %}
+        {{ upgrade_prompt('kitchen', 'visitor') }}
       {% endif %}
     {% else %}
       <div class="r6-empty">No cross-cuisine parallels recorded yet.</div>
@@ -864,6 +893,10 @@ select.haccp-input{padding:3px 7px}
                   {% if p.local_provider %} · <a href="#" class="r6-gold-link">{{ p.local_provider }}</a>{% endif %}
                 </div>
               {% endif %}
+            {% elif gate_for_tier('library') == 'preview_then_prompt' %}
+              {{ upgrade_prompt('library', 'beverage_producer', compact=true) }}
+            {% else %}
+              {{ upgrade_prompt('kitchen', 'visitor', compact=true) }}
             {% endif %}
           </div>
         {% endfor %}
@@ -1165,7 +1198,7 @@ function handleAction(action, requiredTier) {
 }
 
 const PEEK_CONTENT = {
-  'haccp': {title:'HACCP safety plan — Profession plan feature',desc:'A complete hazard analysis built from this recipe — temperature control windows, cross-contamination checkpoints, and critical control points formatted for EHO and FDA inspection. Available on the Profession plan.',preview:'Step 1 — Receiving: Verify protein delivery temp ≤3°C. Reject if packaging compromised.\nStep 2 — Prep: Separate raw proteins from ready-to-eat on dedicated colour-coded boards.',cta:'Upgrade to Profession'},
+  'haccp': {title:'HACCP safety plan — Profession plan feature',desc:'A complete hazard analysis built from this recipe — temperature control windows, cross-contamination checkpoints, and critical control points formatted for EHO and FDA inspection. Available on the Profession plan.',preview:'Step 1 — Receiving: Verify protein delivery temp ≤3°C. Reject if packaging compromised.\nStep 2 — Prep: Separate raw proteins from ready-to-eat on dedicated colour-coded boards.',cta:'Open The Profession'},
   'notes': {title:'Your private kitchen notebook, attached to this recipe',desc:'Add mise en place timings, sourcing notes, plating reminders, service margin adjustments. Synced across devices, private to you.',preview:'Mise en place: Butter compound — day before. Reduce stock — 2 hrs ahead.\nService note: Rest 6 min covered, slice against grain.',cta:'Open The Kitchen'},
   'costing': {title:'Live food cost, margin, and yield analysis',desc:'Every ingredient priced against your supplier network. Adjust portion size, see margin move in real time.',preview:'Ingredient cost: $4.82 per portion\nGP at $28 menu price: 82.8%\nYield loss factored: 18% trim…',cta:'Open The Kitchen'},
   'scale': {title:'Scale this recipe for any cover count',desc:'From a dinner for four to a banquet for four hundred — every quantity recalculated.',preview:'Original: 4 portions → Scale to: 48\nButter sauce: 80g → 896g (emulsion risk flag above 400g)\nRoasting time: +18min at full tray load…',cta:'Open The Library'},
@@ -1682,9 +1715,10 @@ function renderCostBreakdown(data) {
     <button class="c-btn c-btn-primary" onclick="exportCostPDF()">Export costing sheet</button>
     <button class="c-btn" onclick="saveMenuPrice()">Save menu price</button>
     <button class="c-btn" onclick="loadCostBreakdown()">Re-cost</button>
-    {% else %}
-    {% from '_partials/upgrade_prompt.html' import upgrade_prompt with context %}
+    {% elif gate_for_tier('profession') == 'preview_then_prompt' %}
     {{ upgrade_prompt('profession', 'cost') }}
+    {% else %}
+    {{ upgrade_prompt('kitchen', 'visitor') }}
     {% endif %}
   </div>`;
   body.innerHTML=html;

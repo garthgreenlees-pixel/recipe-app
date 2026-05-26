@@ -1,11 +1,71 @@
-{# Tier-aware upgrade-prompt component — V4 Sprint 4.2 #}
-{# Renders when gate_for_tier() returns "preview_then_prompt". #}
+{# Tier-aware upgrade-prompt component — Cycle 2 #}
+{# Renders when gate_for_tier() returns "preview_then_prompt" or "gate_block". #}
 {# Reads `current_user` from Jinja context (injected by @app.context_processor). #}
 {# Callers MUST use `with context` on the import so the macro can see current_user. #}
-{# Usage: {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %} #}
-{#        {{ upgrade_prompt('library', 'quality_hierarchy') }} #}
+{#
+  Plain usage (prompt panel only):
+    {{ upgrade_prompt('library', 'quality_hierarchy') }}
 
-{% macro upgrade_prompt(required_tier, context='default') -%}
+  Call-block usage (dimmed content above, prompt below):
+    {% call upgrade_prompt('library', 'quality_hierarchy') %}
+      [content to render dimmed]
+    {% endcall %}
+
+  Compact variant (inside cards):
+    {{ upgrade_prompt('library', 'beverage_producer', compact=true) }}
+#}
+
+<style>
+  .locked {
+    position: relative;
+    opacity: 0.45;
+    pointer-events: none;
+    user-select: none;
+  }
+  .lock-prompt {
+    margin-top: var(--s2);
+    padding: var(--s3);
+    border: 1px solid var(--gold);
+    background: var(--cream-50);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s2);
+  }
+  .lock-prompt--compact {
+    margin-top: var(--s1);
+    padding: var(--s1) var(--s2);
+  }
+  .lock-prompt__text {
+    font-size: 14px;
+    color: var(--charcoal-soft);
+    line-height: 1.4;
+  }
+  .lock-prompt__text strong {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 500;
+    color: var(--charcoal);
+  }
+  .lock-prompt__cta {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--charcoal);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .lock-prompt__cta:hover {
+    border-bottom-color: var(--charcoal);
+  }
+</style>
+
+{% macro upgrade_prompt(required_tier, context='default', compact=false) -%}
 {%- set door_names = {
   'kitchen': 'The Kitchen',
   'library': 'The Library',
@@ -13,57 +73,18 @@
   'trade': 'The Trade'
 } -%}
 {%- set context_phrases = {
-  'haccp': 'to generate the HACCP brief',
-  'cost': 'to cost this recipe',
-  'beverage': 'to see the named producers',
-  'quality_hierarchy': 'to read the full Quality Hierarchy',
-  'default': 'for full access'
+  'quality_hierarchy': 'read the full Quality Hierarchy',
+  'default': 'see this section in full',
+  'cost': 'export and save your costing sheet',
+  'beverage_producer': 'see the producer behind this pairing',
+  'visitor': 'start using this'
 } -%}
 {%- set door = door_names.get(required_tier, 'The Kitchen') -%}
 {%- set phrase = context_phrases.get(context, context_phrases['default']) -%}
-{%- if current_user -%}
-  {%- set target_url = '/pricing#' + required_tier -%}
-{%- else -%}
-  {%- set target_url = '/auth/signup?tier=' + required_tier -%}
-{%- endif -%}
-<style>
-  .upgrade-prompt {
-    border: 1px solid var(--line, #e5e3dd);
-    background: var(--cream-100, #f5f1e9);
-    padding: 1rem 1.25rem;
-    margin: 1rem 0;
-    font-family: var(--body, 'DM Sans', system-ui, sans-serif);
-  }
-  .upgrade-prompt__text {
-    margin: 0 0 0.75rem 0;
-    color: var(--charcoal-soft, #2a2a2a);
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
-  .upgrade-prompt__text strong {
-    font-family: var(--display, 'Playfair Display', serif);
-    font-style: italic;
-    font-weight: 500;
-    color: var(--charcoal, #1a1a1a);
-  }
-  .upgrade-prompt__cta {
-    display: inline-block;
-    font-family: var(--body, 'DM Sans', system-ui, sans-serif);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--charcoal, #1a1a1a);
-    text-decoration: none;
-    border-bottom: 1px solid var(--gold, #c9a84c);
-    padding-bottom: 2px;
-  }
-  .upgrade-prompt__cta:hover {
-    border-bottom-color: var(--charcoal, #1a1a1a);
-  }
-</style>
-<div class="upgrade-prompt" data-context="{{ context }}" data-required-tier="{{ required_tier }}">
-  <p class="upgrade-prompt__text">Open <strong>{{ door }}</strong> {{ phrase }}.</p>
-  <a href="{{ target_url }}" class="upgrade-prompt__cta">Open {{ door }}</a>
+{%- set target_url = '/pricing#' + required_tier -%}
+{% if caller is defined %}<div class="locked">{{ caller() }}</div>{% endif %}
+<div class="lock-prompt{% if compact %} lock-prompt--compact{% endif %}" data-context="{{ context }}" data-required-tier="{{ required_tier }}">
+  <p class="lock-prompt__text">Open <strong>{{ door }}</strong> to {{ phrase }}.</p>
+  <a href="{{ target_url }}" class="lock-prompt__cta">Open {{ door }}</a>
 </div>
 {%- endmacro %}
