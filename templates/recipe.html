@@ -620,7 +620,7 @@ select.haccp-input{padding:3px 7px}
   <section class="r6-hero">
     <div class="r6-hero__image">
       {% if recipe.image_url %}
-        <img src="{{ recipe.image_url }}" alt="{{ recipe_name }}">
+        <img src="{{ recipe.image_url }}" alt="{{ recipe_name }}" onerror="this.onerror=null;this.src='/static/img/recipe-placeholder.svg'">
       {% else %}
         <div class="r6-hero__placeholder">{{ recipe_name }}</div>
       {% endif %}

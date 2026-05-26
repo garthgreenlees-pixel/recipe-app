@@ -18,7 +18,7 @@
   .kitchen__italic { font-style: italic; }
 
   .kitchen__add-section { margin-bottom: var(--s4); }
-  .kitchen__add { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
+  .kitchen__add { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s2); }
   .kitchen__add-tile { padding: var(--s3); border: 1.5px dashed var(--line); background: var(--cream-100); text-decoration: none; display: flex; flex-direction: column; gap: var(--s1); color: var(--charcoal); transition: all 0.2s; }
   .kitchen__add-tile:hover { border-color: var(--gold); border-style: solid; }
   .kitchen__add-tile__icon { font-family: var(--mono); font-size: 11px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; }
@@ -48,10 +48,13 @@
   .k-btn--ghost:hover { border-color: var(--gold); }
 
   @media (max-width: 900px) {
-    .kitchen__add { grid-template-columns: 1fr; }
+    .kitchen__add { grid-template-columns: repeat(2, 1fr); }
     .kitchen__toolbar { flex-direction: column; align-items: stretch; }
     .kitchen__search { min-width: auto; }
     .kitchen__hello h1 { font-size: 32px; }
+  }
+  @media (max-width: 500px) {
+    .kitchen__add { grid-template-columns: 1fr; }
   }
 
   /* ── Modal overlay ── */
@@ -81,32 +84,31 @@
   {# ─── HELLO BAND ─── #}
   <section class="kitchen__hello">
     <h1>Your kitchen.</h1>
-    <div class="kitchen__count">
-      {{ recipe_total }} {% if recipe_total == 1 %}recipe{% else %}recipes{% endif %}
-      {% set at_standard = recipes_by_state.enhanced | selectattr('pillars_filled', 'equalto', 7) | list | length
-                         + recipes_by_state.canon_saved | length %}
-      {% if at_standard > 0 %} · {{ at_standard }} at Sashimi standard{% endif %}
-    </div>
   </section>
 
   {# ─── ADD A RECIPE ─── #}
   <section class="kitchen__add-section">
     <div class="kitchen__eyebrow">Add a recipe</div>
     <div class="kitchen__add">
+      <a href="#" class="kitchen__add-tile" data-modal="url">
+        <div class="kitchen__add-tile__icon">▸ URL</div>
+        <div class="kitchen__add-tile__name">Import a URL</div>
+        <div class="kitchen__add-tile__desc">Paste a recipe URL — we'll fetch it and structure it.</div>
+      </a>
       <a href="#" class="kitchen__add-tile" data-modal="scan">
         <div class="kitchen__add-tile__icon">▸ Scan</div>
         <div class="kitchen__add-tile__name">Scan a page</div>
         <div class="kitchen__add-tile__desc">Camera or upload. Single page or multi-page from a cookbook.</div>
       </a>
-      <a href="#" class="kitchen__add-tile" data-modal="import">
-        <div class="kitchen__add-tile__icon">▸ Import</div>
-        <div class="kitchen__add-tile__name">Import a recipe</div>
-        <div class="kitchen__add-tile__desc">PDF, a link, or paste plain text. One door, three sources.</div>
-      </a>
       <a href="#" class="kitchen__add-tile" data-modal="write">
         <div class="kitchen__add-tile__icon">▸ Write</div>
         <div class="kitchen__add-tile__name">Write from scratch</div>
-        <div class="kitchen__add-tile__desc">A blank recipe editor. For the dish that lives in your head.</div>
+        <div class="kitchen__add-tile__desc">A blank editor — title, ingredients, method. The dish that lives in your head.</div>
+      </a>
+      <a href="#" class="kitchen__add-tile" data-modal="pdf">
+        <div class="kitchen__add-tile__icon">▸ PDF</div>
+        <div class="kitchen__add-tile__name">Import a PDF</div>
+        <div class="kitchen__add-tile__desc">Drop a PDF cookbook — pick the pages you want.</div>
       </a>
     </div>
   </section>
@@ -119,9 +121,10 @@
     <h2>Open a door<br><span class="kitchen__italic">to start the collection.</span></h2>
     <p class="kitchen__empty__lede">Three ways in — scan a page out of a cookbook, import a recipe from a link or a PDF, or write your own.</p>
     <div class="kitchen__empty__ctas">
-      <a href="#" class="k-btn" data-modal="scan">Scan a page</a>
-      <a href="#" class="k-btn k-btn--ghost" data-modal="import">Import a recipe</a>
+      <a href="#" class="k-btn" data-modal="url">Import a URL</a>
+      <a href="#" class="k-btn k-btn--ghost" data-modal="scan">Scan a page</a>
       <a href="#" class="k-btn k-btn--ghost" data-modal="write">Write from scratch</a>
+      <a href="#" class="k-btn k-btn--ghost" data-modal="pdf">Import a PDF</a>
     </div>
   </section>
 
@@ -145,7 +148,6 @@
   {% if recipes_by_state.imported %}
   <div class="kitchen__group-head">
     <h3>Imported · just landed</h3>
-    <div class="kitchen__group-count">{{ recipes_by_state.imported | length }} {% if recipes_by_state.imported | length == 1 %}recipe{% else %}recipes{% endif %}</div>
   </div>
   <div class="cards-grid">
     {% for recipe in recipes_by_state.imported %}
@@ -158,7 +160,6 @@
   {% if recipes_by_state.enhanced %}
   <div class="kitchen__group-head">
     <h3>Enhanced · you've worked on these</h3>
-    <div class="kitchen__group-count">{{ recipes_by_state.enhanced | length }} {% if recipes_by_state.enhanced | length == 1 %}recipe{% else %}recipes{% endif %}</div>
   </div>
   <div class="cards-grid">
     {% for recipe in recipes_by_state.enhanced %}
@@ -171,7 +172,6 @@
   {% if recipes_by_state.canon_saved %}
   <div class="kitchen__group-head">
     <h3>Saved from The Canon</h3>
-    <div class="kitchen__group-count">{{ recipes_by_state.canon_saved | length }} {% if recipes_by_state.canon_saved | length == 1 %}recipe{% else %}recipes{% endif %}</div>
   </div>
   <div class="cards-grid">
     {% for recipe in recipes_by_state.canon_saved %}
@@ -187,30 +187,30 @@
 {# ─── MODALS ─── #}
 <div id="kitchen-overlay" class="kmodal-overlay" aria-hidden="true">
 
+  {# IMPORT A URL #}
+  <div id="modal-url" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="modal-url-title" hidden>
+    <button class="kmodal__close" data-close-modal aria-label="Close">✕</button>
+    <div class="kmodal__eyebrow">▸ URL</div>
+    <h2 class="kmodal__title" id="modal-url-title">Import a URL</h2>
+    <p class="kmodal__lede">Paste a recipe URL — we'll fetch it and structure it.</p>
+    <form class="kmodal__form" method="post" action="/enhance">
+      <label class="kmodal__label" for="url-input">Recipe URL</label>
+      <input id="url-input" class="kmodal__input" type="url" name="url" placeholder="https://…" required>
+      <button type="submit" class="kmodal__submit">Fetch and import →</button>
+    </form>
+  </div>
+
   {# SCAN A PAGE #}
   <div id="modal-scan" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="modal-scan-title" hidden>
     <button class="kmodal__close" data-close-modal aria-label="Close">✕</button>
     <div class="kmodal__eyebrow">▸ Scan</div>
     <h2 class="kmodal__title" id="modal-scan-title">Scan a page</h2>
-    <p class="kmodal__lede">Paste the URL of a recipe page. Provenance will fetch and parse it into your editor.</p>
-    <form class="kmodal__form" method="post" action="/enhance">
-      <label class="kmodal__label" for="scan-url">Page URL</label>
-      <input id="scan-url" class="kmodal__input" type="url" name="url" placeholder="https://…" required>
-      <button type="submit" class="kmodal__submit">Scan this page →</button>
-    </form>
-  </div>
-
-  {# IMPORT A RECIPE #}
-  <div id="modal-import" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="modal-import-title" hidden>
-    <button class="kmodal__close" data-close-modal aria-label="Close">✕</button>
-    <div class="kmodal__eyebrow">▸ Import</div>
-    <h2 class="kmodal__title" id="modal-import-title">Import a recipe</h2>
-    <p class="kmodal__lede">Paste plain text — from a PDF, a message, or anywhere else. Provenance reads it and opens the editor.</p>
+    <p class="kmodal__lede">Photo of a cookbook page. We'll read it and structure the recipe.</p>
     <div class="kmodal__form">
-      <label class="kmodal__label" for="import-text">Recipe text</label>
-      <textarea id="import-text" class="kmodal__textarea" rows="8" placeholder="Paste recipe text here…"></textarea>
-      <div id="import-status" class="kmodal__status" hidden></div>
-      <button type="button" class="kmodal__submit" id="btn-import">Import →</button>
+      <label class="kmodal__label" for="scan-file">Photo or image file</label>
+      <input id="scan-file" class="kmodal__input" type="file" accept="image/*" capture="environment" required>
+      <div id="scan-status" class="kmodal__status" hidden></div>
+      <button type="button" class="kmodal__submit" id="btn-scan">Scan and import →</button>
     </div>
   </div>
 
@@ -224,6 +224,15 @@
       <div id="write-status" class="kmodal__status" hidden></div>
       <button type="button" class="kmodal__submit" id="btn-write">Open blank editor →</button>
     </div>
+  </div>
+
+  {# IMPORT A PDF — stub; full flow lands in Phase B #}
+  <div id="modal-pdf" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="modal-pdf-title" hidden>
+    <button class="kmodal__close" data-close-modal aria-label="Close">✕</button>
+    <div class="kmodal__eyebrow">▸ PDF</div>
+    <h2 class="kmodal__title" id="modal-pdf-title">Import a PDF</h2>
+    <p class="kmodal__lede">The PDF flow is on its way — page picker, classification, full extraction.</p>
+    <p style="font-family:var(--mono);font-size:11px;color:var(--warm-gray);padding:1rem 0;">Coming in the next cycle.</p>
   </div>
 
 </div>
