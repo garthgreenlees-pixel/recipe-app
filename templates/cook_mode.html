@@ -207,6 +207,22 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
 .cm-nav-btn--next.is-finish{
   background:var(--gold);color:#0e0d0b;border-color:var(--gold);
 }
+
+/* ── TOOL STRIP ───────────────────────────────────────── */
+.cm-tools{display:flex;gap:6px}
+.cm-tool{
+  width:28px;height:28px;border-radius:50%;
+  background:transparent;
+  border:1px solid rgba(245,241,233,0.25);
+  color:var(--cream);
+  font-family:var(--sans);font-size:14px;font-weight:500;
+  cursor:pointer;
+  transition:opacity 0.15s,background 0.15s;
+  -webkit-tap-highlight-color:transparent;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0;
+}
+.cm-tool:active{opacity:0.6}
 </style>
 </head>
 <body>
@@ -223,6 +239,13 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   <div class="cm-bar-lock" id="cm-lock-btn" onclick="toggleWakeLock()" title="Screen wake lock">
     <span class="cm-bar-lock-label" id="cm-lock-label">Screen on</span>
     <span class="cm-lock-dot" id="cm-lock-dot"></span>
+  </div>
+  <div class="cm-tools">
+    {% if recipe.requires_haccp %}
+      <button class="cm-tool cm-tool--haccp" type="button" onclick="openHaccp()" aria-label="HACCP">H</button>
+    {% endif %}
+    <button class="cm-tool cm-tool--cost" type="button" onclick="openCost()" aria-label="Cost This Recipe">$</button>
+    <button class="cm-tool cm-tool--notes" type="button" onclick="openNotes()" aria-label="Notes">✎</button>
   </div>
 </header>
 
@@ -516,6 +539,14 @@ function updateNavState() {
 }
 
 document.addEventListener('DOMContentLoaded', updateNavState);
+
+// ── Tool strip ─────────────────────────────────────────
+function openHaccp() {
+  console.log('HACCP modal — wires in Cycle 6');
+}
+function openCost() {
+  console.log('Cost modal — wires in Cycle 6');
+}
 </script>
 
 {% if method_steps and method_steps | length > 0 %}
