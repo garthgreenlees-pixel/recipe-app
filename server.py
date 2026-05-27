@@ -1122,6 +1122,7 @@ def init_db():
     for stmt in [
         "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
+        "ALTER TABLE menus ADD COLUMN IF NOT EXISTS allergen_notes JSONB DEFAULT '{}'::jsonb",
     ]:
         try:
             cur.execute(stmt)
@@ -1355,6 +1356,69 @@ def _normalize_member_recipe(kitchen_recipe):
 def _get_allergens_for_region(recipe, region):
     """Allergen detection stub — returns empty until allergen data lands in DB."""
     return []
+
+
+# Keyword map for CA Priority 11 allergens (ingredient-name based matching)
+_ALLERGEN_KEYWORDS = {
+    "eggs": ["egg", "eggs", "mayonnaise", "mayo", "aioli", "hollandaise", "meringue",
+             "custard", "omelette", "omelet", "frittata", "quiche"],
+    "milk": ["milk", "cream", "butter", "cheese", "yogurt", "yoghurt", "ghee", "beurre",
+             "whey", "casein", "lactose", "dairy", "ricotta", "mozzarella", "parmesan",
+             "cheddar", "brie", "camembert", "feta", "mascarpone", "creme fraiche",
+             "crème fraîche", "crème", "dulce de leche", "bechamel", "béchamel"],
+    "mustard": ["mustard", "dijon", "moutarde"],
+    "peanuts": ["peanut", "groundnut", "groundnut oil"],
+    "crustaceans_molluscs": ["shrimp", "prawn", "crab", "lobster", "langoustine",
+                             "crawfish", "crayfish", "mussel", "oyster", "scallop",
+                             "clam", "squid", "octopus", "calamari", "abalone",
+                             "whelk", "cockle", "periwinkle"],
+    "fish": ["salmon", "tuna", "cod", "halibut", "sea bass", "anchov", "sardine",
+             "mackerel", "herring", "haddock", "tilapia", "trout", "bream",
+             "snapper", "flounder", "sole", "mahi", "swordfish", "pollock",
+             "fish sauce", "fish stock", "worcestershire", "worcester"],
+    "sesame": ["sesame", "tahini", "hummus"],
+    "soy": ["soy", "soya", "tofu", "miso", "tempeh", "edamame", "tamari",
+            "natto", "soy sauce", "shoyu"],
+    "sulphites": ["wine", "white wine", "red wine", "wine vinegar", "champagne",
+                  "dried apricot", "dried fruit", "raisin", "sultana", "currant",
+                  "beer", "cider", "pickle", "pickled"],
+    "tree_nuts": ["almond", "walnut", "pecan", "cashew", "pistachio", "hazelnut",
+                  "macadamia", "brazil nut", "chestnut", "pine nut", "pine kernel",
+                  "praline", "marzipan", "nougat"],
+    "wheat_triticale": ["wheat", "flour", "bread", "pasta", "noodle", "couscous",
+                        "semolina", "bulgur", "barley", "rye", "crouton",
+                        "breadcrumb", "batter", "crust", "dough", "seitan",
+                        "panko", "tortilla", "roux", "soba"],
+}
+
+
+def _detect_allergens_for_recipe(recipe_dict, region="CA"):
+    """Keyword-based allergen detection from ingredient list + steps text.
+
+    Returns a cache dict: {"region": region, "detected": [list], "detected_at": iso}.
+    Always writes a result so subsequent adds read from cache rather than re-detecting.
+    """
+    import datetime
+    try:
+        ingredients, method_steps = _recipe_dict_to_haccp_inputs(recipe_dict)
+        all_text = " ".join(ingredients + method_steps).lower()
+        detected = []
+        for allergen, keywords in _ALLERGEN_KEYWORDS.items():
+            if any(kw in all_text for kw in keywords):
+                detected.append(allergen)
+        return {
+            "region": region,
+            "detected": detected,
+            "detected_at": datetime.datetime.utcnow().isoformat(),
+        }
+    except Exception as exc:
+        import datetime
+        return {
+            "region": region,
+            "detected": [],
+            "detected_at": datetime.datetime.utcnow().isoformat(),
+            "error": str(exc),
+        }
 
 
 def _generate_haccp_brief_internal(title, ingredients, method_steps, allergen_region):
@@ -13543,13 +13607,39 @@ def menu_detail_page(slug):
             "recipe": dict(recipe) if recipe else None,
         })
     courses = sorted(courses_map.values(), key=lambda c: c["order"])
+
+    # ── Allergen aggregation for template ────────────────────────────────────
+    allergens_by_course = {}
+    for course in courses:
+        for dish in course["dishes"]:
+            r = dish.get("recipe") or {}
+            allergen_cache = r.get("allergens") or {}
+            detected = allergen_cache.get("detected", []) if isinstance(allergen_cache, dict) else []
+            for allergen in detected:
+                allergens_by_course.setdefault(allergen, [])
+                allergens_by_course[allergen].append({
+                    "course_name": course["name"],
+                    "dish_title": r.get("name") or r.get("title") or dish.get("recipe_ref", ""),
+                    "menu_recipe_id": dish["menu_recipe_id"],
+                    "recipe_image": r.get("image_url") or None,
+                })
+    aggregated_allergens = sorted(allergens_by_course.keys())
+
     cur.close(); conn.close()
     menu_dict = dict(menu)
     menu_dict["id"] = str(menu_dict["id"])
     for k in ("event_date", "created_at", "updated_at", "last_exported_at"):
         if menu_dict.get(k) is not None:
             menu_dict[k] = menu_dict[k].isoformat()
-    return render_template("menu_detail.html", menu=menu_dict, courses=courses)
+    allergen_notes = menu_dict.get("allergen_notes") or {}
+    return render_template(
+        "menu_detail.html",
+        menu=menu_dict,
+        courses=courses,
+        aggregated_allergens=aggregated_allergens,
+        allergens_by_course=allergens_by_course,
+        allergen_notes=allergen_notes,
+    )
 
 
 # ─── Sprint 8 — Menu Builder Routes ─────────────────────────────────────────
@@ -13675,8 +13765,27 @@ def get_menu(slug):
             "dish_order_within_course": mr["dish_order_within_course"],
             "recipe": dict(recipe) if recipe else None,
         })
+    # ── Allergen aggregation ─────────────────────────────────────────────────
+    allergens_by_course = {}  # allergen → [{course_name, dish_title, menu_recipe_id, recipe_image}]
+    for course in courses_map.values():
+        for dish in course["dishes"]:
+            r = dish.get("recipe") or {}
+            allergen_cache = r.get("allergens") or {}
+            detected = allergen_cache.get("detected", []) if isinstance(allergen_cache, dict) else []
+            for allergen in detected:
+                allergens_by_course.setdefault(allergen, [])
+                allergens_by_course[allergen].append({
+                    "course_name": course["name"],
+                    "dish_title": r.get("name") or r.get("title") or dish.get("recipe_ref", ""),
+                    "menu_recipe_id": dish["menu_recipe_id"],
+                    "recipe_image": r.get("image_url") or None,
+                })
+    aggregated_allergens = sorted(allergens_by_course.keys())
     result = _menu_to_dict(menu)
     result["courses"] = sorted(courses_map.values(), key=lambda c: c["order"])
+    result["aggregated_allergens"] = aggregated_allergens
+    result["allergens_by_course"] = allergens_by_course
+    result["allergen_notes"] = result.get("allergen_notes") or {}
     cur.close(); conn.close()
     return jsonify(result)
 
@@ -13694,16 +13803,44 @@ def update_menu(slug):
         return jsonify({"error": "Not found"}), 404
     allowed = ("title", "event_date", "cover_count", "menu_price", "chef_notes")
     updates = {k: data[k] for k in allowed if k in data}
-    if not updates:
+    allergen_notes_patch = data.get("allergen_notes")
+
+    if not updates and allergen_notes_patch is None:
         cur.close(); conn.close()
         return jsonify({"error": "No valid fields to update"}), 400
-    set_parts = ", ".join(f"{k} = %s" for k in updates)
-    vals = list(updates.values()) + [slug, user["id"]]
-    cur.execute(
-        f"UPDATE menus SET {set_parts}, updated_at = NOW() "
-        f"WHERE slug = %s AND owner_user_id = %s RETURNING *",
-        vals
-    )
+
+    if allergen_notes_patch is not None and isinstance(allergen_notes_patch, dict):
+        # Build a merge patch: remove keys with empty-string values, merge the rest
+        to_merge = {}
+        to_delete_keys = []
+        for k, v in allergen_notes_patch.items():
+            if v == "":
+                to_delete_keys.append(k)
+            else:
+                to_merge[k] = v
+        if to_merge:
+            cur.execute(
+                "UPDATE menus SET allergen_notes = COALESCE(allergen_notes, '{}'::jsonb) || %s::jsonb, "
+                "updated_at = NOW() WHERE slug = %s AND owner_user_id = %s",
+                (json.dumps(to_merge), slug, user["id"]),
+            )
+        for k in to_delete_keys:
+            cur.execute(
+                "UPDATE menus SET allergen_notes = allergen_notes - %s, "
+                "updated_at = NOW() WHERE slug = %s AND owner_user_id = %s",
+                (k, slug, user["id"]),
+            )
+
+    if updates:
+        set_parts = ", ".join(f"{k} = %s" for k in updates)
+        vals = list(updates.values()) + [slug, user["id"]]
+        cur.execute(
+            f"UPDATE menus SET {set_parts}, updated_at = NOW() "
+            f"WHERE slug = %s AND owner_user_id = %s",
+            vals
+        )
+
+    cur.execute("SELECT * FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
     row = cur.fetchone()
     cur.close(); conn.close()
     return jsonify(_menu_to_dict(row))
@@ -13749,6 +13886,28 @@ def add_menu_recipe(slug):
     if recipe is None:
         cur.close(); conn.close()
         return jsonify({"error": "Recipe not found"}), 404
+
+    # ── Allergen cache: detect on first add, skip if already cached ──────────
+    if recipe.get("allergens") is None:
+        allergen_cache = _detect_allergens_for_recipe(recipe)
+        cache_json = json.dumps(allergen_cache)
+        prefix = recipe_ref.split(":")[0]
+        try:
+            if prefix == "canon":
+                cur.execute(
+                    "UPDATE recipes SET allergens = %s::jsonb WHERE slug = %s",
+                    (cache_json, recipe_ref.split(":", 1)[1]),
+                )
+            elif prefix == "kitchen":
+                cur.execute(
+                    "UPDATE user_kitchen_recipes SET allergens = %s::jsonb WHERE uuid = %s",
+                    (cache_json, recipe_ref.split(":", 1)[1]),
+                )
+            recipe = dict(recipe)
+            recipe["allergens"] = allergen_cache
+        except Exception as exc:
+            app.logger.warning(f"Allergen cache write failed for {recipe_ref}: {exc}")
+
     cur.execute("""
         INSERT INTO menu_recipes (menu_id, recipe_ref, course_name, course_order, dish_order_within_course)
         VALUES (%s, %s, %s, %s, %s)
