@@ -430,6 +430,7 @@ function _parseQty(qtyText, infoText) {
 }
 
 function initUnits() {
+  let hasVariants = false;
   document.querySelectorAll('.cm-ing-row').forEach(row => {
     const qEl = row.querySelector('.cm-ing-qty');
     const iEl = row.querySelector('.cm-ing-info');
@@ -437,7 +438,12 @@ function initUnits() {
     const parsed = _parseQty(qEl.textContent.trim(), iEl ? iEl.textContent.replace(/[()]/g,'').trim() : '');
     qEl.dataset.metric   = parsed.metric;
     qEl.dataset.imperial = parsed.imperial;
+    if (parsed.metric !== parsed.imperial) hasVariants = true;
   });
+  if (!hasVariants) {
+    const toggleRow = document.querySelector('.cm-unit-row');
+    if (toggleRow) toggleRow.style.display = 'none';
+  }
   const saved = localStorage.getItem('pv_units') || 'metric';
   setUnits(saved, true);
 }
