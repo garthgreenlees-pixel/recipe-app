@@ -126,6 +126,24 @@ _CUISINE_PATTERN = _re.compile(
     r'\b(' + '|'.join(_re.escape(c) for c in _LINKABLE_CUISINES) + r')\b'
 )
 
+@app.template_filter('format_event_date')
+def format_event_date_filter(value):
+    """Format an ISO date string or date object as '14 March 2027'."""
+    if not value:
+        return ''
+    try:
+        from datetime import datetime, date
+        if isinstance(value, str):
+            dt = datetime.fromisoformat(value.split('T')[0])
+        elif isinstance(value, date):
+            dt = datetime.combine(value, datetime.min.time())
+        else:
+            dt = value
+        return dt.strftime('%-d %B %Y')
+    except Exception:
+        return str(value)
+
+
 @app.template_filter('format_timer')
 def format_timer(seconds):
     try:
@@ -13643,6 +13661,7 @@ def menu_detail_page(slug):
     )
 
     user_can_see_cost = user_can_access("profession")
+    user_can_print = user_can_access("profession")
     cost_data = None
     if user_can_see_cost:
         region = get_user_location() or "CA"
@@ -13668,6 +13687,100 @@ def menu_detail_page(slug):
         has_any_pairings=has_any_pairings,
         user_can_see_cost=user_can_see_cost,
         cost_data=cost_data,
+        user_can_print=user_can_print,
+    )
+
+
+@app.route("/menu/<slug>/print/menu-card")
+@requires_tier("profession")
+def print_menu_card(slug):
+    from weasyprint import HTML as WeasyHTML
+    from datetime import datetime
+
+    user = get_current_user()
+    conn = psycopg2.connect(DATABASE_URL_WRITE)
+    conn.autocommit = True
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        abort(404)
+
+    cur.execute("""
+        SELECT * FROM menu_recipes WHERE menu_id = %s
+        ORDER BY course_order, dish_order_within_course
+    """, (menu["id"],))
+    mr_rows = cur.fetchall()
+    _DEFAULT_COURSES = [("Amuse", 1), ("Starter", 2), ("Main", 3), ("Cheese", 4), ("Dessert", 5)]
+    courses_map = {name: {"name": name, "order": order, "dishes": []} for name, order in _DEFAULT_COURSES}
+    for mr in mr_rows:
+        try:
+            recipe = _resolve_recipe_ref(mr["recipe_ref"], user["id"], cur)
+        except ValueError:
+            recipe = None
+        cn = mr["course_name"]
+        if cn not in courses_map:
+            courses_map[cn] = {"name": cn, "order": mr["course_order"], "dishes": []}
+        courses_map[cn]["dishes"].append({
+            "menu_recipe_id": str(mr["id"]),
+            "recipe_ref": mr["recipe_ref"],
+            "dish_order_within_course": mr["dish_order_within_course"],
+            "recipe": dict(recipe) if recipe else None,
+        })
+    courses = sorted(courses_map.values(), key=lambda c: c["order"])
+
+    allergens_by_course = {}
+    for course in courses:
+        for dish in course["dishes"]:
+            r = dish.get("recipe") or {}
+            allergen_cache = r.get("allergens") or {}
+            detected = allergen_cache.get("detected", []) if isinstance(allergen_cache, dict) else []
+            for allergen in detected:
+                allergens_by_course.setdefault(allergen, []).append(dish["menu_recipe_id"])
+    aggregated_allergens = sorted(allergens_by_course.keys())
+
+    def _build_allergen_sentence(allergens):
+        if not allergens:
+            return "This menu has been reviewed for common allergens. Please tell us if any concern your table."
+        fmt = [a.lower() for a in allergens]
+        if len(fmt) == 1:
+            return f"This menu contains {fmt[0]}. Please tell us if it concerns your table."
+        joined = ", ".join(fmt[:-1]) + ", and " + fmt[-1]
+        return f"This menu contains {joined}. Please tell us if any of these are a concern at your table."
+
+    allergen_sentence = _build_allergen_sentence(aggregated_allergens)
+
+    cur.execute("UPDATE menus SET last_exported_at = NOW() WHERE id = %s", (menu["id"],))
+    cur.close(); conn.close()
+
+    menu_dict = dict(menu)
+    menu_dict["id"] = str(menu_dict["id"])
+    for k in ("event_date", "created_at", "updated_at", "last_exported_at"):
+        if menu_dict.get(k) is not None:
+            menu_dict[k] = menu_dict[k].isoformat()
+
+    gen_stamp = datetime.now().strftime('%-d %B %Y · %H:%M')
+
+    html = render_template(
+        "print/menu_card.html",
+        menu=menu_dict,
+        courses=courses,
+        aggregated_allergens=aggregated_allergens,
+        allergen_sentence=allergen_sentence,
+        gen_stamp=gen_stamp,
+    )
+
+    try:
+        pdf_bytes = WeasyHTML(string=html, base_url=request.host_url).write_pdf()
+    except Exception:
+        app.logger.exception(f"WeasyPrint error for menu-card {slug}")
+        abort(500)
+
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="menu-card-{slug}.pdf"'},
     )
 
 

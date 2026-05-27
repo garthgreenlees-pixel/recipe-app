@@ -128,6 +128,16 @@
   .mb-frost-veil__icon { font-size: 18px; color: var(--gold); }
   .mb-frost-veil__copy { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--charcoal); }
 
+  /* ── Action bar ── */
+  .mb-actions { display: flex; align-items: center; justify-content: space-between; padding: var(--s3) 0 var(--s2) 0; border-top: 1px solid var(--gold); margin-top: var(--s4); }
+  .mb-actions__save { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; background: var(--cream-100); color: var(--charcoal); border: 1px solid var(--line); padding: 8px 18px; cursor: pointer; transition: border-color 0.15s; }
+  .mb-actions__save:hover { border-color: var(--charcoal); }
+  .mb-actions__exports { display: flex; align-items: center; gap: var(--s2); position: relative; }
+  .mb-actions__exports__label { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-right: 4px; }
+  .mb-actions__export { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--charcoal); background: none; border: 1px solid var(--line); padding: 7px 14px; cursor: pointer; transition: border-color 0.15s; }
+  .mb-actions__export:hover:not(.disabled) { border-color: var(--charcoal); }
+  .mb-actions__export.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
   /* ── Picker backdrop + modal ── */
   .mb-picker-backdrop { display: none; position: fixed; inset: 0; background: rgba(31,27,22,0.72); z-index: 400; align-items: center; justify-content: center; }
   .mb-picker-backdrop.is-open { display: flex; }
@@ -454,6 +464,37 @@
     </div>{# end .mb-right-col #}
 
   </div>{# end .mb-layout #}
+
+  {# ── Action bar ── #}
+  <div class="mb-actions">
+    <button class="mb-actions__save" onclick="_flashSave()" id="mb-save-btn">Save</button>
+    <div></div>
+    {% if user_can_print %}
+    <div class="mb-actions__exports">
+      <span class="mb-actions__exports__label">Print</span>
+      <button class="mb-actions__export" onclick="window.open('/menu/{{ menu.slug }}/print/menu-card', '_blank')">Menu card</button>
+      <button class="mb-actions__export disabled" title="Available next">Costing sheet</button>
+      <button class="mb-actions__export disabled" title="Available next">Allergen card</button>
+      <button class="mb-actions__export disabled" title="Available next">Beverage program</button>
+    </div>
+    {% else %}
+    <div class="mb-actions__exports mb-frost-wrap">
+      <div style="opacity:0.18; display:flex; align-items:center; gap:var(--s2); pointer-events:none;">
+        <span class="mb-actions__exports__label">Print</span>
+        <button class="mb-actions__export">Menu card</button>
+        <button class="mb-actions__export">Costing sheet</button>
+        <button class="mb-actions__export">Allergen card</button>
+        <button class="mb-actions__export">Beverage program</button>
+      </div>
+      <div class="mb-frost-veil">
+        <div class="mb-frost-veil__lock">
+          <span class="mb-frost-veil__icon">&#128274;</span>
+          <span class="mb-frost-veil__copy">Profession unlocks</span>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
 
 </div>
 
@@ -849,6 +890,16 @@
     panel.appendChild(pctDiv);
   }
   {% endif %}
+
+  /* ── Action bar save ── */
+  window._flashSave = function () {
+    // UX affordance — auto-save already runs on field blur; this confirms visually
+    const btn = document.getElementById('mb-save-btn');
+    if (!btn) return;
+    btn.textContent = 'Saved';
+    clearTimeout(btn._t);
+    btn._t = setTimeout(() => { btn.textContent = 'Save'; }, 1500);
+  };
 
   /* ── Allergen note auto-save ── */
   let _noteTimer = null;
