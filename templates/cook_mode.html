@@ -274,6 +274,148 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   padding:0;
 }
 .cm-tool:active{opacity:0.6}
+
+/* ── UPGRADE OVERLAY ──────────────────────────────────── */
+.cm-upgrade-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(14,13,11,0.97);
+  display:none;flex-direction:column;
+  padding:20px;
+  max-width:var(--max-w);margin:0 auto;
+}
+.cm-upgrade-overlay.open{display:flex}
+.cm-upgrade-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:16px;
+}
+.cm-upgrade-eyebrow{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--gold);
+}
+.cm-upgrade-close{
+  width:32px;height:32px;background:transparent;border:none;
+  color:var(--cream-muted);font-size:20px;cursor:pointer;line-height:1;
+}
+.cm-upgrade-title{
+  font-family:var(--didot);font-style:italic;
+  font-size:20px;color:var(--cream);
+  line-height:1.3;margin-bottom:12px;
+}
+.cm-upgrade-desc{
+  font-family:var(--sans);font-size:14px;color:var(--cream-muted);
+  line-height:1.6;margin-bottom:20px;
+}
+.cm-upgrade-preview{
+  font-family:var(--mono);font-size:11px;line-height:1.7;
+  color:var(--cream-muted);
+  border:0.5px solid var(--divider);
+  padding:12px 14px;margin-bottom:24px;
+  white-space:pre-line;flex:1;overflow-y:auto;
+}
+.cm-upgrade-cta{
+  display:block;text-align:center;
+  background:var(--gold);color:#0e0d0b;
+  font-family:var(--sans);font-size:14px;font-weight:600;
+  letter-spacing:0.04em;text-transform:uppercase;
+  padding:14px;text-decoration:none;border-radius:2px;
+  flex-shrink:0;
+}
+
+/* ── HACCP OVERLAY ────────────────────────────────────── */
+.cm-haccp-overlay{
+  position:fixed;inset:0;z-index:450;
+  background:rgba(14,13,11,0.96);
+  display:none;align-items:flex-start;justify-content:center;
+  overflow-y:auto;
+}
+.cm-haccp-overlay.open{display:flex}
+.cm-haccp-modal{
+  background:var(--bg-layer);
+  width:100%;max-width:var(--max-w);
+  min-height:100vh;display:flex;flex-direction:column;
+}
+.cm-haccp-header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(22,21,18,0.97);backdrop-filter:blur(8px);
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:12px 16px;gap:8px;
+  border-bottom:0.5px solid var(--divider);
+}
+.cm-haccp-eyebrow{
+  font-family:var(--mono);font-size:8px;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--cream-muted);
+  display:block;margin-bottom:3px;
+}
+.cm-haccp-recipe-title{font-family:var(--sans);font-size:13px;color:var(--cream)}
+.cm-haccp-header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.cm-haccp-close{
+  width:32px;height:32px;background:transparent;border:none;
+  color:var(--cream-muted);font-size:18px;cursor:pointer;line-height:1;padding:0;
+}
+.cm-haccp-body{flex:1}
+.cm-hdr-btn{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.06em;
+  text-transform:uppercase;padding:5px 10px;
+  background:transparent;border:0.5px solid var(--divider);
+  color:var(--cream-muted);cursor:pointer;border-radius:2px;white-space:nowrap;
+}
+.cm-hdr-btn--primary{
+  background:var(--gold);color:#0e0d0b;border-color:var(--gold);font-weight:600;
+}
+.haccp-section{border-bottom:0.5px solid var(--divider);padding:14px 16px}
+.haccp-section:last-child{border-bottom:none;padding-bottom:20px}
+.haccp-section-label{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px;font-weight:600;color:var(--cream-muted)}
+.haccp-allergen-label{color:var(--gold-soft)!important}
+.haccp-ccp-label{color:#e06050!important}
+.haccp-loading{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--cream-muted);text-align:center;padding:44px 16px;line-height:1.8;white-space:pre-line}
+.haccp-allergen-section{display:flex;flex-wrap:wrap;gap:6px;padding-top:2px}
+.haccp-allergen-pill{font-family:var(--mono);font-size:9px;letter-spacing:0.07em;text-transform:uppercase;background:rgba(201,168,76,0.15);border:0.5px solid rgba(201,168,76,0.4);color:var(--gold-soft);font-weight:600;border-radius:2px;padding:4px 9px}
+.haccp-rationale{font-size:11px;color:var(--cream-muted);margin-top:8px;font-style:italic;line-height:1.5}
+.haccp-flow{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:4px}
+.haccp-flow-step{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;background:rgba(90,165,200,0.12);border:0.5px solid rgba(90,165,200,0.3);border-radius:2px;padding:3px 8px;color:#5fa8cc}
+.haccp-flow-arrow{color:var(--cream-muted);font-size:11px;padding:0 1px}
+.haccp-receiving-item{margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid var(--divider)}
+.haccp-receiving-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.haccp-receiving-ingredient{font-weight:600;font-size:12px;color:#5cb87e;margin-bottom:4px}
+.haccp-receiving-detail{font-size:12px;line-height:1.5;margin-bottom:2px;color:var(--cream)}
+.haccp-reject{color:#e06050}
+.haccp-table-wrap{overflow-x:auto;margin-top:4px}
+.haccp-table{width:100%;border-collapse:collapse;font-size:11px;line-height:1.45}
+.haccp-table th{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-muted);border-bottom:1.5px solid var(--divider);padding:5px 8px;text-align:left;white-space:nowrap}
+.haccp-table td{border-bottom:0.5px solid var(--divider);padding:7px 8px;vertical-align:top;color:var(--cream)}
+.haccp-table tr:last-child td{border-bottom:none}
+.haccp-limit{font-weight:600;color:#e06050;min-width:100px}
+.haccp-hazard-cat{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--cream-muted)}
+.haccp-footer{font-family:var(--mono);font-size:9px;color:var(--cream-muted);letter-spacing:0.05em;line-height:1.6;font-style:italic}
+.haccp-doc-ctrl{background:var(--bg-layer)}
+.haccp-doc-ctrl-top{margin-bottom:10px}
+.haccp-version-badge{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;border-radius:2px;padding:3px 9px;display:inline-block}
+.haccp-version-draft{background:rgba(224,90,64,0.15);border:0.5px solid rgba(224,90,64,0.5);color:#e06050}
+.haccp-version-signed{background:rgba(92,184,126,0.15);border:0.5px solid rgba(92,184,126,0.5);color:#5cb87e}
+.haccp-doc-ctrl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 20px;margin-top:8px}
+.haccp-doc-ctrl-field{display:flex;flex-direction:column;gap:4px}
+.haccp-doc-ctrl-label{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-muted)}
+.haccp-doc-ctrl-value{font-size:12px;color:var(--cream)}
+.haccp-input{font-family:var(--mono);font-size:11px;border:0.5px solid rgba(245,241,233,0.2);border-radius:2px;padding:4px 7px;background:rgba(245,241,233,0.06);color:var(--cream);width:100%;box-sizing:border-box}
+.haccp-input:focus{outline:none;border-color:var(--gold-soft)}
+select.haccp-input{padding:3px 7px}
+.haccp-textarea{width:100%;font-family:var(--serif);font-size:12px;line-height:1.6;color:var(--cream);border:0.5px solid rgba(245,241,233,0.2);border-radius:2px;padding:8px 10px;resize:vertical;background:rgba(245,241,233,0.06);box-sizing:border-box;min-height:72px}
+.haccp-textarea:focus{outline:none;border-color:var(--gold-soft)}
+.haccp-text-display{font-size:12px;line-height:1.6;color:var(--cream)}
+.haccp-signoff-note{font-family:var(--mono);font-size:9px;color:var(--cream-muted);margin-bottom:10px;letter-spacing:0.04em}
+.haccp-signoff-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+.haccp-sig-field{grid-column:1/-1}
+.haccp-sig-input{font-style:italic}
+.haccp-signature-display{font-size:17px;font-style:italic;font-family:var(--didot);color:var(--cream);line-height:1.3;border-bottom:0.5px solid var(--divider);padding-bottom:2px;display:inline-block;min-width:140px}
+.haccp-validation-msg{font-family:var(--mono);font-size:9px;color:#e06050;letter-spacing:0.04em;margin-top:6px;display:none}
+.haccp-watermark-draft{display:none}
+@media print{
+  .cm-haccp-overlay{position:static;background:none;display:block!important;overflow:visible}
+  body>*:not(.cm-haccp-overlay){display:none!important}
+  .cm-haccp-header{position:static}
+  .haccp-watermark-draft{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);font-family:var(--mono,monospace);font-size:52pt;color:rgba(176,58,46,0.09);pointer-events:none;z-index:9999;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap}
+  .haccp-input,.haccp-textarea,.haccp-validation-msg{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -591,13 +733,306 @@ function updateNavState() {
 
 document.addEventListener('DOMContentLoaded', updateNavState);
 
-// ── Tool strip ─────────────────────────────────────────
+// ── Tier gating ────────────────────────────────────────
+const CM_RECIPE_SLUG = {{ recipe.slug | tojson }};
+const CM_USER_TIER = {{ user_tier | tojson }};
+const CM_IS_AUTHENTICATED = {{ 'true' if is_authenticated else 'false' }};
+const CM_TIER_HIERARCHY = ['free','kitchen','library','profession','trade'];
+
+function cmMeetsRequirement(required) {
+  if (!CM_IS_AUTHENTICATED) return false;
+  const my = CM_TIER_HIERARCHY.indexOf(CM_USER_TIER);
+  const req = CM_TIER_HIERARCHY.indexOf(required);
+  return my >= req;
+}
+
+const CM_UPGRADE_COPY = {
+  haccp: {
+    title: 'HACCP safety plan — Profession plan feature',
+    desc: 'A complete hazard analysis built from this recipe — temperature control windows, cross-contamination checkpoints, and critical control points formatted for EHO and FDA inspection.',
+    preview: 'Step 1 — Receiving: Verify protein delivery temp ≤3°C. Reject if packaging compromised.\nStep 2 — Prep: Separate raw proteins from ready-to-eat on dedicated colour-coded boards.'
+  },
+  cost: {
+    title: 'Live food cost, margin, and yield analysis',
+    desc: 'Every ingredient priced against your supplier network. Adjust portion size, see margin move in real time.',
+    preview: 'Ingredient cost: $4.82 per portion\nGP at $28 menu price: 82.8%\nYield loss factored: 18% trim…'
+  }
+};
+
+function openUpgrade(action) {
+  const c = CM_UPGRADE_COPY[action] || CM_UPGRADE_COPY.cost;
+  document.getElementById('cm-upgrade-title').textContent = c.title;
+  document.getElementById('cm-upgrade-desc').textContent = c.desc;
+  document.getElementById('cm-upgrade-preview').textContent = c.preview;
+  document.getElementById('cm-upgrade-overlay').classList.add('open');
+}
+function closeUpgrade() {
+  document.getElementById('cm-upgrade-overlay').classList.remove('open');
+}
+
+// ── HACCP modal ────────────────────────────────────────
 function openHaccp() {
-  console.log('HACCP modal — wires in Cycle 6');
+  if (!CM_IS_AUTHENTICATED) {
+    window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
+  if (!cmMeetsRequirement('profession')) { openUpgrade('haccp'); return; }
+  document.getElementById('cm-haccp-overlay').classList.add('open');
+  _cmHaccpSetBody('<div class="haccp-loading">Loading HACCP brief…</div>');
+  _cmHaccpUpdateHeaderBtns(false);
+  fetch('/api/haccp/latest/' + encodeURIComponent(CM_RECIPE_SLUG))
+    .then(r => r.json())
+    .then(data => {
+      if (data.exists) {
+        _haccpBrief = data.brief; _haccpSavedId = data.id; _haccpVersion = data.version;
+        _haccpSigned = !!data.pic_signed_at; _haccpSignedAt = data.pic_signed_at; _haccpPicName = data.pic_name;
+        cmRenderHaccpBrief(data.brief, data);
+      } else { _cmHaccpGenerateFresh(); }
+    })
+    .catch(() => _cmHaccpGenerateFresh());
 }
-function openCost() {
-  console.log('Cost modal — wires in Cycle 6');
+function closeHaccp() {
+  document.getElementById('cm-haccp-overlay').classList.remove('open');
 }
+
+function _knEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+let _haccpBrief = null, _haccpSavedId = null, _haccpVersion = null;
+let _haccpSigned = false, _haccpSignedAt = null, _haccpPicName = null;
+
+function _haccpTodayISO() { return new Date().toISOString().slice(0,10); }
+function _haccpSixMonthsISO() { const d=new Date(); d.setMonth(d.getMonth()+6); return d.toISOString().slice(0,10); }
+function _haccpFmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso.includes('T') ? iso : iso+'T00:00:00');
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+}
+function _cmHaccpSetBody(html) { document.getElementById('cm-haccp-body').innerHTML = html; }
+function _cmHaccpUpdateHeaderBtns(isSigned) {
+  const c = document.getElementById('cm-haccp-header-btns');
+  if (!c) return;
+  if (isSigned) {
+    c.innerHTML = `<button class="cm-hdr-btn" onclick="haccpGenerateNew()">New version</button>
+      <button class="cm-hdr-btn" onclick="window.print()">Print</button>`;
+  } else {
+    c.innerHTML = `<button class="cm-hdr-btn cm-hdr-btn--primary" onclick="haccpSign()">Sign &amp; finalise</button>
+      <button class="cm-hdr-btn" onclick="window.print()">Print</button>`;
+  }
+}
+
+function _cmHaccpCollect() {
+  const ingredients = [];
+  document.querySelectorAll('.cm-ing-row').forEach(row => {
+    const qty = (row.querySelector('.cm-ing-qty')||{}).innerText||'';
+    const name = (row.querySelector('.cm-ing-name')||{}).innerText||'';
+    const line = [qty.trim(),name.trim()].filter(Boolean).join(' ');
+    if (line) ingredients.push(line);
+  });
+  const method_steps = [];
+  document.querySelectorAll('.cm-step-text').forEach(el => { const t=el.innerText.trim(); if(t) method_steps.push(t); });
+  const title = (document.querySelector('.cm-title')||{}).innerText?.trim() || CM_RECIPE_SLUG;
+  return {ingredients, method_steps, title};
+}
+
+async function _cmHaccpGenerateFresh() {
+  const {ingredients, method_steps, title} = _cmHaccpCollect();
+  if (!ingredients.length && !method_steps.length) {
+    _cmHaccpSetBody('<div class="haccp-loading">No recipe data found on this page.</div>'); return;
+  }
+  _cmHaccpSetBody('<div class="haccp-loading">Reviewing the recipe…\nCharting the critical control points…\nSetting the brief…</div>');
+  const ctrl = new AbortController();
+  const timeout = setTimeout(() => ctrl.abort(), 185000);
+  try {
+    const r = await fetch('/api/haccp', {
+      method:'POST', headers:{'Content-Type':'application/json'}, signal:ctrl.signal,
+      body:JSON.stringify({title, ingredients, method_steps, allergen_region:'CA'})
+    });
+    clearTimeout(timeout);
+    if (r.status===502) { const d=await r.json(); throw {status:502,data:d}; }
+    if (!r.ok) throw {status:r.status};
+    const data = await r.json();
+    _haccpBrief=data; _haccpSavedId=null; _haccpVersion=null;
+    _haccpSigned=false; _haccpSignedAt=null; _haccpPicName=null;
+    cmRenderHaccpBrief(data, null);
+  } catch(err) {
+    clearTimeout(timeout);
+    if (err&&err.name==='AbortError') _cmHaccpSetBody('<div class="haccp-loading">HACCP generation is taking longer than expected. Refresh and try again.</div>');
+    else if (err&&err.status===502) _cmHaccpSetBody('<div class="haccp-loading">Could not generate a complete HACCP plan. The recipe may be missing structural detail.</div>');
+    else _cmHaccpSetBody('<div class="haccp-loading">Something went wrong. Try again in a moment.</div>');
+  }
+}
+
+function haccpGenerateNew() {
+  _haccpSavedId=null; _haccpVersion=null; _haccpSigned=false; _haccpSignedAt=null; _haccpPicName=null;
+  _cmHaccpGenerateFresh();
+}
+
+function cmRenderHaccpBrief(d, savedMeta) {
+  const isSigned = !!(savedMeta && savedMeta.pic_signed_at);
+  const edits = (savedMeta && savedMeta.edits) || {};
+  const today = _haccpTodayISO();
+  const vLabel = savedMeta ? ('Version '+savedMeta.version) : 'Draft';
+  const genDate = savedMeta ? (_haccpFmtDate(savedMeta.saved_at)||'Not yet drafted') : _haccpFmtDate(today);
+  const S='haccp-section', SL='haccp-section-label';
+  _cmHaccpUpdateHeaderBtns(isSigned);
+  let html = '';
+  if (!isSigned) html += '<div class="haccp-watermark-draft" aria-hidden="true">DRAFT — UNSIGNED</div>';
+
+  html += `<div class="${S} haccp-doc-ctrl">
+    <div class="haccp-doc-ctrl-top"><span class="haccp-version-badge ${isSigned?'haccp-version-signed':'haccp-version-draft'}">${isSigned?vLabel+' — SIGNED':vLabel+' — UNSIGNED DRAFT'}</span></div>
+    <div class="haccp-doc-ctrl-grid">
+      <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Generated</span><span class="haccp-doc-ctrl-value">${_knEsc(genDate)}</span></div>
+      <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Effective date</span>
+        ${isSigned?`<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.effective_date||today))}</span>`:`<input type="date" class="haccp-input" id="haccp-eff-date" value="${edits.effective_date||today}">`}
+      </div>
+      <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Next review</span>
+        ${isSigned?`<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.next_review_date||_haccpSixMonthsISO()))}</span>`:`<input type="date" class="haccp-input" id="haccp-review-date" value="${edits.next_review_date||_haccpSixMonthsISO()}">`}
+      </div>
+      ${isSigned?`<div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at)||'—')}</span></div>`:''}
+    </div>
+  </div>`;
+
+  html += `<div class="${S}">
+    <div class="${SL}" style="color:#7ab4d8">Equipment Calibration Verification</div>
+    <div class="haccp-doc-ctrl-grid">
+      <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-date">Thermometers calibrated</label>
+        ${isSigned?`<span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(edits.calibration_date||'')||'Not yet calibrated')}</span>`:`<input type="date" class="haccp-input" id="haccp-cal-date" value="${edits.calibration_date||''}">`}
+      </div>
+      <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-by">Calibrated by</label>
+        ${isSigned?`<span class="haccp-doc-ctrl-value">${_knEsc(edits.calibrated_by||'')}</span>`:`<input type="text" class="haccp-input" id="haccp-cal-by" placeholder="Full name" value="${_knEsc(edits.calibrated_by||'')}">`}
+      </div>
+    </div>
+  </div>`;
+
+  const allergens=d.allergens||{};
+  const detected=Array.isArray(allergens.detected)?allergens.detected:[];
+  html += `<div class="${S}">
+    <div class="${SL} haccp-allergen-label">Allergens — ${_knEsc(allergens.region_label||allergens.region||'')}</div>
+    ${detected.length?`<div class="haccp-allergen-section">${detected.map(a=>`<span class="haccp-allergen-pill">${_knEsc(a)}</span>`).join('')}</div>`:'<span style="font-family:var(--mono);font-size:9px;color:var(--cream-muted)">None identified</span>'}
+    ${allergens.rationale?`<div class="haccp-rationale">${_knEsc(allergens.rationale)}</div>`:''}
+  </div>`;
+
+  const flow=Array.isArray(d.process_flow)?d.process_flow:[];
+  if (flow.length) html += `<div class="${S}"><div class="${SL}" style="color:#5fa8cc">Process Flow</div>
+    <div class="haccp-flow">${flow.map((s,i)=>`<span class="haccp-flow-step">${i+1}. ${_knEsc(s.label||s.id||'')}</span>${i<flow.length-1?'<span class="haccp-flow-arrow">→</span>':''}`).join('')}</div>
+  </div>`;
+
+  const receiving=Array.isArray(d.receiving_criteria)?d.receiving_criteria:[];
+  if (receiving.length) html += `<div class="${S}"><div class="${SL}" style="color:#5cb87e">Receiving Criteria</div>
+    <div class="haccp-receiving">${receiving.map(r=>`<div class="haccp-receiving-item">
+      <div class="haccp-receiving-ingredient">${_knEsc(r.ingredient||'')}${r.delivery_temp_max_c!=null?` — max ${r.delivery_temp_max_c}°C`:''}</div>
+      <div class="haccp-receiving-detail"><strong>Accept:</strong> ${_knEsc(r.accept_criteria||'')}</div>
+      <div class="haccp-receiving-detail haccp-reject"><strong>Reject:</strong> ${_knEsc(r.reject_criteria||'')}</div>
+    </div>`).join('')}</div>
+  </div>`;
+
+  const ccps=Array.isArray(d.ccp_table)?d.ccp_table:[];
+  if (ccps.length) html += `<div class="${S}"><div class="${SL} haccp-ccp-label">Critical Control Points</div>
+    <div class="haccp-table-wrap"><table class="haccp-table">
+      <thead><tr><th>Step</th><th>Hazard</th><th>Critical Limit</th><th>Monitoring</th><th>Corrective Action</th><th>Records</th></tr></thead>
+      <tbody>${ccps.map(ccp=>`<tr>
+        <td><strong>${_knEsc(ccp.step||'')}</strong><br><span class="haccp-hazard-cat">${_knEsc(ccp.hazard_category||'')}</span></td>
+        <td>${_knEsc(ccp.hazard||ccp.ingredient_or_process||'')}</td>
+        <td class="haccp-limit">${_knEsc(ccp.critical_limit||'')}</td>
+        <td>${_knEsc(ccp.monitoring||'')}</td>
+        <td>${_knEsc(ccp.corrective_action||'')}</td>
+        <td>${_knEsc(ccp.records||'')}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+  </div>`;
+
+  const nonCcps=Array.isArray(d.non_ccp_steps)?d.non_ccp_steps:[];
+  if (nonCcps.length) html += `<div class="${S}"><div class="${SL}" style="color:rgba(245,241,233,0.45)">Non-CCP Steps</div>
+    <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
+      ${nonCcps.map(s=>`<li style="font-size:13px;line-height:1.55;color:var(--cream)"><strong>${_knEsc(s.step||'')}</strong> — ${_knEsc(s.rationale||'')}</li>`).join('')}
+    </ul>
+  </div>`;
+
+  const defaultComm='Allergen status is communicated to all kitchen staff at briefing prior to service. Front-of-house staff are briefed on allergen presence in this dish. Customers with allergies are notified verbally of cross-contamination risk and offered alternatives.';
+  html += `<div class="${S}"><div class="${SL} haccp-allergen-label">Allergen Communication Statement</div>
+    ${isSigned?`<div class="haccp-text-display">${_knEsc(edits.allergen_communication||defaultComm)}</div>`:`<textarea class="haccp-textarea" id="haccp-allergen-comm" rows="3">${_knEsc(edits.allergen_communication||defaultComm)}</textarea>`}
+  </div>`;
+
+  html += `<div class="${S}"><div class="${SL}" style="color:rgba(245,241,233,0.45)">Record Retention</div>
+    <div class="haccp-text-display">All HACCP records, monitoring logs, and corrective action documentation are retained for a minimum of 24 months from date of generation, per Safe Food for Canadians Regulations.</div>
+  </div>`;
+
+  if (isSigned) {
+    html += `<div class="${S}"><div class="${SL} haccp-ccp-label">Sign-off — Person in Charge</div>
+      <div class="haccp-signoff-grid">
+        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">PIC Name</span><span class="haccp-doc-ctrl-value">${_knEsc(savedMeta.pic_name||'')}</span></div>
+        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Role</span><span class="haccp-doc-ctrl-value">${_knEsc(edits.signoff_role||'')}</span></div>
+        <div class="haccp-doc-ctrl-field haccp-sig-field"><span class="haccp-doc-ctrl-label">Signature</span><span class="haccp-signature-display">${_knEsc(edits.signature_text||savedMeta.pic_name||'')}</span></div>
+        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Date signed</span><span class="haccp-doc-ctrl-value">${_knEsc(_haccpFmtDate(savedMeta.pic_signed_at)||'—')}</span></div>
+      </div>
+    </div>`;
+  } else {
+    html += `<div class="${S}"><div class="${SL} haccp-ccp-label">Sign-off — Person in Charge</div>
+      <div class="haccp-signoff-note">Complete all fields to enable signing. Typed name acts as digital signature.</div>
+      <div class="haccp-signoff-grid">
+        <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-pic-name">PIC Name</label><input type="text" class="haccp-input" id="haccp-pic-name" placeholder="Full name" value="${_knEsc(edits.pic_name||'')}"></div>
+        <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-role">Role</label>
+          <select class="haccp-input" id="haccp-role">${['PIC','Executive Chef','Sous Chef','Kitchen Manager','Owner-Operator','Other'].map(r=>`<option value="${r}" ${(edits.signoff_role||'PIC')===r?'selected':''}>${r}</option>`).join('')}</select>
+        </div>
+        <div class="haccp-doc-ctrl-field haccp-sig-field"><label class="haccp-doc-ctrl-label" for="haccp-sig">Signature (type full name)</label><input type="text" class="haccp-input haccp-sig-input" id="haccp-sig" placeholder="Type full name as signature" value="${_knEsc(edits.signature_text||'')}"></div>
+        <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Date signed</span><span class="haccp-doc-ctrl-value">${_haccpFmtDate(today)}</span></div>
+      </div>
+      <div class="haccp-validation-msg" id="haccp-val-msg">Please fill in: calibration date, calibrated by, PIC name, and signature.</div>
+    </div>`;
+  }
+
+  if (d.footer_note) html += `<div class="${S}"><div class="haccp-footer">${_knEsc(d.footer_note)}</div></div>`;
+  document.getElementById('cm-haccp-body').innerHTML = html;
+}
+
+function haccpSign() {
+  const get = id => (document.getElementById(id)||{});
+  const calDate=get('haccp-cal-date').value||'';
+  const calBy=(get('haccp-cal-by').value||'').trim();
+  const picName=(get('haccp-pic-name').value||'').trim();
+  const role=get('haccp-role').value||'PIC';
+  const sig=(get('haccp-sig').value||'').trim();
+  const effDate=get('haccp-eff-date').value||_haccpTodayISO();
+  const reviewDate=get('haccp-review-date').value||_haccpSixMonthsISO();
+  const allergenComm=(get('haccp-allergen-comm').value||'').trim();
+  const msg=document.getElementById('haccp-val-msg');
+  const missing=[];
+  if (!calDate) missing.push('thermometer calibration date');
+  if (!calBy)   missing.push('calibrated by name');
+  if (!picName) missing.push('PIC name');
+  if (!sig)     missing.push('signature');
+  if (missing.length) {
+    if (msg) { msg.textContent='Please fill in: '+missing.join(', ')+'.'; msg.style.display='block'; }
+    const firstId=!calDate?'haccp-cal-date':!calBy?'haccp-cal-by':!picName?'haccp-pic-name':'haccp-sig';
+    const el=document.getElementById(firstId);
+    if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
+    return;
+  }
+  if (msg) msg.style.display='none';
+  const edits={calibration_date:calDate,calibrated_by:calBy,signoff_role:role,
+    signature_text:sig,pic_name:picName,allergen_communication:allergenComm,
+    effective_date:effDate,next_review_date:reviewDate};
+  _cmHaccpSetBody('<div class="haccp-loading">Saving and signing…</div>');
+  fetch('/api/haccp/save',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({recipe_slug:CM_RECIPE_SLUG,brief:_haccpBrief,edits})})
+  .then(r=>r.json())
+  .then(saved=>{
+    if (saved.error) throw new Error(saved.error);
+    _haccpSavedId=saved.id; _haccpVersion=saved.version;
+    return fetch('/api/haccp/sign',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id:saved.id,pic_name:picName})});
+  })
+  .then(r=>r.json())
+  .then(signed=>{
+    if (signed.error) throw new Error(signed.error);
+    _haccpSigned=true; _haccpSignedAt=signed.pic_signed_at; _haccpPicName=picName;
+    cmRenderHaccpBrief(_haccpBrief,{id:_haccpSavedId,version:_haccpVersion,pic_name:picName,
+      pic_signed_at:signed.pic_signed_at,saved_at:signed.pic_signed_at,edits});
+  })
+  .catch(err=>_cmHaccpSetBody('<div class="haccp-loading">Sign failed — '+_knEsc((err||{}).message||'Try again.')+'</div>'));
+}
+
+// openCost() defined in Commit 2
 
 // ── Notes pane ─────────────────────────────────────────
 const NOTES_KEY = 'cm_notes_' + '{{ recipe.slug }}';
@@ -637,6 +1072,37 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="cm-notes-foot">
     <span class="cm-notes-hint">Saved on this device</span>
     <button class="cm-notes-clear" type="button" onclick="clearNotes()">Clear</button>
+  </div>
+</div>
+
+<!-- UPGRADE PROMPT -->
+<div class="cm-upgrade-overlay" id="cm-upgrade-overlay" onclick="if(event.target===this)closeUpgrade()">
+  <div class="cm-upgrade-head">
+    <span class="cm-upgrade-eyebrow">Profession plan</span>
+    <button class="cm-upgrade-close" type="button" onclick="closeUpgrade()" aria-label="Close">×</button>
+  </div>
+  <div class="cm-upgrade-title" id="cm-upgrade-title"></div>
+  <div class="cm-upgrade-desc" id="cm-upgrade-desc"></div>
+  <div class="cm-upgrade-preview" id="cm-upgrade-preview"></div>
+  <a href="/pricing" class="cm-upgrade-cta">See plans →</a>
+</div>
+
+<!-- HACCP BRIEF -->
+<div class="cm-haccp-overlay" id="cm-haccp-overlay" onclick="if(event.target===this)closeHaccp()">
+  <div class="cm-haccp-modal">
+    <div class="cm-haccp-header">
+      <div>
+        <span class="cm-haccp-eyebrow">HACCP Brief — Codex Alimentarius CXC 1-1969</span>
+        <span class="cm-haccp-recipe-title">{{ recipe.title or recipe.name }}</span>
+      </div>
+      <div class="cm-haccp-header-right">
+        <span id="cm-haccp-header-btns"></span>
+        <button class="cm-haccp-close" type="button" onclick="closeHaccp()" aria-label="Close">✕</button>
+      </div>
+    </div>
+    <div class="cm-haccp-body" id="cm-haccp-body">
+      <div class="haccp-loading">Loading…</div>
+    </div>
   </div>
 </div>
 
