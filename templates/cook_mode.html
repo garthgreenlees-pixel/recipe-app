@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -23,12 +23,14 @@
   --divider:rgba(245,241,233,0.1);
   --serif:Georgia,'Times New Roman',serif;
   --didot:'Playfair Display',Georgia,serif;
+  --mono:'DM Mono',ui-monospace,monospace;
+  --sans:'DM Sans',system-ui,sans-serif;
   --gold-soft:#D4B679;
   --max-w:600px;
 }
 
 html{-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--cream)}
-body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg);color:var(--cream);padding-bottom:60px;min-height:100vh}
+body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg);color:var(--cream);padding-bottom:80px;min-height:100vh}
 
 /* ── TOP BAR ─────────────────────────────────────────── */
 .cm-bar{
@@ -177,6 +179,34 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   color:var(--gold);font-size:13px;letter-spacing:6px;
   margin:28px 0;
 }
+
+/* ── STEP COUNTER ─────────────────────────────────────── */
+.cm-step-counter{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);
+}
+
+/* ── NAV BAR ──────────────────────────────────────────── */
+.cm-nav-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  display:flex;gap:8px;padding:8px 12px;
+  background:rgba(14,13,11,0.92);backdrop-filter:blur(8px);
+  border-top:0.5px solid rgba(245,241,233,0.12);
+}
+.cm-nav-btn{
+  flex:1;min-height:56px;
+  font-family:var(--sans);font-size:16px;font-weight:500;
+  text-transform:uppercase;letter-spacing:0.1em;
+  background:transparent;color:var(--cream);
+  border:1px solid rgba(245,241,233,0.25);border-radius:4px;
+  cursor:pointer;transition:opacity 0.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.cm-nav-btn:active{opacity:0.6}
+.cm-nav-btn[disabled]{opacity:0.3;cursor:not-allowed;pointer-events:none}
+.cm-nav-btn--next.is-finish{
+  background:var(--gold);color:#0e0d0b;border-color:var(--gold);
+}
 </style>
 </head>
 <body>
@@ -217,6 +247,7 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
 <h1 class="cm-title">{{ recipe.title }}</h1>
 
 <!-- META STRIP -->
+{% set method_steps = recipe.steps %}
 {% set _parts = [] %}
 {% set _srv = recipe.servings_text or '' %}
 {% if not _srv and recipe.servings %}
@@ -234,10 +265,13 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
 {% if _srv %}{% set _ = _parts.append(_srv) %}{% endif %}
 {% if recipe.time_active %}{% set _ = _parts.append(recipe.time_active + ' active') %}{% endif %}
 {% if recipe.time_total %}{% set _ = _parts.append(recipe.time_total + ' total') %}{% endif %}
-{% if _parts %}
+{% if (method_steps and method_steps | length > 0) or _parts %}
 <div class="cm-meta">
+  {% if method_steps and method_steps | length > 0 %}
+  <span class="cm-step-counter">Step <span id="cm-cur-step">1</span> of <span id="cm-total-steps">{{ method_steps | length }}</span></span>
+  {% endif %}
   {% for part in _parts %}
-    {% if not loop.first %}<span class="cm-meta-dot">·</span>{% endif %}
+    {% if not loop.first or (method_steps and method_steps | length > 0) %}<span class="cm-meta-dot">·</span>{% endif %}
     {{ part }}
   {% endfor %}
 </div>
@@ -278,7 +312,6 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
 <div class="cm-ornament">· · ·</div>
 
 <!-- METHOD -->
-{% set method_steps = recipe.steps %}
 {% if method_steps and method_steps | length > 0 %}
 <div class="cm-section">
   <p class="cm-section-head">Method</p>
@@ -450,7 +483,47 @@ function setUnits(u, silent) {
 }
 
 document.addEventListener('DOMContentLoaded', initUnits);
+
+// ── Navigation ─────────────────────────────────────────
+const totalSteps = parseInt(document.getElementById('cm-total-steps')?.textContent || '0', 10);
+
+function navStep(dir) {
+  if (!totalSteps) return;
+  if (currentStep === totalSteps && dir === 1) {
+    clearFocus();
+    currentStep = 1;
+    updateNavState();
+    return;
+  }
+  const target = Math.min(Math.max(currentStep + dir, 1), totalSteps);
+  if (target === currentStep) return;
+  currentStep = target;
+  focusStep(currentStep - 1);
+  updateNavState();
+}
+
+function updateNavState() {
+  const curEl  = document.getElementById('cm-cur-step');
+  const backBtn = document.getElementById('cm-nav-back');
+  const nextBtn = document.getElementById('cm-nav-next');
+  if (curEl)    curEl.textContent = currentStep;
+  if (backBtn)  backBtn.disabled  = currentStep <= 1;
+  if (nextBtn) {
+    const isFinish = currentStep >= totalSteps;
+    nextBtn.textContent = isFinish ? 'Finish' : 'Next';
+    nextBtn.classList.toggle('is-finish', isFinish);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', updateNavState);
 </script>
+
+{% if method_steps and method_steps | length > 0 %}
+<nav class="cm-nav-bar">
+  <button id="cm-nav-back" class="cm-nav-btn cm-nav-btn--back" onclick="navStep(-1)" disabled>Back</button>
+  <button id="cm-nav-next" class="cm-nav-btn cm-nav-btn--next" onclick="navStep(1)">Next</button>
+</nav>
+{% endif %}
 
 </body>
 </html>
