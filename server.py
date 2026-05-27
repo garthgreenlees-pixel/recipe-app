@@ -1481,6 +1481,31 @@ def _compute_recipe_cost(recipe, region):
     }
 
 
+def _resolve_recipe_ref(ref, user_id, cur):
+    """Resolve a polymorphic recipe_ref to a recipe dict.
+
+    "canon:<slug>"   → recipes table (public, no ownership check).
+    "kitchen:<uuid>" → user_kitchen_recipes (scoped to user_id).
+    Returns dict on success, None on miss. Raises ValueError on malformed ref.
+    """
+    if not ref or ':' not in ref:
+        raise ValueError(f"Malformed recipe_ref: {ref!r}")
+    prefix, _, key = ref.partition(':')
+    if prefix == 'canon':
+        cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (key,))
+    elif prefix == 'kitchen':
+        if not user_id:
+            return None
+        cur.execute(
+            "SELECT * FROM user_kitchen_recipes WHERE uuid = %s AND user_id = %s LIMIT 1",
+            (key, int(user_id))
+        )
+    else:
+        raise ValueError(f"Unknown recipe_ref prefix: {prefix!r}")
+    row = cur.fetchone()
+    return dict(row) if row else None
+
+
 @app.route("/recipes")
 def recipes_page():
     return render_template("recipes.html")
@@ -13343,6 +13368,270 @@ def invoices_resolve_line(invoice_id):
     cur.close()
     conn.close()
     return jsonify({"resolved": True})
+
+
+# ─── Sprint 8 — Menu Builder Routes ─────────────────────────────────────────
+
+def _menu_slug_unique(base, cur):
+    """Return base slug, appending -2, -3, etc. until unique in menus."""
+    candidate, n = base, 2
+    while True:
+        cur.execute("SELECT 1 FROM menus WHERE slug = %s", (candidate,))
+        if not cur.fetchone():
+            return candidate
+        candidate = f"{base}-{n}"
+        n += 1
+
+
+def _menu_to_dict(row):
+    """Convert a menus row to a JSON-safe dict."""
+    d = dict(row)
+    d['id'] = str(d['id'])
+    for k in ('event_date', 'created_at', 'updated_at', 'last_exported_at'):
+        if d.get(k) is not None:
+            d[k] = d[k].isoformat()
+    return d
+
+
+def _menu_recipe_to_dict(row):
+    """Convert a menu_recipes row to a JSON-safe dict."""
+    d = dict(row)
+    d['id'] = str(d['id'])
+    d['menu_id'] = str(d['menu_id'])
+    if d.get('created_at') is not None:
+        d['created_at'] = d['created_at'].isoformat()
+    return d
+
+
+@app.route("/api/menus", methods=["GET"])
+@requires_tier("library")
+def list_menus():
+    user = get_current_user()
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT m.id, m.slug, m.title, m.event_date, m.cover_count, m.updated_at,
+               COUNT(DISTINCT mr.course_name) AS course_count,
+               COUNT(mr.id) AS dish_count
+        FROM menus m
+        LEFT JOIN menu_recipes mr ON mr.menu_id = m.id
+        WHERE m.owner_user_id = %s
+        GROUP BY m.id
+        ORDER BY m.event_date DESC NULLS LAST, m.updated_at DESC
+    """, (user["id"],))
+    rows = cur.fetchall()
+    cur.close(); conn.close()
+    result = []
+    for r in rows:
+        d = dict(r)
+        d['id'] = str(d['id'])
+        d['course_count'] = int(d['course_count'])
+        d['dish_count'] = int(d['dish_count'])
+        if d.get('event_date') is not None:
+            d['event_date'] = d['event_date'].isoformat()
+        if d.get('updated_at') is not None:
+            d['updated_at'] = d['updated_at'].isoformat()
+        result.append(d)
+    return jsonify(result)
+
+
+@app.route("/api/menus", methods=["POST"])
+@requires_tier("library")
+def create_menu():
+    user = get_current_user()
+    data = request.get_json() or {}
+    title = (data.get("title") or "").strip()
+    if not title:
+        return jsonify({"error": "title is required"}), 400
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    slug_base = (_slugify(title) or 'menu')[:80]
+    slug = _menu_slug_unique(slug_base, cur)
+    cur.execute("""
+        INSERT INTO menus (slug, owner_user_id, title, event_date, cover_count, chef_notes)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        RETURNING *
+    """, (
+        slug, user["id"], title,
+        data.get("event_date") or None,
+        int(data.get("cover_count", 1)),
+        data.get("chef_notes") or None,
+    ))
+    row = cur.fetchone()
+    cur.close(); conn.close()
+    return jsonify(_menu_to_dict(row)), 201
+
+
+@app.route("/api/menu/<slug>", methods=["GET"])
+@requires_tier("library")
+def get_menu(slug):
+    user = get_current_user()
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    cur.execute("""
+        SELECT * FROM menu_recipes WHERE menu_id = %s
+        ORDER BY course_order, dish_order_within_course
+    """, (menu["id"],))
+    mr_rows = cur.fetchall()
+    courses_map = {}
+    for mr in mr_rows:
+        try:
+            recipe = _resolve_recipe_ref(mr["recipe_ref"], user["id"], cur)
+        except ValueError:
+            recipe = None
+        cn = mr["course_name"]
+        if cn not in courses_map:
+            courses_map[cn] = {"name": cn, "order": mr["course_order"], "dishes": []}
+        courses_map[cn]["dishes"].append({
+            "menu_recipe_id": str(mr["id"]),
+            "recipe_ref": mr["recipe_ref"],
+            "dish_order_within_course": mr["dish_order_within_course"],
+            "recipe": dict(recipe) if recipe else None,
+        })
+    result = _menu_to_dict(menu)
+    result["courses"] = sorted(courses_map.values(), key=lambda c: c["order"])
+    cur.close(); conn.close()
+    return jsonify(result)
+
+
+@app.route("/api/menu/<slug>", methods=["PATCH"])
+@requires_tier("library")
+def update_menu(slug):
+    user = get_current_user()
+    data = request.get_json() or {}
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT id FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    if not cur.fetchone():
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    allowed = ("title", "event_date", "cover_count", "menu_price", "chef_notes")
+    updates = {k: data[k] for k in allowed if k in data}
+    if not updates:
+        cur.close(); conn.close()
+        return jsonify({"error": "No valid fields to update"}), 400
+    set_parts = ", ".join(f"{k} = %s" for k in updates)
+    vals = list(updates.values()) + [slug, user["id"]]
+    cur.execute(
+        f"UPDATE menus SET {set_parts}, updated_at = NOW() "
+        f"WHERE slug = %s AND owner_user_id = %s RETURNING *",
+        vals
+    )
+    row = cur.fetchone()
+    cur.close(); conn.close()
+    return jsonify(_menu_to_dict(row))
+
+
+@app.route("/api/menu/<slug>", methods=["DELETE"])
+@requires_tier("library")
+def delete_menu(slug):
+    user = get_current_user()
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT id FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    if not cur.fetchone():
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    cur.execute("DELETE FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    cur.close(); conn.close()
+    return '', 204
+
+
+@app.route("/api/menu/<slug>/recipes", methods=["POST"])
+@requires_tier("library")
+def add_menu_recipe(slug):
+    user = get_current_user()
+    data = request.get_json() or {}
+    recipe_ref = (data.get("recipe_ref") or "").strip()
+    course_name = (data.get("course_name") or "").strip()
+    course_order = data.get("course_order")
+    if not recipe_ref or not course_name or course_order is None:
+        return jsonify({"error": "recipe_ref, course_name, and course_order are required"}), 400
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT id FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    try:
+        recipe = _resolve_recipe_ref(recipe_ref, user["id"], cur)
+    except ValueError as e:
+        cur.close(); conn.close()
+        return jsonify({"error": str(e)}), 400
+    if recipe is None:
+        cur.close(); conn.close()
+        return jsonify({"error": "Recipe not found"}), 404
+    cur.execute("""
+        INSERT INTO menu_recipes (menu_id, recipe_ref, course_name, course_order, dish_order_within_course)
+        VALUES (%s, %s, %s, %s, %s)
+        RETURNING *
+    """, (menu["id"], recipe_ref, course_name, int(course_order), int(data.get("dish_order_within_course", 1))))
+    mr = cur.fetchone()
+    cur.execute("UPDATE menus SET updated_at = NOW() WHERE id = %s", (menu["id"],))
+    cur.close(); conn.close()
+    result = _menu_recipe_to_dict(mr)
+    result["recipe"] = dict(recipe)
+    return jsonify(result), 201
+
+
+@app.route("/api/menu/<slug>/recipes/<menu_recipe_id>", methods=["PATCH"])
+@requires_tier("library")
+def update_menu_recipe(slug, menu_recipe_id):
+    user = get_current_user()
+    data = request.get_json() or {}
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT id FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    cur.execute("SELECT id FROM menu_recipes WHERE id = %s AND menu_id = %s", (menu_recipe_id, menu["id"]))
+    if not cur.fetchone():
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    allowed = ("course_name", "course_order", "dish_order_within_course")
+    updates = {k: data[k] for k in allowed if k in data}
+    if not updates:
+        cur.close(); conn.close()
+        return jsonify({"error": "No valid fields to update"}), 400
+    set_parts = ", ".join(f"{k} = %s" for k in updates)
+    vals = list(updates.values()) + [menu_recipe_id, str(menu["id"])]
+    cur.execute(
+        f"UPDATE menu_recipes SET {set_parts} WHERE id = %s AND menu_id = %s RETURNING *",
+        vals
+    )
+    mr = cur.fetchone()
+    cur.execute("UPDATE menus SET updated_at = NOW() WHERE id = %s", (menu["id"],))
+    cur.close(); conn.close()
+    return jsonify(_menu_recipe_to_dict(mr))
+
+
+@app.route("/api/menu/<slug>/recipes/<menu_recipe_id>", methods=["DELETE"])
+@requires_tier("library")
+def delete_menu_recipe(slug, menu_recipe_id):
+    user = get_current_user()
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT id FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    cur.execute("SELECT id FROM menu_recipes WHERE id = %s AND menu_id = %s", (menu_recipe_id, menu["id"]))
+    if not cur.fetchone():
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    cur.execute("DELETE FROM menu_recipes WHERE id = %s", (menu_recipe_id,))
+    cur.execute("UPDATE menus SET updated_at = NOW() WHERE id = %s", (menu["id"],))
+    cur.close(); conn.close()
+    return '', 204
 
 
 # ─── OPT3 Canon routes ───────────────────────────────────────────────────────
