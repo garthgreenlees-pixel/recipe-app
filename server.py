@@ -13627,21 +13627,9 @@ def menu_detail_page(slug):
     courses = sorted(courses_map.values(), key=lambda c: c["order"])
 
     # ── Allergen aggregation for template ────────────────────────────────────
-    allergens_by_course = {}
-    for course in courses:
-        for dish in course["dishes"]:
-            r = dish.get("recipe") or {}
-            allergen_cache = r.get("allergens") or {}
-            detected = allergen_cache.get("detected", []) if isinstance(allergen_cache, dict) else []
-            for allergen in detected:
-                allergens_by_course.setdefault(allergen, [])
-                allergens_by_course[allergen].append({
-                    "course_name": course["name"],
-                    "dish_title": r.get("name") or r.get("title") or dish.get("recipe_ref", ""),
-                    "menu_recipe_id": dish["menu_recipe_id"],
-                    "recipe_image": r.get("image_url") or None,
-                })
-    aggregated_allergens = sorted(allergens_by_course.keys())
+    allergen_data = _build_menu_allergens(str(menu["id"]), user["id"], cur)
+    aggregated_allergens = allergen_data["aggregated_allergens"]
+    allergens_by_course = allergen_data["allergens_by_course"]
     # ── Beverage pairing aggregation ─────────────────────────────────────────
     pairings_by_course = {}
     for course in courses:
@@ -13675,7 +13663,7 @@ def menu_detail_page(slug):
     for k in ("event_date", "created_at", "updated_at", "last_exported_at"):
         if menu_dict.get(k) is not None:
             menu_dict[k] = menu_dict[k].isoformat()
-    allergen_notes = menu_dict.get("allergen_notes") or {}
+    allergen_notes = allergen_data["allergen_notes"]
     return render_template(
         "menu_detail.html",
         menu=menu_dict,
@@ -13730,15 +13718,8 @@ def print_menu_card(slug):
         })
     courses = sorted(courses_map.values(), key=lambda c: c["order"])
 
-    allergens_by_course = {}
-    for course in courses:
-        for dish in course["dishes"]:
-            r = dish.get("recipe") or {}
-            allergen_cache = r.get("allergens") or {}
-            detected = allergen_cache.get("detected", []) if isinstance(allergen_cache, dict) else []
-            for allergen in detected:
-                allergens_by_course.setdefault(allergen, []).append(dish["menu_recipe_id"])
-    aggregated_allergens = sorted(allergens_by_course.keys())
+    allergen_data = _build_menu_allergens(str(menu["id"]), user["id"], cur)
+    aggregated_allergens = allergen_data["aggregated_allergens"]
 
     def _build_allergen_sentence(allergens):
         if not allergens:
@@ -13836,6 +13817,80 @@ def print_costing_sheet(slug):
     )
 
 
+@app.route("/menu/<slug>/print/allergen-card")
+@requires_tier("profession")
+def print_allergen_card(slug):
+    from weasyprint import HTML as WeasyHTML
+    from datetime import datetime
+
+    user = get_current_user()
+    conn = psycopg2.connect(DATABASE_URL_WRITE)
+    conn.autocommit = True
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        abort(404)
+
+    allergen_data = _build_menu_allergens(str(menu["id"]), user["id"], cur)
+    aggregated_allergens = allergen_data["aggregated_allergens"]
+    allergens_by_course = allergen_data["allergens_by_course"]
+    allergen_notes = allergen_data["allergen_notes"]
+
+    # Build flat per-dish list for the grid (one row per dish, all its allergens)
+    dishes_allergens = {}
+    for allergen, dishes in allergens_by_course.items():
+        for d in dishes:
+            mid = d["menu_recipe_id"]
+            if mid not in dishes_allergens:
+                dishes_allergens[mid] = {
+                    "course_name": d["course_name"],
+                    "dish_title": d["dish_title"],
+                    "course_order": d.get("course_order", 0),
+                    "dish_order": d.get("dish_order_within_course", 0),
+                    "allergens": [],
+                }
+            dishes_allergens[mid]["allergens"].append(allergen)
+    dishes_allergens_list = sorted(
+        dishes_allergens.values(),
+        key=lambda x: (x["course_order"], x["dish_order"]),
+    )
+
+    cur.execute("UPDATE menus SET last_exported_at = NOW() WHERE id = %s", (menu["id"],))
+    cur.close(); conn.close()
+
+    menu_dict = dict(menu)
+    menu_dict["id"] = str(menu_dict["id"])
+    for k in ("event_date", "created_at", "updated_at", "last_exported_at"):
+        if menu_dict.get(k) is not None:
+            menu_dict[k] = menu_dict[k].isoformat()
+
+    gen_stamp = datetime.now().strftime('%-d %B %Y · %H:%M')
+
+    html = render_template(
+        "print/allergen_card.html",
+        menu=menu_dict,
+        aggregated_allergens=aggregated_allergens,
+        allergens_by_course=allergens_by_course,
+        allergen_notes=allergen_notes,
+        dishes_allergens_list=dishes_allergens_list,
+        gen_stamp=gen_stamp,
+    )
+
+    try:
+        pdf_bytes = WeasyHTML(string=html, base_url=request.host_url).write_pdf()
+    except Exception:
+        app.logger.exception(f"WeasyPrint error for allergen-card {slug}")
+        abort(500)
+
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="allergen-card-{slug}.pdf"'},
+    )
+
+
 # ─── Sprint 8 — Menu Builder Routes ─────────────────────────────────────────
 
 def _normalize_beverage_pairings(raw):
@@ -13919,6 +13974,55 @@ def _compute_menu_cost(menu_id, covers, menu_price, user_id, region, cur):
         "projected_food_cost_pct": projected_food_cost_pct,
         "target_window": {"low": 28.0, "high": 35.0},
         "any_missing_cost": any_missing_cost,
+    }
+
+
+def _build_menu_allergens(menu_id, user_id, cur):
+    """Aggregate allergen data for a menu. Single source of truth used by menu_detail_page,
+    all print routes, and the get_menu API.
+
+    Returns dict:
+      aggregated_allergens  — sorted list of allergen strings
+      allergens_by_course   — dict: allergen → [{course_name, dish_title, menu_recipe_id,
+                                                  recipe_image, course_order,
+                                                  dish_order_within_course}]
+      allergen_notes        — dict: allergen → chef's note string (from menus.allergen_notes)
+    """
+    cur.execute("""
+        SELECT id, recipe_ref, course_name, course_order, dish_order_within_course
+        FROM menu_recipes WHERE menu_id = %s
+        ORDER BY course_order, dish_order_within_course
+    """, (menu_id,))
+    mr_rows = cur.fetchall()
+
+    allergens_by_course = {}
+    for mr in mr_rows:
+        try:
+            recipe = _resolve_recipe_ref(mr["recipe_ref"], user_id, cur)
+        except ValueError:
+            recipe = None
+        r = dict(recipe) if recipe else {}
+        allergen_cache = r.get("allergens") or {}
+        detected = allergen_cache.get("detected", []) if isinstance(allergen_cache, dict) else []
+        dish_title = r.get("name") or r.get("title") or mr["recipe_ref"]
+        for allergen in detected:
+            allergens_by_course.setdefault(allergen, []).append({
+                "course_name": mr["course_name"],
+                "dish_title": dish_title,
+                "menu_recipe_id": str(mr["id"]),
+                "recipe_image": r.get("image_url") or None,
+                "course_order": mr["course_order"],
+                "dish_order_within_course": mr["dish_order_within_course"],
+            })
+
+    cur.execute("SELECT allergen_notes FROM menus WHERE id = %s", (menu_id,))
+    row = cur.fetchone()
+    allergen_notes = (row["allergen_notes"] if row else None) or {}
+
+    return {
+        "aggregated_allergens": sorted(allergens_by_course.keys()),
+        "allergens_by_course": allergens_by_course,
+        "allergen_notes": allergen_notes,
     }
 
 
@@ -14225,21 +14329,9 @@ def get_menu(slug):
             "recipe": dict(recipe) if recipe else None,
         })
     # ── Allergen aggregation ─────────────────────────────────────────────────
-    allergens_by_course = {}  # allergen → [{course_name, dish_title, menu_recipe_id, recipe_image}]
-    for course in courses_map.values():
-        for dish in course["dishes"]:
-            r = dish.get("recipe") or {}
-            allergen_cache = r.get("allergens") or {}
-            detected = allergen_cache.get("detected", []) if isinstance(allergen_cache, dict) else []
-            for allergen in detected:
-                allergens_by_course.setdefault(allergen, [])
-                allergens_by_course[allergen].append({
-                    "course_name": course["name"],
-                    "dish_title": r.get("name") or r.get("title") or dish.get("recipe_ref", ""),
-                    "menu_recipe_id": dish["menu_recipe_id"],
-                    "recipe_image": r.get("image_url") or None,
-                })
-    aggregated_allergens = sorted(allergens_by_course.keys())
+    allergen_data = _build_menu_allergens(str(menu["id"]), user["id"], cur)
+    aggregated_allergens = allergen_data["aggregated_allergens"]
+    allergens_by_course = allergen_data["allergens_by_course"]
     # ── Beverage pairing aggregation ─────────────────────────────────────────
     pairings_by_course = {}
     for course in sorted(courses_map.values(), key=lambda c: c["order"]):
@@ -14258,7 +14350,7 @@ def get_menu(slug):
     result["courses"] = sorted(courses_map.values(), key=lambda c: c["order"])
     result["aggregated_allergens"] = aggregated_allergens
     result["allergens_by_course"] = allergens_by_course
-    result["allergen_notes"] = result.get("allergen_notes") or {}
+    result["allergen_notes"] = allergen_data["allergen_notes"]
     result["pairings_by_course"] = pairings_by_course
     cur.close(); conn.close()
     return jsonify(result)

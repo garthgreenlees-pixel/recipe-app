@@ -1,0 +1,225 @@
+{% extends "print/_base.html" %}
+
+{% block page_title %}Allergen Card — {{ menu.title }}{% endblock %}
+{% block doctype %}<span style="color:#A0522D;">Allergen Card</span>{% endblock %}
+{% block title %}{{ menu.title }}{% endblock %}
+{% block title_clause %}{% if menu.event_date %}<span class="pdf-title-clause">{{ menu.event_date | format_event_date }}.</span>{% endif %}{% endblock %}
+{% block meta %}{{ menu.cover_count }} covers · for service{% endblock %}
+
+{% block extra_styles %}
+/* ── Allergen commitment block ── */
+.pdf-allergen-commitment {
+  margin-bottom: 6mm;
+}
+.pdf-allergen-commitment__heading {
+  font-family: 'DM Mono', monospace;
+  font-size: 10pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #A0522D;
+  margin-bottom: 4mm;
+}
+.pdf-allergen-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm;
+}
+.pdf-allergen-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 8pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: #fff;
+  background: #A0522D;
+  padding: 2mm 4mm;
+  border-radius: 2pt;
+}
+.pdf-allergen-none {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 11pt;
+  color: #4a3f33;
+  line-height: 1.5;
+}
+
+/* ── Course-dish-allergen grid ── */
+.pdf-allergen-grid {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8mm;
+}
+.pdf-allergen-grid thead tr {
+  border-bottom: 1px solid #A0522D;
+}
+.pdf-allergen-grid th {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #807462;
+  padding: 1.5mm 2mm;
+  text-align: left;
+}
+.pdf-allergen-grid td {
+  padding: 2mm 2mm;
+  border-bottom: 1px dotted #d9d0b6;
+  vertical-align: top;
+}
+.pdf-allergen-grid tr:last-child td { border-bottom: none; }
+.course-col {
+  width: 22%;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 11pt;
+  font-weight: 400;
+  color: #C9A84C;
+}
+.dish-col {
+  width: 42%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11pt;
+  font-weight: 300;
+  color: #1f1b16;
+}
+.allergens-col {
+  width: 36%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10pt;
+  font-weight: 400;
+  color: #4a3f33;
+}
+
+/* ── Service notes ── */
+.pdf-allergen-notes__heading {
+  font-family: 'DM Mono', monospace;
+  font-size: 9pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #A0522D;
+  margin-bottom: 4mm;
+  margin-top: 8mm;
+  padding-top: 5mm;
+  border-top: 1px solid #d9d0b6;
+}
+.pdf-allergen-note-block {
+  background: #faf7f2;
+  border-left: 2pt solid #C9A84C;
+  padding: 3mm 4mm;
+  margin-bottom: 3mm;
+  page-break-inside: avoid;
+}
+.pdf-allergen-note-block__head {
+  font-family: 'DM Mono', monospace;
+  font-size: 8pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #C9A84C;
+  margin-bottom: 1.5mm;
+}
+.pdf-allergen-note-block__body {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 10pt;
+  font-weight: 400;
+  color: #1f1b16;
+  line-height: 1.5;
+}
+
+/* ── Sign-off block ── */
+.pdf-allergen-signoff {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8mm;
+  margin-top: 16mm;
+  padding-top: 6mm;
+  border-top: 1px solid #C9A84C;
+}
+.pdf-allergen-signoff .field {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #807462;
+  margin-bottom: 8mm;
+}
+.pdf-allergen-signoff .field-line {
+  border-bottom: 1px dotted #807462;
+  height: 8mm;
+  display: block;
+}
+{% endblock %}
+
+{% block body %}
+
+{# ── Commitment block ── #}
+<div class="pdf-allergen-commitment">
+  <div class="pdf-allergen-commitment__heading">This menu contains:</div>
+  {% if aggregated_allergens %}
+  <div class="pdf-allergen-list">
+    {% for allergen in aggregated_allergens %}
+    <span class="pdf-allergen-chip">{{ allergen }}</span>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="pdf-allergen-none">This menu has been reviewed for common allergens. No restricted allergens detected.</div>
+  {% endif %}
+</div>
+
+{# ── Course-dish-allergen grid ── #}
+{% if dishes_allergens_list %}
+<table class="pdf-allergen-grid">
+  <thead>
+    <tr>
+      <th class="course-col">Course</th>
+      <th class="dish-col">Dish</th>
+      <th class="allergens-col">Allergens</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for row in dishes_allergens_list %}
+  <tr>
+    <td class="course-col">{{ row.course_name }}</td>
+    <td class="dish-col">{{ row.dish_title }}</td>
+    <td class="allergens-col">{{ row.allergens | join(', ') }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{# ── Service notes ── #}
+{% set has_notes = namespace(found=false) %}
+{% for allergen in aggregated_allergens %}
+  {% if allergen_notes.get(allergen) %}{% set has_notes.found = true %}{% endif %}
+{% endfor %}
+{% if has_notes.found %}
+<div class="pdf-allergen-notes__heading">Service notes</div>
+{% for allergen in aggregated_allergens %}
+  {% set note = allergen_notes.get(allergen) %}
+  {% if note %}
+  <div class="pdf-allergen-note-block">
+    <div class="pdf-allergen-note-block__head">{{ allergen }}</div>
+    <div class="pdf-allergen-note-block__body">{{ note }}</div>
+  </div>
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+{# ── Sign-off block ── #}
+<div class="pdf-allergen-signoff">
+  <div>
+    <div class="field">Chef on duty</div>
+    <span class="field-line"></span>
+  </div>
+  <div>
+    <div class="field">Date · time</div>
+    <span class="field-line"></span>
+  </div>
+</div>
+
+{% endblock %}
