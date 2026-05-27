@@ -976,6 +976,24 @@ function cmRenderHaccpBrief(d, savedMeta) {
     </div>`).join('')}</div>
   </div>`;
 
+  const hazardSteps=Array.isArray(d.hazard_analysis)?d.hazard_analysis:[];
+  if (hazardSteps.length) {
+    const hazRows=hazardSteps.flatMap(hs=>(Array.isArray(hs.agents)?hs.agents:[]).map(a=>({step:hs.step||'',...a})));
+    if (hazRows.length) html += `<div class="${S}"><div class="${SL}" style="color:#e06050">Hazard Analysis</div>
+      <div class="haccp-table-wrap"><table class="haccp-table">
+        <thead><tr><th>Step</th><th>Category</th><th>Hazard / Agent</th><th>Source</th><th>Severity</th><th>Likelihood</th></tr></thead>
+        <tbody>${hazRows.map(h=>`<tr>
+          <td><strong>${_knEsc(h.step||'')}</strong></td>
+          <td><span class="haccp-hazard-cat">${_knEsc(h.category||'')}</span></td>
+          <td>${_knEsc(h.agent||'')}</td>
+          <td>${_knEsc(h.source||'')}</td>
+          <td>${_knEsc(h.severity||'')}</td>
+          <td>${_knEsc(h.likelihood||'')}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+  }
+
   const ccps=Array.isArray(d.ccp_table)?d.ccp_table:[];
   if (ccps.length) html += `<div class="${S}"><div class="${SL} haccp-ccp-label">Critical Control Points</div>
     <div class="haccp-table-wrap"><table class="haccp-table">
@@ -995,6 +1013,15 @@ function cmRenderHaccpBrief(d, savedMeta) {
   if (nonCcps.length) html += `<div class="${S}"><div class="${SL}" style="color:rgba(245,241,233,0.45)">Non-CCP Steps</div>
     <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
       ${nonCcps.map(s=>`<li style="font-size:13px;line-height:1.55;color:var(--cream)"><strong>${_knEsc(s.step||'')}</strong> — ${_knEsc(s.rationale||'')}</li>`).join('')}
+    </ul>
+  </div>`;
+
+  const verif=d.verification||{};
+  const verifActs=Array.isArray(verif.activities)?verif.activities:[];
+  if (verifActs.length||verif.frequency_note) html += `<div class="${S}"><div class="${SL}" style="color:#7ab4d8">Verification Activities</div>
+    ${verif.frequency_note?`<div style="font-size:12px;color:var(--cream-muted);margin-bottom:8px">${_knEsc(verif.frequency_note)}</div>`:''}
+    <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
+      ${verifActs.map((a,i)=>`<li style="font-size:13px;line-height:1.55;color:var(--cream)"><span style="font-family:var(--mono);font-size:9px;color:var(--cream-muted);margin-right:6px">${String(i+1).padStart(2,'0')}</span>${_knEsc(a)}</li>`).join('')}
     </ul>
   </div>`;
 

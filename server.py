@@ -6726,6 +6726,32 @@ OUTPUT FORMAT: Return STRICT JSON only — no markdown fences, no preamble, no c
     }}
   ],
 
+  "hazard_analysis": [
+    {{
+      "step": "step id or label from process_flow",
+      "agents": [
+        {{
+          "category": "Biological | Chemical | Physical",
+          "agent": "specific organism or hazard (e.g. Salmonella spp., allergen cross-contact, glass fragment)",
+          "source": "how this hazard enters at this step",
+          "severity": "High | Medium | Low",
+          "likelihood": "High | Medium | Low",
+          "significant": true
+        }}
+      ]
+    }}
+  ],
+
+  "verification": {{
+    "activities": [
+      "Calibrate all probe thermometers against a certified reference before each service. Log calibration date, result, and initials.",
+      "Supervisory review of all completed monitoring logs at end of each service.",
+      "Internal HACCP audit conducted quarterly. Document findings and corrective actions.",
+      "Finished product temperature check randomly once per service by PIC."
+    ],
+    "frequency_note": "one sentence summarising how often the full HACCP plan is formally reviewed and updated"
+  }},
+
   "pic_signoff_required": true,
   "footer_note": "Brief structure follows Codex Alimentarius CXC 1-1969 (General Principles of Food Hygiene). Implementation is the responsibility of the operator."
 }}
