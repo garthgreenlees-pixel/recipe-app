@@ -486,9 +486,7 @@ select.haccp-input{padding:3px 7px}
     <span class="cm-lock-dot" id="cm-lock-dot"></span>
   </div>
   <div class="cm-tools">
-    {% if recipe.requires_haccp %}
-      <button class="cm-tool cm-tool--haccp" type="button" onclick="openHaccp()" aria-label="HACCP">H</button>
-    {% endif %}
+    <button class="cm-tool cm-tool--haccp" type="button" onclick="openHaccp()" aria-label="HACCP">H</button>
     <button class="cm-tool cm-tool--cost" type="button" onclick="openCost()" aria-label="Cost This Recipe">$</button>
     <button class="cm-tool cm-tool--notes" type="button" onclick="openNotes()" aria-label="Notes">✎</button>
   </div>

@@ -1161,7 +1161,7 @@ def _query_user_recipes(user_id, state="imported"):
                 "pillars_filled": filled,
                 "time_display": time_raw,
                 "serves": serves_raw,
-                "requires_haccp": True,
+                "requires_haccp": _detect_raw_served(*_recipe_dict_to_haccp_inputs(r)),
             })
         return out
     except Exception as e:
@@ -2596,7 +2596,7 @@ def recipe_page(slug):
                 if _norm_yield:
                     _row["servings_text"] = _norm_yield
             _recipe_dict = _normalize_member_recipe(_row)
-            _recipe_dict["requires_haccp"] = True
+            _recipe_dict["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_recipe_dict))
             # Pairings — stored JSONB first, then LLM-derived fallback
             _stored_pairings = kitchen_recipe.get("beverage_pairings")
             _pairings = _stored_pairings if _stored_pairings else _find_pairings_for_user_recipe(kitchen_recipe.get("title", ""))
@@ -2720,7 +2720,7 @@ def recipe_page(slug):
     _region = user_loc or "CA"
     _user = get_current_user()
     _pub_recipe = dict(recipe)
-    _pub_recipe["requires_haccp"] = True
+    _pub_recipe["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_pub_recipe))
     return render_template(
         "recipe.html",
         recipe=_pub_recipe,
@@ -2770,7 +2770,7 @@ def recipe_cook_mode(slug):
                 if isinstance(s, dict) else {"instruction": str(s), "insight": ""}
                 for s in _enhanced
             ]
-        _recipe_dict["requires_haccp"] = True
+        _recipe_dict["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_recipe_dict))
         return render_template("cook_mode.html", recipe=_recipe_dict)
     # Fall back to public recipes table
     cur.execute("SELECT * FROM recipes WHERE slug = %s", (slug,))
@@ -2780,7 +2780,7 @@ def recipe_cook_mode(slug):
     if not recipe:
         return "Recipe not found", 404
     _canon_recipe = dict(recipe)
-    _canon_recipe["requires_haccp"] = True
+    _canon_recipe["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_canon_recipe))
     return render_template("cook_mode.html", recipe=_canon_recipe)
 
 
@@ -6515,6 +6515,42 @@ def _build_recipe_user_msg(title, ingredients, method_steps):
     for i, step in enumerate(method_steps, 1):
         msg += f"{i}. {step}\n"
     return msg
+
+
+def _recipe_dict_to_haccp_inputs(d):
+    """Extract flat text strings from a recipe dict for _detect_raw_served."""
+    content = d.get("recipe_content_jsonb") or {}
+    raw_ings = d.get("ingredients") or content.get("ingredients") or []
+    if isinstance(raw_ings, str):
+        try:
+            raw_ings = json.loads(raw_ings)
+        except Exception:
+            raw_ings = []
+    ingredients = []
+    for ing in (raw_ings if isinstance(raw_ings, list) else []):
+        if isinstance(ing, dict):
+            name = str(ing.get("name") or "").strip()
+            qty = str(ing.get("qty") or ing.get("quantity") or "").strip()
+            line = " ".join(filter(None, [qty, name]))
+            if line:
+                ingredients.append(line)
+        elif isinstance(ing, str) and ing.strip():
+            ingredients.append(ing.strip())
+    steps_raw = d.get("enhanced_steps") or d.get("steps") or content.get("steps") or []
+    if isinstance(steps_raw, str):
+        try:
+            steps_raw = json.loads(steps_raw)
+        except Exception:
+            steps_raw = []
+    method_steps = []
+    for s in (steps_raw if isinstance(steps_raw, list) else []):
+        if isinstance(s, dict):
+            text = (s.get("enhanced_step") or s.get("instruction") or s.get("text") or "").strip()
+            if text:
+                method_steps.append(text)
+        elif isinstance(s, str) and s.strip():
+            method_steps.append(s.strip())
+    return ingredients, method_steps
 
 
 def _detect_raw_served(ingredients, method_steps):
