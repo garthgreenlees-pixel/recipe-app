@@ -13624,6 +13624,23 @@ def menu_detail_page(slug):
                     "recipe_image": r.get("image_url") or None,
                 })
     aggregated_allergens = sorted(allergens_by_course.keys())
+    # ── Beverage pairing aggregation ─────────────────────────────────────────
+    pairings_by_course = {}
+    for course in courses:
+        for dish in course["dishes"]:
+            r = dish.get("recipe") or {}
+            ref = dish.get("recipe_ref", "")
+            prefix = ref.split(":")[0] if ":" in ref else ""
+            raw = r.get("pairings") if prefix == "canon" else r.get("beverage_pairings")
+            pairings_by_course.setdefault(course["name"], []).append({
+                "course_order": course["order"],
+                "dish_title": r.get("name") or r.get("title") or dish.get("recipe_ref", ""),
+                "dish_image": r.get("image_url") or None,
+                "pairings": _normalize_beverage_pairings(raw),
+            })
+    has_any_pairings = any(
+        e["pairings"] for entries in pairings_by_course.values() for e in entries
+    )
 
     cur.close(); conn.close()
     menu_dict = dict(menu)
@@ -13639,10 +13656,32 @@ def menu_detail_page(slug):
         aggregated_allergens=aggregated_allergens,
         allergens_by_course=allergens_by_course,
         allergen_notes=allergen_notes,
+        pairings_by_course=pairings_by_course,
+        has_any_pairings=has_any_pairings,
     )
 
 
 # ─── Sprint 8 — Menu Builder Routes ─────────────────────────────────────────
+
+def _normalize_beverage_pairings(raw):
+    """Normalize beverage_pairings (kitchen) or pairings (canon) to [{role, descriptor, producer}]."""
+    if not raw or not isinstance(raw, list):
+        return []
+    out = []
+    for p in raw:
+        if isinstance(p, str):
+            if p.strip():
+                out.append({"role": "", "descriptor": p.strip(), "producer": ""})
+        elif isinstance(p, dict):
+            tier = (p.get("tier_label") or "").strip()
+            ptype = (p.get("pairing_type") or "").strip()
+            role = tier.title() if tier else ptype.title() if ptype else ""
+            desc = (p.get("flavour_logic") or p.get("beverage_description") or "").strip()
+            producer = (p.get("beverage_name") or "").strip()
+            if producer or desc:
+                out.append({"role": role, "descriptor": desc, "producer": producer})
+    return out
+
 
 def _menu_slug_unique(base, cur):
     """Return base slug, appending -2, -3, etc. until unique in menus."""
@@ -13781,11 +13820,26 @@ def get_menu(slug):
                     "recipe_image": r.get("image_url") or None,
                 })
     aggregated_allergens = sorted(allergens_by_course.keys())
+    # ── Beverage pairing aggregation ─────────────────────────────────────────
+    pairings_by_course = {}
+    for course in sorted(courses_map.values(), key=lambda c: c["order"]):
+        for dish in course["dishes"]:
+            r = dish.get("recipe") or {}
+            ref = dish.get("recipe_ref", "")
+            prefix = ref.split(":")[0] if ":" in ref else ""
+            raw = r.get("pairings") if prefix == "canon" else r.get("beverage_pairings")
+            pairings_by_course.setdefault(course["name"], []).append({
+                "course_order": course["order"],
+                "dish_title": r.get("name") or r.get("title") or dish.get("recipe_ref", ""),
+                "dish_image": r.get("image_url") or None,
+                "pairings": _normalize_beverage_pairings(raw),
+            })
     result = _menu_to_dict(menu)
     result["courses"] = sorted(courses_map.values(), key=lambda c: c["order"])
     result["aggregated_allergens"] = aggregated_allergens
     result["allergens_by_course"] = allergens_by_course
     result["allergen_notes"] = result.get("allergen_notes") or {}
+    result["pairings_by_course"] = pairings_by_course
     cur.close(); conn.close()
     return jsonify(result)
 
