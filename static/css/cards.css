@@ -115,6 +115,18 @@
   flex-direction: column;
 }
 
+.recipe-card__incomplete {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted, #888);
+  padding: var(--s2) 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
 .recipe-card__cuisine {
   font-family: var(--mono);
   font-size: 10px;

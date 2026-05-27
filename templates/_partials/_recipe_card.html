@@ -22,6 +22,9 @@
     {% endif %}
   </div>
   <div class="recipe-card__body">
+    {% if pillars_filled == 0 %}
+      <div class="recipe-card__incomplete">Recipe import incomplete — content pending</div>
+    {% else %}
     <div class="recipe-card__cuisine">{{ format_cuisine(recipe.cuisine) }}</div>
     <div class="recipe-card__title">
       {% set title = recipe.title | default('') %}
@@ -44,6 +47,7 @@
         <span>Serves {{ recipe.serves }}</span>
       {% endif %}
     </div>
+    {% endif %}
   </div>
   <div class="recipe-card__pillars">
     {% for i in range(1, 8) %}
