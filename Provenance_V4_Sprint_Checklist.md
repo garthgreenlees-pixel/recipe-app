@@ -162,6 +162,59 @@
 - [ ] [6.7] Spice Routes as first-class canons on `/explorer` (gated by 6.5 + 5.4/5.5)
 - [ ] [7.24] Beverage extraction sprint (ongoing, parallel)
 
+---
+
+## V4 Sprint 12B — International Expansion Hook (parallel track, Japan first)
+
+Pre-launch international SEO probe. One discoverable Japanese-language landing page linked to seed canon entries. Inbound JP traffic is the cue to invest in full localization. Reusable template for France, Italy, Mexico, Australia, SE Asia when each region's turn comes.
+
+Full strategy: `~/Desktop/Provenance/International/Provenance_International_Expansion_Strategy_v1_2026-05-27.md`
+
+### Cycle JP-A — Discoverable page (engineering, 1–2 cycles)
+
+- [ ] Add route `/ja` with Japanese landing page template
+- [ ] Noto Sans JP + Shippori Mincho font loading
+- [ ] `<html lang="ja">`, hreflang alternates (ja/en/x-default), schema.org `inLanguage: "ja"`, JP Open Graph
+- [ ] Sitemap entry for `/ja` with hreflang alternate
+- [ ] Submit Google Search Console JP property
+
+### Cycle JP-B — Seed canon entries (data work, ongoing)
+
+- [ ] Write 5–10 canonical Japanese technique entries in Sashimi Standard format
+- [ ] Link from `/ja` landing page
+- [ ] Source authority: Tsuji's *Japanese Cooking: A Simple Art* (already in canon source list)
+
+Seed targets: 出汁の引き方 (dashi), 刺身, 寿司酢, 天ぷら衣, 蕎麦打ち, 出汁巻き玉子, 茶碗蒸し, 焼き鳥, すき焼き, 懐石料理.
+
+### Cycle JP-C — Localization data schema (engineering, 1 cycle)
+
+- [ ] Create `food_safety_authorities` table — keyed by `(country_code, region_code)`
+- [ ] Create `allergen_set` table — keyed by `country_code`
+- [ ] Seed Japan rows: Kyoto City Medical Health Center (4 branches: 北東部 075-746-7211, 中部 075-746-7212, 南東部 075-746-7213, 西部 075-746-7214), 8 mandatory allergens (特定原材料: えび, かに, くるみ, 小麦, そば, 卵, 乳, 落花生) + 20 recommended, 食品衛生責任者 role
+- [ ] Codex Alimentarius generic fallback row
+
+### Cycle JP-D — HACCP brief localization (engineering, 1 cycle)
+
+- [ ] Modify `build_haccp_system_prompt()` to read from `food_safety_authorities` + `allergen_set` based on recipe origin region or chef operating region
+- [ ] Brief renders 食品衛生責任者 sign-off line, Japan allergen pills, JP authority footer when target region = Japan
+
+### Trigger gates beyond JP-D
+
+- [ ] Monitor JP traffic via Google Analytics on `/ja` page
+- [ ] Threshold: 500 unique JP visitors/month sustained for 3 months
+- [ ] If hit → kickoff full Japanese platform translation (new sprint, estimated post-Stage 3)
+- [ ] If not hit after 6 months → reassess (different region first? different content on /ja?)
+- [ ] At 100+ JP chef signups → consider partnership with 京都市食品衛生協会 or 公益社団法人京都府食品衛生協会 for endorsement
+
+**Decisions recorded:**
+
+- **Discoverable-page-first is now Provenance doctrine for international expansion.** Applies to France, Italy, Mexico, Australia, SE Asia. Each region adds one landing page route, 5–10 seed canon entries, one `food_safety_authorities` row, one `allergen_set` mapping. No platform engineering changes per region — only data.
+- **HACCP regulatory framework localization is the differentiator vs existing operational HACCP software** (FoodDocs, FoodReady, Jolt, Safefood 360°, etc.). They sell daily monitoring; Provenance generates the regulatory brief from the recipe technique itself. Closest real competitor is the UK food safety consultant charging £2,000–8,000 per bespoke HACCP plan.
+
+**To close:** Cycles JP-A → JP-D are the buildable scope. Trigger gates beyond JP-D wait on real traffic data. No prerequisite on other sprints — can run in parallel with Sprint 8 onward.
+
+---
+
 ## V4 Sprint 13 — Remaining Route Walking Surfaces (~2 days each, one per fortnight)
 
 *Uses PMT wireframe as template — each is a fast templated build.*
