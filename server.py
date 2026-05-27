@@ -126,6 +126,21 @@ _CUISINE_PATTERN = _re.compile(
     r'\b(' + '|'.join(_re.escape(c) for c in _LINKABLE_CUISINES) + r')\b'
 )
 
+@app.template_filter('format_timer')
+def format_timer(seconds):
+    try:
+        s = int(seconds)
+    except (TypeError, ValueError):
+        return ''
+    if s < 60:
+        return f"{s}s"
+    h, rem = divmod(s, 3600)
+    m, s = divmod(rem, 60)
+    if h > 0:
+        return f"{h}:{m:02d}:{s:02d}"
+    return f"{m}:{s:02d}"
+
+
 @app.template_filter('linkify_cuisines')
 def linkify_cuisines_filter(text):
     """Wrap known cuisine names in technique browse links. Safe for HTML output."""
@@ -2766,8 +2781,8 @@ def recipe_cook_mode(slug):
         _enhanced = _recipe_dict.get("enhanced_steps")
         if _enhanced and isinstance(_enhanced, list) and len(_enhanced) > 0:
             _recipe_dict["steps"] = [
-                {"instruction": s.get("enhanced_step", ""), "insight": s.get("insight", "")}
-                if isinstance(s, dict) else {"instruction": str(s), "insight": ""}
+                {"instruction": s.get("enhanced_step", ""), "insight": s.get("insight", ""), "timer_seconds": s.get("timer_seconds")}
+                if isinstance(s, dict) else {"instruction": str(s), "insight": "", "timer_seconds": None}
                 for s in _enhanced
             ]
         _recipe_dict["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_recipe_dict))

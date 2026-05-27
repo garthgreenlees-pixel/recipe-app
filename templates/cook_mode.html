@@ -101,6 +101,16 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   font-style:italic;letter-spacing:0.03em;color:var(--cream-muted);
 }
 .cm-meta-dot{color:var(--gold);margin:0 2px}
+.cm-serves-stepper{display:inline-flex;align-items:center;gap:4px;vertical-align:middle}
+.cm-serves-btn{
+  background:none;border:1px solid var(--divider);color:var(--cream-muted);
+  width:20px;height:20px;border-radius:2px;font-size:14px;line-height:1;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);transition:border-color 0.15s,color 0.15s;padding:0;
+}
+.cm-serves-btn:hover{border-color:var(--gold-soft);color:var(--cream)}
+.cm-serves-label{font-family:var(--serif);font-size:12px;font-style:italic;color:var(--cream-muted)}
+.cm-serves-value{font-family:var(--mono);font-size:11px;color:var(--cream);min-width:16px;text-align:center}
 
 /* ── SECTION ──────────────────────────────────────────── */
 .cm-section{max-width:var(--max-w);margin:32px auto 0;padding:0 20px}
@@ -172,6 +182,20 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   font-family:var(--didot);font-size:12px;font-style:italic;
   color:var(--cream-muted);line-height:1.5;margin-top:6px;
 }
+.cm-timer-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;margin:8px 0 0 0;
+  border:1px solid var(--gold-soft);background:transparent;
+  color:var(--gold-soft);font:500 13px var(--mono);
+  border-radius:999px;cursor:pointer;min-height:36px;letter-spacing:0.04em;
+}
+.cm-timer-chip:hover{color:var(--gold);border-color:var(--gold)}
+.cm-timer-chip:active{background:var(--gold);color:var(--bg)}
+.cm-timer-chip.cm-timer-running{color:var(--cream);border-color:var(--cream)}
+.cm-timer-chip.cm-timer-done{color:#c0604a;border-color:#c0604a;animation:cmTimerFlash 0.6s 3}
+@keyframes cmTimerFlash{0%,100%{background:transparent}50%{background:rgba(160,82,45,0.25)}}
+.cm-timer-icon{font-size:14px}
+.cm-timer-display{font-variant-numeric:tabular-nums;min-width:3ch}
 
 /* ── DIVIDER ──────────────────────────────────────────── */
 .cm-ornament{
@@ -528,16 +552,26 @@ select.haccp-input{padding:3px 7px}
     {% set _srv = recipe.servings | string %}
   {% endif %}
 {% endif %}
-{% if _srv %}{% set _ = _parts.append(_srv) %}{% endif %}
+{% set _srv_token = _srv.split(' ')[0] if _srv else '' %}
+{% set _base_serves_int = _srv_token.split('-')[0] | int or 4 %}
 {% if recipe.time_active %}{% set _ = _parts.append(recipe.time_active + ' active') %}{% endif %}
 {% if recipe.time_total %}{% set _ = _parts.append(recipe.time_total + ' total') %}{% endif %}
-{% if (method_steps and method_steps | length > 0) or _parts %}
+{% if (method_steps and method_steps | length > 0) or _srv or _parts %}
 <div class="cm-meta">
   {% if method_steps and method_steps | length > 0 %}
   <span class="cm-step-counter">Step <span id="cm-cur-step">1</span> of <span id="cm-total-steps">{{ method_steps | length }}</span></span>
   {% endif %}
+  {% if _srv %}
+    {% if method_steps and method_steps | length > 0 %}<span class="cm-meta-dot">·</span>{% endif %}
+    <div class="cm-serves-stepper" id="cmServes" data-base="{{ _base_serves_int }}">
+      <button class="cm-serves-btn" type="button" onclick="cmStepServes(-1)" aria-label="Fewer servings">−</button>
+      <span class="cm-serves-label">Serves</span>
+      <span class="cm-serves-value" id="cmServesVal">{{ _base_serves_int }}</span>
+      <button class="cm-serves-btn" type="button" onclick="cmStepServes(1)" aria-label="More servings">+</button>
+    </div>
+  {% endif %}
   {% for part in _parts %}
-    {% if not loop.first or (method_steps and method_steps | length > 0) %}<span class="cm-meta-dot">·</span>{% endif %}
+    {% if not loop.first or _srv or (method_steps and method_steps | length > 0) %}<span class="cm-meta-dot">·</span>{% endif %}
     {{ part }}
   {% endfor %}
 </div>
@@ -560,7 +594,7 @@ select.haccp-input{padding:3px 7px}
     {% elif ing is not mapping and ing[:3] == '## ' %}
     <li class="cm-ing-heading">{{ ing[3:] }}</li>
     {% else %}
-    <li class="cm-ing-row">
+    <li class="cm-ing-row"{% if ing is mapping and ing.count %} data-base-qty="{{ ing.count }}" data-base-unit="{{ ing.unit or '' }}"{% endif %}>
       <span class="cm-ing-qty">
         {% if ing is mapping %}{{ ing.count or '' }}{% if ing.unit %}&thinsp;{{ ing.unit }}{% endif %}{% endif %}
       </span>
@@ -588,6 +622,12 @@ select.haccp-input{padding:3px 7px}
     <span class="cm-step-num">{{ loop.index }}</span>
     <div>
       <span class="cm-step-text">{{ step_text }}</span>
+      {% if step is mapping and step.timer_seconds %}
+      <button class="cm-timer-chip" type="button" data-seconds="{{ step.timer_seconds }}" aria-label="Start timer for {{ step.timer_seconds | format_timer }}">
+        <span class="cm-timer-icon">⏱</span>
+        <span class="cm-timer-display">{{ step.timer_seconds | format_timer }}</span>
+      </button>
+      {% endif %}
       {% if step is mapping %}{% set _note = step.technique_note or step.insight or '' %}{% if _note %}<div class="cm-step-note">{{ _note }}</div>{% endif %}{% endif %}
     </div>
   </li>
@@ -1240,6 +1280,123 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('blur', () => localStorage.setItem(NOTES_KEY, input.value));
   }
 });
+
+// ── TIMER CHIPS ──────────────────────────────────────────
+function cmFormatTimerJS(seconds) {
+  if (seconds < 0) seconds = 0;
+  if (seconds < 60) return seconds + 's';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  const pad = n => String(n).padStart(2, '0');
+  if (h > 0) return h + ':' + pad(m) + ':' + pad(s);
+  return m + ':' + pad(s);
+}
+
+function cmHandleTimerTap(chip) {
+  const initialSeconds = parseInt(chip.dataset.seconds, 10);
+  if (!isFinite(initialSeconds) || initialSeconds <= 0) return;
+  const display = chip.querySelector('.cm-timer-display');
+
+  if (chip.dataset.timerId) {
+    clearInterval(parseInt(chip.dataset.timerId, 10));
+    delete chip.dataset.timerId;
+    delete chip.dataset.endsAt;
+    chip.classList.remove('cm-timer-running', 'cm-timer-done');
+    display.textContent = cmFormatTimerJS(initialSeconds);
+    return;
+  }
+  if (chip.classList.contains('cm-timer-done')) {
+    chip.classList.remove('cm-timer-done');
+    display.textContent = cmFormatTimerJS(initialSeconds);
+    return;
+  }
+
+  const endsAt = Date.now() + (initialSeconds * 1000);
+  chip.dataset.endsAt = endsAt;
+  chip.classList.add('cm-timer-running');
+
+  const tick = () => {
+    const remaining = Math.ceil((parseInt(chip.dataset.endsAt, 10) - Date.now()) / 1000);
+    if (remaining <= 0) {
+      display.textContent = '0s';
+      clearInterval(parseInt(chip.dataset.timerId, 10));
+      delete chip.dataset.timerId;
+      delete chip.dataset.endsAt;
+      chip.classList.remove('cm-timer-running');
+      chip.classList.add('cm-timer-done');
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      return;
+    }
+    display.textContent = cmFormatTimerJS(remaining);
+  };
+  tick();
+  const intervalId = setInterval(tick, 1000);
+  chip.dataset.timerId = intervalId;
+}
+
+document.querySelectorAll('.cm-timer-chip').forEach(chip => {
+  chip.addEventListener('click', () => cmHandleTimerTap(chip));
+});
+
+// ── SERVES STEPPER ───────────────────────────────────────
+const CM_BASE_SERVINGS = {{ _base_serves_int }};
+let cmCurrentServings = CM_BASE_SERVINGS;
+
+function cmParseQtyStr(s) {
+  if (!s) return NaN;
+  s = s.trim();
+  if (s.includes('/')) {
+    const [n, d] = s.split('/');
+    return parseFloat(n) / parseFloat(d);
+  }
+  return parseFloat(s);
+}
+
+function cmFormatQty(n) {
+  if (isNaN(n) || n <= 0) return '';
+  const FRAC = [
+    [1/8,'⅛'],[1/4,'¼'],[1/3,'⅓'],[3/8,'⅜'],[1/2,'½'],
+    [5/8,'⅝'],[2/3,'⅔'],[3/4,'¾'],[7/8,'⅞'],
+    [1/5,'⅕'],[2/5,'⅖'],[3/5,'⅗'],[4/5,'⅘']
+  ];
+  const whole = Math.floor(n);
+  const frac = n - whole;
+  if (frac < 0.01) return String(whole);
+  for (const [val, ch] of FRAC) {
+    if (Math.abs(frac - val) < 0.01) return (whole > 0 ? whole + ' ' : '') + ch;
+  }
+  return (Math.round(n * 10) / 10).toString();
+}
+
+function cmUpdateServings(n) {
+  if (n < 1) return;
+  cmCurrentServings = n;
+  const valEl = document.getElementById('cmServesVal');
+  if (valEl) valEl.textContent = n;
+  document.querySelectorAll('.cm-ing-row').forEach(row => {
+    const baseQty = row.dataset.baseQty;
+    const baseUnit = row.dataset.baseUnit || '';
+    if (!baseQty) return;
+    const base = cmParseQtyStr(baseQty);
+    if (isNaN(base)) return;
+    const scaled = base * n / CM_BASE_SERVINGS;
+    const formatted = cmFormatQty(scaled);
+    const fullStr = formatted + (baseUnit ? ' ' + baseUnit : '');
+    const qEl = row.querySelector('.cm-ing-qty');
+    const iEl = row.querySelector('.cm-ing-info');
+    if (!qEl) return;
+    qEl.textContent = fullStr;
+    const infoText = iEl ? iEl.textContent.replace(/[()]/g, '').trim() : '';
+    const parsed = _parseQty(fullStr, infoText);
+    qEl.dataset.metric   = parsed.metric;
+    qEl.dataset.imperial = parsed.imperial;
+  });
+}
+
+function cmStepServes(delta) {
+  cmUpdateServings(cmCurrentServings + delta);
+}
 </script>
 
 <div class="cm-notes-pane" id="cm-notes-pane" hidden>
