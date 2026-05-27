@@ -416,6 +416,58 @@ select.haccp-input{padding:3px 7px}
   .haccp-watermark-draft{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);font-family:var(--mono,monospace);font-size:52pt;color:rgba(176,58,46,0.09);pointer-events:none;z-index:9999;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap}
   .haccp-input,.haccp-textarea,.haccp-validation-msg{display:none!important}
 }
+
+/* ── COST OVERLAY ─────────────────────────────────────── */
+.cm-cost-overlay{
+  position:fixed;inset:0;z-index:450;
+  background:rgba(14,13,11,0.96);
+  display:none;align-items:flex-start;justify-content:center;
+  overflow-y:auto;
+}
+.cm-cost-overlay.open{display:flex}
+.cm-cost-modal{
+  background:var(--bg-layer);
+  width:100%;max-width:var(--max-w);
+  min-height:100vh;display:flex;flex-direction:column;
+}
+.cm-cost-header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(22,21,18,0.97);backdrop-filter:blur(8px);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;
+  border-bottom:0.5px solid var(--divider);
+}
+.cm-cost-title{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--cream)}
+.cm-cost-close{
+  width:32px;height:32px;background:transparent;border:none;
+  color:var(--cream-muted);font-size:18px;cursor:pointer;line-height:1;padding:0;
+}
+.cm-cost-body{flex:1;padding:0}
+.c-ing-table{width:100%;border-collapse:collapse;font-size:12px}
+.c-ing-table th{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-muted);border-bottom:1px solid var(--divider);padding:8px;text-align:left}
+.c-ing-table td{border-bottom:0.5px solid var(--divider);padding:8px;vertical-align:top;color:var(--cream)}
+.c-ing-table tr:last-child td{border-bottom:none}
+.c-ing-name{font-size:12px;color:var(--cream);line-height:1.3}
+.c-ing-meta{font-family:var(--mono);font-size:11px;color:var(--cream-muted)}
+.c-ing-supplier{font-size:11px;color:var(--cream-muted)}
+.c-ing-nodata{font-size:11px;color:var(--cream-muted);font-style:italic}
+.c-unit-warn{font-family:var(--mono);font-size:10px;color:var(--gold-soft);margin-top:2px}
+.c-banner{font-family:var(--sans);font-size:12px;color:var(--cream-muted);padding:10px 16px;border-bottom:0.5px solid var(--divider);line-height:1.5}
+.c-banner a{color:var(--gold-soft);text-decoration:underline}
+.c-totals{padding:12px 16px;border-top:1px solid var(--divider)}
+.c-totals-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}
+.c-totals-label{color:var(--cream-muted);font-family:var(--sans)}
+.c-totals-value{color:var(--cream);font-weight:600;font-family:var(--mono)}
+.c-menu-price-row{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--divider);flex-wrap:wrap}
+.c-menu-price-row label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--cream-muted);white-space:nowrap}
+.c-menu-input{width:90px;padding:5px 7px;border:0.5px solid rgba(245,241,233,0.2);background:rgba(245,241,233,0.06);font-size:13px;color:var(--cream);font-family:var(--mono);-webkit-appearance:none;border-radius:2px}
+.c-menu-input:focus{outline:none;border-color:var(--gold-soft)}
+.c-gp-display{font-family:var(--mono);font-size:11px;color:var(--gold-soft);flex:1}
+.cm-cost-actions{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;border-top:0.5px solid var(--divider)}
+.cm-cost-btn{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;padding:8px 14px;background:transparent;border:0.5px solid var(--divider);color:var(--cream-muted);cursor:pointer;border-radius:2px}
+.cm-cost-btn--primary{background:var(--gold);color:#0e0d0b;border-color:var(--gold);font-weight:600}
+.cm-cost-loading{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--cream-muted);text-align:center;padding:44px 16px;line-height:1.8}
+.c-partial-note{font-family:var(--mono);font-size:9px;color:var(--cream-muted);margin-top:4px}
 </style>
 </head>
 <body>
@@ -1032,7 +1084,109 @@ function haccpSign() {
   .catch(err=>_cmHaccpSetBody('<div class="haccp-loading">Sign failed — '+_knEsc((err||{}).message||'Try again.')+'</div>'));
 }
 
-// openCost() defined in Commit 2
+// ── Cost modal ─────────────────────────────────────────
+function openCost() {
+  if (!CM_IS_AUTHENTICATED) {
+    window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
+  if (!cmMeetsRequirement('profession')) { openUpgrade('cost'); return; }
+  document.getElementById('cm-cost-overlay').classList.add('open');
+  cmLoadCostBreakdown();
+}
+function closeCost() {
+  document.getElementById('cm-cost-overlay').classList.remove('open');
+}
+
+function _cmEsc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function cmLoadCostBreakdown() {
+  const body = document.getElementById('cm-cost-body');
+  body.innerHTML = '<div class="cm-cost-loading">Pricing the ingredients…</div>';
+  try {
+    const r = await fetch('/api/costing/recipe/' + encodeURIComponent(CM_RECIPE_SLUG));
+    const data = await r.json();
+    cmRenderCostBreakdown(data);
+  } catch(e) {
+    body.innerHTML = '<div class="cm-cost-loading">Could not load cost data.</div>';
+  }
+}
+
+function cmRenderCostBreakdown(data) {
+  const body = document.getElementById('cm-cost-body');
+  const breakdown = data.breakdown || [];
+  const priced = breakdown.filter(r => r.unit_price !== null && r.unit_price !== undefined);
+  const total = breakdown.length;
+  const pct = total ? Math.round(priced.length / total * 100) : 0;
+  const warnCount = data.unit_warning_count || 0;
+  const warnItems = data.unit_warning_items || [];
+  const verified = data.priced_count || 0;
+  let html = '';
+  if ((pct < 60 || warnCount > 0) && total > 0) {
+    const unverifiedNames = [...(data.unpriced_items||[]), ...warnItems];
+    const nameList = unverifiedNames.slice(0,4).map(n => `<em>${_cmEsc(n)}</em>`).join(', ');
+    const more = unverifiedNames.length > 4 ? ` +${unverifiedNames.length-4} more` : '';
+    html += `<div class="c-banner">Cost is partial — ${verified} of ${total} ingredients have verified pricing.
+      ${unverifiedNames.length ? `Add prices for ${nameList}${more} to complete.` : ''}
+      <a href="/recipe/${CM_RECIPE_SLUG}">Manage pricing on recipe page →</a>
+    </div>`;
+  }
+  html += `<table class="c-ing-table"><thead><tr><th>Ingredient</th><th>Qty</th><th>Supplier</th><th>Cost</th></tr></thead><tbody>`;
+  for (const r of breakdown) {
+    const hasPrice = r.unit_price !== null && r.unit_price !== undefined;
+    const needsUnitInfo = r.cost_warning === 'needs_unit_info';
+    const warn = (!needsUnitInfo && r.unit_estimate) ? `<div class="c-unit-warn">⚠ Unit estimate</div>` : '';
+    html += `<tr><td><div class="c-ing-name">${_cmEsc(r.ingredient)}</div>${warn}</td><td><div class="c-ing-meta">${r.quantity} ${r.unit||''}</div></td><td>`;
+    if (needsUnitInfo) {
+      html += `<div class="c-ing-supplier">${_cmEsc(r.supplier||'')}${r.price_unit?` · ${r.currency||'CAD'}${r.unit_price?.toFixed(2)}/${r.price_unit}`:''}</div>
+               <div class="c-unit-warn" style="font-style:italic">Pack size unknown</div>`;
+    } else if (hasPrice) {
+      html += `<div class="c-ing-supplier">${_cmEsc(r.supplier||'')}${r.price_unit?` · ${r.currency||'CAD'}${r.unit_price?.toFixed(2)}/${r.price_unit}`:''}</div>`;
+    } else {
+      html += `<div class="c-ing-nodata">No pricing yet</div>`;
+    }
+    html += `</td><td>${(hasPrice && !needsUnitInfo) ? `<strong>${(r.currency||'CAD')} ${(r.line_cost||0).toFixed(2)}</strong>` : '—'}</td></tr>`;
+  }
+  html += '</tbody></table>';
+  const totalCost = data.total_cost || 0;
+  const portions = data.portions || 4;
+  const cpp = data.cost_per_portion || 0;
+  const partialNote = warnCount > 0 ? `<div class="c-partial-note">Partial — ${verified} of ${total} ingredients verified</div>` : '';
+  html += `<div class="c-totals">
+    <div class="c-totals-row"><span class="c-totals-label">Total ingredient cost</span><span class="c-totals-value">CAD ${totalCost.toFixed(2)}</span></div>${partialNote}
+    <div class="c-totals-row"><span class="c-totals-label">Cost per portion (${portions})</span><span class="c-totals-value">CAD ${cpp.toFixed(2)}</span></div>
+    <div class="c-menu-price-row">
+      <label for="cm-menu-price">Menu price</label>
+      <input id="cm-menu-price" class="c-menu-input" type="number" step="0.01" min="0" value="${data.menu_price||''}" placeholder="0.00" oninput="cmUpdateGP(${cpp})">
+      <span class="c-gp-display" id="cm-gp-display">${data.actual_food_cost_pct!=null?`${data.actual_food_cost_pct}% food cost`:''}</span>
+    </div>
+  </div>
+  <div class="cm-cost-actions">
+    <button class="cm-cost-btn cm-cost-btn--primary" onclick="cmExportCostPDF()">Export PDF</button>
+    <button class="cm-cost-btn" onclick="cmSaveMenuPrice()">Save menu price</button>
+    <button class="cm-cost-btn" onclick="cmLoadCostBreakdown()">Re-cost</button>
+  </div>`;
+  body.innerHTML = html;
+}
+
+function cmUpdateGP(cpp) {
+  const mp = parseFloat(document.getElementById('cm-menu-price').value) || 0;
+  const el = document.getElementById('cm-gp-display');
+  if (mp > 0 && cpp > 0) {
+    const fc = (cpp / mp * 100).toFixed(1);
+    el.textContent = `${fc}% food cost · ${(100-fc).toFixed(1)}% GP`;
+  } else { el.textContent = ''; }
+}
+function cmSaveMenuPrice() {
+  const mp = parseFloat(document.getElementById('cm-menu-price').value) || null;
+  fetch('/api/costing/recipe/'+encodeURIComponent(CM_RECIPE_SLUG)+'/set-target',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({menu_price:mp,target_food_cost_pct:30})
+  }).catch(()=>{});
+}
+function cmExportCostPDF() {
+  window.open('/api/costing/recipe/'+encodeURIComponent(CM_RECIPE_SLUG)+'?format=pdf','_blank');
+}
 
 // ── Notes pane ─────────────────────────────────────────
 const NOTES_KEY = 'cm_notes_' + '{{ recipe.slug }}';
@@ -1085,6 +1239,19 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="cm-upgrade-desc" id="cm-upgrade-desc"></div>
   <div class="cm-upgrade-preview" id="cm-upgrade-preview"></div>
   <a href="/pricing" class="cm-upgrade-cta">See plans →</a>
+</div>
+
+<!-- COST THIS RECIPE -->
+<div class="cm-cost-overlay" id="cm-cost-overlay" onclick="if(event.target===this)closeCost()">
+  <div class="cm-cost-modal">
+    <div class="cm-cost-header">
+      <span class="cm-cost-title">Cost this recipe</span>
+      <button class="cm-cost-close" type="button" onclick="closeCost()" aria-label="Close">✕</button>
+    </div>
+    <div class="cm-cost-body" id="cm-cost-body">
+      <div class="cm-cost-loading">Loading…</div>
+    </div>
+  </div>
 </div>
 
 <!-- HACCP BRIEF -->
