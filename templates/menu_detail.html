@@ -102,6 +102,32 @@
   .mb-bev-empty { font-family: var(--display); font-size: 13px; font-style: italic; color: var(--warm-gray); line-height: 1.5; }
   .mb-bev-empty--menu { font-family: var(--display); font-size: 13px; font-style: italic; color: var(--warm-gray); text-align: center; padding: var(--s3) 0; }
 
+  /* ── Cost panel ── */
+  .mb-cost-grid { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; margin-bottom: var(--s3); }
+  .mb-cost-grid .label { font-family: var(--body); font-size: 12px; color: var(--charcoal); }
+  .mb-cost-grid .value { font-family: var(--mono); font-size: 12px; color: var(--charcoal); text-align: right; white-space: nowrap; }
+  .mb-cost-grid .row-total .label { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--charcoal); border-top: 1px solid var(--line); padding-top: 6px; margin-top: 2px; }
+  .mb-cost-grid .row-total .value { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--charcoal); border-top: 1px solid var(--line); padding-top: 6px; margin-top: 2px; text-align: right; }
+  .mb-cost-missing { font-family: var(--display); font-size: 11px; font-style: italic; color: var(--warm-gray); margin-top: -4px; margin-bottom: var(--s3); }
+  .mb-cost-input { display: flex; align-items: center; gap: 8px; margin-bottom: var(--s2); }
+  .mb-cost-input label { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray); flex-shrink: 0; }
+  .mb-cost-input input { width: 80px; border: 1px solid var(--line); background: var(--cream-100); padding: 5px 8px; font-family: var(--mono); font-size: 13px; color: var(--charcoal); text-align: right; outline: none; }
+  .mb-cost-input input:focus { border-color: var(--gold); }
+  .mb-cost-pct { display: flex; align-items: baseline; gap: 6px; margin-top: var(--s2); padding-top: var(--s2); border-top: 1px solid var(--line-soft); }
+  .mb-cost-pct__value { font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--warm-gray); }
+  .mb-cost-pct__value.pct--in-window { color: var(--gold); }
+  .mb-cost-pct__value.pct--warning { color: var(--terracotta); }
+  .mb-cost-pct__meta { display: flex; flex-direction: column; gap: 2px; }
+  .mb-cost-pct__label { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--charcoal); }
+  .mb-cost-pct__sub { font-family: var(--display); font-size: 11px; font-style: italic; color: var(--warm-gray); }
+
+  /* ── Frost veil (Library tier) ── */
+  .mb-frost-wrap { position: relative; overflow: hidden; }
+  .mb-frost-veil { position: absolute; inset: 0; background: rgba(245,240,232,0.82); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2; }
+  .mb-frost-veil__lock { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+  .mb-frost-veil__icon { font-size: 18px; color: var(--gold); }
+  .mb-frost-veil__copy { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--charcoal); }
+
   /* ── Picker backdrop + modal ── */
   .mb-picker-backdrop { display: none; position: fixed; inset: 0; background: rgba(31,27,22,0.72); z-index: 400; align-items: center; justify-content: center; }
   .mb-picker-backdrop.is-open { display: flex; }
@@ -358,6 +384,73 @@
 
       </div>{# end .mb-panel--beverage #}
 
+      {# ── Food Cost panel ── #}
+      {% if user_can_see_cost %}
+      <div class="mb-panel mb-panel--cost" id="mb-cost-panel">
+        <div class="mb-panel__head">
+          <span class="mb-panel__head-label">Food Cost</span>
+        </div>
+        {% if cost_data %}
+          {% if cost_data.per_dish %}
+          <div class="mb-cost-grid" id="mb-cost-grid">
+            {% for dish in cost_data.per_dish %}
+            <span class="label">{{ dish.dish_title }}</span>
+            <span class="value">{% if dish.has_cost_data %}CAD {{ "%.2f"|format(dish.cost_for_menu) }}{% else %}—{% endif %}</span>
+            {% endfor %}
+            <div class="row-total"><span class="label">Total food cost</span></div>
+            <div class="row-total"><span class="value">CAD {{ "%.2f"|format(cost_data.total_food_cost) }}</span></div>
+            <span class="label">Per cover</span>
+            <span class="value">CAD {{ "%.2f"|format(cost_data.cost_per_cover) }}</span>
+          </div>
+          {% if cost_data.any_missing_cost %}
+          <p class="mb-cost-missing" id="mb-cost-missing">Some dishes lack cost data.</p>
+          {% endif %}
+          <div class="mb-cost-input">
+            <label for="mb-menu-price">Menu price</label>
+            <input type="number" id="mb-menu-price" min="0" step="0.01" placeholder="0.00"
+              value="{{ '%.2f'|format(cost_data.menu_price) if cost_data.menu_price else '' }}"
+              oninput="debouncedMenuPrice()">
+          </div>
+          {% if cost_data.projected_food_cost_pct is not none %}
+          <div class="mb-cost-pct" id="mb-cost-pct">
+            <span class="mb-cost-pct__value {% if cost_data.projected_food_cost_pct >= 28 and cost_data.projected_food_cost_pct <= 35 %}pct--in-window{% elif cost_data.projected_food_cost_pct > 35 %}pct--warning{% endif %}" id="mb-cost-pct-value">{{ cost_data.projected_food_cost_pct }}%</span>
+            <div class="mb-cost-pct__meta">
+              <span class="mb-cost-pct__label">Food cost %</span>
+              <span class="mb-cost-pct__sub">Target window · 28–35% for fine dining.</span>
+            </div>
+          </div>
+          {% else %}
+          <div class="mb-cost-pct" id="mb-cost-pct" style="display:none"></div>
+          {% endif %}
+          {% else %}
+          <p class="mb-bev-empty--menu">Add a dish to see cost.</p>
+          {% endif %}
+        {% else %}
+        <p class="mb-bev-empty--menu">Add a dish to see cost.</p>
+        {% endif %}
+      </div>{# end .mb-panel--cost #}
+      {% else %}
+      <div class="mb-panel mb-panel--cost mb-frost-wrap" id="mb-cost-panel">
+        <div class="mb-panel__head">
+          <span class="mb-panel__head-label">Food Cost</span>
+        </div>
+        <div style="height:120px; opacity:0.18;">
+          <div class="mb-cost-grid">
+            <span class="label">—</span><span class="value">CAD —</span>
+            <span class="label">—</span><span class="value">CAD —</span>
+            <div class="row-total"><span class="label">Total food cost</span></div>
+            <div class="row-total"><span class="value">CAD —</span></div>
+          </div>
+        </div>
+        <div class="mb-frost-veil">
+          <div class="mb-frost-veil__lock">
+            <span class="mb-frost-veil__icon">&#128274;</span>
+            <span class="mb-frost-veil__copy">Profession unlocks</span>
+          </div>
+        </div>
+      </div>{# end .mb-panel--cost frost #}
+      {% endif %}
+
     </div>{# end .mb-right-col #}
 
   </div>{# end .mb-layout #}
@@ -523,6 +616,7 @@
       const data = await res.json();
       _refreshMatrix(data);
       _refreshBeverages(data);
+      {% if user_can_see_cost %}await _fetchMenuCost();{% endif %}
     } catch (_) {}
   }
 
@@ -652,6 +746,109 @@
 
     panelEl.appendChild(body);
   }
+
+  {% if user_can_see_cost %}
+  /* ── Food Cost panel JS ── */
+  let _costPriceTimer = null;
+  window.debouncedMenuPrice = function () {
+    clearTimeout(_costPriceTimer);
+    _costPriceTimer = setTimeout(_saveAndRefreshCost, 600);
+  };
+
+  async function _saveAndRefreshCost() {
+    const input = document.getElementById('mb-menu-price');
+    const val = input ? parseFloat(input.value) || null : null;
+    try {
+      await fetch('/api/menu/' + SLUG, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ menu_price: val }),
+      });
+    } catch (_) {}
+    await _fetchMenuCost();
+  }
+
+  async function _fetchMenuCost() {
+    try {
+      const res = await fetch('/api/menu/' + SLUG + '/cost');
+      if (!res.ok) return;
+      const data = await res.json();
+      _refreshCost(data);
+    } catch (_) {}
+  }
+
+  function _refreshCost(cost) {
+    const panel = document.getElementById('mb-cost-panel');
+    if (!panel) return;
+    const head = panel.querySelector('.mb-panel__head');
+    let sibling = head ? head.nextSibling : null;
+    while (sibling) { const n = sibling.nextSibling; panel.removeChild(sibling); sibling = n; }
+
+    const dishes = cost.per_dish || [];
+    if (!dishes.length) {
+      const p = document.createElement('p');
+      p.className = 'mb-bev-empty--menu';
+      p.textContent = 'Add a dish to see cost.';
+      panel.appendChild(p);
+      return;
+    }
+
+    // Cost grid
+    const grid = document.createElement('div');
+    grid.className = 'mb-cost-grid';
+    grid.id = 'mb-cost-grid';
+    dishes.forEach(d => {
+      const lbl = document.createElement('span'); lbl.className = 'label'; lbl.textContent = d.dish_title;
+      const val = document.createElement('span'); val.className = 'value';
+      val.textContent = d.has_cost_data ? 'CAD ' + d.cost_for_menu.toFixed(2) : '—';
+      grid.appendChild(lbl); grid.appendChild(val);
+    });
+    const totLbl = document.createElement('div'); totLbl.className = 'row-total';
+    const totLblInner = document.createElement('span'); totLblInner.className = 'label'; totLblInner.textContent = 'Total food cost';
+    totLbl.appendChild(totLblInner);
+    const totVal = document.createElement('div'); totVal.className = 'row-total';
+    const totValInner = document.createElement('span'); totValInner.className = 'value'; totValInner.textContent = 'CAD ' + cost.total_food_cost.toFixed(2);
+    totVal.appendChild(totValInner);
+    grid.appendChild(totLbl); grid.appendChild(totVal);
+    const cpcLbl = document.createElement('span'); cpcLbl.className = 'label'; cpcLbl.textContent = 'Per cover';
+    const cpcVal = document.createElement('span'); cpcVal.className = 'value'; cpcVal.textContent = 'CAD ' + cost.cost_per_cover.toFixed(2);
+    grid.appendChild(cpcLbl); grid.appendChild(cpcVal);
+    panel.appendChild(grid);
+
+    if (cost.any_missing_cost) {
+      const miss = document.createElement('p'); miss.className = 'mb-cost-missing'; miss.id = 'mb-cost-missing';
+      miss.textContent = 'Some dishes lack cost data.'; panel.appendChild(miss);
+    }
+
+    // Menu price input
+    const inputWrap = document.createElement('div'); inputWrap.className = 'mb-cost-input';
+    const lbl = document.createElement('label'); lbl.setAttribute('for', 'mb-menu-price'); lbl.textContent = 'Menu price';
+    const inp = document.createElement('input'); inp.type = 'number'; inp.id = 'mb-menu-price'; inp.min = '0'; inp.step = '0.01'; inp.placeholder = '0.00';
+    if (cost.menu_price) inp.value = cost.menu_price.toFixed(2);
+    inp.setAttribute('oninput', 'debouncedMenuPrice()');
+    inputWrap.appendChild(lbl); inputWrap.appendChild(inp);
+    panel.appendChild(inputWrap);
+
+    // Projected %
+    const pctDiv = document.createElement('div'); pctDiv.className = 'mb-cost-pct'; pctDiv.id = 'mb-cost-pct';
+    if (cost.projected_food_cost_pct !== null && cost.projected_food_cost_pct !== undefined) {
+      pctDiv.style.display = '';
+      const pct = cost.projected_food_cost_pct;
+      const valSpan = document.createElement('span'); valSpan.className = 'mb-cost-pct__value'; valSpan.id = 'mb-cost-pct-value';
+      if (pct >= 28 && pct <= 35) valSpan.classList.add('pct--in-window');
+      else if (pct > 35) valSpan.classList.add('pct--warning');
+      valSpan.textContent = pct + '%';
+      const meta = document.createElement('div'); meta.className = 'mb-cost-pct__meta';
+      const metaLbl = document.createElement('span'); metaLbl.className = 'mb-cost-pct__label'; metaLbl.textContent = 'Food cost %';
+      const metaSub = document.createElement('span'); metaSub.className = 'mb-cost-pct__sub'; metaSub.textContent = 'Target window · 28–35% for fine dining.';
+      meta.appendChild(metaLbl); meta.appendChild(metaSub);
+      pctDiv.appendChild(valSpan); pctDiv.appendChild(meta);
+    } else {
+      pctDiv.style.display = 'none';
+    }
+    panel.appendChild(pctDiv);
+  }
+  {% endif %}
 
   /* ── Allergen note auto-save ── */
   let _noteTimer = null;

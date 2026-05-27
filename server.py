@@ -13642,6 +13642,14 @@ def menu_detail_page(slug):
         e["pairings"] for entries in pairings_by_course.values() for e in entries
     )
 
+    user_can_see_cost = user_can_access("profession")
+    cost_data = None
+    if user_can_see_cost:
+        region = get_user_location() or "CA"
+        covers = int(menu.get("cover_count") or 1)
+        menu_price = menu.get("menu_price")
+        cost_data = _compute_menu_cost(str(menu["id"]), covers, menu_price, user["id"], region, cur)
+
     cur.close(); conn.close()
     menu_dict = dict(menu)
     menu_dict["id"] = str(menu_dict["id"])
@@ -13658,6 +13666,8 @@ def menu_detail_page(slug):
         allergen_notes=allergen_notes,
         pairings_by_course=pairings_by_course,
         has_any_pairings=has_any_pairings,
+        user_can_see_cost=user_can_see_cost,
+        cost_data=cost_data,
     )
 
 
@@ -13681,6 +13691,70 @@ def _normalize_beverage_pairings(raw):
             if producer or desc:
                 out.append({"role": role, "descriptor": desc, "producer": producer})
     return out
+
+
+def _compute_menu_cost(menu_id, covers, menu_price, user_id, region, cur):
+    """Aggregate food cost across all dishes in a menu. Returns cost breakdown dict."""
+    cur.execute("""
+        SELECT * FROM menu_recipes WHERE menu_id = %s
+        ORDER BY course_order, dish_order_within_course
+    """, (menu_id,))
+    rows = cur.fetchall()
+    per_dish = []
+    total_food_cost = 0.0
+    any_missing_cost = False
+    for mr in rows:
+        try:
+            recipe = _resolve_recipe_ref(mr["recipe_ref"], user_id, cur)
+        except ValueError:
+            recipe = None
+        dish_title = mr["recipe_ref"]
+        dish_image = None
+        if recipe:
+            dish_title = recipe.get("name") or recipe.get("title") or mr["recipe_ref"]
+            dish_image = recipe.get("image_url") or None
+        cost_result = _compute_recipe_cost(recipe, region) if recipe else None
+        if not cost_result or not cost_result.get("cost_per_portion"):
+            per_dish.append({
+                "menu_recipe_id": str(mr["id"]),
+                "course_name": mr["course_name"],
+                "dish_title": dish_title,
+                "dish_image": dish_image,
+                "cost_per_serving": None,
+                "cost_for_menu": None,
+                "has_cost_data": False,
+            })
+            any_missing_cost = True
+        else:
+            cps = cost_result["cost_per_portion"]
+            cfm = round(cps * covers, 2)
+            total_food_cost += cfm
+            per_dish.append({
+                "menu_recipe_id": str(mr["id"]),
+                "course_name": mr["course_name"],
+                "dish_title": dish_title,
+                "dish_image": dish_image,
+                "cost_per_serving": round(cps, 2),
+                "cost_for_menu": cfm,
+                "has_cost_data": True,
+            })
+    total_food_cost = round(total_food_cost, 2)
+    cost_per_cover = round(total_food_cost / covers, 2) if covers > 0 else 0.0
+    mp = float(menu_price) if menu_price else None
+    projected_food_cost_pct = None
+    if mp and mp > 0 and covers > 0:
+        revenue = mp * covers
+        projected_food_cost_pct = round((total_food_cost / revenue) * 100, 1) if revenue > 0 else None
+    return {
+        "covers": covers,
+        "menu_price": mp,
+        "per_dish": per_dish,
+        "total_food_cost": total_food_cost,
+        "cost_per_cover": cost_per_cover,
+        "projected_food_cost_pct": projected_food_cost_pct,
+        "target_window": {"low": 28.0, "high": 35.0},
+        "any_missing_cost": any_missing_cost,
+    }
 
 
 def _menu_slug_unique(base, cur):
@@ -13913,6 +13987,25 @@ def delete_menu(slug):
     cur.execute("DELETE FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
     cur.close(); conn.close()
     return '', 204
+
+
+@app.route("/api/menu/<slug>/cost")
+@requires_tier("profession")
+def get_menu_cost(slug):
+    user = get_current_user()
+    region = get_user_location() or "CA"
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        return jsonify({"error": "Not found"}), 404
+    covers = int(menu["cover_count"] or 1)
+    menu_price = menu.get("menu_price")
+    cost = _compute_menu_cost(str(menu["id"]), covers, menu_price, user["id"], region, cur)
+    cur.close(); conn.close()
+    return jsonify(cost)
 
 
 @app.route("/api/menu/<slug>/recipes", methods=["POST"])
