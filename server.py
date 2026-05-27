@@ -13398,6 +13398,101 @@ def invoices_resolve_line(invoice_id):
     return jsonify({"resolved": True})
 
 
+# ─── Sprint 8 — Recipe Search Endpoint ──────────────────────────────────────
+
+@app.route("/api/recipes/search")
+def recipes_search():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+
+    q = request.args.get("q", "").strip()
+    include_canon = request.args.get("include_canon", "true").lower() != "false"
+    include_kitchen = request.args.get("include_kitchen", "true").lower() != "false"
+    limit = min(200, max(1, request.args.get("limit", 50, type=int)))
+    user_id = user["id"]
+    results = []
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    # ── Kitchen recipes (user-scoped, shown first) ───────────────────────────
+    if include_kitchen:
+        pattern = f"%{q}%" if q else "%"
+        cur.execute("""
+            SELECT uuid, title, slug, has_image, origin, template_version,
+                   recipe_content_jsonb, ingredients, steps,
+                   quality_hierarchy, sensory_tests, cross_cuisine_parallels,
+                   lives_or_dies, beverage_pairings
+            FROM user_kitchen_recipes
+            WHERE user_id = %s AND is_draft = FALSE AND slug IS NOT NULL
+              AND (title ILIKE %s OR origin ILIKE %s)
+            ORDER BY title ASC
+            LIMIT %s
+        """, (user_id, pattern, pattern, limit))
+        for r in cur.fetchall():
+            is_enhanced = (
+                r.get("template_version") == "v3"
+                or r.get("recipe_content_jsonb") is not None
+            )
+            state = "enhanced" if is_enhanced else "imported"
+            content = r.get("recipe_content_jsonb") or {}
+            cuisine = content.get("cuisine") or r.get("origin") or ""
+            filled = sum([
+                bool(r.get("ingredients")),
+                bool(r.get("steps") or content.get("steps")),
+                bool(r.get("quality_hierarchy")),
+                bool(r.get("sensory_tests")),
+                bool(r.get("cross_cuisine_parallels")),
+                bool(r.get("lives_or_dies")),
+                bool(r.get("beverage_pairings")),
+            ])
+            image_url = f"/images/{r['uuid']}/hero.jpg" if r.get("has_image") else None
+            results.append({
+                "recipe_ref": f"kitchen:{r['uuid']}",
+                "state": state,
+                "title": r.get("title") or "Untitled",
+                "cuisine": cuisine,
+                "image_url": image_url,
+                "requires_haccp": _detect_raw_served(*_recipe_dict_to_haccp_inputs(r)),
+                "pillars_filled": filled,
+            })
+
+    # ── Canon recipes ────────────────────────────────────────────────────────
+    if include_canon:
+        pattern = f"%{q}%" if q else "%"
+        cur.execute("""
+            SELECT slug, name, cuisine, image_url, ingredients, steps,
+                   cross_cuisine_parallels, description, pairings
+            FROM recipes
+            WHERE slug IS NOT NULL AND slug != ''
+              AND (name ILIKE %s OR cuisine ILIKE %s)
+            ORDER BY name ASC
+            LIMIT %s
+        """, (pattern, pattern, limit))
+        for r in cur.fetchall():
+            filled = sum([
+                bool(r.get("ingredients")),
+                bool(r.get("steps")),
+                bool(r.get("cross_cuisine_parallels")),
+                bool(r.get("description")),
+                bool(r.get("pairings")),
+            ])
+            results.append({
+                "recipe_ref": f"canon:{r['slug']}",
+                "state": "canon",
+                "title": r.get("name") or "Untitled",
+                "cuisine": r.get("cuisine") or "",
+                "image_url": r.get("image_url") or None,
+                "requires_haccp": _detect_raw_served(*_recipe_dict_to_haccp_inputs(r)),
+                "pillars_filled": filled,
+            })
+
+    cur.close()
+    conn.close()
+    return jsonify({"results": results, "total_count": len(results)})
+
+
 # ─── Sprint 8 — Menu Builder Page Routes ────────────────────────────────────
 
 @app.route("/menu/new")

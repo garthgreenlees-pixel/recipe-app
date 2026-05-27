@@ -55,8 +55,56 @@
   .mb-dish-remove { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); background: none; border: none; cursor: pointer; padding: 4px 6px; }
   .mb-dish-remove:hover { color: #B94040; }
 
-  /* ── Add dish button (disabled in Cycle 5) ── */
-  .mb-add-dish { margin-top: var(--s2); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--warm-gray); background: none; border: 1px dashed var(--line); padding: 9px 16px; cursor: not-allowed; opacity: 0.5; display: inline-block; }
+  /* ── Add dish button ── */
+  .mb-add-dish { margin-top: var(--s2); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--warm-gray); background: none; border: 1px dashed var(--line); padding: 9px 16px; cursor: pointer; display: inline-block; transition: border-color 0.15s, color 0.15s; }
+  .mb-add-dish:hover { border-color: var(--gold); color: var(--charcoal); }
+
+  /* ── Picker backdrop + modal ── */
+  .mb-picker-backdrop { display: none; position: fixed; inset: 0; background: rgba(31,27,22,0.72); z-index: 400; align-items: center; justify-content: center; }
+  .mb-picker-backdrop.is-open { display: flex; }
+
+  .mb-picker-modal { background: var(--cream-50); border: 1px solid var(--gold); width: 720px; max-width: calc(100vw - 32px); max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  .mb-picker-header { display: flex; align-items: baseline; justify-content: space-between; padding: 20px 24px 16px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+  .mb-picker-title { font-family: var(--display); font-size: 22px; font-style: italic; font-weight: 500; color: var(--charcoal); }
+  .mb-picker-close { font-family: var(--mono); font-size: 18px; background: none; border: none; color: var(--warm-gray); cursor: pointer; padding: 0 0 0 12px; line-height: 1; }
+  .mb-picker-close:hover { color: var(--charcoal); }
+
+  .mb-picker-search-wrap { padding: 14px 24px; border-bottom: 1px solid var(--line-soft); flex-shrink: 0; }
+  .mb-picker-search { width: 100%; border: 1px solid var(--line); background: var(--cream-100); padding: 10px 13px; font-family: var(--body); font-size: 15px; color: var(--charcoal); outline: none; }
+  .mb-picker-search:focus { border-color: var(--gold); }
+
+  .mb-picker-body { overflow-y: auto; flex: 1; padding: 16px 24px 24px; }
+  .mb-picker-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .mb-picker-loading { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); text-transform: uppercase; letter-spacing: 0.1em; padding: var(--s3) 0; }
+  .mb-picker-error { font-family: var(--mono); font-size: 11px; color: #B94040; padding: var(--s3) 0; }
+  .mb-picker-empty { font-family: var(--display); font-size: 15px; font-style: italic; color: var(--warm-gray); padding: var(--s3) 0; display: none; }
+
+  /* ── Picker mini card ── */
+  .mb-picker-card { border: 1px solid var(--line-soft); background: var(--cream-100); cursor: pointer; transition: border-color 0.15s, transform 0.12s; }
+  .mb-picker-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .mb-picker-card.is-adding { opacity: 0.5; pointer-events: none; }
+
+  .mb-picker-card__image { position: relative; width: 100%; padding-top: 75%; background: var(--cream-200); overflow: hidden; }
+  .mb-picker-card__image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .mb-picker-card__image--no-img { background: var(--cream-200); }
+
+  .mb-picker-card__tag { position: absolute; top: 6px; left: 6px; font-family: var(--mono); font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; padding: 3px 6px; border: 1px solid; }
+  .mb-picker-card__tag--imported { background: var(--cream-50); color: var(--warm-gray); border-color: var(--line); }
+  .mb-picker-card__tag--enhanced { background: var(--gold); color: var(--cream-50); border-color: var(--gold); }
+  .mb-picker-card__tag--canon { background: var(--charcoal); color: var(--cream-50); border-color: var(--charcoal); }
+  .mb-picker-card__tag--composed { background: var(--burgundy); color: var(--cream-50); border-color: var(--burgundy); }
+  .mb-picker-card__tag--member { background: var(--cream-100); color: var(--charcoal); border-color: var(--gold-soft); }
+  .mb-picker-card__haccp { position: absolute; top: 6px; right: 6px; font-family: var(--mono); font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; padding: 3px 6px; background: var(--terracotta); color: var(--cream-50); }
+
+  .mb-picker-card__body { padding: 8px 10px 10px; }
+  .mb-picker-card__cuisine { font-family: var(--mono); font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mb-picker-card__title { font-family: var(--display); font-size: 13px; font-weight: 500; color: var(--charcoal); line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+  @media (max-width: 600px) {
+    .mb-picker-results { grid-template-columns: repeat(2, 1fr); }
+    .mb-picker-modal { max-height: 90vh; }
+  }
 </style>
 {% endblock %}
 
@@ -139,11 +187,34 @@
       </div>
       {% endif %}
 
-      <button class="mb-add-dish" tabindex="-1" aria-disabled="true">+ Add a dish</button>
+      <button class="mb-add-dish"
+              data-course-name="{{ course.name }}"
+              data-course-order="{{ course.order }}"
+              onclick="openPicker(this.dataset.courseName, parseInt(this.dataset.courseOrder))">+ Add a dish</button>
     </div>
     {% endfor %}
   </div>
 
+</div>
+
+{# ── Recipe picker modal ── #}
+<div class="mb-picker-backdrop" id="mb-picker-backdrop" onclick="pickerBackdropClick(event)">
+  <div class="mb-picker-modal" id="mb-picker-modal">
+    <div class="mb-picker-header">
+      <span class="mb-picker-title" id="mb-picker-header-title">Add a dish</span>
+      <button class="mb-picker-close" onclick="closePicker()" aria-label="Close">×</button>
+    </div>
+    <div class="mb-picker-search-wrap">
+      <input class="mb-picker-search" id="mb-picker-search" type="search"
+             placeholder="Search by name, cuisine, or ingredient"
+             autocomplete="off"
+             oninput="debouncedSearch()">
+    </div>
+    <div class="mb-picker-body">
+      <div class="mb-picker-results" id="mb-picker-results"></div>
+      <p class="mb-picker-empty" id="mb-picker-empty">No recipes match that. Try a different word, or use Compose this course.</p>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -163,7 +234,6 @@
   window.mbTitleEdit = function (el) {
     el.contentEditable = 'true';
     el.focus();
-    // move cursor to end
     const range = document.createRange();
     const sel = window.getSelection();
     range.selectNodeContents(el);
@@ -235,7 +305,6 @@
       if (res.ok || res.status === 204) {
         const row = document.getElementById('dish-' + id);
         if (row) row.remove();
-        // update course dish count display
         const course = btn.closest('.mb-course');
         if (course) {
           const countEl = course.querySelector('.mb-course-count');
@@ -249,6 +318,152 @@
       btn.disabled = false;
     }
   };
+
+  /* ── Picker ── */
+  let _pickerCourse = null;
+  let _searchTimer = null;
+
+  function _esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  window.openPicker = function (courseName, courseOrder) {
+    _pickerCourse = { name: courseName, order: courseOrder };
+    document.getElementById('mb-picker-header-title').textContent = 'Add a dish to ' + courseName;
+    document.getElementById('mb-picker-search').value = '';
+    document.getElementById('mb-picker-empty').style.display = 'none';
+    document.getElementById('mb-picker-backdrop').classList.add('is-open');
+    document.getElementById('mb-picker-search').focus();
+    fetchPickerResults('');
+  };
+
+  window.closePicker = function () {
+    document.getElementById('mb-picker-backdrop').classList.remove('is-open');
+    _pickerCourse = null;
+    clearTimeout(_searchTimer);
+  };
+
+  window.pickerBackdropClick = function (e) {
+    if (e.target === document.getElementById('mb-picker-backdrop')) closePicker();
+  };
+
+  window.debouncedSearch = function () {
+    clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(() => {
+      fetchPickerResults(document.getElementById('mb-picker-search').value.trim());
+    }, 200);
+  };
+
+  async function fetchPickerResults(q) {
+    const grid = document.getElementById('mb-picker-results');
+    const emptyEl = document.getElementById('mb-picker-empty');
+    emptyEl.style.display = 'none';
+    grid.innerHTML = '<div class="mb-picker-loading">Loading…</div>';
+    try {
+      const url = '/api/recipes/search?limit=50&q=' + encodeURIComponent(q);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Request failed');
+      const data = await res.json();
+      const results = data.results || [];
+      if (results.length === 0) {
+        grid.innerHTML = '';
+        emptyEl.style.display = 'block';
+        return;
+      }
+      grid.innerHTML = results.map(r => {
+        const tagLabel = { canon: 'Canon', enhanced: 'Enhanced', imported: 'Imported', composed: 'Composed', member: 'Member' }[r.state] || 'Imported';
+        const tagClass = 'mb-picker-card__tag--' + (r.state || 'imported');
+        const haccpHtml = r.requires_haccp ? '<span class="mb-picker-card__haccp">HACCP</span>' : '';
+        const imgHtml = r.image_url
+          ? `<img src="${_esc(r.image_url)}" alt="${_esc(r.title)}" loading="lazy" onerror="this.remove()">`
+          : '';
+        return `<div class="mb-picker-card" data-ref="${_esc(r.recipe_ref)}" onclick="addDishToMenu(this)">
+          <div class="mb-picker-card__image${r.image_url ? '' : ' mb-picker-card__image--no-img'}">
+            ${imgHtml}
+            <span class="mb-picker-card__tag ${tagClass}">${tagLabel}</span>
+            ${haccpHtml}
+          </div>
+          <div class="mb-picker-card__body">
+            <div class="mb-picker-card__cuisine">${_esc(r.cuisine || '')}</div>
+            <div class="mb-picker-card__title">${_esc(r.title)}</div>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (_) {
+      grid.innerHTML = '<div class="mb-picker-error">Could not load recipes. Check your connection and try again.</div>';
+    }
+  }
+
+  window.addDishToMenu = async function (card) {
+    if (!_pickerCourse) return;
+    const recipe_ref = card.dataset.ref;
+    card.classList.add('is-adding');
+    try {
+      const res = await fetch('/api/menu/' + SLUG + '/recipes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recipe_ref: recipe_ref,
+          course_name: _pickerCourse.name,
+          course_order: _pickerCourse.order,
+        }),
+      });
+      if (res.ok) {
+        const dish = await res.json();
+        closePicker();
+        _appendDishRow(dish);
+      } else {
+        card.classList.remove('is-adding');
+      }
+    } catch (_) {
+      card.classList.remove('is-adding');
+    }
+  };
+
+  function _appendDishRow(dish) {
+    const courseId = 'course-' + (dish.course_name || '').toLowerCase().replace(/\s+/g, '-');
+    const courseEl = document.getElementById(courseId);
+    if (!courseEl) return;
+
+    let dishList = courseEl.querySelector('.mb-dishes');
+    if (!dishList) {
+      dishList = document.createElement('div');
+      dishList.className = 'mb-dishes';
+      const addBtn = courseEl.querySelector('.mb-add-dish');
+      courseEl.insertBefore(dishList, addBtn);
+    }
+
+    const r = dish.recipe || {};
+    const imgHtml = r.image_url
+      ? `<img class="mb-dish-img" src="${_esc(r.image_url)}" alt="${_esc(r.name || r.title || '')}" onerror="this.style.display='none'">`
+      : '<div class="mb-dish-img-placeholder"></div>';
+    const title = _esc(r.name || r.title || dish.recipe_ref || '');
+    const cuisine = _esc(r.cuisine || '');
+
+    const row = document.createElement('div');
+    row.className = 'mb-dish';
+    row.id = 'dish-' + dish.id;
+    row.dataset.id = dish.id;
+    row.innerHTML = `${imgHtml}
+      <div class="mb-dish-info">
+        <div class="mb-dish-cuisine">${cuisine}</div>
+        <div class="mb-dish-title">${title}</div>
+      </div>
+      <button class="mb-dish-remove" data-id="${_esc(dish.id)}" data-slug="${_esc(SLUG)}" onclick="mbRemoveDish(this)" aria-label="Remove dish">✕</button>`;
+    dishList.appendChild(row);
+
+    const countEl = courseEl.querySelector('.mb-course-count');
+    if (countEl) {
+      const count = courseEl.querySelectorAll('.mb-dish').length;
+      countEl.textContent = count + ' dish' + (count !== 1 ? 'es' : '');
+    }
+  }
+
+  /* ── ESC to close picker ── */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closePicker();
+  });
+
 })();
 </script>
 {% endblock %}
