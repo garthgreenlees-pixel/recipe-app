@@ -1282,6 +1282,44 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ── TIMER CHIPS ──────────────────────────────────────────
+let cmAudioCtx = null;
+
+function cmEnsureAudioCtx() {
+  if (!cmAudioCtx) {
+    try {
+      cmAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {
+      return null;
+    }
+  }
+  if (cmAudioCtx.state === 'suspended') {
+    cmAudioCtx.resume();
+  }
+  return cmAudioCtx;
+}
+
+function cmPlayTimerAlarm() {
+  const ctx = cmEnsureAudioCtx();
+  if (!ctx) return;
+  const playBeep = (offset) => {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.frequency.value = 880;
+    o.type = 'sine';
+    const t0 = ctx.currentTime + offset;
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(0.3, t0 + 0.01);
+    g.gain.linearRampToValueAtTime(0, t0 + 0.25);
+    o.start(t0);
+    o.stop(t0 + 0.3);
+  };
+  playBeep(0);
+  playBeep(0.4);
+  playBeep(0.8);
+}
+
 function cmFormatTimerJS(seconds) {
   if (seconds < 0) seconds = 0;
   if (seconds < 60) return seconds + 's';
@@ -1312,6 +1350,7 @@ function cmHandleTimerTap(chip) {
     return;
   }
 
+  cmEnsureAudioCtx();
   const endsAt = Date.now() + (initialSeconds * 1000);
   chip.dataset.endsAt = endsAt;
   chip.classList.add('cm-timer-running');
@@ -1326,6 +1365,7 @@ function cmHandleTimerTap(chip) {
       chip.classList.remove('cm-timer-running');
       chip.classList.add('cm-timer-done');
       if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      cmPlayTimerAlarm();
       return;
     }
     display.textContent = cmFormatTimerJS(remaining);
