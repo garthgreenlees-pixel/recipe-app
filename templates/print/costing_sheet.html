@@ -1,0 +1,181 @@
+{% extends "print/_base.html" %}
+
+{% block page_title %}Costing Sheet — {{ menu.title }}{% endblock %}
+{% block doctype %}Costing Sheet{% endblock %}
+{% block title %}{{ menu.title }}{% endblock %}
+{% block title_clause %}{% if menu.event_date %}<span class="pdf-title-clause">{{ menu.event_date | format_event_date }}.</span>{% endif %}{% endblock %}
+{% block meta %}
+  {{ cost.covers }} covers
+  {%- if cost.menu_price %} · CAD {{ "%.2f" | format(cost.menu_price) }}/cover{%- endif %}
+  {%- if cost.projected_food_cost_pct %} · Food cost {{ cost.projected_food_cost_pct }}%{%- endif %}
+{% endblock %}
+
+{% block extra_styles %}
+.pdf-cs-dish {
+  margin-bottom: 9mm;
+  page-break-inside: avoid;
+}
+.pdf-cs-course {
+  font-family: 'DM Mono', monospace;
+  font-size: 8pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #807462;
+  margin-bottom: 1.5mm;
+}
+.pdf-cs-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 13pt;
+  font-weight: 400;
+  color: #1f1b16;
+  margin-bottom: 3mm;
+}
+.pdf-cs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8.5pt;
+  font-weight: 300;
+}
+.pdf-cs-table thead tr {
+  border-bottom: 1px solid #C9A84C;
+}
+.pdf-cs-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 7pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: #807462;
+  padding: 1.5mm 2mm;
+  text-align: left;
+}
+.pdf-cs-table td {
+  padding: 1.5mm 2mm;
+  color: #1f1b16;
+  border-bottom: 1px dotted #d9d0b6;
+  vertical-align: top;
+}
+.pdf-cs-table tr:last-child td { border-bottom: none; }
+.col-ing  { width: 28%; }
+.col-qty  { width: 14%; }
+.col-cost { width: 13%; text-align: right; }
+.col-origin   { width: 22%; }
+.col-provider { width: 23%; }
+.pdf-cs-table th.col-cost,
+.pdf-cs-table td.col-cost { text-align: right; }
+.pdf-cs-no-ingredients {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5pt;
+  color: #807462;
+  padding: 2mm 0;
+  font-style: italic;
+}
+.pdf-cs-dish-total {
+  font-family: 'DM Mono', monospace;
+  font-size: 8pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: #1f1b16;
+  padding-top: 2.5mm;
+  text-align: right;
+}
+.pdf-cs-dish-total__per {
+  font-weight: 400;
+  color: #807462;
+  margin-left: 8mm;
+}
+.pdf-cs-summary {
+  margin-top: 10mm;
+  padding-top: 5mm;
+  border-top: 1px solid #C9A84C;
+}
+.pdf-cs-summary__row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'DM Mono', monospace;
+  font-size: 9pt;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: #1f1b16;
+  padding: 2mm 0;
+  border-bottom: 1px dotted #d9d0b6;
+}
+.pdf-cs-summary__row:last-of-type { border-bottom: none; }
+.pdf-cs-summary__row--pct { font-weight: 500; }
+.pdf-cs-summary__row--pct.pct--in-window span:last-child { color: #C9A84C; }
+.pdf-cs-summary__row--pct.pct--warning span:last-child { color: #b94a2c; }
+.pdf-cs-target {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 8.5pt;
+  color: #807462;
+  text-align: center;
+  margin-top: 4mm;
+}
+{% endblock %}
+
+{% block body %}
+{% for dish in cost.per_dish %}
+<div class="pdf-cs-dish">
+  <div class="pdf-cs-course">{{ dish.course_name }}</div>
+  <div class="pdf-cs-title">{{ dish.dish_title }}</div>
+  {% if dish.ingredients %}
+  <table class="pdf-cs-table">
+    <thead>
+      <tr>
+        <th class="col-ing">Ingredient</th>
+        <th class="col-qty">Qty (× {{ cost.covers }})</th>
+        <th class="col-cost">Cost</th>
+        <th class="col-origin">Origin producer</th>
+        <th class="col-provider">Local provider</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for ing in dish.ingredients %}
+    <tr>
+      <td class="col-ing">{{ ing.ingredient }}</td>
+      <td class="col-qty">{% if ing.quantity %}{{ "%.1f" | format(ing.quantity | float) }} {{ ing.unit or '' }}{% else %}—{% endif %}</td>
+      <td class="col-cost">{% if ing.line_cost is not none %}{{ ing.currency }} {{ "%.2f" | format(ing.line_cost) }}{% else %}—{% endif %}</td>
+      <td class="col-origin">{{ ing.origin_producer or '—' }}</td>
+      <td class="col-provider">{{ ing.local_provider or '—' }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="pdf-cs-no-ingredients">No ingredient data available.</div>
+  {% endif %}
+  <div class="pdf-cs-dish-total">
+    {% if dish.dish_total_cost is not none %}
+      CAD {{ "%.2f" | format(dish.dish_total_cost) }}
+      <span class="pdf-cs-dish-total__per">CAD {{ "%.2f" | format(dish.dish_cost_per_cover) }} per cover</span>
+    {% else %}
+      No cost data
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+
+<div class="pdf-cs-summary">
+  <div class="pdf-cs-summary__row">
+    <span>Total food cost</span>
+    <span>CAD {{ "%.2f" | format(cost.total_food_cost) }}</span>
+  </div>
+  <div class="pdf-cs-summary__row">
+    <span>Cost per cover</span>
+    <span>CAD {{ "%.2f" | format(cost.cost_per_cover) }}</span>
+  </div>
+  {% if cost.projected_food_cost_pct %}
+  <div class="pdf-cs-summary__row pdf-cs-summary__row--pct {% if cost.projected_food_cost_pct >= 28 and cost.projected_food_cost_pct <= 35 %}pct--in-window{% else %}pct--warning{% endif %}">
+    <span>Projected food cost</span>
+    <span>{{ cost.projected_food_cost_pct }}%</span>
+  </div>
+  {% endif %}
+  <div class="pdf-cs-target">Target window · 28–35% for fine dining.</div>
+</div>
+{% endblock %}

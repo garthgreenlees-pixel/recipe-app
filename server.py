@@ -13784,6 +13784,58 @@ def print_menu_card(slug):
     )
 
 
+@app.route("/menu/<slug>/print/costing-sheet")
+@requires_tier("profession")
+def print_costing_sheet(slug):
+    from weasyprint import HTML as WeasyHTML
+    from datetime import datetime
+
+    user = get_current_user()
+    region = get_user_location() or "CA"
+    conn = psycopg2.connect(DATABASE_URL_WRITE)
+    conn.autocommit = True
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        abort(404)
+
+    covers = int(menu.get("cover_count") or 1)
+    menu_price = menu.get("menu_price")
+    cost = _compute_menu_cost_with_provenance(str(menu["id"]), covers, menu_price, user["id"], region, cur)
+
+    cur.execute("UPDATE menus SET last_exported_at = NOW() WHERE id = %s", (menu["id"],))
+    cur.close(); conn.close()
+
+    menu_dict = dict(menu)
+    menu_dict["id"] = str(menu_dict["id"])
+    for k in ("event_date", "created_at", "updated_at", "last_exported_at"):
+        if menu_dict.get(k) is not None:
+            menu_dict[k] = menu_dict[k].isoformat()
+
+    gen_stamp = datetime.now().strftime('%-d %B %Y · %H:%M')
+
+    html = render_template(
+        "print/costing_sheet.html",
+        menu=menu_dict,
+        cost=cost,
+        gen_stamp=gen_stamp,
+    )
+
+    try:
+        pdf_bytes = WeasyHTML(string=html, base_url=request.host_url).write_pdf()
+    except Exception:
+        app.logger.exception(f"WeasyPrint error for costing-sheet {slug}")
+        abort(500)
+
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="costing-sheet-{slug}.pdf"'},
+    )
+
+
 # ─── Sprint 8 — Menu Builder Routes ─────────────────────────────────────────
 
 def _normalize_beverage_pairings(raw):
@@ -13851,6 +13903,187 @@ def _compute_menu_cost(menu_id, covers, menu_price, user_id, region, cur):
                 "cost_for_menu": cfm,
                 "has_cost_data": True,
             })
+    total_food_cost = round(total_food_cost, 2)
+    cost_per_cover = round(total_food_cost / covers, 2) if covers > 0 else 0.0
+    mp = float(menu_price) if menu_price else None
+    projected_food_cost_pct = None
+    if mp and mp > 0 and covers > 0:
+        revenue = mp * covers
+        projected_food_cost_pct = round((total_food_cost / revenue) * 100, 1) if revenue > 0 else None
+    return {
+        "covers": covers,
+        "menu_price": mp,
+        "per_dish": per_dish,
+        "total_food_cost": total_food_cost,
+        "cost_per_cover": cost_per_cover,
+        "projected_food_cost_pct": projected_food_cost_pct,
+        "target_window": {"low": 28.0, "high": 35.0},
+        "any_missing_cost": any_missing_cost,
+    }
+
+
+def _pats_rule_for_ingredients(ingredient_names, region, cur):
+    """Batch resolve origin producer + local provider for a list of ingredient names.
+
+    Pat's Rule: ingredient_master.source_product_id → product_suppliers (ORIGIN always,
+    PROVIDER region-filtered) → suppliers.name.
+
+    Returns dict keyed by lowercase name: {origin_producer: str|None, local_provider: str|None}.
+    """
+    if not ingredient_names:
+        return {}
+
+    _CA_PROVINCES = {'BC', 'AB', 'SK', 'MB', 'ON', 'QC', 'NB', 'NS', 'PE', 'NL', 'NT', 'YT', 'NU'}
+    region_terms = [region] if region else ['nowhere']
+    if region in _CA_PROVINCES:
+        region_terms += ['nationwide_CA', 'Western_Canada']
+    elif region:
+        region_terms += ['nationwide_US']
+
+    # Step 1: resolve names → master_ids
+    name_to_master = {}
+    for name in ingredient_names:
+        n = name.lower().strip()
+        if not n:
+            continue
+        master_id, ok = _resolve_ingredient_master_id(cur, n)
+        if ok and master_id:
+            name_to_master[n] = master_id
+
+    empty = {name.lower().strip(): {"origin_producer": None, "local_provider": None} for name in ingredient_names}
+    if not name_to_master:
+        return empty
+
+    # Step 2: master_ids → source_product_ids
+    master_ids = list(set(name_to_master.values()))
+    cur.execute(
+        "SELECT id, source_product_id FROM ingredient_master WHERE id = ANY(%s) AND source_product_id IS NOT NULL",
+        (master_ids,),
+    )
+    master_to_product = {row["id"]: row["source_product_id"] for row in cur.fetchall()}
+
+    product_ids = list(set(master_to_product.values()))
+    if not product_ids:
+        return empty
+
+    # Step 3: product_ids → origin + region-filtered provider suppliers
+    cur.execute("""
+        SELECT ps.product_id, ps.role, ps.is_primary, s.name AS supplier_name
+        FROM product_suppliers ps
+        JOIN suppliers s ON ps.supplier_id = s.id
+        WHERE ps.product_id = ANY(%s)
+          AND (ps.role = 'ORIGIN' OR (ps.role = 'PROVIDER' AND ps.region && %s::text[]))
+        ORDER BY ps.product_id, ps.role, ps.is_primary DESC, s.name
+    """, (product_ids, region_terms))
+
+    product_prov = {}
+    for row in cur.fetchall():
+        pid = row["product_id"]
+        if pid not in product_prov:
+            product_prov[pid] = {"origin_producer": None, "local_provider": None}
+        if row["role"] == "ORIGIN" and not product_prov[pid]["origin_producer"]:
+            product_prov[pid]["origin_producer"] = row["supplier_name"]
+        elif row["role"] == "PROVIDER" and not product_prov[pid]["local_provider"]:
+            product_prov[pid]["local_provider"] = row["supplier_name"]
+
+    result = {}
+    for name in ingredient_names:
+        n = name.lower().strip()
+        master_id = name_to_master.get(n)
+        product_id = master_to_product.get(master_id) if master_id else None
+        result[n] = product_prov.get(product_id) or {"origin_producer": None, "local_provider": None}
+    return result
+
+
+def _compute_menu_cost_with_provenance(menu_id, covers, menu_price, user_id, region, cur):
+    """Like _compute_menu_cost but enriches each ingredient line with Pat's Rule provenance."""
+    cur.execute("""
+        SELECT * FROM menu_recipes WHERE menu_id = %s
+        ORDER BY course_order, dish_order_within_course
+    """, (menu_id,))
+    rows = cur.fetchall()
+
+    per_dish = []
+    total_food_cost = 0.0
+    any_missing_cost = False
+
+    for mr in rows:
+        try:
+            recipe = _resolve_recipe_ref(mr["recipe_ref"], user_id, cur)
+        except ValueError:
+            recipe = None
+
+        dish_title = mr["recipe_ref"]
+        dish_image = None
+        if recipe:
+            dish_title = recipe.get("name") or recipe.get("title") or mr["recipe_ref"]
+            dish_image = recipe.get("image_url") or None
+
+        if not recipe:
+            per_dish.append({
+                "menu_recipe_id": str(mr["id"]),
+                "course_name": mr["course_name"],
+                "dish_title": dish_title,
+                "dish_image": dish_image,
+                "ingredients": [],
+                "dish_total_cost": None,
+                "dish_cost_per_cover": None,
+                "has_cost_data": False,
+            })
+            any_missing_cost = True
+            continue
+
+        ingredients = recipe.get("ingredients") or []
+        if isinstance(ingredients, str):
+            try:
+                import json as _json
+                ingredients = _json.loads(ingredients)
+            except Exception:
+                ingredients = []
+
+        recipe_portions = max(int(recipe.get("servings") or recipe.get("yield_count") or 1), 1)
+        scale = covers / recipe_portions
+
+        breakdown, dish_base_cost, unpriced, _ = _cost_ingredient_loop(
+            ingredients, user_id, True, cur
+        )
+        # dish_base_cost is the total for recipe_portions; scale to covers
+        dish_cost_for_menu = round(dish_base_cost * scale, 2)
+        dish_cost_per_cover = round(dish_base_cost / recipe_portions, 2)
+
+        ing_names = [(item.get("ingredient") or item.get("name") or "") for item in breakdown]
+        provenance = _pats_rule_for_ingredients(ing_names, region, cur)
+
+        enriched = []
+        for item in breakdown:
+            ing_name = item.get("ingredient") or item.get("name") or ""
+            prov = provenance.get(ing_name.lower().strip()) or {}
+            lc = item.get("line_cost")
+            enriched.append({
+                "ingredient": ing_name,
+                "quantity": item.get("quantity"),
+                "unit": item.get("unit"),
+                "line_cost": round(lc * scale, 2) if lc is not None else None,
+                "origin_producer": prov.get("origin_producer"),
+                "local_provider": prov.get("local_provider"),
+                "currency": item.get("currency") or "CAD",
+            })
+
+        if unpriced:
+            any_missing_cost = True
+
+        total_food_cost += dish_cost_for_menu
+        per_dish.append({
+            "menu_recipe_id": str(mr["id"]),
+            "course_name": mr["course_name"],
+            "dish_title": dish_title,
+            "dish_image": dish_image,
+            "ingredients": enriched,
+            "dish_total_cost": dish_cost_for_menu,
+            "dish_cost_per_cover": dish_cost_per_cover,
+            "has_cost_data": dish_base_cost > 0,
+        })
+
     total_food_cost = round(total_food_cost, 2)
     cost_per_cover = round(total_food_cost / covers, 2) if covers > 0 else 0.0
     mp = float(menu_price) if menu_price else None
