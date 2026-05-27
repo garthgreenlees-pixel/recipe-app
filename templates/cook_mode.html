@@ -384,19 +384,10 @@ document.querySelector('.cm-bar-exit')?.addEventListener('click', releaseWakeLoc
 
 // ── Step focus ─────────────────────────────────────────
 let focusedStep = -1;
+let currentStep = 1;
 
-function focusStep(i, total) {
-  if (focusedStep === i) {
-    // Tap same step again: advance to next
-    const next = i + 1;
-    if (next < total) {
-      setFocus(next);
-    } else {
-      clearFocus();
-    }
-  } else {
-    setFocus(i);
-  }
+function focusStep(i) {
+  setFocus(i);
 }
 
 function setFocus(i) {
