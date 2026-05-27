@@ -208,6 +208,57 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
   background:var(--gold);color:#0e0d0b;border-color:var(--gold);
 }
 
+/* ── NOTES PANE ───────────────────────────────────────── */
+.cm-notes-pane{
+  position:fixed;inset:0;z-index:400;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  padding:16px;
+  max-width:var(--max-w);margin:0 auto;
+}
+.cm-notes-pane[hidden]{display:none}
+.cm-notes-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--divider);
+}
+.cm-notes-title{
+  font-family:var(--didot);font-style:italic;
+  font-size:20px;color:var(--cream);
+}
+.cm-notes-close{
+  width:32px;height:32px;
+  background:transparent;border:none;
+  color:var(--cream);font-size:24px;cursor:pointer;line-height:1;
+}
+.cm-notes-input{
+  flex:1;width:100%;
+  margin:16px 0;padding:12px;
+  background:transparent;color:var(--cream);
+  font-family:var(--sans);font-size:16px;line-height:1.6;
+  border:1px solid var(--divider);border-radius:4px;
+  resize:vertical;min-height:200px;
+  -webkit-appearance:none;
+}
+.cm-notes-input:focus{outline:none;border-color:var(--gold-soft)}
+.cm-notes-foot{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:12px;
+  border-top:1px solid var(--divider);
+}
+.cm-notes-hint{
+  font-family:var(--mono);font-size:10px;
+  color:var(--warm-gray,#948B7F);
+  text-transform:uppercase;letter-spacing:0.1em;
+}
+.cm-notes-clear{
+  background:transparent;border:none;
+  color:var(--warm-gray,#948B7F);
+  font-family:var(--mono);font-size:11px;
+  text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;
+}
+.cm-notes-clear:active{color:var(--cream)}
+
 /* ── TOOL STRIP ───────────────────────────────────────── */
 .cm-tools{display:flex;gap:6px}
 .cm-tool{
@@ -547,7 +598,47 @@ function openHaccp() {
 function openCost() {
   console.log('Cost modal — wires in Cycle 6');
 }
+
+// ── Notes pane ─────────────────────────────────────────
+const NOTES_KEY = 'cm_notes_' + '{{ recipe.slug }}';
+
+function openNotes() {
+  const pane  = document.getElementById('cm-notes-pane');
+  const input = document.getElementById('cm-notes-input');
+  input.value = localStorage.getItem(NOTES_KEY) || '';
+  pane.hidden = false;
+  setTimeout(() => input.focus(), 50);
+}
+function closeNotes() {
+  const input = document.getElementById('cm-notes-input');
+  localStorage.setItem(NOTES_KEY, input.value);
+  document.getElementById('cm-notes-pane').hidden = true;
+}
+function clearNotes() {
+  const input = document.getElementById('cm-notes-input');
+  input.value = '';
+  localStorage.setItem(NOTES_KEY, '');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('cm-notes-input');
+  if (input) {
+    input.addEventListener('blur', () => localStorage.setItem(NOTES_KEY, input.value));
+  }
+});
 </script>
+
+<div class="cm-notes-pane" id="cm-notes-pane" hidden>
+  <div class="cm-notes-head">
+    <span class="cm-notes-title">Notes</span>
+    <button class="cm-notes-close" type="button" onclick="closeNotes()" aria-label="Close">×</button>
+  </div>
+  <textarea class="cm-notes-input" id="cm-notes-input" placeholder="What you're doing differently this time…"></textarea>
+  <div class="cm-notes-foot">
+    <span class="cm-notes-hint">Saved on this device</span>
+    <button class="cm-notes-clear" type="button" onclick="clearNotes()">Clear</button>
+  </div>
+</div>
 
 {% if method_steps and method_steps | length > 0 %}
 <nav class="cm-nav-bar">
