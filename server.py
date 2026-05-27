@@ -1250,11 +1250,39 @@ def kitchen():
         "canon_saved": _query_user_saved_canon_recipes(user_id),
     }
     total = sum(len(v) for v in recipes_by_state.values())
+    # ── Menus (Library+) ──
+    has_library = user_can_access("library")
+    user_menus = []
+    if has_library:
+        _mc = get_db()
+        _mcur = _mc.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        _mcur.execute("""
+            SELECT m.id, m.slug, m.title, m.event_date, m.cover_count, m.updated_at,
+                   COUNT(DISTINCT mr.course_name) AS course_count,
+                   COUNT(mr.id) AS dish_count
+            FROM menus m
+            LEFT JOIN menu_recipes mr ON mr.menu_id = m.id
+            WHERE m.owner_user_id = %s
+            GROUP BY m.id
+            ORDER BY m.event_date DESC NULLS LAST, m.updated_at DESC
+        """, (user_id,))
+        user_menus = [dict(r) for r in _mcur.fetchall()]
+        for m in user_menus:
+            m["id"] = str(m["id"])
+            m["course_count"] = int(m["course_count"])
+            m["dish_count"] = int(m["dish_count"])
+            if m.get("event_date"):
+                m["event_date"] = m["event_date"].isoformat()
+            if m.get("updated_at"):
+                m["updated_at"] = m["updated_at"].isoformat()
+        _mcur.close(); _mc.close()
     return render_template(
         "kitchen.html",
         recipes_by_state=recipes_by_state,
         recipe_total=total,
         format_cuisine=_format_cuisine,
+        has_library=has_library,
+        user_menus=user_menus,
     )
 
 
@@ -13368,6 +13396,65 @@ def invoices_resolve_line(invoice_id):
     cur.close()
     conn.close()
     return jsonify({"resolved": True})
+
+
+# ─── Sprint 8 — Menu Builder Page Routes ────────────────────────────────────
+
+@app.route("/menu/new")
+def menu_new_page():
+    user = get_current_user()
+    if not user:
+        return _login_redirect()
+    if not user_can_access("library"):
+        return redirect("/pricing")
+    return render_template("menu_new.html")
+
+
+@app.route("/menu/<slug>")
+def menu_detail_page(slug):
+    user = get_current_user()
+    if not user:
+        return _login_redirect()
+    if not user_can_access("library"):
+        return redirect("/pricing")
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        abort(404)
+    cur.execute("""
+        SELECT * FROM menu_recipes WHERE menu_id = %s
+        ORDER BY course_order, dish_order_within_course
+    """, (menu["id"],))
+    mr_rows = cur.fetchall()
+    _DEFAULT_COURSES = [
+        ("Amuse", 1), ("Starter", 2), ("Main", 3), ("Cheese", 4), ("Dessert", 5)
+    ]
+    courses_map = {name: {"name": name, "order": order, "dishes": []} for name, order in _DEFAULT_COURSES}
+    for mr in mr_rows:
+        try:
+            recipe = _resolve_recipe_ref(mr["recipe_ref"], user["id"], cur)
+        except ValueError:
+            recipe = None
+        cn = mr["course_name"]
+        if cn not in courses_map:
+            courses_map[cn] = {"name": cn, "order": mr["course_order"], "dishes": []}
+        courses_map[cn]["dishes"].append({
+            "menu_recipe_id": str(mr["id"]),
+            "recipe_ref": mr["recipe_ref"],
+            "dish_order_within_course": mr["dish_order_within_course"],
+            "recipe": dict(recipe) if recipe else None,
+        })
+    courses = sorted(courses_map.values(), key=lambda c: c["order"])
+    cur.close(); conn.close()
+    menu_dict = dict(menu)
+    menu_dict["id"] = str(menu_dict["id"])
+    for k in ("event_date", "created_at", "updated_at", "last_exported_at"):
+        if menu_dict.get(k) is not None:
+            menu_dict[k] = menu_dict[k].isoformat()
+    return render_template("menu_detail.html", menu=menu_dict, courses=courses)
 
 
 # ─── Sprint 8 — Menu Builder Routes ─────────────────────────────────────────

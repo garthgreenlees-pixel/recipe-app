@@ -57,6 +57,24 @@
     .kitchen__add { grid-template-columns: 1fr; }
   }
 
+  /* ── Menus section ── */
+  .kitchen__menus { margin-bottom: var(--s4); padding-bottom: var(--s4); border-bottom: 1px solid var(--line); }
+  .kitchen__menus-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--s2); }
+  .kitchen__menus-head h2 { font-family: var(--display); font-size: 20px; font-style: italic; font-weight: 500; color: var(--charcoal); border-bottom: 1.5px solid var(--gold); padding-bottom: 3px; }
+  .kitchen__menus-new { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; padding: 7px 14px; background: transparent; color: var(--charcoal); border: 1px solid var(--line); text-decoration: none; white-space: nowrap; }
+  .kitchen__menus-new:hover { border-color: var(--gold); color: var(--charcoal); }
+  .kitchen__menus-list { display: flex; flex-direction: column; gap: 1px; }
+  .kitchen__menu-row { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: var(--s2) 0; border-bottom: 1px solid rgba(201,192,176,0.4); text-decoration: none; color: var(--charcoal); gap: var(--s2); }
+  .kitchen__menu-row:last-child { border-bottom: none; }
+  .kitchen__menu-row:hover .kitchen__menu-title { color: var(--gold); }
+  .kitchen__menu-title { font-family: var(--display); font-size: 17px; font-weight: 500; color: var(--charcoal); margin-bottom: 2px; }
+  .kitchen__menu-meta { font-family: var(--mono); font-size: 10px; color: var(--warm-gray); text-transform: uppercase; letter-spacing: 0.1em; }
+  .kitchen__menu-counts { font-family: var(--mono); font-size: 10px; color: var(--warm-gray); text-align: right; white-space: nowrap; }
+  .kitchen__menus-empty { font-family: var(--display); font-size: 14px; font-style: italic; color: var(--warm-gray); padding: var(--s2) 0; }
+  .kitchen__menus-gate { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); text-transform: uppercase; letter-spacing: 0.1em; padding: var(--s2) 0; }
+  .kitchen__menus-gate a { color: var(--warm-gray); border-bottom: 1px solid transparent; }
+  .kitchen__menus-gate a:hover { border-bottom-color: var(--gold); color: var(--charcoal); }
+
   /* ── Modal overlay ── */
   .kmodal-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.72); z-index: 900; display: none; align-items: center; justify-content: center; }
   .kmodal-overlay.is-open { display: flex; }
@@ -149,6 +167,37 @@
         <div class="kitchen__add-tile__desc">Drop a PDF cookbook — pick the pages you want.</div>
       </a>
     </div>
+  </section>
+
+  {# ─── MENUS SECTION ─── #}
+  <section class="kitchen__menus">
+    <div class="kitchen__menus-head">
+      <h2>Menus</h2>
+      {% if has_library %}<a href="/menu/new" class="kitchen__menus-new">+ New menu</a>{% endif %}
+    </div>
+    {% if has_library %}
+      {% if user_menus %}
+        <div class="kitchen__menus-list">
+          {% for m in user_menus %}
+          <a href="/menu/{{ m.slug }}" class="kitchen__menu-row">
+            <div>
+              <div class="kitchen__menu-title">{{ m.title }}</div>
+              <div class="kitchen__menu-meta">
+                {{ m.event_date if m.event_date else "No date" }} &middot; {{ m.cover_count }} cover{{ "s" if m.cover_count != 1 }}
+              </div>
+            </div>
+            <div class="kitchen__menu-counts">
+              {{ m.course_count }} course{{ "s" if m.course_count != 1 }}<br>{{ m.dish_count }} dish{{ "es" if m.dish_count != 1 }}
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="kitchen__menus-empty">No menus yet — start with the season.</p>
+      {% endif %}
+    {% else %}
+      <p class="kitchen__menus-gate"><a href="/pricing">Open Library to start building menus →</a></p>
+    {% endif %}
   </section>
 
   {% if recipe_total == 0 %}

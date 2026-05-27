@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+
+{% block title %}{{ menu.title }} — Menu — Provenance{% endblock %}
+{% block meta_robots %}noindex{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── Page scaffold ── */
+  .mb-page { max-width: 820px; margin: 0 auto; padding: var(--s5) var(--s4) var(--s7); }
+
+  /* ── Crumb ── */
+  .mb-crumb { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--s4); }
+  .mb-crumb a { color: var(--warm-gray); border-bottom: none; }
+  .mb-crumb a:hover { color: var(--charcoal); }
+  .mb-crumb span { color: var(--warm-gray-light); }
+
+  /* ── Page header ── */
+  .mb-header { margin-bottom: var(--s5); padding-bottom: var(--s4); border-bottom: 1px solid var(--line); }
+  .mb-eyebrow { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: var(--gold); margin-bottom: var(--s1); }
+  .mb-title-wrap { position: relative; margin-bottom: var(--s3); }
+  .mb-title { font-family: var(--display); font-size: 38px; font-style: italic; font-weight: 500; color: var(--charcoal); line-height: 1.1; cursor: pointer; outline: none; min-height: 46px; border-bottom: 1.5px solid transparent; transition: border-color 0.15s; }
+  .mb-title:hover { border-bottom-color: var(--line); }
+  .mb-title[contenteditable="true"] { border-bottom-color: var(--gold); }
+  .mb-title:empty:before { content: attr(data-placeholder); color: var(--warm-gray); }
+  .mb-saved { font-family: var(--mono); font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em; opacity: 0; transition: opacity 0.3s; position: absolute; bottom: -18px; left: 0; }
+  .mb-saved.is-visible { opacity: 1; }
+
+  /* ── Cover stepper ── */
+  .mb-meta-row { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; }
+  .mb-cover-block { display: flex; align-items: center; gap: var(--s1); }
+  .mb-cover-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--warm-gray); margin-right: 4px; }
+  .mb-stepper-btn { font-family: var(--mono); font-size: 16px; width: 28px; height: 28px; border: 1px solid var(--line); background: transparent; cursor: pointer; color: var(--charcoal); display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; }
+  .mb-stepper-btn:hover { border-color: var(--gold); }
+  .mb-stepper-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .mb-cover-val { font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--charcoal); min-width: 28px; text-align: center; }
+  .mb-cover-saved { font-family: var(--mono); font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em; opacity: 0; transition: opacity 0.3s; }
+  .mb-cover-saved.is-visible { opacity: 1; }
+
+  /* ── Courses ── */
+  .mb-courses { display: flex; flex-direction: column; gap: var(--s4); }
+  .mb-course { }
+  .mb-course-head { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: var(--s1); border-bottom: 1px solid var(--line); margin-bottom: var(--s2); }
+  .mb-course-name { font-family: var(--display); font-size: 20px; font-style: italic; font-weight: 500; color: var(--charcoal); }
+  .mb-course-count { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray); }
+
+  /* ── Dish rows ── */
+  .mb-dishes { display: flex; flex-direction: column; gap: 1px; }
+  .mb-dish { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: var(--s2); padding: var(--s2) 0; border-bottom: 1px solid rgba(201,192,176,0.3); }
+  .mb-dish:last-child { border-bottom: none; }
+  .mb-dish-img { width: 52px; height: 40px; object-fit: cover; background: var(--cream-200); flex-shrink: 0; }
+  .mb-dish-img-placeholder { width: 52px; height: 40px; background: var(--cream-200); flex-shrink: 0; }
+  .mb-dish-info { min-width: 0; }
+  .mb-dish-cuisine { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray); margin-bottom: 2px; }
+  .mb-dish-title { font-family: var(--display); font-size: 15px; font-weight: 500; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mb-dish-remove { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); background: none; border: none; cursor: pointer; padding: 4px 6px; }
+  .mb-dish-remove:hover { color: #B94040; }
+
+  /* ── Add dish button (disabled in Cycle 5) ── */
+  .mb-add-dish { margin-top: var(--s2); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--warm-gray); background: none; border: 1px dashed var(--line); padding: 9px 16px; cursor: not-allowed; opacity: 0.5; display: inline-block; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mb-page">
+
+  {# ── Crumb ── #}
+  <div class="mb-crumb">
+    <a href="/kitchen">MyKitchen</a>
+    <span> · </span><a href="/kitchen">Menus</a>
+    <span> · {{ menu.title }}</span>
+  </div>
+
+  {# ── Page header ── #}
+  <div class="mb-header">
+    <div class="mb-eyebrow">Menu in build</div>
+    <div class="mb-title-wrap">
+      <h1 class="mb-title"
+          id="mb-title"
+          contenteditable="false"
+          data-slug="{{ menu.slug }}"
+          data-original="{{ menu.title }}"
+          data-placeholder="Untitled menu"
+          onclick="mbTitleEdit(this)"
+          onblur="mbTitleSave(this)"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">{{ menu.title }}</h1>
+      <span class="mb-saved" id="mb-title-saved">Saved</span>
+    </div>
+
+    <div class="mb-meta-row" style="margin-top: var(--s3);">
+      <div class="mb-cover-block">
+        <span class="mb-cover-label">Covers</span>
+        <button class="mb-stepper-btn" id="mb-cover-dec" onclick="mbStepCover(-1)" aria-label="Fewer covers">−</button>
+        <span class="mb-cover-val" id="mb-cover-val">{{ menu.cover_count }}</span>
+        <button class="mb-stepper-btn" id="mb-cover-inc" onclick="mbStepCover(1)" aria-label="More covers">+</button>
+        <span class="mb-cover-saved" id="mb-cover-saved">Saved</span>
+      </div>
+      {% if menu.event_date %}
+      <div style="font-family:var(--mono);font-size:11px;color:var(--warm-gray);">{{ menu.event_date }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  {# ── Courses ── #}
+  <div class="mb-courses" id="mb-courses">
+    {% for course in courses %}
+    <div class="mb-course" id="course-{{ course.name | lower | replace(' ', '-') }}">
+      <div class="mb-course-head">
+        <span class="mb-course-name">{{ course.name }}</span>
+        <span class="mb-course-count">
+          {{ course.dishes | length }} dish{{ "es" if course.dishes | length != 1 else "" }}
+        </span>
+      </div>
+
+      {% if course.dishes %}
+      <div class="mb-dishes">
+        {% for dish in course.dishes %}
+        <div class="mb-dish" id="dish-{{ dish.menu_recipe_id }}" data-id="{{ dish.menu_recipe_id }}">
+          {% if dish.recipe and dish.recipe.image_url %}
+            <img class="mb-dish-img" src="{{ dish.recipe.image_url }}" alt="{{ dish.recipe.name if dish.recipe else '' }}" onerror="this.style.display='none'">
+          {% else %}
+            <div class="mb-dish-img-placeholder"></div>
+          {% endif %}
+          <div class="mb-dish-info">
+            {% if dish.recipe %}
+            <div class="mb-dish-cuisine">{{ dish.recipe.cuisine or "" }}</div>
+            <div class="mb-dish-title">{{ dish.recipe.name or dish.recipe.title or dish.recipe_ref }}</div>
+            {% else %}
+            <div class="mb-dish-cuisine">—</div>
+            <div class="mb-dish-title">{{ dish.recipe_ref }}</div>
+            {% endif %}
+          </div>
+          <button class="mb-dish-remove"
+                  data-id="{{ dish.menu_recipe_id }}"
+                  data-slug="{{ menu.slug }}"
+                  onclick="mbRemoveDish(this)"
+                  aria-label="Remove dish">✕</button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <button class="mb-add-dish" tabindex="-1" aria-disabled="true">+ Add a dish</button>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  const SLUG = {{ menu.slug | tojson }};
+
+  /* ── Saved indicator ── */
+  function flashSaved(el) {
+    el.classList.add('is-visible');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('is-visible'), 1500);
+  }
+
+  /* ── Title: click to edit ── */
+  window.mbTitleEdit = function (el) {
+    el.contentEditable = 'true';
+    el.focus();
+    // move cursor to end
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  };
+
+  window.mbTitleSave = async function (el) {
+    el.contentEditable = 'false';
+    const newTitle = el.textContent.trim();
+    if (!newTitle || newTitle === el.dataset.original) return;
+    try {
+      const res = await fetch('/api/menu/' + SLUG, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: newTitle }),
+      });
+      if (res.ok) {
+        el.dataset.original = newTitle;
+        flashSaved(document.getElementById('mb-title-saved'));
+      } else {
+        el.textContent = el.dataset.original;
+      }
+    } catch (_) {
+      el.textContent = el.dataset.original;
+    }
+  };
+
+  /* ── Cover stepper ── */
+  let _coverVal = parseInt(document.getElementById('mb-cover-val').textContent, 10) || 1;
+  let _coverTimer = null;
+
+  function syncDecBtn() {
+    document.getElementById('mb-cover-dec').disabled = _coverVal <= 1;
+  }
+  syncDecBtn();
+
+  async function patchCover(val) {
+    try {
+      const res = await fetch('/api/menu/' + SLUG, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cover_count: val }),
+      });
+      if (res.ok) {
+        flashSaved(document.getElementById('mb-cover-saved'));
+      }
+    } catch (_) {}
+  }
+
+  window.mbStepCover = function (delta) {
+    const next = Math.max(1, _coverVal + delta);
+    if (next === _coverVal) return;
+    _coverVal = next;
+    document.getElementById('mb-cover-val').textContent = _coverVal;
+    syncDecBtn();
+    clearTimeout(_coverTimer);
+    _coverTimer = setTimeout(() => patchCover(_coverVal), 600);
+  };
+
+  /* ── Remove dish ── */
+  window.mbRemoveDish = async function (btn) {
+    const id = btn.dataset.id;
+    const slug = btn.dataset.slug;
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/menu/' + slug + '/recipes/' + id, { method: 'DELETE' });
+      if (res.ok || res.status === 204) {
+        const row = document.getElementById('dish-' + id);
+        if (row) row.remove();
+        // update course dish count display
+        const course = btn.closest('.mb-course');
+        if (course) {
+          const countEl = course.querySelector('.mb-course-count');
+          const remaining = course.querySelectorAll('.mb-dish').length;
+          countEl.textContent = remaining + ' dish' + (remaining !== 1 ? 'es' : '');
+        }
+      } else {
+        btn.disabled = false;
+      }
+    } catch (_) {
+      btn.disabled = false;
+    }
+  };
+})();
+</script>
+{% endblock %}
