@@ -1161,7 +1161,7 @@ def _query_user_recipes(user_id, state="imported"):
                 "pillars_filled": filled,
                 "time_display": time_raw,
                 "serves": serves_raw,
-                "requires_haccp": False,
+                "requires_haccp": True,
             })
         return out
     except Exception as e:
@@ -2596,6 +2596,7 @@ def recipe_page(slug):
                 if _norm_yield:
                     _row["servings_text"] = _norm_yield
             _recipe_dict = _normalize_member_recipe(_row)
+            _recipe_dict["requires_haccp"] = True
             # Pairings — stored JSONB first, then LLM-derived fallback
             _stored_pairings = kitchen_recipe.get("beverage_pairings")
             _pairings = _stored_pairings if _stored_pairings else _find_pairings_for_user_recipe(kitchen_recipe.get("title", ""))
@@ -2718,9 +2719,11 @@ def recipe_page(slug):
     conn.close()
     _region = user_loc or "CA"
     _user = get_current_user()
+    _pub_recipe = dict(recipe)
+    _pub_recipe["requires_haccp"] = True
     return render_template(
         "recipe.html",
-        recipe=recipe,
+        recipe=_pub_recipe,
         recipe_suppliers=recipe_suppliers,
         suggested_beverages=suggested_beverages,
         user_location=user_loc,
@@ -2767,6 +2770,7 @@ def recipe_cook_mode(slug):
                 if isinstance(s, dict) else {"instruction": str(s), "insight": ""}
                 for s in _enhanced
             ]
+        _recipe_dict["requires_haccp"] = True
         return render_template("cook_mode.html", recipe=_recipe_dict)
     # Fall back to public recipes table
     cur.execute("SELECT * FROM recipes WHERE slug = %s", (slug,))
@@ -2775,7 +2779,9 @@ def recipe_cook_mode(slug):
     conn.close()
     if not recipe:
         return "Recipe not found", 404
-    return render_template("cook_mode.html", recipe=dict(recipe))
+    _canon_recipe = dict(recipe)
+    _canon_recipe["requires_haccp"] = True
+    return render_template("cook_mode.html", recipe=_canon_recipe)
 
 
 @app.route("/suggest-supplier", methods=["GET"])
