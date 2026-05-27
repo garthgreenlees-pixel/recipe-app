@@ -1086,6 +1086,47 @@ def init_db():
         CREATE INDEX IF NOT EXISTS idx_ingredient_master_variant_of
         ON ingredient_master(variant_of) WHERE variant_of IS NOT NULL
     """)
+    # ── Sprint 8 — Menu Builder scaffold ─────────────────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS menus (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            slug TEXT NOT NULL UNIQUE,
+            owner_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            title TEXT NOT NULL,
+            event_date DATE,
+            cover_count INTEGER NOT NULL DEFAULT 1,
+            menu_price DECIMAL(10,2),
+            chef_notes TEXT,
+            created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+            updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+            last_exported_at TIMESTAMP
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_menus_owner_user_id ON menus(owner_user_id)
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS menu_recipes (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            menu_id UUID NOT NULL REFERENCES menus(id) ON DELETE CASCADE,
+            recipe_ref TEXT NOT NULL,
+            course_name TEXT NOT NULL,
+            course_order INTEGER NOT NULL,
+            dish_order_within_course INTEGER NOT NULL DEFAULT 1,
+            created_at TIMESTAMP NOT NULL DEFAULT NOW()
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_menu_recipes_menu_id ON menu_recipes(menu_id)
+    """)
+    for stmt in [
+        "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
+    ]:
+        try:
+            cur.execute(stmt)
+        except Exception:
+            pass
     cur.close()
     conn.close()
 
