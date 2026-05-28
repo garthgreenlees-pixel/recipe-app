@@ -14319,7 +14319,20 @@ def _compute_menu_cost_with_provenance(menu_id, covers, menu_price, user_id, reg
             except Exception:
                 ingredients = []
 
-        recipe_portions = max(int(recipe.get("servings") or recipe.get("yield_count") or 1), 1)
+        _srv = recipe.get("servings") or recipe.get("yield_count") or 1
+        if isinstance(_srv, dict):
+            _srv = _srv.get("count") or 1
+        elif isinstance(_srv, str) and not _srv.strip().lstrip("-").replace(".", "", 1).isdigit():
+            try:
+                import json as _json
+                _p = _json.loads(_srv.replace("'", '"'))
+                _srv = _p.get("count", 1) if isinstance(_p, dict) else 1
+            except Exception:
+                _srv = 1
+        try:
+            recipe_portions = max(int(float(_srv or 1)), 1)
+        except (ValueError, TypeError):
+            recipe_portions = 1
         scale = covers / recipe_portions
 
         breakdown, dish_base_cost, unpriced, _ = _cost_ingredient_loop(
