@@ -14428,6 +14428,53 @@ def _suggest_beverages_for_recipe(recipe, limit=5, cur=None):
     return results[:limit]
 
 
+def _extract_method_steps(recipe):
+    """Return a list of step strings from a recipe dict. Handles multiple shapes:
+    1. recipe['steps'] JSONB list of dicts with 'instruction' key (canon recipes)
+    2. recipe['method_steps'] list of strings or dicts
+    3. recipe['recipe_content_jsonb']['method_steps'] (user_kitchen_recipes)
+    4. recipe['full_content']['method_steps'] or ['steps'] (canon JSONB blob)
+    Returns [] if none populated.
+    """
+    fc = recipe.get("full_content") or {}
+    candidates = [
+        recipe.get("steps"),
+        recipe.get("method_steps"),
+        (recipe.get("recipe_content_jsonb") or {}).get("method_steps"),
+        fc.get("method_steps"),
+        fc.get("steps"),
+    ]
+    for c in candidates:
+        if not c:
+            continue
+        if isinstance(c, list):
+            out = []
+            for s in c:
+                if isinstance(s, str) and s.strip():
+                    out.append(s.strip())
+                elif isinstance(s, dict):
+                    text = s.get("instruction") or s.get("text") or s.get("step") or ""
+                    if text.strip():
+                        out.append(text.strip())
+            if out:
+                return out
+        elif isinstance(c, str) and c.strip():
+            return [c.strip()]
+    return []
+
+
+def _extract_service_notes(recipe):
+    """Return service_notes string or None.
+    service_notes is not a first-class DB column (Step 1 discovery) —
+    only read from recipe_content_jsonb.
+    """
+    jsonb = recipe.get("recipe_content_jsonb") or {}
+    val = jsonb.get("service_notes") or jsonb.get("service_note")
+    if isinstance(val, str) and val.strip():
+        return val.strip()
+    return None
+
+
 def _compute_menu_cost_with_provenance(menu_id, covers, menu_price, user_id, region, cur):
     """Like _compute_menu_cost but enriches each ingredient line with Pat's Rule provenance."""
     cur.execute("""
@@ -14462,6 +14509,8 @@ def _compute_menu_cost_with_provenance(menu_id, covers, menu_price, user_id, reg
                 "dish_total_cost": None,
                 "dish_cost_per_cover": None,
                 "has_cost_data": False,
+                "method_steps": [],
+                "service_notes": None,
             })
             any_missing_cost = True
             continue
@@ -14528,6 +14577,8 @@ def _compute_menu_cost_with_provenance(menu_id, covers, menu_price, user_id, reg
             "dish_total_cost": dish_cost_for_menu,
             "dish_cost_per_cover": dish_cost_per_cover,
             "has_cost_data": dish_base_cost > 0,
+            "method_steps": _extract_method_steps(recipe),
+            "service_notes": _extract_service_notes(recipe),
         })
 
     total_food_cost = round(total_food_cost, 2)

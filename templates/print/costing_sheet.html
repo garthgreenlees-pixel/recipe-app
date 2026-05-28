@@ -117,6 +117,61 @@
   text-align: center;
   margin-top: 4mm;
 }
+.pdf-cs-method {
+  margin-top: 5mm;
+  padding-top: 4mm;
+  border-top: 1px dotted #DDD3BE;
+  page-break-inside: avoid;
+}
+.pdf-cs-method__head {
+  font-family: 'DM Mono', monospace;
+  font-size: 7pt;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #C9A84C;
+  margin-bottom: 2.5mm;
+}
+.pdf-cs-method__steps {
+  margin: 0;
+  padding-left: 5mm;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8.5pt;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #1f1b16;
+}
+.pdf-cs-method__steps li { margin-bottom: 1.5mm; }
+.pdf-cs-method__prose {
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8.5pt;
+  font-weight: 300;
+  line-height: 1.55;
+  color: #1f1b16;
+}
+.pdf-cs-method__service {
+  margin-top: 3mm;
+  padding: 2mm 3mm;
+  background: #F4EFE4;
+  border-left: 2px solid #C9A84C;
+}
+.pdf-cs-method__service-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 6.5pt;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #6B6258;
+  margin-bottom: 1mm;
+}
+.pdf-cs-method__service-body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8pt;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #3A332B;
+}
 {% endblock %}
 
 {% block body %}
@@ -158,6 +213,26 @@
       No cost data
     {% endif %}
   </div>
+  {% if dish.method_steps %}
+  <div class="pdf-cs-method">
+    <div class="pdf-cs-method__head">Method</div>
+    {% if dish.method_steps|length > 1 %}
+    <ol class="pdf-cs-method__steps">
+      {% for step in dish.method_steps %}
+      <li>{{ step }}</li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p class="pdf-cs-method__prose">{{ dish.method_steps[0] }}</p>
+    {% endif %}
+    {% if dish.service_notes %}
+    <div class="pdf-cs-method__service">
+      <div class="pdf-cs-method__service-label">Service note</div>
+      <div class="pdf-cs-method__service-body">{{ dish.service_notes }}</div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
 </div>
 {% endfor %}
 
