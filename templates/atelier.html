@@ -11,8 +11,8 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Design tokens — unified for both branches ── */
-:root {
+/* ── Design tokens — scoped to .at-page ── */
+body.at-page {
   /* Legacy atelier tokens — kept for JS-assigned classes */
   --cream:          #F0EDE8;
   --cream-bright:   #FAF7F2;
@@ -26,7 +26,7 @@
   --serif:          Georgia, 'Times New Roman', serif;
   --didot:          'Playfair Display', Georgia, serif;
 
-  /* Wireframe system tokens — compose surface + gate */
+  /* Wireframe system tokens */
   --cream-50:       #FAF7F1;
   --cream-100:      #F4EFE4;
   --cream-200:      #EAE2CE;
@@ -45,95 +45,99 @@
   --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s5: 48px; --s6: 64px;
 }
 
-html { -webkit-font-smoothing: antialiased; background: var(--cream-50); }
-body { font-family: var(--body); background: var(--cream-50); color: var(--charcoal); line-height: 1.65; min-height: 100vh; font-weight: 300; }
+html { -webkit-font-smoothing: antialiased; background: #FAF7F1; }
+body.at-page { font-family: var(--body); background: var(--cream-50); color: var(--charcoal); line-height: 1.65; min-height: 100vh; font-weight: 300; }
 
 /* ── Top bar — shared ── */
-.a-top {
+.at-page .a-top {
   position: sticky; top: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px 24px;
   background: rgba(250,247,241,0.95); backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line-soft);
 }
-.a-wordmark {
+.at-page .a-wordmark {
   font-family: var(--display); font-size: 15px; letter-spacing: 0.02em;
   color: var(--charcoal); text-decoration: none;
 }
-.a-wordmark em { font-style: italic; color: var(--gold-mid); }
-.a-back {
+.at-page .a-wordmark em { font-style: italic; color: var(--gold-mid); }
+.at-page .a-back {
   font-family: var(--mono); font-size: 11px; text-transform: uppercase;
   letter-spacing: 0.1em; color: var(--warm-gray); text-decoration: none;
 }
-.a-back:hover { color: var(--charcoal); }
+.at-page .a-back:hover { color: var(--charcoal); }
 
 /* ── Usage chip — nav ── */
-.usage-chip {
+.at-page .usage-chip {
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
   color: var(--warm-gray); background: var(--cream-100);
   border: 1px solid var(--line-soft); padding: 4px 10px; white-space: nowrap;
 }
-.usage-chip--reserve {
+.at-page .usage-chip--reserve {
   color: var(--tier-reserve); border-color: rgba(122,46,46,0.28);
   background: rgba(122,46,46,0.05); font-weight: 500;
 }
 
 /* ── Compose surface wrapper ── */
-.at-surface {
+.at-page .at-surface {
   max-width: 1100px; margin: 0 auto; padding: 52px 48px 80px;
 }
-@media (max-width: 900px) { .at-surface { padding: 36px 20px 64px; } }
+@media (max-width: 900px) { .at-page .at-surface { padding: 36px 20px 64px; } }
 
 /* ── Brief page header ── */
-.brief-page-header {
+.at-page .brief-page-header {
   display: flex; justify-content: space-between; align-items: flex-start;
   margin-bottom: var(--s5); padding-bottom: var(--s4);
   border-bottom: 1px solid var(--line);
 }
-.brief-page-header__left .eyebrow { margin-bottom: var(--s1); }
-.eyebrow {
+.at-page .brief-page-header__left .eyebrow { margin-bottom: var(--s1); }
+.at-page .eyebrow {
   font-family: var(--body); font-size: 11px; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.16em; color: var(--warm-gray);
 }
-.brief-page-header h2 {
+.at-page .brief-page-header h2 {
   font-family: var(--display); font-size: 38px; font-weight: 500;
   font-style: italic; letter-spacing: -0.01em; line-height: 1.15;
   color: var(--charcoal);
 }
-@media (max-width: 600px) { .brief-page-header h2 { font-size: 28px; } }
+@media (max-width: 600px) { .at-page .brief-page-header h2 { font-size: 28px; } }
 
 /* ── Hint chips ── */
-.brief-hint-row {
+.at-page .brief-hint-row {
   display: flex; flex-wrap: wrap; gap: var(--s1); margin-bottom: var(--s4);
 }
-.brief-hint {
+.at-page .brief-hint {
   font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
   background: var(--cream-100); border: 1px solid var(--line-soft);
-  padding: 5px 12px; cursor: default; letter-spacing: 0.01em;
+  padding: 5px 12px; cursor: pointer; letter-spacing: 0.01em;
+  transition: background 0.15s, color 0.15s;
+}
+.at-page .brief-hint:hover {
+  background: var(--cream-200); color: var(--charcoal);
 }
 
 /* ── Brief form ── */
-.brief-form-wrap { max-width: 700px; }
-.brief-textarea {
+.at-page .brief-form-wrap { max-width: 700px; }
+.at-page .brief-textarea {
   display: block; width: 100%; min-height: 120px; padding: var(--s3);
   font-family: var(--display); font-style: italic;
   font-size: 17px; line-height: 1.7; color: var(--charcoal);
   background: var(--cream-50); border: 1.5px solid var(--line);
   resize: vertical; outline: none; transition: border-color 0.2s;
 }
-.brief-textarea:focus { border-color: var(--gold); }
-.brief-textarea::placeholder { font-family: var(--display); font-style: italic; color: var(--warm-gray-light); }
-.brief-form-actions {
+.at-page .brief-textarea:focus { border-color: var(--gold); }
+.at-page .brief-textarea::placeholder { font-family: var(--display); font-style: italic; color: var(--warm-gray-light); }
+.at-page .brief-form-actions {
   margin-top: var(--s2); display: flex; align-items: center; gap: var(--s3);
   flex-wrap: wrap;
 }
-.brief-form-hint {
+.at-page .brief-form-hint {
   font-family: var(--mono); font-size: 10px; color: var(--warm-gray-light);
   letter-spacing: 0.04em;
 }
 
 /* ── Buttons (wireframe system) ── */
-.btn {
+.at-page .btn {
   font-family: var(--body); font-size: 14px; font-weight: 600;
   letter-spacing: 0.02em; padding: 12px 28px;
   border: 1.5px solid var(--charcoal);
@@ -141,25 +145,25 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
   cursor: pointer; display: inline-block; text-decoration: none;
   transition: background 0.2s, color 0.2s;
 }
-.btn:hover { background: var(--cream-50); color: var(--charcoal); }
-.btn:disabled { opacity: 0.42; cursor: not-allowed; }
-.link-gold {
+.at-page .btn:hover { background: var(--cream-50); color: var(--charcoal); }
+.at-page .btn:disabled { opacity: 0.42; cursor: not-allowed; }
+.at-page .link-gold {
   font-family: var(--body); font-size: 14px; font-weight: 500;
   color: var(--charcoal); text-decoration: none;
   border-bottom: 1.5px solid var(--gold); padding-bottom: 1px;
 }
-.link-muted {
+.at-page .link-muted {
   font-family: var(--body); font-size: 14px;
   color: var(--warm-gray); text-decoration: none;
   border-bottom: 1px solid var(--line-soft); padding-bottom: 1px;
 }
 
 /* ── Legacy brief-form classes (kept so existing layout still works) ── */
-.a-brief-ta { /* alias — full styling from .brief-textarea above */ }
-.a-compose-btn { /* alias — full styling from .btn above */ }
+.at-page .a-brief-ta { /* alias — full styling from .brief-textarea above */ }
+.at-page .a-compose-btn { /* alias — full styling from .btn above */ }
 
 /* ── Status bar ── */
-.a-status {
+.at-page .a-status {
   font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em;
   color: var(--warm-gray); background: var(--cream-100);
   border: 1px solid var(--line-soft); padding: var(--s2) var(--s3);
@@ -168,23 +172,23 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
 }
 
 /* ── Parse chips (a-chip = parse-chip style) ── */
-.a-chips {
+.at-page .a-chips {
   max-width: 700px; margin: var(--s2) 0 var(--s3);
   display: none; flex-wrap: wrap; gap: var(--s1);
 }
-.a-chip {
+.at-page .a-chip {
   display: inline-flex; align-items: center; gap: 7px;
   font-family: var(--mono); font-size: 11px;
   border: 1px solid var(--gold-soft); background: var(--cream-50);
   padding: 5px 12px; color: var(--charcoal);
 }
-.a-chip-key {
+.at-page .a-chip-key {
   font-size: 9px; text-transform: uppercase; letter-spacing: 0.14em;
   color: var(--warm-gray);
 }
 
 /* ── Error ── */
-.a-error {
+.at-page .a-error {
   max-width: 700px; margin: var(--s2) 0;
   padding: 12px 16px;
   background: rgba(122,46,46,0.04); border: 1px solid rgba(122,46,46,0.2);
@@ -193,24 +197,24 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
 }
 
 /* ── Result area — courses rendered inside by JS ── */
-.a-result { max-width: 900px; margin: var(--s4) 0 80px; display: none; }
+.at-page .a-result { max-width: 900px; margin: var(--s4) 0 80px; display: none; }
 
 /* ── Comp header (JS renders this at top of resultArea) ── */
-.comp-header {
+.at-page .comp-header {
   display: flex; justify-content: space-between; align-items: flex-end;
   padding-bottom: var(--s3); margin-bottom: var(--s4);
   border-bottom: 1px solid var(--line);
 }
-.comp-header h3 {
+.at-page .comp-header h3 {
   font-family: var(--display); font-size: 26px; font-style: italic;
   font-weight: 500; color: var(--charcoal); line-height: 1.2;
 }
-.comp-header__meta {
+.at-page .comp-header__meta {
   font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
   text-align: right;
 }
-.comp-header__meta div { margin-bottom: 2px; }
-.comp-header__mode-chip {
+.at-page .comp-header__meta div { margin-bottom: 2px; }
+.at-page .comp-header__mode-chip {
   display: inline-block; font-family: var(--mono); font-size: 9px;
   font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em;
   padding: 3px 9px; color: var(--tier-reserve);
@@ -218,18 +222,18 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
 }
 
 /* ── a-result-head — legacy hook styled as comp-header ── */
-.a-result-head {
+.at-page .a-result-head {
   padding-bottom: var(--s3); margin-bottom: var(--s4);
   border-bottom: 1px solid var(--line);
 }
-.a-result-head .a-result-title {
+.at-page .a-result-head .a-result-title {
   font-family: var(--display); font-size: 26px; font-style: italic;
   font-weight: 500; color: var(--charcoal); margin-bottom: 6px;
 }
-.a-result-head .a-result-meta {
+.at-page .a-result-head .a-result-meta {
   font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
 }
-.a-result-badge {
+.at-page .a-result-badge {
   display: inline-block; padding: 2px 9px;
   border: 1px solid rgba(122,46,46,0.3); background: rgba(122,46,46,0.05);
   font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em;
@@ -238,90 +242,90 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
 }
 
 /* ── Course cards (a-course = course-card) ── */
-.comp-courses { display: flex; flex-direction: column; gap: var(--s3); margin-bottom: var(--s4); }
+.at-page .comp-courses { display: flex; flex-direction: column; gap: var(--s3); margin-bottom: var(--s4); }
 
-.a-course {
+.at-page .a-course {
   background: var(--cream-50); border: 1px solid var(--line-soft);
   padding: var(--s4); position: relative; transition: border-color 0.2s;
 }
-.a-course:hover { border-color: var(--gold-soft); }
-.a-course.is-freeform { background: var(--cream-100); }
+.at-page .a-course:hover { border-color: var(--gold-soft); }
+.at-page .a-course.is-freeform { background: var(--cream-100); }
 
 /* Course card top row (position + badge) */
-.course-card__top {
+.at-page .course-card__top {
   display: flex; justify-content: space-between; align-items: flex-start;
   margin-bottom: var(--s2);
 }
 
 /* Course position (a-course-pos = course-card__pos) */
-.a-course-pos {
+.at-page .a-course-pos {
   font-family: var(--mono); font-size: 13px; font-weight: 500;
   text-transform: uppercase; letter-spacing: 0.18em; color: var(--warm-gray);
 }
 
 /* Badges */
-.badge {
+.at-page .badge {
   font-family: var(--mono); font-size: 9px; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.14em;
   padding: 4px 10px; border: 1px solid; flex-shrink: 0;
 }
-.badge--library { color: var(--gold); border-color: var(--gold); background: rgba(201,168,76,0.07); }
-.badge--draft   { color: var(--warm-gray); border-color: var(--line); background: var(--cream-100); }
+.at-page .badge--library { color: var(--gold); border-color: var(--gold); background: rgba(201,168,76,0.07); }
+.at-page .badge--draft   { color: var(--warm-gray); border-color: var(--line); background: var(--cream-100); }
 
 /* Course name (a-course-name = course-name) */
-.a-course-name {
+.at-page .a-course-name {
   font-family: var(--display); font-size: 22px; line-height: 1.25;
   margin-bottom: var(--s2); color: var(--charcoal);
 }
-.a-course-name.course-name--canon   { font-style: normal; font-weight: 500; }
-.a-course-name.course-name--freeform { font-style: italic; }
+.at-page .a-course-name.course-name--canon   { font-style: normal; font-weight: 500; }
+.at-page .a-course-name.course-name--freeform { font-style: italic; }
 
 /* Course description (a-course-desc = course-desc) */
-.a-course-desc {
+.at-page .a-course-desc {
   font-family: var(--body); font-size: 14px; line-height: 1.75;
   color: var(--charcoal-soft); max-width: 780px; margin-bottom: var(--s3);
   font-weight: 300;
 }
 
 /* ── Lineage rows — atelier-lineage-section restyled ── */
-.atelier-lineage-section { margin-bottom: var(--s1); }
-.lineage-row {
+.at-page .atelier-lineage-section { margin-bottom: var(--s1); }
+.at-page .lineage-row {
   display: flex; align-items: center; flex-wrap: wrap; gap: var(--s1);
   margin-bottom: var(--s1);
 }
-.atelier-lineage-label, .lineage-lbl {
+.at-page .atelier-lineage-label, .at-page .lineage-lbl {
   font-family: var(--mono); font-size: 9px; text-transform: uppercase;
   letter-spacing: 0.16em; color: var(--warm-gray-light);
   flex-shrink: 0; min-width: 64px;
 }
 
 /* Chips — atelier technique/ingredient/pour links restyled as lchips */
-.atelier-technique-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1); }
-.atelier-technique-list li { padding: 0; border: none; }
-.atelier-technique-link {
+.at-page .atelier-technique-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1); }
+.at-page .atelier-technique-list li { padding: 0; border: none; }
+.at-page .atelier-technique-link {
   font-family: var(--mono); font-size: 10px; color: var(--charcoal-soft);
   background: var(--cream-100); border: 1px solid var(--line-soft);
   border-left: 2px solid var(--gold);
   padding: 3px 9px; text-decoration: none; display: inline-block;
   transition: border-color 0.15s;
 }
-.atelier-technique-link:hover { border-left-color: var(--gold-soft); color: var(--charcoal); }
+.at-page .atelier-technique-link:hover { border-left-color: var(--gold-soft); color: var(--charcoal); }
 
-.atelier-ingredient-wrap {
+.at-page .atelier-ingredient-wrap {
   display: flex; flex-wrap: wrap; gap: var(--s1);
 }
-.atelier-ingredient {
+.at-page .atelier-ingredient {
   font-family: var(--mono); font-size: 10px; color: var(--charcoal-soft);
   background: var(--cream-100); border: 1px solid var(--line-soft);
   border-left: 2px solid var(--charcoal);
   padding: 3px 9px; font-style: normal;
 }
 /* Remove middot pseudo-content for the chip layout */
-.atelier-ingredient + .atelier-ingredient::before { content: none; }
+.at-page .atelier-ingredient + .atelier-ingredient::before { content: none; }
 
-.atelier-pour-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1); }
-.atelier-pour-list li { padding: 0; border: none; }
-.atelier-pour-link {
+.at-page .atelier-pour-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1); }
+.at-page .atelier-pour-list li { padding: 0; border: none; }
+.at-page .atelier-pour-link {
   font-family: var(--mono); font-size: 10px; color: var(--charcoal-soft);
   background: var(--cream-100); border: 1px solid var(--line-soft);
   border-left: 2px solid var(--burgundy);
@@ -329,11 +333,11 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
   font-style: normal; font-weight: normal;
   transition: border-color 0.15s;
 }
-.atelier-pour-link:hover { color: var(--gold); }
-.atelier-pour-region { font-style: normal; color: var(--warm-gray); font-size: 10px; }
+.at-page .atelier-pour-link:hover { color: var(--gold); }
+.at-page .atelier-pour-region { font-style: normal; color: var(--warm-gray); font-size: 10px; }
 
 /* Library recipe link — kept for backward compat */
-.atelier-library-recipe {
+.at-page .atelier-library-recipe {
   display: flex; align-items: center; gap: 1rem;
   margin: var(--s2) 0 var(--s3); padding: var(--s2) var(--s3);
   background: rgba(201,168,76,0.05);
@@ -341,17 +345,17 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
   text-decoration: none; color: inherit;
   transition: background 200ms ease, border-color 200ms ease;
 }
-.atelier-library-recipe:hover { background: rgba(201,168,76,0.1); border-left-color: var(--gold); }
-.atelier-library-recipe-eyebrow {
+.at-page .atelier-library-recipe:hover { background: rgba(201,168,76,0.1); border-left-color: var(--gold); }
+.at-page .atelier-library-recipe-eyebrow {
   font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.16em;
   text-transform: uppercase; color: var(--warm-gray); flex-shrink: 0;
 }
-.atelier-library-recipe-name { flex: 1; font-family: var(--display); font-style: italic; font-size: 1.05rem; color: var(--charcoal); }
-.atelier-library-recipe-arrow { flex-shrink: 0; color: var(--gold-mid); font-size: 1.1rem; transition: transform 200ms ease; }
-.atelier-library-recipe:hover .atelier-library-recipe-arrow { transform: translateX(3px); color: var(--gold); }
+.at-page .atelier-library-recipe-name { flex: 1; font-family: var(--display); font-style: italic; font-size: 1.05rem; color: var(--charcoal); }
+.at-page .atelier-library-recipe-arrow { flex-shrink: 0; color: var(--gold-mid); font-size: 1.1rem; transition: transform 200ms ease; }
+.at-page .atelier-library-recipe:hover .atelier-library-recipe-arrow { transform: translateX(3px); color: var(--gold); }
 
 /* ── Action bar ── */
-.comp-actions {
+.at-page .comp-actions {
   display: flex; align-items: center; gap: var(--s4);
   padding: var(--s4) 0; border-top: 1px solid var(--line);
   margin-top: var(--s2); flex-wrap: wrap;
@@ -360,99 +364,99 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
 
 {% if not has_addon %}
 <style>
-/* ── Gate screen — CSS for {% else %} branch ── */
-.gate-wrap {
+/* ── Gate screen — CSS for gate branch only ── */
+.at-page .gate-wrap {
   max-width: 1100px; margin: 0 auto; padding: 56px 48px 80px;
 }
-@media (max-width: 768px) { .gate-wrap { padding: 40px 20px 64px; } }
+@media (max-width: 768px) { .at-page .gate-wrap { padding: 40px 20px 64px; } }
 
-.gate-intro { margin-bottom: var(--s5); }
-.gate-eyebrow {
+.at-page .gate-intro { margin-bottom: var(--s5); }
+.at-page .gate-eyebrow {
   font-family: var(--body); font-size: 11px; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.16em;
   color: var(--warm-gray); margin-bottom: var(--s1);
 }
-.gate-heading {
+.at-page .gate-heading {
   font-family: var(--display); font-size: 38px; font-weight: 500;
   line-height: 1.15; letter-spacing: -0.01em;
   color: var(--charcoal); margin-bottom: var(--s2);
 }
-.gate-lede {
+.at-page .gate-lede {
   font-family: var(--body); font-size: 14px; line-height: 1.7;
   color: var(--charcoal-soft); max-width: 520px; margin: 0;
 }
 
-.gate-layout {
+.at-page .gate-layout {
   display: grid; grid-template-columns: 1fr 340px;
   gap: 0; align-items: start; border: 1px solid var(--line-soft);
 }
-@media (max-width: 768px) { .gate-layout { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .at-page .gate-layout { grid-template-columns: 1fr; } }
 
-.gate-preview-col {
+.at-page .gate-preview-col {
   position: relative; overflow: hidden; border-right: 1px solid var(--line-soft);
 }
-@media (max-width: 768px) { .gate-preview-col { border-right: none; border-bottom: 1px solid var(--line-soft); } }
-.gate-preview {
+@media (max-width: 768px) { .at-page .gate-preview-col { border-right: none; border-bottom: 1px solid var(--line-soft); } }
+.at-page .gate-preview {
   filter: blur(4px); opacity: 0.55;
   pointer-events: none; user-select: none; padding: var(--s4);
 }
-.gate-preview-title {
+.at-page .gate-preview-title {
   font-family: var(--display); font-size: 28px; font-style: italic;
   color: var(--charcoal); margin-bottom: 4px;
 }
-.gate-preview-sub {
+.at-page .gate-preview-sub {
   font-family: var(--mono); font-size: 10px; text-transform: uppercase;
   letter-spacing: 0.18em; color: var(--warm-gray); margin-bottom: var(--s4);
 }
-.gate-preview-course { padding: var(--s2) 0; border-bottom: 1px solid var(--line-soft); }
-.gate-preview-course:last-child { border-bottom: none; }
-.gate-preview-pos {
+.at-page .gate-preview-course { padding: var(--s2) 0; border-bottom: 1px solid var(--line-soft); }
+.at-page .gate-preview-course:last-child { border-bottom: none; }
+.at-page .gate-preview-pos {
   font-family: var(--mono); font-size: 10px; text-transform: uppercase;
   letter-spacing: 0.2em; color: var(--warm-gray); margin-bottom: 3px;
 }
-.gate-preview-name { font-family: var(--display); font-size: 17px; color: var(--charcoal); margin-bottom: 3px; }
-.gate-preview-desc { font-size: 13px; color: var(--charcoal-soft); line-height: 1.55; }
+.at-page .gate-preview-name { font-family: var(--display); font-size: 17px; color: var(--charcoal); margin-bottom: 3px; }
+.at-page .gate-preview-desc { font-size: 13px; color: var(--charcoal-soft); line-height: 1.55; }
 
-.gate-veil {
+.at-page .gate-veil {
   position: absolute; inset: 0;
   background: linear-gradient(105deg, rgba(250,247,241,0.12) 0%, rgba(250,247,241,0.55) 55%, rgba(250,247,241,0.82) 100%);
   backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); pointer-events: none;
 }
 
-.gate-panel {
+.at-page .gate-panel {
   padding: var(--s5) var(--s4); background: var(--cream-50);
   display: flex; flex-direction: column;
 }
-.gate-panel__eyebrow {
+.at-page .gate-panel__eyebrow {
   font-family: var(--mono); font-size: 10px; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.18em;
   color: var(--tier-reserve); margin-bottom: var(--s3);
   display: flex; align-items: center; gap: 8px;
 }
-.gate-panel__eyebrow::before {
+.at-page .gate-panel__eyebrow::before {
   content: ''; display: inline-block; width: 8px; height: 8px;
   border-radius: 50%; background: var(--tier-reserve);
 }
-.gate-panel__headline {
+.at-page .gate-panel__headline {
   font-family: var(--display); font-size: 23px; line-height: 1.25;
   color: var(--charcoal); margin-bottom: var(--s4);
 }
-.gate-panel__price-block { margin-bottom: var(--s3); }
-.gate-panel__price-main {
+.at-page .gate-panel__price-block { margin-bottom: var(--s3); }
+.at-page .gate-panel__price-main {
   font-family: var(--display); font-size: 30px; font-weight: 600;
   color: var(--charcoal); display: block; margin-bottom: 4px;
 }
-.gate-panel__price-alt {
+.at-page .gate-panel__price-alt {
   font-family: var(--mono); font-size: 12px; color: var(--warm-gray);
   letter-spacing: 0.04em; padding: 4px 0;
   border-top: 1px solid var(--line-soft); display: block; margin-top: 4px;
 }
-.gate-panel__desc {
+.at-page .gate-panel__desc {
   font-family: var(--body); font-size: 13px; color: var(--warm-gray);
   line-height: 1.65; margin-bottom: var(--s4);
   padding-bottom: var(--s4); border-bottom: 1px solid var(--line-soft);
 }
-.gate-panel__cta {
+.at-page .gate-panel__cta {
   display: block; width: 100%; text-align: center;
   font-family: var(--body); font-size: 14px; font-weight: 600;
   letter-spacing: 0.02em; padding: 13px 24px;
@@ -460,11 +464,11 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
   background: var(--charcoal); color: var(--cream-50);
   text-decoration: none; transition: background 0.2s, color 0.2s;
 }
-.gate-panel__cta:hover { background: var(--cream-50); color: var(--charcoal); }
+.at-page .gate-panel__cta:hover { background: var(--cream-50); color: var(--charcoal); }
 </style>
 {% endif %}
 </head>
-<body>
+<body class="at-page">
 
 <div class="a-top">
   <a class="a-wordmark" href="/"><em>l'</em>Atelier</a>
@@ -528,6 +532,16 @@ body { font-family: var(--body); background: var(--cream-50); color: var(--charc
 </div><!-- /at-surface -->
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+  var ta = document.getElementById('briefTa');
+  document.querySelectorAll('.brief-hint').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      ta.value = chip.textContent.trim();
+      ta.focus();
+    });
+  });
+});
+
 async function runCompose() {
   const ta      = document.getElementById('briefTa');
   const btn     = document.getElementById('composeBtn');
