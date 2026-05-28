@@ -7,265 +7,365 @@
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --cream:#F0EDE8;
-  --cream-bright:#FAF7F2;
-  --gold:#C9A84C;
-  --gold-mid:#A8966B;
-  --burgundy:#8B2C1A;
-  --divider:#E7E5E4;
-  --text:#1C1917;
-  --text-mid:#444441;
-  --text-muted:#888780;
-  --serif:Georgia,'Times New Roman',serif;
-  --didot:'Playfair Display',Georgia,serif;
-}
-html{-webkit-font-smoothing:antialiased;background:var(--cream)}
-body{font-family:var(--serif);background:var(--cream);color:var(--text);line-height:1.65;min-height:100vh}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Top bar ── */
-.a-top{
-  position:sticky;top:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 24px;
-  background:rgba(240,237,232,0.94);backdrop-filter:blur(10px);
-  border-bottom:0.5px solid rgba(0,0,0,0.08);
-}
-.a-wordmark{
-  font-family:var(--didot);font-size:15px;letter-spacing:0.04em;
-  color:var(--text);text-decoration:none;
-}
-.a-wordmark em{font-style:italic;color:var(--gold-mid)}
-.a-back{
-  font-size:12px;color:var(--text-muted);text-decoration:none;
-  letter-spacing:0.02em;
-}
-.a-back:hover{color:var(--text)}
+/* ── Design tokens — unified for both branches ── */
+:root {
+  /* Legacy atelier tokens — kept for JS-assigned classes */
+  --cream:          #F0EDE8;
+  --cream-bright:   #FAF7F2;
+  --gold:           #C9A84C;
+  --gold-mid:       #A8966B;
+  --burgundy:       #8B2C1A;
+  --divider:        #E7E5E4;
+  --text:           #1C1917;
+  --text-mid:       #444441;
+  --text-muted:     #888780;
+  --serif:          Georgia, 'Times New Roman', serif;
+  --didot:          'Playfair Display', Georgia, serif;
 
-/* ── Hero ── */
-.a-hero{
-  max-width:640px;margin:64px auto 44px;padding:0 24px;text-align:center;
+  /* Wireframe system tokens — compose surface + gate */
+  --cream-50:       #FAF7F1;
+  --cream-100:      #F4EFE4;
+  --cream-200:      #EAE2CE;
+  --line:           #C9C0B0;
+  --line-soft:      #DDD3BE;
+  --charcoal:       #1F1B16;
+  --charcoal-soft:  #3A332B;
+  --warm-gray:      #6B6258;
+  --warm-gray-light:#948B7F;
+  --gold-soft:      #D4B679;
+  --tier-reserve:   #7A2E2E;
+  --tier-library:   #4A6B8A;
+  --display:        'Playfair Display', Georgia, serif;
+  --body:           'DM Sans', system-ui, sans-serif;
+  --mono:           'DM Mono', 'Courier New', monospace;
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s5: 48px; --s6: 64px;
 }
-.a-eyebrow{
-  font-size:10px;letter-spacing:4px;text-transform:uppercase;
-  color:var(--gold-mid);margin-bottom:18px;
+
+html { -webkit-font-smoothing: antialiased; background: var(--cream-50); }
+body { font-family: var(--body); background: var(--cream-50); color: var(--charcoal); line-height: 1.65; min-height: 100vh; font-weight: 300; }
+
+/* ── Top bar — shared ── */
+.a-top {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px;
+  background: rgba(250,247,241,0.95); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line-soft);
 }
-.a-title{
-  font-family:var(--didot);font-size:clamp(28px,5vw,42px);font-weight:400;
-  color:var(--text);line-height:1.15;margin-bottom:14px;
+.a-wordmark {
+  font-family: var(--display); font-size: 15px; letter-spacing: 0.02em;
+  color: var(--charcoal); text-decoration: none;
 }
-.a-title em{font-style:italic}
-.a-subtitle{
-  font-size:14px;color:var(--text-muted);line-height:1.75;
+.a-wordmark em { font-style: italic; color: var(--gold-mid); }
+.a-back {
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--warm-gray); text-decoration: none;
+}
+.a-back:hover { color: var(--charcoal); }
+
+/* ── Usage chip — nav ── */
+.usage-chip {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--warm-gray); background: var(--cream-100);
+  border: 1px solid var(--line-soft); padding: 4px 10px; white-space: nowrap;
+}
+.usage-chip--reserve {
+  color: var(--tier-reserve); border-color: rgba(122,46,46,0.28);
+  background: rgba(122,46,46,0.05); font-weight: 500;
+}
+
+/* ── Compose surface wrapper ── */
+.at-surface {
+  max-width: 1100px; margin: 0 auto; padding: 52px 48px 80px;
+}
+@media (max-width: 900px) { .at-surface { padding: 36px 20px 64px; } }
+
+/* ── Brief page header ── */
+.brief-page-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: var(--s5); padding-bottom: var(--s4);
+  border-bottom: 1px solid var(--line);
+}
+.brief-page-header__left .eyebrow { margin-bottom: var(--s1); }
+.eyebrow {
+  font-family: var(--body); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.16em; color: var(--warm-gray);
+}
+.brief-page-header h2 {
+  font-family: var(--display); font-size: 38px; font-weight: 500;
+  font-style: italic; letter-spacing: -0.01em; line-height: 1.15;
+  color: var(--charcoal);
+}
+@media (max-width: 600px) { .brief-page-header h2 { font-size: 28px; } }
+
+/* ── Hint chips ── */
+.brief-hint-row {
+  display: flex; flex-wrap: wrap; gap: var(--s1); margin-bottom: var(--s4);
+}
+.brief-hint {
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
+  background: var(--cream-100); border: 1px solid var(--line-soft);
+  padding: 5px 12px; cursor: default; letter-spacing: 0.01em;
 }
 
 /* ── Brief form ── */
-.a-form{max-width:640px;margin:0 auto 60px;padding:0 24px}
-.a-brief-label{
-  display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--gold-mid);margin-bottom:10px;
+.brief-form-wrap { max-width: 700px; }
+.brief-textarea {
+  display: block; width: 100%; min-height: 120px; padding: var(--s3);
+  font-family: var(--display); font-style: italic;
+  font-size: 17px; line-height: 1.7; color: var(--charcoal);
+  background: var(--cream-50); border: 1.5px solid var(--line);
+  resize: vertical; outline: none; transition: border-color 0.2s;
 }
-.a-brief-ta{
-  width:100%;min-height:120px;padding:16px 18px;
-  font-family:var(--serif);font-size:15px;line-height:1.7;
-  color:var(--text);background:var(--cream-bright);
-  border:1px solid rgba(0,0,0,0.12);border-radius:4px;
-  resize:vertical;outline:none;transition:border-color 0.2s;
+.brief-textarea:focus { border-color: var(--gold); }
+.brief-textarea::placeholder { font-family: var(--display); font-style: italic; color: var(--warm-gray-light); }
+.brief-form-actions {
+  margin-top: var(--s2); display: flex; align-items: center; gap: var(--s3);
+  flex-wrap: wrap;
 }
-.a-brief-ta:focus{border-color:var(--gold-mid)}
-.a-brief-ta::placeholder{color:var(--text-muted);font-style:italic}
-.a-compose-btn{
-  margin-top:14px;width:100%;padding:15px;
-  font-family:var(--didot);font-size:16px;font-weight:400;letter-spacing:0.03em;
-  color:#fff;background:var(--burgundy);border:none;border-radius:4px;
-  cursor:pointer;transition:opacity 0.2s;
+.brief-form-hint {
+  font-family: var(--mono); font-size: 10px; color: var(--warm-gray-light);
+  letter-spacing: 0.04em;
 }
-.a-compose-btn:hover{opacity:0.88}
-.a-compose-btn:disabled{opacity:0.42;cursor:not-allowed}
+
+/* ── Buttons (wireframe system) ── */
+.btn {
+  font-family: var(--body); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.02em; padding: 12px 28px;
+  border: 1.5px solid var(--charcoal);
+  background: var(--charcoal); color: var(--cream-50);
+  cursor: pointer; display: inline-block; text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.btn:hover { background: var(--cream-50); color: var(--charcoal); }
+.btn:disabled { opacity: 0.42; cursor: not-allowed; }
+.link-gold {
+  font-family: var(--body); font-size: 14px; font-weight: 500;
+  color: var(--charcoal); text-decoration: none;
+  border-bottom: 1.5px solid var(--gold); padding-bottom: 1px;
+}
+.link-muted {
+  font-family: var(--body); font-size: 14px;
+  color: var(--warm-gray); text-decoration: none;
+  border-bottom: 1px solid var(--line-soft); padding-bottom: 1px;
+}
+
+/* ── Legacy brief-form classes (kept so existing layout still works) ── */
+.a-brief-ta { /* alias — full styling from .brief-textarea above */ }
+.a-compose-btn { /* alias — full styling from .btn above */ }
 
 /* ── Status bar ── */
-.a-status{
-  max-width:640px;margin:0 auto 20px;padding:0 24px;
-  font-size:13px;color:var(--text-muted);font-style:italic;
-  display:none;
+.a-status {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em;
+  color: var(--warm-gray); background: var(--cream-100);
+  border: 1px solid var(--line-soft); padding: var(--s2) var(--s3);
+  text-align: center; margin: var(--s3) 0; max-width: 700px;
+  display: none;
 }
 
-/* ── Parse chips ── */
-.a-chips{
-  max-width:640px;margin:0 auto 28px;padding:0 24px;
-  display:none;flex-wrap:wrap;gap:7px;
+/* ── Parse chips (a-chip = parse-chip style) ── */
+.a-chips {
+  max-width: 700px; margin: var(--s2) 0 var(--s3);
+  display: none; flex-wrap: wrap; gap: var(--s1);
 }
-.a-chip{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:4px 10px;
-  border:0.5px solid var(--gold-mid);border-radius:20px;
-  font-size:11.5px;color:var(--text-mid);
+.a-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 11px;
+  border: 1px solid var(--gold-soft); background: var(--cream-50);
+  padding: 5px 12px; color: var(--charcoal);
 }
-.a-chip-key{
-  font-size:10px;letter-spacing:1px;text-transform:uppercase;
-  color:var(--gold-mid);margin-right:2px;
+.a-chip-key {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--warm-gray);
 }
 
 /* ── Error ── */
-.a-error{
-  max-width:640px;margin:0 auto 24px;padding:12px 16px;
-  background:rgba(139,44,26,0.06);
-  border:0.5px solid rgba(139,44,26,0.2);
-  border-radius:4px;font-size:13px;color:var(--burgundy);
-  display:none;
+.a-error {
+  max-width: 700px; margin: var(--s2) 0;
+  padding: 12px 16px;
+  background: rgba(122,46,46,0.04); border: 1px solid rgba(122,46,46,0.2);
+  font-family: var(--mono); font-size: 12px; color: var(--tier-reserve);
+  display: none;
 }
 
-/* ── Result ── */
-.a-result{
-  max-width:700px;margin:0 auto 80px;padding:0 24px;
-  display:none;
+/* ── Result area — courses rendered inside by JS ── */
+.a-result { max-width: 900px; margin: var(--s4) 0 80px; display: none; }
+
+/* ── Comp header (JS renders this at top of resultArea) ── */
+.comp-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding-bottom: var(--s3); margin-bottom: var(--s4);
+  border-bottom: 1px solid var(--line);
 }
-.a-result-head{
-  border-bottom:1px solid rgba(0,0,0,0.1);
-  padding-bottom:20px;margin-bottom:36px;
+.comp-header h3 {
+  font-family: var(--display); font-size: 26px; font-style: italic;
+  font-weight: 500; color: var(--charcoal); line-height: 1.2;
 }
-.a-result-title{
-  font-family:var(--didot);font-size:26px;font-weight:400;
-  color:var(--text);margin-bottom:6px;
+.comp-header__meta {
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
+  text-align: right;
 }
-.a-result-meta{
-  font-size:12px;color:var(--text-muted);letter-spacing:0.3px;
-}
-.a-result-badge{
-  display:inline-block;padding:2px 9px;
-  border:0.5px solid var(--gold-mid);border-radius:20px;
-  font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--gold-mid);margin-left:8px;vertical-align:middle;
-}
-.a-course{
-  margin-bottom:36px;padding-bottom:36px;
-  border-bottom:0.5px solid var(--divider);
-}
-.a-course:last-child{border-bottom:none}
-.a-course-pos{
-  font-size:10px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--gold-mid);margin-bottom:5px;
-}
-.a-course-name{
-  font-family:var(--didot);font-size:20px;font-weight:400;
-  color:var(--text);margin-bottom:8px;line-height:1.3;
-}
-.a-course-desc{
-  font-size:14px;color:var(--text-mid);line-height:1.8;
-}
-/* ── Library recipe link ─────────────────────────────────────────── */
-.atelier-library-recipe{
-  display:flex;align-items:center;gap:1rem;
-  margin:1.25rem 0 1.5rem;padding:1rem 1.25rem;
-  background:rgba(201,168,76,0.05);
-  border-left:2px solid rgba(201,168,76,0.55);
-  text-decoration:none;color:inherit;
-  transition:background 200ms ease,border-color 200ms ease;
-}
-.atelier-library-recipe:hover{
-  background:rgba(201,168,76,0.1);border-left-color:rgba(201,168,76,1);
-}
-.atelier-library-recipe-eyebrow{
-  font-family:'DM Mono','IBM Plex Mono',monospace;
-  font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;
-  color:var(--text-muted);flex-shrink:0;
-}
-.atelier-library-recipe-name{
-  flex:1;font-family:var(--didot);font-style:italic;
-  font-size:1.05rem;color:var(--text);
-}
-.atelier-library-recipe-arrow{
-  flex-shrink:0;font-family:var(--serif);
-  color:var(--gold-mid);font-size:1.1rem;
-  transition:transform 200ms ease;
-}
-.atelier-library-recipe:hover .atelier-library-recipe-arrow{
-  transform:translateX(3px);color:var(--gold);
+.comp-header__meta div { margin-bottom: 2px; }
+.comp-header__mode-chip {
+  display: inline-block; font-family: var(--mono); font-size: 9px;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em;
+  padding: 3px 9px; color: var(--tier-reserve);
+  border: 1px solid rgba(122,46,46,0.3); background: rgba(122,46,46,0.05);
 }
 
-/* ── Lineage sections ────────────────────────────────────────────── */
-.atelier-lineage-section{margin-top:1.5rem}
-.atelier-lineage-label{
-  font-family:'DM Mono','IBM Plex Mono',var(--serif);
-  font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;
-  color:var(--text-muted);margin-bottom:0.65rem;
+/* ── a-result-head — legacy hook styled as comp-header ── */
+.a-result-head {
+  padding-bottom: var(--s3); margin-bottom: var(--s4);
+  border-bottom: 1px solid var(--line);
 }
-/* Techniques — italic linked list */
-.atelier-technique-list{list-style:none;margin:0;padding:0}
-.atelier-technique-list li{
-  padding:0.35rem 0;border-bottom:1px solid rgba(0,0,0,0.05);
+.a-result-head .a-result-title {
+  font-family: var(--display); font-size: 26px; font-style: italic;
+  font-weight: 500; color: var(--charcoal); margin-bottom: 6px;
 }
-.atelier-technique-list li:last-child{border-bottom:none}
-.atelier-technique-link{
-  font-family:var(--didot);font-style:italic;
-  font-size:1rem;line-height:1.4;color:var(--text-mid);
-  text-decoration:none;border-bottom:1px solid transparent;
-  padding-bottom:1px;transition:color 180ms ease,border-color 180ms ease;
+.a-result-head .a-result-meta {
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
 }
-.atelier-technique-link:hover{
-  color:var(--gold);border-bottom-color:rgba(201,168,76,0.6);
+.a-result-badge {
+  display: inline-block; padding: 2px 9px;
+  border: 1px solid rgba(122,46,46,0.3); background: rgba(122,46,46,0.05);
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--tier-reserve);
+  margin-left: 8px; vertical-align: middle;
 }
-/* Ingredients — italic prose with middot separators */
-.atelier-ingredient-wrap{
-  font-family:var(--didot);font-size:0.95rem;
-  line-height:1.7;color:var(--text-mid);
+
+/* ── Course cards (a-course = course-card) ── */
+.comp-courses { display: flex; flex-direction: column; gap: var(--s3); margin-bottom: var(--s4); }
+
+.a-course {
+  background: var(--cream-50); border: 1px solid var(--line-soft);
+  padding: var(--s4); position: relative; transition: border-color 0.2s;
 }
-.atelier-ingredient{font-style:italic}
-.atelier-ingredient+.atelier-ingredient::before{
-  content:' · ';font-style:normal;color:var(--text-muted);margin:0 0.3rem;
+.a-course:hover { border-color: var(--gold-soft); }
+.a-course.is-freeform { background: var(--cream-100); }
+
+/* Course card top row (position + badge) */
+.course-card__top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: var(--s2);
 }
-/* Pours — linked list (beverage_products with /beverage/products/<id> route) */
-.atelier-pour-list{list-style:none;margin:0;padding:0}
-.atelier-pour-list li{padding:0.4rem 0;border-bottom:1px solid rgba(201,168,76,0.08)}
-.atelier-pour-list li:last-child{border-bottom:none}
-.atelier-pour-link{
-  font-family:var(--didot);font-style:italic;font-weight:500;
-  font-size:1.02rem;line-height:1.4;
-  color:var(--gold-mid);text-decoration:none;
-  border-bottom:1px solid rgba(201,168,76,0.25);padding-bottom:1px;
-  transition:color 180ms ease,border-bottom-color 180ms ease;
+
+/* Course position (a-course-pos = course-card__pos) */
+.a-course-pos {
+  font-family: var(--mono); font-size: 13px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.18em; color: var(--warm-gray);
 }
-.atelier-pour-link:hover{color:var(--gold);border-bottom-color:rgba(201,168,76,0.7)}
-.atelier-pour-region{font-style:italic;color:var(--text-mid);font-size:0.95rem}
-@media(max-width:600px){
-  .atelier-library-recipe{flex-direction:column;align-items:flex-start;gap:0.5rem}
+
+/* Badges */
+.badge {
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  padding: 4px 10px; border: 1px solid; flex-shrink: 0;
+}
+.badge--library { color: var(--gold); border-color: var(--gold); background: rgba(201,168,76,0.07); }
+.badge--draft   { color: var(--warm-gray); border-color: var(--line); background: var(--cream-100); }
+
+/* Course name (a-course-name = course-name) */
+.a-course-name {
+  font-family: var(--display); font-size: 22px; line-height: 1.25;
+  margin-bottom: var(--s2); color: var(--charcoal);
+}
+.a-course-name.course-name--canon   { font-style: normal; font-weight: 500; }
+.a-course-name.course-name--freeform { font-style: italic; }
+
+/* Course description (a-course-desc = course-desc) */
+.a-course-desc {
+  font-family: var(--body); font-size: 14px; line-height: 1.75;
+  color: var(--charcoal-soft); max-width: 780px; margin-bottom: var(--s3);
+  font-weight: 300;
+}
+
+/* ── Lineage rows — atelier-lineage-section restyled ── */
+.atelier-lineage-section { margin-bottom: var(--s1); }
+.lineage-row {
+  display: flex; align-items: center; flex-wrap: wrap; gap: var(--s1);
+  margin-bottom: var(--s1);
+}
+.atelier-lineage-label, .lineage-lbl {
+  font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--warm-gray-light);
+  flex-shrink: 0; min-width: 64px;
+}
+
+/* Chips — atelier technique/ingredient/pour links restyled as lchips */
+.atelier-technique-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1); }
+.atelier-technique-list li { padding: 0; border: none; }
+.atelier-technique-link {
+  font-family: var(--mono); font-size: 10px; color: var(--charcoal-soft);
+  background: var(--cream-100); border: 1px solid var(--line-soft);
+  border-left: 2px solid var(--gold);
+  padding: 3px 9px; text-decoration: none; display: inline-block;
+  transition: border-color 0.15s;
+}
+.atelier-technique-link:hover { border-left-color: var(--gold-soft); color: var(--charcoal); }
+
+.atelier-ingredient-wrap {
+  display: flex; flex-wrap: wrap; gap: var(--s1);
+}
+.atelier-ingredient {
+  font-family: var(--mono); font-size: 10px; color: var(--charcoal-soft);
+  background: var(--cream-100); border: 1px solid var(--line-soft);
+  border-left: 2px solid var(--charcoal);
+  padding: 3px 9px; font-style: normal;
+}
+/* Remove middot pseudo-content for the chip layout */
+.atelier-ingredient + .atelier-ingredient::before { content: none; }
+
+.atelier-pour-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1); }
+.atelier-pour-list li { padding: 0; border: none; }
+.atelier-pour-link {
+  font-family: var(--mono); font-size: 10px; color: var(--charcoal-soft);
+  background: var(--cream-100); border: 1px solid var(--line-soft);
+  border-left: 2px solid var(--burgundy);
+  padding: 3px 9px; text-decoration: none; display: inline-block;
+  font-style: normal; font-weight: normal;
+  transition: border-color 0.15s;
+}
+.atelier-pour-link:hover { color: var(--gold); }
+.atelier-pour-region { font-style: normal; color: var(--warm-gray); font-size: 10px; }
+
+/* Library recipe link — kept for backward compat */
+.atelier-library-recipe {
+  display: flex; align-items: center; gap: 1rem;
+  margin: var(--s2) 0 var(--s3); padding: var(--s2) var(--s3);
+  background: rgba(201,168,76,0.05);
+  border-left: 2px solid rgba(201,168,76,0.55);
+  text-decoration: none; color: inherit;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+.atelier-library-recipe:hover { background: rgba(201,168,76,0.1); border-left-color: var(--gold); }
+.atelier-library-recipe-eyebrow {
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--warm-gray); flex-shrink: 0;
+}
+.atelier-library-recipe-name { flex: 1; font-family: var(--display); font-style: italic; font-size: 1.05rem; color: var(--charcoal); }
+.atelier-library-recipe-arrow { flex-shrink: 0; color: var(--gold-mid); font-size: 1.1rem; transition: transform 200ms ease; }
+.atelier-library-recipe:hover .atelier-library-recipe-arrow { transform: translateX(3px); color: var(--gold); }
+
+/* ── Action bar ── */
+.comp-actions {
+  display: flex; align-items: center; gap: var(--s4);
+  padding: var(--s4) 0; border-top: 1px solid var(--line);
+  margin-top: var(--s2); flex-wrap: wrap;
 }
 </style>
 
 {% if not has_addon %}
 <style>
-/* ── Gate screen — design tokens (wireframe system) ── */
-:root {
-  --cream-50:   #FAF7F1;
-  --cream-100:  #F4EFE4;
-  --line:       #C9C0B0;
-  --line-soft:  #DDD3BE;
-  --charcoal:   #1F1B16;
-  --charcoal-soft: #3A332B;
-  --warm-gray:  #6B6258;
-  --gold-soft:  #D4B679;
-  --tier-reserve: #7A2E2E;
-  --display:    'Playfair Display', Georgia, serif;
-  --body:       'DM Sans', system-ui, sans-serif;
-  --mono:       'DM Mono', 'Courier New', monospace;
-  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px;
-  --s5: 48px; --s6: 64px;
-}
-
-/* ── Gate wrapper ── */
+/* ── Gate screen — CSS for {% else %} branch ── */
 .gate-wrap {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 56px 48px 80px;
+  max-width: 1100px; margin: 0 auto; padding: 56px 48px 80px;
 }
-@media (max-width: 768px) {
-  .gate-wrap { padding: 40px 20px 64px; }
-}
+@media (max-width: 768px) { .gate-wrap { padding: 40px 20px 64px; } }
 
-/* ── Gate intro ── */
 .gate-intro { margin-bottom: var(--s5); }
 .gate-eyebrow {
   font-family: var(--body); font-size: 11px; font-weight: 600;
@@ -282,36 +382,19 @@ body{font-family:var(--serif);background:var(--cream);color:var(--text);line-hei
   color: var(--charcoal-soft); max-width: 520px; margin: 0;
 }
 
-/* ── Gate layout: preview + panel ── */
 .gate-layout {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 0;
-  align-items: start;
-  border: 1px solid var(--line-soft);
+  display: grid; grid-template-columns: 1fr 340px;
+  gap: 0; align-items: start; border: 1px solid var(--line-soft);
 }
-@media (max-width: 768px) {
-  .gate-layout { grid-template-columns: 1fr; }
-}
+@media (max-width: 768px) { .gate-layout { grid-template-columns: 1fr; } }
 
-/* ── Preview column ── */
 .gate-preview-col {
-  position: relative;
-  overflow: hidden;
-  border-right: 1px solid var(--line-soft);
+  position: relative; overflow: hidden; border-right: 1px solid var(--line-soft);
 }
-@media (max-width: 768px) {
-  .gate-preview-col {
-    border-right: none;
-    border-bottom: 1px solid var(--line-soft);
-  }
-}
+@media (max-width: 768px) { .gate-preview-col { border-right: none; border-bottom: 1px solid var(--line-soft); } }
 .gate-preview {
-  filter: blur(4px);
-  opacity: 0.55;
-  pointer-events: none;
-  user-select: none;
-  padding: var(--s4);
+  filter: blur(4px); opacity: 0.55;
+  pointer-events: none; user-select: none; padding: var(--s4);
 }
 .gate-preview-title {
   font-family: var(--display); font-size: 28px; font-style: italic;
@@ -321,43 +404,24 @@ body{font-family:var(--serif);background:var(--cream);color:var(--text);line-hei
   font-family: var(--mono); font-size: 10px; text-transform: uppercase;
   letter-spacing: 0.18em; color: var(--warm-gray); margin-bottom: var(--s4);
 }
-.gate-preview-course {
-  padding: var(--s2) 0;
-  border-bottom: 1px solid var(--line-soft);
-}
+.gate-preview-course { padding: var(--s2) 0; border-bottom: 1px solid var(--line-soft); }
 .gate-preview-course:last-child { border-bottom: none; }
 .gate-preview-pos {
   font-family: var(--mono); font-size: 10px; text-transform: uppercase;
   letter-spacing: 0.2em; color: var(--warm-gray); margin-bottom: 3px;
 }
-.gate-preview-name {
-  font-family: var(--display); font-size: 17px;
-  color: var(--charcoal); margin-bottom: 3px;
-}
-.gate-preview-desc {
-  font-size: 13px; color: var(--charcoal-soft); line-height: 1.55;
-}
+.gate-preview-name { font-family: var(--display); font-size: 17px; color: var(--charcoal); margin-bottom: 3px; }
+.gate-preview-desc { font-size: 13px; color: var(--charcoal-soft); line-height: 1.55; }
 
-/* ── Veil overlay ── */
 .gate-veil {
   position: absolute; inset: 0;
-  background: linear-gradient(
-    105deg,
-    rgba(250,247,241,0.12) 0%,
-    rgba(250,247,241,0.55) 55%,
-    rgba(250,247,241,0.82) 100%
-  );
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  pointer-events: none;
+  background: linear-gradient(105deg, rgba(250,247,241,0.12) 0%, rgba(250,247,241,0.55) 55%, rgba(250,247,241,0.82) 100%);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); pointer-events: none;
 }
 
-/* ── Upgrade panel ── */
 .gate-panel {
-  padding: var(--s5) var(--s4);
-  background: var(--cream-50);
-  display: flex;
-  flex-direction: column;
+  padding: var(--s5) var(--s4); background: var(--cream-50);
+  display: flex; flex-direction: column;
 }
 .gate-panel__eyebrow {
   font-family: var(--mono); font-size: 10px; font-weight: 600;
@@ -366,14 +430,12 @@ body{font-family:var(--serif);background:var(--cream);color:var(--text);line-hei
   display: flex; align-items: center; gap: 8px;
 }
 .gate-panel__eyebrow::before {
-  content: ''; display: inline-block;
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--tier-reserve);
+  content: ''; display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; background: var(--tier-reserve);
 }
 .gate-panel__headline {
-  font-family: var(--display); font-size: 23px;
-  line-height: 1.25; color: var(--charcoal);
-  margin-bottom: var(--s4);
+  font-family: var(--display); font-size: 23px; line-height: 1.25;
+  color: var(--charcoal); margin-bottom: var(--s4);
 }
 .gate-panel__price-block { margin-bottom: var(--s3); }
 .gate-panel__price-main {
@@ -381,10 +443,9 @@ body{font-family:var(--serif);background:var(--cream);color:var(--text);line-hei
   color: var(--charcoal); display: block; margin-bottom: 4px;
 }
 .gate-panel__price-alt {
-  font-family: var(--mono); font-size: 12px;
-  color: var(--warm-gray); letter-spacing: 0.04em;
-  padding: 4px 0; border-top: 1px solid var(--line-soft);
-  display: block; margin-top: 4px;
+  font-family: var(--mono); font-size: 12px; color: var(--warm-gray);
+  letter-spacing: 0.04em; padding: 4px 0;
+  border-top: 1px solid var(--line-soft); display: block; margin-top: 4px;
 }
 .gate-panel__desc {
   font-family: var(--body); font-size: 13px; color: var(--warm-gray);
@@ -397,12 +458,9 @@ body{font-family:var(--serif);background:var(--cream);color:var(--text);line-hei
   letter-spacing: 0.02em; padding: 13px 24px;
   border: 1.5px solid var(--charcoal);
   background: var(--charcoal); color: var(--cream-50);
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s;
+  text-decoration: none; transition: background 0.2s, color 0.2s;
 }
-.gate-panel__cta:hover {
-  background: var(--cream-50); color: var(--charcoal);
-}
+.gate-panel__cta:hover { background: var(--cream-50); color: var(--charcoal); }
 </style>
 {% endif %}
 </head>
@@ -410,33 +468,64 @@ body{font-family:var(--serif);background:var(--cream);color:var(--text);line-hei
 
 <div class="a-top">
   <a class="a-wordmark" href="/"><em>l'</em>Atelier</a>
+  {% if has_addon %}
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="usage-chip usage-chip--reserve">Reserve · unlimited</span>
+    <a class="a-back" href="/kitchen">← Kitchen</a>
+  </div>
+  {% else %}
   <a class="a-back" href="/kitchen">← Kitchen</a>
+  {% endif %}
 </div>
 
 {% if has_addon %}
 
-<div class="a-hero">
-  <div class="a-eyebrow">Menu Composition Engine</div>
-  <h1 class="a-title">Describe the meal.<br><em>We'll compose the menu.</em></h1>
-  <p class="a-subtitle">
-    Write your brief in plain language — cuisine, season, occasion, constraints.<br>
-    l'Atelier matches or builds a structure, then drafts every course.
-  </p>
-</div>
+<div class="at-surface">
 
-<form class="a-form" id="briefForm" onsubmit="return false">
-  <label class="a-brief-label" for="briefTa">Your brief</label>
-  <textarea class="a-brief-ta" id="briefTa" rows="5"
-    placeholder="e.g. Kaiseki for 8 in Vancouver, autumn. Pacific Northwest ingredients, Japanese restraint. Sake pairing. Nine courses."></textarea>
-  <button class="a-compose-btn" id="composeBtn" onclick="runCompose()">
-    Compose menu
-  </button>
-</form>
+  <!-- Brief page header -->
+  <div class="brief-page-header">
+    <div class="brief-page-header__left">
+      <div class="eyebrow">l'Atelier</div>
+      <h2>Tell me about the menu.</h2>
+    </div>
+  </div>
 
-<div class="a-status"  id="statusMsg"></div>
-<div class="a-chips"   id="chipsArea"></div>
-<div class="a-error"   id="errorBox"></div>
-<div class="a-result"  id="resultArea"></div>
+  <!-- Hint chips -->
+  <div class="brief-hint-row">
+    <span class="brief-hint">A six-course tasting for early autumn, leaning Pacific Northwest, one vegan course</span>
+    <span class="brief-hint">Kaiseki for 8 in Vancouver, September, sake pairing, nine courses</span>
+    <span class="brief-hint">Sunday lunch, Provençal, family style, eight guests, no shellfish</span>
+    <span class="brief-hint">Omakase for two, Tokyo-leaning, spring, seven courses</span>
+  </div>
+
+  <!-- Brief form -->
+  <div class="brief-form-wrap">
+    <form id="briefForm" onsubmit="return false">
+      <textarea class="brief-textarea a-brief-ta" id="briefTa" rows="5"
+        placeholder="e.g. Kaiseki for 8 in Vancouver, autumn. Pacific Northwest ingredients, Japanese restraint. Sake pairing. Nine courses."
+        aria-label="Menu brief"></textarea>
+      <div class="brief-form-actions">
+        <button class="btn a-compose-btn" id="composeBtn" type="button" onclick="runCompose()">
+          Compose menu
+        </button>
+        <span class="brief-form-hint">We'll pull out cuisine, season, courses, dietary notes, and region.</span>
+      </div>
+    </form>
+  </div>
+
+  <!-- Status bar -->
+  <div class="a-status" id="statusMsg"></div>
+
+  <!-- Parse chips -->
+  <div class="a-chips" id="chipsArea"></div>
+
+  <!-- Error -->
+  <div class="a-error" id="errorBox"></div>
+
+  <!-- Result — JS renders comp-header + comp-courses + comp-actions inside here -->
+  <div class="a-result" id="resultArea"></div>
+
+</div><!-- /at-surface -->
 
 <script>
 async function runCompose() {
@@ -467,7 +556,7 @@ async function runCompose() {
     parsed = await r.json();
   } catch (e) {
     console.error("l'Atelier parse-brief failed:", e);
-    showError("l’Atelier couldn’t compose that brief. Try a shorter brief, or try again in a moment.");
+    showError("l'Atelier couldn't compose that brief. Try a shorter brief, or try again in a moment.");
     btn.disabled = false;
     return;
   }
@@ -486,7 +575,7 @@ async function runCompose() {
     comp = await r.json();
   } catch (e) {
     console.error("l'Atelier compose failed:", e);
-    showError("l’Atelier couldn’t compose that brief. Try a shorter brief, or try again in a moment.");
+    showError("l'Atelier couldn't compose that brief. Try a shorter brief, or try again in a moment.");
     btn.disabled = false;
     return;
   }
@@ -544,40 +633,88 @@ function renderChips(bp) {
 
 function renderResult(comp) {
   const area      = document.getElementById('resultArea');
-  const modeLabel = comp.compose_mode === 'canon_anchored' ? 'canon' : 'free-form';
+  const modeLabel = comp.compose_mode === 'canon_anchored' ? 'Canon' : 'Free-form';
 
-  const head = document.createElement('div');
-  head.className = 'a-result-head';
-  head.innerHTML = `
-    <div class="a-result-title">${esc(comp.title)}</div>
+  // Composition header
+  const header = document.createElement('div');
+  header.className = 'a-result-head';
+  header.innerHTML = `
+    <div class="a-result-title">${esc(comp.title || 'Composition')}</div>
     <div class="a-result-meta">
-      ${comp.slot_count} courses
-      &middot; ${esc(comp.canon_name || '')}
+      ${comp.slot_count || ''} courses
+      ${comp.canon_name ? '&middot; ' + esc(comp.canon_name) : ''}
       <span class="a-result-badge">${modeLabel}</span>
     </div>`;
   area.innerHTML = '';
-  area.appendChild(head);
+  area.appendChild(header);
 
-  (comp.courses || []).forEach((c, i) => area.appendChild(renderCourse(c, i + 1)));
+  // Courses wrapper
+  const coursesWrap = document.createElement('div');
+  coursesWrap.className = 'comp-courses';
+  (comp.courses || []).forEach((c, i) => coursesWrap.appendChild(renderCourse(c, i + 1)));
+  area.appendChild(coursesWrap);
+
+  // Action bar — visible, Save to Menu Builder unwired (Cycle 8)
+  const actions = document.createElement('div');
+  actions.className = 'comp-actions';
+  actions.innerHTML = `
+    <button class="btn" type="button" disabled title="Coming in the next cycle">Save to Menu Builder</button>
+    <a class="link-gold" href="#" onclick="composeAgain();return false;">Compose again</a>
+    <a class="link-muted" href="#" onclick="discardResult();return false;">Discard</a>`;
+  area.appendChild(actions);
 
   area.style.display = 'block';
   area.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
+function composeAgain() {
+  const result = document.getElementById('resultArea');
+  const chips  = document.getElementById('chipsArea');
+  result.style.display = 'none'; result.innerHTML = '';
+  chips.style.display  = 'none'; chips.innerHTML  = '';
+  document.getElementById('briefTa').focus();
+}
+
+function discardResult() {
+  const result = document.getElementById('resultArea');
+  const chips  = document.getElementById('chipsArea');
+  result.style.display = 'none'; result.innerHTML = '';
+  chips.style.display  = 'none'; chips.innerHTML  = '';
+  document.getElementById('briefTa').value = '';
+  document.getElementById('briefTa').focus();
+}
+
 function renderCourse(course, position) {
   const article = document.createElement('article');
-  article.className = 'a-course';
+  const lr      = course.library_recipe;
+  const isCanon = !!(lr && lr.slug);
+  article.className = 'a-course' + (isCanon ? '' : ' is-freeform');
 
-  const posEl = document.createElement('div');
+  // Top row: position + badge
+  const top = document.createElement('div');
+  top.className = 'course-card__top';
+
+  const posEl = document.createElement('span');
   posEl.className = 'a-course-pos';
-  posEl.textContent = position + (course.slot_name ? '. ' + course.slot_name.replace(/_/g, ' ') : '.');
-  article.appendChild(posEl);
+  const romanPos = toRoman(position);
+  const slotLabel = course.slot_name ? course.slot_name.replace(/_/g, ' ') : '';
+  posEl.textContent = romanPos + (slotLabel ? ' · ' + slotLabel : '');
+  top.appendChild(posEl);
 
+  const badge = document.createElement('span');
+  badge.className = isCanon ? 'badge badge--library' : 'badge badge--draft';
+  badge.textContent = isCanon ? 'From the Library' : 'Compose draft';
+  top.appendChild(badge);
+
+  article.appendChild(top);
+
+  // Course name
   const titleEl = document.createElement('div');
-  titleEl.className = 'a-course-name';
+  titleEl.className = 'a-course-name ' + (isCanon ? 'course-name--canon' : 'course-name--freeform');
   titleEl.textContent = course.name || '(untitled)';
   article.appendChild(titleEl);
 
+  // Description
   if (course.description) {
     const descEl = document.createElement('div');
     descEl.className = 'a-course-desc';
@@ -585,8 +722,7 @@ function renderCourse(course, position) {
     article.appendChild(descEl);
   }
 
-  // Library recipe panel — when a curated match exists
-  const lr = course.library_recipe;
+  // Library recipe panel
   if (lr && lr.slug) {
     const link = document.createElement('a');
     link.className = 'atelier-library-recipe';
@@ -610,6 +746,7 @@ function renderCourse(course, position) {
     article.appendChild(link);
   }
 
+  // Lineage sections
   const techs = course.lineage_techniques  || [];
   const ings  = course.lineage_ingredients || [];
   const pours = course.lineage_beverages   || [];
@@ -621,13 +758,21 @@ function renderCourse(course, position) {
   return article;
 }
 
+function toRoman(n) {
+  const map = [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],
+               [50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];
+  let result = '';
+  for (const [val, sym] of map) { while (n >= val) { result += sym; n -= val; } }
+  return result;
+}
+
 function renderTechniques(items) {
   const section = document.createElement('div');
-  section.className = 'atelier-lineage-section';
+  section.className = 'atelier-lineage-section lineage-row';
 
-  const label = document.createElement('div');
-  label.className = 'atelier-lineage-label';
-  label.textContent = '— Techniques —';
+  const label = document.createElement('span');
+  label.className = 'atelier-lineage-label lineage-lbl';
+  label.textContent = 'Technique';
   section.appendChild(label);
 
   const ul = document.createElement('ul');
@@ -647,11 +792,11 @@ function renderTechniques(items) {
 
 function renderIngredients(items) {
   const section = document.createElement('div');
-  section.className = 'atelier-lineage-section';
+  section.className = 'atelier-lineage-section lineage-row';
 
-  const label = document.createElement('div');
-  label.className = 'atelier-lineage-label';
-  label.textContent = '— Ingredients —';
+  const label = document.createElement('span');
+  label.className = 'atelier-lineage-label lineage-lbl';
+  label.textContent = 'Ingredients';
   section.appendChild(label);
 
   const wrap = document.createElement('div');
@@ -668,18 +813,18 @@ function renderIngredients(items) {
 
 function renderPours(items) {
   const section = document.createElement('div');
-  section.className = 'atelier-lineage-section';
+  section.className = 'atelier-lineage-section lineage-row';
 
-  const label = document.createElement('div');
-  label.className = 'atelier-lineage-label';
-  label.textContent = '— Pour with —';
+  const label = document.createElement('span');
+  label.className = 'atelier-lineage-label lineage-lbl';
+  label.textContent = 'Beverage';
   section.appendChild(label);
 
   const list = document.createElement('ul');
   list.className = 'atelier-pour-list';
   items.forEach(item => {
     const li = document.createElement('li');
-    const a = document.createElement('a');
+    const a  = document.createElement('a');
     a.className = 'atelier-pour-link';
     a.href = '/beverage/products/' + item.id;
     const name = document.createElement('span');
