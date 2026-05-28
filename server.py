@@ -6770,10 +6770,7 @@ ENHANCE_SYSTEM_PROMPT = (
 
 
 def _enhance_recipe_steps(title, ingredients, steps):
-    """Wrapper kept for /api/enhance-recipe backward compat.
-    Delegates to _add_step_insights() — steps are preserved verbatim.
-    Returns (step_strings, step_objects) or None on failure.
-    """
+    """Delegates to _add_step_insights(). Returns (step_strings, step_objects) or None on failure."""
     if not steps:
         return None
     try:
@@ -6782,29 +6779,6 @@ def _enhance_recipe_steps(title, ingredients, steps):
         return (strings, objects)
     except Exception:
         return None
-
-
-@app.route("/api/enhance-recipe", methods=["POST"])
-def enhance_recipe():
-    data = request.get_json()
-    recipe_title = data.get("recipe_title", "Untitled")
-    ingredients = data.get("ingredients", [])
-    steps = data.get("steps", [])
-
-    if not steps:
-        return jsonify(error="No steps provided"), 400
-
-    result = _enhance_recipe_steps(recipe_title, ingredients, steps)
-    if result is None:
-        return jsonify(error="Enhancement failed"), 500
-
-    enhanced_strings, enhanced_steps = result
-    return jsonify({
-        "recipe_title": recipe_title,
-        "ingredients": ingredients,
-        "original_steps": steps,
-        "enhanced_steps": enhanced_steps,
-    })
 
 
 def _build_recipe_user_msg(title, ingredients, method_steps):
@@ -9246,16 +9220,6 @@ def supplier_notify():
     })
 
 
-@app.route("/test/enhance")
-def test_enhance_page():
-    return send_file("test_enhance.html")
-
-
-@app.route("/test/enhance-barramundi")
-def test_enhance_barramundi_page():
-    return send_file("test_enhance_barramundi.html")
-
-
 # ─── Demo pages ──────────────────────────────────────────────────────────────
 
 @app.route("/demo")
@@ -11166,24 +11130,47 @@ def _match_techniques_for_enhance(recipe_data):
 @app.route("/enhance", methods=["GET", "POST"])
 def enhance_recipe_page():
     if request.method == "GET":
-        return render_template("enhance.html")
+        return redirect(url_for("kitchen"))
 
-    url = request.form.get('url', '').strip()
+    url = request.form.get("url", "").strip()
     if not url:
-        return render_template("enhance.html", error="Please enter a recipe URL.")
+        return redirect(url_for("kitchen"))
 
     try:
         recipe_data = _fetch_and_parse_recipe(url)
     except Exception as e:
-        return render_template("enhance.html", error=f"Could not parse that URL: {str(e)}")
+        app.logger.warning(f"[enhance] fetch failed: {e}")
+        return redirect(url_for("kitchen"))
 
-    technique_matches = _match_techniques_for_enhance(recipe_data)
+    user = get_current_user()
+    if user and DATABASE_URL_WRITE:
+        try:
+            recipe_uuid = str(uuid.uuid4())
+            title = recipe_data.get("title", "Imported Recipe")
+            slug = make_kitchen_slug(title, recipe_uuid)
+            conn = get_db()
+            cur = conn.cursor()
+            cur.execute("""
+                INSERT INTO user_kitchen_recipes
+                    (uuid, user_id, title, slug, preamble, tags, source_url, ingredients, steps, is_draft)
+                VALUES (%s, %s, %s, %s, %s, '[]', %s, %s, %s, FALSE)
+                ON CONFLICT (uuid) DO NOTHING
+            """, (
+                recipe_uuid,
+                user["id"],
+                title,
+                slug,
+                recipe_data.get("description", ""),
+                url,
+                json.dumps([str(i) for i in recipe_data.get("ingredients", [])]),
+                json.dumps([str(s) for s in recipe_data.get("instructions", [])]),
+            ))
+            cur.close()
+            conn.close()
+        except Exception as e:
+            app.logger.error(f"[enhance] db_save failed: {e}")
 
-    return render_template("enhance_result.html",
-        recipe=recipe_data,
-        techniques=technique_matches,
-        source_url=url,
-    )
+    return redirect(url_for("kitchen"))
 
 
 # ─── Programme builder ───────────────────────────────────────────────────────
