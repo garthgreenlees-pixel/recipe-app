@@ -267,6 +267,18 @@
   </div>
   {% endif %}
 
+  {# ─── GROUP: COMPOSE DRAFTS ─── #}
+  {% if recipes_by_state.compose_draft %}
+  <div class="kitchen__group-head">
+    <h3>Compose drafts · from l'Atelier</h3>
+  </div>
+  <div class="cards-grid">
+    {% for recipe in recipes_by_state.compose_draft %}
+      {% include '_partials/_recipe_card.html' %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {% endif %}{# end if recipe_total > 0 #}
 
 </div>

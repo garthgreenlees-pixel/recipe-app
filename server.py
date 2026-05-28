@@ -1289,6 +1289,60 @@ def _query_user_saved_canon_recipes(user_id):
     return []
 
 
+def _query_compose_drafts(user_id):
+    """Return compose-draft kitchen recipes for a user (is_draft=TRUE rows from l'Atelier)."""
+    if not DATABASE_URL:
+        return []
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT uuid, title, slug, has_image, origin, time_total,
+                   servings_count, servings_text, template_version,
+                   recipe_content_jsonb,
+                   quality_hierarchy, sensory_tests, cross_cuisine_parallels,
+                   lives_or_dies, beverage_pairings, ingredients, steps
+            FROM user_kitchen_recipes
+            WHERE user_id = %s AND is_draft = TRUE AND slug IS NOT NULL
+            ORDER BY updated_at DESC
+        """, (user_id,))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        out = []
+        for r in rows:
+            filled = sum([
+                bool(r.get("ingredients")),
+                bool(r.get("steps") or (r.get("recipe_content_jsonb") or {}).get("steps")),
+                bool(r.get("quality_hierarchy")),
+                bool(r.get("sensory_tests")),
+                bool(r.get("cross_cuisine_parallels")),
+                bool(r.get("lives_or_dies")),
+                bool(r.get("beverage_pairings")),
+            ])
+            content = r.get("recipe_content_jsonb") or {}
+            cuisine = content.get("cuisine") or r.get("origin") or ""
+            time_raw = content.get("time_total") or r.get("time_total") or ""
+            serves_raw = r.get("servings_count") or r.get("servings_text") or ""
+            image_url = f"/images/{r['uuid']}/hero.jpg" if r.get("has_image") else None
+            out.append({
+                "uuid": r["uuid"],
+                "slug": r["slug"],
+                "title": r.get("title") or "Untitled",
+                "image_url": image_url,
+                "cuisine": cuisine,
+                "state": "compose_draft",
+                "pillars_filled": filled,
+                "time_display": time_raw,
+                "serves": serves_raw,
+                "requires_haccp": _detect_raw_served(*_recipe_dict_to_haccp_inputs(r)),
+            })
+        return out
+    except Exception as e:
+        app.logger.warning(f"_query_compose_drafts failed: {e}")
+        return []
+
+
 @app.route("/")
 def index():
     user = get_current_user()
@@ -1307,6 +1361,7 @@ def kitchen():
         "imported": _query_user_recipes(user_id, state="imported"),
         "enhanced": _query_user_recipes(user_id, state="enhanced"),
         "canon_saved": _query_user_saved_canon_recipes(user_id),
+        "compose_draft": _query_compose_drafts(user_id),
     }
     total = sum(len(v) for v in recipes_by_state.values())
     # ── Menus (Library+) ──

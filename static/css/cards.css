@@ -94,6 +94,12 @@
   border-color: var(--gold-soft);
 }
 
+.recipe-card__tag--compose_draft {
+  background: transparent;
+  color: var(--warm-gray);
+  border-color: var(--warm-gray);
+}
+
 .recipe-card__haccp {
   position: absolute;
   top: var(--s1);

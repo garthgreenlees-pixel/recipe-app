@@ -15,7 +15,7 @@
       <span>{{ recipe.title }}</span>
     {% endif %}
     <span class="recipe-card__tag recipe-card__tag--{{ card_state }}">
-      {{ card_state | title }} · {{ pillars_filled }} of 7
+      {{ card_state | replace('_', ' ') | title }} · {{ pillars_filled }} of 7
     </span>
     {% if recipe.requires_haccp %}
       <span class="recipe-card__haccp">HACCP</span>
