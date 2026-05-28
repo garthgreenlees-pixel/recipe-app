@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>l'Atelier — Provenance Wireframe · Cycle 2 · Sprint 9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════════════════════════════
+   PROVENANCE DESIGN SYSTEM — tokens locked from Foundation
+   Phaidon × Te Papa × Larousse · institutional editorial voice
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --cream-50:          #FAF7F1;
+  --cream-100:         #F4EFE4;
+  --cream-200:         #EAE2CE;
+  --line:              #C9C0B0;
+  --line-soft:         #DDD3BE;
+  --charcoal:          #1F1B16;
+  --charcoal-soft:     #3A332B;
+  --warm-gray:         #6B6258;
+  --warm-gray-light:   #948B7F;
+  --gold:              #C9A84C;   /* atelier surface — brief spec; Foundation uses #B89343 */
+  --gold-soft:         #D4B679;
+  --burgundy:          #7A2E2E;
+  --terracotta:        #A0522D;
+  --tier-reserve:      #7A2E2E;
+  --tier-library:      #4A6B8A;
+  --display:           'Playfair Display', Georgia, serif;
+  --body:              'DM Sans', system-ui, sans-serif;
+  --mono:              'DM Mono', 'Courier New', monospace;
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px;
+  --s5: 48px; --s6: 64px; --s7: 96px; --s8: 128px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--charcoal);
+  background: var(--cream-50);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h2, h3, h4 { font-family: var(--display); font-weight: 500; letter-spacing: -0.01em; color: var(--charcoal); }
+h2 { font-size: 38px; line-height: 1.15; }
+h3 { font-size: 26px; line-height: 1.2; }
+h4 { font-size: 20px; line-height: 1.3; }
+p  { font-family: var(--body); font-size: 14px; line-height: 1.7; color: var(--charcoal-soft); margin-bottom: var(--s2); }
+p:last-child { margin-bottom: 0; }
+.eyebrow { font-family: var(--body); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: var(--warm-gray); margin-bottom: var(--s1); }
+
+/* ── Foundation nav — locked, unchanged ─────────────────────────── */
+.hp-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--cream-50);
+  border-bottom: 1px solid var(--line);
+  padding: var(--s2) var(--s5);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.hp-nav__brand { font-family: var(--display); font-size: 20px; letter-spacing: -0.01em; }
+.hp-nav__brand .italic { font-style: italic; }
+.hp-nav__items { display: flex; gap: var(--s4); list-style: none; }
+.hp-nav__items a { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--charcoal-soft); text-decoration: none; }
+.hp-nav__items a:hover { color: var(--charcoal); border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+.hp-nav__util { display: flex; gap: var(--s3); align-items: center; }
+.hp-nav__util a { font-size: 12px; color: var(--warm-gray); text-decoration: none; }
+
+/* Usage meter chip */
+.usage-chip {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+  color: var(--warm-gray); background: var(--cream-100);
+  border: 1px solid var(--line-soft);
+  padding: 4px 10px; white-space: nowrap;
+}
+.usage-chip--reserve {
+  color: var(--tier-reserve);
+  border-color: rgba(122,46,46,0.28);
+  background: rgba(122,46,46,0.05);
+  font-weight: 500;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+.btn {
+  font-family: var(--body); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.02em; padding: 12px 24px;
+  border: 1.5px solid var(--charcoal);
+  background: var(--charcoal); color: var(--cream-50);
+  cursor: pointer; display: inline-block; text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.btn:hover { background: var(--cream-50); color: var(--charcoal); }
+.btn--sm { font-size: 12px; padding: 9px 18px; }
+.link-gold {
+  font-family: var(--body); font-size: 14px; font-weight: 500;
+  color: var(--charcoal); text-decoration: none;
+  border-bottom: 1.5px solid var(--gold); padding-bottom: 1px;
+}
+.link-muted {
+  font-family: var(--body); font-size: 14px;
+  color: var(--warm-gray); text-decoration: none;
+  border-bottom: 1px solid var(--line-soft); padding-bottom: 1px;
+}
+
+/* ── Wireframe annotation bar ────────────────────────────────────── */
+.wf-note {
+  font-family: var(--mono); font-size: 11px; line-height: 1.6;
+  color: var(--warm-gray); border-left: 2px solid var(--gold-soft);
+  padding: var(--s2) var(--s3); margin: var(--s3) 0;
+  background: var(--cream-100);
+}
+.wf-note strong { color: var(--charcoal); font-weight: 600; }
+
+/* ── Screen label system ─────────────────────────────────────────── */
+.wf-screen { border-top: 3px solid var(--gold); margin-top: var(--s7); }
+.wf-screen:first-of-type { margin-top: var(--s4); border-top: 1px solid var(--line); }
+.wf-screen__label {
+  background: var(--charcoal); color: var(--cream-50);
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 10px var(--s5); display: flex; align-items: center; gap: var(--s3);
+}
+.wf-screen__label .sn { color: var(--gold); font-weight: 600; }
+.wf-screen__body { background: var(--cream-50); padding: var(--s6) var(--s5) var(--s7); }
+.wf-inner { max-width: 1100px; margin: 0 auto; }
+
+/* Sub-state labels within a screen */
+.wf-state-label {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--warm-gray);
+  border-top: 1px dashed var(--line); padding-top: var(--s3); margin-top: var(--s5);
+  margin-bottom: var(--s4); display: flex; align-items: center; gap: var(--s2);
+}
+.wf-state-label::before {
+  content: ''; display: inline-block; width: 20px; height: 1px; background: var(--gold);
+}
+
+/* ── Foundation footer — locked, unchanged ───────────────────────── */
+.hp-footer {
+  max-width: 1100px; margin: var(--s7) auto 0;
+  padding: var(--s5) var(--s5) var(--s6);
+  border-top: 1px solid var(--line);
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--s4);
+}
+.hp-footer h5 { font-family: var(--body); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: var(--warm-gray); margin-bottom: var(--s2); }
+.hp-footer ul { list-style: none; }
+.hp-footer li { padding: 4px 0; font-size: 13px; }
+.hp-footer li a { text-decoration: none; color: var(--charcoal-soft); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCREEN 1 — Reserve Gate
+   ═══════════════════════════════════════════════════════════════════ */
+
+.gate-intro { margin-bottom: var(--s5); }
+.gate-intro h2 { margin-bottom: var(--s2); }
+.gate-intro p  { max-width: 520px; }
+
+.gate-layout {
+  display: grid; grid-template-columns: 1fr 340px;
+  gap: 0; align-items: start;
+  border: 1px solid var(--line-soft);
+}
+.gate-preview-col {
+  position: relative; overflow: hidden;
+  border-right: 1px solid var(--line-soft);
+}
+.gate-preview {
+  filter: blur(4px); opacity: 0.55;
+  pointer-events: none; user-select: none;
+  padding: var(--s4);
+}
+.gate-preview-title {
+  font-family: var(--display); font-size: 28px; font-style: italic;
+  color: var(--charcoal); margin-bottom: 4px;
+}
+.gate-preview-sub {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--warm-gray); margin-bottom: var(--s4);
+}
+.gate-preview-course {
+  padding: var(--s2) 0; border-bottom: 1px solid var(--line-soft);
+}
+.gate-preview-course:last-child { border-bottom: none; }
+.gate-preview-pos {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.2em; color: var(--warm-gray); margin-bottom: 3px;
+}
+.gate-preview-name {
+  font-family: var(--display); font-size: 17px; color: var(--charcoal);
+  margin-bottom: 3px;
+}
+.gate-preview-desc { font-size: 13px; color: var(--charcoal-soft); line-height: 1.55; }
+
+.gate-veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(250,247,241,0.12) 0%,
+    rgba(250,247,241,0.55) 55%,
+    rgba(250,247,241,0.82) 100%
+  );
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  pointer-events: none;
+}
+
+.gate-panel {
+  padding: var(--s5) var(--s4);
+  background: var(--cream-50);
+  display: flex; flex-direction: column;
+}
+.gate-panel__eyebrow {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--tier-reserve); margin-bottom: var(--s3);
+  display: flex; align-items: center; gap: 8px;
+}
+.gate-panel__eyebrow::before {
+  content: ''; display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--tier-reserve);
+}
+.gate-panel__headline {
+  font-family: var(--display); font-size: 23px;
+  line-height: 1.25; color: var(--charcoal);
+  margin-bottom: var(--s4);
+}
+.gate-panel__price-block { margin-bottom: var(--s3); }
+.gate-panel__price-main {
+  font-family: var(--display); font-size: 30px; font-weight: 600;
+  color: var(--charcoal); display: block; margin-bottom: 4px;
+}
+.gate-panel__price-alt {
+  font-family: var(--mono); font-size: 12px;
+  color: var(--warm-gray); letter-spacing: 0.04em;
+  padding: 4px 0; border-top: 1px solid var(--line-soft);
+  display: block; margin-top: 4px;
+}
+.gate-panel__desc {
+  font-size: 13px; color: var(--warm-gray); line-height: 1.65;
+  margin-bottom: var(--s4); padding-bottom: var(--s4);
+  border-bottom: 1px solid var(--line-soft);
+}
+.gate-panel__cta { display: block; width: 100%; text-align: center; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCREEN 2 — Brief Entry
+   ═══════════════════════════════════════════════════════════════════ */
+
+.brief-page-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: var(--s5);
+  padding-bottom: var(--s4); border-bottom: 1px solid var(--line);
+}
+.brief-page-header__left .eyebrow { margin-bottom: var(--s1); }
+.brief-page-header__left h2 { font-style: italic; }
+
+.brief-hint-row {
+  display: flex; flex-wrap: wrap; gap: var(--s1);
+  margin-bottom: var(--s4);
+}
+.brief-hint {
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
+  background: var(--cream-100); border: 1px solid var(--line-soft);
+  padding: 5px 12px; cursor: default; letter-spacing: 0.01em;
+}
+
+.brief-form-wrap { max-width: 700px; }
+.brief-textarea {
+  display: block; width: 100%; min-height: 120px;
+  padding: var(--s3);
+  font-family: var(--display); font-style: italic;
+  font-size: 17px; line-height: 1.7;
+  color: var(--charcoal); background: var(--cream-50);
+  border: 1.5px solid var(--line);
+  resize: vertical; outline: none;
+  transition: border-color 0.2s;
+}
+.brief-textarea:focus { border-color: var(--gold); }
+.brief-textarea::placeholder {
+  font-family: var(--display); font-style: italic;
+  color: var(--warm-gray-light);
+}
+.brief-form-actions {
+  margin-top: var(--s2);
+  display: flex; align-items: center; gap: var(--s3);
+}
+.brief-form-hint {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--warm-gray-light); letter-spacing: 0.04em;
+}
+
+/* Post-parse state */
+.parse-result-block { max-width: 700px; }
+.parse-label {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--warm-gray); margin-bottom: var(--s2);
+}
+.parse-chips {
+  display: flex; flex-wrap: wrap; gap: var(--s1);
+  margin-bottom: var(--s4);
+}
+.parse-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 11px;
+  border: 1px solid var(--gold-soft);
+  background: var(--cream-50); padding: 5px 12px; color: var(--charcoal);
+}
+.parse-chip__k {
+  font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--warm-gray);
+}
+.parse-chip__v { color: var(--charcoal-soft); }
+.parse-chip__edit {
+  font-size: 9px; color: var(--gold); cursor: pointer;
+  border-bottom: 1px dashed var(--gold-soft); letter-spacing: 0.1em;
+}
+.parse-actions { display: flex; align-items: center; gap: var(--s3); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCREEN 3 — Loading State
+   ═══════════════════════════════════════════════════════════════════ */
+
+.loading-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: var(--s4); padding-bottom: var(--s3);
+  border-bottom: 1px solid var(--line);
+}
+.loading-header h3 { font-style: italic; }
+.loading-header__right { text-align: right; }
+.loading-header__right .mono {
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray); display: block; margin-bottom: 2px;
+}
+
+.slot-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: var(--s3); margin-bottom: var(--s3);
+}
+.slot-card {
+  background: var(--cream-100); border: 1px solid var(--line-soft);
+  padding: var(--s3); min-height: 110px;
+  position: relative; transition: border-color 0.3s;
+}
+.slot-card--done {
+  background: var(--cream-50); border-color: var(--line-soft);
+}
+.slot-card--composing {
+  border-color: var(--gold);
+  animation: goldPulse 2s ease-in-out infinite;
+}
+.slot-card--queued { opacity: 0.38; }
+
+@keyframes goldPulse {
+  0%, 100% { border-color: var(--gold);     box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+  50%       { border-color: var(--gold);     box-shadow: 0 0 0 5px rgba(201,168,76,0.14); }
+}
+
+.slot-pos {
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.2em; color: var(--warm-gray); margin-bottom: var(--s1);
+}
+.slot-name { font-family: var(--display); font-size: 16px; color: var(--charcoal); margin-bottom: var(--s2); }
+.slot-state {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.12em; display: flex; align-items: center; gap: 6px; margin-top: auto;
+}
+.slot-state--done     { color: var(--warm-gray-light); }
+.slot-state--active   { color: var(--gold); }
+.slot-state--queued   { color: var(--line); }
+.slot-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+.loading-status {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em;
+  color: var(--warm-gray); background: var(--cream-100);
+  border: 1px solid var(--line-soft);
+  padding: var(--s2) var(--s3);
+  text-align: center;
+}
+.loading-status__hl { color: var(--gold); font-weight: 500; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCREEN 4 — Composition Result
+   ═══════════════════════════════════════════════════════════════════ */
+
+.comp-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding-bottom: var(--s3); margin-bottom: var(--s4);
+  border-bottom: 1px solid var(--line);
+}
+.comp-header h3 { font-style: italic; }
+.comp-header__meta { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); text-align: right; }
+.comp-header__meta div { margin-bottom: 2px; }
+.comp-header__mode-chip {
+  display: inline-block; font-family: var(--mono); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  padding: 3px 9px;
+  color: var(--tier-reserve); border: 1px solid rgba(122,46,46,0.3);
+  background: rgba(122,46,46,0.05);
+}
+
+.comp-courses { display: flex; flex-direction: column; gap: var(--s3); margin-bottom: var(--s5); }
+
+.course-card {
+  background: var(--cream-50); border: 1px solid var(--line-soft);
+  padding: var(--s4); position: relative;
+  transition: border-color 0.2s;
+}
+.course-card:hover { border-color: var(--gold-soft); }
+
+.course-card__top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: var(--s2);
+}
+.course-card__pos {
+  font-family: var(--mono); font-size: 13px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.18em; color: var(--warm-gray);
+}
+
+/* Badges — two variants */
+.badge {
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  padding: 4px 10px; border: 1px solid; flex-shrink: 0;
+}
+.badge--library {
+  color: var(--gold); border-color: var(--gold);
+  background: rgba(201,168,76,0.07);
+}
+.badge--draft {
+  color: var(--warm-gray); border-color: var(--line);
+  background: var(--cream-100);
+}
+
+.course-name {
+  font-family: var(--display); font-size: 22px; line-height: 1.25;
+  margin-bottom: var(--s2); color: var(--charcoal);
+}
+.course-name--canon   { font-style: normal; font-weight: 500; }
+.course-name--freeform { font-style: italic; }
+
+.course-desc {
+  font-family: var(--body); font-size: 14px; line-height: 1.75;
+  color: var(--charcoal-soft); max-width: 780px; margin-bottom: var(--s3);
+}
+
+/* Lineage chips row */
+.lineage-row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s1); margin-bottom: var(--s1); }
+.lineage-lbl {
+  font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--warm-gray-light); flex-shrink: 0;
+  min-width: 64px;
+}
+.lchip {
+  font-family: var(--mono); font-size: 10px; color: var(--charcoal-soft);
+  background: var(--cream-100); border: 1px solid var(--line-soft);
+  padding: 3px 9px; display: inline-flex; align-items: center; gap: 4px;
+}
+.lchip--technique { border-left: 2px solid var(--gold); }
+.lchip--canon     { border-left: 2px solid var(--charcoal); }
+.lchip--supplier  { border-left: 2px solid var(--tier-library); }
+.lchip--beverage  { border-left: 2px solid var(--burgundy); color: var(--charcoal-soft); }
+
+/* Pat's Rule indicator on supplier chips */
+.pat-rule {
+  font-size: 8px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--tier-library); border-left: 1px solid var(--line-soft);
+  padding-left: 5px; margin-left: 2px;
+}
+
+.course-card__footer {
+  display: flex; align-items: center; justify-content: flex-end;
+  margin-top: var(--s2); padding-top: var(--s2); border-top: 1px dotted var(--line-soft);
+}
+.respin {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--gold);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+}
+.respin:hover { border-bottom-color: var(--gold); }
+
+/* Action bar */
+.comp-actions {
+  display: flex; align-items: center; gap: var(--s4);
+  padding: var(--s4) 0; border-top: 1px solid var(--line);
+  margin-top: var(--s2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCREEN 5 — Save to Menu Builder
+   ═══════════════════════════════════════════════════════════════════ */
+
+.transition-moment {
+  text-align: center; padding: var(--s6) var(--s5);
+  border-bottom: 1px solid var(--line-soft); margin-bottom: var(--s6);
+}
+.transition-line {
+  font-family: var(--display); font-size: 26px; font-style: italic;
+  color: var(--warm-gray); margin-bottom: var(--s2);
+}
+.transition-sub {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--warm-gray-light);
+}
+
+/* Menu Builder — patterned exactly from menu_detail.html classes */
+.mb-crumb {
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--s4);
+}
+.mb-crumb a { color: var(--warm-gray); text-decoration: none; }
+.mb-header  { margin-bottom: var(--s4); padding-bottom: var(--s3); border-bottom: 1px solid var(--line); }
+.mb-eyebrow { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: var(--gold); margin-bottom: var(--s1); }
+.mb-title   { font-family: var(--display); font-size: 34px; font-style: italic; font-weight: 500; color: var(--charcoal); line-height: 1.1; }
+.mb-meta-row { display: flex; align-items: center; gap: var(--s3); margin-top: var(--s2); flex-wrap: wrap; }
+.mb-meta-tag { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; padding: 4px 10px; }
+.mb-meta-tag--composed { color: var(--tier-reserve); border: 1px solid rgba(122,46,46,0.28); background: rgba(122,46,46,0.05); }
+.mb-meta-tag--date     { color: var(--warm-gray); border: 1px solid var(--line-soft); background: var(--cream-100); }
+
+.mb-layout { display: grid; grid-template-columns: 1fr 268px; gap: var(--s5); align-items: start; }
+.mb-courses { display: flex; flex-direction: column; gap: var(--s3); }
+.mb-course {
+  background: var(--cream-100); border: 1px solid var(--line-soft);
+  padding: var(--s2) var(--s3) var(--s3);
+}
+.mb-course-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding-bottom: var(--s1); border-bottom: 1px solid var(--line); margin-bottom: var(--s2);
+}
+.mb-course-name { font-family: var(--display); font-size: 18px; font-style: italic; font-weight: 500; color: var(--charcoal); }
+.mb-course-count { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray); }
+.mb-dishes { display: flex; flex-direction: column; gap: 1px; }
+.mb-dish {
+  display: grid; grid-template-columns: 64px 1fr auto;
+  align-items: center; gap: var(--s2);
+  padding: var(--s2); background: var(--cream-50); border: 1px solid var(--line-soft);
+}
+.mb-dish__img {
+  width: 64px; height: 48px; flex-shrink: 0;
+  background: var(--cream-200);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 8px; color: var(--warm-gray-light);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.mb-dish-info { min-width: 0; }
+.mb-dish-cuisine { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray); margin-bottom: 2px; }
+.mb-dish-title   { font-family: var(--display); font-size: 14px; font-weight: 500; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mb-dish-badge   { display: inline-block; font-family: var(--mono); font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 6px; margin-top: 3px; }
+.mb-dish-badge--library { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.4); }
+.mb-dish-badge--draft   { background: var(--cream-100); color: var(--warm-gray); border: 1px solid var(--line-soft); }
+.mb-dish-remove { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); background: none; border: none; cursor: pointer; padding: 4px 6px; }
+.mb-add-dish {
+  margin-top: var(--s2); font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold);
+  background: none; border: 1px dashed var(--line); padding: 9px 16px;
+  cursor: pointer; display: inline-block;
+}
+.mb-right-col { position: sticky; top: 80px; display: flex; flex-direction: column; gap: var(--s3); }
+.mb-panel { border: 1px solid var(--line); background: var(--cream-50); padding: var(--s3); }
+.mb-panel__head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--s2); padding-bottom: var(--s2); border-bottom: 1px solid var(--line); }
+.mb-panel__title { font-family: var(--display); font-size: 15px; font-style: italic; color: var(--gold); }
+.mb-panel__body  { font-size: 13px; color: var(--warm-gray); font-style: italic; font-family: var(--display); line-height: 1.55; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCREEN 6 — Badge Legend
+   ═══════════════════════════════════════════════════════════════════ */
+
+.legend-header { margin-bottom: var(--s5); max-width: 640px; }
+.legend-header h3 { font-style: italic; margin-bottom: var(--s2); }
+.legend-header p  { font-size: 15px; color: var(--charcoal-soft); }
+
+.legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4); }
+.legend-card { background: var(--cream-100); border: 1px solid var(--line-soft); padding: var(--s4); }
+.legend-badge-preview { margin-bottom: var(--s3); }
+.legend-card__name { font-family: var(--display); font-size: 20px; margin-bottom: var(--s2); }
+.legend-card__body { font-size: 14px; color: var(--charcoal-soft); line-height: 1.7; margin-bottom: var(--s3); }
+.legend-card__applies {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--warm-gray);
+  padding-top: var(--s2); border-top: 1px dotted var(--line-soft);
+}
+.legend-card__conditions { margin-top: var(--s2); }
+.legend-card__conditions li {
+  font-family: var(--mono); font-size: 11px; color: var(--charcoal-soft);
+  padding: 4px 0; border-bottom: 1px dotted var(--line-soft); list-style: none;
+}
+.legend-card__conditions li::before { content: '—  '; color: var(--gold); }
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hp-nav { padding: var(--s2); flex-wrap: wrap; gap: var(--s2); }
+  .hp-nav__items { gap: var(--s2); flex-wrap: wrap; }
+  .wf-screen__body { padding: var(--s4) var(--s2) var(--s6); }
+  .gate-layout { grid-template-columns: 1fr; }
+  .slot-grid, .mb-layout, .legend-grid { grid-template-columns: 1fr; }
+  .hp-footer { grid-template-columns: 1fr 1fr; padding: var(--s4) var(--s2); }
+  h2 { font-size: 28px; }
+  h3 { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TOP NAV — locked from Foundation, unchanged
+     Authenticated state · Reserve add-on holder
+     ══════════════════════════════════════════════════════════════════ -->
+<nav class="hp-nav" aria-label="Main navigation">
+  <div class="hp-nav__brand"><span class="italic">Provenance</span></div>
+  <ul class="hp-nav__items">
+    <li><a href="#">The Canon</a></li>
+    <li><a href="#">The Atlases</a></li>
+    <li><a href="#">The Routes</a></li>
+    <li><a href="#">The Table</a></li>
+  </ul>
+  <div class="hp-nav__util">
+    <a href="#">Pricing</a>
+    <a href="#">MyKitchen →</a>
+    <span class="usage-chip usage-chip--reserve">Reserve · unlimited</span>
+    <a href="#">Leave</a>
+  </div>
+</nav>
+<div class="wf-note" style="margin: 0; border-left: none; border-bottom: 1px solid var(--line); padding: 8px 48px; border-radius: 0; background: rgba(250,247,241,0.95);">
+  <strong>Nav note:</strong> Usage chip switches to <code style="font-family:var(--mono);font-size:10px;">12 of 20 composes this month</code> (warm-gray) for non-addon users on Screen 1 · "Leave" replaces "Sign out" sitewide · "MyKitchen" is one word.
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 1 · l'Atelier · Reserve Gate
+     Who sees this: Library or Profession tier without has_atelier_addon
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="wf-screen" id="screen-1">
+  <div class="wf-screen__label">
+    <span class="sn">Screen 1</span>
+    <span>l'Atelier · Reserve Gate · Library / Profession member without add-on</span>
+  </div>
+  <div class="wf-screen__body">
+    <div class="wf-inner">
+
+      <div class="gate-intro">
+        <div class="eyebrow">l'Atelier</div>
+        <h2>Compose a menu.</h2>
+        <p>Brief the kitchen. l'Atelier matches a canon structure, drafts every course, and carries the result to your Menu Builder for editing before service.</p>
+      </div>
+
+      <div class="gate-layout">
+        <!-- Left: blurred composition preview -->
+        <div class="gate-preview-col">
+          <div class="gate-preview" aria-hidden="true">
+            <div class="gate-preview-title">Autumn Kaiseki · Vancouver</div>
+            <div class="gate-preview-sub">6 courses · Pacific Northwest · September</div>
+            <div class="gate-preview-course">
+              <div class="gate-preview-pos">I · Arrival</div>
+              <div class="gate-preview-name">Dungeness Crab Dashi, Chrysanthemum Snow</div>
+              <div class="gate-preview-desc">Crab from Organic Ocean simmered at 85°C with kombu eight minutes. Freeze-dried chrysanthemum dissolves on contact.</div>
+            </div>
+            <div class="gate-preview-course">
+              <div class="gate-preview-pos">II · Seasonal</div>
+              <div class="gate-preview-name">Cold-Start Sea Scallop, Celery Root Silk</div>
+              <div class="gate-preview-desc">Taylor Shellfish scallop, cold-start in dry steel. Celery root from North Arm Farm, Pemberton, passed through fine-mesh tamis.</div>
+            </div>
+            <div class="gate-preview-course">
+              <div class="gate-preview-pos">III · Earth</div>
+              <div class="gate-preview-name">Wild Mushroom Broth, Pine Oil, Cured Yolk</div>
+              <div class="gate-preview-desc">Foraged blend from Mikuni Wild Harvest — chanterelles, matsutake, black trumpet. Egg yolk salt-cured 72 hours.</div>
+            </div>
+            <div class="gate-preview-course">
+              <div class="gate-preview-pos">IV · Protein</div>
+              <div class="gate-preview-name">Ikejime Spring Salmon, Sansho Butter</div>
+              <div class="gate-preview-desc">Wild chinook from Organic Ocean, dispatched ikejime. Where the dish lives or dies: the moment skin stops pulling from the pan.</div>
+            </div>
+            <div class="gate-preview-course">
+              <div class="gate-preview-pos">V · Pause</div>
+              <div class="gate-preview-name">Salt Spring Sheep's Cheese, Wild Honeycomb</div>
+              <div class="gate-preview-desc">Farm House Natural Cheeses, sixty-plus days. Honeycomb fractured, not sliced.</div>
+            </div>
+            <div class="gate-preview-course">
+              <div class="gate-preview-pos">VI · Sweet</div>
+              <div class="gate-preview-name">Quince Tarte Tatin, Nigori Ice</div>
+              <div class="gate-preview-desc">Local quince poached before the tarte is built. Nigori sake churned into a coarse ice — pale opacity reads as snow on the plate.</div>
+            </div>
+          </div>
+          <div class="gate-veil" aria-hidden="true"></div>
+        </div>
+
+        <!-- Right: upgrade panel -->
+        <div class="gate-panel">
+          <div class="gate-panel__eyebrow">Reserve add-on</div>
+          <h3 class="gate-panel__headline" style="font-family: var(--display);">Compose menus from your kitchen's voice — add Reserve.</h3>
+          <div class="gate-panel__price-block">
+            <span class="gate-panel__price-main">$5.99 / month</span>
+            <span class="gate-panel__price-alt">$59 / year &nbsp;·&nbsp; save two months</span>
+          </div>
+          <p class="gate-panel__desc">Reserve unlocks the menu composition engine — brief by brief, each session saved to your Menu Builder and anchored to the full technique library.</p>
+          <a href="#" class="btn gate-panel__cta">Add Reserve</a>
+        </div>
+      </div>
+
+      <div class="wf-note" style="margin-top: var(--s4);">
+        <strong>Gate decision:</strong> Gate is <code style="font-family:var(--mono);font-size:10px;">has_atelier_addon = FALSE</code> — not a tier comparison. Kitchen, Library, and Profession members all see this gate if the flag is not set. The veil is <code style="font-family:var(--mono);font-size:10px;">backdrop-filter: blur(3px)</code> + gradient overlay. The preview is intentionally readable at the course name level — enough to understand the value, not enough to copy.<br>
+        <strong>Price:</strong> $5.99/mo · $59/yr per the locked 10× rule (10 months for the price of 12). "Add Reserve" is the button label — never "Subscribe."
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 2 · Brief Entry → Parse → Chip Confirmation
+     Who sees this: has_atelier_addon = TRUE · logged-in member
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="wf-screen" id="screen-2">
+  <div class="wf-screen__label">
+    <span class="sn">Screen 2</span>
+    <span>Brief Entry → Parse → Chip Confirmation · Reserve add-on holder</span>
+  </div>
+  <div class="wf-screen__body">
+    <div class="wf-inner">
+
+      <!-- Page header -->
+      <div class="brief-page-header">
+        <div class="brief-page-header__left">
+          <div class="eyebrow">l'Atelier</div>
+          <h2 style="font-style:italic;">Tell me about the menu.</h2>
+        </div>
+        <div>
+          <span class="usage-chip usage-chip--reserve">Reserve · unlimited</span>
+        </div>
+      </div>
+
+      <!-- STATE A: Brief form at rest -->
+      <div class="wf-state-label">State A — Composer at rest</div>
+
+      <div class="brief-hint-row">
+        <span class="brief-hint">A six-course tasting for early autumn, leaning Pacific Northwest, one vegan course</span>
+        <span class="brief-hint">Kaiseki for 8 in Vancouver, September, sake pairing, nine courses</span>
+        <span class="brief-hint">Sunday lunch, Provençal, family style, eight guests, no shellfish</span>
+        <span class="brief-hint">Omakase for two, Tokyo-leaning, spring, seven courses</span>
+      </div>
+
+      <div class="brief-form-wrap">
+        <textarea
+          class="brief-textarea"
+          rows="5"
+          placeholder="Tell me about the menu."
+          aria-label="Menu brief"></textarea>
+        <div class="brief-form-actions">
+          <button class="btn" type="button">Parse brief →</button>
+          <span class="brief-form-hint">We'll pull out cuisine, season, courses, dietary notes, and region.</span>
+        </div>
+      </div>
+
+      <!-- STATE B: Post-parse chip confirmation -->
+      <div class="wf-state-label">State B — After parse: chips shown, user confirms before composing</div>
+
+      <div class="brief-form-wrap" style="margin-bottom: var(--s4);">
+        <textarea
+          class="brief-textarea"
+          rows="3"
+          style="border-color: var(--gold); opacity: 0.7;"
+          readonly
+          aria-label="Brief (parsed)">Kaiseki for 8 in Vancouver, autumn, Pacific Northwest ingredients, Japanese restraint, sake pairing, nine courses, one vegan course.</textarea>
+      </div>
+
+      <div class="parse-result-block">
+        <div class="parse-label">Brief parsed — review and edit before composing</div>
+        <div class="parse-chips">
+          <div class="parse-chip">
+            <span class="parse-chip__k">Cuisine</span>
+            <span class="parse-chip__v">Pacific Northwest · Japanese</span>
+            <span class="parse-chip__edit">edit</span>
+          </div>
+          <div class="parse-chip">
+            <span class="parse-chip__k">Season</span>
+            <span class="parse-chip__v">Autumn</span>
+            <span class="parse-chip__edit">edit</span>
+          </div>
+          <div class="parse-chip">
+            <span class="parse-chip__k">Courses</span>
+            <span class="parse-chip__v">9</span>
+            <span class="parse-chip__edit">edit</span>
+          </div>
+          <div class="parse-chip">
+            <span class="parse-chip__k">Region</span>
+            <span class="parse-chip__v">Vancouver, BC</span>
+            <span class="parse-chip__edit">edit</span>
+          </div>
+          <div class="parse-chip">
+            <span class="parse-chip__k">Dietary</span>
+            <span class="parse-chip__v">One vegan course</span>
+            <span class="parse-chip__edit">edit</span>
+          </div>
+          <div class="parse-chip">
+            <span class="parse-chip__k">Format</span>
+            <span class="parse-chip__v">Kaiseki · tasting menu</span>
+            <span class="parse-chip__edit">edit</span>
+          </div>
+          <div class="parse-chip">
+            <span class="parse-chip__k">Beverage</span>
+            <span class="parse-chip__v">Sake pairing</span>
+            <span class="parse-chip__edit">edit</span>
+          </div>
+        </div>
+
+        <div class="parse-actions">
+          <button class="btn" type="button">Compose</button>
+          <a href="#" class="link-muted">Start over</a>
+        </div>
+      </div>
+
+      <div class="wf-note">
+        <strong>Brief → parse flow:</strong> POST <code style="font-family:var(--mono);font-size:10px;">/api/atelier/parse-brief</code> → returns structured JSON → chips render from <code>brief_parsed</code> keys. Each chip is editable inline (click <code>edit</code> to open a small text input). "Compose" POSTs to <code>/api/atelier/compose</code> with the chips' current values as <code>brief_parsed</code>.<br>
+        <strong>Free-form mode fallback:</strong> If brief yields no canon match (Mode C), chips still appear but the "Format" chip shows "Free-form · synthesising structure" in warm-gray italic to signal Mode C is active.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 3 · Loading State · Slot by Slot
+     One plate at a time at the pass — not a spinner
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="wf-screen" id="screen-3">
+  <div class="wf-screen__label">
+    <span class="sn">Screen 3</span>
+    <span>Loading State · Slot by Slot · Autumn Kaiseki in progress</span>
+  </div>
+  <div class="wf-screen__body">
+    <div class="wf-inner">
+
+      <div class="loading-header">
+        <div>
+          <div class="eyebrow">l'Atelier · Composing</div>
+          <h3>Autumn Kaiseki · Vancouver</h3>
+        </div>
+        <div class="loading-header__right">
+          <span class="mono">Canon · Kaiseki</span>
+          <span class="mono">6 courses · Pacific Northwest</span>
+        </div>
+      </div>
+
+      <div class="slot-grid">
+        <!-- Slot I — done -->
+        <div class="slot-card slot-card--done">
+          <div class="slot-pos">I · Arrival</div>
+          <div class="slot-name">Dungeness Crab Dashi, Chrysanthemum Snow</div>
+          <div class="slot-state slot-state--done"><span class="slot-dot"></span> Composed</div>
+        </div>
+        <!-- Slot II — done -->
+        <div class="slot-card slot-card--done">
+          <div class="slot-pos">II · Seasonal</div>
+          <div class="slot-name">Cold-Start Sea Scallop, Celery Root Silk</div>
+          <div class="slot-state slot-state--done"><span class="slot-dot"></span> Composed</div>
+        </div>
+        <!-- Slot III — composing (animated) -->
+        <div class="slot-card slot-card--composing">
+          <div class="slot-pos">III · Earth</div>
+          <div class="slot-name" style="color: var(--warm-gray); font-style: italic;">Composing&hellip;</div>
+          <div class="slot-state slot-state--active"><span class="slot-dot"></span> Composing course 3 of 6</div>
+        </div>
+        <!-- Slot IV — queued -->
+        <div class="slot-card slot-card--queued">
+          <div class="slot-pos">IV · Protein</div>
+          <div class="slot-name" style="color: var(--line);">—</div>
+          <div class="slot-state slot-state--queued"><span class="slot-dot"></span> Queued</div>
+        </div>
+        <!-- Slot V — queued -->
+        <div class="slot-card slot-card--queued">
+          <div class="slot-pos">V · Pause</div>
+          <div class="slot-name" style="color: var(--line);">—</div>
+          <div class="slot-state slot-state--queued"><span class="slot-dot"></span> Queued</div>
+        </div>
+        <!-- Slot VI — queued -->
+        <div class="slot-card slot-card--queued">
+          <div class="slot-pos">VI · Sweet</div>
+          <div class="slot-name" style="color: var(--line);">—</div>
+          <div class="slot-state slot-state--queued"><span class="slot-dot"></span> Queued</div>
+        </div>
+      </div>
+
+      <div class="loading-status">
+        Composing course <span class="loading-status__hl">3</span> of <span class="loading-status__hl">6</span> &nbsp;·&nbsp; each course composed independently
+      </div>
+
+      <div class="wf-note" style="margin-top: var(--s4);">
+        <strong>Loading pattern:</strong> N × sequential Haiku 4.5 calls — one per slot. Slots reveal in order as each call resolves. The gold border animation (<code style="font-family:var(--mono);font-size:10px;">goldPulse</code> keyframe) runs on the active slot only. Completed slots drop to the resting state (cream-50 bg, no animation). Queued slots are faded (0.38 opacity).<br>
+        <strong>Error handling:</strong> If a slot fails after 2 attempts, the slot card shows "Could not compose this course — re-spin to retry" in terracotta, not an error modal. Composition continues with remaining slots.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 4 · Composition Result · Course Cards
+     Full composition — 6 courses · canon-anchored and compose-draft mixed
+     Pat's Rule applies on all ingredient and beverage lineage chips
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="wf-screen" id="screen-4">
+  <div class="wf-screen__label">
+    <span class="sn">Screen 4</span>
+    <span>Composition Result · Course Cards · Pat's Rule on lineage chips</span>
+  </div>
+  <div class="wf-screen__body">
+    <div class="wf-inner">
+
+      <div class="comp-header">
+        <div>
+          <div class="eyebrow">l'Atelier · Composition</div>
+          <h3>Autumn Kaiseki · Vancouver</h3>
+        </div>
+        <div class="comp-header__meta">
+          <div><span class="comp-header__mode-chip">Canon · Kaiseki</span></div>
+          <div style="margin-top: 6px;">6 courses · 28 May 2026 · Draft</div>
+          <div>Pacific Northwest · Japanese</div>
+        </div>
+      </div>
+
+      <div class="comp-courses">
+
+        <!-- ── Course I · From the Library ── -->
+        <div class="course-card">
+          <div class="course-card__top">
+            <span class="course-card__pos">I &nbsp;·&nbsp; Arrival</span>
+            <span class="badge badge--library">From the Library</span>
+          </div>
+          <div class="course-name course-name--canon">Dungeness Crab Dashi, Chrysanthemum Snow</div>
+          <p class="course-desc">Crab bodies from Organic Ocean, Vancouver, simmered eight minutes at 85°C with kombu from the Kelp Queen. The extraction window is narrow — pull at pale amber or the brine note dominates. Freeze-dried chrysanthemum from Fresh As dissolves on contact with hot dashi, releasing a faint floral bitterness that cuts the ocean sweetness. Serve in a handmade dashi bowl; the colour of the broth against pale ceramic is where the dish lives or dies.</p>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Technique</span>
+            <span class="lchip lchip--technique">Dashi extraction · kombu</span>
+            <span class="lchip lchip--canon">Canon: Japanese</span>
+          </div>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Ingredients</span>
+            <span class="lchip lchip--supplier">Organic Ocean · Vancouver BC <span class="pat-rule">origin</span></span>
+            <span class="lchip lchip--supplier">Fresh As NZ · freeze-dried <span class="pat-rule">provider</span></span>
+            <span class="lchip lchip--supplier">Kelp Queen · Ucluelet BC <span class="pat-rule">origin</span></span>
+          </div>
+          <div class="course-card__footer">
+            <a class="respin" href="#" title="Compose a new version of this course">↻ re-spin this course</a>
+          </div>
+        </div>
+
+        <!-- ── Course II · From the Library ── -->
+        <div class="course-card">
+          <div class="course-card__top">
+            <span class="course-card__pos">II &nbsp;·&nbsp; Seasonal</span>
+            <span class="badge badge--library">From the Library</span>
+          </div>
+          <div class="course-name course-name--canon">Cold-Start Sea Scallop, Celery Root Silk, Yuzu Kosho</div>
+          <p class="course-desc">Single sea scallop from Taylor Shellfish, Puget Sound, placed cold-side down in a dry carbon-steel pan over medium heat. The colour change at the base — translucent up to the midpoint — is the flip signal. Celery root from North Arm Farm, Pemberton, roasted at 200°C until caramelised, then passed through a fine-mesh tamis with cold butter. The yuzu kosho is the heat register: use enough to cut the celery-root sweetness, not so much it overwrites the scallop.</p>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Technique</span>
+            <span class="lchip lchip--technique">Cold-start sear · dry steel</span>
+            <span class="lchip lchip--canon">Canon: French technique</span>
+          </div>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Ingredients</span>
+            <span class="lchip lchip--supplier">Taylor Shellfish · Puget Sound WA <span class="pat-rule">origin</span></span>
+            <span class="lchip lchip--supplier">North Arm Farm · Pemberton BC <span class="pat-rule">origin</span></span>
+          </div>
+          <div class="course-card__footer">
+            <a class="respin" href="#">↻ re-spin this course</a>
+          </div>
+        </div>
+
+        <!-- ── Course III · Compose draft (free-form) ── -->
+        <div class="course-card" style="background: var(--cream-100);">
+          <div class="course-card__top">
+            <span class="course-card__pos">III &nbsp;·&nbsp; Earth</span>
+            <span class="badge badge--draft">Compose draft</span>
+          </div>
+          <div class="course-name course-name--freeform">Wild Mushroom Broth, Pine Oil, 72-Hour Cured Egg Yolk</div>
+          <p class="course-desc">A foraged blend from Mikuni Wild Harvest — chanterelles, matsutake fragment, and black trumpet — simmered in the residual dashi base and reduced by half. Cold-pressed pine oil from a BC producer laced in at the moment of service: the oil breaks on contact with the hot broth surface and releases the resinous note before the guest lifts the bowl. Egg yolk slow-cured 72 hours in a 4:1 salt-to-sugar ratio until it holds a wax-like consistency that grates cleanly tableside.</p>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Technique</span>
+            <span class="lchip lchip--technique">Salt-sugar curing · yolk</span>
+            <span class="lchip lchip--technique">Forage-led broth reduction</span>
+          </div>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Ingredients</span>
+            <span class="lchip lchip--supplier">Mikuni Wild Harvest · BC / PNW <span class="pat-rule">origin</span></span>
+          </div>
+          <div class="course-card__footer">
+            <a class="respin" href="#">↻ re-spin this course</a>
+          </div>
+        </div>
+
+        <!-- ── Course IV · From the Library ── -->
+        <div class="course-card">
+          <div class="course-card__top">
+            <span class="course-card__pos">IV &nbsp;·&nbsp; Protein</span>
+            <span class="badge badge--library">From the Library</span>
+          </div>
+          <div class="course-name course-name--canon">Ikejime Spring Chinook, Sansho Butter, Coastal Herb Oil</div>
+          <p class="course-desc">Wild spring chinook from Organic Ocean, Vancouver, dispatched ikejime. The neurosystem cut prevents lactic acid build-up and extends the window of peak flesh texture to four days — order accordingly. Sear skin-side down in clarified butter for the first three minutes over medium-high heat. Where the dish lives or dies: the moment the skin stops pulling from the pan surface is the moment to flip. Sansho butter mounted cold at the pass; herb oil pressed from coastal forage drizzled last.</p>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Technique</span>
+            <span class="lchip lchip--technique">Ikejime dispatch</span>
+            <span class="lchip lchip--canon">Canon: Japanese</span>
+            <span class="lchip lchip--technique">Pan-sear · skin side</span>
+          </div>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Ingredients</span>
+            <span class="lchip lchip--supplier">Organic Ocean · Vancouver BC <span class="pat-rule">origin</span></span>
+          </div>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Beverage</span>
+            <span class="lchip lchip--beverage">Junmai Ginjo sake <span class="pat-rule">pairing</span></span>
+            <span class="lchip lchip--supplier">Granville Island Brewing (non-alcoholic alt) <span class="pat-rule">provider · Vancouver BC</span></span>
+          </div>
+          <div class="course-card__footer">
+            <a class="respin" href="#">↻ re-spin this course</a>
+          </div>
+        </div>
+
+        <!-- ── Course V · Compose draft (vegan course) ── -->
+        <div class="course-card" style="background: var(--cream-100);">
+          <div class="course-card__top">
+            <span class="course-card__pos">V &nbsp;·&nbsp; Vegan · Pause</span>
+            <span class="badge badge--draft">Compose draft</span>
+          </div>
+          <div class="course-name course-name--freeform">Roasted Camas Bulb, Smoked Douglas Fir Honey, Pickled Fiddlehead</div>
+          <p class="course-desc">Camas bulb from Wildest Foods, foraged and sourced with First Nations harvesting protocols. Roasted in the coals of the wood oven until the outer skins are charred and the interior is sweet and dense — a flavour that reads as baked chestnut rather than any onion note. Douglas fir honey cold-smoked for thirty minutes before service. Fiddleheads from North Arm Farm, blanched and quick-pickled in rice vinegar, provide the brightness that the bulb and honey alone cannot supply.</p>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Technique</span>
+            <span class="lchip lchip--technique">Ember roasting</span>
+            <span class="lchip lchip--technique">Cold-smoke · honey</span>
+          </div>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Ingredients</span>
+            <span class="lchip lchip--supplier">Wildest Foods · BC forage <span class="pat-rule">origin</span></span>
+            <span class="lchip lchip--supplier">North Arm Farm · Pemberton BC <span class="pat-rule">provider</span></span>
+          </div>
+          <div class="course-card__footer">
+            <a class="respin" href="#">↻ re-spin this course</a>
+          </div>
+        </div>
+
+        <!-- ── Course VI · From the Library ── -->
+        <div class="course-card">
+          <div class="course-card__top">
+            <span class="course-card__pos">VI &nbsp;·&nbsp; Sweet</span>
+            <span class="badge badge--library">From the Library</span>
+          </div>
+          <div class="course-name course-name--canon">Quince Tarte Tatin, Dark Caramel, Nigori Ice</div>
+          <p class="course-desc">Local quince — firm enough to resist collapse — poached forty minutes in a light sugar syrup before the tarte is built. The fruit will not soften in the oven alone; the pre-poach is where the texture is set. Caramel taken three degrees past the standard amber to a dark mahogany so the bitterness registers against the sweetness of the quince. Nigori sake from the sake pairing program churned into a coarse, granular ice. The pale opacity of unfiltered sake makes it read as light snow against the dark caramel.</p>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Technique</span>
+            <span class="lchip lchip--technique">Tarte Tatin inversion</span>
+            <span class="lchip lchip--canon">Canon: French pastry</span>
+            <span class="lchip lchip--technique">Dark caramel · mahogany</span>
+          </div>
+          <div class="lineage-row">
+            <span class="lineage-lbl">Beverage</span>
+            <span class="lchip lchip--beverage">Nigori Junmai sake · late-season <span class="pat-rule">pairing</span></span>
+          </div>
+          <div class="course-card__footer">
+            <a class="respin" href="#">↻ re-spin this course</a>
+          </div>
+        </div>
+
+      </div><!-- /comp-courses -->
+
+      <!-- Action bar -->
+      <div class="comp-actions">
+        <button class="btn" type="button">Save to Menu Builder</button>
+        <a class="link-gold" href="#">Compose again</a>
+        <a class="link-muted" href="#">Discard</a>
+      </div>
+
+      <div class="wf-note">
+        <strong>Badge wording:</strong> "From the Library" = canon-anchored (course pulled from a technique_reference with canon_tier; founder-reviewed; Sashimi Standard certified). "Compose draft" = free-form slot (Mode C) or a slot where the canon pool produced a novel invention; beta operating mode; whimsy; not yet founder-reviewed. Never "AI-generated", never "generated."<br>
+        <strong>Name weight:</strong> Canon-anchored course names render in regular weight Playfair (font-weight 500). Free-form course names render in italic Playfair (font-style: italic) — a quiet visual signal of the source, not an explicit label.<br>
+        <strong>Pat's Rule:</strong> Every ingredient chip shows origin producer + location. Every beverage chip shows producer or style. Local provider shows when known. The <code style="font-family:var(--mono);font-size:10px;">pat-rule</code> span is a secondary label within each chip, not a separate column.<br>
+        <strong>Re-spin:</strong> Calls <code style="font-family:var(--mono);font-size:10px;">_atelier_compose_slot()</code> for that slot index only, replaces card in place. Does not re-parse the brief or re-run the full composition.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 5 · Save to Menu Builder · Transition + Landing State
+     Two-step: compose → save → Menu Builder (not auto-promoted)
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="wf-screen" id="screen-5">
+  <div class="wf-screen__label">
+    <span class="sn">Screen 5</span>
+    <span>Save to Menu Builder · Transition Moment + Menu Builder Landing</span>
+  </div>
+  <div class="wf-screen__body" style="background: var(--cream-100);">
+    <div class="wf-inner">
+
+      <!-- Part A: Transition moment -->
+      <div class="transition-moment">
+        <div class="transition-line">Carrying through to your Menu Builder&hellip;</div>
+        <div class="transition-sub">Composition saved · courses pre-populated · ready to edit</div>
+      </div>
+
+      <!-- Part B: Menu Builder landing state -->
+      <div class="mb-page">
+        <div class="mb-crumb">
+          <a href="#">MyKitchen</a> &nbsp;/&nbsp; <a href="#">Menus</a> &nbsp;/&nbsp; Autumn Kaiseki · Vancouver
+        </div>
+
+        <div class="mb-header">
+          <div class="mb-eyebrow">Menu Builder</div>
+          <div class="mb-title">Autumn Kaiseki · Vancouver</div>
+          <div class="mb-meta-row">
+            <span class="mb-meta-tag mb-meta-tag--composed">l'Atelier composition</span>
+            <span class="mb-meta-tag mb-meta-tag--date">28 May 2026</span>
+          </div>
+        </div>
+
+        <div class="mb-layout">
+
+          <!-- Left: courses -->
+          <div class="mb-courses">
+
+            <div class="mb-course">
+              <div class="mb-course-head">
+                <span class="mb-course-name">Arrival</span>
+                <span class="mb-course-count">1 dish</span>
+              </div>
+              <div class="mb-dishes">
+                <div class="mb-dish">
+                  <div class="mb-dish__img">64 × 48</div>
+                  <div class="mb-dish-info">
+                    <div class="mb-dish-cuisine">Japanese · Pacific NW</div>
+                    <div class="mb-dish-title">Dungeness Crab Dashi, Chrysanthemum Snow</div>
+                    <span class="mb-dish-badge mb-dish-badge--library">From the Library</span>
+                  </div>
+                  <button class="mb-dish-remove" title="Remove">×</button>
+                </div>
+              </div>
+              <button class="mb-add-dish">+ add dish</button>
+            </div>
+
+            <div class="mb-course">
+              <div class="mb-course-head">
+                <span class="mb-course-name">Seasonal</span>
+                <span class="mb-course-count">1 dish</span>
+              </div>
+              <div class="mb-dishes">
+                <div class="mb-dish">
+                  <div class="mb-dish__img">64 × 48</div>
+                  <div class="mb-dish-info">
+                    <div class="mb-dish-cuisine">French technique · Pacific NW</div>
+                    <div class="mb-dish-title">Cold-Start Sea Scallop, Celery Root Silk, Yuzu Kosho</div>
+                    <span class="mb-dish-badge mb-dish-badge--library">From the Library</span>
+                  </div>
+                  <button class="mb-dish-remove" title="Remove">×</button>
+                </div>
+              </div>
+              <button class="mb-add-dish">+ add dish</button>
+            </div>
+
+            <div class="mb-course">
+              <div class="mb-course-head">
+                <span class="mb-course-name">Earth</span>
+                <span class="mb-course-count">1 dish</span>
+              </div>
+              <div class="mb-dishes">
+                <div class="mb-dish">
+                  <div class="mb-dish__img">64 × 48</div>
+                  <div class="mb-dish-info">
+                    <div class="mb-dish-cuisine">Pacific Northwest · Forage</div>
+                    <div class="mb-dish-title">Wild Mushroom Broth, Pine Oil, 72-Hour Cured Egg Yolk</div>
+                    <span class="mb-dish-badge mb-dish-badge--draft">Compose draft</span>
+                  </div>
+                  <button class="mb-dish-remove" title="Remove">×</button>
+                </div>
+              </div>
+              <button class="mb-add-dish">+ add dish</button>
+            </div>
+
+            <div class="mb-course">
+              <div class="mb-course-head">
+                <span class="mb-course-name">Protein</span>
+                <span class="mb-course-count">1 dish</span>
+              </div>
+              <div class="mb-dishes">
+                <div class="mb-dish">
+                  <div class="mb-dish__img">64 × 48</div>
+                  <div class="mb-dish-info">
+                    <div class="mb-dish-cuisine">Japanese · Pacific NW</div>
+                    <div class="mb-dish-title">Ikejime Spring Chinook, Sansho Butter, Coastal Herb Oil</div>
+                    <span class="mb-dish-badge mb-dish-badge--library">From the Library</span>
+                  </div>
+                  <button class="mb-dish-remove" title="Remove">×</button>
+                </div>
+              </div>
+              <button class="mb-add-dish">+ add dish</button>
+            </div>
+
+            <div class="mb-course">
+              <div class="mb-course-head">
+                <span class="mb-course-name">Vegan · Pause</span>
+                <span class="mb-course-count">1 dish</span>
+              </div>
+              <div class="mb-dishes">
+                <div class="mb-dish">
+                  <div class="mb-dish__img">64 × 48</div>
+                  <div class="mb-dish-info">
+                    <div class="mb-dish-cuisine">Pacific Northwest · Forage</div>
+                    <div class="mb-dish-title">Roasted Camas Bulb, Smoked Douglas Fir Honey, Pickled Fiddlehead</div>
+                    <span class="mb-dish-badge mb-dish-badge--draft">Compose draft</span>
+                  </div>
+                  <button class="mb-dish-remove" title="Remove">×</button>
+                </div>
+              </div>
+              <button class="mb-add-dish">+ add dish</button>
+            </div>
+
+            <div class="mb-course">
+              <div class="mb-course-head">
+                <span class="mb-course-name">Sweet</span>
+                <span class="mb-course-count">1 dish</span>
+              </div>
+              <div class="mb-dishes">
+                <div class="mb-dish">
+                  <div class="mb-dish__img">64 × 48</div>
+                  <div class="mb-dish-info">
+                    <div class="mb-dish-cuisine">French pastry · Japanese beverage</div>
+                    <div class="mb-dish-title">Quince Tarte Tatin, Dark Caramel, Nigori Ice</div>
+                    <span class="mb-dish-badge mb-dish-badge--library">From the Library</span>
+                  </div>
+                  <button class="mb-dish-remove" title="Remove">×</button>
+                </div>
+              </div>
+              <button class="mb-add-dish">+ add dish</button>
+            </div>
+
+          </div><!-- /mb-courses -->
+
+          <!-- Right: sticky panels -->
+          <div class="mb-right-col">
+            <div class="mb-panel">
+              <div class="mb-panel__head">
+                <span class="mb-panel__title">Allergen matrix</span>
+              </div>
+              <div class="mb-panel__body">Cross-menu allergens appear here once ingredient data is populated from the dish records.</div>
+            </div>
+            <div class="mb-panel">
+              <div class="mb-panel__head">
+                <span class="mb-panel__title">Beverage program</span>
+              </div>
+              <div class="mb-panel__body">Sake pairings from composition lineage appear here. Add or replace via the beverage canon.</div>
+            </div>
+            <div class="mb-panel">
+              <div class="mb-panel__head">
+                <span class="mb-panel__title">Menu cost</span>
+              </div>
+              <div class="mb-panel__body">Cost populates when ingredient pricing is confirmed in your MyKitchen settings.</div>
+            </div>
+          </div>
+
+        </div><!-- /mb-layout -->
+      </div><!-- /mb-page -->
+
+      <div class="wf-note" style="margin-top: var(--s5);">
+        <strong>Two-step, not auto:</strong> "Save to Menu Builder" is an explicit action in Screen 4. The composition is saved to the <code style="font-family:var(--mono);font-size:10px;">compositions</code> table first (status='draft'), then converted to a <code style="font-family:var(--mono);font-size:10px;">menus</code> row + <code style="font-family:var(--mono);font-size:10px;">menu_recipes</code> rows on save. Courses land as dish rows using the <code style="font-family:var(--mono);font-size:10px;">composition_id</code> as provenance. The "l'Atelier composition" badge on the menu header signals origin to the user — it is not displayed to diners.<br>
+        <strong>Menu Builder affordances unchanged:</strong> Composed dishes arrive in the existing course/dish-row structure. User can reorder, remove, add further dishes, edit titles, set cover count, run allergen matrix, and export PDF — all Sprint 8 features. Nothing new is added to the Menu Builder in Sprint 9.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SCREEN 6 · Founder-Review Badge Legend
+     Surfaces in /atelier result page and in Menu Builder dish rows
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="wf-screen" id="screen-6">
+  <div class="wf-screen__label">
+    <span class="sn">Screen 6</span>
+    <span>Founder-Review Badge Legend · Surfaces on Result Page + Menu Builder</span>
+  </div>
+  <div class="wf-screen__body">
+    <div class="wf-inner">
+
+      <div class="legend-header">
+        <div class="eyebrow">l'Atelier · Badge reference</div>
+        <h3>What the badges mean.</h3>
+        <p>Two badges appear on composition course cards and in the Menu Builder dish rows after a composition is saved. They tell you the provenance of the course — where the structure came from and what review it has received.</p>
+      </div>
+
+      <div class="legend-grid">
+
+        <!-- Badge 1: From the Library -->
+        <div class="legend-card">
+          <div class="legend-badge-preview">
+            <span class="badge badge--library" style="font-size: 11px; padding: 6px 14px;">From the Library</span>
+          </div>
+          <div class="legend-card__name">From the Library</div>
+          <div class="legend-card__body">
+            This course was drawn from a canon entry in the technique library — a technique reference with a <code style="font-family:var(--mono);font-size:11px;">canon_tier</code> and <code style="font-family:var(--mono);font-size:11px;">course_slots</code> defined. The structure, the lineage, and the named producers in the lineage chips were pulled from verified Provenance data — not composed from the brief alone.
+          </div>
+          <div class="legend-card__applies">Applies when</div>
+          <ul class="legend-card__conditions">
+            <li>Composition ran in Mode A (explicit canon_entry_id) or Mode B (matched canon via rules engine)</li>
+            <li>The slot was filled from real technique_references and ingredient_products pools</li>
+            <li>The canon entry has been founder-reviewed and is certified at the Sashimi Standard</li>
+          </ul>
+        </div>
+
+        <!-- Badge 2: Compose draft -->
+        <div class="legend-card">
+          <div class="legend-badge-preview">
+            <span class="badge badge--draft" style="font-size: 11px; padding: 6px 14px;">Compose draft</span>
+          </div>
+          <div class="legend-card__name">Compose draft</div>
+          <div class="legend-card__body">
+            This course was composed from the brief in Mode C (free-form) or arrived at a course that had no canon pool match. Whimsy is the operating mode. The description, lineage, and structure are plausible but have not yet been founder-reviewed. Safe to save and refine in your Menu Builder before service — treat it as a strong first draft, not a finished plate.
+          </div>
+          <div class="legend-card__applies">Applies when</div>
+          <ul class="legend-card__conditions">
+            <li>Brief produced no canon match — Haiku synthesised slot structure from scratch</li>
+            <li>A canon-matched slot produced an invention that could not be validated against real pool IDs</li>
+            <li>Beta operating mode — founder review has not yet run on this course type</li>
+          </ul>
+        </div>
+
+      </div><!-- /legend-grid -->
+
+      <div class="wf-note" style="margin-top: var(--s5);">
+        <strong>Where badges render:</strong> On the course card in Screen 4 (top-right). In the Menu Builder dish row (below the dish title, above the remove button). Not shown to diners — only to the member composing or editing the menu.<br>
+        <strong>Beta signal:</strong> During the Sprint 9 beta, all Compose draft courses carry a secondary tooltip on hover: "Founder review pending — verify before service." This tooltip is not part of the permanent badge design and will be removed once the review pipeline is running.<br>
+        <strong>Never use:</strong> "AI", "generated", "auto-generated", "machine-written", or any phrase that attributes authorship to a model. The badge is about review status, not origin.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FOOTER — locked from Foundation, unchanged
+     ══════════════════════════════════════════════════════════════════ -->
+<footer class="hp-footer">
+  <div>
+    <h5>Provenance</h5>
+    <p style="font-size: 14px; color: var(--charcoal-soft); max-width: 280px; line-height: 1.55;">A reference for the origin of ingredients, the lineage of techniques, and the canon of beverages.</p>
+  </div>
+  <div>
+    <h5>Library</h5>
+    <ul>
+      <li><a href="#">The Canon</a></li>
+      <li><a href="#">The Atlases</a></li>
+      <li><a href="#">The Routes</a></li>
+      <li><a href="#">Cuisines</a></li>
+    </ul>
+  </div>
+  <div>
+    <h5>The Kitchen</h5>
+    <ul>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">For Professionals</a></li>
+      <li><a href="#">Methodology</a></li>
+      <li><a href="#">The Standard</a></li>
+    </ul>
+  </div>
+  <div>
+    <h5>The House</h5>
+    <ul>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Suppliers</a></li>
+      <li><a href="#">The Provenance Table</a></li>
+      <li><a href="#">MyKitchen →</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>

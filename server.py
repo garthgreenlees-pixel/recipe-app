@@ -5577,6 +5577,14 @@ def admin_technique_builder():
     return send_file("admin_technique_builder.html")
 
 
+@app.route("/admin/wireframe/atelier")
+def admin_wireframe_atelier():
+    user = get_current_user()
+    if not user or user.get("role") not in ("founder", "admin"):
+        return redirect(url_for("home"))
+    return send_from_directory("static", "wireframe-atelier.html")
+
+
 # ─── Technique extraction (AI) ───────────────────────────────────────────────
 
 TECHNIQUE_EXTRACTION_PROMPT = (
