@@ -13891,25 +13891,132 @@ def print_allergen_card(slug):
     )
 
 
+@app.route("/menu/<slug>/print/beverage-program")
+@requires_tier("profession")
+def print_beverage_program(slug):
+    from weasyprint import HTML as WeasyHTML
+    from datetime import datetime
+
+    user = get_current_user()
+    region = get_user_location() or "CA"
+    conn = psycopg2.connect(DATABASE_URL_WRITE)
+    conn.autocommit = True
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM menus WHERE slug = %s AND owner_user_id = %s", (slug, user["id"]))
+    menu = cur.fetchone()
+    if not menu:
+        cur.close(); conn.close()
+        abort(404)
+
+    cur.execute("""
+        SELECT * FROM menu_recipes WHERE menu_id = %s
+        ORDER BY course_order, dish_order_within_course
+    """, (menu["id"],))
+    mr_rows = cur.fetchall()
+    _DEFAULT_COURSES = [("Amuse", 1), ("Starter", 2), ("Main", 3), ("Cheese", 4), ("Dessert", 5)]
+    courses_map = {name: {"name": name, "order": order, "dishes": []} for name, order in _DEFAULT_COURSES}
+    for mr in mr_rows:
+        try:
+            recipe = _resolve_recipe_ref(mr["recipe_ref"], user["id"], cur)
+        except ValueError:
+            recipe = None
+        cn = mr["course_name"]
+        if cn not in courses_map:
+            courses_map[cn] = {"name": cn, "order": mr["course_order"], "dishes": []}
+        courses_map[cn]["dishes"].append({
+            "menu_recipe_id": str(mr["id"]),
+            "recipe_ref": mr["recipe_ref"],
+            "dish_order_within_course": mr["dish_order_within_course"],
+            "recipe": dict(recipe) if recipe else None,
+        })
+    courses = sorted(courses_map.values(), key=lambda c: c["order"])
+
+    pairings_by_course = {}
+    all_product_ids = []
+    for course in courses:
+        for dish in course["dishes"]:
+            r = dish.get("recipe") or {}
+            ref = dish.get("recipe_ref", "")
+            prefix = ref.split(":")[0] if ":" in ref else ""
+            raw = r.get("pairings") if prefix == "canon" else r.get("beverage_pairings")
+            pairings = _normalize_beverage_pairings(raw)
+            for p in pairings:
+                if p.get("product_id") is not None:
+                    all_product_ids.append(p["product_id"])
+            pairings_by_course.setdefault(course["name"], []).append({
+                "course_order": course["order"],
+                "dish_title": r.get("name") or r.get("title") or dish.get("recipe_ref", ""),
+                "dish_image": r.get("image_url") or None,
+                "pairings": pairings,
+            })
+
+    provider_lookup = _pats_rule_for_beverages(all_product_ids, region, cur)
+    for entries in pairings_by_course.values():
+        for entry in entries:
+            for p in entry["pairings"]:
+                p["local_provider"] = provider_lookup.get(p.get("product_id"))
+
+    has_any_pairings = any(
+        e["pairings"] for entries in pairings_by_course.values() for e in entries
+    )
+
+    cur.execute("UPDATE menus SET last_exported_at = NOW() WHERE id = %s", (menu["id"],))
+    cur.close(); conn.close()
+
+    menu_dict = dict(menu)
+    menu_dict["id"] = str(menu_dict["id"])
+    for k in ("event_date", "created_at", "updated_at", "last_exported_at"):
+        if menu_dict.get(k) is not None:
+            menu_dict[k] = menu_dict[k].isoformat()
+
+    gen_stamp = datetime.now().strftime('%-d %B %Y · %H:%M')
+
+    html = render_template(
+        "print/beverage_program.html",
+        menu=menu_dict,
+        courses=courses,
+        pairings_by_course=pairings_by_course,
+        has_any_pairings=has_any_pairings,
+        region=region,
+        gen_stamp=gen_stamp,
+    )
+
+    try:
+        pdf_bytes = WeasyHTML(string=html, base_url=request.host_url).write_pdf()
+    except Exception:
+        app.logger.exception(f"WeasyPrint error for beverage-program {slug}")
+        abort(500)
+
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="beverage-program-{slug}.pdf"'},
+    )
+
+
 # ─── Sprint 8 — Menu Builder Routes ─────────────────────────────────────────
 
 def _normalize_beverage_pairings(raw):
-    """Normalize beverage_pairings (kitchen) or pairings (canon) to [{role, descriptor, producer}]."""
+    """Normalize beverage_pairings (kitchen) or pairings (canon) to [{role, descriptor, producer, product_id}].
+    product_id is sourced from beverage_product_id on kitchen pairing dicts; used by print routes for Pat's Rule.
+    Screen rendering ignores the new field — only reads role/descriptor/producer.
+    """
     if not raw or not isinstance(raw, list):
         return []
     out = []
     for p in raw:
         if isinstance(p, str):
             if p.strip():
-                out.append({"role": "", "descriptor": p.strip(), "producer": ""})
+                out.append({"role": "", "descriptor": p.strip(), "producer": "", "product_id": None})
         elif isinstance(p, dict):
             tier = (p.get("tier_label") or "").strip()
             ptype = (p.get("pairing_type") or "").strip()
             role = tier.title() if tier else ptype.title() if ptype else ""
             desc = (p.get("flavour_logic") or p.get("beverage_description") or "").strip()
             producer = (p.get("beverage_name") or "").strip()
+            product_id = p.get("beverage_product_id")
             if producer or desc:
-                out.append({"role": role, "descriptor": desc, "producer": producer})
+                out.append({"role": role, "descriptor": desc, "producer": producer, "product_id": product_id})
     return out
 
 
@@ -14096,6 +14203,52 @@ def _pats_rule_for_ingredients(ingredient_names, region, cur):
         master_id = name_to_master.get(n)
         product_id = master_to_product.get(master_id) if master_id else None
         result[n] = product_prov.get(product_id) or {"origin_producer": None, "local_provider": None}
+    return result
+
+
+def _pats_rule_for_beverages(product_ids, region, cur):
+    """Batch resolve local provider for a list of beverage_product_ids.
+
+    Symmetric counterpart to _pats_rule_for_ingredients. Skips the master_id step
+    because product_id is already known on each pairing. beverage_product_suppliers
+    has no is_primary column — first alphabetical match per product wins.
+
+    Returns dict keyed by product_id → local_provider supplier name (str) or None.
+    Fails gracefully if beverage_product_suppliers is empty or missing.
+    """
+    if not product_ids:
+        return {}
+
+    _CA_PROVINCES = {'BC', 'AB', 'SK', 'MB', 'ON', 'QC', 'NB', 'NS', 'PE', 'NL', 'NT', 'YT', 'NU'}
+    region_terms = [region] if region else ['nowhere']
+    if region in _CA_PROVINCES:
+        region_terms += ['nationwide_CA', 'Western_Canada']
+    elif region:
+        region_terms += ['nationwide_US']
+
+    valid_ids = [int(pid) for pid in product_ids if pid is not None]
+    result = {pid: None for pid in product_ids}
+    if not valid_ids:
+        return result
+
+    try:
+        cur.execute("""
+            SELECT bps.product_id, s.name AS supplier_name
+            FROM beverage_product_suppliers bps
+            JOIN suppliers s ON bps.supplier_id = s.id
+            WHERE bps.product_id = ANY(%s)
+              AND bps.role = 'PROVIDER'
+              AND bps.region && %s::text[]
+            ORDER BY bps.product_id, s.name
+        """, (valid_ids, region_terms))
+        seen = set()
+        for row in cur.fetchall():
+            pid = row["product_id"]
+            if pid not in seen:
+                seen.add(pid)
+                result[pid] = row["supplier_name"]
+    except Exception:
+        app.logger.warning("_pats_rule_for_beverages query failed — returning all None")
     return result
 
 

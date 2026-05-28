@@ -1,0 +1,144 @@
+{% extends "print/_base.html" %}
+
+{% block page_title %}Beverage Program — {{ menu.title }}{% endblock %}
+{% block doctype %}Beverage Program{% endblock %}
+{% block title %}{{ menu.title }}{% endblock %}
+{% block title_clause %}{% if menu.event_date %}<span class="pdf-title-clause">{{ menu.event_date | format_event_date }}.</span>{% endif %}{% endblock %}
+{% block meta %}{{ menu.cover_count }} covers · for the sommelier{% endblock %}
+
+{% block extra_styles %}
+/* ── Per-dish course block ── */
+.pdf-bev-course {
+  padding: 4mm 0;
+  border-bottom: 1px dotted #d9d0b6;
+  page-break-inside: avoid;
+}
+.pdf-bev-course:last-child { border-bottom: none; }
+.pdf-bev-course__head {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 13pt;
+  font-weight: 400;
+  color: #C9A84C;
+  margin-bottom: 4mm;
+}
+
+/* ── Pairing rows ── */
+.pdf-bev-course__pairings {
+  padding-left: 4mm;
+}
+.pdf-bev-pairing {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 2mm;
+  margin-bottom: 3mm;
+}
+.pdf-bev-pairing:last-child { margin-bottom: 0; }
+.pdf-bev-pairing__role {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: #807462;
+  padding-top: 1mm;
+}
+.pdf-bev-pairing__body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt;
+  font-weight: 300;
+  color: #1f1b16;
+  line-height: 1.5;
+}
+.pdf-bev-pairing__body .descriptor {
+  display: inline;
+}
+.pdf-bev-pairing__body .producer {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 10pt;
+  font-weight: 400;
+  display: block;
+  margin-top: 0.5mm;
+}
+.pdf-bev-pairing__provider {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8pt;
+  font-weight: 300;
+  color: #4a3f33;
+  margin-top: 1mm;
+  padding-left: 2mm;
+}
+.pdf-bev-pairing__provider .arrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 8pt;
+  color: #807462;
+  margin-right: 2mm;
+}
+
+/* ── Per-dish and whole-menu empty states ── */
+.pdf-bev-pairing__empty {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 10pt;
+  font-weight: 400;
+  color: #4a3f33;
+  padding-left: 4mm;
+}
+.pdf-bev-empty--menu {
+  text-align: center;
+  padding: 12mm 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 11pt;
+  font-weight: 400;
+  color: #4a3f33;
+}
+{% endblock %}
+
+{% block body %}
+
+{# ── Whole-menu empty states ── #}
+{% if not pairings_by_course %}
+<div class="pdf-bev-empty--menu">Add dishes to draft beverage pairings.</div>
+
+{% elif not has_any_pairings %}
+<div class="pdf-bev-empty--menu">No beverage pairings drafted for this menu yet.</div>
+
+{% else %}
+
+{# ── Course blocks ── #}
+{% for course in courses %}
+{% if pairings_by_course[course.name] is defined %}
+{% for entry in pairings_by_course[course.name] %}
+<div class="pdf-bev-course">
+  <div class="pdf-bev-course__head">{{ entry.course_order is defined and '' or '' }}{{ course.name }} · {{ entry.dish_title }}</div>
+
+  {% if entry.pairings %}
+  <div class="pdf-bev-course__pairings">
+    {% for pairing in entry.pairings %}
+    <div class="pdf-bev-pairing">
+      <div class="pdf-bev-pairing__role">{{ pairing.role or '—' }}</div>
+      <div>
+        <div class="pdf-bev-pairing__body">
+          {% if pairing.descriptor %}<span class="descriptor">{{ pairing.descriptor }}</span>{% endif %}
+          {% if pairing.producer %}<span class="producer">{{ pairing.producer }}</span>{% endif %}
+        </div>
+        <div class="pdf-bev-pairing__provider">
+          <span class="arrow">↳</span>
+          {% if pairing.local_provider %}{{ pairing.local_provider }} · {{ region }}{% else %}—{% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="pdf-bev-pairing__empty">Pairings not drafted yet.</div>
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+{% endif %}
+{% endblock %}
