@@ -375,6 +375,82 @@ body.at-page { font-family: var(--body); background: var(--cream-50); color: var
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ── Badge legend trigger link ── */
+.at-page .at-legend-trigger {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--warm-gray); text-decoration: none;
+  border-bottom: 1px solid var(--line-soft);
+}
+.at-page .at-legend-trigger:hover { color: var(--charcoal); border-bottom-color: var(--gold); }
+
+/* ── Badge Legend modal ── */
+.at-page .at-legend-backdrop {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,0.55);
+  align-items: center; justify-content: center;
+  padding: var(--s4);
+}
+.at-page .at-legend-card {
+  position: relative; background: var(--cream-50);
+  max-width: 680px; width: 100%; max-height: 85vh; overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(31,27,22,0.18);
+  padding: var(--s5) var(--s5) var(--s4);
+}
+.at-page .at-legend-x {
+  position: absolute; top: var(--s2); right: var(--s2);
+  background: none; border: none; cursor: pointer;
+  font-family: var(--mono); font-size: 14px; color: var(--warm-gray);
+  line-height: 1; padding: 4px 8px;
+}
+.at-page .at-legend-x:hover { color: var(--charcoal); }
+.at-page .at-legend-head { margin-bottom: var(--s4); }
+.at-page .at-legend-title {
+  font-family: var(--display); font-size: 28px; font-style: italic;
+  font-weight: 500; color: var(--charcoal); margin: var(--s1) 0 var(--s2);
+}
+.at-page .at-legend-intro {
+  font-family: var(--body); font-size: 14px; color: var(--charcoal-soft);
+  line-height: 1.65; max-width: 560px;
+}
+.at-page .at-legend-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3);
+  margin-bottom: var(--s4);
+}
+@media (max-width: 540px) { .at-page .at-legend-grid { grid-template-columns: 1fr; } }
+.at-page .at-legend-lcard {
+  background: var(--cream-100); border: 1px solid var(--line-soft);
+  padding: var(--s3);
+}
+.at-page .at-legend-badge-preview { margin-bottom: var(--s2); }
+.at-page .at-legend-badge-sample { font-size: 11px; padding: 6px 14px; }
+.at-page .at-legend-lcard-name {
+  font-family: var(--display); font-size: 17px; font-weight: 500;
+  color: var(--charcoal); margin-bottom: var(--s1);
+}
+.at-page .at-legend-lcard-body {
+  font-family: var(--body); font-size: 13px; color: var(--charcoal-soft);
+  line-height: 1.65; margin-bottom: var(--s2);
+}
+.at-page .at-legend-applies {
+  font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--warm-gray-light); margin-bottom: var(--s1);
+}
+.at-page .at-legend-conditions {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.at-page .at-legend-conditions li {
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray);
+  line-height: 1.5; padding-left: 14px; position: relative;
+}
+.at-page .at-legend-conditions li::before {
+  content: '—'; position: absolute; left: 0; color: var(--gold);
+}
+.at-page .at-legend-footer {
+  padding-top: var(--s3); border-top: 1px solid var(--line-soft);
+  text-align: center;
+}
 </style>
 
 {% if not has_addon %}
@@ -546,6 +622,49 @@ body.at-page { font-family: var(--body); background: var(--cream-50); color: var
 
 </div><!-- /at-surface -->
 
+<!-- Badge Legend modal (Screen 6) -->
+<div class="at-legend-backdrop" id="legendModal" style="display:none;" onclick="closeLegendBackdrop(event)" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
+  <div class="at-legend-card">
+    <button class="at-legend-x" onclick="_closeLegend()" aria-label="Close badge legend">&#215;</button>
+    <div class="at-legend-head">
+      <div class="eyebrow">Reference</div>
+      <h2 class="at-legend-title" id="legendTitle">Course badges explained.</h2>
+      <p class="at-legend-intro">Every course card carries a badge that tells you how that course was sourced. Two states are possible.</p>
+    </div>
+    <div class="at-legend-grid">
+      <div class="at-legend-lcard">
+        <div class="at-legend-badge-preview">
+          <span class="badge badge--library at-legend-badge-sample">From the Library</span>
+        </div>
+        <div class="at-legend-lcard-name">From the Library</div>
+        <div class="at-legend-lcard-body">This course is anchored to a recipe in your library. The canon structure matched your brief, and a library recipe was pulled as the reference point for this slot.</div>
+        <div class="at-legend-applies">Appears when</div>
+        <ul class="at-legend-conditions">
+          <li>Your brief matched a known canon structure</li>
+          <li>A library recipe exists for this course slot</li>
+          <li>The recipe is indexed and active in your library</li>
+        </ul>
+      </div>
+      <div class="at-legend-lcard">
+        <div class="at-legend-badge-preview">
+          <span class="badge badge--draft at-legend-badge-sample">Compose draft</span>
+        </div>
+        <div class="at-legend-lcard-name">Compose draft</div>
+        <div class="at-legend-lcard-body">This course was composed from the brief without a matching library recipe. The course structure, name, and description are a starting point &#8212; edit freely in your Menu Builder.</div>
+        <div class="at-legend-applies">Appears when</div>
+        <ul class="at-legend-conditions">
+          <li>No library recipe matched this slot</li>
+          <li>The brief resolved to a free-form structure</li>
+          <li>The slot is available for your own development</li>
+        </ul>
+      </div>
+    </div>
+    <div class="at-legend-footer">
+      <a class="link-muted" href="#" onclick="_closeLegend();return false;">Close</a>
+    </div>
+  </div>
+</div>
+
 <script>
 let currentCompositionId = null;
 
@@ -694,6 +813,12 @@ function renderResult(comp) {
     <a class="link-gold" href="#" onclick="composeAgain();return false;">Compose again</a>
     <a class="link-muted" href="#" onclick="discardResult();return false;">Discard</a>`;
   area.appendChild(actions);
+
+  // Legend trigger
+  const legendLink = document.createElement('p');
+  legendLink.style.cssText = 'margin-top:var(--s2);';
+  legendLink.innerHTML = '<a class="at-legend-trigger" href="#" onclick="openLegend();return false;">Badge legend</a>';
+  area.appendChild(legendLink);
 
   area.style.display = 'block';
   area.scrollIntoView({behavior: 'smooth', block: 'start'});
@@ -910,6 +1035,25 @@ function renderPours(items) {
   });
   section.appendChild(list);
   return section;
+}
+
+function openLegend() {
+  const modal = document.getElementById('legendModal');
+  modal.style.display = 'flex';
+  document.addEventListener('keydown', legendEscHandler);
+}
+
+function closeLegendBackdrop(e) {
+  if (e.target === document.getElementById('legendModal')) _closeLegend();
+}
+
+function _closeLegend() {
+  document.getElementById('legendModal').style.display = 'none';
+  document.removeEventListener('keydown', legendEscHandler);
+}
+
+function legendEscHandler(e) {
+  if (e.key === 'Escape') _closeLegend();
 }
 
 function esc(str) {
