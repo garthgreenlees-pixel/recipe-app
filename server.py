@@ -1164,6 +1164,28 @@ def init_db():
         CREATE INDEX IF NOT EXISTS idx_composition_events_user_month
             ON composition_events(user_id, created_at)
     """)
+    # ── Sprint 8.5 — Beverage pairing suggestions queue ───────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS beverage_pairing_suggestions (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            recipe_ref TEXT NOT NULL,
+            beverage_product_id INTEGER NOT NULL REFERENCES beverage_products(id) ON DELETE CASCADE,
+            source_tier TEXT NOT NULL,
+            role TEXT,
+            descriptor TEXT,
+            match_score NUMERIC,
+            match_reasoning TEXT,
+            status TEXT NOT NULL DEFAULT 'pending',
+            suggested_at TIMESTAMP NOT NULL DEFAULT NOW(),
+            reviewed_at TIMESTAMP,
+            reviewed_by INTEGER REFERENCES users(id),
+            CONSTRAINT bps_status_values CHECK (status IN ('pending','approved','rejected'))
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_bev_pair_sugg_status_ref
+            ON beverage_pairing_suggestions(status, recipe_ref)
+    """)
     cur.close()
     conn.close()
 
@@ -14278,6 +14300,134 @@ def _pats_rule_for_beverages(product_ids, region, cur):
     return result
 
 
+def _suggest_beverages_for_recipe(recipe, limit=5, cur=None):
+    """Score beverage pairings for a recipe using the locked priority chain.
+
+    Priority: supplier (×1.0) > canon (×0.7) > web (×0.5, stub until web_verified flag added).
+    Matching is against pairing_intelligence.food_category / food_profile.
+    Always preserves at least one supplier-tier result when any exist.
+    Returns list of dicts sorted by weighted score desc.
+    """
+    if cur is None:
+        return []
+
+    food_category = None
+    food_terms = []
+    tags = recipe.get("tradition_tags") or recipe.get("tags") or []
+    if isinstance(tags, list) and tags:
+        food_category = tags[0]
+    elif isinstance(tags, str):
+        food_category = tags
+    title = recipe.get("name") or recipe.get("title") or ""
+    cuisine = recipe.get("cuisine") or ""
+    for term in [food_category, cuisine] + title.split():
+        t = (term or "").strip().lower()
+        if t and len(t) >= 3:
+            food_terms.append(t)
+    food_terms = list(dict.fromkeys(food_terms))[:4]
+
+    _ROLE_MAP = {
+        "complement": "Complement",
+        "contrast":   "Contrast",
+        "regional":   "Bridge",
+        "tradition":  "Bridge",
+        "bridge":     "Bridge",
+    }
+    _NA_CATEGORIES = {"tea", "coffee", "soda", "juice", "infusion", "mocktail",
+                      "soft_drink", "kombucha", "sparkling_water"}
+
+    def _score_rows(rows, multiplier, tier):
+        out = []
+        for r in rows:
+            raw = float(r.get("confidence") or 0.5)
+            pt = (r.get("pairing_type") or "").lower()
+            bev_cat = (r.get("category") or "").lower()
+            role = "Non-alcoholic" if bev_cat in _NA_CATEGORIES else _ROLE_MAP.get(pt, "Complement")
+            fc = r.get("food_category") or ""
+            reasoning = f"source: {tier} · category: {fc} · pairing: {pt}"
+            out.append({
+                "beverage_product_id": r["beverage_product_id"],
+                "source_tier": tier,
+                "role": role,
+                "descriptor": r.get("flavour_logic") or "",
+                "match_score": round(raw * multiplier, 4),
+                "match_reasoning": reasoning,
+            })
+        return out
+
+    seen_ids = set()
+    results = []
+
+    # PASS 1 — Trade-tier supplier beverages.
+    # suppliers table has no tier column yet; this pass returns empty until that column is added.
+    try:
+        if food_category:
+            cur.execute("""
+                SELECT pi.food_profile, pi.food_category, pi.pairing_type, pi.flavour_logic,
+                       pi.confidence, bp.id AS beverage_product_id, bp.category
+                FROM pairing_intelligence pi
+                JOIN beverage_products bp ON pi.beverage_product_id = bp.id
+                JOIN beverage_product_suppliers bps ON bps.product_id = bp.id
+                JOIN suppliers s ON bps.supplier_id = s.id
+                WHERE pi.food_category ILIKE %s
+                  AND pi.beverage_product_id IS NOT NULL
+                  AND s.tier = 'trade'
+                ORDER BY pi.confidence DESC
+                LIMIT %s
+            """, (f"%{food_category}%", limit))
+            supplier_rows = cur.fetchall()
+            for row in _score_rows(supplier_rows, 1.0, "supplier"):
+                if row["beverage_product_id"] not in seen_ids:
+                    seen_ids.add(row["beverage_product_id"])
+                    results.append(row)
+    except Exception:
+        pass  # tier column absent — pass 1 yields nothing until schema is extended
+
+    supplier_count = len(results)
+
+    # PASS 2 — Beverage canon (pairing_intelligence → beverage_products, no supplier filter).
+    try:
+        conditions, params = [], []
+        if food_category:
+            conditions.append("pi.food_category ILIKE %s")
+            params.append(f"%{food_category}%")
+        elif food_terms:
+            or_clauses = " OR ".join("pi.food_profile ILIKE %s" for _ in food_terms[:3])
+            conditions.append(f"({or_clauses})")
+            params.extend(f"%{t}%" for t in food_terms[:3])
+        if not conditions:
+            conditions.append("TRUE")
+        where = " AND ".join(conditions)
+        params.append(limit * 3)
+        cur.execute(f"""
+            SELECT pi.food_profile, pi.food_category, pi.pairing_type, pi.flavour_logic,
+                   pi.confidence, bp.id AS beverage_product_id, bp.category
+            FROM pairing_intelligence pi
+            JOIN beverage_products bp ON pi.beverage_product_id = bp.id
+            WHERE {where}
+              AND pi.beverage_product_id IS NOT NULL
+            ORDER BY pi.confidence DESC
+            LIMIT %s
+        """, params)
+        for row in _score_rows(cur.fetchall(), 0.7, "canon"):
+            if row["beverage_product_id"] not in seen_ids:
+                seen_ids.add(row["beverage_product_id"])
+                results.append(row)
+    except Exception as e:
+        app.logger.warning("_suggest_beverages pass 2 failed: %s", e)
+
+    # PASS 3 — Sashimi-verified web suppliers (stub — no web_verified flag exists yet).
+    # Slot reserved; no-op until beverage_products.web_verified is added.
+
+    results.sort(key=lambda r: r["match_score"], reverse=True)
+    # Guarantee at least one supplier-tier result at the front when any exist.
+    if supplier_count > 0 and results and results[0]["source_tier"] != "supplier":
+        supplier_items = [r for r in results if r["source_tier"] == "supplier"]
+        other_items = [r for r in results if r["source_tier"] != "supplier"]
+        results = supplier_items[:1] + other_items
+    return results[:limit]
+
+
 def _compute_menu_cost_with_provenance(menu_id, covers, menu_price, user_id, region, cur):
     """Like _compute_menu_cost but enriches each ingredient line with Pat's Rule provenance."""
     cur.execute("""
@@ -17012,6 +17162,132 @@ def atelier():
     if user.get("role") not in ("founder", "admin"):
         return redirect(url_for("kitchen"))
     return send_file("atelier.html")
+
+
+# ─── Admin — Pairing review queue ────────────────────────────────────────────
+# TODO: migrate gate to a Trade-tier permission check once that column exists.
+
+@app.route("/admin/pairings")
+def admin_pairings():
+    g = _admin_guard()
+    if g:
+        return g
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT bps.id, bps.recipe_ref, bps.source_tier, bps.role,
+               bps.descriptor, bps.match_score, bps.match_reasoning,
+               bps.status, bps.suggested_at,
+               bp.name AS beverage_name, bp.slug AS beverage_slug,
+               bp.category AS beverage_category,
+               bpr.name AS producer_name
+        FROM beverage_pairing_suggestions bps
+        JOIN beverage_products bp ON bp.id = bps.beverage_product_id
+        LEFT JOIN beverage_producers bpr ON bpr.id = bp.producer_id
+        WHERE bps.status = 'pending'
+        ORDER BY bps.recipe_ref, bps.match_score DESC
+    """)
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    # Group by recipe_ref for template display
+    from collections import OrderedDict
+    grouped = OrderedDict()
+    for row in rows:
+        ref = row["recipe_ref"]
+        if ref not in grouped:
+            grouped[ref] = []
+        grouped[ref].append(row)
+
+    return render_template("admin_pairings.html", grouped=grouped)
+
+
+@app.route("/admin/pairings/<uuid:suggestion_id>/approve", methods=["POST"])
+def admin_pairings_approve(suggestion_id):
+    g = _admin_guard_api()
+    if g:
+        return g
+    if not DATABASE_URL_WRITE:
+        return jsonify(error="no write DB"), 503
+    user_id = session.get("user_id")
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT bps.*, bp.name AS beverage_name, bp.category AS beverage_category,
+               bpr.name AS producer_name
+        FROM beverage_pairing_suggestions bps
+        JOIN beverage_products bp ON bp.id = bps.beverage_product_id
+        LEFT JOIN beverage_producers bpr ON bpr.id = bp.producer_id
+        WHERE bps.id = %s
+    """, (str(suggestion_id),))
+    row = cur.fetchone()
+    if not row:
+        cur.close(); conn.close()
+        return jsonify(error="suggestion not found"), 404
+    if row["status"] != "pending":
+        cur.close(); conn.close()
+        return jsonify(error="already decided"), 409
+
+    recipe_ref = row["recipe_ref"]
+    pairing_entry = {
+        "name": f"{row['producer_name'] + ' ' if row['producer_name'] else ''}{row['beverage_name']}".strip(),
+        "category": (row["beverage_category"] or "").lower().replace(" ", "_"),
+        "pairing_type": (row["role"] or "complement").lower(),
+        "tasting_note": row["descriptor"] or "",
+    }
+
+    write_conn = psycopg2.connect(DATABASE_URL_WRITE)
+    write_cur = write_conn.cursor()
+    if recipe_ref.startswith("canon:"):
+        slug = recipe_ref[len("canon:"):]
+        write_cur.execute("""
+            UPDATE recipes
+            SET pairings = COALESCE(pairings, '[]'::jsonb) || %s::jsonb
+            WHERE slug = %s
+        """, (json.dumps([pairing_entry]), slug))
+    elif recipe_ref.startswith("kitchen:"):
+        ukr_id = recipe_ref[len("kitchen:"):]
+        write_cur.execute("""
+            UPDATE user_kitchen_recipes
+            SET beverage_pairings = COALESCE(beverage_pairings, '[]'::jsonb) || %s::jsonb
+            WHERE id = %s OR slug = %s
+        """, (json.dumps([pairing_entry]), ukr_id, ukr_id))
+    write_conn.commit()
+    write_cur.close()
+    write_conn.close()
+
+    cur.execute("""
+        UPDATE beverage_pairing_suggestions
+        SET status = 'approved', reviewed_at = NOW(), reviewed_by = %s
+        WHERE id = %s
+    """, (user_id, str(suggestion_id)))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify(ok=True, recipe_ref=recipe_ref)
+
+
+@app.route("/admin/pairings/<uuid:suggestion_id>/reject", methods=["POST"])
+def admin_pairings_reject(suggestion_id):
+    g = _admin_guard_api()
+    if g:
+        return g
+    user_id = session.get("user_id")
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE beverage_pairing_suggestions
+        SET status = 'rejected', reviewed_at = NOW(), reviewed_by = %s
+        WHERE id = %s AND status = 'pending'
+    """, (user_id, str(suggestion_id)))
+    affected = cur.rowcount
+    conn.commit()
+    cur.close()
+    conn.close()
+    if not affected:
+        return jsonify(error="suggestion not found or already decided"), 404
+    return jsonify(ok=True)
 
 
 # ─── Run ─────────────────────────────────────────────────────────────────────

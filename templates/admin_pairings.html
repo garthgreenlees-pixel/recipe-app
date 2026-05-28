@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}The Brief — Provenance{% endblock %}
+
+{% block extra_head %}
+<style>
+.ap-page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+.ap-header { margin-bottom: 40px; border-bottom: 1px solid var(--line); padding-bottom: 24px; }
+.ap-headline {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--charcoal);
+  margin: 0 0 6px;
+}
+.ap-subhead {
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--warm-gray);
+  margin: 0;
+}
+.ap-empty {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--warm-gray);
+  padding: 40px 0;
+  text-align: center;
+  letter-spacing: 0.06em;
+}
+.ap-recipe-group { margin-bottom: 40px; }
+.ap-recipe-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--warm-gray);
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dotted var(--line);
+}
+.ap-recipe-title a { color: var(--charcoal); text-decoration: none; border-bottom: 1px solid var(--gold); }
+.ap-recipe-title a:hover { color: var(--gold); }
+.ap-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px 16px;
+  align-items: start;
+  padding: 14px 0;
+  border-bottom: 1px dotted var(--line-soft);
+}
+.ap-row:last-child { border-bottom: none; }
+.ap-tier {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 3px 7px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.ap-tier--supplier { background: var(--terracotta); color: var(--cream-50); }
+.ap-tier--canon    { background: var(--gold);       color: var(--cream-50); }
+.ap-tier--web      { background: var(--warm-gray);  color: var(--cream-50); }
+.ap-bev-name {
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--charcoal);
+  margin: 0 0 3px;
+}
+.ap-bev-role {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--warm-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.ap-descriptor {
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--charcoal);
+  margin: 6px 0 0;
+  line-height: 1.55;
+}
+.ap-reasoning {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--warm-gray);
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+}
+.ap-actions { display: flex; gap: 8px; align-items: flex-start; padding-top: 2px; }
+.ap-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  padding: 6px 12px;
+  border: 1px solid var(--charcoal);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ap-btn--approve { background: var(--charcoal); color: var(--cream-50); }
+.ap-btn--approve:hover { background: var(--gold); border-color: var(--gold); }
+.ap-btn--reject  { background: transparent; color: var(--charcoal); }
+.ap-btn--reject:hover  { border-color: var(--warm-gray); color: var(--warm-gray); }
+.ap-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ap-page">
+  <div class="ap-header">
+    <h1 class="ap-headline">The Brief</h1>
+    <p class="ap-subhead">Pairing suggestions awaiting your nod.</p>
+  </div>
+
+  {% if not grouped %}
+  <div class="ap-empty">Queue is clear — nothing pending review.</div>
+  {% else %}
+  {% for recipe_ref, suggestions in grouped.items() %}
+  <div class="ap-recipe-group">
+    <div class="ap-recipe-title">
+      {% if recipe_ref.startswith('canon:') %}
+        {% set slug = recipe_ref[6:] %}
+        <a href="/recipe/{{ slug }}">{{ slug }}</a>
+      {% else %}
+        {{ recipe_ref }}
+      {% endif %}
+    </div>
+    {% for s in suggestions %}
+    <div class="ap-row" id="row-{{ s.id }}">
+      <div>
+        <span class="ap-tier ap-tier--{{ s.source_tier }}">{{ s.source_tier }}</span>
+      </div>
+      <div>
+        <div class="ap-bev-name">
+          {{ s.producer_name + ' · ' if s.producer_name else '' }}{{ s.beverage_name }}
+        </div>
+        <div class="ap-bev-role">{{ s.role or '—' }} · {{ s.beverage_category or '' }}</div>
+        {% if s.descriptor %}
+        <div class="ap-descriptor">{{ s.descriptor }}</div>
+        {% endif %}
+        <div class="ap-reasoning">{{ s.match_reasoning or '' }} · score {{ "%.2f"|format(s.match_score|float) }}</div>
+      </div>
+      <div class="ap-actions">
+        <button class="ap-btn ap-btn--approve" onclick="decide('{{ s.id }}', 'approve', this)">Approve</button>
+        <button class="ap-btn ap-btn--reject"  onclick="decide('{{ s.id }}', 'reject',  this)">Reject</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+
+<script>
+async function decide(id, action, btn) {
+  const row = document.getElementById('row-' + id);
+  const btns = row.querySelectorAll('button');
+  btns.forEach(b => b.disabled = true);
+  try {
+    const r = await fetch('/admin/pairings/' + id + '/' + action, { method: 'POST' });
+    if (r.ok) {
+      row.style.opacity = '0.3';
+      row.style.pointerEvents = 'none';
+    } else {
+      const data = await r.json().catch(() => ({}));
+      alert(data.error || 'Request failed (' + r.status + ')');
+      btns.forEach(b => b.disabled = false);
+    }
+  } catch (e) {
+    alert('Network error');
+    btns.forEach(b => b.disabled = false);
+  }
+}
+</script>
+{% endblock %}
