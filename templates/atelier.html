@@ -360,6 +360,21 @@ body.at-page { font-family: var(--body); background: var(--cream-50); color: var
   padding: var(--s4) 0; border-top: 1px solid var(--line);
   margin-top: var(--s2); flex-wrap: wrap;
 }
+
+/* ── Save-to-MenuBuilder transition ── */
+.at-page .at-save-transition {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 240px;
+}
+.at-page .at-save-msg {
+  font-family: var(--display); font-style: italic; font-size: 30px;
+  color: var(--charcoal); text-align: center; line-height: 1.35;
+  animation: at-fade-in 0.4s ease;
+}
+@keyframes at-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 </style>
 
 {% if not has_addon %}
@@ -532,6 +547,8 @@ body.at-page { font-family: var(--body); background: var(--cream-50); color: var
 </div><!-- /at-surface -->
 
 <script>
+let currentCompositionId = null;
+
 document.addEventListener('DOMContentLoaded', function () {
   var ta = document.getElementById('briefTa');
   document.querySelectorAll('.brief-hint').forEach(function (chip) {
@@ -595,6 +612,7 @@ async function runCompose() {
   }
 
   stat.style.display = 'none';
+  currentCompositionId = comp.composition_id || null;
   renderResult(comp);
   btn.disabled = false;
 }
@@ -668,11 +686,11 @@ function renderResult(comp) {
   (comp.courses || []).forEach((c, i) => coursesWrap.appendChild(renderCourse(c, i + 1)));
   area.appendChild(coursesWrap);
 
-  // Action bar — visible, Save to Menu Builder unwired (Cycle 8)
+  // Action bar
   const actions = document.createElement('div');
   actions.className = 'comp-actions';
   actions.innerHTML = `
-    <button class="btn" type="button" disabled title="Coming in the next cycle">Save to Menu Builder</button>
+    <button class="btn" id="saveMbBtn" type="button" onclick="saveToMenuBuilder()">Save to Menu Builder</button>
     <a class="link-gold" href="#" onclick="composeAgain();return false;">Compose again</a>
     <a class="link-muted" href="#" onclick="discardResult();return false;">Discard</a>`;
   area.appendChild(actions);
@@ -696,6 +714,43 @@ function discardResult() {
   chips.style.display  = 'none'; chips.innerHTML  = '';
   document.getElementById('briefTa').value = '';
   document.getElementById('briefTa').focus();
+}
+
+async function saveToMenuBuilder() {
+  if (!currentCompositionId) {
+    showError('No composition to save — please compose a menu first.');
+    return;
+  }
+
+  const result  = document.getElementById('resultArea');
+  const errBox  = document.getElementById('errorBox');
+  errBox.style.display = 'none';
+
+  // Disable all action-bar controls during request
+  const saveBtn   = document.getElementById('saveMbBtn');
+  const actionEls = result.querySelectorAll('button, a.link-gold, a.link-muted');
+  actionEls.forEach(el => { el.style.pointerEvents = 'none'; el.style.opacity = '0.42'; });
+
+  let resp;
+  try {
+    const r = await fetch('/api/atelier/promote', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ composition_id: currentCompositionId }),
+    });
+    resp = await r.json();
+    if (!r.ok) throw new Error(resp.error || r.statusText);
+  } catch (e) {
+    console.error("l'Atelier promote failed:", e);
+    actionEls.forEach(el => { el.style.pointerEvents = ''; el.style.opacity = ''; });
+    showError(e.message || 'Could not save to Menu Builder — please try again.');
+    return;
+  }
+
+  // Success — transition message then redirect
+  result.innerHTML = '<div class="at-save-transition"><p class="at-save-msg">Carrying through to your Menu Builder…</p></div>';
+  result.style.display = 'block';
+  setTimeout(() => { window.location.assign('/menu/' + resp.menu_slug); }, 600);
 }
 
 function renderCourse(course, position) {
