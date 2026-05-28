@@ -128,6 +128,37 @@
   .mb-frost-veil__icon { font-size: 18px; color: var(--gold); }
   .mb-frost-veil__copy { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--charcoal); }
 
+  /* ── Composition counter ── */
+  .mb-comp-counter { display: flex; align-items: center; justify-content: space-between; background: var(--charcoal); border-left: 3px solid var(--gold); padding: var(--s2) var(--s3); margin-bottom: var(--s3); }
+  .mb-comp-counter__label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); }
+  .mb-comp-counter__remaining { font-family: var(--mono); font-size: 13px; color: var(--cream-50); }
+  .mb-comp-counter__remaining strong { font-size: 15px; color: var(--gold); }
+
+  /* ── Course actions grid ── */
+  .mb-course-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-top: var(--s2); }
+  .mb-compose-course { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); background: none; border: 1px dashed var(--gold); padding: 9px 16px; cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .mb-compose-course:hover { background: var(--gold); color: var(--charcoal); border-color: var(--gold); }
+  .mb-compose-course .symbol { font-family: var(--display); font-style: italic; font-size: 13px; }
+
+  /* ── Inline compose panel ── */
+  .mb-compose-inline { display: none; margin-top: var(--s2); background: var(--charcoal); border-left: 3px solid var(--gold); padding: var(--s3); }
+  .mb-compose-inline.is-open { display: block; }
+  .mb-compose-inline__head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--s2); }
+  .mb-compose-inline__title { font-family: var(--display); font-size: 15px; font-style: italic; color: var(--cream-50); }
+  .mb-compose-inline__close { font-family: var(--mono); font-size: 16px; background: none; border: none; color: var(--warm-gray); cursor: pointer; padding: 0; line-height: 1; }
+  .mb-compose-inline__close:hover { color: var(--cream-50); }
+  .mb-compose-inline__placeholder { font-family: var(--display); font-size: 13px; font-style: italic; color: var(--warm-gray); }
+
+  /* ── Capped state modal ── */
+  .mb-comp-capped-backdrop { display: none; position: fixed; inset: 0; background: rgba(31,27,22,0.80); z-index: 400; align-items: center; justify-content: center; }
+  .mb-comp-capped-backdrop.is-open { display: flex; }
+  .mb-comp-capped { background: var(--cream-50); border: 1px solid var(--gold); padding: var(--s4); max-width: 480px; width: calc(100vw - 48px); }
+  .mb-comp-capped__eyebrow { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-bottom: var(--s2); }
+  .mb-comp-capped__title { font-family: var(--display); font-size: 20px; font-style: italic; font-weight: 500; color: var(--charcoal); margin-bottom: var(--s3); line-height: 1.35; }
+  .mb-comp-capped__price { font-family: var(--body); font-size: 13px; color: var(--warm-gray); margin-bottom: var(--s3); }
+  .mb-comp-capped__cta { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--cream-50); background: var(--gold); padding: 10px 20px; text-decoration: none; transition: background 0.15s; }
+  .mb-comp-capped__cta:hover { background: var(--charcoal); }
+
   /* ── Action bar ── */
   .mb-actions { display: flex; align-items: center; justify-content: space-between; padding: var(--s3) 0 var(--s2) 0; border-top: 1px solid var(--gold); margin-top: var(--s4); }
   .mb-actions__save { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; background: var(--cream-100); color: var(--charcoal); border: 1px solid var(--line); padding: 8px 18px; cursor: pointer; transition: border-color 0.15s; }
@@ -275,16 +306,34 @@
         </div>
         {% endif %}
 
-        <button class="mb-add-dish"
-                data-course-name="{{ course.name }}"
-                data-course-order="{{ course.order }}"
-                onclick="openPicker(this.dataset.courseName, parseInt(this.dataset.courseOrder))">+ Add a dish</button>
+        <div class="mb-course-actions">
+          <button class="mb-add-dish"
+                  data-course-name="{{ course.name }}"
+                  data-course-order="{{ course.order }}"
+                  onclick="openPicker(this.dataset.courseName, parseInt(this.dataset.courseOrder))">+ Add a dish</button>
+          <button type="button" class="mb-compose-course" onclick="openCompose('{{ course.name }}', {{ course.order }})">
+            <span class="symbol">◇</span> Compose this course
+          </button>
+        </div>
+        <div class="mb-compose-inline" id="compose-panel-{{ course.name | lower | replace(' ', '-') }}">
+          <div class="mb-compose-inline__head">
+            <span class="mb-compose-inline__title">Compose this course.</span>
+            <button class="mb-compose-inline__close" onclick="closeCompose('{{ course.name | lower | replace(' ', '-') }}')" aria-label="Close">×</button>
+          </div>
+          <div class="mb-compose-inline__placeholder">Compose engine arrives in Sprint 9.</div>
+        </div>
       </div>
       {% endfor %}
     </div>
 
     {# ── Right column ── #}
     <div class="mb-right-col" id="mb-right-col">
+
+      {# Composition counter #}
+      <div class="mb-comp-counter">
+        <span class="mb-comp-counter__label">Compositions · Beta</span>
+        <span class="mb-comp-counter__remaining"><strong>{{ compositions.remaining }}</strong> of {{ compositions.free_limit }} free this month</span>
+      </div>
 
       {# Allergen matrix panel #}
       <div class="mb-panel" id="mb-panel">
@@ -498,6 +547,16 @@
 
 </div>
 
+{# ── Capped compositions modal ── #}
+<div class="mb-comp-capped-backdrop" id="mb-comp-capped-backdrop" onclick="closeCappedIfBackdrop(event)">
+  <div class="mb-comp-capped">
+    <div class="mb-comp-capped__eyebrow">l'Atelier</div>
+    <div class="mb-comp-capped__title">You've used your twenty free compositions this month.</div>
+    <div class="mb-comp-capped__price">l'Atelier · <strong>$5.99 / month</strong> · twenty compositions, every month, every surface</div>
+    <a href="/pricing" class="mb-comp-capped__cta">Open l'Atelier →</a>
+  </div>
+</div>
+
 {# ── Recipe picker modal ── #}
 <div class="mb-picker-backdrop" id="mb-picker-backdrop" onclick="pickerBackdropClick(event)">
   <div class="mb-picker-modal" id="mb-picker-modal">
@@ -523,6 +582,8 @@
 <script>
 (function () {
   const SLUG = {{ menu.slug | tojson }};
+  window.cmRemaining = {{ compositions.remaining }};
+  window.cmHasAtelier = {{ compositions.has_atelier | tojson }};
 
   // Server-side allergen data, kept in sync by _syncRightColumn()
   let _allergenState = {
@@ -1038,8 +1099,8 @@
     if (!dishList) {
       dishList = document.createElement('div');
       dishList.className = 'mb-dishes';
-      const addBtn = courseEl.querySelector('.mb-add-dish');
-      courseEl.insertBefore(dishList, addBtn);
+      const actionsGrid = courseEl.querySelector('.mb-course-actions');
+      courseEl.insertBefore(dishList, actionsGrid);
     }
 
     const r = dish.recipe || {};
@@ -1068,9 +1129,39 @@
     }
   }
 
-  /* ── ESC to close picker ── */
+  /* ── Compose ── */
+  window.openCompose = function (courseName, courseOrder) {
+    if (window.cmRemaining === 0 && !window.cmHasAtelier) {
+      openCappedModal();
+      return;
+    }
+    const slug = courseName.toLowerCase().replace(/\s+/g, '-');
+    const panel = document.getElementById('compose-panel-' + slug);
+    if (panel) panel.classList.add('is-open');
+  };
+
+  window.closeCompose = function (courseSlug) {
+    const panel = document.getElementById('compose-panel-' + courseSlug);
+    if (panel) panel.classList.remove('is-open');
+  };
+
+  window.openCappedModal = function () {
+    document.getElementById('mb-comp-capped-backdrop').classList.add('is-open');
+  };
+
+  window.closeCappedIfBackdrop = function (e) {
+    if (e.target === document.getElementById('mb-comp-capped-backdrop')) {
+      document.getElementById('mb-comp-capped-backdrop').classList.remove('is-open');
+    }
+  };
+
+  /* ── ESC to close picker / compose panels / capped modal ── */
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closePicker();
+    if (e.key === 'Escape') {
+      closePicker();
+      document.getElementById('mb-comp-capped-backdrop').classList.remove('is-open');
+      document.querySelectorAll('.mb-compose-inline.is-open').forEach(p => p.classList.remove('is-open'));
+    }
   });
 
 })();

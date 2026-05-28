@@ -1141,11 +1141,29 @@ def init_db():
         "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
         "ALTER TABLE menus ADD COLUMN IF NOT EXISTS allergen_notes JSONB DEFAULT '{}'::jsonb",
+        "ALTER TABLE users ADD COLUMN IF NOT EXISTS has_atelier_addon BOOLEAN NOT NULL DEFAULT FALSE",
     ]:
         try:
             cur.execute(stmt)
         except Exception:
             pass
+    # ── Sprint 8 — l'Atelier composition scaffold ─────────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS composition_events (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            kind TEXT NOT NULL,
+            menu_id UUID,
+            course_name TEXT,
+            recipe_id UUID,
+            brief TEXT,
+            created_at TIMESTAMP NOT NULL DEFAULT NOW()
+        )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_composition_events_user_month
+            ON composition_events(user_id, created_at)
+    """)
     cur.close()
     conn.close()
 
@@ -13657,6 +13675,8 @@ def menu_detail_page(slug):
         menu_price = menu.get("menu_price")
         cost_data = _compute_menu_cost(str(menu["id"]), covers, menu_price, user["id"], region, cur)
 
+    compositions = _compositions_state(user["id"], cur)
+
     cur.close(); conn.close()
     menu_dict = dict(menu)
     menu_dict["id"] = str(menu_dict["id"])
@@ -13676,6 +13696,7 @@ def menu_detail_page(slug):
         user_can_see_cost=user_can_see_cost,
         cost_data=cost_data,
         user_can_print=user_can_print,
+        compositions=compositions,
     )
 
 
@@ -14357,6 +14378,39 @@ def _compute_menu_cost_with_provenance(menu_id, covers, menu_price, user_id, reg
         "projected_food_cost_pct": projected_food_cost_pct,
         "target_window": {"low": 28.0, "high": 35.0},
         "any_missing_cost": any_missing_cost,
+    }
+
+
+def _compositions_state(user_id, cur):
+    """Return composition state dict for the given user.
+
+    Returns {has_atelier, used_this_month, free_limit, remaining, can_compose}.
+    free_limit is fixed at 20 for beta. l'Atelier members (has_atelier=True) can_compose
+    regardless of remaining count.
+    """
+    cur.execute(
+        "SELECT COALESCE(has_atelier_addon, FALSE) AS has_atelier FROM users WHERE id = %s",
+        (user_id,),
+    )
+    row = cur.fetchone()
+    has_atelier = bool(row["has_atelier"]) if row else False
+
+    cur.execute("""
+        SELECT COUNT(*) AS n FROM composition_events
+        WHERE user_id = %s AND created_at >= date_trunc('month', NOW())
+    """, (user_id,))
+    used = int((cur.fetchone() or {}).get("n", 0) or 0)
+
+    free_limit = 20
+    remaining = max(free_limit - used, 0)
+    can_compose = remaining > 0 or has_atelier
+
+    return {
+        "has_atelier": has_atelier,
+        "used_this_month": used,
+        "free_limit": free_limit,
+        "remaining": remaining,
+        "can_compose": can_compose,
     }
 
 
