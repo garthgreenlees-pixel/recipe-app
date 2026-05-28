@@ -11648,6 +11648,17 @@ def gate_for_tier(required_tier: str) -> str:
 app.jinja_env.globals["gate_for_tier"] = gate_for_tier
 
 
+def gate_for_addon(addon_name):
+    user = get_current_user()
+    if not user:
+        return False
+    if user.get("role") in ("founder", "admin"):
+        return True
+    if addon_name == "atelier":
+        return bool(user.get("has_atelier_addon"))
+    return False
+
+
 @app.context_processor
 def inject_user():
     user = get_current_user()
@@ -17218,8 +17229,8 @@ def atelier():
     user = get_current_user()
     if not user:
         return _login_redirect()
-    if user.get("role") not in ("founder", "admin"):
-        return redirect(url_for("kitchen"))
+    if not gate_for_addon("atelier"):
+        return redirect(url_for("pricing_page"))
     return send_file("atelier.html")
 
 
