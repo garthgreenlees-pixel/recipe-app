@@ -35,7 +35,7 @@ import psycopg2
 import psycopg2.extras
 import requests as http_requests
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify, send_from_directory, send_file, Response, render_template, render_template_string, g, session, redirect, url_for, flash
+from flask import Flask, request, jsonify, send_from_directory, send_file, Response, render_template, render_template_string, g, session, redirect, url_for, flash, abort
 from flask_cors import CORS
 import anthropic
 import fal_client
