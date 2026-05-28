@@ -5581,7 +5581,7 @@ def admin_technique_builder():
 def admin_wireframe_atelier():
     user = get_current_user()
     if not user or user.get("role") not in ("founder", "admin"):
-        return redirect(url_for("home"))
+        return redirect(url_for("index"))
     return send_from_directory("static", "wireframe-atelier.html")
 
 
