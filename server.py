@@ -1457,6 +1457,10 @@ def _detect_allergens_for_recipe(recipe_dict, region="CA"):
         }
 
 
+def _is_raw_served(recipe_dict):
+    return _detect_raw_served(*_recipe_dict_to_haccp_inputs(recipe_dict))
+
+
 def _generate_haccp_brief_internal(title, ingredients, method_steps, allergen_region):
     """Call the HACCP generator and return the parsed JSON dict, or None on failure."""
     system_prompt = build_haccp_system_prompt(title, ingredients, allergen_region)
@@ -13641,6 +13645,7 @@ def menu_detail_page(slug):
             "recipe_ref": mr["recipe_ref"],
             "dish_order_within_course": mr["dish_order_within_course"],
             "recipe": dict(recipe) if recipe else None,
+            "is_raw_served": _is_raw_served(recipe) if recipe else False,
         })
     courses = sorted(courses_map.values(), key=lambda c: c["order"])
 
@@ -14723,6 +14728,7 @@ def add_menu_recipe(slug):
     cur.close(); conn.close()
     result = _menu_recipe_to_dict(mr)
     result["recipe"] = dict(recipe)
+    result["is_raw_served"] = _is_raw_served(recipe)
     return jsonify(result), 201
 
 

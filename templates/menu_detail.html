@@ -50,8 +50,9 @@
   .mb-dishes { display: flex; flex-direction: column; gap: 1px; }
   .mb-dish { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: var(--s2); padding: var(--s2) 0; border-bottom: 1px solid rgba(201,192,176,0.3); }
   .mb-dish:last-child { border-bottom: none; }
-  .mb-dish-img { width: 64px; height: 48px; object-fit: cover; overflow: hidden; background: var(--cream-200); flex-shrink: 0; }
-  .mb-dish-img-placeholder { width: 64px; height: 48px; background: var(--cream-200); flex-shrink: 0; }
+  .mb-dish__image { position: relative; width: 64px; height: 48px; flex-shrink: 0; background: var(--cream-200); overflow: hidden; }
+  .mb-dish__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .mb-dish__haccp { position: absolute; top: 2px; right: 2px; font-family: var(--mono); font-size: 7px; font-weight: 600; padding: 1px 3px; background: var(--terracotta); color: var(--cream-50); text-transform: uppercase; letter-spacing: 0.10em; }
   .mb-dish-info { min-width: 0; }
   .mb-dish-cuisine { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray); margin-bottom: 2px; }
   .mb-dish-title { font-family: var(--display); font-size: 15px; font-weight: 500; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -282,11 +283,14 @@
         <div class="mb-dishes">
           {% for dish in course.dishes %}
           <div class="mb-dish" id="dish-{{ dish.menu_recipe_id }}" data-id="{{ dish.menu_recipe_id }}">
-            {% if dish.recipe and dish.recipe.image_url %}
-              <img class="mb-dish-img" src="{{ dish.recipe.image_url }}" alt="{{ dish.recipe.name if dish.recipe else '' }}" onerror="this.style.display='none'">
-            {% else %}
-              <div class="mb-dish-img-placeholder"></div>
-            {% endif %}
+            <div class="mb-dish__image">
+              {% if dish.recipe and dish.recipe.image_url %}
+                <img src="{{ dish.recipe.image_url }}" alt="{{ dish.recipe.name if dish.recipe else '' }}" onerror="this.style.display='none'">
+              {% endif %}
+              {% if dish.is_raw_served %}
+                <span class="mb-dish__haccp">HACCP</span>
+              {% endif %}
+            </div>
             <div class="mb-dish-info">
               {% if dish.recipe %}
               <div class="mb-dish-cuisine">{{ dish.recipe.cuisine or "" }}</div>
@@ -1104,9 +1108,8 @@
     }
 
     const r = dish.recipe || {};
-    const imgHtml = r.image_url
-      ? `<img class="mb-dish-img" src="${_esc(r.image_url)}" alt="${_esc(r.name || r.title || '')}" onerror="this.style.display='none'">`
-      : '<div class="mb-dish-img-placeholder"></div>';
+    const haccpBadge = dish.is_raw_served ? '<span class="mb-dish__haccp">HACCP</span>' : '';
+    const imgHtml = `<div class="mb-dish__image">${r.image_url ? `<img src="${_esc(r.image_url)}" alt="${_esc(r.name || r.title || '')}" onerror="this.style.display='none'">` : ''}${haccpBadge}</div>`;
     const title = _esc(r.name || r.title || dish.recipe_ref || '');
     const cuisine = _esc(r.cuisine || '');
 
