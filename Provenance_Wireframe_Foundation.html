@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Provenance — Wireframe Foundation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   Provenance Wireframe Design System
+   Editorial Institutional aesthetic
+   Phaidon × Te Papa × Larousse
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* Colors — warm cream institutional */
+  --cream-50: #FAF7F1;
+  --cream-100: #F4EFE4;
+  --cream-200: #EAE2CE;
+  --line: #C9C0B0;
+  --line-soft: #DDD3BE;
+  --charcoal: #1F1B16;
+  --charcoal-soft: #3A332B;
+  --warm-gray: #6B6258;
+  --warm-gray-light: #948B7F;
+  
+  /* Accents */
+  --gold: #C9A84C;
+  --gold-soft: #D4B679;
+  --burgundy: #7A2E2E;     /* Reserve tier accent */
+  --terracotta: #A0522D;   /* HACCP / regulated */
+  
+  /* Tier color tokens */
+  --tier-kitchen: #6B7F4F;
+  --tier-library: #4A6B8A;
+  --tier-profession: #8B5A3C;
+  --tier-trade: #5A4A6B;
+  --tier-reserve: #7A2E2E;
+  
+  /* Type */
+  --display: 'Playfair Display', Georgia, serif;
+  --body: 'DM Sans', system-ui, sans-serif;
+  --mono: 'DM Mono', 'Courier New', monospace;
+  
+  /* Spacing — 8px baseline */
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 48px;
+  --s6: 64px;
+  --s7: 96px;
+  --s8: 128px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--charcoal);
+  background: var(--cream-50);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typography scale ─── */
+h1, h2, h3, h4, h5 { font-family: var(--display); font-weight: 500; letter-spacing: -0.01em; color: var(--charcoal); }
+h1 { font-size: 56px; line-height: 1.05; letter-spacing: -0.02em; }
+h2 { font-size: 40px; line-height: 1.15; }
+h3 { font-size: 28px; line-height: 1.25; }
+h4 { font-size: 22px; line-height: 1.3; font-weight: 600; }
+h5 { font-size: 17px; line-height: 1.35; font-weight: 600; font-family: var(--body); text-transform: uppercase; letter-spacing: 0.08em; }
+p { font-family: var(--body); margin-bottom: var(--s2); }
+.eyebrow { font-family: var(--body); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: var(--warm-gray); margin-bottom: var(--s1); }
+.mono { font-family: var(--mono); font-size: 13px; letter-spacing: 0; }
+.lede { font-size: 22px; line-height: 1.5; color: var(--charcoal-soft); font-weight: 400; }
+a { color: var(--charcoal); text-decoration: none; border-bottom: 1px solid var(--gold-soft); }
+a:hover { border-bottom-color: var(--gold); }
+
+/* ─── Header chrome — sticky tier switcher ─── */
+.app-header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--cream-50);
+  border-bottom: 1px solid var(--line);
+  padding: var(--s2) var(--s5);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.app-header__title { font-family: var(--display); font-size: 18px; font-style: italic; }
+.app-header__title strong { font-style: normal; font-weight: 600; }
+.app-header__title small { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); margin-left: var(--s2); text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* Tier switcher */
+.tier-switcher { display: flex; gap: 2px; padding: 2px; background: var(--cream-100); border-radius: 24px; border: 1px solid var(--line-soft); }
+.tier-switcher button {
+  font-family: var(--body); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 6px 12px; border: none; background: transparent; cursor: pointer;
+  color: var(--warm-gray); border-radius: 20px; transition: all 0.2s;
+}
+.tier-switcher button.is-active { background: var(--charcoal); color: var(--cream-50); }
+.tier-switcher button:hover:not(.is-active) { color: var(--charcoal); }
+
+/* ─── Wireframe layout ─── */
+.wire-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--s7) var(--s5) var(--s8);
+  display: none;
+}
+.wire-page.is-active { display: block; }
+
+/* ─── Wireframe block conventions ─── */
+.wf-block {
+  border: 1.5px dashed var(--line);
+  background: var(--cream-100);
+  padding: var(--s4);
+  margin-bottom: var(--s3);
+  position: relative;
+  min-height: 80px;
+}
+.wf-block__label {
+  position: absolute;
+  top: -10px; left: 16px;
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  background: var(--cream-50); color: var(--warm-gray);
+  padding: 0 8px;
+}
+
+/* Image-placeholder box */
+.wf-image {
+  background: var(--cream-200);
+  border: 1px solid var(--line-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 11px; color: var(--warm-gray-light);
+  text-transform: uppercase; letter-spacing: 0.14em;
+  min-height: 180px;
+}
+.wf-image.is-hero { min-height: 360px; }
+.wf-image.is-square { aspect-ratio: 1; min-height: 0; }
+
+/* Tier chips */
+.tier-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  padding: 3px 8px; border-radius: 3px;
+  border: 1px solid currentColor;
+  background: var(--cream-50);
+}
+.tier-chip--kitchen { color: var(--tier-kitchen); }
+.tier-chip--library { color: var(--tier-library); }
+.tier-chip--profession { color: var(--tier-profession); }
+.tier-chip--trade { color: var(--tier-trade); }
+.tier-chip--reserve { color: var(--tier-reserve); background: var(--cream-100); }
+.tier-chip__lock::before { content: "○"; font-size: 12px; }
+.tier-chip.is-locked .tier-chip__lock::before { content: "●"; }
+
+/* Buttons */
+.btn {
+  font-family: var(--body); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 12px 24px; border: 1.5px solid var(--charcoal);
+  background: var(--charcoal); color: var(--cream-50);
+  cursor: pointer; transition: all 0.2s;
+  display: inline-block; text-decoration: none;
+  border-bottom: 1.5px solid var(--charcoal);
+}
+.btn:hover { background: var(--cream-50); color: var(--charcoal); border-bottom-color: var(--charcoal); }
+.btn--ghost { background: transparent; color: var(--charcoal); }
+.btn--ghost:hover { background: var(--charcoal); color: var(--cream-50); }
+.btn--gold { background: var(--gold); border-color: var(--gold); color: var(--cream-50); }
+.btn--gold:hover { background: transparent; color: var(--gold); border-color: var(--gold); border-bottom-color: var(--gold); }
+.btn--small { font-size: 12px; padding: 8px 16px; }
+
+/* Lock overlay for tier-gated content */
+.locked {
+  position: relative;
+  opacity: 0.45;
+  pointer-events: none;
+}
+.lock-prompt {
+  margin-top: var(--s2);
+  padding: var(--s3);
+  border: 1px solid var(--gold);
+  background: var(--cream-50);
+  display: flex; justify-content: space-between; align-items: center;
+  gap: var(--s2);
+}
+.lock-prompt__text { font-size: 14px; color: var(--charcoal-soft); }
+.lock-prompt__text strong { font-family: var(--display); font-style: italic; }
+
+/* Annotations — gold left bar, mono, margin-positioned */
+.annotation {
+  font-family: var(--mono); font-size: 11px; line-height: 1.5;
+  color: var(--warm-gray); padding-left: var(--s2);
+  border-left: 2px solid var(--gold);
+  margin: var(--s3) 0;
+  letter-spacing: 0.01em;
+}
+.annotation strong { color: var(--charcoal); font-weight: 500; }
+
+/* Cards */
+.card {
+  background: var(--cream-100);
+  border: 1px solid var(--line-soft);
+  padding: var(--s4);
+  position: relative;
+}
+.card__eyebrow { font-family: var(--body); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--warm-gray); margin-bottom: var(--s1); }
+.card__title { font-family: var(--display); font-size: 24px; line-height: 1.2; margin-bottom: var(--s2); }
+.card__tier { position: absolute; top: var(--s3); right: var(--s3); }
+.card__cta { margin-top: var(--s3); font-family: var(--body); font-size: 14px; font-weight: 600; color: var(--charcoal); border-bottom: 1.5px solid var(--gold); padding-bottom: 2px; display: inline-block; }
+
+/* Grids */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4); }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--s3); }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: var(--s3); }
+
+/* ─── SITE MAP view ─── */
+.sitemap-intro {
+  border-left: 4px solid var(--gold);
+  padding: var(--s2) var(--s4);
+  margin-bottom: var(--s6);
+  max-width: 760px;
+}
+.sitemap-intro h1 { font-size: 48px; margin-bottom: var(--s2); }
+.sitemap-intro .lede { margin-bottom: var(--s3); }
+
+.sitemap-section { margin-bottom: var(--s6); }
+.sitemap-section__head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: var(--s2); margin-bottom: var(--s3); }
+.sitemap-section__head h3 { font-size: 22px; font-style: italic; }
+.sitemap-section__head .mono { color: var(--warm-gray); }
+
+.sitemap-list { list-style: none; }
+.sitemap-list li {
+  display: grid;
+  grid-template-columns: 200px 1fr 140px 80px;
+  gap: var(--s3); align-items: center;
+  padding: var(--s2) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.sitemap-list li:hover { background: var(--cream-100); margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+.sitemap-list .sm-url { font-family: var(--mono); font-size: 13px; color: var(--charcoal); }
+.sitemap-list .sm-name { font-family: var(--display); font-size: 17px; font-style: italic; color: var(--charcoal-soft); }
+.sitemap-list .sm-tier { font-size: 11px; }
+.sitemap-list .sm-status { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; text-align: right; }
+.sitemap-list .sm-status.is-shipped { color: var(--tier-kitchen); }
+.sitemap-list .sm-status.is-planned { color: var(--warm-gray-light); }
+.sitemap-list .sm-status.is-locked { color: var(--gold); }
+.sitemap-list a { border: none; }
+.sitemap-list a:hover .sm-name { border-bottom: 1px solid var(--gold); }
+
+/* ─── HOMEPAGE wireframe specific ─── */
+.hp-nav { border-bottom: 1px solid var(--line); padding-bottom: var(--s2); margin-bottom: var(--s5); display: flex; justify-content: space-between; align-items: center; }
+.hp-nav__brand { font-family: var(--display); font-size: 20px; letter-spacing: -0.01em; }
+.hp-nav__brand .italic { font-style: italic; }
+.hp-nav__items { display: flex; gap: var(--s4); list-style: none; }
+.hp-nav__items a { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: none; color: var(--charcoal-soft); }
+.hp-nav__items a:hover { color: var(--charcoal); border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+.hp-nav__util { display: flex; gap: var(--s3); }
+.hp-nav__util a { font-size: 12px; color: var(--warm-gray); border-bottom: none; }
+
+.hp-hero { margin-bottom: var(--s7); padding: var(--s6) 0; border-bottom: 1px solid var(--line-soft); }
+.hp-hero h1 { font-size: 64px; line-height: 1.05; max-width: 900px; margin-bottom: var(--s3); }
+.hp-hero h1 .italic { font-style: italic; color: var(--charcoal-soft); }
+.hp-hero__lede { font-size: 20px; max-width: 600px; color: var(--charcoal-soft); margin-bottom: var(--s4); }
+.hp-hero__ctas { display: flex; gap: var(--s2); align-items: center; }
+
+.hp-section { padding: var(--s6) 0; border-bottom: 1px solid var(--line-soft); }
+.hp-section h2 { margin-bottom: var(--s4); }
+.hp-section h2 .italic { font-style: italic; }
+
+.hp-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--s3); padding: var(--s4) 0; }
+.hp-stats__item { text-align: center; padding: var(--s2); border-right: 1px solid var(--line-soft); }
+.hp-stats__item:last-child { border-right: none; }
+.hp-stats__num { font-family: var(--display); font-size: 36px; font-weight: 600; color: var(--charcoal); margin-bottom: 4px; }
+.hp-stats__label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--warm-gray); }
+
+.hp-personas { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: var(--s2); margin-top: var(--s4); }
+.hp-persona { padding: var(--s3); background: var(--cream-100); border: 1px solid var(--line-soft); position: relative; }
+.hp-persona__eyebrow { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--warm-gray); margin-bottom: var(--s1); }
+.hp-persona__title { font-family: var(--display); font-size: 26px; margin-bottom: var(--s1); }
+.hp-persona__tier { font-family: var(--body); font-size: 12px; color: var(--gold); font-weight: 600; margin-bottom: var(--s2); }
+.hp-persona__desc { font-size: 14px; color: var(--charcoal-soft); margin-bottom: var(--s2); line-height: 1.5; }
+.hp-persona__cta { font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+
+.hp-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); }
+.hp-compare__col { padding: var(--s4); }
+.hp-compare__col:first-child { border-right: 1px solid var(--line); background: var(--cream-50); }
+.hp-compare__col:last-child { background: var(--cream-100); }
+.hp-compare__head { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--warm-gray); margin-bottom: var(--s2); }
+.hp-compare__title { font-family: var(--display); font-size: 22px; font-style: italic; margin-bottom: var(--s3); }
+.hp-compare__list { list-style: none; }
+.hp-compare__list li { padding: 6px 0; border-bottom: 1px dotted var(--line-soft); font-size: 14px; }
+.hp-compare__list li:last-child { border-bottom: none; }
+.hp-compare__list em { font-style: normal; color: var(--gold); font-weight: 500; }
+
+.hp-footer { padding: var(--s5) 0 var(--s4); margin-top: var(--s5); border-top: 1px solid var(--line); display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--s4); }
+.hp-footer h5 { color: var(--warm-gray); margin-bottom: var(--s2); font-size: 11px; letter-spacing: 0.16em; }
+.hp-footer ul { list-style: none; }
+.hp-footer li { padding: 4px 0; font-size: 13px; }
+.hp-footer li a { border: none; color: var(--charcoal-soft); }
+.hp-footer li a:hover { color: var(--charcoal); border-bottom: 1px solid var(--gold); }
+
+/* ─── Notes / meta panel at bottom ─── */
+.meta-panel {
+  background: var(--charcoal);
+  color: var(--cream-50);
+  padding: var(--s4) var(--s5);
+  margin-top: var(--s6);
+}
+.meta-panel h4 { color: var(--cream-50); margin-bottom: var(--s2); }
+.meta-panel p, .meta-panel li { color: var(--cream-100); font-size: 14px; }
+.meta-panel ul { padding-left: var(--s3); }
+.meta-panel .mono { color: var(--gold-soft); }
+
+/* Tier-aware visibility */
+body[data-tier="logged-out"] .show-when-member { display: none; }
+body[data-tier="kitchen"] .gated-library, body[data-tier="kitchen"] .gated-profession, body[data-tier="kitchen"] .gated-reserve { /* will gate downstream */ }
+body[data-tier="library"] .gated-profession, body[data-tier="library"] .gated-reserve { /* downstream */ }
+body[data-tier="profession"] .gated-reserve { /* downstream */ }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .app-header { padding: var(--s2); flex-direction: column; gap: var(--s2); align-items: flex-start; }
+  .wire-page { padding: var(--s4) var(--s2) var(--s6); }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .sitemap-list li { grid-template-columns: 1fr; gap: var(--s1); }
+  .hp-personas { grid-template-columns: 1fr 1fr; }
+  .hp-stats { grid-template-columns: 1fr 1fr; }
+  .hp-footer { grid-template-columns: 1fr 1fr; }
+  .hp-hero h1 { font-size: 36px; }
+}
+</style>
+</head>
+<body data-tier="kitchen">
+
+<!-- ════════════════════════════════════════════════════════
+     HEADER — sticky tier switcher
+     ════════════════════════════════════════════════════════ -->
+<header class="app-header">
+  <div class="app-header__title">
+    <strong>Provenance</strong> Wireframe Foundation <small>v1 · 14 May 2026 · Target state per Sprint 1–7</small>
+  </div>
+  <div class="tier-switcher" role="tablist" aria-label="View as tier">
+    <button data-tier="logged-out" type="button">Logged out</button>
+    <button data-tier="kitchen" type="button" class="is-active">Kitchen</button>
+    <button data-tier="library" type="button">Library</button>
+    <button data-tier="profession" type="button">Profession</button>
+    <button data-tier="trade" type="button">Trade</button>
+    <button data-tier="reserve" type="button">Reserve</button>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════
+     SITE MAP — default landing view
+     ════════════════════════════════════════════════════════ -->
+<main id="sitemap" class="wire-page is-active">
+
+  <div class="sitemap-intro">
+    <div class="eyebrow">Wireframe Foundation</div>
+    <h1>The platform, <em style="font-style: italic;">walkable.</em></h1>
+    <p class="lede">A target-state visual reference for every surface of Provenance. Each entry below opens a wireframe rendered in the institutional voice the doctrine commits to — Te Papa-class restraint, named producers, Pat's Rule operating, the Sashimi Standard at the gate.</p>
+    <p class="mono" style="color: var(--warm-gray); margin-top: var(--s3);">
+      Use the tier switcher in the header to see how each surface renders for a logged-out visitor, a Kitchen-tier member, all the way up to Reserve. Click any URL below to open its wireframe.
+    </p>
+  </div>
+
+  <!-- PUBLIC SURFACES -->
+  <section class="sitemap-section">
+    <div class="sitemap-section__head">
+      <h3>Public surfaces</h3>
+      <span class="mono">No authentication required</span>
+    </div>
+    <ul class="sitemap-list">
+      <li>
+        <span class="sm-url">/</span>
+        <a href="#homepage" onclick="switchView('homepage')"><span class="sm-name">Homepage — the front door</span></a>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-shipped">Wireframed</span>
+      </li>
+      <li>
+        <span class="sm-url">/pricing</span>
+        <span class="sm-name">The Four Doors — pricing &amp; tier overview</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/canon</span>
+        <span class="sm-name">The Canon — typed index of all canons</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/explorer</span>
+        <span class="sm-name">Canon Explorer — Regional / Route / Method / Meta</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/atlas</span>
+        <span class="sm-name">The Atlases — geographic browse</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/route</span>
+        <span class="sm-name">The Routes — the five Spice Routes index</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/route/pacific-migration-trail</span>
+        <span class="sm-name">Pacific Migration Trail walking surface</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/route/west-african-diaspora</span>
+        <span class="sm-name">West African Diaspora Trail</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/route/portuguese-colonial</span>
+        <span class="sm-name">Portuguese Colonial Trail</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/route/trans-saharan</span>
+        <span class="sm-name">Trans-Saharan Trade</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/route/indian-ocean</span>
+        <span class="sm-name">Indian Ocean Trade</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/table</span>
+        <span class="sm-name">The Provenance Table — dinner series</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/recipes</span>
+        <span class="sm-name">Recipes — Cuisine / Section / Facet filtered browse</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/beverages</span>
+        <span class="sm-name">Beverage Terroir — full canon</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/cuisines</span>
+        <span class="sm-name">Cuisines — curated canon hierarchy (redesigned)</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/techniques/browse</span>
+        <span class="sm-name">Techniques — by Type / Cuisine / Method</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/suppliers</span>
+        <span class="sm-name">Sourced by Provenance — with Founding Partner editorial</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/protocols</span>
+        <span class="sm-name">Service Protocols (ToC public, content gated)</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--library">Library</span></span>
+        <span class="sm-status is-locked">Tier-gated</span>
+      </li>
+      <li>
+        <span class="sm-url">/about</span>
+        <span class="sm-name">About — the institutional manifesto</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/for-professionals</span>
+        <span class="sm-name">For Professionals — the working-kitchen pitch</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- MEMBER SURFACES -->
+  <section class="sitemap-section">
+    <div class="sitemap-section__head">
+      <h3>Member surfaces</h3>
+      <span class="mono">Authentication required</span>
+    </div>
+    <ul class="sitemap-list">
+      <li>
+        <span class="sm-url">/kitchen</span>
+        <span class="sm-name">MyKitchen — the member home, recipe collection</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--kitchen">Kitchen+</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/recipe/&lt;slug&gt;</span>
+        <span class="sm-name">Recipe detail — seven pillars, tier-gated sections</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--kitchen">Kitchen+</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/recipe/&lt;slug&gt;/cook</span>
+        <span class="sm-name">Cook Mode — step nav, timers, wake-lock, integrations</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--kitchen">Kitchen+</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/recipe/&lt;slug&gt;/edit</span>
+        <span class="sm-name">Recipe editor — author-only, with audit panel</span>
+        <span class="sm-tier"><span class="tier-chip">Author</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/menu-builder</span>
+        <span class="sm-name">Menu Builder — recipe selection, allergen matrix, costing</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--library">Library+</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/atelier</span>
+        <span class="sm-name">l'Atelier — Compose Menu (Reserve only)</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--reserve">Reserve</span></span>
+        <span class="sm-status is-locked">Tier-gated</span>
+      </li>
+      <li>
+        <span class="sm-url">/compose</span>
+        <span class="sm-name">Compose Recipe — single-recipe generation (Reserve only)</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--reserve">Reserve</span></span>
+        <span class="sm-status is-locked">Tier-gated</span>
+      </li>
+      <li>
+        <span class="sm-url">/auth/account</span>
+        <span class="sm-name">Account — tier, membership, billing, leave</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--kitchen">Kitchen+</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/suggest-supplier</span>
+        <span class="sm-name">Suggest a supplier — flywheel form</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--kitchen">Kitchen+</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- IMPORT MODALS -->
+  <section class="sitemap-section">
+    <div class="sitemap-section__head">
+      <h3>Import flows (modals from MyKitchen)</h3>
+      <span class="mono">All Kitchen-tier, except Compose (Reserve)</span>
+    </div>
+    <ul class="sitemap-list">
+      <li>
+        <span class="sm-url">— modal —</span>
+        <span class="sm-name">Scan a page — camera or upload, multi-page</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--kitchen">Kitchen+</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">— modal —</span>
+        <span class="sm-name">Import a recipe — PDF / URL / paste (unified)</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--kitchen">Kitchen+</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">— modal —</span>
+        <span class="sm-name">Write from scratch — blank recipe editor</span>
+        <span class="sm-tier"><span class="tier-chip tier-chip--kitchen">Kitchen+</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- AUTH -->
+  <section class="sitemap-section">
+    <div class="sitemap-section__head">
+      <h3>Authentication</h3>
+      <span class="mono">Edges of the member system</span>
+    </div>
+    <ul class="sitemap-list">
+      <li>
+        <span class="sm-url">/auth/signup</span>
+        <span class="sm-name">Open a kitchen — registration</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/auth/login</span>
+        <span class="sm-name">Welcome back — sign in</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+      <li>
+        <span class="sm-url">/auth/logout</span>
+        <span class="sm-name">Leave — POST endpoint, no UI</span>
+        <span class="sm-tier"><span class="tier-chip">Open</span></span>
+        <span class="sm-status is-planned">Queued</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- META PANEL -->
+  <section class="meta-panel">
+    <h4>About this foundation</h4>
+    <p>This wireframe foundation locks the design system for every subsequent surface wireframe. The aesthetic — warm cream, charcoal, single gold accent, Playfair Display + DM Sans + DM Mono — is the platform's institutional voice rendered visually. Each future wireframe drops into this same file as a new section.</p>
+    <p style="margin-top: var(--s2);"><strong style="color: var(--cream-50); font-family: var(--display); font-style: italic;">What target state means:</strong> the platform shown here assumes Sprints 1 through 7 of the Combined Fix List v2 have shipped. Tier gates render correctly, Cook Mode and Menu Builder ship as features (not placeholders), l'Atelier is the menu engine and Compose Recipe is the per-recipe generator, /cuisines is the curated canon hierarchy, the Founding Partner is editorially placed, and the institutional voice replaces every SaaS phrasing on the public surfaces.</p>
+    <p style="margin-top: var(--s2);" class="mono">First wireframe: <strong>Homepage</strong> — open it via the link in the Public Surfaces table above. Next surfaces queued: /pricing, /kitchen, /recipe/&lt;slug&gt;, Cook Mode, Menu Builder, /atelier, /compose, the Founding Partner /suppliers surface.</p>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════════
+     HOMEPAGE wireframe
+     ════════════════════════════════════════════════════════ -->
+<main id="homepage" class="wire-page">
+
+  <div style="margin-bottom: var(--s4);">
+    <a href="#sitemap" onclick="switchView('sitemap')" style="font-family: var(--mono); font-size: 12px; color: var(--warm-gray); border: none;">← Back to site map</a>
+  </div>
+
+  <div class="annotation">
+    <strong>Wireframe: Homepage (/)</strong><br>
+    Target state per Sprint 7.6 (institutional metadata), 7.7 (reshaped primary nav: Canon / Atlases / Routes / Table), 7.8 (three CTAs of escalating commitment), 5.5 (Cook / Sommelier / Chef / Supplier as personas, not parallel tiers).
+  </div>
+
+  <!-- TOP NAV — target state -->
+  <nav class="hp-nav">
+    <div class="hp-nav__brand"><span class="italic">Provenance</span></div>
+    <ul class="hp-nav__items">
+      <li><a href="#">The Canon</a></li>
+      <li><a href="#">The Atlases</a></li>
+      <li><a href="#">The Routes</a></li>
+      <li><a href="#">The Table</a></li>
+    </ul>
+    <div class="hp-nav__util">
+      <a href="#">Pricing</a>
+      <a href="#" class="show-when-member">MyKitchen →</a>
+      <a href="#">Sign in</a>
+    </div>
+  </nav>
+
+  <div class="annotation">
+    <strong>Nav decision (Sprint 7.7):</strong> Recipes and Drinks fold into The Canon as sections. The four primary nav items are the canonical surfaces from the brief. Pricing and Sign in sit right-aligned as utility. MyKitchen → appears only when authenticated.
+  </div>
+
+  <!-- HERO -->
+  <section class="hp-hero">
+    <h1>Every ingredient has a provenance.<br><span class="italic">Every dish deserves to know it.</span></h1>
+    <p class="hp-hero__lede">A reference for the origin of ingredients, the lineage of techniques, and the canon of beverages. For the working kitchen and the curious diner alike.</p>
+    <div class="hp-hero__ctas">
+      <a href="#" class="btn">Open the Canon</a>
+      <a href="#" class="btn btn--ghost">Find your tier</a>
+      <a href="#" style="font-size: 14px; color: var(--charcoal-soft); border-bottom: 1.5px solid var(--gold); padding-bottom: 2px;">Begin in your kitchen →</a>
+    </div>
+  </section>
+
+  <div class="annotation">
+    <strong>Hero H1:</strong> retained from current site — it works. The italic second line gives it the editorial register.<br>
+    <strong>Three CTAs of escalating commitment (Sprint 7.8):</strong> low / medium / high. Institutional voice — not "Get started for free." The visitor is invited into an institution.
+  </div>
+
+  <!-- STATS BAND -->
+  <section class="hp-section" style="padding: var(--s4) 0;">
+    <div class="hp-stats">
+      <div class="hp-stats__item">
+        <div class="hp-stats__num">12,599</div>
+        <div class="hp-stats__label">Technique references</div>
+      </div>
+      <div class="hp-stats__item">
+        <div class="hp-stats__num">3,654</div>
+        <div class="hp-stats__label">Beverage entries</div>
+      </div>
+      <div class="hp-stats__item">
+        <div class="hp-stats__num">15,325</div>
+        <div class="hp-stats__label">Pairings mapped</div>
+      </div>
+      <div class="hp-stats__item">
+        <div class="hp-stats__num">686</div>
+        <div class="hp-stats__label">Recipes at standard</div>
+      </div>
+      <div class="hp-stats__item">
+        <div class="hp-stats__num">92</div>
+        <div class="hp-stats__label">Verified suppliers</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="annotation">
+    <strong>Stats band (Sprint 7.1):</strong> Numbers read from <span class="mono">/api/stats</span> — never hardcoded. When the database grows, every page that quotes a count updates on next load. No more Session B drift between 12,599 / 12,106 / 686 / 618.
+  </div>
+
+  <!-- CARBONARA COMPARISON -->
+  <section class="hp-section">
+    <div class="eyebrow">The same dish</div>
+    <h2>Spaghetti alla Carbonara,<br><span class="italic">with and without Provenance.</span></h2>
+    <p class="lede" style="margin-bottom: var(--s4); max-width: 720px;">Two ingredient lists. The dish lives or dies in the second one.</p>
+    
+    <div class="hp-compare">
+      <div class="hp-compare__col">
+        <div class="hp-compare__head">Without Provenance</div>
+        <div class="hp-compare__title">Carbonara</div>
+        <ul class="hp-compare__list">
+          <li>200 g spaghetti</li>
+          <li>150 g guanciale</li>
+          <li>4 egg yolks</li>
+          <li>50 g pecorino, grated</li>
+          <li>Black pepper</li>
+          <li>Salt</li>
+        </ul>
+      </div>
+      <div class="hp-compare__col">
+        <div class="hp-compare__head">Sourced by Provenance</div>
+        <div class="hp-compare__title">Carbonara</div>
+        <ul class="hp-compare__list">
+          <li>200 g <em>Senatore Cappelli spaghetti, Pastificio Mancini</em></li>
+          <li>150 g <em>Suino Casertana guanciale, 24-month cure</em></li>
+          <li>4 <em>pastured egg yolks, Lazio</em></li>
+          <li>50 g <em>Pecorino Romano DOP, grated</em></li>
+          <li>Black pepper, Tellicherry, cracked</li>
+          <li>Mediterranean sea salt</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="annotation">
+    <strong>Carbonara comparison (Session B 5.3):</strong> codified as the homepage teaser — single dish, clean argument. Producer-specific second card does the institutional work better than any tagline. Bourguignon remains as the depth artifact for the wine canon elsewhere.
+  </div>
+
+  <!-- PERSONAS -->
+  <section class="hp-section">
+    <div class="eyebrow">Find your entry</div>
+    <h2>Who are you<br><span class="italic">at the table?</span></h2>
+    <p class="lede" style="margin-bottom: var(--s4); max-width: 720px;">The Four Doors map to four members. The right door is the one that opens to your work.</p>
+    
+    <div class="hp-personas">
+      <div class="hp-persona">
+        <div class="hp-persona__eyebrow">The Cook</div>
+        <div class="hp-persona__title">Open The Kitchen</div>
+        <div class="hp-persona__tier">From $49 / year</div>
+        <div class="hp-persona__desc">The home kitchen seat. Imports, your collection, the platform's named producers in every recipe you keep.</div>
+        <a href="#" class="hp-persona__cta">Door I →</a>
+      </div>
+      <div class="hp-persona">
+        <div class="hp-persona__eyebrow">The Sommelier</div>
+        <div class="hp-persona__title">Open The Library</div>
+        <div class="hp-persona__tier">From $149 / year</div>
+        <div class="hp-persona__desc">The beverage canon at full depth — terroir, named producers, the Spice Routes, the service protocols.</div>
+        <a href="#" class="hp-persona__cta">Door II →</a>
+      </div>
+      <div class="hp-persona">
+        <div class="hp-persona__eyebrow">The Chef</div>
+        <div class="hp-persona__title">Open The Profession</div>
+        <div class="hp-persona__tier">From $299 / year</div>
+        <div class="hp-persona__desc">The working kitchen. HACCP briefs, recipe costing, Menu Builder with cross-recipe allergen matrix.</div>
+        <a href="#" class="hp-persona__cta">Door III →</a>
+      </div>
+      <div class="hp-persona">
+        <div class="hp-persona__eyebrow">The Supplier</div>
+        <div class="hp-persona__title">Open The Trade</div>
+        <div class="hp-persona__tier">From $999 / year</div>
+        <div class="hp-persona__desc">The marketplace seat. Producer portal, product listing, regional targeting, pairing intelligence analytics.</div>
+        <a href="#" class="hp-persona__cta">Door IV →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="annotation">
+    <strong>Personas → Doors mapping (Sprint 4.1 + Session B 5.5):</strong> The Cook / Sommelier / Chef / Supplier is "who you are at the table" — the entry-point language. The Kitchen / Library / Profession / Trade is what you pay — the commercial language. Each persona card explicitly names its default door. A visitor sees four doors named once, four times.<br>
+    <strong>Reserve tier</strong> sits parallel to this stack, not in it — it's the Composition layer (Compose Menu + Compose Recipe) sold separately or as an add-on. Surfaced on /pricing, not on the homepage persona block.
+  </div>
+
+  <!-- THE TABLE -->
+  <section class="hp-section">
+    <div class="eyebrow">The seven dinners</div>
+    <h2>From the database<br><span class="italic">to the table.</span></h2>
+    <p class="lede" style="margin-bottom: var(--s4); max-width: 720px;">The Pacific Migration Trail rendered as seven dinners across two countries — Dinner Zero on the Sunshine Coast, the Wellington capstone with Monique Fiso.</p>
+    
+    <div class="grid-2">
+      <div class="wf-image is-hero">
+        <span class="mono">Image — Dinner Zero, Sunshine Coast<br>Founding partner: Purely Artisan</span>
+      </div>
+      <div style="display: flex; flex-direction: column; justify-content: center;">
+        <p style="font-size: 18px; margin-bottom: var(--s2);">The Provenance Table is the living artifact of the Pacific Migration Trail. Seven dinners. Two countries. One thesis: that techniques travel with people, and that a kitchen is a place where the journey resolves.</p>
+        <p style="font-size: 16px; color: var(--charcoal-soft); margin-bottom: var(--s3);">Founding sponsor of Dinner Zero: <strong>Purely Artisan Foods</strong>. Wellington capstone: <strong>Monique Fiso</strong>.</p>
+        <a href="#" class="btn btn--ghost">Walk the trail →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="annotation">
+    <strong>The Table band (Session B Section 10):</strong> the dinner series gets a homepage block because partner conversations, tourism-board pitches, and media inquiries need a public artifact. Links to /route/pacific-migration-trail (Sprint 5.4). Founding-partner naming on Dinner Zero (Sprint 6.3).
+  </div>
+
+  <!-- METHOD CLOSE -->
+  <section class="hp-section">
+    <div class="eyebrow">The Empty Seat Method</div>
+    <h2>Every entry,<br><span class="italic">tested from the chair of someone who knows nothing about it.</span></h2>
+    <p class="lede" style="margin-bottom: var(--s4); max-width: 720px;">The chef testing the dish from the diner's chair. The author writing the entry from the reader's chair. The platform itself tested from the empty seat at the table.</p>
+    <div style="display: flex; gap: var(--s2);">
+      <a href="#" class="btn btn--ghost">Read the standard</a>
+      <a href="#" style="font-size: 14px; color: var(--charcoal-soft); padding: 12px 8px; border-bottom: 1.5px solid var(--gold); padding-bottom: 2px;">The Sashimi Standard →</a>
+    </div>
+  </section>
+
+  <div class="annotation">
+    <strong>The Empty Seat Method (Session B Section 17):</strong> kept collapsed as both product method and process — institutionally elegant, true at multiple altitudes. Capitalized as the named concept; lowercase when used as working description elsewhere.
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="hp-footer">
+    <div>
+      <h5>Provenance</h5>
+      <p style="font-size: 14px; color: var(--charcoal-soft); max-width: 320px;">A reference for the origin of ingredients, the lineage of techniques, and the canon of beverages.</p>
+    </div>
+    <div>
+      <h5>Library</h5>
+      <ul>
+        <li><a href="#">The Canon</a></li>
+        <li><a href="#">The Atlases</a></li>
+        <li><a href="#">The Routes</a></li>
+        <li><a href="#">Cuisines</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>The Kitchen</h5>
+      <ul>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">For Professionals</a></li>
+        <li><a href="#">Methodology</a></li>
+        <li><a href="#">The Standard</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>The House</h5>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Suppliers</a></li>
+        <li><a href="#">The Provenance Table</a></li>
+        <li><a href="#">Sign in</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <div class="annotation" style="margin-top: var(--s5);">
+    <strong>Footer (Sprint 7.6 + voice):</strong> Library / Kitchen / House as organising metaphors — institutional building, not SaaS menu. "Methodology" links to a standing page; "The Standard" links to the Sashimi Standard explainer (per Session B 3.10 fix path).
+  </div>
+
+</main>
+
+<script>
+// ─── Section switcher ───
+function switchView(viewId) {
+  document.querySelectorAll('.wire-page').forEach(p => p.classList.remove('is-active'));
+  const target = document.getElementById(viewId);
+  if (target) {
+    target.classList.add('is-active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// ─── Tier switcher ───
+const tierButtons = document.querySelectorAll('.tier-switcher button');
+tierButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tier = btn.dataset.tier;
+    document.body.dataset.tier = tier;
+    tierButtons.forEach(b => b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+  });
+});
+
+// ─── Hash-based navigation fallback ───
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.replace('#', '');
+  if (hash) switchView(hash);
+});
+
+// Initialize from hash if present
+if (window.location.hash) {
+  const hash = window.location.hash.replace('#', '');
+  switchView(hash);
+}
+</script>
+
+</body>
+</html>

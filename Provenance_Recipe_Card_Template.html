@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Provenance — Recipe Card Template · Single Source of Truth</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  --cream-50: #FAF7F1;
+  --cream-100: #F5F1E9;
+  --cream-200: #EBE5D7;
+  --charcoal: #1F1B16;
+  --charcoal-soft: #4A4439;
+  --warm-gray: #8B8275;
+  --warm-gray-light: #B5AC9F;
+  --gold: #C9A84C;
+  --gold-soft: #D4B679;
+  --burgundy: #7A2E2E;
+  --terracotta: #A0522D;
+  --line: #D9D2C2;
+  --line-soft: #E8E2D2;
+  --display: 'Playfair Display', Georgia, serif;
+  --body: 'DM Sans', -apple-system, system-ui, sans-serif;
+  --mono: 'DM Mono', 'SF Mono', Menlo, monospace;
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s5: 48px; --s6: 64px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; font-family: var(--body); background: var(--cream-50); color: var(--charcoal); line-height: 1.55; }
+
+.lock-banner { background: var(--charcoal); color: var(--cream-50); padding: var(--s3) var(--s5); border-bottom: 4px solid var(--gold); }
+.lock-banner__eyebrow { font-family: var(--mono); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold-soft); margin-bottom: var(--s1); }
+.lock-banner h1 { font-family: var(--display); font-size: 28px; font-style: italic; margin: 0 0 var(--s1) 0; line-height: 1.2; color: var(--cream-50); }
+.lock-banner p { margin: 0; font-size: 14px; color: var(--cream-100); max-width: 800px; }
+.lock-banner__rules { display: flex; gap: var(--s4); margin-top: var(--s2); padding-top: var(--s2); border-top: 1px solid rgba(212, 182, 121, 0.2); flex-wrap: wrap; }
+.lock-banner__rule { font-family: var(--mono); font-size: 11px; color: var(--gold-soft); text-transform: uppercase; letter-spacing: 0.12em; }
+.lock-banner__rule strong { color: var(--cream-50); }
+
+.frame { max-width: 1240px; margin: 0 auto; padding: var(--s5); }
+.section { margin-bottom: var(--s6); }
+.section__head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: var(--s2); border-bottom: 1px solid var(--line); margin-bottom: var(--s4); }
+.section__head h2 { font-family: var(--display); font-size: 32px; font-style: italic; margin: 0; }
+.section__head__meta { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--warm-gray); }
+
+.intro { background: var(--cream-100); border-left: 4px solid var(--gold); padding: var(--s4); margin-bottom: var(--s5); font-size: 15px; line-height: 1.65; color: var(--charcoal-soft); max-width: 800px; }
+.intro strong { color: var(--charcoal); font-weight: 500; }
+
+.model { background: var(--cream-100); border: 1px solid var(--line-soft); padding: var(--s4); }
+.model__field { display: grid; grid-template-columns: 220px 1fr; gap: var(--s3); padding: var(--s2) 0; border-bottom: 1px dotted var(--line-soft); }
+.model__field:last-child { border-bottom: none; }
+.model__field__key { font-family: var(--mono); font-size: 12px; color: var(--gold); font-weight: 600; }
+.model__field__desc { font-size: 13px; color: var(--charcoal-soft); line-height: 1.55; }
+.model__field__desc strong { color: var(--charcoal); }
+.model__field__desc code { font-family: var(--mono); font-size: 11px; background: var(--cream-50); padding: 2px 4px; color: var(--charcoal); }
+
+/* RECIPE CARD — the canonical template */
+.recipe-card { background: var(--cream-50); border: 1px solid var(--line-soft); text-decoration: none; color: inherit; transition: all 0.2s; display: flex; flex-direction: column; border-bottom: 1px solid var(--line-soft); overflow: hidden; }
+.recipe-card:hover { border-color: var(--gold-soft); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(31,27,22,0.06); border-bottom: 1px solid var(--gold-soft); }
+.recipe-card__image { aspect-ratio: 4/3; background: var(--cream-200); position: relative; overflow: hidden; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10px; color: var(--warm-gray-light); text-transform: uppercase; letter-spacing: 0.14em; }
+.recipe-card__tag { position: absolute; top: var(--s1); left: var(--s1); font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; padding: 4px 8px; background: var(--cream-50); border: 1px solid var(--line-soft); color: var(--charcoal); }
+.recipe-card__tag--imported { background: var(--cream-50); color: var(--warm-gray); border-color: var(--line); }
+.recipe-card__tag--enhanced { background: var(--gold); color: var(--cream-50); border-color: var(--gold); }
+.recipe-card__tag--canon { background: var(--charcoal); color: var(--cream-50); border-color: var(--charcoal); }
+.recipe-card__tag--composed { background: var(--burgundy); color: var(--cream-50); border-color: var(--burgundy); }
+.recipe-card__tag--member { background: var(--cream-100); color: var(--charcoal); border-color: var(--gold-soft); }
+.recipe-card__haccp { position: absolute; top: var(--s1); right: var(--s1); font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; padding: 4px 8px; background: var(--terracotta); color: var(--cream-50); }
+.recipe-card__body { padding: var(--s2) var(--s3); flex: 1; display: flex; flex-direction: column; }
+.recipe-card__cuisine { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--gold); margin-bottom: 4px; font-weight: 600; }
+.recipe-card__title { font-family: var(--display); font-size: 19px; line-height: 1.2; letter-spacing: -0.005em; margin-bottom: var(--s1); flex: 1; }
+.recipe-card__title .italic { font-style: italic; color: var(--charcoal-soft); }
+.recipe-card__meta { display: flex; gap: var(--s2); align-items: center; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray); padding-top: var(--s2); border-top: 1px dotted var(--line-soft); flex-wrap: wrap; }
+.recipe-card__meta__divider { color: var(--line); }
+.recipe-card__pillars { display: flex; gap: 2px; padding: 0 var(--s3) var(--s2); }
+.recipe-card__pillar-dot { flex: 1; height: 2px; background: var(--line-soft); }
+.recipe-card__pillar-dot.is-filled { background: var(--gold); }
+
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--s3); }
+
+.annotation { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); background: var(--cream-100); border-left: 3px solid var(--gold-soft); padding: var(--s2) var(--s3); line-height: 1.6; margin: var(--s3) 0; }
+.annotation strong { color: var(--charcoal); font-weight: 600; }
+
+.inherit-diagram { background: var(--cream-100); border: 1px solid var(--line-soft); padding: var(--s4); margin-bottom: var(--s4); }
+.inherit-diagram__box { background: var(--cream-50); border: 1px solid var(--gold); padding: var(--s2) var(--s3); margin-bottom: var(--s2); font-family: var(--mono); font-size: 12px; color: var(--charcoal); }
+.inherit-diagram__box.is-base { background: var(--charcoal); color: var(--gold-soft); border-color: var(--charcoal); font-weight: 600; }
+.inherit-diagram__box strong { color: var(--gold); font-weight: 600; }
+.inherit-diagram__arrow { text-align: center; color: var(--gold); font-family: var(--display); font-style: italic; font-size: 24px; margin: 4px 0; }
+.inherit-diagram__children { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--s1); margin-top: var(--s2); }
+.inherit-diagram__children .inherit-diagram__box { margin-bottom: 0; font-size: 10px; text-align: center; background: var(--cream-50); border: 1px solid var(--line); }
+
+.pillars-legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s2); }
+.pillar-card { background: var(--cream-100); padding: var(--s3); border-left: 3px solid var(--gold); }
+.pillar-card__num { font-family: var(--display); font-style: italic; font-size: 24px; color: var(--gold); line-height: 1; margin-bottom: var(--s1); }
+.pillar-card__name { font-family: var(--display); font-size: 16px; font-style: italic; margin-bottom: var(--s1); }
+.pillar-card__desc { font-size: 12px; line-height: 1.5; color: var(--charcoal-soft); }
+
+@media (max-width: 900px) {
+  .frame { padding: var(--s3); }
+  .lock-banner { padding: var(--s3); }
+  .inherit-diagram__children { grid-template-columns: 1fr 1fr; }
+  .pillars-legend { grid-template-columns: 1fr; }
+  .model__field { grid-template-columns: 1fr; gap: var(--s1); }
+}
+</style>
+</head>
+<body>
+
+<div class="lock-banner">
+  <div class="lock-banner__eyebrow">● Locked template · Single source of truth</div>
+  <h1>The Recipe Card Template.</h1>
+  <p>This file is the canonical recipe-card template for Provenance. Every fix-list sprint that touches recipe rendering edits THIS FILE — never rewrites from scratch. Card and detail views read from the same data model. Sample cards below show every state the card can hold.</p>
+  <div class="lock-banner__rules">
+    <span class="lock-banner__rule"><strong>Rule 1.</strong> Edit, never rewrite.</span>
+    <span class="lock-banner__rule"><strong>Rule 2.</strong> Card and detail share one schema.</span>
+    <span class="lock-banner__rule"><strong>Rule 3.</strong> State changes via tag, not template clone.</span>
+    <span class="lock-banner__rule"><strong>Rule 4.</strong> Pat's Rule on every ingredient.</span>
+    <span class="lock-banner__rule"><strong>Rule 5.</strong> Seven pillars, no fewer, no more.</span>
+    <span class="lock-banner__rule"><strong>Rule 6.</strong> Language column from day one.</span>
+  </div>
+</div>
+
+<div class="frame">
+
+  <div class="intro">
+    <strong>Why this file exists.</strong> Recipe cards are the user's primary surface in Provenance. They are where users land, where they import, where they enhance, where they cook from, and where the supplier flywheel lives. In every prior rebuild, recipe cards drifted because there was no single template to edit. This is that single template. The data model, the card scale, and the detail scale all live here. If you change the way a recipe is rendered anywhere on the platform, you change it here first.
+  </div>
+
+  <section class="section">
+    <div class="section__head">
+      <h2>I. The data model</h2>
+      <span class="section__head__meta">What every recipe holds</span>
+    </div>
+
+    <div class="model">
+      <div class="model__field"><div class="model__field__key">id</div><div class="model__field__desc">UUID. The recipe's permanent identifier. <strong>Never changes.</strong></div></div>
+      <div class="model__field"><div class="model__field__key">slug</div><div class="model__field__desc">URL-safe slug from the title. Used at <code>/recipe/&lt;slug&gt;</code>. <strong>i18n-aware:</strong> slug is generated from the recipe's primary language. Language-prefixed routes (/ja/, /fr/, etc.) resolve to the same recipe id.</div></div>
+      <div class="model__field"><div class="model__field__key">language</div><div class="model__field__desc">ISO 639-1 code. Primary language of the recipe (en, ja, fr, pt, es). <strong>Even at English-only launch, this column exists.</strong> Future translations bind to the same recipe id with different language values.</div></div>
+      <div class="model__field"><div class="model__field__key">state</div><div class="model__field__desc">One of: <code>imported</code>, <code>enhanced</code>, <code>canon</code>, <code>composed</code>, <code>member</code>. Drives the card tag and dictates which pillars are required vs. optional. <strong>Changes via state transition, not template clone.</strong></div></div>
+      <div class="model__field"><div class="model__field__key">title</div><div class="model__field__desc">Display name. May include italic span: "Pan-Seared Duck Breast <em>with mānuka honey glaze</em>" — the italic carries lyrical content, Playfair italic, charcoal-soft.</div></div>
+      <div class="model__field"><div class="model__field__key">cuisine</div><div class="model__field__desc">FK to cuisine canon. Drives the canon tag on the card. A recipe belongs to one cuisine canon as its home; cross-cuisine parallels are referenced separately in Pillar V.</div></div>
+      <div class="model__field"><div class="model__field__key">image_url</div><div class="model__field__desc">Hero image. Card view uses 4:3 crop. Detail view uses full image. <strong>One image, two renderings — never separate uploads.</strong></div></div>
+      <div class="model__field"><div class="model__field__key">cooking_time_minutes</div><div class="model__field__desc">Total time including prep. Displayed on card meta strip.</div></div>
+      <div class="model__field"><div class="model__field__key">serves</div><div class="model__field__desc">Default serving count. Cost This Recipe and Menu Builder calculations scale from this base.</div></div>
+      <div class="model__field"><div class="model__field__key">requires_haccp</div><div class="model__field__desc">Boolean. Detected server-side by <code>_detect_raw_served()</code>. When true, the terracotta HACCP badge appears on the card and the HACCP brief surfaces in the detail view's sidebar.</div></div>
+      <div class="model__field"><div class="model__field__key">pillar_1_ingredients</div><div class="model__field__desc">Structured list. Each ingredient holds: name, quantity, unit, <strong>origin_supplier_id</strong> (the named producer), <strong>provider_supplier_id</strong> (the local distributor). Pat's Rule applies here — both pointers populated where canon has them.</div></div>
+      <div class="model__field"><div class="model__field__key">pillar_2_method</div><div class="model__field__desc">Ordered list of steps. Each step holds: instruction, sensory cues (sound/smell/texture/visual), optional timer_seconds, optional tool references.</div></div>
+      <div class="model__field"><div class="model__field__key">pillar_3_quality_hierarchy</div><div class="model__field__desc">Reserve vs House substitution map per ingredient. What the swap costs in technique adjustment.</div></div>
+      <div class="model__field"><div class="model__field__key">pillar_4_sensory_tests</div><div class="model__field__desc">Pass/fail anchors at the critical moments of the cook. The eye-of-the-needle cues.</div></div>
+      <div class="model__field"><div class="model__field__key">pillar_5_cross_cuisine_parallels</div><div class="model__field__desc">Linked technique references in other canons. Drives the "this technique elsewhere" section.</div></div>
+      <div class="model__field"><div class="model__field__key">pillar_6_beverage_pairings</div><div class="model__field__desc">Three role-labelled pairings minimum (complement, contrast, non-alcoholic). Each holds origin_producer + local_provider — Pat's Rule for beverages.</div></div>
+      <div class="model__field"><div class="model__field__key">pillar_7_origin_lineage</div><div class="model__field__desc">The dish's home, travel history, apprenticeship lineage, authority sources cited.</div></div>
+      <div class="model__field"><div class="model__field__key">owner_user_id</div><div class="model__field__desc">For member recipes (state = imported/enhanced/member/composed). NULL for canon recipes. Drives "Your Recipe Collection" vs "From the Canon" filtering on /kitchen.</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head">
+      <h2>II. The seven pillars</h2>
+      <span class="section__head__meta">The Sashimi Standard schema</span>
+    </div>
+
+    <div class="pillars-legend">
+      <div class="pillar-card"><div class="pillar-card__num">I</div><div class="pillar-card__name">Ingredients</div><div class="pillar-card__desc">Named producers, species-level precision. Pat's Rule: origin + provider.</div></div>
+      <div class="pillar-card"><div class="pillar-card__num">II</div><div class="pillar-card__name">Method</div><div class="pillar-card__desc">Numbered steps with sensory anchors. What to listen for, smell, feel.</div></div>
+      <div class="pillar-card"><div class="pillar-card__num">III</div><div class="pillar-card__name">Quality Hierarchy</div><div class="pillar-card__desc">Reserve vs House per ingredient. What the swap costs.</div></div>
+      <div class="pillar-card"><div class="pillar-card__num">IV</div><div class="pillar-card__name">Sensory Tests</div><div class="pillar-card__desc">Pass / fail at the critical moments of the cook.</div></div>
+      <div class="pillar-card"><div class="pillar-card__num">V</div><div class="pillar-card__name">Cross-Cuisine Parallels</div><div class="pillar-card__desc">Where this technique lives elsewhere. Genuine connections only.</div></div>
+      <div class="pillar-card"><div class="pillar-card__num">VI</div><div class="pillar-card__name">Beverage Pairings</div><div class="pillar-card__desc">Role-labelled: complement, contrast, non-alcoholic. Pat's Rule applies.</div></div>
+      <div class="pillar-card"><div class="pillar-card__num">VII</div><div class="pillar-card__name">Origin &amp; Lineage</div><div class="pillar-card__desc">The dish's home, travel history, authority sources cited.</div></div>
+      <div class="pillar-card" style="background: var(--charcoal); color: var(--cream-50); border-left-color: var(--gold);">
+        <div class="pillar-card__num" style="color: var(--gold-soft);">⎯</div>
+        <div class="pillar-card__name" style="color: var(--cream-50);">No eighth pillar</div>
+        <div class="pillar-card__desc" style="color: var(--cream-100);">The schema is closed. Additions go inside a pillar, never beside it.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head">
+      <h2>III. The five states</h2>
+      <span class="section__head__meta">A recipe is always in exactly one state</span>
+    </div>
+
+    <div class="inherit-diagram">
+      <div class="inherit-diagram__box is-base"><strong>recipe</strong> · the canonical template (this file)</div>
+      <div class="inherit-diagram__arrow">↓</div>
+      <div class="inherit-diagram__children">
+        <div class="inherit-diagram__box"><strong>imported</strong><br>just landed</div>
+        <div class="inherit-diagram__box"><strong>enhanced</strong><br>member-improved</div>
+        <div class="inherit-diagram__box"><strong>canon</strong><br>Provenance-authored</div>
+        <div class="inherit-diagram__box"><strong>composed</strong><br>Reserve-generated</div>
+        <div class="inherit-diagram__box"><strong>member</strong><br>contributed + verified</div>
+      </div>
+    </div>
+
+    <div class="annotation">
+      <strong>State transitions:</strong> Imported recipes become enhanced when the user fills in pillar gaps; composed recipes become enhanced when the user edits them; member-contributed recipes become canon when verified against the Sashimi Standard. Canon recipes do not transition out — they may be revised in place but stay canon. <strong>Every state uses the same card template.</strong> Only the tag changes, and the pillar dots reflect how many pillars are populated.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head">
+      <h2>IV. Sample cards · the five states</h2>
+      <span class="section__head__meta">One template, five renderings</span>
+    </div>
+
+    <div class="cards-grid">
+
+      <a href="#" class="recipe-card">
+        <div class="recipe-card__image">
+          <span class="recipe-card__tag recipe-card__tag--imported">Imported · 2 of 7</span>
+          Image — Boeuf Bourguignon
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__cuisine">French · Burgundy</div>
+          <div class="recipe-card__title">Boeuf Bourguignon<br><span class="italic">— from grandmother's notebook.</span></div>
+          <div class="recipe-card__meta"><span>Mar 2026</span><span class="recipe-card__meta__divider">·</span><span>Imported · PDF</span></div>
+        </div>
+        <div class="recipe-card__pillars">
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot"></div>
+          <div class="recipe-card__pillar-dot"></div>
+          <div class="recipe-card__pillar-dot"></div>
+          <div class="recipe-card__pillar-dot"></div>
+          <div class="recipe-card__pillar-dot"></div>
+        </div>
+      </a>
+
+      <a href="#" class="recipe-card">
+        <div class="recipe-card__image">
+          <span class="recipe-card__tag recipe-card__tag--enhanced">Enhanced · 6 of 7</span>
+          Image — Duck breast
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__cuisine">Pacific Migration Trail</div>
+          <div class="recipe-card__title">Pan-Seared Duck Breast<br><span class="italic">with mānuka honey glaze.</span></div>
+          <div class="recipe-card__meta"><span>65 min</span><span class="recipe-card__meta__divider">·</span><span>Serves 4</span><span class="recipe-card__meta__divider">·</span><span>$14.20</span></div>
+        </div>
+        <div class="recipe-card__pillars">
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot"></div>
+        </div>
+      </a>
+
+      <a href="#" class="recipe-card">
+        <div class="recipe-card__image">
+          <span class="recipe-card__tag recipe-card__tag--canon">From the Canon</span>
+          Image — Carbonara
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__cuisine">Italian · Lazio</div>
+          <div class="recipe-card__title">Spaghetti alla Carbonara<br><span class="italic">— the Roman tradition.</span></div>
+          <div class="recipe-card__meta"><span>25 min</span><span class="recipe-card__meta__divider">·</span><span>Serves 4</span><span class="recipe-card__meta__divider">·</span><span>Provenance authored</span></div>
+        </div>
+        <div class="recipe-card__pillars">
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+        </div>
+      </a>
+
+      <a href="#" class="recipe-card">
+        <div class="recipe-card__image">
+          <span class="recipe-card__tag recipe-card__tag--composed">Reserve · Composed</span>
+          Image — Lamb shoulder
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__cuisine">Moroccan · French braise</div>
+          <div class="recipe-card__title">Slow-Braised Lamb Shoulder<br><span class="italic">with preserved lemon and harissa.</span></div>
+          <div class="recipe-card__meta"><span>4 hr 30 min</span><span class="recipe-card__meta__divider">·</span><span>Serves 6</span><span class="recipe-card__meta__divider">·</span><span>Draft v1</span></div>
+        </div>
+        <div class="recipe-card__pillars">
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+        </div>
+      </a>
+
+      <a href="#" class="recipe-card">
+        <div class="recipe-card__image">
+          <span class="recipe-card__tag recipe-card__tag--member">Member · Verified</span>
+          <span class="recipe-card__haccp">HACCP</span>
+          Image — Hamachi crudo
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__cuisine">Japanese · Tokyo</div>
+          <div class="recipe-card__title">Hamachi Crudo<br><span class="italic">with yuzu and shio kombu.</span></div>
+          <div class="recipe-card__meta"><span>15 min</span><span class="recipe-card__meta__divider">·</span><span>Serves 2</span><span class="recipe-card__meta__divider">·</span><span>Raw-served</span></div>
+        </div>
+        <div class="recipe-card__pillars">
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+          <div class="recipe-card__pillar-dot is-filled"></div>
+        </div>
+      </a>
+
+      <div style="background: var(--cream-100); border: 1.5px dashed var(--gold); padding: var(--s3); display: flex; flex-direction: column; justify-content: center; min-height: 360px;">
+        <div style="font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--gold); margin-bottom: var(--s2); font-weight: 600;">How to add a new state</div>
+        <p style="font-size: 13px; line-height: 1.55; color: var(--charcoal-soft); margin: 0;">If a new card state is needed (e.g. "draft" before publishing), add it as a new state value in the data model, add a tag style in the CSS block above, then add a sample card here. <strong>Do not clone this file. Do not create a parallel template.</strong></p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head">
+      <h2>V. Card vs detail · same data, two scales</h2>
+      <span class="section__head__meta">One template, two renderings</span>
+    </div>
+
+    <div class="annotation">
+      <strong>Card scale (above) renders:</strong> image, state tag, optional HACCP badge, cuisine, title, three meta items, pillar-fill dots.<br>
+      <strong>Detail scale (full /recipe page in main wireframe deck) renders:</strong> the same data expanded — all seven pillars in full, sidebar with HACCP/cost/tools, action buttons for Cook Mode / Edit / Save / Suggest Supplier.<br>
+      <strong>The rule:</strong> the card is a projection of the detail. Never invent a card-only field. Never invent a detail-only field. If a piece of data should appear on the card, it goes in the schema first.
+    </div>
+
+    <div class="annotation">
+      <strong>Pat's Rule rendering — geographically transferable:</strong> on the card, ingredient suppliers are not visible — the card is the hook, not the spec sheet. On the detail page, every ingredient with a populated origin_supplier_id and provider_supplier_id renders as a gold-underlined link. <strong>Geographic filtering applies at render time</strong>: the provider shown is the user's region's provider, not a fixed one. This is what makes Pat's Rule transferable across geographies — the same data row renders different providers to a Vancouver chef, a Charleston chef, a Tokyo chef.
+    </div>
+
+    <div class="annotation">
+      <strong>i18n forward-compatibility:</strong> the data model holds a <code>language</code> column on every recipe. Today every row is <code>en</code>. When Japan launches, Japanese-language recipes are added as new rows with <code>language='ja'</code>, bound to the same parent recipe id where applicable. The card and detail templates remain unchanged — they render whatever language matches the current locale. <strong>The translation work is content, not code rewrites.</strong>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head">
+      <h2>VI. Rules of engagement</h2>
+      <span class="section__head__meta">For every fix-list sprint touching recipe rendering</span>
+    </div>
+
+    <div class="model">
+      <div class="model__field"><div class="model__field__key">Rule 1</div><div class="model__field__desc"><strong>Edit, never rewrite.</strong> If a sprint touches recipe rendering, it edits this file with surgical changes. Never delete and rebuild. Never create a parallel template.</div></div>
+      <div class="model__field"><div class="model__field__key">Rule 2</div><div class="model__field__desc"><strong>Card and detail share one schema.</strong> No data point exists on one view and not the other. Card omits by choice (projection), not by absence.</div></div>
+      <div class="model__field"><div class="model__field__key">Rule 3</div><div class="model__field__desc"><strong>State changes via tag, not template clone.</strong> An imported recipe becomes enhanced by changing its <code>state</code> value and filling more pillars — not by being copied into a new file.</div></div>
+      <div class="model__field"><div class="model__field__key">Rule 4</div><div class="model__field__desc"><strong>Pat's Rule on every ingredient that has it.</strong> Origin + provider, geographically filtered. Beverages too — the same discipline applies.</div></div>
+      <div class="model__field"><div class="model__field__key">Rule 5</div><div class="model__field__desc"><strong>Seven pillars, no fewer, no more.</strong> The schema is closed. Card pillar-dots always render 7 positions. If an entry is missing a pillar, the dot is empty — the schema doesn't shrink to fit.</div></div>
+      <div class="model__field"><div class="model__field__key">Rule 6</div><div class="model__field__desc"><strong>Language column lives in the schema from day one.</strong> Even at English-only launch. When a market opens, translations become new rows, not a new template.</div></div>
+      <div class="model__field"><div class="model__field__key">Rule 7</div><div class="model__field__desc"><strong>Before opening a fix-list ticket that touches recipes, open this file.</strong> If the change cannot be made by editing this file, the change is wrong.</div></div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
