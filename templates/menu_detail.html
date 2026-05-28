@@ -41,14 +41,14 @@
 
   /* ── Courses (left) ── */
   .mb-courses { display: flex; flex-direction: column; gap: var(--s4); }
-  .mb-course { }
+  .mb-course { background: var(--cream-100); border: 1px solid var(--line-soft); padding: var(--s2) var(--s3) var(--s3); }
   .mb-course-head { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: var(--s1); border-bottom: 1px solid var(--line); margin-bottom: var(--s2); }
   .mb-course-name { font-family: var(--display); font-size: 20px; font-style: italic; font-weight: 500; color: var(--charcoal); }
   .mb-course-count { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray); }
 
   /* ── Dish rows ── */
   .mb-dishes { display: flex; flex-direction: column; gap: 1px; }
-  .mb-dish { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: var(--s2); padding: var(--s2) 0; border-bottom: 1px solid rgba(201,192,176,0.3); }
+  .mb-dish { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: var(--s2); padding: var(--s2); background: var(--cream-50); border: 1px solid var(--line-soft); }
   .mb-dish:last-child { border-bottom: none; }
   .mb-dish__image { position: relative; width: 64px; height: 48px; flex-shrink: 0; background: var(--cream-200); overflow: hidden; }
   .mb-dish__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -96,7 +96,7 @@
   .mb-bev-course:last-child { margin-bottom: 0; }
   .mb-bev-course__head { font-family: var(--display); font-size: 13px; font-style: italic; color: var(--gold); margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
   .mb-bev-course__pairings { display: flex; flex-direction: column; gap: 10px; }
-  .mb-bev-pairing { display: flex; gap: var(--s2); }
+  .mb-bev-pairing { display: grid; grid-template-columns: 80px 1fr; gap: var(--s2); }
   .mb-bev-pairing__role { font-family: var(--mono); font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--warm-gray); min-width: 64px; padding-top: 2px; flex-shrink: 0; }
   .mb-bev-pairing__body { font-family: var(--body); font-size: 12px; color: var(--charcoal); line-height: 1.45; }
   .mb-bev-pairing__body .producer { font-family: var(--display); font-style: italic; font-weight: 500; display: block; margin-bottom: 2px; }
@@ -162,13 +162,13 @@
 
   /* ── Action bar ── */
   .mb-actions { display: flex; align-items: center; justify-content: space-between; padding: var(--s3) 0 var(--s2) 0; border-top: 1px solid var(--gold); margin-top: var(--s4); }
-  .mb-actions__save { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; background: var(--cream-100); color: var(--charcoal); border: 1px solid var(--line); padding: 8px 18px; cursor: pointer; transition: border-color 0.15s; }
-  .mb-actions__save:hover { border-color: var(--charcoal); }
+  .mb-actions__save { padding: 10px 20px; background: var(--charcoal); color: var(--cream-50); border: none; cursor: pointer; font-family: var(--body); font-size: 13px; font-weight: 500; letter-spacing: 0.02em; }
+  .mb-actions__save:hover { background: var(--gold); }
   .mb-actions__exports { display: flex; align-items: center; gap: var(--s2); position: relative; }
   .mb-actions__exports__label { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-right: 4px; }
-  .mb-actions__export { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--charcoal); background: none; border: 1px solid var(--line); padding: 7px 14px; cursor: pointer; transition: border-color 0.15s; }
-  .mb-actions__export:hover:not(.disabled) { border-color: var(--gold); }
-  .mb-actions__export.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+  .mb-actions__export { font-family: var(--body); font-size: 13px; color: var(--charcoal); border: none; background: none; cursor: pointer; padding: 4px 0; border-bottom: 1.5px solid var(--gold); font-weight: 500; }
+  .mb-actions__export:hover { color: var(--gold); }
+  .mb-actions__export.disabled, .mb-actions__export.locked { color: var(--warm-gray); border-bottom-color: var(--line); cursor: not-allowed; }
 
   /* ── Picker backdrop + modal ── */
   .mb-picker-backdrop { display: none; position: fixed; inset: 0; background: rgba(31,27,22,0.72); z-index: 400; align-items: center; justify-content: center; }
