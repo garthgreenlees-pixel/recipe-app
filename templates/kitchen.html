@@ -63,6 +63,8 @@
   .kitchen__menus-head h2 { font-family: var(--display); font-size: 20px; font-style: italic; font-weight: 500; color: var(--charcoal); border-bottom: 1.5px solid var(--gold); padding-bottom: 3px; }
   .kitchen__menus-new { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; padding: 7px 14px; background: transparent; color: var(--charcoal); border: 1px solid var(--line); text-decoration: none; white-space: nowrap; }
   .kitchen__menus-new:hover { border-color: var(--gold); color: var(--charcoal); }
+  .kitchen__menus-compose { display: inline-flex; flex-direction: column; align-items: flex-start; white-space: normal; }
+  .kitchen__menus-compose-sub { font-family: var(--mono); font-size: 9px; font-weight: 400; text-transform: none; letter-spacing: 0.08em; color: var(--warm-gray); font-style: italic; margin-top: 2px; }
   .kitchen__menus-list { display: flex; flex-direction: column; gap: 1px; }
   .kitchen__menu-row { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: var(--s2) 0; border-bottom: 1px solid rgba(201,192,176,0.4); text-decoration: none; color: var(--charcoal); gap: var(--s2); }
   .kitchen__menu-row:last-child { border-bottom: none; }
@@ -173,7 +175,13 @@
   <section class="kitchen__menus">
     <div class="kitchen__menus-head">
       <h2>Menus</h2>
-      {% if has_library %}<a href="/menu/new" class="kitchen__menus-new">+ New menu</a>{% endif %}
+      <div style="display:flex;align-items:center;gap:var(--s2);">
+        <a href="/atelier" class="kitchen__menus-new kitchen__menus-compose">
+          + Compose a menu
+          <span class="kitchen__menus-compose-sub">l'Atelier</span>
+        </a>
+        {% if has_library %}<a href="/menu/new" class="kitchen__menus-new">+ New menu</a>{% endif %}
+      </div>
     </div>
     {% if has_library %}
       {% if user_menus %}
