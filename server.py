@@ -1647,6 +1647,8 @@ def _resolve_recipe_ref(ref, user_id, cur):
     prefix, _, key = ref.partition(':')
     if prefix == 'canon':
         cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (key,))
+    elif prefix == 'technique':
+        cur.execute("SELECT * FROM technique_references WHERE slug = %s LIMIT 1", (key,))
     elif prefix == 'kitchen':
         if not user_id:
             return None
@@ -17222,6 +17224,166 @@ def atelier_compose():
         slot_count=len(courses),
         courses=courses,
     )
+
+
+def _create_kitchen_recipe_from_invention(invention, owner_user_id, write_cur):
+    """Insert a user_kitchen_recipes row from a user_invention dict. Returns the uuid string."""
+    new_uuid = str(uuid.uuid4())
+    slug = make_kitchen_slug(invention.get("name") or "draft", new_uuid)
+    suffix = 2
+    while True:
+        write_cur.execute("SELECT 1 FROM user_kitchen_recipes WHERE slug = %s", (slug,))
+        if not write_cur.fetchone():
+            break
+        slug = f"{make_kitchen_slug(invention.get('name') or 'draft', new_uuid)}-{suffix}"
+        suffix += 1
+    write_cur.execute("""
+        INSERT INTO user_kitchen_recipes
+            (uuid, user_id, title, slug, preamble, origin, flavour_context,
+             lives_or_dies, quality_hierarchy, sensory_tests, is_draft)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, TRUE)
+    """, (
+        new_uuid,
+        owner_user_id,
+        invention.get("name") or "Untitled draft",
+        slug,
+        invention.get("description") or "",
+        invention.get("origin") or "",
+        invention.get("flavour_context") or "",
+        invention.get("lives_or_dies") or "",
+        json.dumps(invention.get("quality_hierarchy") or {}),
+        json.dumps(invention.get("sensory_tests") or []),
+    ))
+    return new_uuid
+
+
+def _resolve_course_recipe_ref(course, invention, owner_user_id, read_cur, write_cur):
+    """
+    Returns the recipe_ref string for a composition_course row.
+    Canon (recipe_id set)  → "technique:<slug>" — resolved via technique_references.
+    Draft (invention_id set) → inserts a kitchen recipe, returns "kitchen:<uuid>".
+    """
+    if course.get("recipe_id"):
+        read_cur.execute(
+            "SELECT slug FROM technique_references WHERE id = %s", (course["recipe_id"],)
+        )
+        row = read_cur.fetchone()
+        slug = row["slug"] if row and row.get("slug") else str(course["recipe_id"])
+        return f"technique:{slug}"
+    else:
+        new_uuid = _create_kitchen_recipe_from_invention(invention, owner_user_id, write_cur)
+        return f"kitchen:{new_uuid}"
+
+
+@app.route("/api/atelier/promote", methods=["POST"])
+def atelier_promote():
+    user = get_current_user()
+    if not user:
+        return jsonify(error="Login required"), 401
+    if not gate_for_addon("atelier"):
+        return jsonify(error="Reserve add-on required"), 403
+
+    data = request.get_json() or {}
+    composition_id = data.get("composition_id")
+    if not composition_id:
+        return jsonify(error="composition_id required"), 400
+
+    if not DATABASE_URL_WRITE:
+        return jsonify(error="Write DB unavailable"), 503
+
+    # ── Read phase ────────────────────────────────────────────────────────────
+    read_conn = psycopg2.connect(DATABASE_URL)
+    read_conn.autocommit = True
+    read_cur = read_conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        read_cur.execute(
+            "SELECT * FROM compositions WHERE id = %s AND user_id = %s",
+            (int(composition_id), user["id"])
+        )
+        comp = read_cur.fetchone()
+        if not comp:
+            return jsonify(error="Composition not found or not yours"), 404
+
+        read_cur.execute("""
+            SELECT cc.*,
+                   ui.name      AS inv_name,
+                   ui.description AS inv_desc,
+                   ui.origin    AS inv_origin,
+                   ui.flavour_context AS inv_flavour,
+                   ui.lives_or_dies   AS inv_lives_or_dies,
+                   ui.quality_hierarchy AS inv_quality_hierarchy,
+                   ui.sensory_tests    AS inv_sensory_tests
+            FROM composition_courses cc
+            LEFT JOIN user_inventions ui ON ui.id = cc.invention_id
+            WHERE cc.composition_id = %s
+            ORDER BY cc.position
+        """, (int(composition_id),))
+        courses = [dict(r) for r in read_cur.fetchall()]
+    finally:
+        read_cur.close()
+        read_conn.close()
+
+    if not courses:
+        return jsonify(error="Composition has no courses"), 400
+
+    # ── Write phase — single transaction ──────────────────────────────────────
+    write_conn = psycopg2.connect(DATABASE_URL_WRITE)
+    write_cur = write_conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    read_conn2 = psycopg2.connect(DATABASE_URL)
+    read_conn2.autocommit = True
+    read_cur2 = read_conn2.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        slug_base = (_slugify(comp["title"]) or "menu")[:80]
+        menu_slug = _menu_slug_unique(slug_base, read_cur2)
+
+        write_cur.execute("""
+            INSERT INTO menus (slug, owner_user_id, title)
+            VALUES (%s, %s, %s)
+            RETURNING id, slug
+        """, (menu_slug, user["id"], comp["title"]))
+        menu_row = write_cur.fetchone()
+        menu_id = menu_row["id"]
+
+        kitchen_slugs = []
+        for course in courses:
+            invention = None
+            if course.get("invention_id"):
+                invention = {
+                    "name": course.get("inv_name") or course.get("slot_name") or "Draft course",
+                    "description": course.get("inv_desc") or "",
+                    "origin": course.get("inv_origin") or "",
+                    "flavour_context": course.get("inv_flavour") or "",
+                    "lives_or_dies": course.get("inv_lives_or_dies") or "",
+                    "quality_hierarchy": course.get("inv_quality_hierarchy"),
+                    "sensory_tests": course.get("inv_sensory_tests"),
+                }
+            recipe_ref = _resolve_course_recipe_ref(
+                course, invention, user["id"], read_cur2, write_cur
+            )
+            if recipe_ref.startswith("kitchen:"):
+                kitchen_slugs.append(recipe_ref[len("kitchen:"):])
+            course_name = (
+                course.get("slot_role") or course.get("slot_name")
+                or f"Course {course['position']}"
+            )
+            write_cur.execute("""
+                INSERT INTO menu_recipes (menu_id, recipe_ref, course_name, course_order)
+                VALUES (%s, %s, %s, %s)
+            """, (menu_id, recipe_ref, course_name, int(course["position"])))
+
+        write_conn.commit()
+        return jsonify(menu_id=str(menu_id), menu_slug=menu_slug,
+                       kitchen_uuids=kitchen_slugs), 201
+
+    except Exception as e:
+        write_conn.rollback()
+        app.logger.error(f"[ATELIER PROMOTE] failed: {e}")
+        return jsonify(error="Promote failed", detail=str(e)), 500
+    finally:
+        write_cur.close()
+        write_conn.close()
+        read_cur2.close()
+        read_conn2.close()
 
 
 @app.route("/atelier")
