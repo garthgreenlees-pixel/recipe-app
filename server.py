@@ -17433,9 +17433,8 @@ def atelier():
     user = get_current_user()
     if not user:
         return _login_redirect()
-    if not gate_for_addon("atelier"):
-        return redirect(url_for("pricing_page"))
-    return send_file("atelier.html")
+    has_addon = gate_for_addon("atelier")
+    return render_template("atelier.html", has_addon=has_addon, user=user)
 
 
 # ─── Admin — Pairing review queue ────────────────────────────────────────────

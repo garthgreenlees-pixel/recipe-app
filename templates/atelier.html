@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>l'Atelier — Provenance</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#F0EDE8;
+  --cream-bright:#FAF7F2;
+  --gold:#C9A84C;
+  --gold-mid:#A8966B;
+  --burgundy:#8B2C1A;
+  --divider:#E7E5E4;
+  --text:#1C1917;
+  --text-mid:#444441;
+  --text-muted:#888780;
+  --serif:Georgia,'Times New Roman',serif;
+  --didot:'Playfair Display',Georgia,serif;
+}
+html{-webkit-font-smoothing:antialiased;background:var(--cream)}
+body{font-family:var(--serif);background:var(--cream);color:var(--text);line-height:1.65;min-height:100vh}
+
+/* ── Top bar ── */
+.a-top{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;
+  background:rgba(240,237,232,0.94);backdrop-filter:blur(10px);
+  border-bottom:0.5px solid rgba(0,0,0,0.08);
+}
+.a-wordmark{
+  font-family:var(--didot);font-size:15px;letter-spacing:0.04em;
+  color:var(--text);text-decoration:none;
+}
+.a-wordmark em{font-style:italic;color:var(--gold-mid)}
+.a-back{
+  font-size:12px;color:var(--text-muted);text-decoration:none;
+  letter-spacing:0.02em;
+}
+.a-back:hover{color:var(--text)}
+
+/* ── Hero ── */
+.a-hero{
+  max-width:640px;margin:64px auto 44px;padding:0 24px;text-align:center;
+}
+.a-eyebrow{
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold-mid);margin-bottom:18px;
+}
+.a-title{
+  font-family:var(--didot);font-size:clamp(28px,5vw,42px);font-weight:400;
+  color:var(--text);line-height:1.15;margin-bottom:14px;
+}
+.a-title em{font-style:italic}
+.a-subtitle{
+  font-size:14px;color:var(--text-muted);line-height:1.75;
+}
+
+/* ── Brief form ── */
+.a-form{max-width:640px;margin:0 auto 60px;padding:0 24px}
+.a-brief-label{
+  display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold-mid);margin-bottom:10px;
+}
+.a-brief-ta{
+  width:100%;min-height:120px;padding:16px 18px;
+  font-family:var(--serif);font-size:15px;line-height:1.7;
+  color:var(--text);background:var(--cream-bright);
+  border:1px solid rgba(0,0,0,0.12);border-radius:4px;
+  resize:vertical;outline:none;transition:border-color 0.2s;
+}
+.a-brief-ta:focus{border-color:var(--gold-mid)}
+.a-brief-ta::placeholder{color:var(--text-muted);font-style:italic}
+.a-compose-btn{
+  margin-top:14px;width:100%;padding:15px;
+  font-family:var(--didot);font-size:16px;font-weight:400;letter-spacing:0.03em;
+  color:#fff;background:var(--burgundy);border:none;border-radius:4px;
+  cursor:pointer;transition:opacity 0.2s;
+}
+.a-compose-btn:hover{opacity:0.88}
+.a-compose-btn:disabled{opacity:0.42;cursor:not-allowed}
+
+/* ── Status bar ── */
+.a-status{
+  max-width:640px;margin:0 auto 20px;padding:0 24px;
+  font-size:13px;color:var(--text-muted);font-style:italic;
+  display:none;
+}
+
+/* ── Parse chips ── */
+.a-chips{
+  max-width:640px;margin:0 auto 28px;padding:0 24px;
+  display:none;flex-wrap:wrap;gap:7px;
+}
+.a-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 10px;
+  border:0.5px solid var(--gold-mid);border-radius:20px;
+  font-size:11.5px;color:var(--text-mid);
+}
+.a-chip-key{
+  font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--gold-mid);margin-right:2px;
+}
+
+/* ── Error ── */
+.a-error{
+  max-width:640px;margin:0 auto 24px;padding:12px 16px;
+  background:rgba(139,44,26,0.06);
+  border:0.5px solid rgba(139,44,26,0.2);
+  border-radius:4px;font-size:13px;color:var(--burgundy);
+  display:none;
+}
+
+/* ── Result ── */
+.a-result{
+  max-width:700px;margin:0 auto 80px;padding:0 24px;
+  display:none;
+}
+.a-result-head{
+  border-bottom:1px solid rgba(0,0,0,0.1);
+  padding-bottom:20px;margin-bottom:36px;
+}
+.a-result-title{
+  font-family:var(--didot);font-size:26px;font-weight:400;
+  color:var(--text);margin-bottom:6px;
+}
+.a-result-meta{
+  font-size:12px;color:var(--text-muted);letter-spacing:0.3px;
+}
+.a-result-badge{
+  display:inline-block;padding:2px 9px;
+  border:0.5px solid var(--gold-mid);border-radius:20px;
+  font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold-mid);margin-left:8px;vertical-align:middle;
+}
+.a-course{
+  margin-bottom:36px;padding-bottom:36px;
+  border-bottom:0.5px solid var(--divider);
+}
+.a-course:last-child{border-bottom:none}
+.a-course-pos{
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold-mid);margin-bottom:5px;
+}
+.a-course-name{
+  font-family:var(--didot);font-size:20px;font-weight:400;
+  color:var(--text);margin-bottom:8px;line-height:1.3;
+}
+.a-course-desc{
+  font-size:14px;color:var(--text-mid);line-height:1.8;
+}
+/* ── Library recipe link ─────────────────────────────────────────── */
+.atelier-library-recipe{
+  display:flex;align-items:center;gap:1rem;
+  margin:1.25rem 0 1.5rem;padding:1rem 1.25rem;
+  background:rgba(201,168,76,0.05);
+  border-left:2px solid rgba(201,168,76,0.55);
+  text-decoration:none;color:inherit;
+  transition:background 200ms ease,border-color 200ms ease;
+}
+.atelier-library-recipe:hover{
+  background:rgba(201,168,76,0.1);border-left-color:rgba(201,168,76,1);
+}
+.atelier-library-recipe-eyebrow{
+  font-family:'DM Mono','IBM Plex Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--text-muted);flex-shrink:0;
+}
+.atelier-library-recipe-name{
+  flex:1;font-family:var(--didot);font-style:italic;
+  font-size:1.05rem;color:var(--text);
+}
+.atelier-library-recipe-arrow{
+  flex-shrink:0;font-family:var(--serif);
+  color:var(--gold-mid);font-size:1.1rem;
+  transition:transform 200ms ease;
+}
+.atelier-library-recipe:hover .atelier-library-recipe-arrow{
+  transform:translateX(3px);color:var(--gold);
+}
+
+/* ── Lineage sections ────────────────────────────────────────────── */
+.atelier-lineage-section{margin-top:1.5rem}
+.atelier-lineage-label{
+  font-family:'DM Mono','IBM Plex Mono',var(--serif);
+  font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:0.65rem;
+}
+/* Techniques — italic linked list */
+.atelier-technique-list{list-style:none;margin:0;padding:0}
+.atelier-technique-list li{
+  padding:0.35rem 0;border-bottom:1px solid rgba(0,0,0,0.05);
+}
+.atelier-technique-list li:last-child{border-bottom:none}
+.atelier-technique-link{
+  font-family:var(--didot);font-style:italic;
+  font-size:1rem;line-height:1.4;color:var(--text-mid);
+  text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:1px;transition:color 180ms ease,border-color 180ms ease;
+}
+.atelier-technique-link:hover{
+  color:var(--gold);border-bottom-color:rgba(201,168,76,0.6);
+}
+/* Ingredients — italic prose with middot separators */
+.atelier-ingredient-wrap{
+  font-family:var(--didot);font-size:0.95rem;
+  line-height:1.7;color:var(--text-mid);
+}
+.atelier-ingredient{font-style:italic}
+.atelier-ingredient+.atelier-ingredient::before{
+  content:' · ';font-style:normal;color:var(--text-muted);margin:0 0.3rem;
+}
+/* Pours — linked list (beverage_products with /beverage/products/<id> route) */
+.atelier-pour-list{list-style:none;margin:0;padding:0}
+.atelier-pour-list li{padding:0.4rem 0;border-bottom:1px solid rgba(201,168,76,0.08)}
+.atelier-pour-list li:last-child{border-bottom:none}
+.atelier-pour-link{
+  font-family:var(--didot);font-style:italic;font-weight:500;
+  font-size:1.02rem;line-height:1.4;
+  color:var(--gold-mid);text-decoration:none;
+  border-bottom:1px solid rgba(201,168,76,0.25);padding-bottom:1px;
+  transition:color 180ms ease,border-bottom-color 180ms ease;
+}
+.atelier-pour-link:hover{color:var(--gold);border-bottom-color:rgba(201,168,76,0.7)}
+.atelier-pour-region{font-style:italic;color:var(--text-mid);font-size:0.95rem}
+@media(max-width:600px){
+  .atelier-library-recipe{flex-direction:column;align-items:flex-start;gap:0.5rem}
+}
+</style>
+
+{% if not has_addon %}
+<style>
+/* ── Gate screen — design tokens (wireframe system) ── */
+:root {
+  --cream-50:   #FAF7F1;
+  --cream-100:  #F4EFE4;
+  --line:       #C9C0B0;
+  --line-soft:  #DDD3BE;
+  --charcoal:   #1F1B16;
+  --charcoal-soft: #3A332B;
+  --warm-gray:  #6B6258;
+  --gold-soft:  #D4B679;
+  --tier-reserve: #7A2E2E;
+  --display:    'Playfair Display', Georgia, serif;
+  --body:       'DM Sans', system-ui, sans-serif;
+  --mono:       'DM Mono', 'Courier New', monospace;
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px;
+  --s5: 48px; --s6: 64px;
+}
+
+/* ── Gate wrapper ── */
+.gate-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 56px 48px 80px;
+}
+@media (max-width: 768px) {
+  .gate-wrap { padding: 40px 20px 64px; }
+}
+
+/* ── Gate intro ── */
+.gate-intro { margin-bottom: var(--s5); }
+.gate-eyebrow {
+  font-family: var(--body); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--warm-gray); margin-bottom: var(--s1);
+}
+.gate-heading {
+  font-family: var(--display); font-size: 38px; font-weight: 500;
+  line-height: 1.15; letter-spacing: -0.01em;
+  color: var(--charcoal); margin-bottom: var(--s2);
+}
+.gate-lede {
+  font-family: var(--body); font-size: 14px; line-height: 1.7;
+  color: var(--charcoal-soft); max-width: 520px; margin: 0;
+}
+
+/* ── Gate layout: preview + panel ── */
+.gate-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 0;
+  align-items: start;
+  border: 1px solid var(--line-soft);
+}
+@media (max-width: 768px) {
+  .gate-layout { grid-template-columns: 1fr; }
+}
+
+/* ── Preview column ── */
+.gate-preview-col {
+  position: relative;
+  overflow: hidden;
+  border-right: 1px solid var(--line-soft);
+}
+@media (max-width: 768px) {
+  .gate-preview-col {
+    border-right: none;
+    border-bottom: 1px solid var(--line-soft);
+  }
+}
+.gate-preview {
+  filter: blur(4px);
+  opacity: 0.55;
+  pointer-events: none;
+  user-select: none;
+  padding: var(--s4);
+}
+.gate-preview-title {
+  font-family: var(--display); font-size: 28px; font-style: italic;
+  color: var(--charcoal); margin-bottom: 4px;
+}
+.gate-preview-sub {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--warm-gray); margin-bottom: var(--s4);
+}
+.gate-preview-course {
+  padding: var(--s2) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.gate-preview-course:last-child { border-bottom: none; }
+.gate-preview-pos {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.2em; color: var(--warm-gray); margin-bottom: 3px;
+}
+.gate-preview-name {
+  font-family: var(--display); font-size: 17px;
+  color: var(--charcoal); margin-bottom: 3px;
+}
+.gate-preview-desc {
+  font-size: 13px; color: var(--charcoal-soft); line-height: 1.55;
+}
+
+/* ── Veil overlay ── */
+.gate-veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(250,247,241,0.12) 0%,
+    rgba(250,247,241,0.55) 55%,
+    rgba(250,247,241,0.82) 100%
+  );
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  pointer-events: none;
+}
+
+/* ── Upgrade panel ── */
+.gate-panel {
+  padding: var(--s5) var(--s4);
+  background: var(--cream-50);
+  display: flex;
+  flex-direction: column;
+}
+.gate-panel__eyebrow {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--tier-reserve); margin-bottom: var(--s3);
+  display: flex; align-items: center; gap: 8px;
+}
+.gate-panel__eyebrow::before {
+  content: ''; display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--tier-reserve);
+}
+.gate-panel__headline {
+  font-family: var(--display); font-size: 23px;
+  line-height: 1.25; color: var(--charcoal);
+  margin-bottom: var(--s4);
+}
+.gate-panel__price-block { margin-bottom: var(--s3); }
+.gate-panel__price-main {
+  font-family: var(--display); font-size: 30px; font-weight: 600;
+  color: var(--charcoal); display: block; margin-bottom: 4px;
+}
+.gate-panel__price-alt {
+  font-family: var(--mono); font-size: 12px;
+  color: var(--warm-gray); letter-spacing: 0.04em;
+  padding: 4px 0; border-top: 1px solid var(--line-soft);
+  display: block; margin-top: 4px;
+}
+.gate-panel__desc {
+  font-family: var(--body); font-size: 13px; color: var(--warm-gray);
+  line-height: 1.65; margin-bottom: var(--s4);
+  padding-bottom: var(--s4); border-bottom: 1px solid var(--line-soft);
+}
+.gate-panel__cta {
+  display: block; width: 100%; text-align: center;
+  font-family: var(--body); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.02em; padding: 13px 24px;
+  border: 1.5px solid var(--charcoal);
+  background: var(--charcoal); color: var(--cream-50);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.gate-panel__cta:hover {
+  background: var(--cream-50); color: var(--charcoal);
+}
+</style>
+{% endif %}
+</head>
+<body>
+
+<div class="a-top">
+  <a class="a-wordmark" href="/"><em>l'</em>Atelier</a>
+  <a class="a-back" href="/kitchen">← Kitchen</a>
+</div>
+
+{% if has_addon %}
+
+<div class="a-hero">
+  <div class="a-eyebrow">Menu Composition Engine</div>
+  <h1 class="a-title">Describe the meal.<br><em>We'll compose the menu.</em></h1>
+  <p class="a-subtitle">
+    Write your brief in plain language — cuisine, season, occasion, constraints.<br>
+    l'Atelier matches or builds a structure, then drafts every course.
+  </p>
+</div>
+
+<form class="a-form" id="briefForm" onsubmit="return false">
+  <label class="a-brief-label" for="briefTa">Your brief</label>
+  <textarea class="a-brief-ta" id="briefTa" rows="5"
+    placeholder="e.g. Kaiseki for 8 in Vancouver, autumn. Pacific Northwest ingredients, Japanese restraint. Sake pairing. Nine courses."></textarea>
+  <button class="a-compose-btn" id="composeBtn" onclick="runCompose()">
+    Compose menu
+  </button>
+</form>
+
+<div class="a-status"  id="statusMsg"></div>
+<div class="a-chips"   id="chipsArea"></div>
+<div class="a-error"   id="errorBox"></div>
+<div class="a-result"  id="resultArea"></div>
+
+<script>
+async function runCompose() {
+  const ta      = document.getElementById('briefTa');
+  const btn     = document.getElementById('composeBtn');
+  const stat    = document.getElementById('statusMsg');
+  const chips   = document.getElementById('chipsArea');
+  const errBox  = document.getElementById('errorBox');
+  const result  = document.getElementById('resultArea');
+
+  const brief = ta.value.trim();
+  if (brief.length < 20) { showError('Please write at least a sentence.'); return; }
+
+  btn.disabled = true;
+  chips.style.display  = 'none';  chips.innerHTML  = '';
+  errBox.style.display = 'none';
+  result.style.display = 'none';  result.innerHTML = '';
+  setStatus('Parsing your brief…');
+
+  let parsed;
+  try {
+    const r = await fetch('/api/atelier/parse-brief', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({brief_text: brief}),
+    });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.error || r.statusText); }
+    parsed = await r.json();
+  } catch (e) {
+    console.error("l'Atelier parse-brief failed:", e);
+    showError("l’Atelier couldn’t compose that brief. Try a shorter brief, or try again in a moment.");
+    btn.disabled = false;
+    return;
+  }
+
+  renderChips(parsed.brief_parsed);
+  setStatus('Composing every course — this takes about 30 seconds…');
+
+  let comp;
+  try {
+    const r = await fetch('/api/atelier/compose', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({brief_parsed: parsed.brief_parsed}),
+    });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.error || r.statusText); }
+    comp = await r.json();
+  } catch (e) {
+    console.error("l'Atelier compose failed:", e);
+    showError("l’Atelier couldn’t compose that brief. Try a shorter brief, or try again in a moment.");
+    btn.disabled = false;
+    return;
+  }
+
+  stat.style.display = 'none';
+  renderResult(comp);
+  btn.disabled = false;
+}
+
+function setStatus(msg) {
+  const el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBox');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('statusMsg').style.display = 'none';
+}
+
+function renderChips(bp) {
+  const area = document.getElementById('chipsArea');
+  area.innerHTML = '';
+  const fields = [
+    ['cuisine',  bp.primary_cuisine],
+    ['season',   bp.season],
+    ['guests',   bp.guest_count],
+    ['occasion', bp.occasion_type],
+    ['location', bp.current_location],
+    ['courses',  bp.course_count_target],
+  ];
+  fields.forEach(([k, v]) => {
+    if (!v) return;
+    const chip = document.createElement('span');
+    chip.className = 'a-chip';
+    chip.innerHTML = `<span class="a-chip-key">${esc(k)}</span>${esc(String(v))}`;
+    area.appendChild(chip);
+  });
+  (bp.dietary_constraints || []).forEach(d => {
+    const chip = document.createElement('span');
+    chip.className = 'a-chip';
+    chip.innerHTML = `<span class="a-chip-key">diet</span>${esc(d)}`;
+    area.appendChild(chip);
+  });
+  (bp.beverage_preferences || []).forEach(b => {
+    const chip = document.createElement('span');
+    chip.className = 'a-chip';
+    chip.innerHTML = `<span class="a-chip-key">beverage</span>${esc(b)}`;
+    area.appendChild(chip);
+  });
+  area.style.display = 'flex';
+}
+
+function renderResult(comp) {
+  const area      = document.getElementById('resultArea');
+  const modeLabel = comp.compose_mode === 'canon_anchored' ? 'canon' : 'free-form';
+
+  const head = document.createElement('div');
+  head.className = 'a-result-head';
+  head.innerHTML = `
+    <div class="a-result-title">${esc(comp.title)}</div>
+    <div class="a-result-meta">
+      ${comp.slot_count} courses
+      &middot; ${esc(comp.canon_name || '')}
+      <span class="a-result-badge">${modeLabel}</span>
+    </div>`;
+  area.innerHTML = '';
+  area.appendChild(head);
+
+  (comp.courses || []).forEach((c, i) => area.appendChild(renderCourse(c, i + 1)));
+
+  area.style.display = 'block';
+  area.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
+function renderCourse(course, position) {
+  const article = document.createElement('article');
+  article.className = 'a-course';
+
+  const posEl = document.createElement('div');
+  posEl.className = 'a-course-pos';
+  posEl.textContent = position + (course.slot_name ? '. ' + course.slot_name.replace(/_/g, ' ') : '.');
+  article.appendChild(posEl);
+
+  const titleEl = document.createElement('div');
+  titleEl.className = 'a-course-name';
+  titleEl.textContent = course.name || '(untitled)';
+  article.appendChild(titleEl);
+
+  if (course.description) {
+    const descEl = document.createElement('div');
+    descEl.className = 'a-course-desc';
+    descEl.textContent = course.description;
+    article.appendChild(descEl);
+  }
+
+  // Library recipe panel — when a curated match exists
+  const lr = course.library_recipe;
+  if (lr && lr.slug) {
+    const link = document.createElement('a');
+    link.className = 'atelier-library-recipe';
+    link.href = '/recipe/' + lr.slug;
+
+    const eyebrow = document.createElement('span');
+    eyebrow.className = 'atelier-library-recipe-eyebrow';
+    eyebrow.textContent = '— From the library —';
+
+    const name = document.createElement('span');
+    name.className = 'atelier-library-recipe-name';
+    name.textContent = lr.name;
+
+    const arrow = document.createElement('span');
+    arrow.className = 'atelier-library-recipe-arrow';
+    arrow.textContent = '→';
+
+    link.appendChild(eyebrow);
+    link.appendChild(name);
+    link.appendChild(arrow);
+    article.appendChild(link);
+  }
+
+  const techs = course.lineage_techniques  || [];
+  const ings  = course.lineage_ingredients || [];
+  const pours = course.lineage_beverages   || [];
+
+  if (techs.length)  article.appendChild(renderTechniques(techs));
+  if (ings.length)   article.appendChild(renderIngredients(ings));
+  if (pours.length)  article.appendChild(renderPours(pours));
+
+  return article;
+}
+
+function renderTechniques(items) {
+  const section = document.createElement('div');
+  section.className = 'atelier-lineage-section';
+
+  const label = document.createElement('div');
+  label.className = 'atelier-lineage-label';
+  label.textContent = '— Techniques —';
+  section.appendChild(label);
+
+  const ul = document.createElement('ul');
+  ul.className = 'atelier-technique-list';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    const a  = document.createElement('a');
+    a.className = 'atelier-technique-link';
+    a.href = item.slug ? '/technique/' + item.slug : '/technique/' + item.id;
+    a.textContent = item.name || '#' + item.id;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  section.appendChild(ul);
+  return section;
+}
+
+function renderIngredients(items) {
+  const section = document.createElement('div');
+  section.className = 'atelier-lineage-section';
+
+  const label = document.createElement('div');
+  label.className = 'atelier-lineage-label';
+  label.textContent = '— Ingredients —';
+  section.appendChild(label);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'atelier-ingredient-wrap';
+  items.forEach(item => {
+    const span = document.createElement('span');
+    span.className = 'atelier-ingredient';
+    span.textContent = item.name || '#' + item.id;
+    wrap.appendChild(span);
+  });
+  section.appendChild(wrap);
+  return section;
+}
+
+function renderPours(items) {
+  const section = document.createElement('div');
+  section.className = 'atelier-lineage-section';
+
+  const label = document.createElement('div');
+  label.className = 'atelier-lineage-label';
+  label.textContent = '— Pour with —';
+  section.appendChild(label);
+
+  const list = document.createElement('ul');
+  list.className = 'atelier-pour-list';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.className = 'atelier-pour-link';
+    a.href = '/beverage/products/' + item.id;
+    const name = document.createElement('span');
+    name.textContent = item.name || ('#' + item.id);
+    a.appendChild(name);
+    if (item.region) {
+      const region = document.createElement('span');
+      region.className = 'atelier-pour-region';
+      region.textContent = ' · ' + item.region;
+      a.appendChild(region);
+    }
+    li.appendChild(a);
+    list.appendChild(li);
+  });
+  section.appendChild(list);
+  return section;
+}
+
+function esc(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+</script>
+
+{% else %}
+
+<div class="gate-wrap">
+  <div class="gate-intro">
+    <div class="gate-eyebrow">l'Atelier</div>
+    <h2 class="gate-heading">Compose a menu.</h2>
+    <p class="gate-lede">Brief the kitchen. l'Atelier matches a canon structure, drafts every course, and carries the result to your Menu Builder for editing before service.</p>
+  </div>
+
+  <div class="gate-layout">
+    <!-- Left: blurred composition preview -->
+    <div class="gate-preview-col">
+      <div class="gate-preview" aria-hidden="true">
+        <div class="gate-preview-title">Autumn Kaiseki · Vancouver</div>
+        <div class="gate-preview-sub">6 courses · Pacific Northwest · September</div>
+        <div class="gate-preview-course">
+          <div class="gate-preview-pos">I · Arrival</div>
+          <div class="gate-preview-name">Dungeness Crab Dashi, Chrysanthemum Snow</div>
+          <div class="gate-preview-desc">Crab from Organic Ocean simmered at 85°C with kombu eight minutes. Freeze-dried chrysanthemum dissolves on contact.</div>
+        </div>
+        <div class="gate-preview-course">
+          <div class="gate-preview-pos">II · Seasonal</div>
+          <div class="gate-preview-name">Cold-Start Sea Scallop, Celery Root Silk</div>
+          <div class="gate-preview-desc">Taylor Shellfish scallop, cold-start in dry steel. Celery root from North Arm Farm, Pemberton, passed through fine-mesh tamis.</div>
+        </div>
+        <div class="gate-preview-course">
+          <div class="gate-preview-pos">III · Earth</div>
+          <div class="gate-preview-name">Wild Mushroom Broth, Pine Oil, Cured Yolk</div>
+          <div class="gate-preview-desc">Foraged blend from Mikuni Wild Harvest — chanterelles, matsutake, black trumpet. Egg yolk salt-cured 72 hours.</div>
+        </div>
+        <div class="gate-preview-course">
+          <div class="gate-preview-pos">IV · Protein</div>
+          <div class="gate-preview-name">Ikejime Spring Salmon, Sansho Butter</div>
+          <div class="gate-preview-desc">Wild chinook from Organic Ocean, dispatched ikejime. Where the dish lives or dies: the moment skin stops pulling from the pan.</div>
+        </div>
+        <div class="gate-preview-course">
+          <div class="gate-preview-pos">V · Pause</div>
+          <div class="gate-preview-name">Salt Spring Sheep's Cheese, Wild Honeycomb</div>
+          <div class="gate-preview-desc">Farm House Natural Cheeses, sixty-plus days. Honeycomb fractured, not sliced.</div>
+        </div>
+        <div class="gate-preview-course">
+          <div class="gate-preview-pos">VI · Sweet</div>
+          <div class="gate-preview-name">Quince Tarte Tatin, Nigori Ice</div>
+          <div class="gate-preview-desc">Local quince poached before the tarte is built. Nigori sake churned into a coarse ice — pale opacity reads as snow on the plate.</div>
+        </div>
+      </div>
+      <div class="gate-veil" aria-hidden="true"></div>
+    </div>
+
+    <!-- Right: upgrade panel -->
+    <div class="gate-panel">
+      <div class="gate-panel__eyebrow">Reserve add-on</div>
+      <h3 class="gate-panel__headline">Compose menus from your kitchen's voice — add Reserve.</h3>
+      <div class="gate-panel__price-block">
+        <span class="gate-panel__price-main">$5.99 / month</span>
+        <span class="gate-panel__price-alt">$59 / year &nbsp;·&nbsp; save two months</span>
+      </div>
+      <p class="gate-panel__desc">Reserve unlocks the menu composition engine — brief by brief, each session saved to your Menu Builder and anchored to the full technique library.</p>
+      <a href="/pricing" class="gate-panel__cta">Add Reserve</a>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+</body>
+</html>
