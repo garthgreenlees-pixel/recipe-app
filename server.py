@@ -203,10 +203,10 @@ SCRAPE_BLOCK_HOURS = 24
 _BLOCKED_IPS: dict = {}
 _BLOCK_LOCK = threading.Lock()
 
-# ── Verified-bot cache: ip -> (is_verified: bool, expiry: float) ─────────────
-_BOT_CACHE: dict = {}
-_BOT_CACHE_LOCK = threading.Lock()
-BOT_CACHE_TTL = 3600   # 1 hour
+# ── Crawler verification cache: ip -> (verdict: str, expiry: float) ──────────
+_crawler_verification_cache: dict = {}
+_CRAWLER_CACHE_LOCK = threading.Lock()
+CRAWLER_CACHE_TTL = 86400  # 24 hours
 _BOT_DNS_POOL = _futures.ThreadPoolExecutor(max_workers=2, thread_name_prefix="bot_dns")
 
 # ── Async access log queue ────────────────────────────────────────────────────
@@ -282,36 +282,46 @@ def _block_ip(ip: str, permanent: bool = False, hours: int = SCRAPE_BLOCK_HOURS)
         _BLOCKED_IPS[ip] = expiry
 
 
-def _dns_check_googlebot(ip: str) -> bool:
-    """Reverse-DNS verify an IP is genuine Googlebot per Google's published method."""
+_CRAWLER_DOMAINS = (
+    ".googlebot.com",
+    ".google.com",
+    ".search.msn.com",
+    ".applebot.apple.com",
+    ".duckduckgo.com",
+)
+
+_CRAWLER_UA_TOKENS = ("googlebot", "bingbot", "applebot", "duckduckbot")
+
+
+def _dns_classify_crawler(ip: str) -> str:
+    """Reverse-DNS verify ip. Returns 'verified', 'non_crawler', or 'inconclusive'."""
     try:
         hostname, _, _ = socket.gethostbyaddr(ip)
-        if not (hostname.endswith(".googlebot.com") or hostname.endswith(".google.com")):
-            return False
+        if not any(hostname.endswith(d) for d in _CRAWLER_DOMAINS):
+            return "non_crawler"
         resolved = socket.gethostbyname(hostname)
-        return resolved == ip
-    except (socket.herror, socket.gaierror, OSError):
-        return False
+        return "verified" if resolved == ip else "non_crawler"
+    except (socket.herror, socket.gaierror, socket.timeout, OSError):
+        return "inconclusive"
 
 
-def _is_verified_googlebot(ip: str) -> bool:
-    """True if this request is a verified Googlebot/Bingbot, cached 1 hour per IP."""
-    ua = request.headers.get("User-Agent", "")
-    if "Googlebot" not in ua and "Bingbot" not in ua:
-        return False
+def _classify_crawler(ip: str, ua: str) -> str:
+    """Return cached 'verified', 'non_crawler', or 'inconclusive' verdict for this IP/UA."""
+    if not any(t in ua.lower() for t in _CRAWLER_UA_TOKENS):
+        return "non_crawler"
     now = _time.time()
-    with _BOT_CACHE_LOCK:
-        entry = _BOT_CACHE.get(ip)
+    with _CRAWLER_CACHE_LOCK:
+        entry = _crawler_verification_cache.get(ip)
         if entry is not None and now < entry[1]:
             return entry[0]
     try:
-        future = _BOT_DNS_POOL.submit(_dns_check_googlebot, ip)
-        result = future.result(timeout=3.0)
+        future = _BOT_DNS_POOL.submit(_dns_classify_crawler, ip)
+        verdict = future.result(timeout=3.0)
     except (_futures.TimeoutError, Exception):
-        result = False
-    with _BOT_CACHE_LOCK:
-        _BOT_CACHE[ip] = (result, now + BOT_CACHE_TTL)
-    return result
+        verdict = "inconclusive"
+    with _CRAWLER_CACHE_LOCK:
+        _crawler_verification_cache[ip] = (verdict, now + CRAWLER_CACHE_TTL)
+    return verdict
 
 
 def _track_scrape(ip: str, slug: str) -> bool:
@@ -375,14 +385,18 @@ def handle_unhandled_exception(e):
 def enforce_security():
     """Global security: block detection, scrape tracking, bulk auth, rate limiting."""
     ip = _get_client_ip()
-
-    # ── Verified search-engine bot: bypass all limits ─────────────────────────
-    if _is_verified_googlebot(ip):
-        return
+    ua = request.headers.get("User-Agent", "")
 
     # ── Blocked IP ────────────────────────────────────────────────────────────
     if _is_blocked(ip):
         return jsonify(error="Access denied"), 403
+
+    # ── Crawler classification ────────────────────────────────────────────────
+    _crawler_status = _classify_crawler(ip, ua)
+    if _crawler_status == "verified":
+        return  # confirmed search-engine bot: bypass all limits
+    if _crawler_status == "inconclusive" and any(t in ua.lower() for t in _CRAWLER_UA_TOKENS):
+        return  # DNS unresolvable but UA claims known crawler: let through without counting
 
     # ── HTML technique pages: scrape tracking only ────────────────────────────
     for _html_prefix in ("/technique/", "/why/", "/beyond/"):
