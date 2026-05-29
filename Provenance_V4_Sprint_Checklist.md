@@ -129,6 +129,18 @@
 - [ ] [6.4] `/cuisines` redesigned (curated ~50–80 named canons with regional/route/method/meta typing)
 - [ ] [5.6] `/protocols` built (Library-gated walking surface)
 
+## Canon Audit + Tightening Pass — queued after Sprint 10
+
+*Pre-requisite: Sprint 10 complete.*
+
+Once Sprint 10 has established the canon structure / spine, audit every existing technique entry against the new structure. Score against the seven Sashimi pillars. Identify entries at full standard, entries needing expansion, entries to cut. Tighten the rescuable. Mark exemplars. Resolve /why/ and /beyond/ doctrinal home (specific pillar subsets or formal retirement of the routes).
+
+- [ ] Row-level pillar audit (0–7 score per entry)
+- [ ] Full-standard entries marked as exemplars
+- [ ] Expansion candidates identified and queued
+- [ ] Cut candidates flagged for operator decision
+- [ ] /why/ and /beyond/ doctrinal fate resolved
+
 ## V4 Sprint 11 — Pricing + Auxiliary Surfaces (~2 weeks)
 
 - [ ] `/pricing` wireframe drafted (if not in Sprint 2)
@@ -317,6 +329,7 @@ Structural wins over V3: no template gets fixed then rebuilt; Stage 2 gate reach
 *Track any work shipped outside the V4 plan — including the cycle that surfaced its existence. Use this to catch drift early.*
 
 - [x] **Cross-Language Pricing Cycle (2026-05-21)** — 135-entry cross-language ingredient catalog seeded, alias-retry bridge code shipped to tester, duplicate-master pattern discovered. Chef-facing REAL/CHILD/NOISE duplicate resolution UX is the carry-forward and needs deliberate slotting into V4 Sprint 11 (`/pricing` rebuild) rather than auto-numbered as Sprint 8.
+- [x] **SEO Recovery — Sprint 14 parked line item (closed 2026-05-28)** — Closed via Cycle 2 (Googlebot 403 fix, commit `c7dec25`) and Cycle 3b (canonical tags + sitemap exclusion on /why/ and /beyond/). Cycle 1 diagnosed the scrape-tracker 403 storm; Cycle 2 shipped three-state DNS classifier; Cycle 3a confirmed /why/ and /beyond/ are same-row content (64–68% token overlap with /technique/); Cycle 3b added rel="canonical" pointing both surfaces at /technique/ master and removed /why/ and /beyond/ from sitemap.xml.
 
 ---
 

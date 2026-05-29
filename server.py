@@ -12257,12 +12257,6 @@ def sitemap():
     for t in techniques:
         urls.append(_url(f'{base}/technique/{t["slug"]}', '0.7', 'weekly', _lastmod(t)))
 
-    for t in techniques:
-        urls.append(_url(f'{base}/why/{t["slug"]}', '0.8', 'weekly', _lastmod(t)))
-
-    for t in techniques:
-        urls.append(_url(f'{base}/beyond/{t["slug"]}', '0.8', 'weekly', _lastmod(t)))
-
     for p in bev_products:
         urls.append(_url(f'{base}/beverage/{p["slug"]}', '0.6', 'weekly', _lastmod(p)))
 
