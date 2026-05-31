@@ -68,7 +68,7 @@
 <div class="toggle-wrap">
   <span class="toggle-label">Monthly</span>
   <label class="toggle">
-    <input type="checkbox" id="billingToggle" checked onchange="toggleBilling(this.checked)">
+    <input type="checkbox" id="billingToggle" onchange="toggleBilling(this.checked)">
     <div class="toggle-track"></div>
     <div class="toggle-thumb"></div>
   </label>
@@ -82,8 +82,8 @@
   <div class="card featured">
     <div class="card-eyebrow">Door I</div>
     <div class="card-name">The Kitchen</div>
-    <div class="card-price-yr" id="price-kitchen">$49<span class="per">/year</span></div>
-    <div class="card-price-mo" id="price-kitchen-sub">or $4.99/month</div>
+    <div class="card-price-yr" id="price-kitchen">$4.99<span class="per">/month</span></div>
+    <div class="card-price-mo" id="price-kitchen-sub">billed monthly</div>
     <hr class="card-rule">
     <ul class="card-features">
       <li>Full seven-pillar depth on every technique</li>
@@ -93,15 +93,15 @@
       <li>Cookbook scanning &amp; recipe extraction</li>
       <li>Basic beverage pairings</li>
     </ul>
-    <a href="/subscribe/kitchen/yearly" class="card-btn card-btn-solid" id="btn-kitchen" data-yearly="/subscribe/kitchen/yearly" data-monthly="/subscribe/kitchen/monthly">Open The Kitchen →</a>
+    <a href="/subscribe/kitchen/monthly" class="card-btn card-btn-solid" id="btn-kitchen" data-yearly="/subscribe/kitchen/yearly" data-monthly="/subscribe/kitchen/monthly">Open The Kitchen →</a>
   </div>
 
   <!-- THE LIBRARY -->
   <div class="card">
     <div class="card-eyebrow">Door II</div>
     <div class="card-name">The Library</div>
-    <div class="card-price-yr" id="price-library">$149<span class="per">/year</span></div>
-    <div class="card-price-mo" id="price-library-sub">or $14.99/month</div>
+    <div class="card-price-yr" id="price-library">$14.99<span class="per">/month</span></div>
+    <div class="card-price-mo" id="price-library-sub">billed monthly</div>
     <hr class="card-rule">
     <ul class="card-features">
       <li>Everything in The Kitchen</li>
@@ -111,15 +111,15 @@
       <li>Beverage terroir at full depth</li>
       <li>Beverage references &amp; references library</li>
     </ul>
-    <a href="/subscribe/library/yearly" class="card-btn card-btn-outline" id="btn-library" data-yearly="/subscribe/library/yearly" data-monthly="/subscribe/library/monthly">Open The Library →</a>
+    <a href="/subscribe/library/monthly" class="card-btn card-btn-outline" id="btn-library" data-yearly="/subscribe/library/yearly" data-monthly="/subscribe/library/monthly">Open The Library →</a>
   </div>
 
   <!-- THE PROFESSION -->
   <div class="card">
     <div class="card-eyebrow">Door III</div>
     <div class="card-name">The Profession</div>
-    <div class="card-price-yr" id="price-profession">$299<span class="per">/year</span></div>
-    <div class="card-price-mo" id="price-profession-sub">or $29.99/month</div>
+    <div class="card-price-yr" id="price-profession">$29.99<span class="per">/month</span></div>
+    <div class="card-price-mo" id="price-profession-sub">billed monthly</div>
     <hr class="card-rule">
     <ul class="card-features">
       <li>Everything in The Library</li>
@@ -129,15 +129,15 @@
       <li>Team accounts</li>
       <li>Priority access to new canons</li>
     </ul>
-    <a href="/subscribe/profession/yearly" class="card-btn card-btn-outline" id="btn-profession" data-yearly="/subscribe/profession/yearly" data-monthly="/subscribe/profession/monthly">Open The Profession →</a>
+    <a href="/subscribe/profession/monthly" class="card-btn card-btn-outline" id="btn-profession" data-yearly="/subscribe/profession/yearly" data-monthly="/subscribe/profession/monthly">Open The Profession →</a>
   </div>
 
   <!-- THE TRADE -->
   <div class="card">
     <div class="card-eyebrow">Door IV</div>
     <div class="card-name">The Trade</div>
-    <div class="card-price-yr" id="price-trade">$999<span class="per">/year</span></div>
-    <div class="card-price-mo" id="price-trade-sub">or $99/month</div>
+    <div class="card-price-yr" id="price-trade">$99<span class="per">/month</span></div>
+    <div class="card-price-mo" id="price-trade-sub">billed monthly</div>
     <hr class="card-rule">
     <ul class="card-features">
       <li>Everything in The Profession</li>
@@ -147,7 +147,7 @@
       <li>Restaurant connection listings</li>
       <li>API access for integrations</li>
     </ul>
-    <a href="/subscribe/trade/yearly" class="card-btn card-btn-outline" id="btn-trade" data-yearly="/subscribe/trade/yearly" data-monthly="/subscribe/trade/monthly">Open The Trade →</a>
+    <a href="/subscribe/trade/monthly" class="card-btn card-btn-outline" id="btn-trade" data-yearly="/subscribe/trade/yearly" data-monthly="/subscribe/trade/monthly">Open The Trade →</a>
   </div>
 
 </div>
