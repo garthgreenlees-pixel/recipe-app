@@ -16874,6 +16874,73 @@ def _match_library_recipe_for_slot(slot, parsed_brief, cur, threshold=0.03, inve
             f"[ATELIER LIBRARY] recipe match failed for slot "
             f"{slot.get('slot_name')!r}: {exc}"
         )
+
+    # Fallback: name-based FTS when ingredient path produced nothing.
+    # Fires only when both existing paths above would return None.
+    # Stricter threshold (0.05 vs 0.03) — a bad name match is worse than no match.
+    fallback_threshold = 0.05
+    fallback_parts = []
+    if invention:
+        dish_name = invention.get('name') or ''
+        for token in dish_name.split():
+            clean = token.strip('.,;:\'"()[]').strip()
+            if len(clean) >= 5:
+                fallback_parts.append(clean)
+
+    if fallback_parts:
+        fallback_query = ' OR '.join(fallback_parts)
+        try:
+            cur.execute(
+                """SELECT id, slug, name, cuisine, description,
+                          ts_rank(
+                              to_tsvector('english',
+                                  COALESCE(name, '') || ' ' ||
+                                  COALESCE(cuisine, '') || ' ' ||
+                                  COALESCE(description, '')
+                              ),
+                              websearch_to_tsquery('english', %s)
+                          ) AS score
+                   FROM recipes
+                   WHERE is_curated = true
+                     AND to_tsvector('english',
+                             COALESCE(name, '') || ' ' ||
+                             COALESCE(cuisine, '') || ' ' ||
+                             COALESCE(description, '')
+                         ) @@ websearch_to_tsquery('english', %s)
+                   ORDER BY score DESC
+                   LIMIT 5""",
+                (fallback_query, fallback_query),
+            )
+            fb_candidates = [dict(r) for r in cur.fetchall()]
+
+            if cuisine_re and fb_candidates:
+                fb_matching = [c for c in fb_candidates
+                               if c.get('cuisine')
+                               and _re.search(cuisine_re, c['cuisine'], _re.IGNORECASE)]
+                if fb_matching:
+                    fb_candidates = fb_matching
+
+            fb_best = fb_candidates[0] if fb_candidates else None
+            if fb_best and float(fb_best.get('score', 0)) >= fallback_threshold:
+                app.logger.info(
+                    f"[ATELIER LIBRARY] name-fallback hit for slot "
+                    f"{slot.get('slot_name')!r}: {fb_best['name']!r} "
+                    f"score={float(fb_best['score']):.4f}"
+                )
+                return {
+                    'id':          fb_best['id'],
+                    'slug':        fb_best.get('slug'),
+                    'name':        fb_best['name'],
+                    'cuisine':     fb_best.get('cuisine'),
+                    'description': fb_best.get('description'),
+                    'score':       float(fb_best['score']),
+                }
+        except Exception as fb_exc:
+            app.logger.warning(
+                f"[ATELIER LIBRARY] name-fallback failed for slot "
+                f"{slot.get('slot_name')!r}: {fb_exc}"
+            )
+
     return None
 
 
