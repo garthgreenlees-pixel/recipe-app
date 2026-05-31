@@ -15217,6 +15217,78 @@ def atlas_volume(volume_slug):
     return render_template("atlas_volume.html", volume=volume, entries=entries)
 
 
+_PMT_NARRATIVE = {
+    "overture": {
+        "eyebrow": "The Routes · A Spice Route of the Provenance Canon",
+        "scene1": 'A waka comes in on a grey morning, into a harbour on the north island of a country no one has named yet. The paddlers have been at sea for weeks. In the hull, wrapped against the salt, are the things that matter most — and among them, seed tubers of <span class="lift">kūmara</span> — a sweet potato that, alone in this hull, did not travel the trail these people travelled. Children are lifted onto the sand. Someone speaks the first words said here.',
+        "scene2": 'That landing is the <span class="lift">end</span> of the longest sea migration in human history. The people who paddle in trace back five thousand years and four thousand miles, to the coast of Taiwan. But the kūmara in the hull does not — it is a New World plant, carried home from South America by voyagers who reached the Americas and returned, centuries before any European crossed this ocean. To understand both, you have to go back to the start and travel the whole way down.',
+        "begin": "Begin the journey",
+    },
+    "stops": {
+        "Spine": {
+            "way": "The trail itself",
+            "display_name": "The Spine",
+            "coord": "Austronesian expansion · pan-Pacific",
+            "intro": 'One technique runs the length of this journey, almost unchanged: <span class="lift">the earth oven</span> — a pit of fire-heated stones, food laid on top, the whole thing buried to cook. It appears at every stop, from the barapen of Borneo to the lovo of Fiji, the imu of Hawaiʿi, the hāngī of Aotearoa. Every island kitchen on this trail is a variation on a single inheritance, carried in the hull of a canoe.',
+        },
+        "Taiwan": {
+            "way": "Where the trail begins",
+            "display_name": "Taiwan",
+            "coord": "Origin · c. 3000 BCE",
+            "intro": 'On the coast of Taiwan, a people who had mastered the outrigger canoe began to leave. They grew taro and millet, fermented rice into wine, cooked on hot stones, preserved meat in highland smoke — and they carried all of it onto the water. Everything that follows begins with what these people <span class="lift">loaded into a hull and paddled south.</span>',
+        },
+        "Philippines": {
+            "way": "The first branching",
+            "display_name": "The Philippines",
+            "coord": "c. 2200 BCE · the islands fill",
+            "intro": 'In the Philippine archipelago the voyagers found a thousand islands and a warmer world. The coconut entered the larder for good; the banana leaf became plate and parcel; the reef gave fish eaten raw and bright with acid. This is where the single Taiwanese kitchen <span class="lift">began to become many.</span>',
+        },
+        "Indonesia": {
+            "way": "The crossroads",
+            "display_name": "Indonesia",
+            "coord": "The fermentation heart · the spice islands",
+            "intro": 'Seventeen thousand islands, and the richest larder on the trail. Indonesia is where the Pacific learned to <span class="lift">ferment</span> — soybean into tempeh, rice into brem, shrimp into terasi, fish into paste and sauce. It is also where the cloves and nutmeg grew that the Austronesians had always had, and that Europe would cross the world to seize. Here the journey meets recorded history.',
+        },
+        "Melanesia": {
+            "way": "The deep water",
+            "display_name": "Melanesia",
+            "coord": "Fiji · Vanuatu · the open ocean",
+            "intro": 'Now the islands are scattered across true ocean, and the voyaging is a feat. In Fiji the whole grammar of the trail is visible at once: the earth oven, raw fish in coconut, taro leaf in coconut, the ceremonial root drunk at dusk. This is the Pacific kitchen <span class="lift">fully itself</span> — coconut as butter, the reef as larder, the lovo as hearth.',
+        },
+        "Polynesia": {
+            "way": "The hub",
+            "display_name": "Polynesia",
+            "coord": "Tonga · Samoa · the central Pacific",
+            "intro": 'Tonga and Samoa first, then the Cook Islands and Tahiti — the centre of the Polynesian world, settled and held for a thousand years. From this hub the two great founding voyages set out. Everything in Hawaiʿi and everything in Aotearoa <span class="lift">launched from here.</span>',
+        },
+        "Hawaii": {
+            "way": "The northern reach",
+            "display_name": "Hawaiʿi",
+            "coord": "The fulcrum · ancient larder &amp; the melting pot",
+            "intro": 'The trail’s fulcrum. First the ancient larder, carried north intact — taro pounded to poi, the imu, the fishpond, the raw reef fish. Then, far later, the plantation era, when Chinese, Japanese, Korean, Portuguese and Filipino workers met on the same islands and the trail did its oldest trick one more time: <span class="lift">it absorbed everything, and made it one plate.</span>',
+        },
+        "Aotearoa": {
+            "way": "Journey’s end",
+            "display_name": "Aotearoa",
+            "coord": "New Zealand · the last landfall",
+            "intro": 'The longest voyage, to the coldest country. Here taro could not grow — but the kūmara could, and it became the reason this chapter exists: a New World plant the voyagers had carried home from South America, now learning a southern winter. Every deep thread that opened in Taiwan lands on this shore — the earth oven as the hāngī, the raw fish as kaimoana, the heat-leaf as horopito, the seaweed as karengo. <span class="lift">This is where the trail comes to rest.</span>',
+        },
+    },
+    "transforms": {
+        "Taiwan": {"glyph": "≈", "text": "From the Taiwan coast the canoes crossed the strait into the islands of the Philippines. Here the larder met the tropics — coconut, banana leaf, the heat of the equator — and the cooking began to change."},
+        "Philippines": {"glyph": "≈", "text": "South and west into the great archipelago of Indonesia — the crossroads of the whole dispersal, where the trail learned to ferment everything it touched, and where the spice it carried would one day pull the rest of the world in after it."},
+        "Indonesia": {"glyph": "≈", "text": "Out past the last of the great islands into open Pacific — into Melanesia, the deep-water leg, where the canoes were truly oceangoing and the earth oven became the lovo."},
+        "Melanesia": {"glyph": "≈", "text": "Into the heart of the ocean — Polynesia, the homeland and the hub. Here the canoe paused for a thousand years before launching its two longest voyages: north to Hawaiʿi, and south to Aotearoa."},
+        "Polynesia": {"glyph": "↑", "text": "North, against the trade winds, on the longest open-ocean voyage yet attempted — two and a half thousand miles to a chain of volcanic islands no human had ever seen. Hawaiʿi."},
+        "Hawaii": {"glyph": "↓", "text": "And the other voyage — south, across the equator, to the last and largest land the Polynesians ever found, and the coldest. The waka that opened this page is on the water now, a New World tuber wrapped in its hull."},
+    },
+    "closing": {
+        "way": "The trail comes to rest",
+        "text": 'The waka that opened this page comes ashore here. The kūmara is carried up the beach and planted in cold ground, and to keep it alive through the southern winter the people dig the rua kūmara — the storage pit that becomes a tradition. <span class="lift">The earth oven becomes the hāngī; the raw fish from a Taiwan reef becomes kaimoana on a southern shore; taro, the mother crop, gives way to the kūmara.</span> And the kūmara is the proof of the strangest truth on the trail: this was never a one-way line. To carry a South American plant to a New Zealand beach, the voyagers had crossed the whole ocean and come back. The journey ends where it began for us — on a grey morning, on a northern shore, with a hull full of everything that mattered.',
+    },
+}
+
+
 @app.route("/route/<volume_slug>")
 def route_volume(volume_slug):
     if not DATABASE_URL:
@@ -15233,7 +15305,7 @@ def route_volume(volume_slug):
     cur.execute("""
         SELECT ve.display_order, ve.editorial_note,
                tr.id, tr.name, tr.slug, tr.entry_slug, tr.decimal_id,
-               tr.description, tr.origin, tr.canon_slug, tr.section_slug
+               tr.description, tr.migration_thread, tr.origin, tr.canon_slug, tr.section_slug
         FROM volume_entries ve
         JOIN technique_references tr ON tr.id = ve.entry_id
         WHERE ve.volume_slug = %s
@@ -15242,7 +15314,25 @@ def route_volume(volume_slug):
     entries = [_serialize_row(r) for r in cur.fetchall()]
     cur.close()
     conn.close()
-    return render_template("route_volume.html", volume=volume, entries=entries)
+    _STOP_ORDER = ["Spine", "Taiwan", "Philippines", "Indonesia",
+                   "Melanesia", "Polynesia", "Hawaii", "Aotearoa"]
+    _stop_map = {}
+    for e in entries:
+        label = e.get("editorial_note") or "Uncategorised"
+        _stop_map.setdefault(label, []).append(e)
+    stops = [{"label": s, "entries": _stop_map[s]} for s in _STOP_ORDER if s in _stop_map]
+    for label, group in _stop_map.items():
+        if label not in set(_STOP_ORDER):
+            stops.append({"label": label, "entries": group})
+    return render_template("route_volume.html", volume=volume, entries=entries, stops=stops,
+                           narrative=_PMT_NARRATIVE if volume_slug == 'pacific-migration-trail' else None)
+
+
+@app.route("/protocols")
+def protocols():
+    user = get_current_user()
+    has_library = user_can_access("library")
+    return render_template("protocols.html", has_library=has_library, user=user)
 
 
 # Legacy: integer ID redirect → canonical slug

@@ -140,6 +140,7 @@ Once Sprint 10 has established the canon structure / spine, audit every existing
 - [ ] Expansion candidates identified and queued
 - [ ] Cut candidates flagged for operator decision
 - [ ] /why/ and /beyond/ doctrinal fate resolved
+- [ ] Sensory schema fix — give 'sound' its own field (currently missing from stored data) and remove 'taste' from the sensory-test slot (taste is the result, not a process check)
 
 ## V4 Sprint 11 — Pricing + Auxiliary Surfaces (~2 weeks)
 

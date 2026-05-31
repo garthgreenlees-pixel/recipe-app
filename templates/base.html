@@ -67,6 +67,10 @@
   --display: 'Playfair Display', Georgia, serif;
   --body: 'DM Sans', system-ui, sans-serif;
 
+  /* Ink tokens — dark text on cream-scheme pages */
+  --ink: #1F1B16;
+  --ink-soft: rgba(31,27,22,0.62);
+
   /* Spacing — 8px baseline */
   --s1: 8px;
   --s2: 16px;
@@ -84,7 +88,7 @@ body {
   font-family: var(--sans);
   font-weight: 300;
   background: var(--cream-50);
-  color: var(--charcoal);
+  color: var(--ink);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -289,7 +293,7 @@ a { color: var(--gold); text-decoration: none; }
   font-family: var(--mono);
   font-size: 0.55rem;
   letter-spacing: 0.08em;
-  color: var(--stone);
+  color: var(--ink-soft);
 }
 .footer-col-title {
   font-family: var(--mono);
@@ -308,7 +312,7 @@ a { color: var(--gold); text-decoration: none; }
   font-family: var(--sans);
   font-weight: 300;
   font-size: 0.85rem;
-  color: var(--stone);
+  color: var(--ink-soft);
   transition: color 0.2s;
   text-decoration: none;
 }
@@ -583,6 +587,7 @@ a { color: var(--gold); text-decoration: none; }
         <li><a href="#">The Atlases</a></li>
         <li><a href="#">The Routes</a></li>
         <li><a href="/cuisines">Cuisines</a></li>
+        <li><a href="/protocols">The Protocols</a></li>
       </ul>
     </div>
     <div class="hp-footer-col">
