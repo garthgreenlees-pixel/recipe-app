@@ -16394,10 +16394,13 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                             OR name                      ~* %s
                             OR COALESCE(description, '') ~* %s
                          )
-                       ORDER BY id LIMIT 80""",
+                       ORDER BY (CASE WHEN COALESCE(origin,'') ~* %s THEN 0 ELSE 1 END),
+                                RANDOM()
+                       LIMIT 100""",
                     (canon['id'],
                      kw_pattern, kw_pattern, kw_pattern,
-                     cuisine_regex, cuisine_regex, cuisine_regex),
+                     cuisine_regex, cuisine_regex, cuisine_regex,
+                     cuisine_regex),
                 )
             else:
                 cur.execute(
@@ -16408,7 +16411,8 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                             OR name                      ~* %s
                             OR COALESCE(description, '') ~* %s
                          )
-                       ORDER BY id LIMIT 80""",
+                       ORDER BY RANDOM()
+                       LIMIT 100""",
                     (canon['id'], kw_pattern, kw_pattern, kw_pattern),
                 )
             pools["techniques"] = [dict(r) for r in cur.fetchall()]
@@ -16425,9 +16429,12 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                               OR name                         ~* %s
                               OR COALESCE(description, '')    ~* %s
                               OR COALESCE(origin_country, '') ~* %s
-                           ORDER BY id LIMIT 120""",
+                           ORDER BY (CASE WHEN COALESCE(origin_country,'') ~* %s THEN 0 ELSE 1 END),
+                                    RANDOM()
+                           LIMIT 150""",
                         (kw_pattern, kw_pattern, kw_pattern,
-                         cuisine_regex, cuisine_regex, cuisine_regex),
+                         cuisine_regex, cuisine_regex, cuisine_regex,
+                         cuisine_regex),
                     )
                 else:
                     cur.execute(
@@ -16436,7 +16443,8 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                            WHERE name                         ~* %s
                               OR COALESCE(description, '')    ~* %s
                               OR COALESCE(origin_country, '') ~* %s
-                           ORDER BY id LIMIT 120""",
+                           ORDER BY RANDOM()
+                           LIMIT 150""",
                         (kw_pattern, kw_pattern, kw_pattern),
                     )
                 pools["ingredients"] = [dict(r) for r in cur.fetchall()]
@@ -17076,16 +17084,21 @@ def _atelier_build_slot_prompt(slot, slot_index, slot_count, canon, brief_parsed
     )
 
 
-def _atelier_compose_slot(slot, slot_index, slot_count, canon, brief_parsed, pools):
+def _atelier_compose_slot(slot, slot_index, slot_count, canon, brief_parsed, pools, valid_pools=None):
     """
     Compose one Invention for one slot via Haiku 4.5.
     Mirrors HACCP retry: MAX_ATTEMPTS=2, fence strip, 1s sleep on retryable failure.
     Validates real-components rule before returning.
     Raises RuntimeError after exhaustion.
+
+    pools       — displayed candidate list (may be filtered to exclude already-used items)
+    valid_pools — full original pool used for ID validation; defaults to pools if not provided
     """
-    valid_technique_ids = {t["id"] for t in pools["techniques"]}
-    valid_ingredient_ids = {i["id"] for i in pools["ingredients"]}
-    valid_beverage_ids = {b["id"] for b in pools["beverages"]}
+    if valid_pools is None:
+        valid_pools = pools
+    valid_technique_ids = {t["id"] for t in valid_pools["techniques"]}
+    valid_ingredient_ids = {i["id"] for i in valid_pools["ingredients"]}
+    valid_beverage_ids = {b["id"] for b in valid_pools["beverages"]}
 
     prompt = _atelier_build_slot_prompt(
         slot, slot_index, slot_count, canon, brief_parsed, pools
@@ -17275,6 +17288,9 @@ def atelier_compose():
     enrich_conn  = get_db()
     enrich_cur   = enrich_conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
+    used_technique_ids  = set()
+    used_ingredient_ids = set()
+
     for slot_index, slot in enumerate(course_slots):
         print(
             f"[ATELIER COMPOSE] slot {slot_index + 1}/{len(course_slots)}: "
@@ -17282,14 +17298,33 @@ def atelier_compose():
             flush=True,
         )
 
+        remaining_slots = len(course_slots) - slot_index
+        # Only filter when there is enough depth; late courses fall back to full pool.
+        filtered_techniques  = [t for t in pools["techniques"]  if t["id"] not in used_technique_ids]
+        filtered_ingredients = [i for i in pools["ingredients"] if i["id"] not in used_ingredient_ids]
+        use_filtered = (
+            len(filtered_techniques)  > remaining_slots * 3 and
+            len(filtered_ingredients) > remaining_slots * 2
+        )
+        slot_pools = {
+            "techniques":  filtered_techniques  if use_filtered else pools["techniques"],
+            "ingredients": filtered_ingredients if use_filtered else pools["ingredients"],
+            "beverages":   pools["beverages"],
+            "_keywords":   pools.get("_keywords", []),
+        }
+
         invention = _atelier_compose_slot(
             slot=slot,
             slot_index=slot_index,
             slot_count=len(course_slots),
             canon=canon,
             brief_parsed=brief_parsed,
-            pools=pools,
+            pools=slot_pools,
+            valid_pools=pools,
         )
+
+        used_technique_ids.update(invention.get("lineage_techniques", []))
+        used_ingredient_ids.update(invention.get("lineage_ingredients", []))
 
         # Persist Invention then link via composition_course
         conn2 = get_db()
