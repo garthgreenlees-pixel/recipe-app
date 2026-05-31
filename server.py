@@ -16571,8 +16571,10 @@ def _ingredient_signature_overlap(invention):
     """
     Returns the fraction of significant Latin-script tokens from the dish name
     that appear in any lineage_ingredient name.
-    Returns 1.0 for non-Latin-script dish names (we cannot tokenize them, so
-    the augmentation trigger fails open rather than firing incorrectly).
+    Non-Latin-script names (Japanese, Korean, Chinese, etc.) produce no tokens.
+    When that happens, the result depends on whether lineage is populated:
+      - empty lineage → 0.0 (trigger augmentation — ingredients genuinely missing)
+      - populated lineage → 1.0 (trust it — can't verify but don't discard)
     """
     _OVERLAP_STOPWORDS = frozenset({
         'and', 'with', 'for', 'the', 'di', 'alla', 'con', 'alle', 'della',
@@ -16584,6 +16586,11 @@ def _ingredient_signature_overlap(invention):
         if t.lower() not in _OVERLAP_STOPWORDS
     ]
     if not tokens:
+        # Can't tokenise (non-Latin script or all-stopword name).
+        # If lineage is also empty, it genuinely needs augmentation → 0.0.
+        # If lineage is already populated, trust it → 1.0.
+        if not (invention.get('lineage_ingredients') or []):
+            return 0.0
         return 1.0
     ingredients = invention.get('lineage_ingredients') or []
     ing_text = ' '.join(
