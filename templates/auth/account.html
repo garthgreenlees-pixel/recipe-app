@@ -117,7 +117,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 
   <hr class="rule">
 
-  {% if user.subscription_tier not in ['profession', 'trade'] %}
+  {% if user.subscription_tier != 'trade' %}
 
   <div class="section-label">Available upgrades</div>
 
@@ -147,6 +147,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     <a href="/subscribe/profession/yearly" class="upgrade-link">Open The Profession →</a>
   </div>
   {% endif %}
+
+  <div class="upgrade-card">
+    <div class="upgrade-card-name">The Trade</div>
+    <div class="upgrade-card-price">$999/year <span style="font-family:var(--sans);font-size:0.75rem;font-weight:300;color:var(--text-light)">or $99/month</span></div>
+    <div class="upgrade-card-desc">Producer and supplier portal. Product listing, regional targeting, pairing analytics, and API access.</div>
+    <a href="/subscribe/trade/yearly" class="upgrade-link">Open The Trade →</a>
+  </div>
 
   {% endif %}
 
