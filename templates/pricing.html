@@ -61,6 +61,20 @@
 .card.featured .card-price-yr .per{color:var(--charcoal)}
 .card.featured .card-price-mo{color:var(--warm-gray)}
 .card.featured .card-features li{color:var(--charcoal-soft)}
+
+.reserve-band{max-width:1100px;margin:0 auto 3rem;padding:0 1.5rem}
+.reserve-band__inner{background:var(--charcoal);border-top:3px solid var(--burgundy);border-radius:8px;padding:2.5rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+@media(max-width:700px){.reserve-band__inner{grid-template-columns:1fr;gap:2rem}}
+.reserve-band__eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--burgundy);margin-bottom:0.75rem}
+.reserve-band__title{font-family:var(--serif);font-size:2rem;font-weight:700;letter-spacing:-0.5px;color:var(--cream);margin-bottom:1.25rem}
+.reserve-band__price{font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--gold-soft);line-height:1}
+.reserve-band__price .per{font-family:var(--sans);font-size:0.85rem;font-weight:300;color:var(--gold-soft)}
+.reserve-band__price-sub{font-size:0.78rem;color:var(--smoke);margin-top:0.3rem;margin-bottom:1.5rem}
+.reserve-band__body{font-size:0.88rem;color:var(--smoke);line-height:1.7;margin:0}
+.reserve-band__features{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem}
+.reserve-band__features li{font-size:0.84rem;color:var(--smoke);padding-left:1.1rem;position:relative;line-height:1.6}
+.reserve-band__features li::before{content:'—';position:absolute;left:0;color:var(--burgundy);font-size:11px;top:2px}
+.reserve-band__features li strong{color:var(--gold-soft);font-weight:600}
 {% endblock %}
 
 {% block content %}
@@ -155,6 +169,22 @@
     <a href="/subscribe/trade/monthly" class="card-btn card-btn-outline" id="btn-trade" data-yearly="/subscribe/trade/yearly" data-monthly="/subscribe/trade/monthly">Open The Trade →</a>
   </div>
 
+</div>
+
+<div class="reserve-band">
+  <div class="reserve-band__inner">
+    <div class="reserve-band__intro">
+      <div class="reserve-band__eyebrow">The composition layer</div>
+      <div class="reserve-band__title"><em>The Reserve.</em></div>
+      <div class="reserve-band__price">$5.99<span class="per"> / month</span></div>
+      <div class="reserve-band__price-sub">or $59 / year — add-on to any door</div>
+      <p class="reserve-band__body">Two composition tools that sit outside the four-door stack. The Reserve is for kitchens that need the platform to generate new work, not just retrieve it.</p>
+    </div>
+    <ul class="reserve-band__features">
+      <li><strong>Compose Menu (l'Atelier)</strong> — single brief in, composed menu out. Technique-matched courses with beverage pairings.</li>
+      <li><strong>Compose Recipe</strong> — single brief in, seven-pillar recipe out. Editable, savable, drops into MyKitchen.</li>
+    </ul>
+  </div>
 </div>
 
 <div class="faq">
