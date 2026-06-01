@@ -2428,11 +2428,12 @@ def suppliers_page():
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("""
         SELECT s.id, s.name, s.notes, s.website, s.service_region,
+               s.is_featured,
                COUNT(ps.id) as product_count
         FROM suppliers s
         LEFT JOIN product_suppliers ps ON s.id = ps.supplier_id
         GROUP BY s.id
-        ORDER BY product_count DESC
+        ORDER BY s.is_featured DESC NULLS LAST, product_count DESC
     """)
     suppliers = cur.fetchall()
     cur.close()

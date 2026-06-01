@@ -156,6 +156,23 @@ main{padding-top:60px}
 .supplier-link:hover{color:var(--gold)}
 .supplier-link-arrow{color:rgba(201,168,76,0.5)}
 
+/* ── Featured Supplier ────────────────────────────────── */
+.featured-section{max-width:1200px;margin:0 auto;padding:2rem 2rem 0}
+.featured-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--gold);opacity:0.85;
+  margin-bottom:1rem;display:flex;align-items:center;gap:12px;
+}
+.featured-eyebrow::after{content:'';flex:1;height:1px;background:var(--gold-border)}
+.featured-cards{display:flex;flex-wrap:wrap;gap:1px;background:var(--gold-border);border:1px solid var(--gold-border);margin-bottom:2rem}
+.featured-card{
+  padding:1.75rem 2rem;background:var(--bg);
+  flex:1;min-width:260px;
+  border-left:3px solid var(--gold);
+  transition:background 200ms;
+}
+.featured-card:hover{background:var(--surface)}
+
 /* ── Partnership Section ──────────────────────────────── */
 .partner-section{
   border-top:1px solid var(--border);
@@ -292,12 +309,46 @@ main{padding-top:60px}
   </div>
 </div>
 
+<!-- ── Featured Suppliers ─────────────────────────────────────────── -->
+{% set featured_suppliers = suppliers | selectattr('is_featured') | list %}
+{% if featured_suppliers %}
+<div class="featured-section">
+  <div class="featured-eyebrow">Featured Supplier</div>
+  <div class="featured-cards">
+    {% for s in featured_suppliers %}
+    <div class="featured-card">
+      <div class="supplier-name">{{ s.name }}</div>
+      <div class="supplier-region">
+        {%- if s.service_region -%}
+          {%- if s.service_region is string -%}
+            {{ s.service_region | replace('_', ' ') | replace('{', '') | replace('}', '') | replace(',', ' · ') }}
+          {%- else -%}
+            {{ s.service_region | join(' · ') | replace('_', ' ') }}
+          {%- endif -%}
+        {%- else -%}
+          Region not specified
+        {%- endif -%}
+      </div>
+      <div class="supplier-count">{{ s.product_count }} product{{ 's' if s.product_count != 1 else '' }} mapped</div>
+      <div class="supplier-links">
+        {% if s.website %}
+        <a href="{{ s.website if s.website.startswith('http') else 'https://' + s.website }}"
+           class="supplier-link" target="_blank" rel="noopener">Visit website →</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
 <!-- ── Supplier Grid ──────────────────────────────────────────────── -->
 <div class="grid-section">
   <div class="grid-header">Verified Suppliers</div>
-  {% if suppliers %}
+  {% set regular_suppliers = suppliers | rejectattr('is_featured') | list %}
+  {% if regular_suppliers %}
   <div class="supplier-grid">
-    {% for s in suppliers %}
+    {% for s in regular_suppliers %}
     <div class="supplier-card">
       <div class="supplier-name">{{ s.name }}</div>
       <div class="supplier-region">
