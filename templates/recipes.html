@@ -346,12 +346,6 @@
     a.className = 'p-card drink';
     a.href = '/technique/' + (d.slug || '');
 
-    var img = document.createElement('img');
-    img.alt = d.name;
-    img.loading = 'lazy';
-    img.src = d.image_url || PLACEHOLDER_SVG;
-    img.onerror = function() { a.classList.add('no-img'); };
-
     var overlay = document.createElement('div');
     overlay.className = 'p-card-overlay';
 
@@ -363,7 +357,6 @@
     name.className = 'p-card-name';
     name.textContent = d.name;
 
-    a.appendChild(img);
     a.appendChild(overlay);
     a.appendChild(cat);
     a.appendChild(name);
