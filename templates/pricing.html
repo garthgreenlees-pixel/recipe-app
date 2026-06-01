@@ -95,6 +95,9 @@
   <span class="toggle-save">Save ~17%</span>
 </div>
 
+{% set _tr = {'kitchen': 1, 'library': 2, 'profession': 3, 'trade': 4} %}
+{% set _vr = _tr[user_tier] if user_tier in _tr else 0 %}
+
 <div class="cards">
 
   <!-- THE KITCHEN -->
@@ -112,7 +115,9 @@
       <li>Cookbook scanning &amp; recipe extraction</li>
       <li>Basic beverage pairings</li>
     </ul>
-    <a href="/subscribe/kitchen/monthly" class="card-btn card-btn-solid" id="btn-kitchen" data-yearly="/subscribe/kitchen/yearly" data-monthly="/subscribe/kitchen/monthly">Open The Kitchen →</a>
+    {% if _vr == 1 %}<span class="card-btn card-btn-solid">Your current plan</span>
+    {% elif _vr > 1 %}<span class="card-btn card-btn-solid">Included</span>
+    {% else %}<a href="/subscribe/kitchen/monthly" class="card-btn card-btn-solid" id="btn-kitchen" data-yearly="/subscribe/kitchen/yearly" data-monthly="/subscribe/kitchen/monthly">Open The Kitchen →</a>{% endif %}
   </div>
 
   <!-- THE LIBRARY -->
@@ -130,7 +135,9 @@
       <li>Beverage terroir at full depth</li>
       <li>Beverage references &amp; references library</li>
     </ul>
-    <a href="/subscribe/library/monthly" class="card-btn card-btn-outline" id="btn-library" data-yearly="/subscribe/library/yearly" data-monthly="/subscribe/library/monthly">Open The Library →</a>
+    {% if _vr == 2 %}<span class="card-btn card-btn-outline">Your current plan</span>
+    {% elif _vr > 2 %}<span class="card-btn card-btn-outline">Included</span>
+    {% else %}<a href="/subscribe/library/monthly" class="card-btn card-btn-outline" id="btn-library" data-yearly="/subscribe/library/yearly" data-monthly="/subscribe/library/monthly">Open The Library →</a>{% endif %}
   </div>
 
   <!-- THE PROFESSION -->
@@ -148,7 +155,9 @@
       <li>Team accounts</li>
       <li>Priority access to new canons</li>
     </ul>
-    <a href="/subscribe/profession/monthly" class="card-btn card-btn-outline" id="btn-profession" data-yearly="/subscribe/profession/yearly" data-monthly="/subscribe/profession/monthly">Open The Profession →</a>
+    {% if _vr == 3 %}<span class="card-btn card-btn-outline">Your current plan</span>
+    {% elif _vr > 3 %}<span class="card-btn card-btn-outline">Included</span>
+    {% else %}<a href="/subscribe/profession/monthly" class="card-btn card-btn-outline" id="btn-profession" data-yearly="/subscribe/profession/yearly" data-monthly="/subscribe/profession/monthly">Open The Profession →</a>{% endif %}
   </div>
 
   <!-- THE TRADE -->
@@ -166,7 +175,8 @@
       <li>Restaurant connection listings</li>
       <li>API access for integrations</li>
     </ul>
-    <a href="/subscribe/trade/monthly" class="card-btn card-btn-outline" id="btn-trade" data-yearly="/subscribe/trade/yearly" data-monthly="/subscribe/trade/monthly">Open The Trade →</a>
+    {% if _vr == 4 %}<span class="card-btn card-btn-outline">Your current plan</span>
+    {% else %}<a href="/subscribe/trade/monthly" class="card-btn card-btn-outline" id="btn-trade" data-yearly="/subscribe/trade/yearly" data-monthly="/subscribe/trade/monthly">Open The Trade →</a>{% endif %}
   </div>
 
 </div>
@@ -241,7 +251,7 @@ function toggleBilling(isYearly) {
       prEl.innerHTML = mo.replace('/month', '') + '<span class="per">/month</span>';
       subEl.textContent = 'billed monthly';
     }
-    btn.href = btn.dataset[period];
+    if (btn) btn.href = btn.dataset[period];
   });
 }
 </script>
