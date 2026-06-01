@@ -551,7 +551,7 @@ def p1000_recipes():
     offset = (page - 1) * per_page
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cols = "id, name, slug, category, origin, description, flavour_context, trigger_keywords, authority_tier, image_url"
+    cols = "id, name, slug, category, origin, description, flavour_context, trigger_keywords, authority_tier, image_url, thumb_url"
     if q:
         cur.execute(
             f"SELECT {cols} FROM technique_references"
@@ -1741,7 +1741,7 @@ def recipes_page():
             conn = get_db()
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute(
-                "SELECT id, name, slug, category, image_url"
+                "SELECT id, name, slug, category, image_url, thumb_url"
                 " FROM technique_references"
                 " WHERE category LIKE %s ORDER BY name LIMIT 24",
                 ("Provenance 1000%",)
@@ -2204,6 +2204,17 @@ def generate_technique_image(slug):
     cur.execute("UPDATE technique_references SET image_url = %s WHERE id = %s", (final_url, tech["id"]))
     conn.commit()
     cur.close(); conn.close()
+
+    try:
+        thumb = _make_card_thumbnail(final_url)
+        if thumb:
+            tconn = get_db()
+            tcur = tconn.cursor()
+            tcur.execute("UPDATE technique_references SET thumb_url = %s WHERE id = %s", (thumb, tech["id"]))
+            tconn.commit()
+            tcur.close(); tconn.close()
+    except Exception:
+        pass
 
     return jsonify({
         "image_url": final_url,
@@ -3935,6 +3946,18 @@ def _prepare_image(data: bytes) -> tuple[bytes, str]:
         img.convert("RGB").save(buf, format="JPEG", quality=92)
         return buf.getvalue(), "image/jpeg"
     return data, media_type
+
+
+def _make_card_thumbnail(image_url):
+    """Fetch full image, resize to ≤440px wide, upload to fal CDN. Returns URL or None."""
+    try:
+        resp = http_requests.get(image_url, timeout=10)
+        resp.raise_for_status()
+        img = Image.open(io.BytesIO(resp.content)).convert("RGB")
+        img.thumbnail((440, 9999), Image.Resampling.LANCZOS)
+        return fal_client.upload_image(img, format='jpeg')
+    except Exception:
+        return None
 
 
 # ─── Scan (AI recipe extraction) ────────────────────────────────────────────

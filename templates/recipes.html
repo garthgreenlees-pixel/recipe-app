@@ -202,7 +202,7 @@
     {%- for r in initial_recipes -%}
     <a class="p-card" href="/technique/{{ r.slug or '' }}">
       <img alt="{{ r.name }}" loading="eager"
-           src="{{ r.image_url if r.image_url else PLACEHOLDER }}"
+           src="{{ r.thumb_url or r.image_url or PLACEHOLDER }}"
            onerror="this.parentElement.classList.add('no-img')">
       <div class="p-card-overlay"></div>
       <div class="p-card-cat">{{ r.cat_label }}</div>
@@ -311,7 +311,7 @@
     var img = document.createElement('img');
     img.alt = r.name;
     img.loading = 'lazy';
-    img.src = r.image_url || PLACEHOLDER_SVG;
+    img.src = r.thumb_url || r.image_url || PLACEHOLDER_SVG;
     img.onerror = function() { a.classList.add('no-img'); };
 
     var overlay = document.createElement('div');
