@@ -201,7 +201,7 @@
     {%- set PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23181510'/%3E%3C/svg%3E" -%}
     {%- for r in initial_recipes -%}
     <a class="p-card" href="/technique/{{ r.slug or '' }}">
-      <img alt="{{ r.name }}" loading="eager"
+      <img alt="{{ r.name }}" loading="{{ 'eager' if loop.first else 'lazy' }}"{% if loop.first %} fetchpriority="high"{% endif %}
            src="{{ r.thumb_url or r.image_url or PLACEHOLDER }}"
            onerror="this.parentElement.classList.add('no-img')">
       <div class="p-card-overlay"></div>
@@ -310,6 +310,7 @@
 
     var img = document.createElement('img');
     img.alt = r.name;
+    img.loading = 'lazy';
     img.loading = 'lazy';
     img.src = r.thumb_url || r.image_url || PLACEHOLDER_SVG;
     img.onerror = function() { a.classList.add('no-img'); };
