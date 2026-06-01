@@ -318,17 +318,7 @@ main{padding-top:60px}
     {% for s in featured_suppliers %}
     <div class="featured-card">
       <div class="supplier-name">{{ s.name }}</div>
-      <div class="supplier-region">
-        {%- if s.service_region -%}
-          {%- if s.service_region is string -%}
-            {{ s.service_region | replace('_', ' ') | replace('{', '') | replace('}', '') | replace(',', ' · ') }}
-          {%- else -%}
-            {{ s.service_region | join(' · ') | replace('_', ' ') }}
-          {%- endif -%}
-        {%- else -%}
-          Region not specified
-        {%- endif -%}
-      </div>
+      <div class="supplier-region">{{ s.region_display }}</div>
       <div class="supplier-count">{{ s.product_count }} product{{ 's' if s.product_count != 1 else '' }} mapped</div>
       <div class="supplier-links">
         {% if s.website %}
@@ -351,17 +341,7 @@ main{padding-top:60px}
     {% for s in regular_suppliers %}
     <div class="supplier-card">
       <div class="supplier-name">{{ s.name }}</div>
-      <div class="supplier-region">
-        {%- if s.service_region -%}
-          {%- if s.service_region is string -%}
-            {{ s.service_region | replace('_', ' ') | replace('{', '') | replace('}', '') | replace(',', ' · ') }}
-          {%- else -%}
-            {{ s.service_region | join(' · ') | replace('_', ' ') }}
-          {%- endif -%}
-        {%- else -%}
-          Region not specified
-        {%- endif -%}
-      </div>
+      <div class="supplier-region">{{ s.region_display }}</div>
       <div class="supplier-count">{{ s.product_count }} product{{ 's' if s.product_count != 1 else '' }} mapped</div>
       <div class="supplier-links">
         {% if s.website %}

@@ -2420,6 +2420,70 @@ def provenance_originals_page():
     return render_template("provenance_originals.html")
 
 
+_REGION_TOKEN_MAP = {
+    'nationwide_US': 'Nationwide US',
+    'nationwide_CA': 'Nationwide Canada',
+    'nationwide_UK': 'Nationwide UK',
+    'nationwide_AU': 'Nationwide Australia',
+    'nationwide_NZ': 'Nationwide NZ',
+    'worldwide': 'Worldwide',
+    'worldwide_export': 'Worldwide',
+    'BC': 'British Columbia',
+    'AB': 'Alberta',
+    'WA': 'Washington',
+    'OR': 'Oregon',
+    'PNW': 'Pacific Northwest',
+    'Western_Canada': 'Western Canada',
+    'UK': 'United Kingdom',
+    'Southeast_Asia': 'Southeast Asia',
+    'Saudi_Arabia': 'Saudi Arabia',
+    'Hong_Kong': 'Hong Kong',
+}
+_REGION_DROP = {'wholesale', 'nationwide_shipping'}
+_COUNTRY_MAP = {
+    'US': 'United States', 'CA': 'Canada', 'UK': 'United Kingdom',
+    'GB': 'United Kingdom', 'NZ': 'New Zealand', 'AU': 'Australia',
+    'SG': 'Singapore', 'FR': 'France', 'ID': 'Indonesia',
+}
+
+def _normalise_supplier_regions(service_region, country=None):
+    def _fmt(tok):
+        tok = tok.strip()
+        if not tok:
+            return None
+        if tok.lower() in _REGION_DROP:
+            return None
+        if tok in _REGION_TOKEN_MAP:
+            return _REGION_TOKEN_MAP[tok]
+        parts = tok.split('_')
+        return ' '.join(p if p.isupper() else p.title() for p in parts)
+
+    if not service_region:
+        if country:
+            return _COUNTRY_MAP.get(country, country)
+        return 'Region not specified'
+
+    tokens = [service_region] if isinstance(service_region, str) else list(service_region)
+    seen, result = set(), []
+    for tok in tokens:
+        display = _fmt(tok)
+        if display is None:
+            continue
+        key = display.lower()
+        if key not in seen:
+            seen.add(key)
+            result.append(display)
+
+    if not result:
+        if country:
+            return _COUNTRY_MAP.get(country, country)
+        return 'Region not specified'
+
+    if len(result) > 5:
+        return ' · '.join(result[:5]) + f' · +{len(result) - 5} more'
+    return ' · '.join(result)
+
+
 @app.route("/suppliers")
 def suppliers_page():
     if not DATABASE_URL:
@@ -2428,16 +2492,21 @@ def suppliers_page():
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("""
         SELECT s.id, s.name, s.notes, s.website, s.service_region,
-               s.is_featured,
+               s.is_featured, s.country,
                COUNT(ps.id) as product_count
         FROM suppliers s
         LEFT JOIN product_suppliers ps ON s.id = ps.supplier_id
         GROUP BY s.id
         ORDER BY s.is_featured DESC NULLS LAST, product_count DESC
     """)
-    suppliers = cur.fetchall()
+    rows = cur.fetchall()
     cur.close()
     conn.close()
+    suppliers = []
+    for row in rows:
+        s = dict(row)
+        s['region_display'] = _normalise_supplier_regions(s.get('service_region'), s.get('country'))
+        suppliers.append(s)
     return render_template("suppliers.html", suppliers=suppliers)
 
 
