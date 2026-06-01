@@ -1731,9 +1731,30 @@ def _resolve_recipe_ref(ref, user_id, cur):
     return dict(row) if row else None
 
 
+_P1000_CAT_RE = _re.compile(r'^Provenance 1000\s*[—\-]\s*')
+
 @app.route("/recipes")
 def recipes_page():
-    return render_template("recipes.html")
+    initial_recipes = []
+    if DATABASE_URL:
+        try:
+            conn = get_db()
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute(
+                "SELECT id, name, slug, category, image_url"
+                " FROM technique_references"
+                " WHERE category LIKE %s ORDER BY name LIMIT 24",
+                ("Provenance 1000%",)
+            )
+            for row in cur.fetchall():
+                r = dict(row)
+                r['cat_label'] = _P1000_CAT_RE.sub('', r.get('category') or '')
+                initial_recipes.append(r)
+            cur.close()
+            conn.close()
+        except Exception:
+            initial_recipes = []
+    return render_template("recipes.html", initial_recipes=initial_recipes)
 
 
 PHOTO_SASHIMI_RULES = """

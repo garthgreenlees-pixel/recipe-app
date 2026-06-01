@@ -197,7 +197,19 @@
 </div>
 
 <div id="panelRecipes" class="grid-section">
-  <div class="p-grid" id="recipesGrid"></div>
+  <div class="p-grid" id="recipesGrid">
+    {%- set PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23181510'/%3E%3C/svg%3E" -%}
+    {%- for r in initial_recipes -%}
+    <a class="p-card" href="/technique/{{ r.slug or '' }}">
+      <img alt="{{ r.name }}" loading="eager"
+           src="{{ r.image_url if r.image_url else PLACEHOLDER }}"
+           onerror="this.parentElement.classList.add('no-img')">
+      <div class="p-card-overlay"></div>
+      <div class="p-card-cat">{{ r.cat_label }}</div>
+      <div class="p-card-name">{{ r.name }}</div>
+    </a>
+    {%- endfor -%}
+  </div>
   <div class="load-more" id="recipesLoadMore" style="display:none">
     <button onclick="loadMoreRecipes()">Load more recipes</button>
   </div>
