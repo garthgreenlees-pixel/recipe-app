@@ -186,9 +186,6 @@
       <select class="cuisine-select" id="cuisineSelect" onchange="onCuisineFilter()">
         <option value="">All cuisines</option>
       </select>
-      <select class="cuisine-select" id="regionSelect" onchange="onRegionFilter()">
-        <option value="">All regions</option>
-      </select>
       <span class="count-label" id="countLabel"></span>
     </div>
 
@@ -228,7 +225,6 @@
   var _urlParams = new URLSearchParams(window.location.search);
   var searchTerm = _urlParams.get('q') || '';
   var cuisineFilter = _urlParams.get('cuisine') || '';
-  var regionFilter = _urlParams.get('region') || '';
   var _searchTimer = null;
   // Pre-fill search input from URL
   if (searchTerm) { var _si = document.getElementById('searchInput'); if (_si) _si.value = searchTerm; }
@@ -241,7 +237,6 @@
     document.getElementById('tabRecipes').className = 'tab-btn' + (tab === 'recipes' ? ' active' : '');
     document.getElementById('tabDrinks').className = 'tab-btn' + (tab === 'drinks' ? ' active' : '');
     document.getElementById('cuisineSelect').style.display = tab === 'recipes' ? '' : 'none';
-    document.getElementById('regionSelect').style.display = tab === 'recipes' ? '' : 'none';
     updateCount();
   };
 
@@ -263,20 +258,13 @@
     applyFilters();
   };
 
-  window.onRegionFilter = function() {
-    regionFilter = document.getElementById('regionSelect').value;
-    recipePage = 0;
-    applyFilters();
-  };
-
   function applyFilters() {
     filteredRecipes = allRecipes.filter(function(r) {
       var matchSearch = !searchTerm ||
         r.name.toLowerCase().includes(searchTerm) ||
         (r.category || '').toLowerCase().includes(searchTerm);
       var matchCuisine = !cuisineFilter || r.category === cuisineFilter;
-      var matchRegion = !regionFilter || r.origin === regionFilter;
-      return matchSearch && matchCuisine && matchRegion;
+      return matchSearch && matchCuisine;
     });
     renderRecipes();
     updateCount();
@@ -284,7 +272,6 @@
     var params = new URLSearchParams();
     if (searchTerm) params.set('q', searchTerm);
     if (cuisineFilter) params.set('cuisine', cuisineFilter);
-    if (regionFilter) params.set('region', regionFilter);
     var qs = params.toString();
     history.pushState({}, '', qs ? '/recipes?' + qs : '/recipes');
   }
@@ -412,18 +399,6 @@
 
   var PLACEHOLDER_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23181510'/%3E%3C/svg%3E";
 
-  function buildRegionFilter() {
-    var seen = {};
-    allRecipes.forEach(function(r) { if (r.origin) seen[r.origin] = true; });
-    var sel = document.getElementById('regionSelect');
-    Object.keys(seen).sort().forEach(function(o) {
-      var opt = document.createElement('option');
-      opt.value = o;
-      opt.textContent = o;
-      sel.appendChild(opt);
-    });
-  }
-
   // ── Bootstrap ──────────────────────────────────────────────────
   fetch('/api/p1000-recipes?per_page=700')
     .then(function(r) { return r.json(); })
@@ -444,17 +419,12 @@
       });
       filteredRecipes = allRecipes.slice();
       buildCuisineFilter();
-      buildRegionFilter();
-      // Pre-apply URL filters after options are built
+      // Pre-apply URL cuisine filter after cuisine options are built
       if (cuisineFilter) {
         var sel = document.getElementById('cuisineSelect');
         if (sel) sel.value = cuisineFilter;
       }
-      if (regionFilter) {
-        var rsel = document.getElementById('regionSelect');
-        if (rsel) rsel.value = regionFilter;
-      }
-      if (searchTerm || cuisineFilter || regionFilter) {
+      if (searchTerm || cuisineFilter) {
         applyFilters();
       } else {
         renderRecipes();
