@@ -110,23 +110,23 @@
 .technique-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .technique-category { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
 .technique-tier { font-family: var(--mono); font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-light); background: #1A1816; padding: 3px 8px; border-radius: 4px; }
-.technique-authority { font-family: var(--mono); font-size: 11px; color: var(--text-light); }
-.technique-title { font-family: var(--serif-alt); font-size: clamp(28px,4vw,44px); font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; color: var(--text); }
-.technique-origin { font-size: 14px; color: var(--text-secondary); font-weight: 300; margin-bottom: 32px; font-style: italic; }
+.technique-authority { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); }
+.technique-title { font-family: var(--serif-alt); font-size: clamp(28px,4vw,44px); font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; color: var(--charcoal); }
+.technique-origin { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; margin-bottom: 32px; font-style: italic; }
 
 /* Sections */
 .section { margin-bottom: 36px; }
 .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .section-label::after { content: ''; flex: 1; height: 1px; background: var(--gold-border); }
-.technique-desc { font-size: 16px; color: var(--text-secondary); font-weight: 300; line-height: 1.75; max-width: 680px; }
-.technique-text { font-size: 15px; color: var(--text-secondary); font-weight: 300; line-height: 1.75; white-space: pre-wrap; max-width: 680px; }
-.flavour-context { font-size: 15px; color: var(--text-secondary); font-style: italic; line-height: 1.7; padding: 16px 20px; border-left: 3px solid var(--gold-border); background: var(--gold-bg); border-radius: 0 6px 6px 0; max-width: 620px; }
+.technique-desc { font-size: 16px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.75; max-width: 680px; }
+.technique-text { font-size: 15px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.75; white-space: pre-wrap; max-width: 680px; }
+.flavour-context { font-size: 15px; color: var(--charcoal-soft); font-style: italic; line-height: 1.7; padding: 16px 20px; border-left: 3px solid var(--gold-border); background: var(--gold-bg); border-radius: 0 6px 6px 0; max-width: 620px; }
 .related-list { display: flex; flex-wrap: wrap; gap: 8px; }
-.related-tag { font-family: var(--mono); font-size: 12px; color: var(--text-secondary); background: rgba(201,168,76,0.06); border: 1px solid var(--gold-border); padding: 4px 12px; border-radius: 20px; text-decoration: none; transition: all 0.15s; }
+.related-tag { font-family: var(--mono); font-size: 12px; color: var(--charcoal-soft); background: rgba(201,168,76,0.06); border: 1px solid var(--gold-border); padding: 4px 12px; border-radius: 20px; text-decoration: none; transition: all 0.15s; }
 .related-tag:hover { color: var(--gold); border-color: var(--gold-border); background: var(--gold-bg); }
-.source-book { font-size: 13px; color: var(--text-light); font-style: italic; }
+.source-book { font-size: 13px; color: var(--warm-gray); font-style: italic; }
 .parallels-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-.parallels-item { font-size: 14px; color: var(--text-secondary); line-height: 1.65; padding-left: 16px; position: relative; }
+.parallels-item { font-size: 14px; color: var(--charcoal-soft); line-height: 1.65; padding-left: 16px; position: relative; }
 .parallels-item::before { content: '—'; position: absolute; left: 0; color: var(--gold); font-size: 12px; top: 2px; }
 
 /* Hero image */
@@ -165,15 +165,15 @@
 /* Editorial / reviewed pairings — full gold underline matching ingredient pattern */
 .tbp-link {
   display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 6px;
-  text-decoration: none; color: var(--text-secondary);
+  text-decoration: none; color: var(--charcoal-soft);
   border-bottom: 1px solid #C9A84C; padding-bottom: 1px;
   transition: border-color 0.15s, color 0.15s; width: fit-content;
 }
-.tbp-link:hover { border-bottom-color: #E8C97A; color: var(--text); }
+.tbp-link:hover { border-bottom-color: #E8C97A; color: var(--charcoal); }
 
 /* Partial pairings — muted gold, italic */
-.tbp-link--partial { border-bottom-color: #8A7A4A; color: rgba(245,241,233,0.55); }
-.tbp-link--partial:hover { border-bottom-color: #B8A46A; color: var(--text-secondary); }
+.tbp-link--partial { border-bottom-color: #8A7A4A; color: var(--warm-gray); }
+.tbp-link--partial:hover { border-bottom-color: #B8A46A; color: var(--charcoal-soft); }
 
 .tbp-producer { font-size: 14px; font-weight: 400; }
 .tbp-wine     { font-size: 14px; font-style: italic; }
@@ -184,7 +184,7 @@
   border-radius: 3px; font-style: normal; white-space: nowrap;
 }
 .tbp-rationale {
-  font-size: 13px; color: var(--text-light); font-style: italic;
+  font-size: 13px; color: var(--warm-gray); font-style: italic;
   line-height: 1.65; margin: 0; padding-left: 2px; max-width: 580px;
 }
 .tbp-rationale--partial { opacity: 0.65; }
@@ -377,7 +377,7 @@
           <p class="technique-text" style="font-size:14px">{{ tier_item.criteria }}</p>
           {% endif %}
           {% if tier_item.get('markers') %}
-          <p class="technique-text" style="font-size:13px;color:var(--text-light);margin-top:4px">{{ tier_item.markers }}</p>
+          <p class="technique-text" style="font-size:13px;color:var(--warm-gray);margin-top:4px">{{ tier_item.markers }}</p>
           {% endif %}
         </div>
         {% else %}
@@ -397,7 +397,7 @@
           <span style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(201,168,76,0.5);padding-top:2px">{{ test.sense }}</span>
           {% endif %}
           <div>
-            {% if test.get('cue') %}<p style="font-size:14px;color:var(--text-secondary)">{{ test.cue }}</p>{% endif %}
+            {% if test.get('cue') %}<p style="font-size:14px;color:var(--charcoal-soft)">{{ test.cue }}</p>{% endif %}
             {% if test.get('fail_indicator') %}<p style="font-size:13px;color:rgba(245,100,80,0.7);margin-top:2px">Fail: {{ test.fail_indicator }}</p>{% endif %}
           </div>
         </div>
@@ -428,11 +428,11 @@
       <div class="section-label">Ingredient Standards</div>
       <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
         {% for ing in technique_ingredients %}
-        <li style="font-size:14px;color:var(--text-secondary);display:flex;align-items:baseline;gap:10px">
+        <li style="font-size:14px;color:var(--charcoal-soft);display:flex;align-items:baseline;gap:10px">
           <a href="/suppliers?ingredient={{ ing.ingredient_name | urlencode }}&region={{ user_region | urlencode }}"
              style="color:var(--text-secondary);text-decoration:none;border-bottom:1px solid #C9A84C">{{ ing.ingredient_name }}</a>
           {% if ing.origin_brand %}
-          <span style="font-size:12px;color:var(--text-light);font-style:italic">{{ ing.origin_brand }}</span>
+          <span style="font-size:12px;color:var(--warm-gray);font-style:italic">{{ ing.origin_brand }}</span>
           {% endif %}
           {% if ing.tier %}
           <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:rgba(201,168,76,0.5)">{{ ing.tier }}</span>
@@ -463,34 +463,34 @@
 
   {% if technique.flavour_context or technique.common_mistakes or technique.species_precision %}
   <section style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08)">
-    <h3 style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:rgba(245,241,233,0.35);text-transform:uppercase;margin-bottom:1.5rem">Common Questions</h3>
+    <h3 style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:var(--warm-gray);text-transform:uppercase;margin-bottom:1.5rem">Common Questions</h3>
     {% if technique.flavour_context %}
     <details style="margin-bottom:1rem">
-      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">Why does {{ technique.name }} taste the way it does?</summary>
-      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.flavour_context }}</p>
+      <summary style="cursor:pointer;font-size:0.85rem;color:var(--charcoal-soft)">Why does {{ technique.name }} taste the way it does?</summary>
+      <p style="font-size:0.8rem;color:var(--charcoal-soft);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.flavour_context }}</p>
     </details>
     {% endif %}
     {% if house_ns.tier %}
     <details style="margin-bottom:1rem">
-      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What are common mistakes when making {{ technique.name }}?</summary>
-      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ house_ns.tier.get('criteria', '')[:400] }}</p>
+      <summary style="cursor:pointer;font-size:0.85rem;color:var(--charcoal-soft)">What are common mistakes when making {{ technique.name }}?</summary>
+      <p style="font-size:0.8rem;color:var(--charcoal-soft);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ house_ns.tier.get('criteria', '')[:400] }}</p>
     </details>
     {% elif technique.common_mistakes %}
     <details style="margin-bottom:1rem">
-      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What are common mistakes when making {{ technique.name }}?</summary>
-      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.common_mistakes }}</p>
+      <summary style="cursor:pointer;font-size:0.85rem;color:var(--charcoal-soft)">What are common mistakes when making {{ technique.name }}?</summary>
+      <p style="font-size:0.8rem;color:var(--charcoal-soft);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.common_mistakes }}</p>
     </details>
     {% endif %}
     {% if technique.species_precision %}
     <details style="margin-bottom:1rem">
-      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What ingredients should I use for {{ technique.name }}?</summary>
-      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.species_precision[:400] }}</p>
+      <summary style="cursor:pointer;font-size:0.85rem;color:var(--charcoal-soft)">What ingredients should I use for {{ technique.name }}?</summary>
+      <p style="font-size:0.8rem;color:var(--charcoal-soft);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{{ technique.species_precision[:400] }}</p>
     </details>
     {% endif %}
     {% if technique.cross_cuisine_parallels and technique.cross_cuisine_parallels|length > 0 %}
     <details style="margin-bottom:1rem">
-      <summary style="cursor:pointer;font-size:0.85rem;color:rgba(245,241,233,0.7)">What dishes are similar to {{ technique.name }}?</summary>
-      <p style="font-size:0.8rem;color:rgba(245,241,233,0.5);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{% for p in technique.cross_cuisine_parallels[:3] %}{{ p if p is string else p.get('technique', '') }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+      <summary style="cursor:pointer;font-size:0.85rem;color:var(--charcoal-soft)">What dishes are similar to {{ technique.name }}?</summary>
+      <p style="font-size:0.8rem;color:var(--charcoal-soft);margin-top:0.5rem;line-height:1.6;padding-left:1rem">{% for p in technique.cross_cuisine_parallels[:3] %}{{ p if p is string else p.get('technique', '') }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
     </details>
     {% endif %}
   </section>
