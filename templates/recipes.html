@@ -311,7 +311,6 @@
     var img = document.createElement('img');
     img.alt = r.name;
     img.loading = 'lazy';
-    img.loading = 'lazy';
     img.src = r.thumb_url || r.image_url || PLACEHOLDER_SVG;
     img.onerror = function() { a.classList.add('no-img'); };
 
