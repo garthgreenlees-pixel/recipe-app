@@ -28,11 +28,19 @@
 .ac-id-row:last-child { border-bottom: none; }
 .ac-id-key { font-size: 0.82rem; color: var(--warm-gray); }
 .ac-id-val { font-size: 0.82rem; color: var(--charcoal-soft); display: flex; align-items: center; gap: 0.75rem; }
-.ac-id-change { font-size: 0.75rem; color: var(--gold); text-decoration: none; }
+.ac-id-change { font-size: 0.75rem; color: var(--gold); text-decoration: none; cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; }
 .ac-id-change:hover { text-decoration: underline; }
-.ac-region { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0.75rem; background: rgba(201,168,76,0.04); border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; margin: 0.5rem 0; }
+.ac-region { padding: 0.7rem 0.75rem; background: rgba(201,168,76,0.04); border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; margin: 0.5rem 0; }
+.ac-region-top { display: flex; justify-content: space-between; align-items: center; }
 .ac-region-key { font-size: 0.82rem; color: var(--charcoal); }
 .ac-region-val { font-size: 0.82rem; color: var(--charcoal-soft); display: flex; align-items: center; gap: 0.75rem; }
+.ac-region-form { margin-top: 0.75rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.ac-region-form select { font-family: inherit; font-size: 0.82rem; color: var(--charcoal); background: var(--cream-50); border: 1px solid var(--line); border-radius: 4px; padding: 5px 8px; flex: 1; min-width: 0; cursor: pointer; }
+.ac-region-form select:focus { outline: 1px solid var(--gold); }
+.ac-region-save { padding: 5px 14px; background: transparent; border: 1px solid var(--gold); border-radius: 4px; color: var(--gold); font-family: inherit; font-size: 0.78rem; cursor: pointer; transition: background 150ms; }
+.ac-region-save:hover { background: rgba(201,168,76,0.1); }
+.ac-region-cancel { font-size: 0.75rem; color: var(--warm-gray); background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
+.ac-region-cancel:hover { color: var(--charcoal); }
 .ac-rung { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; border: 1px solid var(--line-soft); border-radius: 4px; margin-bottom: 0.4rem; background: var(--cream-50); }
 .ac-rung--current { background: var(--cream-100); border-color: var(--line); }
 .ac-rung-dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--line); flex-shrink: 0; }
@@ -151,9 +159,26 @@
     <span class="ac-id-val">{{ user.created_at.strftime('%-d %B %Y') if user.created_at else '—' }}</span>
   </div>
   {# Region drives Pat's Rule supplier proximity ranking #}
-  <div class="ac-region">
-    <span class="ac-region-key">Region</span>
-    <span class="ac-region-val">{{ user.user_location or 'Not set' }}<a href="#" class="ac-id-change">Change</a></span>
+  <div class="ac-region" id="regionRow">
+    <div class="ac-region-top">
+      <span class="ac-region-key">Region</span>
+      <span class="ac-region-val">
+        {{ user.user_location or 'Not set' }}
+        <button type="button" class="ac-id-change" onclick="toggleRegionForm(true)">Change</button>
+      </span>
+    </div>
+    <div id="regionForm" style="display:none">
+      <form class="ac-region-form" method="POST" action="/auth/account/region">
+        <select name="user_location">
+          <option value="">— pick a region —</option>
+          {%- for code, label in valid_regions %}
+          <option value="{{ code }}"{{ ' selected' if user.user_location and user.user_location.upper() == code else '' }}>{{ label }}</option>
+          {%- endfor %}
+        </select>
+        <button type="submit" class="ac-region-save">Save</button>
+        <button type="button" class="ac-region-cancel" onclick="toggleRegionForm(false)">Cancel</button>
+      </form>
+    </div>
   </div>
 
   <hr class="ac-rule">
@@ -224,6 +249,11 @@
   </div>
 
 </div>
+<script>
+function toggleRegionForm(show) {
+  document.getElementById('regionForm').style.display = show ? 'block' : 'none';
+}
+</script>
 {%- else %}
 <div class="ac-wrap ac-wall">
   <div class="ac-wall-head">Find your door.</div>

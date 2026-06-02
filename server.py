@@ -2674,6 +2674,29 @@ def get_user_location():
     return "global"
 
 
+# Region codes accepted for user_location — derived from supplier data + proximity matching logic.
+# Format: ISO country (+ "-" + sub-region where useful for tier-1 matching).
+VALID_REGIONS = [
+    ("CA-BC",  "British Columbia, Canada"),
+    ("CA-AB",  "Alberta, Canada"),
+    ("CA-ON",  "Ontario, Canada"),
+    ("US-CA",  "California, USA"),
+    ("US-WA",  "Washington, USA"),
+    ("US-OR",  "Oregon, USA"),
+    ("US-NY",  "New York, USA"),
+    ("AU-NSW", "New South Wales, Australia"),
+    ("AU-VIC", "Victoria, Australia"),
+    ("AU-WA",  "Western Australia"),
+    ("AU-QLD", "Queensland, Australia"),
+    ("AU-SA",  "South Australia"),
+    ("NZ",     "New Zealand"),
+    ("GB-LND", "London, UK"),
+    ("SG",     "Singapore"),
+    ("FR",     "France"),
+]
+_VALID_REGION_CODES = {code for code, _ in VALID_REGIONS}
+
+
 def _find_pairings_for_user_recipe(recipe_title, limit=3):
     """Return up to `limit` beverage pairings for a user kitchen recipe.
 
@@ -11959,7 +11982,24 @@ def auth_account():
         return _login_redirect()
     subscribed = request.args.get("subscribed") == "true"
     cancelled = request.args.get("cancelled") == "true"
-    return render_template("auth/account.html", user=user, subscribed=subscribed, cancelled=cancelled)
+    return render_template("auth/account.html", user=user, subscribed=subscribed,
+                           cancelled=cancelled, valid_regions=VALID_REGIONS)
+
+
+@app.route("/auth/account/region", methods=["POST"])
+def auth_account_region():
+    user = get_current_user()
+    if not user:
+        return _login_redirect()
+    loc = request.form.get("user_location", "").strip().upper()
+    if loc not in _VALID_REGION_CODES:
+        return redirect("/auth/account")
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("UPDATE users SET user_location = %s WHERE id = %s", (loc, user["id"]))
+    cur.close()
+    conn.close()
+    return redirect("/auth/account")
 
 
 # ─── Password reset + email verification routes ───────────────────────────────
