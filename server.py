@@ -12656,15 +12656,20 @@ def _resolve_ingredient_master_id(cur, name):
         return row[0] if isinstance(row, (list, tuple)) else row["ingredient_id"], True
 
     # 2. Substring containment (prefer foundational / shorter canonical names)
+    # Guard on the second arm: only allow "canonical contains search" when the
+    # search term is at least half the canonical's length.  Without this, a
+    # short generic term ("pasta", "egg", "oil") can claim a long branded name
+    # ("Gnocchi — Pasta d'Angelo") whose canonical merely contains it as a word.
     cur.execute("""
         SELECT id FROM ingredient_master
         WHERE %s LIKE '%%' || lower(canonical_name) || '%%'
-           OR lower(canonical_name) LIKE '%%' || %s || '%%'
+           OR (lower(canonical_name) LIKE '%%' || %s || '%%'
+               AND length(%s) * 2 >= length(canonical_name))
         ORDER BY
           CASE WHEN category LIKE 'foundational_%%' THEN 0 ELSE 1 END,
           length(canonical_name) ASC
         LIMIT 1
-    """, (n, n))
+    """, (n, n, n))
     row = cur.fetchone()
     if row:
         return row[0] if isinstance(row, (list, tuple)) else row["id"], True
