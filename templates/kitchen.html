@@ -300,11 +300,12 @@
     <div class="kmodal__eyebrow">▸ URL</div>
     <h2 class="kmodal__title" id="modal-url-title">Import a URL</h2>
     <p class="kmodal__lede">Paste a recipe URL — we'll fetch it and structure it.</p>
-    <form class="kmodal__form" method="post" action="/enhance">
+    <div class="kmodal__form">
       <label class="kmodal__label" for="url-input">Recipe URL</label>
-      <input id="url-input" class="kmodal__input" type="url" name="url" placeholder="https://…" required>
-      <button type="submit" class="kmodal__submit">Fetch and import →</button>
-    </form>
+      <input id="url-input" class="kmodal__input" type="url" name="url" placeholder="https://…">
+      <div id="url-status" class="kmodal__status" hidden></div>
+      <button type="button" class="kmodal__submit" id="btn-url">Fetch and import →</button>
+    </div>
   </div>
 
   {# SCAN A PAGE #}

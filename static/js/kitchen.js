@@ -103,6 +103,72 @@ var pdfExtracted = [];
     });
   }
 
+  // ── Import a URL — /api/import-url → /api/recipes (full pipeline) → redirect ──
+  var btnUrl = document.getElementById('btn-url');
+  if (btnUrl) {
+    btnUrl.addEventListener('click', function () {
+      var urlInput = document.getElementById('url-input');
+      var status = document.getElementById('url-status');
+      var url = (urlInput && urlInput.value || '').trim();
+      if (!url) {
+        status.textContent = 'Paste a URL first.';
+        status.classList.add('is-error');
+        status.hidden = false;
+        return;
+      }
+      btnUrl.disabled = true;
+      btnUrl.textContent = 'Fetching recipe…';
+      status.classList.remove('is-error');
+      status.hidden = true;
+
+      fetch('/api/import-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url })
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+        .then(function (res) {
+          if (!res.ok) throw new Error(res.data.error || 'Could not fetch that URL');
+          var recipe = res.data;
+          if ((!recipe.ingredients || recipe.ingredients.length === 0) &&
+              (!recipe.steps || recipe.steps.length === 0)) {
+            throw new Error("Couldn't read a recipe from that page — try a URL with a structured recipe");
+          }
+          btnUrl.textContent = 'Building your recipe…';
+          status.textContent = 'Page read — running enhancement…';
+          status.hidden = false;
+          var payload = {
+            title: recipe.title || 'Imported Recipe',
+            preamble: recipe.preamble || '',
+            tags: recipe.tags || [],
+            time: recipe.time || {},
+            servings: recipe.servings || [],
+            ingredients: recipe.ingredients || [],
+            steps: recipe.steps || [],
+            source: recipe.source || { name: '', address: url }
+          };
+          if (recipe._hero_b64) payload._hero_custom_b64 = recipe._hero_b64;
+          return fetch('/api/recipes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          })
+            .then(function (r2) { return r2.json().then(function (d) { return { ok: r2.ok, data: d }; }); })
+            .then(function (res2) {
+              if (!res2.ok) throw new Error(res2.data.error || 'Save failed');
+              window.location.href = '/recipe/' + res2.data.slug + '/edit';
+            });
+        })
+        .catch(function (err) {
+          status.textContent = err.message;
+          status.classList.add('is-error');
+          status.hidden = false;
+          btnUrl.disabled = false;
+          btnUrl.textContent = 'Fetch and import →';
+        });
+    });
+  }
+
   // ── Write from scratch — /api/recipes/new → redirect ──────────────────────
   var btnWrite = document.getElementById('btn-write');
   if (btnWrite) {
