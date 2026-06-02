@@ -738,8 +738,14 @@ select.haccp-input{padding:3px 7px}
         {% endfor %}
       {% else %}
         <div class="r6-ing-group">
+          {% set _ns = namespace(cur_grp='') %}
           {% for ing in ingredients %}
             {% if ing is mapping %}
+              {% set _grp = (ing.group or '') %}
+              {% if _grp and _grp != _ns.cur_grp %}
+                <div class="r6-ing-group-name">{{ _grp }}</div>
+                {% set _ns.cur_grp = _grp %}
+              {% endif %}
               <div class="r6-ing">
                 <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
                 <span class="r6-ing__name">{{ ing.name or ing.get('ingredient', '') }}</span>
@@ -806,8 +812,8 @@ select.haccp-input{padding:3px 7px}
       </div>
       <div class="r6-pillar__badge"><span class="r6-tier-chip r6-tier-chip--library">Library+</span></div>
     </div>
-    {% set qh = recipe.quality_hierarchy or [] %}
-    {% if gate_for_tier('library') == 'full_content' %}
+    {% set qh = recipe.quality_hierarchy if recipe.quality_hierarchy is iterable and recipe.quality_hierarchy is not string and recipe.quality_hierarchy is not mapping else [] %}
+    {% if is_owner or gate_for_tier('library') == 'full_content' %}
       {% if qh %}
         <table class="r6-table">
           <thead>

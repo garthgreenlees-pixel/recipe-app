@@ -120,6 +120,7 @@ var pdfExtracted = [];
       btnUrl.textContent = 'Fetching recipe…';
       status.classList.remove('is-error');
       status.hidden = true;
+      if (window.ProvenanceProcessing) ProvenanceProcessing.show({ messages: ['Fetching the page…', 'Building your recipe…', 'Running enhancement…'] });
 
       fetch('/api/import-url', {
         method: 'POST',
@@ -156,10 +157,12 @@ var pdfExtracted = [];
             .then(function (r2) { return r2.json().then(function (d) { return { ok: r2.ok, data: d }; }); })
             .then(function (res2) {
               if (!res2.ok) throw new Error(res2.data.error || 'Save failed');
+              if (window.ProvenanceProcessing) ProvenanceProcessing.hide();
               window.location.href = '/recipe/' + res2.data.slug + '/edit';
             });
         })
         .catch(function (err) {
+          if (window.ProvenanceProcessing) ProvenanceProcessing.hide();
           status.textContent = err.message;
           status.classList.add('is-error');
           status.hidden = false;

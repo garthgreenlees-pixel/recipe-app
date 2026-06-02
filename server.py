@@ -4402,6 +4402,7 @@ Rules:
 - Include ALL steps verbatim — do not rewrite, merge, or add steps
 - Use lowercase tags
 - source_book is always null for URL imports
+- Populate "group" with the section heading for each ingredient that belongs to a named section (e.g. "Marinade", "Spice blend", "For the cassava"); use "" if the recipe has no sections or the ingredient belongs to the unlabelled main list
 - Return ONLY valid JSON, no markdown fences
 
 Webpage text:
@@ -4824,6 +4825,12 @@ def create_recipe():
     if "method_steps" in data and "steps" not in data:
         raw = data["method_steps"]
         data["steps"] = _parse_steps_text(raw) if isinstance(raw, str) else raw
+    # Clean ingredient names — strip editorial refs, page citations, trailing punctuation
+    _ings = data.get("ingredients", [])
+    if isinstance(_ings, list):
+        for _ing in _ings:
+            if isinstance(_ing, dict) and _ing.get("name"):
+                _ing["name"] = _clean_ingredient_name(_ing["name"])
     recipes = load_recipes()
 
     recipe_uuid = str(uuid.uuid4()).upper()
@@ -5981,6 +5988,21 @@ def _cleanup_raw_text(text):
     return result.strip(), corrections
 
 
+def _clean_ingredient_name(name):
+    """Strip cookbook editorial refs, page citations, and trailing punctuation from ingredient names."""
+    import re as _re2
+    s = (name or "").strip()
+    # "see Yuca con Mojo [page 119]" / "(see Tips ...)" / "[page N]" / "(page N)"
+    s = _re2.sub(r'\s*[\[(]?see\s+[^\])\n]+[\])]?', '', s, flags=_re2.IGNORECASE).strip()
+    s = _re2.sub(r'\s*\[page\s+\d+\]', '', s, flags=_re2.IGNORECASE).strip()
+    s = _re2.sub(r'\s*\(page\s+\d+\)', '', s, flags=_re2.IGNORECASE).strip()
+    # trailing lone parenthetical that is just a measure echo e.g. " (2 tsp)" / "(optional)"
+    s = _re2.sub(r'\s*\(\s*\d[\d/\s]*\s*\w{1,5}\s*\)\s*$', '', s).strip()
+    # trailing commas / semicolons / stray whitespace
+    s = s.rstrip(',;').strip()
+    return s or name  # never return empty — fall back to original if over-stripped
+
+
 def _count_to_float(s):
     """Parse any count string to float: integer, decimal, 'a/b', or 'a b/c'."""
     s = (s or "").strip()
@@ -6175,7 +6197,9 @@ def _enhance_recipe_structure(title, ingredients_text, steps_text):
         'Return ONLY valid JSON — no markdown fences:\n'
         '{\n'
         '  "origin": "1–2 sentence geographic/historical placement",\n'
-        '  "quality_hierarchy": {"tier1": "...", "tier2": "...", "tier3": "..."},\n'
+        '  "quality_hierarchy": [\n'
+        '    {"ingredient": "name", "reserve": "best-quality option", "house": "everyday option", "swap_cost": "what you lose"}\n'
+        '  ],\n'
         '  "sensory_tests": [\n'
         '    {"sense": "visual|aroma|texture|taste|sound", "cue": "...", "fail_indicator": "..."}\n'
         '  ],\n'
