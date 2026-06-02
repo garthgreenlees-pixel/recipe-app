@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Close your seat — Provenance{% endblock %}
+
+{% block meta_robots %}noindex, nofollow{% endblock %}
+
+{% block styles %}
+.close-wrap {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+.close-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  margin-bottom: 1rem;
+}
+.close-heading {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-bottom: 1.25rem;
+}
+.close-body {
+  font-size: 0.9rem;
+  color: var(--charcoal-soft);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+}
+.close-body p { margin-bottom: 0.75rem; }
+.close-rule { border: none; border-top: 1px solid var(--line-soft); margin: 2rem 0; }
+.close-actions { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.close-btn {
+  padding: 10px 22px;
+  background: transparent;
+  border: 1px solid rgba(122,46,46,0.4);
+  border-radius: 4px;
+  color: var(--burgundy);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms;
+}
+.close-btn:hover { background: rgba(122,46,46,0.06); border-color: var(--burgundy); }
+.keep-link {
+  font-size: 0.85rem;
+  color: var(--warm-gray);
+  text-decoration: none;
+  transition: color 150ms;
+}
+.keep-link:hover { color: var(--charcoal); }
+{% endblock %}
+
+{% block content %}
+<div class="close-wrap">
+  <div class="close-eyebrow">Account</div>
+  <h1 class="close-heading">Close your seat?</h1>
+  <div class="close-body">
+    <p>This will end your membership and switch your seat off.</p>
+    <p>Your billing stops immediately. Any active subscription will be cancelled now, not at the end of the period.</p>
+    <p>Your account record is kept — nothing is deleted. To reopen, contact us and we'll restore it.</p>
+  </div>
+  <hr class="close-rule">
+  <div class="close-actions">
+    <form method="POST" action="/auth/account/close" style="margin:0">
+      <button type="submit" class="close-btn">Close my seat</button>
+    </form>
+    <a href="/auth/account" class="keep-link">← Keep my seat</a>
+  </div>
+</div>
+{% endblock %}

@@ -1156,6 +1156,7 @@ def init_db():
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
         "ALTER TABLE menus ADD COLUMN IF NOT EXISTS allergen_notes JSONB DEFAULT '{}'::jsonb",
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS has_atelier_addon BOOLEAN NOT NULL DEFAULT FALSE",
+        "ALTER TABLE users ADD COLUMN IF NOT EXISTS closed_at TIMESTAMP",
     ]:
         try:
             cur.execute(stmt)
@@ -11961,6 +11962,9 @@ def auth_login():
     if not user or not check_password_hash(user["password_hash"], password):
         return render_template("auth/login.html", error="Incorrect email or password.")
 
+    if user.get("closed_at"):
+        return render_template("auth/login.html", error="This seat is closed. Contact us to reopen it.")
+
     session.permanent = True
     session["user_id"] = user["id"]
     if request.form.get("remember_me") == "on":
@@ -12000,6 +12004,42 @@ def auth_account_region():
     cur.close()
     conn.close()
     return redirect("/auth/account")
+
+
+@app.route("/auth/account/close", methods=["GET"])
+def auth_account_close_confirm():
+    user = get_current_user()
+    if not user:
+        return _login_redirect()
+    return render_template("auth/close_confirmation.html", user=user)
+
+
+@app.route("/auth/account/close", methods=["POST"])
+def auth_account_close():
+    user = get_current_user()
+    if not user:
+        return _login_redirect()
+
+    # Cancel active Stripe subscription — wrap so a Stripe failure never leaves the
+    # account half-closed; the webhook will reconcile if needed.
+    sub_id = user.get("stripe_subscription_id")
+    if sub_id:
+        try:
+            stripe.Subscription.cancel(sub_id)
+        except Exception as e:
+            app.logger.warning("close-seat: Stripe cancel failed for sub %s: %s", sub_id, e)
+
+    # Mark closed and downgrade tier — keep the row and all data intact.
+    update_user(
+        user["id"],
+        closed_at=_dt.utcnow(),
+        subscription_tier="free",
+        subscription_status="inactive",
+        stripe_subscription_id=None,
+    )
+
+    session.clear()
+    return redirect("/auth/login?closed=1")
 
 
 # ─── Password reset + email verification routes ───────────────────────────────
