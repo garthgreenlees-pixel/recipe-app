@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Suggestion received — Provenance{% endblock %}
+
+{% block meta_robots %}noindex{% endblock %}
+
+{% block styles %}
+.ss-wrap { max-width: 580px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+.ss-back { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--warm-gray); text-decoration: none; margin-bottom: 2rem; transition: color 150ms; }
+.ss-back:hover { color: var(--charcoal); }
+.ss-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.75rem; }
+.ss-title { font-family: var(--serif); font-size: clamp(1.4rem, 4vw, 1.75rem); font-weight: 400; font-style: italic; color: var(--charcoal); line-height: 1.3; margin-bottom: 1rem; }
+.ss-rule { border: none; border-top: 1px solid var(--line-soft); margin: 1.75rem 0; }
+.ss-body { font-size: 0.9rem; color: var(--warm-gray); line-height: 1.75; margin-bottom: 2rem; }
+.ss-body strong { color: var(--charcoal-soft); font-weight: 500; }
+.ss-back-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); text-decoration: none; transition: opacity 150ms; }
+.ss-back-link:hover { opacity: 0.7; }
+{% endblock %}
+
+{% block content %}
+<div class="ss-wrap">
+
+  <a class="ss-back" href="{% if recipe_slug %}/recipe/{{ recipe_slug }}{% else %}/kitchen{% endif %}">
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    {% if recipe_slug %}Back to recipe{% else %}Back to kitchen{% endif %}
+  </a>
+
+  <span class="ss-eyebrow">Sourced by Provenance</span>
+  <h1 class="ss-title">Suggestion received.</h1>
+
+  <hr class="ss-rule">
+
+  <p class="ss-body">
+    Your suggestion for <strong>{{ supplier_name }}</strong> has been sent.
+    We'll review it and be in touch if we add it to Provenance.
+  </p>
+
+  <a class="ss-back-link" href="{% if recipe_slug %}/recipe/{{ recipe_slug }}{% else %}/kitchen{% endif %}">
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    {% if recipe_slug %}Back to recipe{% else %}Back to MyKitchen{% endif %}
+  </a>
+
+</div>
+{% endblock %}

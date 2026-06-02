@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Suggest a supplier — Provenance{% endblock %}
+
+{% block meta_robots %}noindex{% endblock %}
+
+{% block styles %}
+.ss-wrap { max-width: 580px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+.ss-back { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--warm-gray); text-decoration: none; margin-bottom: 2rem; transition: color 150ms; }
+.ss-back:hover { color: var(--charcoal); }
+.ss-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.75rem; }
+.ss-title { font-family: var(--serif); font-size: clamp(1.4rem, 4vw, 1.75rem); font-weight: 400; font-style: italic; color: var(--charcoal); line-height: 1.3; margin-bottom: 0.6rem; }
+.ss-subtitle { font-size: 0.88rem; color: var(--warm-gray); line-height: 1.7; margin-bottom: 2rem; }
+.ss-rule { border: none; border-top: 1px solid var(--line-soft); margin: 1.5rem 0; }
+.ss-field { margin-bottom: 1.25rem; }
+.ss-label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 0.45rem; }
+.ss-label .opt { font-size: 9px; color: var(--warm-gray-light); text-transform: none; letter-spacing: 0; margin-left: 5px; font-family: var(--sans); }
+.ss-input, .ss-textarea {
+  width: 100%; background: var(--cream-50); border: 1px solid var(--line-soft); border-radius: 4px;
+  padding: 10px 14px; font-family: var(--sans); font-size: 0.9rem; font-weight: 300;
+  color: var(--charcoal); outline: none; transition: border-color 150ms; -webkit-appearance: none;
+}
+.ss-input:focus, .ss-textarea:focus { border-color: var(--gold); }
+.ss-input::placeholder, .ss-textarea::placeholder { color: var(--warm-gray-light); }
+.ss-textarea { min-height: 88px; resize: vertical; line-height: 1.6; }
+.ss-submit {
+  display: inline-block; margin-top: 4px; padding: 11px 28px;
+  background: transparent; border: 1px solid rgba(201,168,76,0.4); border-radius: 4px;
+  cursor: pointer; font-family: var(--sans); font-size: 0.875rem; font-weight: 400;
+  color: var(--gold); letter-spacing: 0.03em; transition: background 150ms, border-color 150ms;
+}
+.ss-submit:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+.ss-error {
+  background: rgba(122,46,46,0.06); border: 1px solid rgba(122,46,46,0.2); border-radius: 4px;
+  padding: 10px 14px; margin-bottom: 1.25rem; font-size: 0.82rem; color: var(--burgundy);
+}
+{% endblock %}
+
+{% block content %}
+<div class="ss-wrap">
+
+  <a class="ss-back" href="{% if recipe_slug %}/recipe/{{ recipe_slug }}{% else %}/kitchen{% endif %}">
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    {% if recipe_slug %}Back to recipe{% else %}Back to kitchen{% endif %}
+  </a>
+
+  <span class="ss-eyebrow">Sourced by Provenance</span>
+  <h1 class="ss-title">
+    {% if recipe_title %}Suggesting a supplier for:<br>{{ recipe_title }}{% else %}Suggest a supplier.{% endif %}
+  </h1>
+  <p class="ss-subtitle">Every verified supplier in Provenance is real, accountable, and worthy of the kitchen. If you know one that belongs, tell us about them.</p>
+
+  {% if error %}
+  <div class="ss-error">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST" action="/suggest-supplier">
+    <input type="hidden" name="recipe_slug" value="{{ recipe_slug or '' }}">
+
+    <div class="ss-field">
+      <label class="ss-label" for="supplier_name">Supplier name</label>
+      <input class="ss-input" type="text" id="supplier_name" name="supplier_name" required
+             placeholder="e.g. Lekker Farms" autocomplete="organization">
+    </div>
+
+    <div class="ss-field">
+      <label class="ss-label" for="supplier_website">Website <span class="opt">optional</span></label>
+      <input class="ss-input" type="url" id="supplier_website" name="supplier_website"
+             placeholder="https://...">
+    </div>
+
+    <div class="ss-field">
+      <label class="ss-label" for="what_they_make">What they make <span class="opt">optional</span></label>
+      <textarea class="ss-textarea" id="what_they_make" name="what_they_make"
+                placeholder="Describe what they produce and why they belong in Provenance."></textarea>
+    </div>
+
+    <hr class="ss-rule">
+
+    <div class="ss-field">
+      <label class="ss-label" for="chef_name">Your name <span class="opt">optional</span></label>
+      <input class="ss-input" type="text" id="chef_name" name="chef_name"
+             placeholder="How you'd like to be addressed" autocomplete="name">
+    </div>
+
+    <div class="ss-field">
+      <label class="ss-label" for="chef_email">Your email <span class="opt">optional — for our reply</span></label>
+      <input class="ss-input" type="email" id="chef_email" name="chef_email"
+             placeholder="chef@kitchen.com" autocomplete="email">
+    </div>
+
+    <button class="ss-submit" type="submit">Send suggestion →</button>
+  </form>
+
+</div>
+{% endblock %}
