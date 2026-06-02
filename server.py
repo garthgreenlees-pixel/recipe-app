@@ -13629,44 +13629,79 @@ def ingredients_near_matches():
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
+        # Branch 1: canonical name matches full query (substring or trigram).
+        # Branch 2: alias_lower matches full query, returns linked canonical.
+        # UNION ALL + GROUP BY MAX(score) deduplicates when a row hits both branches.
         cur.execute("""
-            WITH q AS (
-                SELECT LOWER(SPLIT_PART(%s, ' ', 1)) AS first_word,
-                       LOWER(%s) AS full_query
-            )
-            SELECT m.id, m.canonical_name,
-                   ROUND(similarity(LOWER(m.canonical_name), q.full_query)::numeric, 3) AS score
-            FROM ingredient_master m, q
-            WHERE (
-                LOWER(m.canonical_name) LIKE '%%' || q.first_word || '%%'
-                OR similarity(LOWER(SPLIT_PART(m.canonical_name, ' ', 1)), q.first_word) > 0.5
-            )
-              AND NOT EXISTS (
-                SELECT 1 FROM ingredient_duplicate_dismissals d
-                WHERE d.user_id = %s
-                  AND (d.master_id_a = m.id OR d.master_id_b = m.id)
-              )
-            ORDER BY score DESC
+            WITH q AS (SELECT LOWER(%s) AS full_q)
+            SELECT id, canonical_name, ROUND(MAX(score)::numeric, 3) AS score
+            FROM (
+                SELECT m.id, m.canonical_name,
+                       similarity(LOWER(m.canonical_name), q.full_q) AS score
+                FROM ingredient_master m, q
+                WHERE (
+                    LOWER(m.canonical_name) LIKE '%%' || q.full_q || '%%'
+                    OR similarity(LOWER(m.canonical_name), q.full_q) > 0.3
+                )
+                  AND NOT EXISTS (
+                    SELECT 1 FROM ingredient_duplicate_dismissals d
+                    WHERE d.user_id = %s
+                      AND (d.master_id_a = m.id OR d.master_id_b = m.id)
+                  )
+                UNION ALL
+                SELECT m.id, m.canonical_name,
+                       similarity(ia.alias_lower, q.full_q) AS score
+                FROM ingredient_aliases ia
+                JOIN ingredient_master m ON m.id = ia.ingredient_id
+                CROSS JOIN q
+                WHERE ia.ingredient_id IS NOT NULL
+                  AND (
+                      ia.alias_lower LIKE q.full_q || '%%'
+                      OR ia.alias_lower LIKE '%%' || q.full_q || '%%'
+                      OR similarity(ia.alias_lower, q.full_q) > 0.3
+                  )
+                  AND NOT EXISTS (
+                    SELECT 1 FROM ingredient_duplicate_dismissals d
+                    WHERE d.user_id = %s
+                      AND (d.master_id_a = m.id OR d.master_id_b = m.id)
+                  )
+            ) sub
+            GROUP BY id, canonical_name
+            ORDER BY score DESC, canonical_name
             LIMIT 3
-        """, (name, name, user_id))
+        """, (name, user_id, user_id))
         rows = cur.fetchall()
         matches = [{"id": r["id"], "canonical_name": r["canonical_name"],
                     "score": float(r["score"])} for r in rows]
     except Exception:
-        # pg_trgm unavailable — fall back to ILIKE substring
+        # pg_trgm unavailable — fall back to ILIKE substring (alias branch included)
         app.logger.warning("near-matches: pg_trgm unavailable, using ILIKE fallback")
         cur.execute("""
             SELECT id, canonical_name, 0.5 AS score
-            FROM ingredient_master
-            WHERE LOWER(canonical_name) LIKE %s
-              AND NOT EXISTS (
-                SELECT 1 FROM ingredient_duplicate_dismissals d
-                WHERE d.user_id = %s
-                  AND (d.master_id_a = ingredient_master.id OR d.master_id_b = ingredient_master.id)
-              )
+            FROM (
+                SELECT m.id, m.canonical_name
+                FROM ingredient_master m
+                WHERE LOWER(m.canonical_name) LIKE %s
+                  AND NOT EXISTS (
+                    SELECT 1 FROM ingredient_duplicate_dismissals d
+                    WHERE d.user_id = %s
+                      AND (d.master_id_a = m.id OR d.master_id_b = m.id)
+                  )
+                UNION
+                SELECT m.id, m.canonical_name
+                FROM ingredient_aliases ia
+                JOIN ingredient_master m ON m.id = ia.ingredient_id
+                WHERE ia.alias_lower LIKE %s
+                  AND ia.ingredient_id IS NOT NULL
+                  AND NOT EXISTS (
+                    SELECT 1 FROM ingredient_duplicate_dismissals d
+                    WHERE d.user_id = %s
+                      AND (d.master_id_a = m.id OR d.master_id_b = m.id)
+                  )
+            ) sub
             ORDER BY length(canonical_name) ASC
             LIMIT 3
-        """, (f"%{name.lower()}%", user_id))
+        """, (f"%{name.lower()}%", user_id, f"%{name.lower()}%", user_id))
         rows = cur.fetchall()
         matches = [{"id": r["id"], "canonical_name": r["canonical_name"],
                     "score": float(r["score"])} for r in rows]
