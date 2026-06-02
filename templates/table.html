@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Provenance Table — Dinner Zero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream-50:#FAF7F1;--cream-200:#EAE2CE;
+  --line:#C9C0B0;--line-soft:#DDD3BE;
+  --ink:#1F1B16;--ink-soft:#5A5246;--ink-faint:#8C8473;
+  --gold:#B89343;--gold-deep:#9A7A33;
+  --display:'Playfair Display',Georgia,serif;
+  --body:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono','Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--body);font-weight:300;background:#E8E2D4;color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased;padding:3rem 1rem;}
+.topbar{max-width:680px;margin:0 auto 1.5rem;}
+.topbar a{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-deep);text-decoration:none;}
+.topbar a:hover{color:var(--ink);}
+.menu{max-width:680px;margin:0 auto;background:var(--cream-50);padding:5.5rem 4.75rem 4rem;box-shadow:0 1px 44px rgba(31,27,22,0.11);position:relative;}
+.menu::before{content:"";position:absolute;inset:1.1rem;border:1px solid var(--line-soft);pointer-events:none;}
+.mast{text-align:center;padding-bottom:2.6rem;border-bottom:1px solid var(--line);}
+.mast .mark{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.36em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:1.9rem;}
+.mast h1{font-family:var(--display);font-weight:500;font-size:2.9rem;line-height:1.02;letter-spacing:-0.01em;margin-bottom:0.55rem;}
+.mast .sub{font-family:var(--display);font-style:italic;font-weight:400;font-size:1.15rem;color:var(--ink-soft);margin-bottom:1.7rem;}
+.mast .meta{font-family:var(--mono);font-size:0.59rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-faint);line-height:2.1;}
+.intro{text-align:center;padding:2.4rem 0 0.4rem;}
+.intro p{font-family:var(--display);font-style:italic;font-size:1.02rem;color:var(--ink-soft);max-width:46ch;margin:0 auto;line-height:1.6;}
+.prologue{text-align:center;padding:2.4rem 0;border-bottom:1px solid var(--line-soft);}
+.prologue .label,.turn .label{font-family:var(--mono);font-size:0.57rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:1rem;}
+.prologue h2{font-family:var(--display);font-weight:500;font-size:1.5rem;margin-bottom:0.85rem;}
+.prologue p{font-size:0.9rem;color:var(--ink-soft);max-width:44ch;margin:0 auto 1rem;}
+.course{padding:2.6rem 0;border-bottom:1px solid var(--line-soft);text-align:center;}
+.course .num{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.5rem;}
+.course .place{font-family:var(--display);font-weight:500;font-size:2.05rem;line-height:1;margin-bottom:0.3rem;}
+.course .way{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:1.5rem;}
+.course .dish{font-family:var(--display);font-style:italic;font-weight:500;font-size:1.25rem;margin-bottom:0.55rem;}
+.course .desc{font-size:0.89rem;color:var(--ink-soft);max-width:46ch;margin:0 auto 1.4rem;}
+.pours{max-width:34rem;margin:0 auto;}
+.pour-row{display:flex;gap:1rem;align-items:baseline;justify-content:center;padding:0.35rem 0;}
+.pour-tag{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-deep);width:8.5rem;text-align:right;flex-shrink:0;}
+.pour-txt{font-size:0.85rem;color:var(--ink);text-align:left;max-width:22rem;}
+.pour-txt b{font-weight:500;}
+.rite{font-family:var(--display);font-style:italic;font-size:0.85rem;color:var(--gold-deep);max-width:42ch;margin:1rem auto 0;}
+.turn{padding:3rem 0 2.6rem;text-align:center;border-top:2px solid var(--gold);}
+.turn .dish{font-family:var(--display);font-weight:500;font-size:1.75rem;margin-bottom:0.85rem;}
+.turn p{font-size:0.91rem;color:var(--ink-soft);max-width:48ch;margin:0 auto;}
+.landing{text-align:center;padding-top:2.6rem;border-top:1px solid var(--line);}
+.landing p{font-family:var(--display);font-style:italic;font-size:1rem;color:var(--ink-soft);max-width:48ch;margin:0 auto 1.3rem;}
+.ack{font-size:0.82rem;color:var(--ink-soft);max-width:46ch;margin:0 auto 1.6rem;line-height:1.65;font-style:normal;}
+.foot{font-family:var(--mono);font-size:0.54rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-faint);line-height:2.1;}
+@media print{body{background:#fff;padding:0;}.menu{box-shadow:none;max-width:none;}.topbar{display:none;}}
+@media(max-width:600px){.menu{padding:3rem 1.7rem;}.mast h1{font-size:2.2rem;}.pour-row{flex-direction:column;gap:0.1rem;align-items:center;}.pour-tag{width:auto;text-align:center;}.pour-txt{text-align:center;}}
+</style>
+</head>
+<body>
+  <div class="topbar"><a href="/">&larr; Provenance</a></div>
+  <div class="menu">
+  <div class="mast">
+    <div class="mark">The Provenance Table &middot; Dinner Zero</div>
+    <h1>The Pacific&nbsp;Migration&nbsp;Trail</h1>
+    <div class="sub">Eaten in one night &mdash; Taiwan to Aotearoa</div>
+    <div class="meta">
+      Sixteen seats &middot; one table &middot; seven stops<br>
+      Farrer Cove &middot; Indian Arm &mdash; s&#601;l&#x0313;ilw&#x0313;&#601;t<br>
+      Arriving by waka from Rocky Point Pier, Port Moody<br>
+      A canon dinner &middot; executive chef Garth Greenlees
+    </div>
+  </div>
+  <div class="intro">
+    <p>Five thousand years and four thousand miles of open water, sailed in the order it was first made. One fire is struck at the first stop and tended at the centre of the table all night &mdash; the same fire that opens the earth at the last. Each pour is offered twice: the drink the voyagers carried, and its counterpart from the cellar.</p>
+  </div>
+  <div class="prologue">
+    <div class="label">Prologue &middot; The Crossing</div>
+    <h2>The Embarkation</h2>
+    <p>Guests cross the water to the landing by waka, as the voyagers came &mdash; by canoe, from the sea. At the shore the fire is struck. A bound bundle waits at each place: taro slip, breadfruit cutting, a banked coal &mdash; the cargo a people would die to keep alive.</p>
+    <div class="pours"><div class="pour-row"><span class="pour-tag">To begin</span><span class="pour-txt">Green coconut, opened at the table and shared &mdash; the water that kept people alive on the ocean</span></div></div>
+  </div>
+  <div class="course">
+    <div class="num">Stop One</div><div class="place">Taiwan</div>
+    <div class="way">Origin &middot; where the trail begins</div>
+    <div class="dish">Smoke &amp; the First Ferment</div>
+    <div class="desc">Highland-smoked wild boar, shaved over millet; a foraged bitter green; cured pork aged in the manner of the Bunun and Atayal. The larder before the ocean &mdash; smoke as the first refrigeration, ferment as the first chemistry.</div>
+    <div class="pours">
+      <div class="pour-row"><span class="pour-tag">The carried pour</span><span class="pour-txt"><b>Warm millet rice wine</b> &mdash; the oldest deliberate ferment on the trail</span></div>
+      <div class="pour-row"><span class="pour-tag">The counterpart</span><span class="pour-txt"><b>Kimoto junmai sake</b>, served warm &mdash; the same wild rice-ferment lineage, refined a thousand years on</span></div>
+    </div>
+    <div class="rite">Poured to each guest in turn, eldest first &mdash; the first ferment honoured as the elder it is.</div>
+  </div>
+  <div class="course">
+    <div class="num">Stop Two</div><div class="place">The Philippines</div>
+    <div class="way">The first branching &middot; the islands fill</div>
+    <div class="dish">Kinilaw, Cured at the Table</div>
+    <div class="desc">Line-caught fish cut to order and cured before you in cane vinegar and calamansi, finished with coconut and a breath of chilli &mdash; the acid cure that predates ceviche by centuries. The raw-fish thread begins here.</div>
+    <div class="pours">
+      <div class="pour-row"><span class="pour-tag">The carried pour</span><span class="pour-txt"><b>Tuba</b> &mdash; fresh coconut palm wine, from bamboo</span></div>
+      <div class="pour-row"><span class="pour-tag">The counterpart</span><span class="pour-txt"><b>Skin-contact white</b>, high-acid and saline &mdash; cutting the coconut, lifting the cure</span></div>
+    </div>
+    <div class="rite">No cutlery is set. Eaten kamayan, bare-handed off the leaf &mdash; the oldest table manners in the Pacific.</div>
+  </div>
+  <div class="course">
+    <div class="num">Stop Three</div><div class="place">Indonesia</div>
+    <div class="way">The crossroads &middot; the fermentation heart</div>
+    <div class="dish">Rendang &amp; the Bloom</div>
+    <div class="desc">Beef cooked down in coconut and spice until it is dark and nearly eternal &mdash; the travel food of the migrating Minangkabau &mdash; beside a sliver of grilled tempeh, the living ferment shown whole.</div>
+    <div class="pours">
+      <div class="pour-row"><span class="pour-tag">The carried pour</span><span class="pour-txt"><b>Brem</b> &mdash; Balinese fermented rice wine</span></div>
+      <div class="pour-row"><span class="pour-tag">The counterpart</span><span class="pour-txt"><b>Old-vine Grenache</b> or a warm-climate Syrah &mdash; weight and spice to meet the rendang</span></div>
+    </div>
+    <div class="rite">A censer of whole Maluku clove and nutmeg is lit and carried around the table &mdash; the spice the world crossed oceans to seize, passed over each guest.</div>
+  </div>
+  <div class="course">
+    <div class="num">Stop Four</div><div class="place">Melanesia</div>
+    <div class="way">The deep water &middot; Fiji &middot; the open ocean</div>
+    <div class="dish">Kokoda &amp; the Lovo</div>
+    <div class="desc">Fijian raw fish in coconut cream and lime, then a single parcel drawn from the lovo &mdash; the earth oven set into the ground, the same method as the fire on the table, the technology that will end the night.</div>
+    <div class="pours">
+      <div class="pour-row"><span class="pour-tag">The ceremony</span><span class="pour-txt"><b>Kava &mdash; the yaqona rite</b>, the tanoa bowl, the bound order of service, the single breath</span></div>
+      <div class="pour-row"><span class="pour-tag">The counterpart</span><span class="pour-txt"><b>Blanc de blancs</b>, brut nature &mdash; clean bubbles against the coconut fat, a still room and a rising glass</span></div>
+    </div>
+    <div class="rite">The room goes still and formal. The oldest beverage ceremony on the trail, observed in earnest.</div>
+  </div>
+  <div class="course">
+    <div class="num">Stop Five</div><div class="place">Polynesia</div>
+    <div class="way">The hub &middot; Tonga &middot; Samoa &middot; the still point</div>
+    <div class="dish">Lu Pulu &amp; the Leaf</div>
+    <div class="desc">Taro leaf and coconut cream cooked slow into the savoury heart of the trail &mdash; deep and restful after the ceremony. The hub is where the migration paused a thousand years; the plate is a pause.</div>
+    <div class="pours">
+      <div class="pour-row"><span class="pour-tag">The carried pour</span><span class="pour-txt"><b>&#699;Otai</b> &mdash; chilled pounded fruit and coconut</span></div>
+      <div class="pour-row"><span class="pour-tag">The counterpart</span><span class="pour-txt"><b>Aged Riesling</b>, off-dry &mdash; the lift and length to carry the leaf and coconut</span></div>
+    </div>
+    <div class="rite">The lights fall to dark; only the table fire burns. The star path is spoken &mdash; the navigation that launched the two greatest voyages in human history from this exact point.</div>
+  </div>
+  <div class="course">
+    <div class="num">Stop Six</div><div class="place">Hawai&#699;i</div>
+    <div class="way">The fulcrum &middot; ancient larder &amp; melting pot</div>
+    <div class="dish">Two Plates, Two Eras</div>
+    <div class="desc">First the ancient &mdash; poke with limu and roasted kukui, the raw-fish thread at its northern reach. Then, seconds later, the melting pot: one exact bite of the plantation century, where five migrations meet on a single plate.</div>
+    <div class="pours">
+      <div class="pour-row"><span class="pour-tag">The carried pour</span><span class="pour-txt"><b>&#699;Awa</b> &mdash; the northern dialect of the root, served simply now the rite is behind us</span></div>
+      <div class="pour-row"><span class="pour-tag">The counterpart</span><span class="pour-txt"><b>Junmai ginjo sake</b>, chilled, for the ancient bite; an ice-cold lager for the camps</span></div>
+    </div>
+    <div class="rite">Ancient and modern land seconds apart &mdash; two thousand years of change tasted in one mouth.</div>
+  </div>
+  <div class="course">
+    <div class="num">Stop Seven</div><div class="place">Aotearoa</div>
+    <div class="way">Journey&rsquo;s end &middot; the earth is opened</div>
+    <div class="dish">From the H&#257;ng&#299;</div>
+    <div class="desc">The earth oven, buried before you arrived, is unearthed at the table &mdash; the lid of earth lifted, the steam released, kaimoana and the food of the cold country drawn smoking from the ground. The same fire struck at Taiwan, opening the soil at the end of the world.</div>
+    <div class="pours">
+      <div class="pour-row"><span class="pour-tag">The carried pour</span><span class="pour-txt"><b>Native botanical infusion</b> &mdash; kawakawa, horopito, m&#257;nuka &mdash; poured hot from the steam of the oven</span></div>
+      <div class="pour-row"><span class="pour-tag">The counterpart</span><span class="pour-txt"><b>Central Otago Pinot Noir</b> &mdash; the southernmost great red on earth, for the southernmost plate on the trail</span></div>
+    </div>
+    <div class="rite">Silence as the earth is lifted. The whole table leans in.</div>
+  </div>
+  <div class="turn">
+    <div class="label">The Turn</div>
+    <div class="dish">The K&#363;mara</div>
+    <p>One last thing. Everything tonight came <em>down</em> the trail &mdash; west, then south, out of Taiwan. This did not. The k&#363;mara is a New World plant, carried home across the Pacific by these same voyagers, who reached the Americas and returned, centuries before any European crossed this ocean. The trail you have just travelled ran both ways. The map was never a line &mdash; it was a web, and these were the people who wove it.</p>
+  </div>
+  <div class="landing">
+    <p>The fire, lit at Taiwan and carried all night, is let go out. A last pour of the millet wine, so the end rhymes with the beginning. You have travelled the longest road in human history, and come ashore.</p>
+    <p class="ack">We gather on the land and water of the Tsleil-Waututh &mdash; the people of the inlet &mdash; whose name is the name of this water, s&#601;l&#x0313;ilw&#x0313;&#601;t, and who have voyaged and fed themselves from it since long before the first of tonight&rsquo;s stops was sailed. We eat here with their welcome and our thanks.</p>
+    <div class="foot">
+      The Provenance Table &middot; Dinner Zero<br>
+      Every dish traces to an entry in the Provenance canon<br>
+      Pacific Migration Trail &middot; Taiwan &#8594; Aotearoa
+    </div>
+  </div>
+  </div>
+</body>
+</html>

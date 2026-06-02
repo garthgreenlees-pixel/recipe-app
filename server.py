@@ -1416,6 +1416,11 @@ def kitchen():
     )
 
 
+@app.route("/table")
+def table():
+    return render_template("table.html")
+
+
 def _normalize_member_recipe(kitchen_recipe):
     """Return a dict that matches the field names recipe.html expects.
 
