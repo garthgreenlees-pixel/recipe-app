@@ -551,7 +551,7 @@ def p1000_recipes():
     offset = (page - 1) * per_page
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cols = "id, name, slug, category, section_slug, origin, description, flavour_context, trigger_keywords, authority_tier, image_url, thumb_url"
+    cols = "id, name, slug, category, section_slug, facet_technique, origin, description, flavour_context, trigger_keywords, authority_tier, image_url, thumb_url"
     if q:
         cur.execute(
             f"SELECT {cols} FROM technique_references"
@@ -1157,6 +1157,7 @@ def init_db():
         "ALTER TABLE menus ADD COLUMN IF NOT EXISTS allergen_notes JSONB DEFAULT '{}'::jsonb",
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS has_atelier_addon BOOLEAN NOT NULL DEFAULT FALSE",
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS closed_at TIMESTAMP",
+        "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS facet_technique TEXT",
     ]:
         try:
             cur.execute(stmt)
@@ -1742,7 +1743,7 @@ def recipes_page():
             conn = get_db()
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute(
-                "SELECT id, name, slug, category, section_slug, image_url, thumb_url"
+                "SELECT id, name, slug, category, section_slug, facet_technique, image_url, thumb_url"
                 " FROM technique_references"
                 " WHERE category LIKE %s ORDER BY name LIMIT 24",
                 ("Provenance 1000%",)

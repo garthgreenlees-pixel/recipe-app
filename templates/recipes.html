@@ -202,8 +202,23 @@
         <option value="greek-and-levantine">Greek and Levantine</option>
         <option value="cross-canon">Cross-Canon</option>
       </select>
-      <select class="filter-select" id="facetSelect" disabled title="Facet tagging coming soon">
-        <option>Facet — coming soon</option>
+      <select class="filter-select" id="facetSelect" onchange="onFacetFilter()">
+        <option value="">All techniques</option>
+        <option value="bake">Bake</option>
+        <option value="boil-simmer">Boil / Simmer</option>
+        <option value="braise">Braise</option>
+        <option value="confit">Confit</option>
+        <option value="cure">Cure</option>
+        <option value="emulsion">Emulsion</option>
+        <option value="ferment">Ferment</option>
+        <option value="fry">Fry</option>
+        <option value="grill">Grill</option>
+        <option value="raw">Raw</option>
+        <option value="roast">Roast</option>
+        <option value="saute">Sauté</option>
+        <option value="smoke">Smoke</option>
+        <option value="sous-vide">Sous Vide</option>
+        <option value="steam">Steam</option>
       </select>
       <span class="count-label" id="countLabel"></span>
     </div>
@@ -257,10 +272,12 @@
   var searchTerm = _urlParams.get('q') || '';
   var cuisineFilter = _urlParams.get('cuisine') || '';
   var sectionFilter = _urlParams.get('section') || '';
+  var facetFilter = _urlParams.get('facet') || '';
   var _searchTimer = null;
   // Pre-fill inputs from URL
   if (searchTerm) { var _si = document.getElementById('searchInput'); if (_si) _si.value = searchTerm; }
   if (sectionFilter) { var _ss = document.getElementById('sectionSelect'); if (_ss) _ss.value = sectionFilter; }
+  if (facetFilter) { var _fs = document.getElementById('facetSelect'); if (_fs) _fs.value = facetFilter; }
 
   // ── Tab switching ──────────────────────────────────────────────
   window.switchTab = function(tab) {
@@ -299,6 +316,12 @@
     applyFilters();
   };
 
+  window.onFacetFilter = function() {
+    facetFilter = document.getElementById('facetSelect').value;
+    recipePage = 0;
+    applyFilters();
+  };
+
   function applyFilters() {
     filteredRecipes = allRecipes.filter(function(r) {
       var matchSearch = !searchTerm ||
@@ -306,7 +329,8 @@
         (r.category || '').toLowerCase().includes(searchTerm);
       var matchCuisine = !cuisineFilter || r.category === cuisineFilter;
       var matchSection = !sectionFilter || r.section_slug === sectionFilter;
-      return matchSearch && matchCuisine && matchSection;
+      var matchFacet = !facetFilter || r.facet_technique === facetFilter;
+      return matchSearch && matchCuisine && matchSection && matchFacet;
     });
     renderRecipes();
     updateCount();
@@ -315,6 +339,7 @@
     if (searchTerm) params.set('q', searchTerm);
     if (cuisineFilter) params.set('cuisine', cuisineFilter);
     if (sectionFilter) params.set('section', sectionFilter);
+    if (facetFilter) params.set('facet', facetFilter);
     var qs = params.toString();
     history.pushState({}, '', qs ? '/recipes?' + qs : '/recipes');
   }
@@ -463,7 +488,7 @@
       });
       filteredRecipes = allRecipes.slice();
       buildCuisineFilter(); // also pre-applies cuisineFilter from URL
-      if (searchTerm || cuisineFilter || sectionFilter) {
+      if (searchTerm || cuisineFilter || sectionFilter || facetFilter) {
         applyFilters();
       } else {
         renderRecipes();
