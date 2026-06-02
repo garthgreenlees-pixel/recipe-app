@@ -2477,7 +2477,7 @@ _REGION_DROP = {'wholesale', 'nationwide_shipping'}
 _COUNTRY_MAP = {
     'US': 'United States', 'CA': 'Canada', 'UK': 'United Kingdom',
     'GB': 'United Kingdom', 'NZ': 'New Zealand', 'AU': 'Australia',
-    'SG': 'Singapore', 'FR': 'France', 'ID': 'Indonesia',
+    'SG': 'Singapore', 'FR': 'France', 'ID': 'Indonesia', 'JP': 'Japan',
 }
 
 def _normalise_supplier_regions(service_region, country=None):
@@ -2695,6 +2695,7 @@ VALID_REGIONS = [
     ("GB-LND", "London, UK"),
     ("SG",     "Singapore"),
     ("FR",     "France"),
+    ("JP",     "Japan"),
 ]
 _VALID_REGION_CODES = {code for code, _ in VALID_REGIONS}
 
