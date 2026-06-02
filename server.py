@@ -3855,7 +3855,7 @@ def _parse_ingredient_line(line):
              "milliliters", "milliliter", "ml", "liters", "liter", "l",
              "pinch", "dash", "handful", "splash", "drop", "drops", "cloves", "clove",
              "stick", "sticks", "slice", "slices", "can", "cans", "bunch", "bunches"]
-    num_pat = _re.compile(r'^\s*(\d+(?:\s+\d+/\d+)?(?:\.\d+)?|\d+/\d+)\s*')
+    num_pat = _re.compile(r'^\s*(\d+/\d+|\d+(?:\s+\d+/\d+)?(?:\.\d+)?)\s*')
     m = num_pat.match(line)
     count, rest = ("", line)
     if m:
@@ -4273,13 +4273,12 @@ def _jsonld_to_recipe(ld):
     """Convert a JSON-LD Recipe object to our app's recipe format."""
     ingredients = []
     for ing_str in (ld.get("recipeIngredient") or []):
-        ingredients.append({
-            "count": "",
-            "unit": "",
-            "name": str(ing_str).strip(),
-            "info": "",
-            "group": "",
-        })
+        parsed = _parse_ingredient_line(str(ing_str).strip())
+        if parsed:
+            parsed["group"] = ""
+            ingredients.append(parsed)
+        else:
+            ingredients.append({"count": "", "unit": "", "name": str(ing_str).strip(), "info": "", "group": ""})
 
     steps = []
     raw_steps = ld.get("recipeInstructions") or []
@@ -5982,6 +5981,21 @@ def _cleanup_raw_text(text):
     return result.strip(), corrections
 
 
+def _count_to_float(s):
+    """Parse any count string to float: integer, decimal, 'a/b', or 'a b/c'."""
+    s = (s or "").strip()
+    try:
+        from fractions import Fraction
+        if " " in s and "/" in s:
+            whole, frac = s.split(" ", 1)
+            return float(whole) + float(Fraction(frac))
+        if "/" in s:
+            return float(Fraction(s))
+        return float(s)
+    except (ValueError, TypeError, ZeroDivisionError):
+        return None
+
+
 def _convert_to_metric(ingredients):
     """Convert imperial measurements to metric-primary with imperial in parens.
     Returns (converted_ingredients, source_units_raw, quality_warnings)."""
@@ -6001,8 +6015,8 @@ def _convert_to_metric(ingredients):
 
         if unit in UNIT_CONVERSIONS:
             metric_unit, factor = UNIT_CONVERSIONS[unit]
-            try:
-                count_val = float(count_str)
+            count_val = _count_to_float(count_str)
+            if count_val is not None:
                 metric_val = count_val * factor
                 rounded = round(metric_val / 5) * 5 if metric_val > 20 else round(metric_val, 1)
                 imperial_str = f"{count_str} {unit}"
@@ -6011,8 +6025,6 @@ def _convert_to_metric(ingredients):
                 existing_info = new_ing.get('info', '') or ''
                 new_ing['info'] = (f"{existing_info} ({imperial_str})".strip())
                 has_imperial = True
-            except (ValueError, TypeError):
-                pass
         elif unit in ('g', 'kg', 'ml', 'l', 'cl', 'dl'):
             has_metric = True
 
