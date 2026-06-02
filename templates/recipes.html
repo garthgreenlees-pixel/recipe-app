@@ -45,7 +45,7 @@
 }
 .search-input::placeholder{color:var(--stone)}
 .search-input:focus{border-color:var(--gold-border)}
-.cuisine-select{
+.filter-select{
   padding:0.6rem 2rem 0.6rem 0.85rem;
   background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%236B6962'/%3E%3C/svg%3E") no-repeat right 0.7rem center;
   border:1px solid var(--border);color:var(--smoke);
@@ -53,8 +53,12 @@
   cursor:pointer;outline:none;transition:border-color 180ms;
   appearance:none;-webkit-appearance:none;
 }
-.cuisine-select:focus{border-color:var(--gold-border)}
-.cuisine-select option{background:#111;text-transform:none;letter-spacing:0}
+.filter-select:focus{border-color:var(--gold-border)}
+.filter-select option{background:#111;text-transform:none;letter-spacing:0}
+.filter-select:disabled{opacity:0.35;cursor:not-allowed;background-image:none}
+/* keep old alias for any lingering references */
+.cuisine-select{padding:0.6rem 2rem 0.6rem 0.85rem;border:1px solid var(--border);color:var(--smoke);font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background:var(--surface)}
+.facet-note{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--stone);white-space:nowrap;opacity:0.55}
 .count-label{
   font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
   text-transform:uppercase;color:var(--stone);white-space:nowrap;
@@ -183,8 +187,23 @@
         <input type="text" class="search-input" id="searchInput" placeholder="Search recipes, techniques, drinks…" oninput="onSearchDebounced(); acQuery(this.value)" onkeydown="acKeydown(event)" autocomplete="off">
         <div class="ac-dropdown" id="acDropdown"></div>
       </div>
-      <select class="cuisine-select" id="cuisineSelect" onchange="onCuisineFilter()">
+      <select class="filter-select" id="cuisineSelect" onchange="onCuisineFilter()">
         <option value="">All cuisines</option>
+      </select>
+      <select class="filter-select" id="sectionSelect" onchange="onSectionFilter()">
+        <option value="">All sections</option>
+        <option value="seasonal">Seasonal</option>
+        <option value="viral">Viral</option>
+        <option value="pantry">Pantry</option>
+        <option value="transcendent">Transcendent</option>
+        <option value="technique-showcase">Technique Showcase</option>
+        <option value="vegan">Vegan</option>
+        <option value="gluten-free">Gluten-Free</option>
+        <option value="greek-and-levantine">Greek and Levantine</option>
+        <option value="cross-canon">Cross-Canon</option>
+      </select>
+      <select class="filter-select" id="facetSelect" disabled title="Facet tagging coming soon">
+        <option>Facet — coming soon</option>
       </select>
       <span class="count-label" id="countLabel"></span>
     </div>
@@ -237,9 +256,11 @@
   var _urlParams = new URLSearchParams(window.location.search);
   var searchTerm = _urlParams.get('q') || '';
   var cuisineFilter = _urlParams.get('cuisine') || '';
+  var sectionFilter = _urlParams.get('section') || '';
   var _searchTimer = null;
-  // Pre-fill search input from URL
+  // Pre-fill inputs from URL
   if (searchTerm) { var _si = document.getElementById('searchInput'); if (_si) _si.value = searchTerm; }
+  if (sectionFilter) { var _ss = document.getElementById('sectionSelect'); if (_ss) _ss.value = sectionFilter; }
 
   // ── Tab switching ──────────────────────────────────────────────
   window.switchTab = function(tab) {
@@ -249,6 +270,8 @@
     document.getElementById('tabRecipes').className = 'tab-btn' + (tab === 'recipes' ? ' active' : '');
     document.getElementById('tabDrinks').className = 'tab-btn' + (tab === 'drinks' ? ' active' : '');
     document.getElementById('cuisineSelect').style.display = tab === 'recipes' ? '' : 'none';
+    document.getElementById('sectionSelect').style.display = tab === 'recipes' ? '' : 'none';
+    document.getElementById('facetSelect').style.display = tab === 'recipes' ? '' : 'none';
     updateCount();
   };
 
@@ -270,13 +293,20 @@
     applyFilters();
   };
 
+  window.onSectionFilter = function() {
+    sectionFilter = document.getElementById('sectionSelect').value;
+    recipePage = 0;
+    applyFilters();
+  };
+
   function applyFilters() {
     filteredRecipes = allRecipes.filter(function(r) {
       var matchSearch = !searchTerm ||
         r.name.toLowerCase().includes(searchTerm) ||
         (r.category || '').toLowerCase().includes(searchTerm);
       var matchCuisine = !cuisineFilter || r.category === cuisineFilter;
-      return matchSearch && matchCuisine;
+      var matchSection = !sectionFilter || r.section_slug === sectionFilter;
+      return matchSearch && matchCuisine && matchSection;
     });
     renderRecipes();
     updateCount();
@@ -284,6 +314,7 @@
     var params = new URLSearchParams();
     if (searchTerm) params.set('q', searchTerm);
     if (cuisineFilter) params.set('cuisine', cuisineFilter);
+    if (sectionFilter) params.set('section', sectionFilter);
     var qs = params.toString();
     history.pushState({}, '', qs ? '/recipes?' + qs : '/recipes');
   }
@@ -382,12 +413,18 @@
     grid.appendChild(frag);
   }
 
-  // ── Populate cuisine filter ────────────────────────────────────
+  // ── Populate cuisine filter (cultural names only — thematic collections live under Section) ──
+  var _CUISINE_ALLOWLIST = {
+    'Italian':1,'Indian':1,'Mexican':1,'Japanese':1,'Chinese':1,
+    'French':1,'Korean':1,'Thai':1,'American':1,
+    'Greek and Levantine':1,'Vietnamese':1
+  };
+
   function buildCuisineFilter() {
     var seen = {};
     allRecipes.forEach(function(r) {
       var c = catLabel(r.category);
-      if (c) seen[c] = true;
+      if (c && _CUISINE_ALLOWLIST[c]) seen[c] = true;
     });
     var sel = document.getElementById('cuisineSelect');
     Object.keys(seen).sort().forEach(function(c) {
@@ -396,6 +433,8 @@
       opt.textContent = c;
       sel.appendChild(opt);
     });
+    // Pre-apply cuisine from URL after options are built
+    if (cuisineFilter) sel.value = cuisineFilter;
   }
 
   // Helper: find original category string from label
@@ -423,13 +462,8 @@
         if (lbl && r.category) _catMap[lbl] = r.category;
       });
       filteredRecipes = allRecipes.slice();
-      buildCuisineFilter();
-      // Pre-apply URL cuisine filter after cuisine options are built
-      if (cuisineFilter) {
-        var sel = document.getElementById('cuisineSelect');
-        if (sel) sel.value = cuisineFilter;
-      }
-      if (searchTerm || cuisineFilter) {
+      buildCuisineFilter(); // also pre-applies cuisineFilter from URL
+      if (searchTerm || cuisineFilter || sectionFilter) {
         applyFilters();
       } else {
         renderRecipes();

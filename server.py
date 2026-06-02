@@ -551,7 +551,7 @@ def p1000_recipes():
     offset = (page - 1) * per_page
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cols = "id, name, slug, category, origin, description, flavour_context, trigger_keywords, authority_tier, image_url, thumb_url"
+    cols = "id, name, slug, category, section_slug, origin, description, flavour_context, trigger_keywords, authority_tier, image_url, thumb_url"
     if q:
         cur.execute(
             f"SELECT {cols} FROM technique_references"
@@ -1742,7 +1742,7 @@ def recipes_page():
             conn = get_db()
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute(
-                "SELECT id, name, slug, category, image_url, thumb_url"
+                "SELECT id, name, slug, category, section_slug, image_url, thumb_url"
                 " FROM technique_references"
                 " WHERE category LIKE %s ORDER BY name LIMIT 24",
                 ("Provenance 1000%",)
