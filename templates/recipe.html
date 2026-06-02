@@ -574,6 +574,24 @@ select.haccp-input{padding:3px 7px}
 @keyframes cspin{to{transform:rotate(360deg)}}
 .c-review-header{font-family:var(--didot);font-style:italic;font-size:16px;color:var(--text);margin-bottom:4px}
 .c-review-meta{font-size:11px;color:var(--text-muted);margin-bottom:14px}
+/* ── per-ingredient origin marker ── */
+.r-ing-origin{font-family:var(--serif);font-style:italic;font-size:11px;color:var(--gold);margin-top:3px;padding-left:64px;cursor:pointer}
+.r-ing-origin::before{content:"◈ ";font-size:9px}
+.r-ing-origin:hover{color:var(--burgundy)}
+/* ── supplier bottom-sheet ── */
+.r-supplier-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1200}
+.r-supplier-backdrop.open{display:block}
+.r-supplier-sheet{position:fixed;bottom:0;left:0;right:0;background:var(--cream-50);border-radius:12px 12px 0 0;padding:24px;z-index:1201;transform:translateY(100%);transition:transform 0.28s ease;max-height:70vh;overflow-y:auto}
+.r-supplier-sheet.open{transform:translateY(0)}
+.r-supplier-drag{width:40px;height:4px;background:var(--line-soft);border-radius:2px;margin:0 auto 16px}
+.r-supplier-close{float:right;background:none;border:none;font-size:12px;color:var(--warm-gray);cursor:pointer;padding:0}
+.r-supplier-name{font-family:var(--serif);font-size:18px;color:var(--charcoal);margin-bottom:4px;clear:both}
+.r-supplier-loc{font-size:12px;color:var(--warm-gray);margin-bottom:8px}
+.r-supplier-credit{font-size:12px;color:var(--charcoal);margin-bottom:12px}
+.r-supplier-products{list-style:none;padding:0;margin:0 0 12px}
+.r-supplier-product{font-size:12px;color:var(--charcoal);padding:4px 0;border-bottom:0.5px solid var(--line-soft)}
+.r-supplier-footer{font-size:11px;color:var(--warm-gray)}
+.r-supplier-footer a{color:var(--gold)}
 </style>
 {% endblock %}
 
@@ -690,6 +708,15 @@ select.haccp-input{padding:3px 7px}
         <button class="r6-serves__btn" type="button" data-delta="1">+</button>
       </div>
     </div>
+    {# build origin lookup from ingredient_origin_markers #}
+    {% set origin_map = {} %}
+    {% if recipe.ingredient_origin_markers %}
+      {% for m in recipe.ingredient_origin_markers %}
+        {% if m.ingredient_name %}
+          {% set _ = origin_map.update({m.ingredient_name: m}) %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
     {% if ingredients %}
       {% if has_groups %}
         {% for grp in ingredients %}
@@ -700,6 +727,12 @@ select.haccp-input{padding:3px 7px}
                 <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
                 <span class="r6-ing__name">{{ ing.name }}</span>
               </div>
+              {% set marker = origin_map.get(ing.name if ing is mapping else '') %}
+              {% if marker and marker.origin_marker %}
+                <div class="r-ing-origin"{% if marker.suppliers and marker.suppliers | length > 0 %} onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')"{% endif %}>{{ marker.origin_marker }}</div>
+              {% elif marker and marker.suppliers and marker.suppliers | length > 0 %}
+                <div class="r-ing-origin" onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')">Sourced by Provenance</div>
+              {% endif %}
             {% endfor %}
           </div>
         {% endfor %}
@@ -711,6 +744,12 @@ select.haccp-input{padding:3px 7px}
                 <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
                 <span class="r6-ing__name">{{ ing.name or ing.get('ingredient', '') }}</span>
               </div>
+              {% set marker = origin_map.get(ing.name or ing.get('ingredient', '')) %}
+              {% if marker and marker.origin_marker %}
+                <div class="r-ing-origin"{% if marker.suppliers and marker.suppliers | length > 0 %} onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')"{% endif %}>{{ marker.origin_marker }}</div>
+              {% elif marker and marker.suppliers and marker.suppliers | length > 0 %}
+                <div class="r-ing-origin" onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')">Sourced by Provenance</div>
+              {% endif %}
             {% else %}
               <div class="r6-ing">
                 <span class="r6-ing__qty"></span>
@@ -980,6 +1019,20 @@ select.haccp-input{padding:3px 7px}
     </div>
   </section>
   {% endif %}
+
+  {# ─── SUPPLIER BOTTOM-SHEET ─── #}
+  <div class="r-supplier-backdrop" id="supplier-backdrop" onclick="closeSupplierPanel()"></div>
+  <div class="r-supplier-sheet" id="supplier-sheet">
+    <div class="r-supplier-drag"></div>
+    <button class="r-supplier-close" onclick="closeSupplierPanel()">Close ✕</button>
+    <div id="supplier-panel-content">
+      <div class="r-supplier-name" id="sp-name"></div>
+      <div class="r-supplier-loc" id="sp-loc"></div>
+      <div class="r-supplier-credit" id="sp-credit"></div>
+      <ul class="r-supplier-products" id="sp-products"></ul>
+      <div class="r-supplier-footer" id="sp-footer"></div>
+    </div>
+  </div>
 
   {# ─── ACTION BUTTONS ROW ─── #}
   <div class="r-actions">
@@ -2112,6 +2165,43 @@ function _sklAddNew(lineId,invoiceId,name,price,unit){
 }
 function filterPricing(query){const q=query.toLowerCase();document.querySelectorAll('#c-pricing-body .c-pricing-table tbody tr').forEach(row=>{const name=(row.cells[0]?.textContent||'').toLowerCase();row.style.display=(!q||name.includes(q))?'':'none';});}
 
+// ── Supplier panel ────────────────────────────────────
+const RECIPE_SUPPLIERS = (function() {
+  const list = {{ (recipe_suppliers or []) | tojson }};
+  const map = {};
+  (list || []).forEach(s => { if (!map[s.id]) map[s.id] = s; });
+  return Object.values(map);
+})();
+function openSupplierPanelFull(supplierId) {
+  const s = RECIPE_SUPPLIERS.find(r => String(r.id) === String(supplierId));
+  if (!s) return;
+  populateSupplierPanel(s);
+}
+function populateSupplierPanel(s) {
+  document.getElementById('sp-name').textContent = s.name || '';
+  document.getElementById('sp-loc').textContent = [s.city, s.state_province, s.country].filter(Boolean).join(', ');
+  document.getElementById('sp-credit').textContent = s.products && s.products.length ? s.products[0].desc || '' : '';
+  const ul = document.getElementById('sp-products');
+  ul.innerHTML = '';
+  (s.products || []).forEach(p => {
+    const li = document.createElement('li');
+    li.className = 'r-supplier-product';
+    li.textContent = p.name || '';
+    ul.appendChild(li);
+  });
+  document.getElementById('sp-footer').innerHTML = s.website
+    ? 'Visit <a href="' + (s.website.startsWith('http') ? s.website : 'https://' + s.website) + '" target="_blank" rel="noopener">' + s.website + '</a>'
+    : '';
+  document.getElementById('supplier-backdrop').classList.add('open');
+  document.getElementById('supplier-sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSupplierPanel() {
+  document.getElementById('supplier-backdrop').classList.remove('open');
+  document.getElementById('supplier-sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 // ── Escape key handler ────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
@@ -2120,11 +2210,13 @@ document.addEventListener('keydown', e => {
   const ha = document.getElementById('haccp-overlay');
   const co = document.getElementById('costing-overlay');
   const pk = document.getElementById('peek-sheet');
+  const sb = document.getElementById('supplier-sheet');
   if (sc && sc.classList.contains('open')) { closeScaleModal(); return; }
   if (kn && kn.classList.contains('open')) { closeNotesModal(); return; }
   if (ha && ha.classList.contains('open')) { closeHaccpModal(); return; }
   if (co && co.classList.contains('open')) { closeCostingModal(); return; }
   if (pk && pk.classList.contains('open')) { closePeek(); return; }
+  if (sb && sb.classList.contains('open')) { closeSupplierPanel(); return; }
 });
 </script>
 {% endblock %}
