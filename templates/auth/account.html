@@ -1,179 +1,234 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Account — Provenance</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
-  --cream:#F5F1E9;--text:#F5F1E9;--text-secondary:rgba(245,241,233,0.70);--text-light:rgba(245,241,233,0.45);
-  --border:rgba(201,168,76,0.20);--bg:#08080A;--surface:#131210;
-  --serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',monospace;
-}
-html{-webkit-font-smoothing:antialiased}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3)}
-.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none}
-.nav-links{display:flex;align-items:center;gap:2rem}
-.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms}
-.nav-links a:hover{color:#C9A84C}
-.nav-links .nav-active{color:rgba(201,168,76,0.75)}
-.container{max-width:680px;margin:0 auto;padding:3rem 2rem 5rem}
-.account-logo{width:56px;height:56px;border-radius:50%;border:1px solid rgba(201,168,76,0.35);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
-.account-logo span{font-family:var(--serif);font-size:22px;color:var(--gold)}
-.account-name{font-family:var(--serif);font-size:1.8rem;font-weight:600;letter-spacing:-0.5px;margin-bottom:0.2rem}
-.account-plan{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
-.rule{border:none;border-top:1px solid rgba(201,168,76,0.08);margin:2rem 0}
-.section-label{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-light);margin-bottom:1rem}
-.plan-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.5rem}
-.plan-name{font-size:0.95rem;color:var(--text-secondary)}
-.plan-detail{font-size:0.82rem;color:var(--text-light)}
-.billing-btn{display:inline-block;margin-top:1.25rem;padding:9px 20px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:4px;color:var(--gold);font-family:var(--sans);font-size:0.8rem;font-weight:400;letter-spacing:0.05em;text-decoration:none;transition:background 200ms,border-color 200ms}
-.billing-btn:hover{background:rgba(201,168,76,0.16);border-color:rgba(201,168,76,0.4)}
-.upgrade-card{padding:1.5rem;border:1px solid rgba(201,168,76,0.1);border-radius:6px;background:rgba(201,168,76,0.03);margin-bottom:1rem}
-.upgrade-card-name{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem}
-.upgrade-card-price{font-family:var(--serif);font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:0.5rem}
-.upgrade-card-desc{font-size:0.82rem;color:var(--text-light);line-height:1.6;margin-bottom:1rem}
-.upgrade-link{display:inline-block;padding:7px 16px;background:transparent;border:1px solid rgba(201,168,76,0.25);border-radius:4px;color:rgba(201,168,76,0.8);font-family:var(--sans);font-size:0.78rem;letter-spacing:0.04em;text-decoration:none;transition:all 200ms}
-.upgrade-link:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.4);color:var(--gold)}
-.notice{padding:10px 14px;border-radius:4px;font-size:0.82rem;margin-bottom:1.5rem}
-.notice-success{background:rgba(60,160,80,0.12);border:1px solid rgba(60,160,80,0.25);color:#70c085}
-.notice-neutral{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:rgba(201,168,76,0.8)}
-.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:680px;margin:0 auto;flex-wrap:wrap;gap:1rem}
-.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
-.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms}
-.footer-links a:hover{color:#C9A84C}
-.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+{% extends "base.html" %}
 
-{% set tier_labels = {
-  'free': 'Free',
-  'kitchen': 'The Kitchen',
-  'library': 'The Library',
-  'profession': 'The Profession',
-  'trade': 'The Trade'
+{% block title %}Your Account — Provenance{% endblock %}
+
+{% block styles %}
+.ac-wrap { max-width: 680px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+.ac-notice { padding: 10px 14px; border-radius: 4px; font-size: 0.82rem; margin-bottom: 1.5rem; }
+.ac-notice--success { background: rgba(60,160,80,0.1); border: 1px solid rgba(60,160,80,0.25); color: #3a7d50; }
+.ac-notice--neutral { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.18); color: var(--warm-gray); }
+.ac-heading { font-family: var(--serif); font-size: 1.6rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.2rem; }
+.ac-subhead { font-family: var(--mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 2.5rem; }
+.ac-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 0.9rem; }
+.ac-rule { border: none; border-top: 1px solid var(--line-soft); margin: 2rem 0; }
+.ac-door { border: 1px solid var(--line-soft); border-radius: 6px; background: var(--cream-100); overflow: hidden; }
+.ac-door-bar { height: 4px; }
+.ac-door-body { padding: 1.5rem; }
+.ac-door-badge { display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.3); border-radius: 2px; padding: 2px 7px; margin-bottom: 0.75rem; }
+.ac-door-name { font-family: var(--serif); font-size: 1.3rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.15rem; }
+.ac-door-for { font-size: 0.8rem; color: var(--warm-gray); margin-bottom: 1rem; }
+.ac-door-meta { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.ac-door-meta-key { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 2px; }
+.ac-door-meta-val { font-size: 0.82rem; color: var(--charcoal-soft); }
+.ac-door-no { padding: 1.25rem; border: 1px dashed var(--line-soft); border-radius: 6px; font-size: 0.85rem; color: var(--warm-gray); }
+.ac-door-no a { color: var(--gold); }
+.ac-btn { display: inline-block; padding: 8px 18px; border: 1px solid var(--line); border-radius: 4px; color: var(--charcoal-soft); font-size: 0.8rem; text-decoration: none; background: transparent; transition: border-color 180ms, color 180ms; }
+.ac-btn:hover { border-color: var(--charcoal-soft); color: var(--charcoal); }
+.ac-id-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--line-soft); }
+.ac-id-row:last-child { border-bottom: none; }
+.ac-id-key { font-size: 0.82rem; color: var(--warm-gray); }
+.ac-id-val { font-size: 0.82rem; color: var(--charcoal-soft); display: flex; align-items: center; gap: 0.75rem; }
+.ac-id-change { font-size: 0.75rem; color: var(--gold); text-decoration: none; }
+.ac-id-change:hover { text-decoration: underline; }
+.ac-region { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0.75rem; background: rgba(201,168,76,0.04); border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; margin: 0.5rem 0; }
+.ac-region-key { font-size: 0.82rem; color: var(--charcoal); }
+.ac-region-val { font-size: 0.82rem; color: var(--charcoal-soft); display: flex; align-items: center; gap: 0.75rem; }
+.ac-rung { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; border: 1px solid var(--line-soft); border-radius: 4px; margin-bottom: 0.4rem; background: var(--cream-50); }
+.ac-rung--current { background: var(--cream-100); border-color: var(--line); }
+.ac-rung-dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--line); flex-shrink: 0; }
+.ac-rung--current .ac-rung-dot { border-color: var(--gold); background: var(--gold); }
+.ac-rung-body { flex: 1; }
+.ac-rung-name { font-size: 0.85rem; color: var(--warm-gray); }
+.ac-rung--current .ac-rung-name { color: var(--charcoal); font-weight: 500; }
+.ac-rung-price { font-family: var(--mono); font-size: 0.72rem; color: var(--warm-gray-light); margin-top: 1px; }
+.ac-rung-cta { font-size: 0.78rem; color: var(--gold); text-decoration: none; white-space: nowrap; }
+.ac-rung-cta:hover { text-decoration: underline; }
+.ac-rung-here { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--warm-gray); white-space: nowrap; }
+.ac-reserve { border: 1px solid rgba(122,46,46,0.2); border-left: 4px solid var(--burgundy); border-radius: 0 4px 4px 0; background: rgba(122,46,46,0.03); padding: 1.25rem 1.25rem 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.ac-reserve-name { font-family: var(--serif); font-size: 1rem; color: var(--charcoal); margin-bottom: 0.2rem; }
+.ac-reserve-price { font-family: var(--mono); font-size: 0.72rem; color: var(--warm-gray); }
+.ac-reserve-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; flex-shrink: 0; }
+.ac-reserve-status { font-family: var(--mono); font-size: 0.72rem; color: var(--warm-gray); letter-spacing: 0.04em; }
+.ac-reserve-action { font-size: 0.8rem; color: var(--burgundy); text-decoration: none; }
+.ac-reserve-action:hover { text-decoration: underline; }
+.ac-pref-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--line-soft); }
+.ac-pref-row:last-child { border-bottom: none; }
+.ac-pref-label { font-size: 0.85rem; color: var(--charcoal-soft); }
+.ac-pref-static { font-family: var(--mono); font-size: 0.72rem; color: var(--warm-gray); letter-spacing: 0.05em; }
+.ac-toggle { position: relative; display: inline-block; width: 32px; height: 18px; flex-shrink: 0; }
+.ac-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.ac-toggle-track { position: absolute; inset: 0; border-radius: 9px; background: var(--line-soft); transition: background 200ms; cursor: pointer; }
+.ac-toggle input:checked + .ac-toggle-track { background: var(--gold); }
+.ac-toggle-thumb { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: white; transition: transform 200ms; pointer-events: none; }
+.ac-toggle input:checked ~ .ac-toggle-thumb { transform: translateX(14px); }
+.ac-exit { display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; }
+.ac-exit-btn { background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; font-size: 0.8rem; color: var(--warm-gray); text-decoration: none; display: inline-block; transition: color 180ms; }
+.ac-exit-btn:hover { color: var(--charcoal); }
+.ac-exit-close { color: rgba(122,46,46,0.45); }
+.ac-exit-close:hover { color: var(--burgundy) !important; }
+.ac-wall { text-align: center; padding: 6rem 2rem; }
+.ac-wall-head { font-family: var(--serif); font-size: 1.5rem; color: var(--charcoal-soft); margin-bottom: 0.5rem; }
+.ac-wall-body { font-size: 0.88rem; color: var(--warm-gray); margin-bottom: 2rem; }
+{% endblock %}
+
+{% block content %}
+{%- set tier_rank = {'free': 0, 'kitchen': 1, 'library': 2, 'profession': 3, 'trade': 4} %}
+{%- set door_info = {
+  'kitchen':    {'color': '#6B7F4F', 'name': 'The Kitchen',    'for': 'the curious cook',      'price': '$49/yr',  'link': '/subscribe/kitchen/yearly'},
+  'library':    {'color': '#4A6B8A', 'name': 'The Library',    'for': 'the sommelier & cook',  'price': '$149/yr', 'link': '/subscribe/library/yearly'},
+  'profession': {'color': '#8B5A3C', 'name': 'The Profession', 'for': 'the working chef',      'price': '$299/yr', 'link': '/subscribe/profession/yearly'},
+  'trade':      {'color': '#5A4A6B', 'name': 'The Trade',      'for': 'producers & suppliers', 'price': '$999/yr', 'link': '/subscribe/trade/yearly'},
 } %}
-</style>
-</head>
-<body>
-<nav class="nav">
-  <a href="/" class="nav-wordmark">Provenance</a>
-  <div class="nav-links">
-    <a href="/recipes">Recipes</a>
-    <a href="/techniques/browse">Techniques</a>
-    <a href="/auth/account" class="nav-active">{{ user.display_name or 'Account' }}</a>
-    <form method="POST" action="/auth/logout" style="display:inline">
-      <button type="submit" style="background:none;border:none;cursor:pointer;color:inherit;padding:0;font-size:inherit;font-family:inherit;">Leave</button>
+{%- if user %}
+{%- set tier = user.subscription_tier or 'free' %}
+{%- set urank = tier_rank.get(tier, 0) %}
+{%- set d = door_info.get(tier) %}
+<div class="ac-wrap">
+
+  {%- if subscribed %}
+  <div class="ac-notice ac-notice--success">Payment successful — welcome to Provenance.</div>
+  {%- elif cancelled %}
+  <div class="ac-notice ac-notice--neutral">Payment cancelled. Your account is unchanged.</div>
+  {%- endif %}
+
+  <h1 class="ac-heading">{{ user.display_name or user.email }}</h1>
+  <div class="ac-subhead">
+    {%- if d %}{{ d.name }}{%- if user.created_at %} · member since {{ user.created_at.strftime('%B %Y') }}{%- endif %}
+    {%- else %}No door yet{%- endif %}
+  </div>
+
+  {# ── Panel 3: YOUR DOOR ── #}
+  <div class="ac-label">Your door</div>
+  {%- if d %}
+  <div class="ac-door">
+    <div class="ac-door-bar" style="background:{{ d.color }}"></div>
+    <div class="ac-door-body">
+      <div class="ac-door-badge">You're here</div>
+      <div class="ac-door-name">{{ d.name }}</div>
+      <div class="ac-door-for">For {{ d.for }}</div>
+      <div class="ac-door-meta">
+        <div>
+          <div class="ac-door-meta-key">Joined</div>
+          <div class="ac-door-meta-val">{{ user.created_at.strftime('%B %Y') if user.created_at else '—' }}</div>
+        </div>
+        <div>
+          <div class="ac-door-meta-key">Status</div>
+          <div class="ac-door-meta-val">
+            {%- if user.subscription_status == 'active' %}Active
+            {%- elif user.subscription_status == 'past_due' %}Past due
+            {%- elif user.subscription_status %}{{ user.subscription_status | title }}
+            {%- else %}Inactive{%- endif %}
+          </div>
+        </div>
+        <div>
+          <div class="ac-door-meta-key">Price</div>
+          <div class="ac-door-meta-val">{{ d.price }}</div>
+        </div>
+      </div>
+      {%- if user.stripe_customer_id %}
+      <a href="/billing" class="ac-btn">Manage billing →</a>
+      {%- endif %}
+    </div>
+  </div>
+  {%- else %}
+  <div class="ac-door-no">No door yet. <a href="/pricing">Explore plans →</a></div>
+  {%- endif %}
+
+  <hr class="ac-rule">
+
+  {# ── Panel 4: IDENTITY ── #}
+  <div class="ac-label">Identity</div>
+  <div class="ac-id-row">
+    <span class="ac-id-key">Email</span>
+    <span class="ac-id-val">{{ user.email }}<a href="#" class="ac-id-change">Change</a></span>
+  </div>
+  <div class="ac-id-row">
+    <span class="ac-id-key">How you enter</span>
+    <span class="ac-id-val">Magic link to your email</span>
+  </div>
+  <div class="ac-id-row">
+    <span class="ac-id-key">Joined</span>
+    <span class="ac-id-val">{{ user.created_at.strftime('%-d %B %Y') if user.created_at else '—' }}</span>
+  </div>
+  {# Region drives Pat's Rule supplier proximity ranking #}
+  <div class="ac-region">
+    <span class="ac-region-key">Region</span>
+    <span class="ac-region-val">{{ user.user_location or 'Not set' }}<a href="#" class="ac-id-change">Change</a></span>
+  </div>
+
+  <hr class="ac-rule">
+
+  {# ── Panel 5: DOOR LADDER ── #}
+  <div class="ac-label">The doors</div>
+  {%- for rung_tier, rung_data in door_info.items() %}
+  {%- set rung_rank = tier_rank.get(rung_tier, 0) %}
+  {%- set is_current = (tier == rung_tier) %}
+  <div class="ac-rung{{ ' ac-rung--current' if is_current else '' }}">
+    <div class="ac-rung-dot"></div>
+    <div class="ac-rung-body">
+      <div class="ac-rung-name">{{ rung_data.name }}</div>
+      <div class="ac-rung-price">{{ rung_data.price }}</div>
+    </div>
+    {%- if is_current %}<span class="ac-rung-here">Your door</span>{%- endif %}
+    {%- if rung_tier == 'trade' or (not is_current and rung_rank > urank) %}
+    <a href="{{ rung_data.link }}" class="ac-rung-cta">Open {{ rung_data.name }} →</a>
+    {%- endif %}
+  </div>
+  {%- endfor %}
+
+  <hr class="ac-rule">
+
+  {# ── Panel 6: RESERVE ── #}
+  <div class="ac-label">Reserve</div>
+  <div class="ac-reserve">
+    <div>
+      <div class="ac-reserve-name">l'Atelier · Compose Recipe</div>
+      <div class="ac-reserve-price">$5.99/mo / $59/yr</div>
+    </div>
+    <div class="ac-reserve-right">
+      {%- if user.has_atelier_addon %}
+      <div class="ac-reserve-status">On your seat</div>
+      <a href="/billing" class="ac-reserve-action">Manage →</a>
+      {%- else %}
+      <div class="ac-reserve-status">Not on your seat</div>
+      <a href="/subscribe/atelier" class="ac-reserve-action">Enable — $5.99/mo →</a>
+      {%- endif %}
+    </div>
+  </div>
+
+  <hr class="ac-rule">
+
+  {# ── Panel 9: EMAIL PREFS ── #}
+  <div class="ac-label">Email preferences</div>
+  <div class="ac-pref-row">
+    <span class="ac-pref-label">Receipts &amp; account changes</span>
+    <span class="ac-pref-static">Always on</span>
+  </div>
+  <div class="ac-pref-row">
+    <span class="ac-pref-label">The Provenance Table announcements</span>
+    <label class="ac-toggle" aria-label="Toggle announcements">
+      <input type="checkbox" checked>
+      <span class="ac-toggle-track"></span>
+      <span class="ac-toggle-thumb"></span>
+    </label>
+  </div>
+
+  <hr class="ac-rule">
+
+  {# ── Panel 10: QUIET EXIT ── #}
+  <div class="ac-exit">
+    <form method="POST" action="/auth/logout" style="margin:0">
+      <button type="submit" class="ac-exit-btn">Leave</button>
     </form>
+    <a href="#" class="ac-exit-btn ac-exit-close">Close this seat</a>
   </div>
-</nav>
-
-<div class="container">
-
-  {% if subscribed %}
-  <div class="notice notice-success">Payment successful — welcome to Provenance.</div>
-  {% elif cancelled %}
-  <div class="notice notice-neutral">Payment cancelled. Your account is unchanged.</div>
-  {% endif %}
-
-  <div class="account-logo"><span>P</span></div>
-
-  <h1 class="account-name">{{ user.display_name or user.email }}</h1>
-  <div class="account-plan">
-    {% if user.subscription_tier == 'free' %}Free Plan{% else %}
-    {% if user.subscription_tier == 'kitchen' %}The Kitchen{% elif user.subscription_tier == 'library' %}The Library{% elif user.subscription_tier == 'profession' %}The Profession{% elif user.subscription_tier == 'trade' %}The Trade{% endif %}
-    · since {{ user.created_at.strftime('%B %Y') if user.created_at else '' }}
-    {% endif %}
-  </div>
-
-  <hr class="rule">
-
-  <div class="section-label">Your plan</div>
-
-  {% if user.subscription_tier == 'free' %}
-  <div class="plan-row">
-    <span class="plan-name">Free</span>
-    <span class="plan-detail">No active subscription</span>
-  </div>
-  <a href="/pricing" class="billing-btn">Explore plans →</a>
-
-  {% else %}
-  <div class="plan-row">
-    <span class="plan-name">
-      {% if user.subscription_tier == 'kitchen' %}The Kitchen{% elif user.subscription_tier == 'library' %}The Library{% elif user.subscription_tier == 'profession' %}The Profession{% elif user.subscription_tier == 'trade' %}The Trade{% endif %}
-    </span>
-    <span class="plan-detail">
-      {% if user.subscription_status == 'active' %}Active{% elif user.subscription_status == 'past_due' %}Past due — update payment{% else %}Inactive{% endif %}
-    </span>
-  </div>
-  {% if user.stripe_customer_id %}
-  <a href="/billing" class="billing-btn">Manage Billing →</a>
-  {% endif %}
-  {% endif %}
-
-  <hr class="rule">
-
-  {% if user.subscription_tier != 'trade' %}
-
-  <div class="section-label">Available upgrades</div>
-
-  {% if user.subscription_tier == 'free' %}
-  <div class="upgrade-card">
-    <div class="upgrade-card-name">The Kitchen</div>
-    <div class="upgrade-card-price">$49/year <span style="font-family:var(--sans);font-size:0.75rem;font-weight:300;color:var(--text-light)">or $4.99/month</span></div>
-    <div class="upgrade-card-desc">Full seven-pillar depth on every technique. Quality hierarchy, sensory tests, species precision. The complete entry.</div>
-    <a href="/subscribe/kitchen/yearly" class="upgrade-link">Open The Kitchen →</a>
-  </div>
-  {% endif %}
-
-  {% if user.subscription_tier in ['free', 'kitchen'] %}
-  <div class="upgrade-card">
-    <div class="upgrade-card-name">The Library</div>
-    <div class="upgrade-card-price">$149/year <span style="font-family:var(--sans);font-size:0.75rem;font-weight:300;color:var(--text-light)">or $14.99/month</span></div>
-    <div class="upgrade-card-desc">CMS deductive grid. Service protocols. Three Spice Routes complete. Beverage pairings at depth.</div>
-    <a href="/subscribe/library/yearly" class="upgrade-link">Open The Library →</a>
-  </div>
-  {% endif %}
-
-  {% if user.subscription_tier not in ['profession', 'trade'] %}
-  <div class="upgrade-card">
-    <div class="upgrade-card-name">The Profession</div>
-    <div class="upgrade-card-price">$299/year <span style="font-family:var(--sans);font-size:0.75rem;font-weight:300;color:var(--text-light)">or $29.99/month</span></div>
-    <div class="upgrade-card-desc">Supplier connections. Programme builder. Costing tools. Team accounts. Built for working kitchens.</div>
-    <a href="/subscribe/profession/yearly" class="upgrade-link">Open The Profession →</a>
-  </div>
-  {% endif %}
-
-  <div class="upgrade-card">
-    <div class="upgrade-card-name">The Trade</div>
-    <div class="upgrade-card-price">$999/year <span style="font-family:var(--sans);font-size:0.75rem;font-weight:300;color:var(--text-light)">or $99/month</span></div>
-    <div class="upgrade-card-desc">Producer and supplier portal. Product listing, regional targeting, pairing analytics, and API access.</div>
-    <a href="/subscribe/trade/yearly" class="upgrade-link">Open The Trade →</a>
-  </div>
-
-  {% endif %}
-
-  <hr class="rule">
-
-  <form method="POST" action="/auth/logout" style="display:inline">
-    <button type="submit" style="background:none;border:none;cursor:pointer;font-size:0.8rem;color:var(--text-light);text-decoration:none;padding:0;font-family:inherit;">Leave</button>
-  </form>
 
 </div>
-
-<footer>
-  <div class="about-footer">
-    <div class="footer-links">
-      <a href="/about">About</a>
-      <a href="/pricing">Pricing</a>
-      <a href="/methodology">Methodology</a>
-    </div>
-    <span class="footer-wm">Provenance</span>
-  </div>
-</footer>
-</body>
-</html>
+{%- else %}
+<div class="ac-wrap ac-wall">
+  <div class="ac-wall-head">Find your door.</div>
+  <div class="ac-wall-body">Enter or explore your tier.</div>
+  <a href="/auth/login" class="ac-btn">Enter →</a>
+</div>
+{%- endif %}
+{% endblock %}
