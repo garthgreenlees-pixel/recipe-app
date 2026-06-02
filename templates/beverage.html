@@ -192,6 +192,7 @@ body { background: #FDFCF9; color: #1A1A1A; }
   padding:20px 24px;cursor:pointer;transition:all 0.2s;
 }
 .tradition-card:hover{border-color:var(--gold-border);box-shadow:0 4px 16px rgba(139,105,20,0.08);transform:translateY(-1px)}
+.tradition-card--active{border-color:var(--gold-border);box-shadow:0 4px 16px rgba(139,105,20,0.08);}
 .tradition-card-name{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--text);margin-bottom:6px}
 .tradition-card-desc{font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.5;margin-bottom:12px}
 .tradition-card-count{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:0.5px}
@@ -375,7 +376,7 @@ body { background: #FDFCF9; color: #1A1A1A; }
     <div class="section-label">All Traditions</div>
     <div class="tradition-cards">
 
-      <div class="tradition-card" id="trad-wine" onclick="loadTradition('wine','wine','sparkling')">
+      <div class="tradition-card{% if initial_products %} tradition-card--active{% endif %}" id="trad-wine" onclick="loadTradition('wine','wine','sparkling')">
         <div class="tradition-card-name">Wine</div>
         <div class="tradition-card-desc">From Bordeaux to Burgundy to Okanagan. Fermented grape, terroir-driven, vintage-dependent.</div>
         <div class="tradition-card-count">{{ tradition_counts.wine }} beverages</div>
@@ -442,9 +443,21 @@ body { background: #FDFCF9; color: #1A1A1A; }
       </div>
 
     </div>
-    <div id="tradition-results" class="pairing-results" style="display:none;margin-top:32px">
-      <div class="section-label" id="tradition-results-label"></div>
-      <div id="tradition-results-list"></div>
+    <div id="tradition-results" class="pairing-results" style="{% if not initial_products %}display:none;{% endif %}margin-top:32px">
+      <div class="section-label" id="tradition-results-label">{% if initial_products %}Wine{% endif %}</div>
+      <div id="tradition-results-list">
+        {% for p in initial_products %}
+        <div class="pairing-card">
+          <div class="pairing-type-label">{{ (p.category or '') | replace('_', ' ') }}</div>
+          <a href="{{ '/beverage/' + p.slug if p.slug else '/beverage/products/' + p.id|string }}" class="pairing-beverage" style="text-decoration:none;color:inherit">{{ p.name }}</a>
+          {% if p.description %}<div class="pairing-logic">{{ p.description[:180] }}{% if p.description | length > 180 %}…{% endif %}</div>{% endif %}
+          <div class="pairing-badges">
+            {% if p.quality_tier %}<span class="confidence-badge">{{ p.quality_tier }}</span>{% endif %}
+            {% if p.region_name %}<span class="context-badge">{{ p.region_name }}</span>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 

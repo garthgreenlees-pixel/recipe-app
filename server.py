@@ -10479,6 +10479,18 @@ def beverage_browse():
         if trad:
             tradition_counts[trad] += int(cat_row['count'])
 
+    # Pre-fetch first 20 Wine products for stable first paint (mirrors /recipes initial_recipes pattern).
+    # Uses the same JOIN + category LIKE filter the /api/beverage/products handler uses.
+    cur.execute(
+        "SELECT bp.*, br.name AS region_name, br.country AS region_country"
+        " FROM beverage_products bp"
+        " LEFT JOIN beverage_regions br ON bp.region_id = br.id"
+        " WHERE bp.category LIKE %s"
+        " ORDER BY bp.name LIMIT 20",
+        ("wine%",)
+    )
+    initial_products = [_serialize_row(r) for r in cur.fetchall()]
+
     cur.close()
     conn.close()
 
@@ -10491,6 +10503,7 @@ def beverage_browse():
         total_producers=total_producers,
         total_pairings=total_pairings,
         tradition_counts=tradition_counts,
+        initial_products=initial_products,
     )
 
 
