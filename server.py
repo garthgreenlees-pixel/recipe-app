@@ -15350,6 +15350,24 @@ def delete_menu_recipe(slug, menu_recipe_id):
 
 # ─── OPT3 Canon routes ───────────────────────────────────────────────────────
 
+@app.route("/library")
+def library():
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT slug, name, design_palette, entry_count
+        FROM canons
+        WHERE status = 'published'
+        ORDER BY entry_count DESC NULLS LAST, name
+    """)
+    canons = [_serialize_row(r) for r in cur.fetchall()]
+    cur.close()
+    conn.close()
+    return render_template("library.html", canons=canons)
+
+
 @app.route("/canons-v2/")
 def canons_index():
     if not DATABASE_URL:
@@ -15388,9 +15406,217 @@ def canon_book(canon_slug):
         ORDER BY cs.display_order, cs.section_slug
     """, (canon_slug,))
     sections = [_serialize_row(r) for r in cur.fetchall()]
+    cur.execute("""
+        SELECT id, name, slug, cuisine, recipe_type, description, image_url
+        FROM recipes
+        WHERE cuisine_canon = %s
+        ORDER BY is_curated DESC, recipe_type, name
+    """, (canon_slug,))
+    recipes = [_serialize_row(r) for r in cur.fetchall()]
+    palette = canon.get("design_palette") or {}
     cur.close()
     conn.close()
-    return render_template("canon_book.html", canon=canon, sections=sections)
+    return render_template("canon_book.html", canon=canon, sections=sections, recipes=recipes, palette=palette, book_mode=True)
+
+
+REGION_LABELS = {
+    # French regions
+    'classical':             'The Classical Repertoire',
+    'provence':              'Provence',
+    'burgundy':              'Burgundy',
+    'lyonnais':              'Lyonnais',
+    'alsace':                'Alsace',
+    'normandy':              'Normandy',
+    'brittany':              'Brittany',
+    'southwest':             'The Southwest',
+    'bordelais':             'Bordelais',
+    'languedoc-roussillon':  'Languedoc-Roussillon',
+    'savoy':                 'Savoy',
+    'auvergne':              'Auvergne',
+    'lorraine':              'Lorraine',
+    'nord':                  'The North',
+    'loire':                 'Loire',
+    'champagne':             'Champagne',
+    'jura-franche-comte':    'Jura & Franche-Comté',
+    'dauphine':              'Dauphiné',
+    # Italian regions
+    'piedmont':              'Piedmont',
+    'aosta-valley':          'Aosta Valley',
+    'lombardy':              'Lombardy',
+    'trentino-alto-adige':   'Trentino-Alto Adige',
+    'veneto':                'Veneto',
+    'friuli-venezia-giulia': 'Friuli-Venezia Giulia',
+    'liguria':               'Liguria',
+    'emilia-romagna':        'Emilia-Romagna',
+    'tuscany':               'Tuscany',
+    'marche':                'Marche',
+    'umbria':                'Umbria',
+    'lazio':                 'Lazio',
+    'abruzzo':               'Abruzzo',
+    'molise':                'Molise',
+    'campania':              'Campania',
+    'puglia':                'Puglia',
+    'basilicata':            'Basilicata',
+    'calabria':              'Calabria',
+    'sicily':                'Sicily',
+    'sardinia':              'Sardinia',
+    'pan-italian':           'The Italian Foundation',
+    # Japanese disciplines (interior cut for The Method + The Canonical Dishes)
+    'dashi-stock':           'Dashi & Stock',
+    'rice':                  'Rice',
+    'hocho-knife':           'Hōchō — Knife Discipline',
+    'koji-fermentation':     'Koji & Fermentation',
+    'tempura-agemono':       'Tempura / Agemono',
+    'yakimono':              'Yakimono',
+    'nimono-mushimono':      'Nimono & Mushimono',
+    'kaiseki':               'Kaiseki',
+    'sushi':                 'Sushi',
+    'ramen-noodle':          'Ramen & Noodle',
+    'wagashi':               'Wagashi & Confectionery',
+    # Shared
+    'other-regional':        'Other Regions',
+}
+
+_REGION_ORDER = {
+    # Italian regions (north → south)
+    'aosta-valley': 1, 'piedmont': 2, 'lombardy': 3, 'trentino-alto-adige': 4,
+    'veneto': 5, 'friuli-venezia-giulia': 6, 'liguria': 7, 'emilia-romagna': 8,
+    'tuscany': 9, 'marche': 10, 'umbria': 11, 'lazio': 12, 'abruzzo': 13,
+    'molise': 14, 'campania': 15, 'puglia': 16, 'basilicata': 17, 'calabria': 18,
+    'sicily': 19, 'sardinia': 20,
+    # Japanese disciplines (method 31-37, canonical dishes 41-44)
+    'dashi-stock': 31, 'rice': 32, 'hocho-knife': 33, 'koji-fermentation': 34,
+    'tempura-agemono': 35, 'yakimono': 36, 'nimono-mushimono': 37,
+    'kaiseki': 41, 'sushi': 42, 'ramen-noodle': 43, 'wagashi': 44,
+}
+
+_BEV_TOP_BY_CANON = {
+    'french': [
+        (104, 'Burgundy'), (121, 'Bordeaux'), (131, 'Rhône Valley'),
+        (147, 'Loire Valley'), (143, 'Champagne'), (155, 'Alsace'),
+        (288, 'Beaujolais'), (283, 'Languedoc'), (289, 'Roussillon'),
+        (159, 'Provence'), (250, 'Jura'), (333, 'Savoie'),
+        (156, 'Cognac'), (157, 'Armagnac'), (158, 'Normandy'),
+    ],
+    'japanese': [
+        (45, 'Niigata'), (46, 'Nada'), (47, 'Fushimi'), (49, 'Yamagata'),
+        (55, 'Oita'), (50, 'Fukui'), (48, 'Yamaguchi'), (52, 'Shizuoka'),
+        (237, 'Yamazaki — Suntory Distillery'), (238, 'Yoichi — Nikka Distillery'),
+        (239, 'Miyagikyo — Nikka Distillery'), (240, "Chichibu — Ichiro's Malt"),
+        (779, 'Hokkaido Wine Region'), (754, 'Yamanashi Wine Region'),
+        (780, 'Nagano Wine Region'), (449, 'Yamanashi'),
+        (54, 'Kagoshima Shochu'), (56, 'Okinawa'),
+        (51, 'Uji'), (53, 'Kagoshima'),
+    ],
+    'indian': [
+        (65, 'Darjeeling'), (309, 'Nashik'), (67, 'Nilgiri'), (66, 'Assam'),
+        (759, 'Nashik Valley GI'), (819, 'India Nandi Hills Wine Region'),
+    ],
+    'chinese': [
+        (60, 'Guangdong'), (57, 'Yunnan'), (58, 'Fujian'), (59, 'Zhejiang'),
+        (61, 'Guizhou'), (62, 'Sichuan'),
+        (508, 'Ningxia'), (825, 'Yunnan China Wine Region'),
+        (777, 'Xinjiang Wine Region'), (813, 'China Shandong Wine Region'),
+    ],
+    'levantine': [
+        (182, 'Bekaa Valley'),
+        (701, 'Judean Hills'),
+        (298, 'Galilee'),
+        (405, 'Golan Heights'),
+        (804, 'Jordan Madaba Wine Region'),
+    ],
+}
+
+_BEV_COUNTRY_BY_CANON = {
+    'french':   'France',
+    'japanese': 'Japan',
+    'indian':   'India',
+    'chinese':  'China',
+    'levantine': 'Lebanon',
+}
+
+def _sort_regions(slugs):
+    def key(s):
+        if s in ('classical', 'pan-italian'): return (0, 0, '')
+        if s == 'other-regional':             return (2, 0, '')
+        label = REGION_LABELS.get(s, s.replace('-', ' ').title())
+        return (1, _REGION_ORDER.get(s, 50), label)
+    return sorted(slugs, key=key)
+
+
+@app.route("/canon/<canon_slug>/index/")
+def canon_index(canon_slug):
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM canons WHERE slug = %s", (canon_slug,))
+    canon = cur.fetchone()
+    if not canon:
+        cur.close(); conn.close()
+        return "Canon not found", 404
+    canon = _serialize_row(canon)
+    palette = canon.get("design_palette") or {}
+    cur.execute("""
+        SELECT name, slug
+        FROM technique_references
+        WHERE canon_slug = %s AND slug IS NOT NULL
+        ORDER BY LOWER(name)
+    """, (canon_slug,))
+    entries = [_serialize_row(r) for r in cur.fetchall()]
+    cur.close(); conn.close()
+
+    import unicodedata
+    def _first_letter(e):
+        for ch in (e.get("name") or ""):
+            if ch.isalpha():
+                nfd = unicodedata.normalize('NFD', ch)
+                base = ''.join(c for c in nfd if unicodedata.category(c) != 'Mn').upper()
+                return base if (base and base.isascii() and base.isalpha()) else '#'
+        return '#'
+
+    grouped_dict = {}
+    for entry in entries:
+        letter = _first_letter(entry)
+        grouped_dict.setdefault(letter, []).append(entry)
+    latin_letters = sorted(l for l in grouped_dict if l != '#')
+    letters = latin_letters + (['#'] if '#' in grouped_dict else [])
+    grouped = [(l, grouped_dict[l]) for l in letters]
+    default_letter = max(grouped_dict, key=lambda l: len(grouped_dict[l])) if grouped_dict else (letters[0] if letters else '')
+
+    return render_template("canon_index.html",
+        canon=canon, palette=palette,
+        grouped=grouped, letters=letters,
+        total_count=len(entries),
+        default_letter=default_letter,
+        book_mode=True)
+
+
+@app.route("/canon/<canon_slug>/colophon/")
+def canon_colophon(canon_slug):
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM canons WHERE slug = %s", (canon_slug,))
+    canon = cur.fetchone()
+    if not canon:
+        cur.close(); conn.close()
+        return "Canon not found", 404
+    canon = _serialize_row(canon)
+    palette = canon.get("design_palette") or {}
+    cur.execute("""
+        SELECT COUNT(*) AS entry_count
+        FROM technique_references
+        WHERE canon_slug = %s AND slug IS NOT NULL
+    """, (canon_slug,))
+    row = cur.fetchone()
+    entry_count = row["entry_count"] if row else 0
+    cur.close(); conn.close()
+    return render_template("canon_colophon.html",
+        canon=canon, palette=palette,
+        entry_count=entry_count,
+        book_mode=True)
 
 
 @app.route("/canon/<canon_slug>/<section_slug>/")
@@ -15416,17 +15642,227 @@ def canon_section(canon_slug, section_slug):
         conn.close()
         return "Section not found", 404
     section = _serialize_row(section)
+    palette = canon.get("design_palette") or {}
+
+    if section_slug == 'the-pantry':
+        _PANTRY_CATEGORY_LABELS = {
+            'charcuterie_cured':        'Charcuterie & Cured',
+            'chocolate_confection':     'Chocolate & Confection',
+            'dairy_fermented':          'Dairy & Fermented',
+            'flour_baking':             'Flour & Baking',
+            'freeze_dried_condiment':   'Freeze-Dried & Condiment',
+            'freeze_dried_herb_powder': 'Herb Powders',
+            'oils_vinegars':            'Oils & Vinegars',
+            'preserved_pickled':        'Preserved & Pickled',
+            'produce_specialty':        'Specialty Produce',
+            'rice_grains':              'Rice & Grains',
+            'seafood_general':          'Seafood',
+            'seafood_sashimi':          'Seafood — Sashimi Grade',
+            'spices_seasonings':        'Spices & Seasonings',
+            'wagyu_premium_protein':    'Wagyu & Premium Protein',
+        }
+        if canon_slug == 'japanese':
+            cur.execute("""
+                SELECT id, canonical_name, category, origin_country, origin_brand
+                FROM ingredient_master
+                WHERE (lower(origin_country) IN ('japan', 'jp', 'japanese')
+                       OR region_tags @> '["japanese"]')
+                  AND is_active = true
+                ORDER BY category, canonical_name
+            """)
+        elif canon_slug == 'indian':
+            cur.execute("""
+                SELECT id, canonical_name, category, origin_country, origin_brand
+                FROM ingredient_master
+                WHERE (lower(origin_country) IN ('india', 'in', 'indian')
+                       OR region_tags @> '["indian"]')
+                  AND is_active = true
+                ORDER BY category, canonical_name
+            """)
+        elif canon_slug == 'chinese':
+            cur.execute("""
+                SELECT id, canonical_name, category, origin_country, origin_brand
+                FROM ingredient_master
+                WHERE (lower(origin_country) IN ('china', 'cn', 'chinese')
+                       OR region_tags @> '["chinese"]')
+                  AND is_active = true
+                ORDER BY category, canonical_name
+            """)
+        elif canon_slug == 'korean':
+            cur.execute("""
+                SELECT id, canonical_name, category, origin_country, origin_brand
+                FROM ingredient_master
+                WHERE (lower(origin_country) IN ('korea', 'south korea', 'kr', 'korean')
+                       OR region_tags @> '["korean"]')
+                  AND is_active = true
+                ORDER BY category, canonical_name
+            """)
+        elif canon_slug == 'levantine':
+            cur.execute("""
+                SELECT id, canonical_name, category, origin_country, origin_brand
+                FROM ingredient_master
+                WHERE (lower(origin_country) IN ('lebanon', 'syria', 'palestine', 'jordan', 'israel')
+                       OR region_tags @> '["levantine"]')
+                  AND is_active = true
+                ORDER BY category, canonical_name
+            """)
+        else:
+            cur.execute("""
+                SELECT id, canonical_name, category, origin_country, origin_brand
+                FROM ingredient_master
+                WHERE (lower(origin_country) IN ('france', 'fr', 'french')
+                       OR region_tags @> '["french"]')
+                  AND category != 'wagyu_premium_protein'
+                  AND is_active = true
+                ORDER BY category, canonical_name
+            """)
+        rows = [_serialize_row(r) for r in cur.fetchall()]
+        from collections import defaultdict as _defaultdict
+        _grouped = _defaultdict(list)
+        for row in rows:
+            _grouped[row['category']].append(row)
+        categories = [
+            {
+                'slug': cat,
+                'label': _PANTRY_CATEGORY_LABELS.get(cat, cat.replace('_', ' ').title()),
+                'ingredients': _grouped[cat],
+            }
+            for cat in sorted(_grouped.keys())
+        ]
+        cur.close()
+        conn.close()
+        return render_template("canon_pantry.html",
+            canon=canon, section=section, categories=categories, palette=palette, book_mode=True)
+
+    if section_slug == 'the-beverage-tradition':
+        bev_top = _BEV_TOP_BY_CANON.get(canon_slug, [])
+        bev_country = _BEV_COUNTRY_BY_CANON.get(canon_slug, 'France')
+        top_ids = [r[0] for r in bev_top]
+        cur.execute("""
+            WITH RECURSIVE subtree AS (
+                SELECT id, id AS top_id FROM beverage_regions WHERE id = ANY(%s)
+                UNION ALL
+                SELECT r.id, s.top_id FROM beverage_regions r
+                JOIN subtree s ON r.parent_region_id = s.id
+            )
+            SELECT s.top_id, COUNT(DISTINCT bp.id) AS n
+            FROM subtree s
+            LEFT JOIN beverage_producers bp ON bp.region_id = s.id
+              AND bp.is_published = true AND bp.country = %s
+            GROUP BY s.top_id
+        """, (top_ids, bev_country))
+        counts = {row['top_id']: row['n'] for row in cur.fetchall()}
+        bev_regions = [
+            {'region_id': rid, 'label': name, 'producer_count': counts.get(rid, 0)}
+            for rid, name in bev_top
+            if counts.get(rid, 0) > 0
+        ]
+        cur.close()
+        conn.close()
+        return render_template("canon_beverage.html",
+            canon=canon, section=section, bev_regions=bev_regions, palette=palette, book_mode=True)
+
     cur.execute("""
-        SELECT id, name, slug, entry_slug, decimal_id, description, origin, authority_tier
+        SELECT id, name, slug, entry_slug, decimal_id, description, origin, authority_tier,
+               facets->>'region_slug' AS region_slug
         FROM technique_references
         WHERE canon_slug = %s AND section_slug = %s
         ORDER BY decimal_id, name
     """, (canon_slug, section_slug))
     entries = [_serialize_row(r) for r in cur.fetchall()]
+    region_slugs = [e["region_slug"] for e in entries if e.get("region_slug")]
+    has_regions = bool(region_slugs)
+    regions = []
+    if has_regions:
+        distinct_slugs = list(dict.fromkeys(region_slugs))
+        for rs in _sort_regions(distinct_slugs):
+            regions.append({"slug": rs, "label": REGION_LABELS.get(rs, rs.replace('-', ' ').title())})
     cur.close()
     conn.close()
     return render_template("canon_section.html",
-        canon=canon, section=section, entries=entries)
+        canon=canon, section=section, entries=entries,
+        palette=palette, has_regions=has_regions, regions=regions, book_mode=True)
+
+
+@app.route("/canon/<canon_slug>/<section_slug>/<region_slug>/")
+def canon_region(canon_slug, section_slug, region_slug):
+    if not DATABASE_URL:
+        return "Database not configured", 503
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM canons WHERE slug = %s", (canon_slug,))
+    canon = cur.fetchone()
+    if not canon:
+        cur.close()
+        conn.close()
+        return "Canon not found", 404
+    canon = _serialize_row(canon)
+    cur.execute("""
+        SELECT * FROM canon_sections
+        WHERE canon_slug = %s AND section_slug = %s
+    """, (canon_slug, section_slug))
+    section = cur.fetchone()
+    if not section:
+        cur.close()
+        conn.close()
+        return "Section not found", 404
+    section = _serialize_row(section)
+    palette = canon.get("design_palette") or {}
+
+    if section_slug == 'the-beverage-tradition':
+        try:
+            region_id = int(region_slug)
+        except (ValueError, TypeError):
+            cur.close()
+            conn.close()
+            return "Region not found", 404
+        # Region display name from the curated list or DB
+        _bev_labels = {rid: name for rid, name in _BEV_TOP_BY_CANON.get(canon_slug, [])}
+        bev_country = _BEV_COUNTRY_BY_CANON.get(canon_slug, 'France')
+        cur.execute("SELECT name FROM beverage_regions WHERE id = %s", (region_id,))
+        reg_row = cur.fetchone()
+        if not reg_row:
+            cur.close()
+            conn.close()
+            return "Region not found", 404
+        region_label = _bev_labels.get(region_id, reg_row['name'])
+        # Recursive subtree of this region
+        cur.execute("""
+            WITH RECURSIVE subtree AS (
+                SELECT id FROM beverage_regions WHERE id = %s
+                UNION ALL
+                SELECT r.id FROM beverage_regions r
+                JOIN subtree s ON r.parent_region_id = s.id
+            )
+            SELECT bp.id, bp.name, bp.slug AS producer_slug,
+                   br.name AS appellation
+            FROM beverage_producers bp
+            JOIN beverage_regions br ON br.id = bp.region_id
+            WHERE bp.region_id IN (SELECT id FROM subtree)
+              AND bp.is_published = true AND bp.country = %s
+            ORDER BY br.name, bp.name
+        """, (region_id, bev_country))
+        producers = [_serialize_row(r) for r in cur.fetchall()]
+        cur.close()
+        conn.close()
+        return render_template("canon_beverage_region.html",
+            canon=canon, section=section, producers=producers,
+            palette=palette, region_id=region_id, region_label=region_label, book_mode=True)
+
+    cur.execute("""
+        SELECT id, name, slug, entry_slug, decimal_id, description, origin, authority_tier
+        FROM technique_references
+        WHERE canon_slug = %s AND section_slug = %s
+          AND facets->>'region_slug' = %s
+        ORDER BY decimal_id, name
+    """, (canon_slug, section_slug, region_slug))
+    entries = [_serialize_row(r) for r in cur.fetchall()]
+    region_label = REGION_LABELS.get(region_slug, region_slug.replace('-', ' ').title())
+    cur.close()
+    conn.close()
+    return render_template("canon_region.html",
+        canon=canon, section=section, entries=entries,
+        palette=palette, region_slug=region_slug, region_label=region_label, book_mode=True)
 
 
 @app.route("/canon/<canon_slug>/<section_slug>/<entry_slug>")

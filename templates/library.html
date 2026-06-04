@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}The Library — Provenance{% endblock %}
+{% block meta_description %}The bound volumes of the canon — each a cuisine read end to end, built to the Sashimi Standard.{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Mono:wght@500&display=swap">
+{% endblock %}
+
+{% block styles %}
+.lib-wrap{max-width:1100px;margin:0 auto;padding:48px 24px 80px}
+.lib-eyebrow{font:500 10px/1 "DM Mono",monospace;letter-spacing:.28em;text-transform:uppercase;color:var(--gold,#C9A84C);margin-bottom:14px}
+.lib-heading{font-family:"Playfair Display",serif;font-weight:600;font-size:clamp(2.4rem,5vw,3.8rem);color:var(--cream,#F8F2E4);line-height:1;margin:0 0 16px}
+.lib-standfirst{font-size:1rem;line-height:1.65;color:var(--ink-soft,#9a8c70);max-width:520px;margin:0 0 52px}
+.lib-shelf-wrap{position:relative}
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0 14px;align-items:end}
+@media(max-width:600px){.lib-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:320px){.lib-grid{grid-template-columns:1fr}}
+.book-cover{display:block;text-decoration:none;position:relative;transition:transform .18s ease}
+.book-cover:hover{transform:translateY(-5px)}
+.book-cloth{min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;padding:28px 22px 26px;position:relative;overflow:hidden;box-shadow:-4px 0 10px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.5);border-left:5px solid var(--cb)}
+.book-cloth::before{content:"";position:absolute;inset:0;background:linear-gradient(165deg,var(--ca),var(--cb));z-index:0}
+.book-cloth::after{content:"";position:absolute;inset:0;opacity:.13;pointer-events:none;background-image:repeating-linear-gradient(90deg,#000 0 1px,transparent 1px 3px),repeating-linear-gradient(0deg,#000 0 1px,transparent 1px 3px);background-size:3px 3px;z-index:1}
+.book-cover:hover .book-cloth{box-shadow:-4px 0 10px rgba(0,0,0,.3),0 16px 40px rgba(0,0,0,.65)}
+.book-inner{position:relative;z-index:2;display:flex;flex-direction:column}
+.book-mark{width:10px;height:10px;border:1.5px solid #C9A84C;transform:rotate(45deg);margin-bottom:18px;opacity:.75}
+.book-kicker{font:500 8px/1 "DM Mono",monospace;letter-spacing:.32em;text-transform:uppercase;color:#C9A84C;opacity:.6;margin-bottom:22px}
+.book-title{font-family:"Playfair Display",serif;font-weight:600;font-size:clamp(20px,2.5vw,28px);line-height:.95;color:#C9A84C;letter-spacing:.3px}
+.book-foilrule{height:1.5px;width:40px;background:linear-gradient(90deg,#C9A84C,transparent);margin:12px 0 10px;border:0;display:block}
+.book-count{font:500 8px/1 "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#C9A84C;opacity:.65}
+.lib-shelf-plank{height:16px;background:linear-gradient(to bottom,#7B5733,#5C3D1A);box-shadow:0 6px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.07);border-radius:0 0 3px 3px;margin-bottom:0}
+{% endblock %}
+
+{% block content %}
+<div class="lib-wrap">
+  <p class="lib-eyebrow">Provenance</p>
+  <h1 class="lib-heading">The Library</h1>
+  <p class="lib-standfirst">The bound volumes of the canon — each a cuisine read end to end, built to the Sashimi Standard.</p>
+
+  <div class="lib-shelf-wrap">
+    <div class="lib-grid">
+      {% for canon in canons %}
+      {% set p = canon.design_palette or {} %}
+      <a class="book-cover" href="/canon/{{ canon.slug }}/"
+         style="--ca:{{ p.cloth_a or '#3b3330' }};--cb:{{ p.cloth_b or '#241f1b' }}">
+        <div class="book-cloth">
+          <div class="book-inner">
+            <div class="book-mark"></div>
+            <div class="book-kicker">Provenance</div>
+            <div class="book-title">{{ canon.name }}</div>
+            <hr class="book-foilrule">
+            <div class="book-count">{{ "{:,}".format(canon.entry_count) if canon.entry_count else '—' }} techniques</div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="lib-shelf-plank"></div>
+  </div>
+</div>
+{% endblock %}

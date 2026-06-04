@@ -551,6 +551,42 @@ a { color: var(--gold); text-decoration: none; }
 
 <!-- Extra head content (canonical, OG image, additional fonts, JSON-LD) -->
 {% block extra_head %}{% endblock %}
+{% if book_mode %}
+<style>
+  .pageleaf{ animation: leafIn .6s cubic-bezier(.2,.6,.2,1) both; transform-origin:right center; }
+  @keyframes leafIn{
+    0%   { transform: perspective(1600px) rotateY(24deg) translateX(4%); opacity:0; }
+    100% { transform: perspective(1600px) rotateY(0)     translateX(0);  opacity:1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .pageleaf{ animation: leafFade .4s ease both; }
+    @keyframes leafFade{ from{opacity:0} to{opacity:1} }
+  }
+  /* === Book spread (shared) === */
+  .canonpage{background:#211c17;background-image:radial-gradient(120% 80% at 50% -10%,#3a332b,#211c17 80%);padding:40px 16px 64px;min-height:100vh}
+  .bookspread{--foil:#C9A84C;--ink:#2A2018;--stone:#8C7F66;--rule:#ddd0b0;max-width:960px;margin:0 auto;display:flex;box-shadow:0 40px 90px -30px rgba(0,0,0,.75),0 0 0 1px rgba(0,0,0,.22);border-radius:3px;overflow:hidden;font-family:"EB Garamond",Georgia,serif;line-height:1.62}
+  .bpage-left{width:50%;background:linear-gradient(165deg,var(--cloth-a,#3b3330),var(--cloth-b,#241f1b));color:#F8F2E4;padding:clamp(40px,6vw,62px) clamp(28px,5vw,52px) clamp(36px,5vw,56px);position:relative;display:flex;flex-direction:column;justify-content:flex-start}
+  .bpage-left::after{content:"";position:absolute;inset:0;opacity:.16;pointer-events:none;background-image:repeating-linear-gradient(90deg,#000 0 1px,transparent 1px 3px),repeating-linear-gradient(0deg,#000 0 1px,transparent 1px 3px);background-size:3px 3px}
+  .bpage-left>*{position:relative;z-index:1}
+  .bspine{width:10px;flex-shrink:0;background:linear-gradient(to right,rgba(0,0,0,.22) 0%,rgba(0,0,0,.06) 60%,rgba(0,0,0,0) 100%)}
+  .bpage-right{width:50%;background:var(--paper,#F2EBDA);position:relative;color:var(--ink);padding:clamp(30px,5vw,52px) clamp(28px,5vw,48px) 32px}
+  .bpage-right::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;background-image:radial-gradient(circle at 12% 18%,#e3d8bd 0 .7px,transparent 1.3px),radial-gradient(circle at 62% 42%,#d9ccab 0 .6px,transparent 1.2px),radial-gradient(circle at 34% 78%,#e3d8bd 0 .6px,transparent 1.1px);background-size:88px 88px,112px 112px,96px 96px}
+  .bpage-right>*{position:relative;z-index:1}
+  .cmark{width:14px;height:14px;transform:rotate(45deg);border:1.5px solid var(--foil);margin-bottom:22px}
+  .kicker{font:500 11px/1 "DM Mono",monospace;letter-spacing:.34em;text-transform:uppercase;color:var(--foil)}
+  .kicker a{color:inherit;text-decoration:none;opacity:.7}
+  .kicker a:hover{opacity:1}
+  .title{font-family:"Playfair Display",serif;font-weight:600;font-size:clamp(28px,6vw,52px);line-height:.96;margin:16px 0 0;color:var(--foil);letter-spacing:.4px}
+  .title .sub{display:block;font-family:"EB Garamond",serif;font-style:italic;font-weight:400;font-size:clamp(14px,2.5vw,18px);color:#e9d9c4;margin-top:12px;opacity:.92}
+  .epigraph{font-style:italic;font-size:15.5px;max-width:28rem;margin:20px 0 0;color:#ecdcc6;opacity:.9;line-height:1.55}
+  .foilrule{height:2px;width:56px;background:linear-gradient(90deg,var(--foil),transparent);margin:24px 0 0;border:0}
+  .sec-label{font:500 11px/1 "DM Mono",monospace;letter-spacing:.3em;text-transform:uppercase;color:var(--accent,#5E2230);margin:0 0 22px}
+  .foot{text-align:center;padding:20px 0 4px;color:#9a8c70;font:500 10px/1 "DM Mono",monospace;letter-spacing:.25em;text-transform:uppercase}
+  .rhead{display:flex;justify-content:space-between;align-items:baseline;padding:0 0 7px;margin:0 0 16px;border-bottom:1px solid color-mix(in srgb,var(--stone) 30%,transparent);font:500 9px/1 "DM Mono",monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--stone)}
+  .ch-numeral{font:500 10px/1 "DM Mono",monospace;letter-spacing:.4em;text-transform:uppercase;color:var(--foil);margin:16px 0 5px;opacity:.72}
+  @media(max-width:900px){.bookspread{flex-direction:column}.bspine{display:none}.bpage-left,.bpage-right{width:100%}}
+</style>
+{% endif %}
 </head>
 <body>
 
@@ -565,7 +601,7 @@ a { color: var(--gold); text-decoration: none; }
 {% endif %}
 
 <!-- ── PAGE CONTENT ── -->
-<main style="padding-top: {% block main_padding %}60px{% endblock %};">
+<main style="padding-top: {% block main_padding %}60px{% endblock %};" class="{% if book_mode %}pageleaf{% endif %}">
   {% block content %}{% endblock %}
 </main>
 
@@ -583,7 +619,7 @@ a { color: var(--gold); text-decoration: none; }
     <div class="hp-footer-col">
       <h5>Library</h5>
       <ul>
-        <li><a href="/canons-v2/">The Canon</a></li>
+        <li><a href="/library">The Library</a></li>
         <li><a href="#">The Atlases</a></li>
         <li><a href="/route/pacific-migration-trail">The Routes</a></li>
         <li><a href="/cuisines">Cuisines</a></li>
