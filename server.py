@@ -15525,6 +15525,12 @@ _BEV_TOP_BY_CANON = {
         (405, 'Golan Heights'),
         (804, 'Jordan Madaba Wine Region'),
     ],
+    'turkish': [
+        (184, 'Turkey'),
+        (760, 'Thrace'),
+        (766, 'Cappadocia Wine Region'),
+        (510, 'Cappadocia'),
+    ],
 }
 
 _BEV_COUNTRY_BY_CANON = {
@@ -15533,6 +15539,7 @@ _BEV_COUNTRY_BY_CANON = {
     'indian':   'India',
     'chinese':  'China',
     'levantine': 'Lebanon',
+    'turkish':   'Turkey',
 }
 
 def _sort_regions(slugs):
@@ -15703,6 +15710,15 @@ def canon_section(canon_slug, section_slug):
                 FROM ingredient_master
                 WHERE (lower(origin_country) IN ('lebanon', 'syria', 'palestine', 'jordan', 'israel')
                        OR region_tags @> '["levantine"]')
+                  AND is_active = true
+                ORDER BY category, canonical_name
+            """)
+        elif canon_slug == 'turkish':
+            cur.execute("""
+                SELECT id, canonical_name, category, origin_country, origin_brand
+                FROM ingredient_master
+                WHERE (lower(origin_country) IN ('turkey', 'türkiye', 'turkish')
+                       OR region_tags @> '["turkish"]')
                   AND is_active = true
                 ORDER BY category, canonical_name
             """)
