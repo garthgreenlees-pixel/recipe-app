@@ -17123,7 +17123,7 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
     try:
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         try:
-            # Techniques — match keywords OR cuisine synonyms
+            # Techniques — match keywords OR cuisine synonyms; deterministic relevance ranking
             if cuisine_regex:
                 cur.execute(
                     """SELECT id, name, description FROM technique_references
@@ -17136,13 +17136,15 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                             OR name                      ~* %s
                             OR COALESCE(description, '') ~* %s
                          )
-                       ORDER BY (CASE WHEN COALESCE(origin,'') ~* %s THEN 0 ELSE 1 END),
-                                RANDOM()
+                       ORDER BY (CASE WHEN COALESCE(origin,'') ~* %s THEN 0
+                                      WHEN name                ~* %s THEN 1
+                                      ELSE 2 END),
+                                id
                        LIMIT 100""",
                     (canon['id'],
                      kw_pattern, kw_pattern, kw_pattern,
                      cuisine_regex, cuisine_regex, cuisine_regex,
-                     cuisine_regex),
+                     cuisine_regex, cuisine_regex),
                 )
             else:
                 cur.execute(
@@ -17153,11 +17155,24 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                             OR name                      ~* %s
                             OR COALESCE(description, '') ~* %s
                          )
-                       ORDER BY RANDOM()
+                       ORDER BY (CASE WHEN name ~* %s THEN 0 ELSE 1 END), id
                        LIMIT 100""",
-                    (canon['id'], kw_pattern, kw_pattern, kw_pattern),
+                    (canon['id'], kw_pattern, kw_pattern, kw_pattern, kw_pattern),
                 )
             pools["techniques"] = [dict(r) for r in cur.fetchall()]
+
+            # Full cuisine valid-set: all matching IDs (no limit) for validation below
+            if cuisine_regex:
+                cur.execute(
+                    """SELECT id FROM technique_references
+                       WHERE COALESCE(origin,'')      ~* %s
+                          OR name                     ~* %s
+                          OR COALESCE(description,'') ~* %s""",
+                    (cuisine_regex, cuisine_regex, cuisine_regex),
+                )
+                pools["_all_cuisine_technique_ids"] = {r["id"] for r in cur.fetchall()}
+            else:
+                pools["_all_cuisine_technique_ids"] = None
 
             # Ingredients — match against name / description / origin_country
             try:
@@ -17905,7 +17920,9 @@ def _atelier_compose_slot(slot, slot_index, slot_count, canon, brief_parsed, poo
     """
     if valid_pools is None:
         valid_pools = pools
-    valid_technique_ids = {t["id"] for t in valid_pools["techniques"]}
+    # Use full cuisine technique set when available (wider than the shown sample)
+    _full_ids = valid_pools.get("_all_cuisine_technique_ids")
+    valid_technique_ids = _full_ids if _full_ids is not None else {t["id"] for t in valid_pools["techniques"]}
     valid_ingredient_ids = {i["id"] for i in valid_pools["ingredients"]}
     valid_beverage_ids = {b["id"] for b in valid_pools["beverages"]}
 
@@ -17986,14 +18003,8 @@ def _atelier_compose_slot(slot, slot_index, slot_count, canon, brief_parsed, poo
     )
 
 
-@app.route("/api/atelier/compose", methods=["POST"])
-def atelier_compose():
+def _atelier_compose_inner(user):
     from datetime import datetime
-    print("[ATELIER COMPOSE] route entered", flush=True)
-
-    user = get_current_user()
-    if not user:
-        return jsonify(error="Login required"), 401
 
     data = request.get_json() or {}
     brief_parsed   = data.get("brief_parsed") or {}
@@ -18122,80 +18133,111 @@ def atelier_compose():
             "_keywords":   pools.get("_keywords", []),
         }
 
-        invention = _atelier_compose_slot(
-            slot=slot,
-            slot_index=slot_index,
-            slot_count=len(course_slots),
-            canon=canon,
-            brief_parsed=brief_parsed,
-            pools=slot_pools,
-            valid_pools=pools,
-        )
+        try:
+            invention = _atelier_compose_slot(
+                slot=slot,
+                slot_index=slot_index,
+                slot_count=len(course_slots),
+                canon=canon,
+                brief_parsed=brief_parsed,
+                pools=slot_pools,
+                valid_pools=pools,
+            )
 
-        used_technique_ids.update(invention.get("lineage_techniques", []))
-        used_ingredient_ids.update(invention.get("lineage_ingredients", []))
+            used_technique_ids.update(invention.get("lineage_techniques", []))
+            used_ingredient_ids.update(invention.get("lineage_ingredients", []))
 
-        # Persist Invention then link via composition_course
-        conn2 = get_db()
-        cur2  = conn2.cursor()
-        cur2.execute(
-            """INSERT INTO user_inventions
-                 (user_id, name, description,
-                  derived_from_techniques, derived_from_ingredients,
-                  derived_from_beverages, composed_by_brief_id)
-               VALUES (%s, %s, %s, %s::jsonb, %s::jsonb, %s::jsonb, %s)
-               RETURNING id""",
-            (
-                user["id"],
-                invention["name"],
-                invention["description"],
-                json.dumps(invention.get("lineage_techniques", [])),
-                json.dumps(invention.get("lineage_ingredients", [])),
-                json.dumps(invention.get("lineage_beverages", [])),
-                composition_id,
-            ),
-        )
-        invention_id = cur2.fetchone()[0]
+            # Persist Invention then link via composition_course
+            conn2 = get_db()
+            cur2  = conn2.cursor()
+            cur2.execute(
+                """INSERT INTO user_inventions
+                     (user_id, name, description,
+                      derived_from_techniques, derived_from_ingredients,
+                      derived_from_beverages, composed_by_brief_id)
+                   VALUES (%s, %s, %s, %s::jsonb, %s::jsonb, %s::jsonb, %s)
+                   RETURNING id""",
+                (
+                    user["id"],
+                    invention["name"],
+                    invention["description"],
+                    json.dumps(invention.get("lineage_techniques", [])),
+                    json.dumps(invention.get("lineage_ingredients", [])),
+                    json.dumps(invention.get("lineage_beverages", [])),
+                    composition_id,
+                ),
+            )
+            invention_id = cur2.fetchone()[0]
 
-        # XOR constraint: recipe_id must be NULL when invention_id is set
-        cur2.execute(
-            """INSERT INTO composition_courses
-                 (composition_id, position, slot_name, slot_role, invention_id, recipe_id)
-               VALUES (%s, %s, %s, %s, %s, NULL)""",
-            (
-                composition_id,
-                slot_index + 1,
-                slot.get("slot_name"),
-                slot.get("slot_role"),
-                invention_id,
-            ),
-        )
-        cur2.close(); conn2.close()
+            # XOR constraint: recipe_id must be NULL when invention_id is set
+            cur2.execute(
+                """INSERT INTO composition_courses
+                     (composition_id, position, slot_name, slot_role, invention_id, recipe_id)
+                   VALUES (%s, %s, %s, %s, %s, NULL)""",
+                (
+                    composition_id,
+                    slot_index + 1,
+                    slot.get("slot_name"),
+                    slot.get("slot_role"),
+                    invention_id,
+                ),
+            )
+            cur2.close(); conn2.close()
 
-        # Enrich lineage: replace raw ID lists with dicts {id, name, slug}
-        _enrich_invention_lineage(invention, enrich_cur)
+            # Enrich lineage: replace raw ID lists with dicts {id, name, slug}
+            _enrich_invention_lineage(invention, enrich_cur)
 
-        # Augment lineage_ingredients via Haiku if signature overlap is low
-        if _ingredient_signature_overlap(invention) < INGREDIENT_AUGMENTATION_THRESHOLD:
-            _augment_ingredients_via_haiku(invention, brief_parsed, enrich_cur)
+            # Augment lineage_ingredients via Haiku if signature overlap is low
+            if _ingredient_signature_overlap(invention) < INGREDIENT_AUGMENTATION_THRESHOLD:
+                _augment_ingredients_via_haiku(invention, brief_parsed, enrich_cur)
 
-        # Match a curated library recipe for this slot (may be None)
-        library_recipe = _match_library_recipe_for_slot(slot, brief_parsed, enrich_cur, invention=invention)
+            # Match a curated library recipe for this slot (may be None)
+            library_recipe = _match_library_recipe_for_slot(slot, brief_parsed, enrich_cur, invention=invention)
 
-        courses.append(
-            {
+            courses.append(
+                {
+                    "position":            slot_index + 1,
+                    "slot_name":           slot.get("slot_name"),
+                    "slot_role":           slot.get("slot_role"),
+                    "invention_id":        invention_id,
+                    "name":                invention["name"],
+                    "description":         invention["description"],
+                    "lineage_techniques":  invention.get("lineage_techniques", []),
+                    "lineage_ingredients": invention.get("lineage_ingredients", []),
+                    "lineage_beverages":   invention.get("lineage_beverages", []),
+                    "library_recipe":      library_recipe,
+                }
+            )
+
+        except Exception as _slot_err:
+            app.logger.error(
+                f"[ATELIER COMPOSE] slot {slot_index + 1} ({slot.get('slot_name')}) "
+                f"failed — inserting draft slot: {_slot_err}"
+            )
+            try:
+                conn_d = get_db()
+                cur_d  = conn_d.cursor()
+                cur_d.execute(
+                    """INSERT INTO composition_courses
+                         (composition_id, position, slot_name, slot_role, invention_id, recipe_id)
+                       VALUES (%s, %s, %s, %s, NULL, NULL)""",
+                    (composition_id, slot_index + 1, slot.get("slot_name"), slot.get("slot_role")),
+                )
+                cur_d.close(); conn_d.close()
+            except Exception:
+                pass
+            courses.append({
                 "position":            slot_index + 1,
                 "slot_name":           slot.get("slot_name"),
                 "slot_role":           slot.get("slot_role"),
-                "invention_id":        invention_id,
-                "name":                invention["name"],
-                "description":         invention["description"],
-                "lineage_techniques":  invention.get("lineage_techniques", []),
-                "lineage_ingredients": invention.get("lineage_ingredients", []),
-                "lineage_beverages":   invention.get("lineage_beverages", []),
-                "library_recipe":      library_recipe,
-            }
-        )
+                "is_draft":            True,
+                "name":                "Open course — awaiting a library match.",
+                "description":         "",
+                "lineage_techniques":  [],
+                "lineage_ingredients": [],
+                "lineage_beverages":   [],
+                "library_recipe":      None,
+            })
 
     enrich_cur.close(); enrich_conn.close()
 
@@ -18215,6 +18257,19 @@ def atelier_compose():
         slot_count=len(courses),
         courses=courses,
     )
+
+
+@app.route("/api/atelier/compose", methods=["POST"])
+def atelier_compose():
+    print("[ATELIER COMPOSE] route entered", flush=True)
+    user = get_current_user()
+    if not user:
+        return jsonify(error="Login required"), 401
+    try:
+        return _atelier_compose_inner(user)
+    except Exception as _outer:
+        app.logger.error(f"[ATELIER COMPOSE] unhandled: {_outer}", exc_info=True)
+        return jsonify(error="The composer is busy right now — try again in a moment."), 503
 
 
 def _create_kitchen_recipe_from_invention(invention, owner_user_id, write_cur):

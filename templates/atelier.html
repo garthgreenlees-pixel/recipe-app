@@ -721,11 +721,15 @@ async function runCompose() {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({brief_parsed: parsed.brief_parsed}),
     });
-    if (!r.ok) { const e = await r.json(); throw new Error(e.error || r.statusText); }
+    if (!r.ok) {
+      let msg = r.statusText;
+      try { const e = await r.json(); msg = e.error || msg; } catch (_) {}
+      throw new Error(msg);
+    }
     comp = await r.json();
   } catch (e) {
     console.error("l'Atelier compose failed:", e);
-    showError("l'Atelier couldn't compose that brief. Try a shorter brief, or try again in a moment.");
+    showError(e.message || "The composer is busy right now — try again in a moment.");
     btn.disabled = false;
     return;
   }
@@ -880,6 +884,21 @@ async function saveToMenuBuilder() {
 
 function renderCourse(course, position) {
   const article = document.createElement('article');
+
+  if (course.is_draft) {
+    article.className = 'a-course is-open-draft';
+    const posEl = document.createElement('span');
+    posEl.className = 'a-course-pos';
+    const slotLabel = course.slot_name ? course.slot_name.replace(/_/g, ' ') : '';
+    posEl.textContent = toRoman(position) + (slotLabel ? ' · ' + slotLabel : '');
+    article.appendChild(posEl);
+    const nameEl = document.createElement('div');
+    nameEl.className = 'a-course-name course-name--freeform';
+    nameEl.textContent = 'Open course — awaiting a library match.';
+    article.appendChild(nameEl);
+    return article;
+  }
+
   const lr      = course.library_recipe;
   const isCanon = !!(lr && lr.slug);
   article.className = 'a-course' + (isCanon ? '' : ' is-freeform');
