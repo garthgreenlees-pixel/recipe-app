@@ -855,11 +855,17 @@ async function saveToMenuBuilder() {
   const errBox  = document.getElementById('errorBox');
   errBox.style.display = 'none';
 
-  // Disable all action-bar controls during request
-  const saveBtn   = document.getElementById('saveMbBtn');
+  // Disable all action-bar controls during save
   const actionEls = result.querySelectorAll('button, a.link-gold, a.link-muted');
   actionEls.forEach(el => { el.style.pointerEvents = 'none'; el.style.opacity = '0.42'; });
 
+  function setSaveStatus(msg) {
+    result.innerHTML = '<div class="at-save-transition"><p class="at-save-msg">' + msg + '</p></div>';
+    result.style.display = 'block';
+  }
+
+  // Step 1 — create menu + bare kitchen recipe rows
+  setSaveStatus('Saving to Menu Builder…');
   let resp;
   try {
     const r = await fetch('/api/atelier/promote', {
@@ -876,9 +882,30 @@ async function saveToMenuBuilder() {
     return;
   }
 
-  // Success — transition message then redirect
-  result.innerHTML = '<div class="at-save-transition"><p class="at-save-msg">Carrying through to your Menu Builder…</p></div>';
-  result.style.display = 'block';
+  // Step 2 — compose full recipe body per course (one request each)
+  const kitchenCourses = resp.kitchen_courses || [];
+  const total = kitchenCourses.length;
+  for (let i = 0; i < total; i++) {
+    const kc = kitchenCourses[i];
+    setSaveStatus('Composing recipe ' + (i + 1) + ' of ' + total + '…');
+    try {
+      const wr = await fetch('/api/atelier/write-course-recipe', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ kitchen_uuid: kc.kitchen_uuid, invention_id: kc.invention_id }),
+      });
+      if (!wr.ok) {
+        const we = await wr.json().catch(() => ({}));
+        console.warn('write-course-recipe failed for', kc.kitchen_uuid, we.error || wr.statusText);
+        // Non-fatal — bare draft was already saved; continue with remaining courses
+      }
+    } catch (e) {
+      console.warn('write-course-recipe network error:', e);
+    }
+  }
+
+  // Step 3 — redirect
+  setSaveStatus('Carrying through to your Menu Builder…');
   setTimeout(() => { window.location.assign('/menu/' + resp.menu_slug); }, 600);
 }
 

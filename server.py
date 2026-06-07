@@ -18272,6 +18272,87 @@ def atelier_compose():
         return jsonify(error="The composer is busy right now — try again in a moment."), 503
 
 
+def _compose_course_recipe_body(name, description, techniques, ingredients, covers=None):
+    """
+    One Haiku call: compose a professional recipe body grounded in real lineage components.
+    techniques: list of {name, key_principles, pro_tips}
+    ingredients: list of {canonical_name, category}
+    Returns {ingredients: [...dicts...], steps: [...strings...]} or {} on failure.
+    """
+    covers_note = f"Scale for {covers} covers." if covers else "Scale for 4 covers."
+
+    technique_block = ""
+    if techniques:
+        parts = []
+        for t in techniques:
+            line = t["name"]
+            if t.get("key_principles"):
+                line += f" — {str(t['key_principles'])[:120]}"
+            parts.append(line)
+        technique_block = "TECHNIQUES TO APPLY:\n" + "\n".join(f"- {p}" for p in parts)
+
+    ingredient_block = ""
+    if ingredients:
+        names = [i["canonical_name"] for i in ingredients]
+        ingredient_block = "CORE INGREDIENTS (use these; ordinary pantry staples are also fine):\n" + "\n".join(f"- {n}" for n in names)
+
+    prompt = (
+        f"You are composing a professional kitchen recipe for a chef's personal collection. "
+        f"Institutional register. No superlatives. No food-magazine prose.\n\n"
+        f"COURSE: {name}\n"
+        f"CONCEPT: {description}\n\n"
+        f"{technique_block}\n\n"
+        f"{ingredient_block}\n\n"
+        f"RULES:\n"
+        f"- {covers_note}\n"
+        f"- Build from the named techniques and core ingredients above.\n"
+        f"- Ordinary pantry staples (salt, oil, butter, flour, stock, aromatics) are fine.\n"
+        f"- Do NOT invent exotic, branded, or obscure items not derivable from the listed ingredients.\n"
+        f"- ingredients array: each item has count (number or weight as string), unit, name, info (prep note).\n"
+        f"- steps array: ordered method strings that apply the named techniques. Professional but clear.\n"
+        f"- Aim for 6–14 ingredients; 4–8 steps.\n\n"
+        f"Return ONE JSON object. No markdown fence. No prose before or after.\n"
+        f'{{\n'
+        f'  "ingredients": [\n'
+        f'    {{"count": "200", "unit": "g", "name": "jasmine rice", "info": "rinsed"}}\n'
+        f'  ],\n'
+        f'  "steps": [\n'
+        f'    "Bring 400 ml water to a rolling boil in a heavy-based saucepan."\n'
+        f'  ]\n'
+        f'}}'
+    )
+
+    last_err = None
+    for attempt in range(1, _ATELIER_COMPOSE_MAX_ATTEMPTS + 1):
+        try:
+            resp = client.messages.create(
+                model=_ATELIER_COMPOSE_MODEL,
+                max_tokens=1800,
+                timeout=45.0,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = resp.content[0].text.strip()
+            if raw.startswith("```"):
+                raw = raw.split("```", 2)[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+                raw = raw.rsplit("```", 1)[0].strip()
+            body = json.loads(raw)
+            if not body.get("ingredients") or not body.get("steps"):
+                raise ValueError("missing ingredients or steps in response")
+            return body
+        except Exception as e:
+            last_err = e
+            app.logger.warning(f"[_compose_course_recipe_body] attempt {attempt} failed: {e}")
+            if attempt < _ATELIER_COMPOSE_MAX_ATTEMPTS:
+                _time.sleep(1)
+
+    app.logger.error(
+        f"[_compose_course_recipe_body] {name!r}: exhausted {_ATELIER_COMPOSE_MAX_ATTEMPTS} attempts — {last_err}"
+    )
+    return {}
+
+
 def _create_kitchen_recipe_from_invention(invention, owner_user_id, write_cur):
     """Insert a user_kitchen_recipes row from a user_invention dict. Returns the uuid string."""
     new_uuid = str(uuid.uuid4())
@@ -18390,7 +18471,7 @@ def atelier_promote():
         menu_row = write_cur.fetchone()
         menu_id = menu_row["id"]
 
-        kitchen_slugs = []
+        kitchen_courses = []  # [{kitchen_uuid, invention_id}] for per-course recipe composition
         for course in courses:
             invention = None
             if course.get("invention_id"):
@@ -18407,7 +18488,11 @@ def atelier_promote():
                 course, invention, user["id"], read_cur2, write_cur
             )
             if recipe_ref.startswith("kitchen:"):
-                kitchen_slugs.append(recipe_ref[len("kitchen:"):])
+                ku = recipe_ref[len("kitchen:"):]
+                kitchen_courses.append({
+                    "kitchen_uuid": ku,
+                    "invention_id": course["invention_id"],
+                })
             course_name = (
                 course.get("slot_role") or course.get("slot_name")
                 or f"Course {course['position']}"
@@ -18419,7 +18504,7 @@ def atelier_promote():
 
         write_conn.commit()
         return jsonify(menu_id=str(menu_id), menu_slug=menu_slug,
-                       kitchen_uuids=kitchen_slugs), 201
+                       kitchen_courses=kitchen_courses), 201
 
     except Exception as e:
         write_conn.rollback()
@@ -18430,6 +18515,190 @@ def atelier_promote():
         write_conn.close()
         read_cur2.close()
         read_conn2.close()
+
+
+@app.route("/api/atelier/write-course-recipe", methods=["POST"])
+def atelier_write_course_recipe():
+    """
+    Compose a full recipe body (ingredients + steps + seven pillars) for one atelier course.
+    Called per-course after promote so no single request times out.
+    Writes ONLY to user_kitchen_recipes (UPDATE — row already exists from promote).
+    Never touches the public recipes table.
+    """
+    user = get_current_user()
+    if not user:
+        return jsonify(error="Login required"), 401
+
+    data = request.get_json() or {}
+    kitchen_uuid = data.get("kitchen_uuid")
+    invention_id = data.get("invention_id")
+
+    if not kitchen_uuid or not invention_id:
+        return jsonify(error="kitchen_uuid and invention_id required"), 400
+
+    if not DATABASE_URL_WRITE:
+        return jsonify(error="Write DB unavailable"), 503
+
+    # ── 1. Read invention + verify kitchen recipe ownership ───────────────────
+    read_conn = psycopg2.connect(DATABASE_URL)
+    read_conn.autocommit = True
+    read_cur = read_conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        read_cur.execute(
+            "SELECT * FROM user_inventions WHERE id = %s AND user_id = %s",
+            (int(invention_id), user["id"])
+        )
+        inv_row = read_cur.fetchone()
+        if not inv_row:
+            return jsonify(error="Invention not found or not yours"), 404
+        invention = dict(inv_row)
+
+        read_cur.execute(
+            "SELECT uuid, title FROM user_kitchen_recipes WHERE uuid = %s AND user_id = %s",
+            (kitchen_uuid, user["id"])
+        )
+        kitchen_row = read_cur.fetchone()
+        if not kitchen_row:
+            return jsonify(error="Kitchen recipe not found or not yours"), 404
+
+        # ── 2. Resolve real component names from lineage ──────────────────────
+        technique_ids = invention.get("derived_from_techniques") or []
+        ingredient_ids = invention.get("derived_from_ingredients") or []
+
+        techniques = []
+        if technique_ids:
+            read_cur.execute(
+                """SELECT name, key_principles, pro_tips
+                   FROM technique_references WHERE id = ANY(%s)""",
+                (technique_ids,)
+            )
+            techniques = [dict(r) for r in read_cur.fetchall()]
+
+        ingredients_lineage = []
+        if ingredient_ids:
+            read_cur.execute(
+                "SELECT canonical_name, category FROM ingredient_master WHERE id = ANY(%s)",
+                (ingredient_ids,)
+            )
+            ingredients_lineage = [dict(r) for r in read_cur.fetchall()]
+
+        # Covers from the originating composition's brief
+        covers = None
+        if invention.get("composed_by_brief_id"):
+            read_cur.execute(
+                "SELECT brief_parsed FROM compositions WHERE id = %s",
+                (invention["composed_by_brief_id"],)
+            )
+            comp_row = read_cur.fetchone()
+            if comp_row and comp_row.get("brief_parsed"):
+                covers = comp_row["brief_parsed"].get("covers")
+    finally:
+        read_cur.close()
+        read_conn.close()
+
+    # ── 3. Compose recipe body ─────────────────────────────────────────────────
+    body = _compose_course_recipe_body(
+        name=invention["name"],
+        description=invention.get("description") or "",
+        techniques=techniques,
+        ingredients=ingredients_lineage,
+        covers=covers,
+    )
+    if not body:
+        return jsonify(error="Recipe body composition failed — try again in a moment."), 503
+
+    ingredients = body.get("ingredients", [])
+    steps = body.get("steps", [])
+
+    # ── 4. Build ingredient strings for enrichment functions ──────────────────
+    ingredient_strings = []
+    for ing in ingredients:
+        if isinstance(ing, dict):
+            parts = [str(ing.get("count") or ""), ing.get("unit") or "", ing.get("name") or ""]
+            info = ing.get("info") or ""
+            parts = [p for p in parts if p]
+            line = " ".join(parts)
+            if info:
+                line += f" ({info})"
+            ingredient_strings.append(line.strip())
+        else:
+            ingredient_strings.append(str(ing))
+
+    ingredients_text = "\n".join(f"- {s}" for s in ingredient_strings)
+    steps_text = "\n".join(f"{i + 1}. {s}" for i, s in enumerate(steps))
+    title = invention["name"]
+
+    # ── 5. Run enrichment pipeline ────────────────────────────────────────────
+    enhanced_steps = []
+    try:
+        enhanced_steps = _add_step_insights(title, ingredient_strings, steps)
+    except Exception as _e:
+        app.logger.warning(f"[WRITE_COURSE_RECIPE] step insights failed for {title!r}: {_e}")
+
+    structure = {}
+    try:
+        structure = _enhance_recipe_structure(title, ingredients_text, steps_text)
+    except Exception as _e:
+        app.logger.warning(f"[WRITE_COURSE_RECIPE] structure failed for {title!r}: {_e}")
+
+    pairings = []
+    try:
+        pairings = _enrich_beverage_pairings(title, ingredients_text)
+    except Exception as _e:
+        app.logger.warning(f"[WRITE_COURSE_RECIPE] pairings failed for {title!r}: {_e}")
+
+    # ── 6. UPDATE user_kitchen_recipes (never touches public recipes table) ───
+    write_conn = psycopg2.connect(DATABASE_URL_WRITE)
+    write_cur = write_conn.cursor()
+    try:
+        write_cur.execute("""
+            UPDATE user_kitchen_recipes
+            SET ingredients              = %s::jsonb,
+                steps                    = %s::jsonb,
+                original_steps           = %s::jsonb,
+                enhanced_steps           = %s::jsonb,
+                origin                   = COALESCE(NULLIF(%s, ''), origin),
+                quality_hierarchy        = %s::jsonb,
+                sensory_tests            = %s::jsonb,
+                cross_cuisine_parallels  = %s::jsonb,
+                flavour_context          = COALESCE(NULLIF(%s, ''), flavour_context),
+                lives_or_dies            = COALESCE(NULLIF(%s, ''), lives_or_dies),
+                quality_warnings         = %s::jsonb,
+                ingredient_origin_markers = %s::jsonb,
+                beverage_pairings        = %s::jsonb,
+                updated_at               = NOW()
+            WHERE uuid = %s AND user_id = %s
+        """, (
+            json.dumps(ingredients),
+            json.dumps(steps),
+            json.dumps(steps),           # original_steps verbatim
+            json.dumps(enhanced_steps),
+            structure.get("origin") or invention.get("origin") or "",
+            json.dumps(structure["quality_hierarchy"]) if structure.get("quality_hierarchy") else None,
+            json.dumps(structure["sensory_tests"]) if structure.get("sensory_tests") else None,
+            json.dumps(structure["cross_cuisine_parallels"]) if structure.get("cross_cuisine_parallels") else None,
+            structure.get("flavour_context") or invention.get("flavour_context") or "",
+            structure.get("lives_or_dies") or invention.get("lives_or_dies") or "",
+            json.dumps(structure.get("quality_warnings") or []),
+            json.dumps(structure.get("ingredient_origin_markers") or []),
+            json.dumps(pairings) if pairings else None,
+            kitchen_uuid,
+            user["id"],
+        ))
+        write_conn.commit()
+        app.logger.info(
+            f"[WRITE_COURSE_RECIPE] completed: kitchen_uuid={kitchen_uuid} "
+            f"title={title!r} ingredients={len(ingredients)} steps={len(steps)}"
+        )
+    except Exception as e:
+        write_conn.rollback()
+        app.logger.error(f"[WRITE_COURSE_RECIPE] db write failed: {e}")
+        return jsonify(error="Write failed", detail=str(e)), 500
+    finally:
+        write_cur.close()
+        write_conn.close()
+
+    return jsonify(ok=True, kitchen_uuid=kitchen_uuid), 200
 
 
 @app.route("/atelier")
