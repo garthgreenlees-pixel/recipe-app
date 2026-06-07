@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Ingredient Review — Admin{% endblock %}
+
+{% block extra_head %}
+<style>
+.ari-page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+.ari-header { margin-bottom: 40px; border-bottom: 1px solid var(--line); padding-bottom: 24px; }
+.ari-headline {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--charcoal);
+  margin: 0 0 6px;
+}
+.ari-subhead {
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--warm-gray);
+  margin: 0;
+}
+.ari-count {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--warm-gray);
+  margin-top: 10px;
+}
+.ari-empty {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--warm-gray);
+  padding: 40px 0;
+  text-align: center;
+  letter-spacing: 0.06em;
+}
+.ari-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px 20px;
+  align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px dotted var(--line-soft);
+}
+.ari-row:last-child { border-bottom: none; }
+.ari-name {
+  font-family: var(--body);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--charcoal);
+  margin: 0 0 4px;
+}
+.ari-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--warm-gray);
+  letter-spacing: 0.05em;
+}
+.ari-meta span { margin-right: 14px; }
+.ari-actions { display: flex; gap: 8px; align-items: flex-start; padding-top: 2px; }
+.ari-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  padding: 6px 12px;
+  border: 1px solid var(--charcoal);
+  cursor: pointer;
+  white-space: nowrap;
+  background: none;
+}
+.ari-btn--approve { background: var(--charcoal); color: var(--cream-50); border-color: var(--charcoal); }
+.ari-btn--approve:hover { background: var(--gold); border-color: var(--gold); }
+.ari-btn--reject { background: transparent; color: var(--charcoal); }
+.ari-btn--reject:hover { border-color: var(--warm-gray); color: var(--warm-gray); }
+.ari-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ari-page">
+  <div class="ari-header">
+    <h1 class="ari-headline">Composed Ingredients</h1>
+    <p class="ari-subhead">Ingredients the composer invented and saved. Approve to return them to the pool; reject to keep them out.</p>
+    <span class="ari-count">{{ rows|length }} pending</span>
+  </div>
+
+  {% if not rows %}
+  <div class="ari-empty">Queue is clear — no pending composed ingredients.</div>
+  {% else %}
+  {% for ing in rows %}
+  <div class="ari-row" id="ari-row-{{ ing.id }}">
+    <div>
+      <div class="ari-name">{{ ing.name }}</div>
+      <div class="ari-meta">
+        <span>{{ ing.category }}</span>
+        {% if ing.origin_country %}<span>{{ ing.origin_country }}</span>{% endif %}
+        {% if ing.model_version %}<span>{{ ing.model_version }}</span>{% endif %}
+        <span>{{ ing.created_at.strftime('%d %b %Y') if ing.created_at else '' }}</span>
+      </div>
+    </div>
+    <div class="ari-actions">
+      <form method="POST" action="/admin/review/ingredients/{{ ing.id }}/approve" style="display:inline">
+        <button type="submit" class="ari-btn ari-btn--approve">Approve</button>
+      </form>
+      <form method="POST" action="/admin/review/ingredients/{{ ing.id }}/reject" style="display:inline">
+        <button type="submit" class="ari-btn ari-btn--reject">Reject</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

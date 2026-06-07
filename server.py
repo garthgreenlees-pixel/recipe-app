@@ -1005,11 +1005,21 @@ def init_db():
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS faqs JSONB DEFAULT NULL",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS beverage_pairings JSONB DEFAULT NULL",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS enrichment_locked JSONB DEFAULT NULL",
+        "ALTER TABLE ingredient_products ADD COLUMN IF NOT EXISTS review_status TEXT",
     ]:
         try:
             cur.execute(stmt)
         except Exception:
             pass
+    # Backfill review_status for existing ai-augmented rows
+    try:
+        cur.execute("""
+            UPDATE ingredient_products
+            SET review_status = 'pending'
+            WHERE source = 'ai-augmented' AND review_status IS NULL
+        """)
+    except Exception:
+        pass
     # ── Password reset tokens ─────────────────────────────────────────────────
     cur.execute("""
         CREATE TABLE IF NOT EXISTS password_reset_tokens (
@@ -18840,6 +18850,83 @@ def admin_pairings_reject(suggestion_id):
     if not affected:
         return jsonify(error="suggestion not found or already decided"), 404
     return jsonify(ok=True)
+
+
+# ─── Atelier ingredient review desk ──────────────────────────────────────────
+
+@app.route("/admin/review/ingredients")
+def admin_review_ingredients():
+    user = get_current_user()
+    if not user or user.get("role") not in ("founder", "admin"):
+        return redirect("/")
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT id, name, category, origin_country, model_version, prompt_version, created_at
+        FROM ingredient_products
+        WHERE source = 'ai-augmented'
+          AND COALESCE(review_status, 'pending') = 'pending'
+        ORDER BY created_at DESC
+    """)
+    rows = [dict(r) for r in cur.fetchall()]
+    cur.close(); conn.close()
+    return render_template("admin_review_ingredients.html", rows=rows)
+
+
+@app.route("/admin/review/ingredients/<int:ingredient_id>/approve", methods=["POST"])
+def admin_review_ingredients_approve(ingredient_id):
+    user = get_current_user()
+    if not user or user.get("role") not in ("founder", "admin"):
+        return jsonify(error="forbidden"), 403
+    if not DATABASE_URL_WRITE:
+        return jsonify(error="no write DB"), 503
+    conn = psycopg2.connect(DATABASE_URL_WRITE)
+    cur = conn.cursor()
+    try:
+        cur.execute("""
+            UPDATE ingredient_products
+            SET validated = true, review_status = 'approved', updated_at = NOW()
+            WHERE id = %s AND source = 'ai-augmented'
+        """, (ingredient_id,))
+        affected = cur.rowcount
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        cur.close(); conn.close()
+        app.logger.error(f"[REVIEW INGREDIENTS] approve {ingredient_id} failed: {e}")
+        return jsonify(error="Update failed"), 500
+    cur.close(); conn.close()
+    if not affected:
+        return jsonify(error="ingredient not found or not ai-augmented"), 404
+    return redirect("/admin/review/ingredients")
+
+
+@app.route("/admin/review/ingredients/<int:ingredient_id>/reject", methods=["POST"])
+def admin_review_ingredients_reject(ingredient_id):
+    user = get_current_user()
+    if not user or user.get("role") not in ("founder", "admin"):
+        return jsonify(error="forbidden"), 403
+    if not DATABASE_URL_WRITE:
+        return jsonify(error="no write DB"), 503
+    conn = psycopg2.connect(DATABASE_URL_WRITE)
+    cur = conn.cursor()
+    try:
+        cur.execute("""
+            UPDATE ingredient_products
+            SET review_status = 'rejected', updated_at = NOW()
+            WHERE id = %s AND source = 'ai-augmented'
+        """, (ingredient_id,))
+        affected = cur.rowcount
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        cur.close(); conn.close()
+        app.logger.error(f"[REVIEW INGREDIENTS] reject {ingredient_id} failed: {e}")
+        return jsonify(error="Update failed"), 500
+    cur.close(); conn.close()
+    if not affected:
+        return jsonify(error="ingredient not found or not ai-augmented"), 404
+    return redirect("/admin/review/ingredients")
 
 
 # ─── Run ─────────────────────────────────────────────────────────────────────
