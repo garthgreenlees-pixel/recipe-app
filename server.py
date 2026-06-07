@@ -17180,12 +17180,15 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                     cur.execute(
                         """SELECT id, name, COALESCE(description, '') AS description
                            FROM ingredient_products
-                           WHERE name                         ~* %s
+                           WHERE (
+                                   name                         ~* %s
                               OR COALESCE(description, '')    ~* %s
                               OR COALESCE(origin_country, '') ~* %s
                               OR name                         ~* %s
                               OR COALESCE(description, '')    ~* %s
                               OR COALESCE(origin_country, '') ~* %s
+                           )
+                           AND NOT (source = 'ai-augmented' AND validated IS NOT TRUE)
                            ORDER BY (CASE WHEN COALESCE(origin_country,'') ~* %s THEN 0 ELSE 1 END),
                                     RANDOM()
                            LIMIT 150""",
@@ -17197,9 +17200,12 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                     cur.execute(
                         """SELECT id, name, COALESCE(description, '') AS description
                            FROM ingredient_products
-                           WHERE name                         ~* %s
+                           WHERE (
+                                   name                         ~* %s
                               OR COALESCE(description, '')    ~* %s
                               OR COALESCE(origin_country, '') ~* %s
+                           )
+                           AND NOT (source = 'ai-augmented' AND validated IS NOT TRUE)
                            ORDER BY RANDOM()
                            LIMIT 150""",
                         (kw_pattern, kw_pattern, kw_pattern),
