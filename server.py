@@ -3033,6 +3033,9 @@ def recipe_page(slug):
         kitchen_recipe = cur.fetchone()
         if kitchen_recipe:
             user = get_current_user()
+            if not user or user.get("id") != kitchen_recipe.get("user_id"):
+                cur.close(); conn.close()
+                return "Recipe not found", 404
             # Normalize yield text before anything else
             _row = dict(kitchen_recipe)
             _st = (_row.get("servings_text") or "").rstrip()
@@ -3197,6 +3200,10 @@ def recipe_cook_mode(slug):
     cur.execute("SELECT * FROM user_kitchen_recipes WHERE slug = %s", (slug,))
     kitchen_recipe = cur.fetchone()
     if kitchen_recipe:
+        _cook_user = get_current_user()
+        if not _cook_user or _cook_user.get("id") != kitchen_recipe.get("user_id"):
+            cur.close(); conn.close()
+            return "Recipe not found", 404
         cur.close()
         conn.close()
         _recipe_dict = dict(kitchen_recipe)
