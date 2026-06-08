@@ -295,7 +295,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
     {% if is_authenticated %}
     <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
     {% else %}
-    <a href="/auth/login">Sign In</a>
+    <a href="/auth/login">Enter</a>
     {% endif %}
   </div>
   <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">

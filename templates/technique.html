@@ -744,7 +744,7 @@ async function uploadInvoice(file) {
     const data = await r.json();
 
     if (r.status === 401) {
-      body.innerHTML = '<div style="padding:1rem;font-size:0.85rem;color:rgba(245,241,233,0.4)">Please <a href="/auth/login" style="color:var(--gold)">sign in</a> to scan invoices.</div>';
+      body.innerHTML = '<div style="padding:1rem;font-size:0.85rem;color:rgba(245,241,233,0.4)">Please <a href="/auth/login" style="color:var(--gold)">enter</a> to scan invoices.</div>';
       return;
     }
     if (data.error) throw new Error(data.error);

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign In — Provenance</title>
-<meta name="description" content="Sign in to your Provenance account to access culinary techniques, your Kitchen, and saved programmes.">
+<title>Enter — Provenance</title>
+<meta name="description" content="Enter your Provenance account to reach culinary techniques, your Kitchen, and saved programmes.">
 <link rel="canonical" href="https://provenance.kitchen/auth/login">
 <link rel="manifest" href="/static/manifest.json">
 <meta name="theme-color" content="#08080A">
@@ -68,12 +68,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 
 <div class="auth-wrap">
   <div class="auth-card">
-    <div class="auth-eyebrow">Sign In</div>
+    <div class="auth-eyebrow">Enter</div>
     <h1 class="auth-title">Welcome back</h1>
     <p class="auth-sub">New here? <a href="/auth/signup{% if request.args.get('next') %}?next={{ request.args.get('next') }}{% endif %}">Create an account →</a></p>
 
     {% if request.args.get('reset') == '1' %}
-    <div class="auth-success">Password updated. You can now sign in with your new password.</div>
+    <div class="auth-success">Password updated. You can now enter with your new password.</div>
     {% endif %}
 
     {% if request.args.get('closed') == '1' %}
@@ -100,7 +100,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
         <input type="checkbox" name="remember_me" id="remember_me" value="on" style="accent-color:var(--gold);width:14px;height:14px;cursor:pointer">
         <label for="remember_me" style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);cursor:pointer;margin:0">Remember me on this device</label>
       </div>
-      <button type="submit" class="auth-btn">Sign In →</button>
+      <button type="submit" class="auth-btn">Enter →</button>
     </form>
   </div>
 </div>

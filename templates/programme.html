@@ -182,7 +182,7 @@ input[type=number].field-input{width:80px}
     {% if is_authenticated %}
     <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
     {% else %}
-    <a href="/auth/login">Sign In</a>
+    <a href="/auth/login">Enter</a>
     {% endif %}
   </div>
   <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
@@ -202,7 +202,7 @@ input[type=number].field-input{width:80px}
   {% if is_authenticated %}
   <a href="/auth/account" class="mobile-nav-secondary">{{ current_user.display_name or 'Account' }}</a>
   {% else %}
-  <a href="/auth/login" class="mobile-nav-secondary">Sign In</a>
+  <a href="/auth/login" class="mobile-nav-secondary">Enter</a>
   {% endif %}
 </div>
 

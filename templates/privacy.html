@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Provenance</title>
+<meta name="description" content="Provenance beta privacy policy.">
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#08080A">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--text:#F5F1E9;--text-light:rgba(245,241,233,0.55);
+  --bg:#08080A;--border:rgba(201,168,76,0.10);
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.7;min-height:100vh}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3)}
+.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em}
+.nav-links a:hover{color:#C9A84C}
+.content{max-width:680px;margin:0 auto;padding:100px 2rem 4rem}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+h1{font-family:var(--serif);font-size:2.2rem;font-weight:600;letter-spacing:-0.5px;margin-bottom:0.5rem}
+.meta{font-size:0.8rem;color:var(--text-light);margin-bottom:2.5rem}
+p{font-size:0.9rem;color:var(--text-light);margin-bottom:1.25rem;line-height:1.75}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms}
+.footer-links a:hover{color:#C9A84C}
+.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="/" class="nav-wordmark">Provenance</a>
+  <div class="nav-links">
+    <a href="/auth/login">Enter</a>
+    <a href="/auth/signup">Create Account</a>
+  </div>
+</nav>
+
+<div class="content">
+  <div class="eyebrow">Legal</div>
+  <h1>Privacy Policy</h1>
+  <p class="meta">Provenance Culinary Intelligence Inc. &mdash; Last updated: May 4, 2026</p>
+
+  <p>Provenance is in beta. This is a plain-language summary of how we handle your data; a full policy will be issued before public launch.</p>
+
+  <p>We collect your email address, a hashed password, and optional display name when you create an account. We also log anonymous usage data (page views, feature usage) via Google Analytics to improve the product.</p>
+
+  <p>We use Stripe to process payments. Your payment card details are handled entirely by Stripe and are never stored on our servers. We retain only subscription status and Stripe customer identifiers.</p>
+
+  <p>We do not sell, rent, or share your personal data with third parties except as required by law or to deliver the service (e.g. Stripe for payments, Resend for transactional email).</p>
+
+  <p>You may request deletion of your account and associated data at any time by emailing <a href="mailto:hello@provenance.kitchen">hello@provenance.kitchen</a>. Full GDPR data-export tooling will be added before public launch.</p>
+
+  <p>Questions: <a href="mailto:hello@provenance.kitchen">hello@provenance.kitchen</a></p>
+</div>
+
+<footer>
+  <div class="about-footer">
+    <div class="footer-links">
+      <a href="/about">About</a>
+      <a href="/terms">Terms</a>
+      <a href="/privacy">Privacy</a>
+    </div>
+    <span class="footer-wm">Provenance</span>
+  </div>
+</footer>
+</body>
+</html>
