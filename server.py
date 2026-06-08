@@ -15948,9 +15948,19 @@ def canon_explorer():
         ORDER BY n DESC LIMIT 50
     """)
     canon_counts = {r["canon_slug"]: r["n"] for r in cur.fetchall()}
+    cur.execute("""
+        SELECT v.slug, v.name, COUNT(ve.entry_id) as count
+        FROM volumes v
+        LEFT JOIN volume_entries ve ON ve.volume_slug = v.slug
+        WHERE v.volume_type = 'route'
+        GROUP BY v.slug, v.name
+        HAVING COUNT(ve.entry_id) > 0
+        ORDER BY v.slug
+    """)
+    routes = [_serialize_row(r) for r in cur.fetchall()]
     cur.close()
     conn.close()
-    return render_template("explorer.html", canons=canons, canon_counts=canon_counts)
+    return render_template("explorer.html", canons=canons, canon_counts=canon_counts, routes=routes)
 
 
 @app.route("/atlas/<volume_slug>")

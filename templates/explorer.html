@@ -22,10 +22,25 @@
        onmouseover="this.style.borderColor='var(--gold-soft)'" onmouseout="this.style.borderColor='var(--border)'">
       <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,{{ intensity * 0.0012 }}),transparent);pointer-events:none"></div>
       <div style="font-family:var(--serif);font-size:1rem;color:var(--cream);margin-bottom:0.3rem;position:relative">{{ canon.name }}</div>
-      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;position:relative">{{ count }} entries</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;position:relative">{{ count }} techniques</div>
     </a>
     {% endfor %}
   </div>
+
+  {% if routes %}
+  <div style="margin-bottom:2rem">
+    <h2 style="font-family:var(--serif);font-size:1.25rem;font-weight:400;color:var(--cream);margin-bottom:1rem">Spice Routes</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem">
+      {% for route in routes %}
+      <a href="/route/{{ route.slug }}" style="display:block;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;text-decoration:none;transition:border-color 0.2s"
+         onmouseover="this.style.borderColor='var(--gold-soft)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-family:var(--serif);font-size:1rem;color:var(--cream);margin-bottom:0.3rem">{{ route.name }}</div>
+        <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase">{{ route.count }} techniques</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
   <div style="border-top:1px solid var(--border);padding-top:2rem;display:flex;gap:1.5rem;flex-wrap:wrap">
     <a href="/canons-v2/" style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold)">All Canons →</a>
