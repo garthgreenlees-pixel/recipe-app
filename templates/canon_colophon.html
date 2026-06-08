@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Colophon — {{ canon.name }} — Provenance{% endblock %}
+{% block meta_description %}{{ canon.name }} Canon colophon — production and imprint details.{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+{% endblock %}
+
+{% block styles %}
+.colo{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px;text-align:center;padding:0 12px}
+.colo-rule{width:40px;height:1px;background:color-mix(in srgb,var(--stone) 40%,transparent);margin:22px auto}
+.colo-vol{font-family:"Playfair Display",serif;font-weight:500;font-size:18px;color:var(--ink);margin:0 0 9px}
+.colo-count{font-family:"EB Garamond",Georgia,serif;font-style:italic;font-size:15px;color:var(--stone);margin:0}
+.colo-meta{font:500 9px/2 "DM Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--stone);margin:0}
+.colo-imprint{font:500 9px/1 "DM Mono",monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--foil);margin:0}
+{% endblock %}
+
+{% block main_padding %}0px{% endblock %}
+
+{% block content %}
+<div class="canonpage">
+  <div class="bookspread" style="--cloth-a:{{ palette.cloth_a if palette else '#3b3330' }};--cloth-b:{{ palette.cloth_b if palette else '#241f1b' }};--paper:{{ palette.paper if palette else '#F2EBDA' }};--accent:{{ palette.accent if palette else '#5E2230' }}">
+
+    <div class="bpage-left">
+      <div class="cmark"></div>
+      <div class="kicker">
+        <a href="/canon/{{ canon.slug }}/">{{ canon.name }}</a> &middot; Colophon
+      </div>
+      <h1 class="title">Colophon</h1>
+      <hr class="foilrule"/>
+    </div>
+
+    <div class="bspine"></div>
+
+    <div class="bpage-right">
+      <div class="rhead"><span>{{ canon.name }}</span><span>Colophon</span></div>
+      <div class="colo">
+        <p class="colo-vol">The {{ canon.name }} Canon</p>
+        <p class="colo-count">{{ entry_count }} techniques.</p>
+        <div class="colo-rule"></div>
+        <p class="colo-meta">Built to the Sashimi Standard.</p>
+        <p class="colo-meta">Set in Playfair Display and DM Mono.</p>
+        <div class="colo-rule"></div>
+        <p class="colo-imprint">Provenance &middot; Coquitlam, British Columbia</p>
+      </div>
+      <div class="foot"><a href="/canon/{{ canon.slug }}/index/" style="color:inherit;text-decoration:none">Index</a> &nbsp;·&nbsp; Provenance</div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

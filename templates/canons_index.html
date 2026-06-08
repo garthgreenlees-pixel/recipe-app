@@ -21,7 +21,7 @@
       {% if canon.description %}
       <div style="font-size:0.82rem;color:var(--stone);margin-bottom:0.75rem;line-height:1.5">{{ canon.description[:100] }}{% if canon.description|length > 100 %}…{% endif %}</div>
       {% endif %}
-      <div style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase">{{ canon.entry_count or 0 }} entries</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase">{{ canon.entry_count or 0 }} techniques</div>
     </a>
     {% else %}
     <p style="color:var(--stone)">No canons available.</p>

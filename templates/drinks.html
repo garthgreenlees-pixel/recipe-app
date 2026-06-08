@@ -344,7 +344,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
 <section class="p500" id="p500Section">
   <div class="p500-inner">
     <div class="p500-header">
-      <p class="p500-eyebrow">500 Entries · 10 Categories</p>
+      <p class="p500-eyebrow">500 Beverages · 10 Categories</p>
       <h2 class="p500-title">THE PROVENANCE 500</h2>
       <p class="p500-sub">The world's most searched drinks. Each one the definitive version.</p>
     </div>
@@ -484,7 +484,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
       p500Cache[cat] = entries;
       p500Render(entries, cat, grid);
     } catch(e) {
-      grid.innerHTML = '<div class="p500-loading">Could not load entries.</div>';
+      grid.innerHTML = '<div class="p500-loading">Could not load.</div>';
     }
   };
 

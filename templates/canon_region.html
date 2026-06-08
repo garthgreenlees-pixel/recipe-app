@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}{{ region_label }} — {{ section.name }} — {{ canon.name }} — Provenance{% endblock %}
+{% block meta_description %}{{ region_label }} dishes from the {{ canon.name }} {{ section.name }}.{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+{% endblock %}
+
+{% block styles %}
+.elist{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.erow{display:grid;grid-template-columns:4rem 1fr auto;align-items:baseline;gap:12px;padding:13px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit}
+.e-num{font:500 11px/1 "DM Mono",monospace;color:var(--foil);letter-spacing:.05em}
+.e-name{font-family:"Playfair Display",serif;font-weight:500;font-size:17px;color:var(--ink)}
+.e-origin{font:500 9px/1 "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--stone);white-space:nowrap}
+.erow:hover .e-name{color:var(--accent)}
+.back-link{display:inline-block;font:500 10px/1 "DM Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--foil);text-decoration:none;margin-top:20px;opacity:.8}
+.back-link:hover{opacity:1}
+{% endblock %}
+
+{% block main_padding %}0px{% endblock %}
+
+{% block content %}
+<div class="canonpage">
+  <div class="bookspread" style="--cloth-a:{{ palette.cloth_a if palette else '#3b3330' }};--cloth-b:{{ palette.cloth_b if palette else '#241f1b' }};--paper:{{ palette.paper if palette else '#F2EBDA' }};--accent:{{ palette.accent if palette else '#5E2230' }}">
+
+    <div class="bpage-left">
+      <div class="cmark"></div>
+      <div class="kicker">
+        <a href="/canon/{{ canon.slug }}/">{{ canon.name }}</a>
+        &middot; <a href="/canon/{{ canon.slug }}/{{ section.section_slug }}/">{{ section.name }}</a>
+      </div>
+      <h1 class="title">{{ region_label }}</h1>
+      <hr class="foilrule"/>
+    </div>
+
+    <div class="bspine"></div>
+
+    <div class="bpage-right">
+      <div class="rhead"><span>{{ canon.name }}</span><span>{{ region_label }}</span></div>
+      <p class="sec-label">Dishes</p>
+      <ul class="elist">
+        {% for entry in entries %}
+        <li>
+          <a class="erow" href="/technique/{{ entry.slug }}">
+            <span class="e-num">{{ entry.decimal_id or '' }}</span>
+            <span class="e-name">{{ entry.name }}</span>
+            <span class="e-origin">{{ (entry.origin or '')[:26] }}</span>
+          </a>
+        </li>
+        {% else %}
+        <li style="padding:20px 0;color:var(--stone);font-style:italic">No techniques in this region.</li>
+        {% endfor %}
+      </ul>
+      <a class="back-link" href="/canon/{{ canon.slug }}/{{ section.section_slug }}/">&larr; All Regions</a>
+      <div class="foot"><a href="/canon/{{ canon.slug }}/index/" style="color:inherit;text-decoration:none">Index</a> &nbsp;·&nbsp; <a href="/canon/{{ canon.slug }}/colophon/" style="color:inherit;text-decoration:none">Colophon</a> &nbsp;·&nbsp; Provenance</div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

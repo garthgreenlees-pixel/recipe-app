@@ -509,7 +509,7 @@ body { background: #FDFCF9; color: #1A1A1A; }
       <div id="pairing-results-list"></div>
     </div>
     {% else %}
-    <div class="empty-state">No pairing data yet — entries in progress.</div>
+    <div class="empty-state">No pairing data yet.</div>
     {% endif %}
   </div>
 
@@ -542,7 +542,7 @@ async function loadTradition(label, ...categories) {
       allRows.push(...rows);
     }
     if (!allRows.length) {
-      listEl.innerHTML = '<div class="empty-state">No beverages in this tradition yet — entries in progress.</div>';
+      listEl.innerHTML = '<div class="empty-state">No beverages in this tradition yet.</div>';
       return;
     }
     listEl.innerHTML = allRows.map(p => `

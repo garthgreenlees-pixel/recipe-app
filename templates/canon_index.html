@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Index — {{ canon.name }} — Provenance{% endblock %}
+{% block meta_description %}Alphabetical index of all {{ canon.name }} techniques.{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+{% endblock %}
+
+{% block styles %}
+.idx-az{display:flex;flex-wrap:wrap;gap:3px 8px;margin:0 0 18px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+.idx-az a{font:700 11px/1 "DM Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--foil);text-decoration:none;padding:2px 3px;cursor:pointer}
+.idx-az a:hover,.idx-az a.active{color:var(--accent)}
+.idx-ltr{font:700 10px/1 "DM Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--foil);padding:5px 0 4px;border-bottom:1px solid var(--rule);margin-bottom:8px}
+.idx-ents{column-count:2;column-gap:18px}
+@media(max-width:640px){.idx-ents{column-count:1}}
+.idx-ent{display:block;font-family:"Playfair Display",serif;font-size:12.5px;color:var(--ink);text-decoration:none;padding:2px 0;line-height:1.42;break-inside:avoid}
+.idx-ent:hover{color:var(--accent)}
+{% endblock %}
+
+{% block main_padding %}0px{% endblock %}
+
+{% block content %}
+<div class="canonpage">
+  <div class="bookspread" style="--cloth-a:{{ palette.cloth_a if palette else '#3b3330' }};--cloth-b:{{ palette.cloth_b if palette else '#241f1b' }};--paper:{{ palette.paper if palette else '#F2EBDA' }};--accent:{{ palette.accent if palette else '#5E2230' }}">
+
+    <div class="bpage-left">
+      <div class="cmark"></div>
+      <div class="kicker">
+        <a href="/canon/{{ canon.slug }}/">{{ canon.name }}</a> &middot; Index
+      </div>
+      <h1 class="title">Index</h1>
+      <p class="epigraph">{{ "{:,}".format(total_count) }} techniques — alphabetical.</p>
+      <hr class="foilrule"/>
+    </div>
+
+    <div class="bspine"></div>
+
+    <div class="bpage-right">
+      <div class="rhead"><span>{{ canon.name }}</span><span>Index</span></div>
+
+      <div class="idx-az">
+        {% for letter in letters %}
+        <a href="#" data-letter="{{ letter }}">{{ letter }}</a>
+        {% endfor %}
+      </div>
+
+      {% for letter, group in grouped %}
+      {% set lid = 'hash' if letter == '#' else letter %}
+      <div class="idx-grp" id="idx-{{ lid }}" style="display:none">
+        <div class="idx-ltr">{{ letter }}</div>
+        <div class="idx-ents">
+          {% for entry in group %}
+          <a class="idx-ent" href="/technique/{{ entry.slug }}">{{ entry.name }}</a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="foot"><a href="/canon/{{ canon.slug }}/index/" style="color:inherit;text-decoration:none">Index</a> &nbsp;·&nbsp; <a href="/canon/{{ canon.slug }}/colophon/" style="color:inherit;text-decoration:none">Colophon</a> &nbsp;·&nbsp; Provenance</div>
+    </div>
+
+  </div>
+</div>
+<script>
+(function(){
+  var links = document.querySelectorAll('.idx-az a');
+  function lid(l){ return l === '#' ? 'hash' : l; }
+  function show(letter){
+    document.querySelectorAll('.idx-grp').forEach(function(g){ g.style.display = 'none'; });
+    links.forEach(function(a){ a.classList.remove('active'); });
+    var g = document.getElementById('idx-' + lid(letter));
+    if(g) g.style.display = 'block';
+    links.forEach(function(a){ if(a.dataset.letter === letter) a.classList.add('active'); });
+  }
+  links.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      show(a.dataset.letter);
+    });
+  });
+  var def = {{ default_letter|tojson }};
+  if(def) show(def); else if(links.length) show(links[0].dataset.letter);
+})();
+</script>
+{% endblock %}

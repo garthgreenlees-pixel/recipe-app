@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.name }} — {{ canon.name }} — Provenance{% endblock %}
+{% block meta_description %}{{ section.description or (section.name + ' techniques from the ' + canon.name + ' canon.') }}{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+{% endblock %}
+
+{% block styles %}
+/* Overview essay */
+.overview-body{font-family:"EB Garamond",Georgia,serif;font-size:16px;line-height:1.72;color:var(--ink)}
+.overview-body p{margin:0 0 18px}
+.overview-body p:last-child{margin-bottom:0}
+/* Region index */
+.rtoc{list-style:none;margin:0 0 8px;padding:0}
+.rrow{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;padding:17px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit}
+.rrow:first-child{border-top:1px solid var(--rule)}
+.rrow-name{font-family:"Playfair Display",serif;font-weight:500;font-size:20px;color:var(--ink);display:block}
+.rrow-arrow{color:var(--foil);font-size:18px}
+.rrow:hover .rrow-name{color:var(--accent)}
+/* Flat entry list */
+.elist{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.erow{display:grid;grid-template-columns:4rem 1fr auto;align-items:baseline;gap:12px;padding:13px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit}
+.e-num{font:500 11px/1 "DM Mono",monospace;color:var(--foil);letter-spacing:.05em}
+.e-name{font-family:"Playfair Display",serif;font-weight:500;font-size:17px;color:var(--ink)}
+.e-origin{font:500 9px/1 "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--stone);white-space:nowrap}
+.erow:hover .e-name{color:var(--accent)}
+{% endblock %}
+
+{% block main_padding %}0px{% endblock %}
+
+{% block content %}
+{% set roman = ['I','II','III','IV','V','VI','VII','VIII','IX','X'] %}
+<div class="canonpage">
+  <div class="bookspread" style="--cloth-a:{{ palette.cloth_a if palette else '#3b3330' }};--cloth-b:{{ palette.cloth_b if palette else '#241f1b' }};--paper:{{ palette.paper if palette else '#F2EBDA' }};--accent:{{ palette.accent if palette else '#5E2230' }}">
+
+    <div class="bpage-left">
+      <div class="cmark"></div>
+      <div class="kicker">
+        <a href="/canon/{{ canon.slug }}/">{{ canon.name }}</a> &middot; {{ section.name }}
+      </div>
+      {% if section.display_order and section.display_order >= 10 and section.display_order <= 100 and section.display_order % 10 == 0 %}
+      <div class="ch-numeral">{{ roman[(section.display_order // 10) - 1] }}</div>
+      {% endif %}
+      <h1 class="title">{{ section.name }}</h1>
+      {% if section.description %}<p class="epigraph">{{ section.description }}</p>{% endif %}
+      <hr class="foilrule"/>
+    </div>
+
+    <div class="bspine"></div>
+
+    <div class="bpage-right">
+      <div class="rhead"><span>{{ canon.name }}</span><span>{{ section.name }}</span></div>
+      {% if section.display_order == 10 and canon.overview_text %}
+        <div class="overview-body">
+          {% for para in canon.overview_text.split('\n\n') %}
+          <p>{{ para }}</p>
+          {% endfor %}
+        </div>
+      {% elif has_regions %}
+        <p class="sec-label">Regions</p>
+        <ul class="rtoc">
+          {% for region in regions %}
+          <li>
+            <a class="rrow" href="/canon/{{ canon.slug }}/{{ section.section_slug }}/{{ region.slug }}/">
+              <span class="rrow-name">{{ region.label }}</span>
+              <span class="rrow-arrow">&rarr;</span>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="sec-label">Techniques</p>
+        <ul class="elist">
+          {% for entry in entries %}
+          <li>
+            <a class="erow" href="/technique/{{ entry.slug }}">
+              <span class="e-num">{{ entry.decimal_id or '' }}</span>
+              <span class="e-name">{{ entry.name }}</span>
+              <span class="e-origin">{{ (entry.origin or '')[:26] }}</span>
+            </a>
+          </li>
+          {% else %}
+          <li style="padding:20px 0;color:var(--stone);font-style:italic">No techniques in this section.</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <div class="foot"><a href="/canon/{{ canon.slug }}/index/" style="color:inherit;text-decoration:none">Index</a> &nbsp;·&nbsp; <a href="/canon/{{ canon.slug }}/colophon/" style="color:inherit;text-decoration:none">Colophon</a> &nbsp;·&nbsp; Provenance</div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

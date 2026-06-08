@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}{{ volume.name }} — Route — Provenance{% endblock %}
+{% block meta_description %}{{ volume.description or ('Provenance Route: ' + volume.name) }}{% endblock %}
+
+{% block main_padding %}{% if narrative %}0{% else %}60px{% endif %}{% endblock %}
+
+{% block styles %}
+{% if narrative %}
+:root {
+  --ink-faint: #8C8473;
+  --gold-deep: #9A7A33;
+}
+.reveal { opacity:0; transform:translateY(24px); transition:opacity 1s cubic-bezier(.2,.6,.2,1),transform 1s cubic-bezier(.2,.6,.2,1); }
+.reveal.in, .reveal.visible { opacity:1; transform:none; }
+.entry.reveal { transition-duration:.8s; }
+.voyage-rail { position:fixed; top:0; left:0; width:3px; height:100vh; background:var(--cream-200); z-index:50; }
+.voyage-rail__fill { position:absolute; top:0; left:0; width:100%; height:0; background:linear-gradient(var(--gold-soft),var(--gold-deep)); }
+.eyebrow { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold-deep); }
+.wrap { max-width:920px; margin:0 auto; padding:0 2rem; position:relative; z-index:2; }
+.overture { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:8rem 0 6rem; }
+.overture .eyebrow { margin-bottom:2.5rem; }
+.overture__scene { font-family:var(--serif); font-style:italic; font-weight:400; font-size:clamp(1.35rem,2.5vw,1.9rem); line-height:1.55; color:var(--ink-soft); max-width:30ch; margin-bottom:3.5rem; }
+.overture__scene .lift { color:var(--ink); font-style:normal; }
+.overture h1 { font-family:var(--serif); font-weight:500; font-size:clamp(3rem,9vw,6.5rem); line-height:0.98; letter-spacing:-0.02em; color:var(--ink); margin-bottom:1.5rem; }
+.overture__sub { font-family:var(--mono); font-size:0.78rem; letter-spacing:0.12em; color:var(--ink-faint); text-transform:uppercase; }
+.overture__begin { margin-top:5rem; font-family:var(--mono); font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-deep); display:flex; align-items:center; gap:0.8rem; }
+.overture__begin::after { content:""; width:1px; height:42px; background:linear-gradient(var(--gold),transparent); display:block; animation:dip 2.4s ease-in-out infinite; }
+@keyframes dip { 0%,100% { transform:translateY(0); opacity:0.9; } 50% { transform:translateY(6px); opacity:0.4; } }
+.journey { position:relative; padding-bottom:4rem; }
+.journey::before { content:""; position:absolute; top:0; bottom:0; left:13px; width:1px; background:linear-gradient(var(--gold-soft),var(--line) 60%,var(--line-soft)); }
+@media(min-width:780px) { .journey::before { left:50%; transform:translateX(-0.5px); } }
+.stop { position:relative; padding:5rem 0 1rem 3rem; }
+@media(min-width:780px) { .stop { padding-left:0; } }
+.stop__node { position:absolute; left:6px; top:5.4rem; width:16px; height:16px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 5px var(--cream-50),0 0 0 6px var(--gold-soft); }
+@media(min-width:780px) { .stop__node { left:50%; transform:translateX(-8px); } }
+.stop__head { margin-bottom:2rem; }
+@media(min-width:780px) { .stop__head { text-align:center; max-width:34rem; margin:0 auto 2.25rem; } }
+.stop__way { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.24em; text-transform:uppercase; color:var(--gold-deep); margin-bottom:0.9rem; }
+.stop__name { font-family:var(--serif); font-weight:500; font-size:clamp(2.4rem,6vw,4rem); line-height:1; letter-spacing:-0.015em; color:var(--ink); margin-bottom:0.7rem; }
+.stop__coord { font-family:var(--mono); font-size:0.66rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-faint); }
+.stop__intro { font-family:var(--serif); font-weight:400; font-size:clamp(1.15rem,1.8vw,1.4rem); line-height:1.6; color:var(--ink-soft); max-width:34rem; }
+@media(min-width:780px) { .stop__intro { margin:0 auto; text-align:center; } }
+.stop__intro .lift { color:var(--ink); }
+.entries { margin-top:3rem; }
+@media(min-width:780px) { .entries { max-width:40rem; margin:3rem auto 0; } }
+.entry { position:relative; padding:1.6rem 0; border-top:1px solid var(--line-soft); }
+.entry:first-child { border-top:1px solid var(--line); }
+.entry__name { font-family:var(--serif); font-weight:500; font-size:1.25rem; line-height:1.25; color:var(--ink); margin-bottom:0.5rem; }
+.entry__name a { color:inherit; text-decoration:none; border-bottom:1px solid transparent; transition:border-color .25s; }
+.entry__name a:hover { border-bottom-color:var(--gold); }
+.entry__thread { font-size:0.97rem; line-height:1.7; color:var(--ink-soft); max-width:48ch; }
+.entry__code { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-faint); margin-top:0.7rem; }
+.transform { position:relative; padding:4.5rem 0 4.5rem 3rem; }
+@media(min-width:780px) { .transform { padding-left:0; text-align:center; } }
+.transform__glyph { position:absolute; left:3px; top:50%; transform:translateY(-50%); font-family:var(--mono); color:var(--gold); font-size:0.9rem; background:var(--cream-50); padding:0.5rem 0; }
+@media(min-width:780px) { .transform__glyph { left:50%; transform:translate(-50%,-50%); } }
+.transform__text { font-family:var(--serif); font-style:italic; font-weight:400; font-size:clamp(1.1rem,1.7vw,1.35rem); line-height:1.65; color:var(--gold-deep); max-width:30rem; }
+@media(min-width:780px) { .transform__text { margin:0 auto; } }
+.closing { position:relative; padding:6rem 0 9rem 3rem; }
+@media(min-width:780px) { .closing { padding-left:0; text-align:center; } }
+.closing__node { position:absolute; left:4px; top:6.4rem; width:20px; height:20px; border-radius:50%; background:var(--ink); box-shadow:0 0 0 5px var(--cream-50),0 0 0 6px var(--gold); }
+@media(min-width:780px) { .closing__node { left:50%; transform:translateX(-10px); } }
+.closing__way { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.24em; text-transform:uppercase; color:var(--gold-deep); margin-bottom:1.4rem; }
+.closing__text { font-family:var(--serif); font-weight:400; font-size:clamp(1.3rem,2.2vw,1.7rem); line-height:1.55; color:var(--ink); max-width:36rem; }
+@media(min-width:780px) { .closing__text { margin:0 auto; } }
+.closing__text .lift { font-style:italic; color:var(--gold-deep); }
+.foot { border-top:1px solid var(--line); padding:3rem 0 5rem; text-align:center; }
+.foot p { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-faint); line-height:2; }
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if narrative %}
+
+<div class="voyage-rail"><div class="voyage-rail__fill" id="railFill"></div></div>
+
+<header class="overture">
+  <div class="wrap">
+    <div class="eyebrow reveal">{{ narrative.overture.eyebrow }}</div>
+    <p class="overture__scene reveal">{{ narrative.overture.scene1 | safe }}</p>
+    <h1 class="reveal">Pacific&nbsp;Migration&nbsp;Trail</h1>
+    <div class="overture__sub reveal">Taiwan to Aotearoa · c. 3000 BCE – today · seven stops</div>
+    <p class="overture__scene reveal" style="margin-top:3rem;max-width:36ch;">{{ narrative.overture.scene2 | safe }}</p>
+    <div class="overture__begin reveal">{{ narrative.overture.begin }}</div>
+  </div>
+</header>
+
+<div class="journey wrap">
+
+  {% for stop in stops %}
+  {% set ns = narrative.stops.get(stop.label, {}) %}
+
+  <section class="stop">
+    <span class="stop__node"></span>
+    <div class="stop__head reveal">
+      <div class="stop__way">{{ ns.get('way', stop.label) }}</div>
+      <h2 class="stop__name">{{ ns.get('display_name', stop.label) }}</h2>
+      <div class="stop__coord">{{ ns.get('coord', '') | safe }}</div>
+    </div>
+    {% if ns.get('intro') %}
+    <p class="stop__intro reveal">{{ ns.get('intro') | safe }}</p>
+    {% endif %}
+    <div class="entries">
+      {% for entry in stop.entries %}
+      <article class="entry reveal">
+        <h3 class="entry__name"><a href="/technique/{{ entry.slug }}">{{ entry.name }}</a></h3>
+        {% set body = entry.migration_thread or entry.description %}
+        {% if body %}<p class="entry__thread">{{ body }}</p>{% endif %}
+        <div class="entry__code">{{ entry.decimal_id or '' }}{% if entry.origin %} · {{ entry.origin[:30] }}{% endif %}</div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% set tf = narrative.transforms.get(stop.label) %}
+  {% if tf %}
+  <div class="transform">
+    <span class="transform__glyph">{{ tf.glyph }}</span>
+    <p class="transform__text reveal">{{ tf.text }}</p>
+  </div>
+  {% endif %}
+
+  {% endfor %}
+
+  <section class="closing">
+    <span class="closing__node"></span>
+    <div class="closing__way reveal">{{ narrative.closing.way }}</div>
+    <p class="closing__text reveal">{{ narrative.closing.text | safe }}</p>
+  </section>
+
+</div>
+
+{% else %}
+
+<div style="max-width:1000px;margin:0 auto;padding:2rem 1.5rem 4rem">
+
+  <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;color:var(--ink-soft);text-transform:uppercase;margin-bottom:0.75rem">
+    <a href="/">Provenance</a> / Route / {{ volume.name }}
+  </p>
+
+  <div style="margin-bottom:3rem">
+    <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:0.5rem">Route</div>
+    <h1 style="font-family:var(--serif);font-size:2.5rem;font-weight:400;color:var(--ink);margin-bottom:0.75rem">{{ volume.name }}</h1>
+    {% if volume.description %}
+    <p style="color:var(--ink-soft);max-width:680px">{{ volume.description }}</p>
+    {% endif %}
+  </div>
+
+  {% if volume.intro_text %}
+  <div style="background:var(--surface);border-left:2px solid var(--gold-soft);padding:1.25rem 1.5rem;margin-bottom:2.5rem">
+    <p style="color:var(--smoke);font-style:italic">{{ volume.intro_text }}</p>
+  </div>
+  {% endif %}
+
+  {% for stop in stops %}
+
+  {% if not loop.first %}
+  <div style="height:1px;background:var(--border);margin:3rem 0"></div>
+  {% endif %}
+
+  {% if stop.label == 'Spine' %}
+  <div style="margin-bottom:1.75rem">
+    <div style="font-family:var(--mono);font-size:0.5rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem">Opening</div>
+    <div style="font-family:var(--serif);font-size:1.2rem;font-weight:400;color:var(--ink)">The Spine</div>
+  </div>
+  {% else %}
+  <div style="margin-bottom:1.75rem">
+    <div style="font-family:var(--mono);font-size:0.5rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:0.4rem">Stop</div>
+    <div style="font-family:var(--serif);font-size:1.5rem;font-weight:400;color:var(--ink)">{{ stop.label }}</div>
+  </div>
+  {% endif %}
+
+  {% for entry in stop.entries %}
+  <div style="padding:1.25rem 1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;margin-bottom:0.5rem">
+    <a href="/technique/{{ entry.slug }}" style="font-family:var(--serif);font-size:1.05rem;color:var(--cream);text-decoration:none;display:block;margin-bottom:0.35rem">{{ entry.name }}</a>
+    {% set body_line = entry.migration_thread or entry.description %}
+    {% if body_line %}
+    {% if entry.migration_thread %}
+    <div style="font-size:0.85rem;color:var(--stone);line-height:1.65;margin-bottom:0.4rem">{{ entry.migration_thread }}</div>
+    {% else %}
+    <div style="font-size:0.85rem;color:var(--stone);line-height:1.65;margin-bottom:0.4rem">{{ entry.description[:120] }}{% if entry.description|length > 120 %}…{% endif %}</div>
+    {% endif %}
+    {% endif %}
+    <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;color:var(--stone)">{{ entry.decimal_id or '' }}{% if entry.origin %} &nbsp;·&nbsp; {{ entry.origin[:30] }}{% endif %}</div>
+  </div>
+  {% endfor %}
+
+  {% else %}
+  <p style="color:var(--ink-soft)">No techniques in this route.</p>
+  {% endfor %}
+
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if narrative %}
+<script>
+const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.reveal').forEach((el,i)=>{
+  const sibs=[...el.parentElement.querySelectorAll('.reveal')];
+  el.style.transitionDelay=(sibs.indexOf(el)%6)*60+'ms';
+  obs.observe(el);
+});
+const fill=document.getElementById('railFill');
+function trackVoyage(){
+  const h=document.documentElement;
+  const p=h.scrollTop/(h.scrollHeight-h.clientHeight);
+  fill.style.height=(p*100)+'%';
+}
+window.addEventListener('scroll',trackVoyage,{passive:true});
+trackVoyage();
+</script>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+{% if narrative %}
+<footer class="foot">
+  <div class="wrap">
+    <p>Pacific Migration Trail · {{ entries|length }} techniques · seven stops · Taiwan → Aotearoa</p>
+    <p>One canon, two renderings — the book is complete as an object; the surface enhances but never completes it.</p>
+  </div>
+</footer>
+{% else %}
+{{ super() }}
+{% endif %}
+{% endblock %}
