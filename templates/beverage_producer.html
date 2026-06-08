@@ -1,26 +1,33 @@
+{% if producer.is_verified and (producer.philosophy_description or producer.reputation_narrative) %}
+{% set meta_desc = (producer.philosophy_description or producer.reputation_narrative) | striptags | replace('\n', ' ') | truncate(155, killwords=True, end='') %}
+{% else %}
+{% set _rp = (' in ' ~ producer.region_name) if producer.region_name else '' %}
+{% set _cp = (', ' ~ producer.country) if producer.country else '' %}
+{% set meta_desc = producer.name ~ ' — ' ~ (producer.producer_type | replace('_', ' ') | title) ~ _rp ~ _cp ~ '.' %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ producer.name }} — Provenance Beverage</title>
-<meta name="description" content="{{ ((producer.philosophy_description or producer.reputation_narrative) | striptags | replace('\n', ' ') | truncate(155, killwords=True, end='')) if (producer.philosophy_description or producer.reputation_narrative) else producer.name ~ ' — Provenance beverage intelligence.' }}">
+<meta name="description" content="{{ meta_desc }}">
 <link rel="canonical" href="{{ canonical_url }}">
 <meta property="og:title" content="{{ producer.name }} — Provenance Beverage">
-<meta property="og:description" content="{{ ((producer.philosophy_description or producer.reputation_narrative) | striptags | replace('\n', ' ') | truncate(155, killwords=True, end='')) if (producer.philosophy_description or producer.reputation_narrative) else producer.name ~ ' — Provenance beverage intelligence.' }}">
+<meta property="og:description" content="{{ meta_desc }}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
 <meta property="og:site_name" content="Provenance">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="{{ producer.name }} — Provenance Beverage">
-<meta name="twitter:description" content="{{ ((producer.philosophy_description or producer.reputation_narrative) | striptags | replace('\n', ' ') | truncate(155, killwords=True, end='')) if (producer.philosophy_description or producer.reputation_narrative) else producer.name ~ ' — Provenance beverage intelligence.' }}">
+<meta name="twitter:description" content="{{ meta_desc }}">
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
   "@type":"Organization",
   "name":"{{ producer.name }}",
-  "description":"{{ producer.philosophy_description or '' }}",
+  "description":{{ meta_desc | tojson }},
   "addressCountry":"{{ producer.country or '' }}"
 }
 </script>
