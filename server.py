@@ -8204,7 +8204,7 @@ def _compute_platform_counts():
             ("technique_count", "SELECT COUNT(*) FROM technique_references"),
             ("recipe_count",    "SELECT COUNT(*) FROM recipes"),
             ("beverage_count",  "SELECT COUNT(*) FROM beverage_products"),
-            ("supplier_count",  "SELECT COUNT(*) FROM suppliers WHERE is_active = TRUE"),
+            ("supplier_count",  "SELECT COUNT(DISTINCT s.id) FROM suppliers s JOIN product_suppliers ps ON ps.supplier_id = s.id WHERE s.is_active = TRUE"),
             ("drink_count",     "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 500 Drinks%'"),
             ("canon_count",     "SELECT COUNT(*) FROM canons WHERE status != 'archived'"),
             ("p1000_count",              "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 1000%'"),
