@@ -3247,14 +3247,19 @@ def suggest_supplier_form():
     recipe_title = ""
     if recipe_slug and DATABASE_URL:
         try:
-            conn = get_db()
-            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT title FROM user_kitchen_recipes WHERE slug = %s", (recipe_slug,))
-            row = cur.fetchone()
-            if row:
-                recipe_title = row["title"]
-            cur.close()
-            conn.close()
+            user = get_current_user()
+            if user and user.get("id"):
+                conn = get_db()
+                cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                cur.execute(
+                    "SELECT title FROM user_kitchen_recipes WHERE slug = %s AND user_id = %s",
+                    (recipe_slug, user["id"]),
+                )
+                row = cur.fetchone()
+                if row:
+                    recipe_title = row["title"]
+                cur.close()
+                conn.close()
         except Exception:
             pass
     return render_template("suggest_supplier.html", recipe_slug=recipe_slug, recipe_title=recipe_title)
