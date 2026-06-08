@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ producer.name }} — Provenance Beverage</title>
-<meta name="description" content="{{ producer.description[:160] if producer.description else producer.name ~ ' — Provenance beverage intelligence.' }}">
+<meta name="description" content="{{ ((producer.philosophy_description or producer.reputation_narrative) | striptags | replace('\n', ' ') | truncate(155, killwords=True, end='')) if (producer.philosophy_description or producer.reputation_narrative) else producer.name ~ ' — Provenance beverage intelligence.' }}">
 <link rel="canonical" href="{{ canonical_url }}">
 <meta property="og:title" content="{{ producer.name }} — Provenance Beverage">
-<meta property="og:description" content="{{ producer.description[:160] if producer.description else producer.name ~ ' — Provenance beverage intelligence.' }}">
+<meta property="og:description" content="{{ ((producer.philosophy_description or producer.reputation_narrative) | striptags | replace('\n', ' ') | truncate(155, killwords=True, end='')) if (producer.philosophy_description or producer.reputation_narrative) else producer.name ~ ' — Provenance beverage intelligence.' }}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
 <meta property="og:site_name" content="Provenance">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="{{ producer.name }} — Provenance Beverage">
-<meta name="twitter:description" content="{{ producer.description[:160] if producer.description else producer.name ~ ' — Provenance beverage intelligence.' }}">
+<meta name="twitter:description" content="{{ ((producer.philosophy_description or producer.reputation_narrative) | striptags | replace('\n', ' ') | truncate(155, killwords=True, end='')) if (producer.philosophy_description or producer.reputation_narrative) else producer.name ~ ' — Provenance beverage intelligence.' }}">
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
