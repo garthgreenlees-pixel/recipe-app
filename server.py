@@ -12081,6 +12081,7 @@ def gate_for_tier(required_tier: str) -> str:
 
 
 app.jinja_env.globals["gate_for_tier"] = gate_for_tier
+app.jinja_env.globals["format_cuisine"] = _format_cuisine
 
 
 def gate_for_addon(addon_name):
