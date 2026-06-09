@@ -2128,6 +2128,125 @@ def generate_recipe_image(slug):
     })
 
 
+@app.route("/api/kitchen-recipe/<slug>/generate-image", methods=["POST"])
+def generate_kitchen_recipe_image(slug):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    fal_key = os.environ.get("FAL_KEY")
+    if not fal_key:
+        return jsonify({"error": "FAL_KEY not configured"}), 503
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute(
+            "SELECT uuid, user_id, title, preamble, tags, ingredients, origin, has_image "
+            "FROM user_kitchen_recipes WHERE slug = %s LIMIT 1",
+            (slug,)
+        )
+        recipe = cur.fetchone()
+    finally:
+        cur.close()
+        conn.close()
+
+    if not recipe:
+        return jsonify({"error": "Recipe not found"}), 404
+    if recipe["user_id"] != user["id"]:
+        return jsonify({"error": "Not your recipe"}), 403
+
+    recipe_uuid = recipe["uuid"]
+
+    if recipe.get("has_image"):
+        return jsonify({"ok": True, "url": f"/images/{recipe_uuid}/hero.jpg"})
+
+    tags = recipe.get("tags") or []
+    if isinstance(tags, str):
+        tags = json.loads(tags)
+    cuisine = (tags[0] if tags else None) or recipe.get("origin")
+    description = recipe.get("preamble") or ""
+    ingredients = recipe.get("ingredients") or []
+    if isinstance(ingredients, str):
+        ingredients = json.loads(ingredients)
+
+    accuracy_brief = get_dish_accuracy_brief(
+        recipe_name=recipe["title"],
+        cuisine=cuisine,
+        description=description
+    )
+
+    attempts = []
+    final_url = None
+    final_passed = False
+    max_attempts = 3
+
+    os.environ["FAL_KEY"] = fal_key
+
+    for attempt in range(max_attempts):
+        retry_guidance = attempts[-1].get("retry_guidance", "") if attempts else ""
+        if retry_guidance and accuracy_brief:
+            accuracy_brief["prompt_phrase"] = (
+                accuracy_brief.get("prompt_phrase", "") + " " + retry_guidance
+            )
+        prompt = build_provenance_food_prompt(
+            recipe_name=recipe["title"],
+            cuisine=cuisine,
+            ingredients=ingredients,
+            description=description,
+            accuracy_brief=accuracy_brief
+        )
+        try:
+            result = fal_client.subscribe(
+                "fal-ai/flux-pro/v1.1",
+                arguments={
+                    "prompt": prompt,
+                    "width": 1280,
+                    "height": 768,
+                    "num_inference_steps": 28,
+                    "guidance_scale": 3.5,
+                }
+            )
+            image_url = result["images"][0]["url"]
+            passed, observations, retry_guidance = verify_dish_image(
+                image_url, recipe["title"], accuracy_brief
+            )
+            attempts.append({
+                "attempt": attempt + 1,
+                "image_url": image_url,
+                "passed": passed,
+                "observations": observations,
+                "retry_guidance": retry_guidance,
+                "prompt": prompt
+            })
+            if passed:
+                final_url = image_url
+                final_passed = True
+                break
+            elif attempt == max_attempts - 1:
+                final_url = image_url
+                final_passed = False
+        except Exception as e:
+            attempts.append({"attempt": attempt + 1, "error": str(e), "passed": False})
+
+    if not final_url:
+        return jsonify({"ok": False, "error": "All generation attempts failed", "attempts": attempts}), 502
+
+    img_bytes = http_requests.get(final_url, timeout=30).content
+    img_b64 = base64.b64encode(img_bytes).decode("utf-8")
+    save_hero_image(recipe_uuid, img_b64)
+    image_dir = EXTRACTED_DIR / recipe_uuid
+    image_dir.mkdir(parents=True, exist_ok=True)
+    (image_dir / "hero.jpg").write_bytes(img_bytes)
+    conn2 = get_db()
+    cur2 = conn2.cursor()
+    cur2.execute("UPDATE user_kitchen_recipes SET has_image = TRUE WHERE uuid = %s", (recipe_uuid,))
+    conn2.commit()
+    cur2.close()
+    conn2.close()
+
+    return jsonify({"ok": True, "url": f"/images/{recipe_uuid}/hero.jpg"})
+
+
 @app.route("/api/technique/<slug>/generate-image", methods=["POST"])
 def generate_technique_image(slug):
     fal_key = os.environ.get("FAL_KEY")

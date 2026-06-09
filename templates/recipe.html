@@ -6,6 +6,8 @@
 
 {% block meta_robots %}{% if is_owner %}noindex{% else %}index, follow{% endif %}{% endblock %}
 
+{% block styles %}{% endblock %}
+
 {% block extra_head %}
 {# ── Schema + OG ── #}
 <link rel="canonical" href="https://provenance.kitchen/recipe/{{ recipe.slug }}">
@@ -640,7 +642,11 @@ select.haccp-input{padding:3px 7px}
       {% if recipe.image_url %}
         <img src="{{ recipe.image_url }}" alt="{{ recipe_name }}" onerror="this.onerror=null;this.src='/static/img/recipe-placeholder.svg'">
       {% else %}
-        <div class="r6-hero__placeholder">{{ recipe_name }}</div>
+        <div class="r6-hero__placeholder" id="heroPlaceholder">{{ recipe_name }}
+          {% if is_owner %}
+          <button id="composePhotoBtn" class="r6-btn r6-btn--ghost" style="margin-top:12px;display:block;margin-left:auto;margin-right:auto">Compose a photo</button>
+          {% endif %}
+        </div>
       {% endif %}
     </div>
     <div class="r6-hero__title-block">
@@ -1101,6 +1107,7 @@ select.haccp-input{padding:3px 7px}
 
     </div>
   </section>
+
 
 </div>
 <script src="/static/js/recipe-detail.js"></script>
@@ -2207,6 +2214,35 @@ function closeSupplierPanel() {
   document.getElementById('supplier-sheet').classList.remove('open');
   document.body.style.overflow = '';
 }
+
+// ── Compose photo ─────────────────────────────────────
+(function () {
+  const btn = document.getElementById('composePhotoBtn');
+  if (!btn) return;
+  btn.addEventListener('click', async function () {
+    btn.disabled = true;
+    btn.textContent = 'Plating…';
+    try {
+      const res = await fetch('/api/kitchen-recipe/' + encodeURIComponent(RECIPE_SLUG) + '/generate-image', {method: 'POST'});
+      const d = await res.json();
+      if (d.ok && d.url) {
+        const placeholder = document.getElementById('heroPlaceholder');
+        const img = document.createElement('img');
+        img.src = d.url;
+        img.alt = RECIPE_SLUG;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+        img.onerror = function () { this.src = '/static/img/recipe-placeholder.svg'; };
+        placeholder.replaceWith(img);
+      } else {
+        btn.disabled = false;
+        btn.textContent = d.error || 'Could not generate — try again';
+      }
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Error — try again';
+    }
+  });
+})();
 
 // ── Escape key handler ────────────────────────────────
 document.addEventListener('keydown', e => {
