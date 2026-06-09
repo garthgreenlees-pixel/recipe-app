@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Beverage Menu Builder — Design Service from Aperitif to Digestif | Provenance</title>
-<meta name="description" content="Build a complete beverage programme from Provenance's technique and beverage database. Select courses, receive pairing suggestions by logic type, export a formatted programme card.">
+<meta name="description" content="Build a complete beverage programme from Provenance's techniques and beverages. Select courses, receive pairing suggestions by logic type, export a formatted programme card.">
 <link rel="canonical" href="https://provenance.kitchen/programme">
 <meta name="robots" content="noindex">
 <meta name="twitter:card" content="summary">
@@ -434,13 +434,13 @@ function buildCard(c, num) {
       html += `<div class="selected-item" style="margin-bottom:10px">
         <div>
           <div class="selected-item-name">${h(c.techniqueName)}</div>
-          <div class="selected-item-meta">Technique database</div>
+          <div class="selected-item-meta">The Library</div>
         </div>
         <button class="selected-clear" data-action="clear-tech" data-id="${c.id}" title="Change">✕</button>
       </div>`;
     } else {
       // Search field — show current dishName as placeholder if set
-      const techPlaceholder = c.dishName ? `Link to technique database…` : 'Search technique database…';
+      const techPlaceholder = c.dishName ? `Link to the Library…` : 'Search the Library…';
       html += `<div class="search-wrap" id="tech-wrap-${c.id}" style="margin-bottom:10px">
         <span class="search-icon">⌕</span>
         <input class="search-input" id="tech-input-${c.id}" type="text" placeholder="${h(techPlaceholder)}">
@@ -498,7 +498,7 @@ function buildCard(c, num) {
       const catHint = c.type==='aperitif' ? 'sparkling' : 'spirits';
       html += `<div class="search-wrap" id="bev-wrap-${c.id}">
         <span class="search-icon">⌕</span>
-        <input class="search-input" id="bev-input-${c.id}" type="text" placeholder="Search beverage database…" data-cat="${catHint}">
+        <input class="search-input" id="bev-input-${c.id}" type="text" placeholder="Search beverages…" data-cat="${catHint}">
         <div class="autocomplete-list" id="bev-list-${c.id}"></div>
       </div>
       <div class="field-group" style="margin-top:8px">
