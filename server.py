@@ -366,6 +366,8 @@ def handle_http_exception(e):
             f"HTTP {e.code} on {request.path}: {e.description}\n{traceback.format_exc()}"
         )
         return jsonify({"error": e.description or str(e)}), e.code
+    if getattr(e, "code", None) == 404:
+        return render_template("404.html"), 404
     return e
 
 
