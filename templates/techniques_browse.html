@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% if cuisine %}{{ cuisine }} Techniques{% elif category %}{{ category | replace('_',' ') | title }} Techniques{% else %}Browse Techniques{% endif %} — Provenance</title>
-<meta name="description" content="Browse {% if total %}{{ total }}{% endif %} culinary techniques{% if cuisine %} from {{ cuisine }} cuisine{% endif %}{% if category %} in {{ category | replace('_',' ') }}{% endif %}. Provenance Technique Library.">
+<title>{% if cuisine %}{{ format_cuisine(cuisine) }} Techniques{% elif category %}{{ category | replace('_',' ') | title }} Techniques{% else %}Browse Techniques{% endif %} — Provenance</title>
+<meta name="description" content="Browse {% if total %}{{ total }}{% endif %} culinary techniques{% if cuisine %} from {{ format_cuisine(cuisine) }} cuisine{% endif %}{% if category %} in {{ category | replace('_',' ') }}{% endif %}. Provenance Technique Library.">
 <link rel="canonical" href="https://provenance.kitchen/techniques/browse{% if cuisine or category or q %}?{% if cuisine %}cuisine={{ cuisine | urlencode }}{% endif %}{% if category %}{% if cuisine %}&{% endif %}category={{ category | urlencode }}{% endif %}{% if q %}{% if cuisine or category %}&{% endif %}q={{ q | urlencode }}{% endif %}{% endif %}">
 <meta property="og:title" content="Browse Techniques — Provenance">
 <meta property="og:description" content="Browse culinary techniques by cuisine and category. Provenance Technique Library.">
@@ -277,12 +277,12 @@ body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:30
   <div class="hero-inner">
     <div class="hero-eyebrow">Provenance Technique Library</div>
     <h1 class="hero-title">
-      {% if cuisine %}{{ cuisine }} Techniques
+      {% if cuisine %}{{ format_cuisine(cuisine) }} Techniques
       {% elif category %}{{ category | replace('_', ' ') | title }} Techniques
       {% else %}Browse Techniques
       {% endif %}
     </h1>
-    <p class="hero-sub">{{ total }} technique{% if total != 1 %}s{% endif %}{% if cuisine %} from {{ cuisine }} cuisine{% endif %}{% if category %} in {{ category | replace('_',' ') }}{% endif %}</p>
+    <p class="hero-sub">{{ total }} technique{% if total != 1 %}s{% endif %}{% if cuisine %} from {{ format_cuisine(cuisine) }} cuisine{% endif %}{% if category %} in {{ category | replace('_',' ') }}{% endif %}</p>
   </div>
 </section>
 
@@ -290,7 +290,7 @@ body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:30
   <a href="/">Home</a><sep>/</sep>
   <a href="/cuisines">Cuisines</a><sep>/</sep>
   {% if cuisine %}
-  <a href="/techniques/browse?cuisine={{ cuisine | urlencode }}">{{ cuisine }}</a><sep>/</sep>Browse
+  <a href="/techniques/browse?cuisine={{ cuisine | urlencode }}">{{ format_cuisine(cuisine) }}</a><sep>/</sep>Browse
   {% else %}
   Browse Techniques
   {% endif %}
@@ -309,7 +309,7 @@ body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:30
             onchange="this.form.submit()">
       <option value="">All Cuisines</option>
       {% if cuisine %}
-      <option value="{{ cuisine }}" selected>{{ cuisine }}</option>
+      <option value="{{ cuisine }}" selected>{{ format_cuisine(cuisine) }}</option>
       {% endif %}
     </select>
     <select name="category" id="category-filter"
@@ -336,7 +336,7 @@ body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:30
       {% if total_pages > 1 %} · page {{ page }} of {{ total_pages }}{% endif %}
     </div>
     <div class="results-filters">
-      {% if cuisine %}<span class="active-filter">{{ cuisine }}</span>{% endif %}
+      {% if cuisine %}<span class="active-filter">{{ format_cuisine(cuisine) }}</span>{% endif %}
       {% if category %}<span class="active-filter">{{ category | replace('_',' ') }}</span>{% endif %}
       {% if q %}<span class="active-filter">{{ q }}</span>{% endif %}
     </div>

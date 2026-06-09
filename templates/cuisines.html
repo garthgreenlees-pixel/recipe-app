@@ -106,7 +106,7 @@
   <div class="cuisines-grid">
     {% for c in cuisines %}
     <a href="/techniques/browse?cuisine={{ c.cuisine | urlencode }}" class="volume-card">
-      <div class="volume-name">{{ c.cuisine }}</div>
+      <div class="volume-name">{{ format_cuisine(c.cuisine) }}</div>
       <div class="volume-label">A canon of place</div>
       <div class="volume-cta">Open the canon →</div>
     </a>

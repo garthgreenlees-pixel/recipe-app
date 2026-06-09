@@ -334,7 +334,7 @@
           <li class="parallels-item">
             {% if item.connection %}{{ item.connection | linkify_cuisines }}{% endif %}
             {% if item.technique %} → <a href="/technique/{{ item.technique | lower }}" class="related-tag">{{ item.technique }}</a>{% endif %}
-            {% if item.cuisine %} <span class="cuisine-tag">{{ item.cuisine }}</span>{% endif %}
+            {% if item.cuisine %} <span class="cuisine-tag">{{ format_cuisine(item.cuisine) }}</span>{% endif %}
           </li>
         {% else %}
           <li class="parallels-item">{{ item | linkify_cuisines }}</li>
