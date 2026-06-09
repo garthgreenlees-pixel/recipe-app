@@ -4681,7 +4681,19 @@ Return ONLY valid JSON — no markdown, no backticks:
     "beverage": "Specific beverage name",
     "reasoning": "Why this pairing works with this specific dish"
   }},
-  "provenance_notes": "1-2 sentences on the cultural preservation significance — what knowledge this dish keeps alive"
+  "provenance_notes": "1-2 sentences on the cultural preservation significance — what knowledge this dish keeps alive",
+  "origin": "2-3 sentences: the cultural and historical lineage of this dish or approach. Institutional register, Larousse-grade.",
+  "flavour_context": "2-3 sentences on the flavour logic — how the principal flavours balance and why it works on the palate.",
+  "lives_or_dies": "2-4 sentences naming the one technical moment that makes or breaks this dish, with the rescue if it slips (e.g. 'beurre blanc breaks above 58C — pull the pan, drop in a cold cube of butter, whisk it back').",
+  "quality_hierarchy": [
+    {{"ingredient": "ingredient name", "reserve": "the benchmark, best-in-class version", "house": "the solid everyday version", "swap_cost": "what you lose stepping down"}}
+  ],
+  "sensory_tests": [
+    {{"sense": "touch | sight | sound | smell | taste", "cue": "what 'right' is — concrete and physical, e.g. 'bark like damp leather'", "fail_indicator": "the tell that it has gone wrong"}}
+  ],
+  "cross_cuisine_parallels": [
+    {{"cuisine": "the other cuisine", "dish": "the parallel dish or technique", "mechanism": "the shared underlying mechanism — why they are cousins"}}
+  ]
 }}
 
 Rules:
@@ -4690,12 +4702,14 @@ Rules:
 - Every ingredient must serve a purpose — no garnish-for-the-sake-of-garnish
 - The preamble and provenance_notes are what make this a Provenance recipe, not just a recipe
 - Minimum 8 ingredients, 6 steps
-- If uncertain about historical specifics, note what is known and what is a respectful approximation"""
+- If uncertain about historical specifics, note what is known and what is a respectful approximation
+- quality_hierarchy: at least 3 entries. sensory_tests: at least 4. cross_cuisine_parallels: at least 2.
+- origin, flavour_context, lives_or_dies and every cue must be in Provenance's voice — chef at the pass, institutional reference. Never use the words "AI", "curated", "seamless", "leverage", or "discover"."""
 
     try:
         response = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=4000,
+            max_tokens=8000,
             messages=[{"role": "user", "content": prompt}],
         )
         resp_text = response.content[0].text.strip()
@@ -4706,6 +4720,22 @@ Rules:
             resp_text = "\n".join(lines)
 
         rdata = json.loads(resp_text)
+
+        _ing_text = "\n".join(
+            f"- {i.get('count','')} {i.get('unit','')} {i.get('name','')}".strip()
+            for i in rdata.get("ingredients", [])
+        )
+        _origin            = rdata.get("origin")
+        _quality_hierarchy = rdata.get("quality_hierarchy") or []
+        _sensory_tests     = rdata.get("sensory_tests") or []
+        _cross_cuisine     = rdata.get("cross_cuisine_parallels") or []
+        _flavour_context   = rdata.get("flavour_context")
+        _lives_or_dies     = rdata.get("lives_or_dies")
+        try:
+            _beverage_pairings = _enrich_beverage_pairings(rdata.get("title", ""), _ing_text)
+        except Exception:
+            _beverage_pairings = None
+
         recipe_uuid = str(uuid.uuid4()).upper()
         recipe = {
             "uuid": recipe_uuid,
@@ -4759,8 +4789,11 @@ Rules:
                 cur2.execute("""
                     INSERT INTO user_kitchen_recipes
                         (uuid, user_id, title, slug, preamble, tags, ingredients, steps,
-                         time_active, time_total, servings, is_draft)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE)
+                         time_active, time_total, servings, is_draft,
+                         origin, quality_hierarchy, sensory_tests, cross_cuisine_parallels,
+                         flavour_context, lives_or_dies, beverage_pairings)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE,
+                            %s, %s, %s, %s, %s, %s, %s)
                 """, (
                     recipe_uuid,
                     user_id,
@@ -4773,6 +4806,13 @@ Rules:
                     time_dict.get("active", ""),
                     time_dict.get("total", ""),
                     json.dumps(rdata.get("servings", [])),
+                    _origin,
+                    json.dumps(_quality_hierarchy) if _quality_hierarchy else None,
+                    json.dumps(_sensory_tests) if _sensory_tests else None,
+                    json.dumps(_cross_cuisine) if _cross_cuisine else None,
+                    _flavour_context,
+                    _lives_or_dies,
+                    json.dumps(_beverage_pairings) if _beverage_pairings else None,
                 ))
                 conn2.commit()
                 cur2.close()
