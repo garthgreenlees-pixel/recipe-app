@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ product.name }} — Provenance Beverage</title>
-<meta name="description" content="{{ product.description[:160] if product.description else product.name ~ ' — Provenance beverage intelligence.' }}">
+<meta name="description" content="{{ product.description[:160] if product.description else product.name ~ ' — Provenance beverage knowledge.' }}">
 <link rel="canonical" href="{{ canonical_url }}">
 <meta property="og:title" content="{{ product.name }} — Provenance Beverage">
-<meta property="og:description" content="{{ product.description[:160] if product.description else product.name ~ ' — Provenance beverage intelligence.' }}">
+<meta property="og:description" content="{{ product.description[:160] if product.description else product.name ~ ' — Provenance beverage knowledge.' }}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:image" content="https://provenance.kitchen/static/img/og-default.jpg">
 <meta property="og:site_name" content="Provenance">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="{{ product.name }} — Provenance Beverage">
-<meta name="twitter:description" content="{{ product.description[:160] if product.description else product.name ~ ' — Provenance beverage intelligence.' }}">
+<meta name="twitter:description" content="{{ product.description[:160] if product.description else product.name ~ ' — Provenance beverage knowledge.' }}">
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -230,7 +230,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
 
   {% if pairings %}
   <div class="section">
-    <div class="section-label">Pairing intelligence</div>
+    <div class="section-label">Pairings</div>
     {% for p in pairings %}
     <div class="pairing-card">
       {% if p.pairing_type %}
