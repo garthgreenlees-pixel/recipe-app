@@ -690,7 +690,7 @@ const _revealObserver = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => _revealObserver.observe(el));
 setTimeout(() => {
   document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-}, 2000);
+}, 1500);
 
 // ── Email verification banner ──
 function resendVerification() {
