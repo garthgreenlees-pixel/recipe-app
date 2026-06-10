@@ -605,26 +605,48 @@ async function generateNotes() {
   const body = document.getElementById('notes-body');
   const btn = document.getElementById('notes-btn');
   btn.disabled = true;
-  body.innerHTML = '';
+  body.innerHTML = '<span class="panel-loading">One moment…</span>';
   ProvenanceProcessing.show({
     messages: ['Reviewing the technique…', 'Marking the safety notes…', 'Setting the card…']
   });
   try {
-    const res = await fetch('/api/kitchen-notes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildPayload())
+    const res = await fetch('/api/kitchen-notes/' + encodeURIComponent(TDATA.slug), {
+      credentials: 'include'
     });
     const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    body.textContent = data.notes;
+    if (!res.ok) {
+      body.innerHTML = '<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">' + escapeHtml(data.error || 'Something went wrong. Try again.') + '</span>';
+      btn.disabled = false;
+      return;
+    }
+    body.innerHTML = renderKitchenNotesCard(data);
     notesGenerated = true;
   } catch(e) {
-    body.innerHTML = '<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">Could not generate notes. Try again.</span>';
+    body.innerHTML = '<span style="color:rgba(220,80,60,0.7);font-size:0.8rem">Something went wrong. Try again.</span>';
     btn.disabled = false;
   } finally {
     ProvenanceProcessing.hide();
   }
+}
+
+function renderKitchenNotesCard(d) {
+  const sections = [
+    { key: 'ccps',                label: 'Critical Control Points' },
+    { key: 'temperatures',        label: 'Temperature Windows' },
+    { key: 'allergens',           label: 'Allergens' },
+    { key: 'cross_contamination', label: 'Cross-Contamination' },
+    { key: 'shelf_life_signals',  label: 'Shelf Life & Storage' },
+  ];
+  const html = sections
+    .filter(s => d[s.key] && d[s.key].length)
+    .map(s => `<div class="haccp-section">
+      <div class="haccp-section-label">${escapeHtml(s.label)}</div>
+      <ul style="margin:0;padding-left:1.1em;list-style:disc">
+        ${d[s.key].map(item => `<li style="font-size:12px;color:var(--cream);line-height:1.6;margin-bottom:4px">${escapeHtml(item)}</li>`).join('')}
+      </ul>
+    </div>`)
+    .join('');
+  return html || '<div class="haccp-section"><span style="font-size:12px;color:var(--cream-muted)">No safety notes generated.</span></div>';
 }
 
 // ── Recipe Costing ──
