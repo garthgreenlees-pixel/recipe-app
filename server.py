@@ -11278,13 +11278,40 @@ def techniques_browse():
 
     where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
 
-    cur.execute(f"SELECT COUNT(*) AS count FROM technique_references {where}", params)
-    total = cur.fetchone()["count"]
+    # Deduplicated count (collapse duplicate names)
     cur.execute(
-        f"SELECT id, name, slug, category, origin, authority_tier, tier_level, description "
-        f"FROM technique_references {where} ORDER BY name LIMIT %s OFFSET %s",
-        params + [per_page, offset]
+        f"SELECT COUNT(*) AS count FROM (SELECT DISTINCT lower(name) FROM technique_references {where}) _c",
+        params
     )
+    total = cur.fetchone()["count"]
+
+    cols = "id, name, slug, category, origin, authority_tier, tier_level, description"
+    if q:
+        # Relevance rank: exact title > prefix title > name-contains > description-only
+        rank_expr = (
+            "CASE"
+            " WHEN lower(name) = lower(%s) THEN 0"
+            " WHEN lower(name) LIKE lower(%s) || '%%' THEN 1"
+            " WHEN name ILIKE '%%' || %s || '%%' THEN 2"
+            " ELSE 3 END AS _rank"
+        )
+        cur.execute(
+            f"SELECT * FROM ("
+            f"  SELECT DISTINCT ON (lower(name)) {cols}, {rank_expr}"
+            f"  FROM technique_references {where}"
+            f"  ORDER BY lower(name), id"
+            f") _d ORDER BY _rank, name LIMIT %s OFFSET %s",
+            [q, q, q] + params + [per_page, offset]
+        )
+    else:
+        cur.execute(
+            f"SELECT * FROM ("
+            f"  SELECT DISTINCT ON (lower(name)) {cols}"
+            f"  FROM technique_references {where}"
+            f"  ORDER BY lower(name), id"
+            f") _d ORDER BY name LIMIT %s OFFSET %s",
+            params + [per_page, offset]
+        )
     techniques = [_serialize_row(r) for r in cur.fetchall()]
 
     cur.close()
