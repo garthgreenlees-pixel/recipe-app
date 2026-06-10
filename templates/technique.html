@@ -672,7 +672,9 @@ function renderKitchenNotesCard(d) {
     </div>`)
     .join('');
   const card = html || '<div class="haccp-section"><span style="font-size:12px;color:var(--cream-muted)">No safety notes generated.</span></div>';
-  return card + '<div style="margin-top:1.25rem"><button class="haccp-action" onclick="window.print()">Print</button></div>';
+  const today = new Date().toLocaleDateString('en-CA', {year:'numeric',month:'long',day:'numeric'});
+  const masthead = `<div class="kn-print-masthead"><div class="kn-print-brand">Provenance</div><div class="kn-print-doc-label">Kitchen Notes</div><div class="kn-print-dish">${escapeHtml(TDATA.title)}</div><div class="kn-print-generated">Generated ${today}</div></div>`;
+  return `<div class="kn-print-wrap">${masthead}${card}<div style="margin-top:1.25rem"><button class="haccp-action kn-print-btn" onclick="printKitchenNotes()">Print</button></div></div>`;
 }
 
 // ── Recipe Costing ──
@@ -968,15 +970,15 @@ function renderHACCPBrief(b) {
       <section class="haccp-section">
         <span class="haccp-version-badge haccp-version-draft">DRAFT — UNSIGNED</span>
         <div class="haccp-doc-ctrl-grid">
-          <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Effective date</span><input type="date" class="haccp-input" id="haccp-eff-date" value="${today}"></div>
-          <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Next review</span><input type="date" class="haccp-input" id="haccp-review-date" value="${sixMonths}"></div>
+          <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Effective date</span><input type="date" class="haccp-input" id="haccp-eff-date" value="${today}"><span class="haccp-input-print">${today}</span></div>
+          <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Next review</span><input type="date" class="haccp-input" id="haccp-review-date" value="${sixMonths}"><span class="haccp-input-print">${sixMonths}</span></div>
         </div>
       </section>
       <section class="haccp-section">
         <h3 class="haccp-section-title">Equipment Calibration Verification</h3>
         <div class="haccp-doc-ctrl-grid">
-          <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-date">Thermometers calibrated</label><input type="date" class="haccp-input" id="haccp-cal-date" value=""></div>
-          <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-by">Calibrated by</label><input type="text" class="haccp-input" id="haccp-cal-by" placeholder="Full name"></div>
+          <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-date">Thermometers calibrated</label><input type="date" class="haccp-input" id="haccp-cal-date" value=""><span class="haccp-input-print">—</span></div>
+          <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-by">Calibrated by</label><input type="text" class="haccp-input" id="haccp-cal-by" placeholder="Full name"><span class="haccp-input-print">—</span></div>
         </div>
       </section>
       <section class="haccp-section haccp-allergens">
@@ -1006,7 +1008,7 @@ function renderHACCPBrief(b) {
       ${(b.non_ccp_steps&&b.non_ccp_steps.length)?renderNonCCPSteps(b.non_ccp_steps):''}
       <section class="haccp-section">
         <h3 class="haccp-section-title">Allergen Communication Statement</h3>
-        <textarea class="haccp-textarea" rows="3">${escapeHtml(defaultAllergenComm)}</textarea>
+        <textarea class="haccp-textarea" rows="3">${escapeHtml(defaultAllergenComm)}</textarea><div class="haccp-textarea-print">${escapeHtml(defaultAllergenComm)}</div>
       </section>
       <section class="haccp-section">
         <h3 class="haccp-section-title">Record Retention</h3>
@@ -1170,9 +1172,23 @@ async function saveHACCPBrief() {
 }
 
 function printHACCPBrief() {
+  // Sync form values to their print-time text nodes before printing
+  document.querySelectorAll('.haccp-brief .haccp-input').forEach(input => {
+    const printEl = input.parentElement.querySelector('.haccp-input-print');
+    if (printEl) printEl.textContent = input.value || '—';
+  });
+  const textarea = document.querySelector('.haccp-brief .haccp-textarea');
+  const textareaPrint = document.querySelector('.haccp-brief .haccp-textarea-print');
+  if (textarea && textareaPrint) textareaPrint.textContent = textarea.value || '';
   document.body.classList.add('haccp-printing');
   window.print();
   setTimeout(() => document.body.classList.remove('haccp-printing'), 1000);
+}
+
+function printKitchenNotes() {
+  document.body.classList.add('notes-printing');
+  window.print();
+  setTimeout(() => document.body.classList.remove('notes-printing'), 1000);
 }
 
 async function regenerateHACCPBrief() {

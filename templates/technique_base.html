@@ -229,17 +229,137 @@ main { padding-bottom: 60px; }
   background: rgba(212,175,55,0.1);
   border-color: rgba(212,175,55,0.7) !important;
 }
-/* Print layout */
+/* Print mastheads and print-value nodes — hidden in browser, displayed at print time */
+.kn-print-masthead { display: none; }
+.haccp-input-print { display: none; }
+.haccp-textarea-print { display: none; }
+
+/* ── SCOPED PRINT ── */
 @media print {
-  body * { visibility: hidden; }
-  .haccp-brief, .haccp-brief * { visibility: visible; }
-  .haccp-brief { position: absolute; top: 0; left: 0; width: 100%; padding: 2rem; }
+  @page { size: A4; margin: 2cm; }
+
+  /* Kitchen Notes — scoped to body.notes-printing */
+  body.notes-printing * { visibility: hidden; }
+  body.notes-printing .kn-print-wrap,
+  body.notes-printing .kn-print-wrap * { visibility: visible; }
+  body.notes-printing .kn-print-wrap {
+    position: absolute; top: 0; left: 0; width: 100%; padding: 0; background: white;
+  }
+  body.notes-printing .kn-print-btn { display: none !important; }
+
+  /* HACCP — scoped to body.haccp-printing */
+  body.haccp-printing * { visibility: hidden; }
+  body.haccp-printing .haccp-brief,
+  body.haccp-printing .haccp-brief * { visibility: visible; }
+  body.haccp-printing .haccp-brief {
+    position: absolute; top: 0; left: 0; width: 100%; padding: 0; background: white;
+  }
+
+  /* Print masthead: visible at print time */
+  .kn-print-masthead { display: block; }
+
+  /* Kitchen Notes: Doctrine typography */
+  .kn-print-wrap { font-family: 'DM Sans', sans-serif; font-size: 10pt; color: #1F1B16; }
+  .kn-print-masthead {
+    padding-bottom: 14pt; margin-bottom: 14pt; border-bottom: 1px solid #C9A84C;
+  }
+  .kn-print-brand {
+    font-family: 'DM Mono', monospace; font-size: 7pt; letter-spacing: 0.28em;
+    text-transform: uppercase; color: #C9A84C; margin-bottom: 3pt;
+  }
+  .kn-print-doc-label {
+    font-family: 'DM Mono', monospace; font-size: 7pt; letter-spacing: 0.2em;
+    text-transform: uppercase; color: #1F1B16; margin-bottom: 5pt;
+  }
+  .kn-print-dish {
+    font-family: 'Playfair Display', Georgia, serif; font-size: 18pt;
+    font-weight: 600; color: #1F1B16; line-height: 1.1; margin-bottom: 6pt;
+  }
+  .kn-print-generated {
+    font-family: 'DM Mono', monospace; font-size: 7pt; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #6B6258;
+  }
+
+  /* Kitchen Notes: override cream-on-dark inline styles */
+  body.notes-printing .kn-print-wrap li { color: #1F1B16 !important; }
+  body.notes-printing .kn-print-wrap .haccp-section-label { color: #1F1B16; opacity: 1; }
+  body.notes-printing .kn-print-wrap .haccp-section { margin-bottom: 10pt; page-break-inside: avoid; }
+
+  /* HACCP: charcoal on white — override dark-theme colors */
+  .haccp-brief { color: #1F1B16; }
+  .haccp-brief p { color: #1F1B16 !important; }
+  .haccp-brief li { color: #1F1B16 !important; }
+  .haccp-brief td, .haccp-brief th { color: #1F1B16 !important; }
+  .haccp-header { border-bottom-color: #C9A84C; }
+  .haccp-recipe-title { color: #1F1B16; }
+  .haccp-meta { color: #6B6258; opacity: 1; }
+  .haccp-section-title { color: #1F1B16; opacity: 1; }
+  .haccp-section-label { color: #1F1B16; opacity: 1; }
+  .haccp-allergen-region { color: #6B6258; opacity: 1; }
+  .haccp-flow-step { background: none; border-color: #DDD3BE; color: #1F1B16; }
+  .haccp-flow-number { background: none !important; color: #C9A84C; }
+  .haccp-receiving-item { background: none; border-color: #DDD3BE; }
+  .haccp-receiving-reject { color: #1F1B16 !important; }
+  .haccp-temp-tag { background: none; color: #1F1B16; border: 1px solid #DDD3BE; }
+  .haccp-non-ccp-list li { background: none; border-left-color: #DDD3BE; }
+  .haccp-signoff-blank { border-bottom-color: #1F1B16; }
+  .haccp-footer { border-top-color: #DDD3BE; color: #6B6258; opacity: 1; }
+  .haccp-version-draft, .haccp-version-signed {
+    background: none; border: 1px solid #1F1B16; color: #1F1B16;
+  }
+  .haccp-label { opacity: 1; color: #6B6258; }
+  .haccp-doc-ctrl-label { color: #6B6258; opacity: 1; }
+  .haccp-dt-title { color: #1F1B16; opacity: 1; }
+  .haccp-dt-question, .haccp-dt-rationale, .haccp-dt-conclusion { color: #1F1B16; opacity: 1; }
+
+  /* HACCP: allergen pills — B&W safe */
+  .haccp-pill-detected {
+    background: none !important; border: 1.5px solid #1F1B16 !important; color: #1F1B16 !important;
+  }
+  .haccp-pill-clear {
+    background: none !important; border: 1px solid #999 !important;
+    color: #999 !important; text-decoration: line-through;
+  }
+
+  /* HACCP: hazard categories — B&W safe */
+  .haccp-hazard-biological, .haccp-hazard-chemical, .haccp-hazard-physical {
+    background: none !important; border: 1px solid #1F1B16; color: #1F1B16 !important;
+  }
+  .haccp-dt-yes, .haccp-dt-no, .haccp-dt-na {
+    background: none !important; border: 1px solid #1F1B16; color: #1F1B16 !important;
+  }
+
+  /* HACCP: hide interactive chrome */
   .haccp-actions { display: none !important; }
   .haccp-dt-toggle { display: none !important; }
+
+  /* HACCP: CCP table — correct layout + page-break per row */
   .haccp-dt-row { display: table-row !important; }
   .haccp-ccp-table thead { display: table-header-group !important; }
-  .haccp-ccp-table, .haccp-ccp-table tbody, .haccp-ccp-table tr, .haccp-ccp-table td { display: table-cell !important; }
-  .haccp-ccp-row { background: none !important; border: none !important; padding: 0 !important; }
+  .haccp-ccp-table { display: table !important; width: 100%; border-collapse: collapse; }
+  .haccp-ccp-table tbody { display: table-row-group !important; }
+  .haccp-ccp-table tr { display: table-row !important; page-break-inside: avoid; }
+  .haccp-ccp-table td, .haccp-ccp-table th { display: table-cell !important; }
+  .haccp-ccp-table th { border-bottom-color: #C9A84C; color: #6B6258 !important; opacity: 1; }
+  .haccp-ccp-table td { border-bottom-color: #DDD3BE; }
+  .haccp-ccp-row { background: none !important; }
+  .haccp-dt-row td { background: none; }
+
+  /* HACCP: section page breaks */
+  .haccp-section { page-break-inside: avoid; }
+  .haccp-ccps { page-break-before: auto; }
+
+  /* HACCP: form controls — hide inputs, show print values */
+  .haccp-input { display: none !important; }
+  .haccp-textarea { display: none !important; }
+  .haccp-input-print {
+    display: block !important; color: #1F1B16; font-family: 'DM Mono', monospace;
+    font-size: 8pt; padding: 2pt 0; border-bottom: 1px solid #DDD3BE;
+  }
+  .haccp-textarea-print {
+    display: block !important; color: #1F1B16; font-family: 'DM Sans', sans-serif;
+    font-size: 9pt; line-height: 1.5; white-space: pre-wrap;
+  }
 }
 body.haccp-printing .haccp-dt-row { display: table-row !important; }
 
