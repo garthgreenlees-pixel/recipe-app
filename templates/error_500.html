@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Something went wrong — Provenance{% endblock %}
+{% block meta_robots %}noindex, nofollow{% endblock %}
+{% block content %}
+<section class="nf-wrap">
+  <div class="nf-inner">
+    <p class="nf-eyebrow">500</p>
+    <h1 class="nf-title">Something went wrong.</h1>
+    <p class="nf-sub">Try again. If it keeps happening, the kitchen is already on it.</p>
+    <div class="nf-links">
+      <a href="/library">Back to the Library</a>
+      <a href="/kitchen">MyKitchen</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block styles %}
+.nf-wrap{min-height:60vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;text-align:center}
+.nf-inner{max-width:560px}
+.nf-eyebrow{font-family:var(--mono,'DM Mono',monospace);font-size:12px;letter-spacing:2px;color:var(--gold,#8B6914);margin-bottom:16px}
+.nf-title{font-family:var(--display,'Playfair Display',Georgia,serif);font-size:clamp(32px,5vw,48px);font-weight:700;line-height:1.1;margin:0 0 16px;color:var(--charcoal,#1a1a1a)}
+.nf-sub{font-family:var(--body,'DM Sans',system-ui,sans-serif);font-size:17px;font-weight:300;line-height:1.6;color:var(--warm-gray,#6E6A60);margin:0 0 32px}
+.nf-links{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+.nf-links a{font-family:var(--mono,'DM Mono',monospace);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold,#8B6914);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px;transition:border-color .18s}
+.nf-links a:hover{border-bottom-color:var(--gold,#8B6914)}
+{% endblock %}

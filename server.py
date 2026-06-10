@@ -383,6 +383,26 @@ def handle_unhandled_exception(e):
     return None  # let Flask use default HTML handling for non-API routes
 
 
+@app.errorhandler(500)
+def handle_server_error(e):
+    """Branded 500 for HTML paths; JSON for API paths. Crash-proof fallback."""
+    if request.path.startswith("/api/"):
+        return jsonify({"error": "Internal server error"}), 500
+    try:
+        return render_template("error_500.html"), 500
+    except Exception:
+        return (
+            '<!DOCTYPE html><html><head><title>Error — Provenance</title>'
+            '<meta charset="utf-8"></head><body style="font-family:Georgia,serif;'
+            'text-align:center;padding:10vh 24px;color:#1F1B16">'
+            '<p style="font-size:12px;letter-spacing:2px;color:#C9A84C">PROVENANCE</p>'
+            '<h1 style="font-size:36px;margin:16px 0">Something went wrong.</h1>'
+            '<p style="color:#6B6258">Try again, or head back to '
+            '<a href="/library" style="color:#C9A84C">the Library</a>.</p>'
+            '</body></html>'
+        ), 500
+
+
 @app.before_request
 def enforce_security():
     """Global security: block detection, scrape tracking, bulk auth, rate limiting."""
@@ -3156,7 +3176,7 @@ def recipe_page(slug):
             user = get_current_user()
             if not user or user.get("id") != kitchen_recipe.get("user_id"):
                 cur.close(); conn.close()
-                return "Recipe not found", 404
+                abort(404)
             # Normalize yield text before anything else
             _row = dict(kitchen_recipe)
             _st = (_row.get("servings_text") or "").rstrip()
@@ -3199,7 +3219,7 @@ def recipe_page(slug):
             )
         cur.close()
         conn.close()
-        return "Recipe not found", 404
+        abort(404)
 
     # Find suppliers linked to this recipe's ingredients.
     # Forward ILIKE only: product name contains the ingredient token.
@@ -3324,7 +3344,7 @@ def recipe_cook_mode(slug):
         _cook_user = get_current_user()
         if not _cook_user or _cook_user.get("id") != kitchen_recipe.get("user_id"):
             cur.close(); conn.close()
-            return "Recipe not found", 404
+            abort(404)
         cur.close()
         conn.close()
         _recipe_dict = dict(kitchen_recipe)
@@ -3355,7 +3375,7 @@ def recipe_cook_mode(slug):
     cur.close()
     conn.close()
     if not recipe:
-        return "Recipe not found", 404
+        abort(404)
     _canon_recipe = dict(recipe)
     _canon_recipe["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_canon_recipe))
     return render_template("cook_mode.html", recipe=_canon_recipe)
@@ -5561,12 +5581,12 @@ def view_shared_recipe(token):
     tokens = load_share_tokens()
     recipe_uuid = tokens.get(token)
     if not recipe_uuid:
-        return "Not found", 404
+        abort(404)
 
     recipes = load_recipes()
     recipe = next((r for r in recipes if r["uuid"] == recipe_uuid), None)
     if not recipe:
-        return "Not found", 404
+        abort(404)
 
     e = html_mod.escape
     title = e(recipe.get("title", "Untitled"))
@@ -8087,7 +8107,7 @@ def haccp_pdf(slug):
     cur.close()
     conn.close()
     if not recipe:
-        return "Recipe not found", 404
+        abort(404)
     name = html_mod.escape(recipe['name'])
     desc = html_mod.escape((recipe.get('description') or '')[:300])
     date_str = datetime.now().strftime('%Y-%m-%d')
@@ -10704,7 +10724,7 @@ def beverage_region_page(region_id):
     region = cur.fetchone()
     if not region:
         cur.close(); conn.close()
-        return "Not found", 404
+        abort(404)
     region = _serialize_row(region)
 
     cur.execute("SELECT * FROM beverage_regions WHERE parent_region_id = %s ORDER BY name", (region_id,))
@@ -10749,7 +10769,7 @@ def beverage_product_page(product_id):
     product = cur.fetchone()
     if not product:
         cur.close(); conn.close()
-        return "Not found", 404
+        abort(404)
     product = _serialize_row(product)
 
     cur.execute("""
@@ -10798,7 +10818,7 @@ def beverage_producer_page(producer_id):
     producer = cur.fetchone()
     if not producer:
         cur.close(); conn.close()
-        return "Not found", 404
+        abort(404)
     producer = _serialize_row(producer)
 
     cur.execute("""
@@ -10843,7 +10863,7 @@ def technique_page(slug):
     if not technique:
         cur.close()
         conn.close()
-        return "Not found", 404
+        abort(404)
     technique = _serialize_row(technique)
 
     # Normalize cross_cuisine_parallels to always be a list for the template
@@ -10963,7 +10983,7 @@ def beverage_by_int_id(product_id):
 @app.route("/beverage/<slug>")
 def beverage_by_slug(slug):
     if slug in ('regions', 'products', 'producers'):
-        return "Not found", 404
+        abort(404)
     if not DATABASE_URL:
         return "Database not configured", 503
     conn = get_db()
@@ -10979,7 +10999,7 @@ def beverage_by_slug(slug):
     product = cur.fetchone()
     if not product:
         cur.close(); conn.close()
-        return "Not found", 404
+        abort(404)
     product = _serialize_row(product)
     product_id = product['id']
 
@@ -11251,7 +11271,7 @@ def why_it_works(slug):
     technique = cur.fetchone()
     if not technique:
         cur.close(); conn.close()
-        return "Not found", 404
+        abort(404)
     technique = _serialize_row(technique)
 
     ccp = technique.get('cross_cuisine_parallels')
@@ -11331,7 +11351,7 @@ def beyond_recipe(slug):
     technique = cur.fetchone()
     if not technique:
         cur.close(); conn.close()
-        return "Not found", 404
+        abort(404)
     technique = _serialize_row(technique)
 
     ccp = technique.get('cross_cuisine_parallels')
@@ -15582,7 +15602,7 @@ def canon_book(canon_slug):
     if not canon:
         cur.close()
         conn.close()
-        return "Canon not found", 404
+        abort(404)
     canon = _serialize_row(canon)
     cur.execute("""
         SELECT cs.section_slug, cs.name, cs.description, cs.entry_count, cs.display_order
@@ -15746,7 +15766,7 @@ def canon_index(canon_slug):
     canon = cur.fetchone()
     if not canon:
         cur.close(); conn.close()
-        return "Canon not found", 404
+        abort(404)
     canon = _serialize_row(canon)
     palette = canon.get("design_palette") or {}
     cur.execute("""
@@ -15794,7 +15814,7 @@ def canon_colophon(canon_slug):
     canon = cur.fetchone()
     if not canon:
         cur.close(); conn.close()
-        return "Canon not found", 404
+        abort(404)
     canon = _serialize_row(canon)
     palette = canon.get("design_palette") or {}
     cur.execute("""
@@ -15822,7 +15842,7 @@ def canon_section(canon_slug, section_slug):
     if not canon:
         cur.close()
         conn.close()
-        return "Canon not found", 404
+        abort(404)
     canon = _serialize_row(canon)
     cur.execute("""
         SELECT * FROM canon_sections
@@ -15832,7 +15852,7 @@ def canon_section(canon_slug, section_slug):
     if not section:
         cur.close()
         conn.close()
-        return "Section not found", 404
+        abort(404)
     section = _serialize_row(section)
     palette = canon.get("design_palette") or {}
 
@@ -15996,7 +16016,7 @@ def canon_region(canon_slug, section_slug, region_slug):
     if not canon:
         cur.close()
         conn.close()
-        return "Canon not found", 404
+        abort(404)
     canon = _serialize_row(canon)
     cur.execute("""
         SELECT * FROM canon_sections
@@ -16006,7 +16026,7 @@ def canon_region(canon_slug, section_slug, region_slug):
     if not section:
         cur.close()
         conn.close()
-        return "Section not found", 404
+        abort(404)
     section = _serialize_row(section)
     palette = canon.get("design_palette") or {}
 
@@ -16016,7 +16036,7 @@ def canon_region(canon_slug, section_slug, region_slug):
         except (ValueError, TypeError):
             cur.close()
             conn.close()
-            return "Region not found", 404
+            abort(404)
         # Region display name from the curated list or DB
         _bev_labels = {rid: name for rid, name in _BEV_TOP_BY_CANON.get(canon_slug, [])}
         bev_country = _BEV_COUNTRY_BY_CANON.get(canon_slug, 'France')
@@ -16025,7 +16045,7 @@ def canon_region(canon_slug, section_slug, region_slug):
         if not reg_row:
             cur.close()
             conn.close()
-            return "Region not found", 404
+            abort(404)
         region_label = _bev_labels.get(region_id, reg_row['name'])
         # Recursive subtree of this region
         cur.execute("""
@@ -16080,7 +16100,7 @@ def canon_entry(canon_slug, section_slug, entry_slug):
     if not technique:
         cur.close()
         conn.close()
-        return "Entry not found", 404
+        abort(404)
     technique = _serialize_row(technique)
     # Redirect to canonical slug-based URL preserving existing page
     cur.close()
@@ -16137,7 +16157,7 @@ def atlas_volume(volume_slug):
     if not volume:
         cur.close()
         conn.close()
-        return "Atlas not found", 404
+        abort(404)
     volume = _serialize_row(volume)
     cur.execute("""
         SELECT ve.display_order, ve.editorial_note,
@@ -16237,7 +16257,7 @@ def route_volume(volume_slug):
     if not volume:
         cur.close()
         conn.close()
-        return "Route not found", 404
+        abort(404)
     volume = _serialize_row(volume)
     cur.execute("""
         SELECT ve.display_order, ve.editorial_note,
@@ -16276,7 +16296,7 @@ def protocols():
 @app.route("/technique/<int:tid>")
 def technique_by_id(tid):
     if not DATABASE_URL:
-        return "Not found", 404
+        abort(404)
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("SELECT slug FROM technique_references WHERE id = %s", (tid,))
@@ -16284,7 +16304,7 @@ def technique_by_id(tid):
     cur.close()
     conn.close()
     if not row:
-        return "Not found", 404
+        abort(404)
     return redirect(url_for("technique_page", slug=row["slug"]), code=301)
 
 
