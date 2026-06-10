@@ -76,14 +76,36 @@
            placeholder="italian, pasta, dinner">
   </section>
 
-  {% if recipe.quality_warnings and recipe.quality_warnings | length > 0 %}
-  <div class="r-warnings">
-    <div class="r-warnings-head" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
-      Audit flags
+  {% if recipe.source_pages_count and recipe.source_pages_count > 0 %}
+  <section class="editor-section">
+    <div class="editor-source-pages-head">Scanned pages ({{ recipe.source_pages_count }})</div>
+    <div class="editor-source-pages">
+      {% for n in range(recipe.source_pages_count) %}
+      <a href="/images/{{ recipe.uuid }}/source-{{ n }}.jpg" target="_blank" rel="noopener" class="editor-source-page">
+        <img src="/images/{{ recipe.uuid }}/source-{{ n }}.jpg" alt="Page {{ n + 1 }}" loading="lazy"
+             onerror="this.parentElement.style.display='none'">
+      </a>
+      {% endfor %}
     </div>
-    <ul class="r-warnings-list">
-      {% for w in recipe.quality_warnings %}
-      <li>{{ w.detail if w is mapping else w }}</li>
+  </section>
+  {% endif %}
+
+  {% set active_flags = recipe.quality_warnings | rejectattr('dismissed') | list %}
+  {% if active_flags %}
+  <div class="r-warnings">
+    <div class="r-warnings-head">
+      Audit flags <span class="r-warnings-count">({{ active_flags | length }})</span>
+    </div>
+    <ul class="r-warnings-list" id="r-warnings-list">
+      {% for w in active_flags %}
+      <li data-flag-index="{{ w._idx }}" data-section="{{ w.section }}">
+        {% if w.section in ('ingredients', 'method') %}
+        <a href="#" class="r-flag-link" onclick="jumpToSection('{{ w.section }}');return false">{{ w.message }}</a>
+        {% else %}
+        {{ w.message }}
+        {% endif %}
+        <button class="r-flag-dismiss" onclick="dismissFlag({{ w._idx }})" aria-label="Dismiss">×</button>
+      </li>
       {% endfor %}
     </ul>
   </div>
@@ -98,11 +120,20 @@
 </div>
 
 <style>
+.editor-source-pages-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--warm-gray);margin-bottom:8px}
+.editor-source-pages{display:flex;flex-wrap:wrap;gap:8px}
+.editor-source-page img{height:120px;width:auto;border:1px solid var(--line-soft);display:block}
+.editor-source-page:hover img{border-color:var(--gold)}
 .r-warnings{background:rgba(255,248,220,0.6);border:0.5px solid rgba(201,168,76,0.5);border-radius:4px;padding:12px 16px;margin:20px 0}
-.r-warnings-head{font-family:var(--serif);font-size:10px;font-style:italic;letter-spacing:3px;text-transform:uppercase;color:#7A6220;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.r-warnings-head{font-family:var(--serif);font-size:10px;font-style:italic;letter-spacing:3px;text-transform:uppercase;color:#7A6220;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.r-warnings-count{font-style:normal;opacity:0.7}
 .r-warnings-list{list-style:none;padding:0;margin-top:8px}
 .r-warnings-list li{font-family:var(--serif);font-size:12px;color:#1F1B16;padding:3px 0;line-height:1.5}
 .r-warnings-list li::before{content:"⚑ ";color:#B8940A;font-size:10px}
+.r-flag-dismiss{float:right;background:none;border:none;color:var(--warm-gray);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;margin-left:8px}
+.r-flag-dismiss:hover{color:#B94040}
+.r-flag-link{color:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--gold)}
+.r-flag-link:hover{color:var(--gold)}
 .recipe-editor { max-width: 720px; margin: 2rem auto 4rem; padding: 0 1rem; color: var(--charcoal, #1F1B16); }
 .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line-soft, #DDD3BE); }
 .editor-back { color: var(--warm-gray, #6B6258); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
@@ -269,5 +300,28 @@ document.addEventListener('keydown', e => {
     saveEditorRecipe();
   }
 });
+
+var _recipeUuid = _uuid;
+
+function dismissFlag(idx) {
+  fetch('/api/recipes/' + _recipeUuid + '/flag-dismiss', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({index: idx})
+  }).then(function(r) {
+    if (r.ok) {
+      var li = document.querySelector('[data-flag-index="' + idx + '"]');
+      if (li) li.remove();
+      var remaining = document.querySelectorAll('#r-warnings-list li').length;
+      if (remaining === 0) { var box = document.querySelector('.r-warnings'); if (box) box.remove(); }
+    }
+  });
+}
+
+function jumpToSection(section) {
+  var targets = {ingredients: '#editIngredients', method: '#editSteps'};
+  var el = document.querySelector(targets[section]);
+  if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
 </script>
 {% endblock %}

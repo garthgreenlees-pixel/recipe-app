@@ -1187,6 +1187,7 @@ def init_db():
         "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS cuisine TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS source_pages_count INTEGER DEFAULT 0",
         "ALTER TABLE menus ADD COLUMN IF NOT EXISTS allergen_notes JSONB DEFAULT '{}'::jsonb",
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS has_atelier_addon BOOLEAN NOT NULL DEFAULT FALSE",
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS closed_at TIMESTAMP",
@@ -5171,17 +5172,13 @@ def create_recipe():
     if hero_custom_b64:
         save_hero_image(recipe_uuid, hero_custom_b64)
         recipe["hasImage"] = True
-    elif images_b64 and 0 <= hero_index < len(images_b64):
-        save_hero_image(recipe_uuid, images_b64[hero_index])
-        recipe["hasImage"] = True
 
-    # Save all scanned page images
+    # Save all scanned page images as source files (never use as hero)
     if images_b64:
         image_dir = EXTRACTED_DIR / recipe_uuid
         image_dir.mkdir(parents=True, exist_ok=True)
-        for i, (b64, mt) in enumerate(zip(images_b64, images_media_types)):
-            ext = "jpg" if "jpeg" in mt or "jpg" in mt else "png"
-            (image_dir / f"page_{i}.{ext}").write_bytes(base64.b64decode(b64))
+        for i, b64 in enumerate(images_b64):
+            (image_dir / f"source-{i}.jpg").write_bytes(base64.b64decode(b64))
 
     # ── Sashimi Pipeline ────────────────────────────────────────────────────────
 
@@ -5333,7 +5330,7 @@ def create_recipe():
                      servings, source_name, source_url, has_image, is_draft,
                      source_book_title, source_book_author, source_book_publisher,
                      source_book_year, source_book_isbn, source_book_page,
-                     origin, cuisine, quality_hierarchy, sensory_tests, cross_cuisine_parallels,
+                     origin, cuisine, source_pages_count, quality_hierarchy, sensory_tests, cross_cuisine_parallels,
                      flavour_context, lives_or_dies, quality_warnings,
                      ingredient_origin_markers, source_units_raw,
                      servings_text, servings_count,
@@ -5341,7 +5338,7 @@ def create_recipe():
                 VALUES (
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                 )
                 ON CONFLICT (uuid) DO NOTHING
             """, (
@@ -5370,6 +5367,7 @@ def create_recipe():
                 source_book_page,
                 structure.get("origin"),
                 _sanitize_cuisine(structure.get("cuisine")),
+                len(images_b64),
                 json.dumps(structure["quality_hierarchy"]) if structure.get("quality_hierarchy") else None,
                 json.dumps(structure["sensory_tests"]) if structure.get("sensory_tests") else None,
                 json.dumps(structure["cross_cuisine_parallels"]) if structure.get("cross_cuisine_parallels") else None,
@@ -5640,7 +5638,7 @@ def recipe_editor(slug):
             SELECT uuid, slug, title, preamble, ingredients, steps,
                    time_active, time_total, servings, tags,
                    source_name, source_url, is_draft, has_image,
-                   quality_warnings
+                   quality_warnings, source_pages_count
             FROM user_kitchen_recipes
             WHERE slug = %s AND user_id = %s
             LIMIT 1
@@ -5650,7 +5648,61 @@ def recipe_editor(slug):
             return redirect("/kitchen")
         _row = dict(row)
         _row["quality_warnings"] = _row.get("quality_warnings") or []
+        # Normalize string flags to structured form
+        normalized = []
+        for i, w in enumerate(_row["quality_warnings"]):
+            if isinstance(w, str):
+                normalized.append({"section": "general", "message": w, "dismissed": False, "_idx": i})
+            elif isinstance(w, dict):
+                w2 = dict(w)
+                w2.setdefault("section", "general")
+                w2.setdefault("dismissed", False)
+                w2["_idx"] = i
+                normalized.append(w2)
+        _row["quality_warnings"] = normalized
+        _row["source_pages_count"] = _row.get("source_pages_count") or 0
         return render_template("recipe_editor.html", recipe=_row)
+    finally:
+        cur.close()
+        conn.close()
+
+
+@app.route("/api/recipes/<recipe_uuid>/flag-dismiss", methods=["POST"])
+def dismiss_recipe_flag(recipe_uuid):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Login required"}), 401
+    data = request.get_json() or {}
+    idx = data.get("index")
+    if idx is None or not isinstance(idx, int):
+        return jsonify({"error": "index required"}), 400
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        cur.execute(
+            "SELECT quality_warnings FROM user_kitchen_recipes WHERE uuid = %s AND user_id = %s LIMIT 1",
+            (recipe_uuid, user["id"])
+        )
+        row = cur.fetchone()
+        if not row:
+            return jsonify({"error": "Not found"}), 404
+        warnings = row["quality_warnings"] or []
+        if isinstance(warnings, str):
+            try:
+                warnings = json.loads(warnings)
+            except Exception:
+                warnings = []
+        if 0 <= idx < len(warnings):
+            w = warnings[idx]
+            if isinstance(w, str):
+                warnings[idx] = {"section": "general", "message": w, "dismissed": True}
+            elif isinstance(w, dict):
+                w["dismissed"] = True
+        cur.execute(
+            "UPDATE user_kitchen_recipes SET quality_warnings = %s::jsonb WHERE uuid = %s AND user_id = %s",
+            (json.dumps(warnings), recipe_uuid, user["id"])
+        )
+        return jsonify({"ok": True})
     finally:
         cur.close()
         conn.close()
@@ -6518,12 +6570,12 @@ def _enhance_recipe_structure(title, ingredients_text, steps_text):
         '  ],\n'
         '  "flavour_context": "Food-science reasoning. No waffle.",\n'
         '  "lives_or_dies": "The one principle this dish stands or falls on. One sentence.",\n'
-        '  "quality_warnings": [],\n'
+        '  "quality_warnings": [{"section": "ingredients|method|general", "message": "one-line issue description"}],\n'
         '  "ingredient_origin_markers": [\n'
         '    {"ingredient_name": "name from recipe", "origin_marker": "1 sentence on provenance"}\n'
         '  ]\n'
         '}\n\n'
-        'quality_warnings: flag contradictory storage, mixed units, step reference gaps, fragments. '
+        'quality_warnings: flag contradictory storage, mixed units, step reference gaps, fragments — each as {"section": "ingredients|method|general", "message": "..."}. '
         'Empty array if clean. Return 2–4 sensory_tests. '
         'ingredient_origin_markers: only ingredients with a meaningful origin story.'
     )
