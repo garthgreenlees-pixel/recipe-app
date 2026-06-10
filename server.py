@@ -1243,6 +1243,40 @@ if not os.environ.get("SKIP_INIT_DB"):
     init_db()
 
 
+# ─── Tag sanitizer ───────────────────────────────────────────────────────────
+
+_TAG_STOPWORDS = frozenset({
+    'a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+    'of', 'with', 'by', 'from', 'is', 'are', 'was', 'were', 'be', 'been',
+    'as', 'it', 'its', 'this', 'that', 'into', 'out', 'up', 'if', 'no',
+    'not', 'so', 'do', 'did', 'does', 'he', 'she', 'we', 'you', 'i',
+    'my', 'your', 'our', 'their', 'which', 'who', 'what', 'likely',
+    'development', 'than', 'about',
+})
+
+def _sanitize_tags(tags, limit=6):
+    """Return ≤limit clean facet tags: strip punctuation, drop stopword-only tokens, reject >3-word phrases."""
+    import re as _re2
+    out = []
+    seen = set()
+    for t in (tags or []):
+        t = _re2.sub(r"[^\w\s\-]", "", str(t)).strip().lower()
+        if not t or t in seen:
+            continue
+        words = t.split()
+        if not words:
+            continue
+        if len(words) == 1 and words[0] in _TAG_STOPWORDS:
+            continue
+        if len(words) > 3:
+            continue
+        seen.add(t)
+        out.append(t)
+        if len(out) >= limit:
+            break
+    return out
+
+
 # ─── Static files ────────────────────────────────────────────────────────────
 
 def _format_cuisine(raw):
@@ -1277,7 +1311,7 @@ def _query_user_recipes(user_id, state="imported"):
         cur.execute("""
             SELECT uuid, title, slug, has_image, origin, time_total,
                    servings_count, servings_text, template_version,
-                   recipe_content_jsonb,
+                   recipe_content_jsonb, tags,
                    quality_hierarchy, sensory_tests, cross_cuisine_parallels,
                    lives_or_dies, beverage_pairings, ingredients, steps
             FROM user_kitchen_recipes
@@ -1314,6 +1348,12 @@ def _query_user_recipes(user_id, state="imported"):
             time_raw = content.get("time_total") or r.get("time_total") or ""
             serves_raw = r.get("servings_count") or r.get("servings_text") or ""
             image_url = f"/images/{r['uuid']}/hero.jpg" if r.get("has_image") else None
+            raw_tags = r.get("tags") or []
+            if isinstance(raw_tags, str):
+                try:
+                    raw_tags = json.loads(raw_tags)
+                except Exception:
+                    raw_tags = []
             out.append({
                 "uuid": r["uuid"],
                 "slug": r["slug"],
@@ -1325,6 +1365,7 @@ def _query_user_recipes(user_id, state="imported"):
                 "time_display": time_raw,
                 "serves": serves_raw,
                 "requires_haccp": _detect_raw_served(*_recipe_dict_to_haccp_inputs(r)),
+                "card_tags": _sanitize_tags(raw_tags, limit=2),
             })
         return out
     except Exception as e:
@@ -1347,7 +1388,7 @@ def _query_compose_drafts(user_id):
         cur.execute("""
             SELECT uuid, title, slug, has_image, origin, time_total,
                    servings_count, servings_text, template_version,
-                   recipe_content_jsonb,
+                   recipe_content_jsonb, tags,
                    quality_hierarchy, sensory_tests, cross_cuisine_parallels,
                    lives_or_dies, beverage_pairings, ingredients, steps
             FROM user_kitchen_recipes
@@ -1373,6 +1414,12 @@ def _query_compose_drafts(user_id):
             time_raw = content.get("time_total") or r.get("time_total") or ""
             serves_raw = r.get("servings_count") or r.get("servings_text") or ""
             image_url = f"/images/{r['uuid']}/hero.jpg" if r.get("has_image") else None
+            raw_tags = r.get("tags") or []
+            if isinstance(raw_tags, str):
+                try:
+                    raw_tags = json.loads(raw_tags)
+                except Exception:
+                    raw_tags = []
             out.append({
                 "uuid": r["uuid"],
                 "slug": r["slug"],
@@ -1384,6 +1431,7 @@ def _query_compose_drafts(user_id):
                 "time_display": time_raw,
                 "serves": serves_raw,
                 "requires_haccp": _detect_raw_served(*_recipe_dict_to_haccp_inputs(r)),
+                "card_tags": _sanitize_tags(raw_tags, limit=2),
             })
         return out
     except Exception as e:
@@ -1515,6 +1563,16 @@ def _normalize_member_recipe(kitchen_recipe):
             or content.get("origin")
             or content.get("cultural_origin")
         )
+
+    # Map kitchen tags → tradition_tags for recipe page display (clamped to 6)
+    if not row.get("tradition_tags"):
+        raw_tags = row.get("tags") or []
+        if isinstance(raw_tags, str):
+            try:
+                raw_tags = json.loads(raw_tags)
+            except Exception:
+                raw_tags = []
+        row["tradition_tags"] = _sanitize_tags(raw_tags, limit=6)
 
     return row
 
@@ -4192,8 +4250,7 @@ def scan_recipe():
 Rules:
 - Extract ALL ingredients with precise quantities — do not simplify or combine
 - Include ALL steps verbatim — do not rewrite, merge, or add steps
-- Use lowercase tags
-- Infer reasonable tags from the recipe type (e.g. "dessert", "vegetarian", "italian")
+- Include at most 6 tags: clean facet labels only — lowercase short noun phrases like cuisine, dish family, or key technique (e.g. "italian", "braised", "pasta"); no stopwords, no punctuation, no more than 3 words each, never a sentence fragment
 - If there are ingredient groups (e.g. "For the sauce"), set the group field
 - If the page shows book title/author/publisher info, populate source_book; otherwise leave null
 - Return ONLY valid JSON, no markdown fences"""
@@ -4473,7 +4530,7 @@ def _jsonld_to_recipe(ld):
             tags.extend([t.strip().lower() for t in val.split(",") if t.strip()])
         elif isinstance(val, list):
             tags.extend([str(t).strip().lower() for t in val if t])
-    tags = list(dict.fromkeys(tags))[:10]
+    tags = _sanitize_tags(list(dict.fromkeys(tags)))
 
     servings = []
     yield_val = ld.get("recipeYield")
@@ -4568,7 +4625,7 @@ def import_url():
 Rules:
 - Extract ALL ingredients with precise quantities — do not simplify or combine
 - Include ALL steps verbatim — do not rewrite, merge, or add steps
-- Use lowercase tags
+- Include at most 6 tags: clean facet labels only — lowercase short noun phrases like cuisine, dish family, or key technique (e.g. "italian", "braised", "pasta"); no stopwords, no punctuation, no more than 3 words each, never a sentence fragment
 - source_book is always null for URL imports
 - Populate "group" with the section heading for each ingredient that belongs to a named section (e.g. "Marinade", "Spice blend", "For the cassava"); use "" if the recipe has no sections or the ingredient belongs to the unlabelled main list
 - Return ONLY valid JSON, no markdown fences
@@ -4629,7 +4686,7 @@ def extract_from_text():
 Rules:
 - Extract ALL ingredients with precise quantities — do not simplify or combine
 - Include ALL steps verbatim — do not rewrite, merge, or add steps
-- Use lowercase tags
+- Include at most 6 tags: clean facet labels only — lowercase short noun phrases like cuisine, dish family, or key technique (e.g. "italian", "braised", "pasta"); no stopwords, no punctuation, no more than 3 words each, never a sentence fragment
 - If this appears to be from a cookbook, populate source_book; otherwise leave null
 - Return ONLY valid JSON, no markdown fences
 
@@ -5054,7 +5111,7 @@ def create_recipe():
         "hasImage": False,
         "time": data.get("time", {"active": "", "total": ""}),
         "cooking": {"times": "0", "last": ""},
-        "tags": data.get("tags", []),
+        "tags": _sanitize_tags(data.get("tags", [])),
         "servings": data.get("servings", []),
         "ingredients": data.get("ingredients", []),
         "steps": data.get("steps", []),

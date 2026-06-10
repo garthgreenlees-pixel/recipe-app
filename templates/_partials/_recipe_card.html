@@ -23,6 +23,11 @@
     {% if recipe.cuisine %}
       <div class="recipe-card__cuisine">{{ format_cuisine(recipe.cuisine) }}</div>
     {% endif %}
+    {% if recipe.card_tags %}
+      <div class="recipe-card__facets">
+        {% for t in recipe.card_tags %}<span class="recipe-card__facet">{{ t }}</span>{% endfor %}
+      </div>
+    {% endif %}
     <div class="recipe-card__title">
       {% set title = recipe.title | default('') %}
       {% if ' — ' in title %}

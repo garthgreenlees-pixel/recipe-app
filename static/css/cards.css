@@ -133,6 +133,23 @@
   align-items: center;
 }
 
+.recipe-card__facets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-bottom: 6px;
+}
+.recipe-card__facet {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--warm-gray);
+  background: var(--cream-200);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
 .recipe-card__cuisine {
   font-family: var(--mono);
   font-size: 10px;

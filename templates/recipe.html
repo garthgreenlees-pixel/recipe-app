@@ -626,7 +626,9 @@ main { padding-bottom: 60px; }
   {# ─── BREADCRUMB + CHIPS ─── #}
   <div class="r6-crumb">
     <a href="/">home</a> ·
-    {% if cuisine_slug %}<a href="/cuisines/{{ cuisine_slug }}">{{ cuisine_display }}</a> · {% endif %}
+    {% if is_owner %}<a href="/kitchen">MyKitchen</a> ·
+    {% elif cuisine_slug %}<a href="/cuisines/{{ cuisine_slug }}">{{ cuisine_display }}</a> ·
+    {% endif %}
     <span>{{ recipe_name }}</span>
     {% if allergens or is_owner %}
     <div class="r6-chips" style="margin-top: var(--s1);">
