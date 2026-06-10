@@ -527,7 +527,32 @@
 </div>
 {% endif %}
 
-{# ── HACCP SLIDE PANEL — opened by technique_base.html bottom bar ── #}
+{# ── WORKING LAYER — Tools & Compliance ── #}
+<div class="t-working-layer">
+  <div class="t-working-header">
+    <span>
+      <span class="t-working-title">Tools &amp; Compliance</span>
+      <span class="t-working-sub">The working layer</span>
+    </span>
+    <span class="t-tier-chip">Profession+ for HACCP &amp; Costing</span>
+  </div>
+  <div class="t-actions">
+    <button class="t-action-btn" onclick="toggleTechPanel('haccp')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
+      HACCP plan
+    </button>
+    <button class="t-action-btn" onclick="toggleTechPanel('notes')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
+      Kitchen notes
+    </button>
+    <button class="t-action-btn" onclick="toggleTechPanel('costing')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
+      Recipe costing
+    </button>
+  </div>
+</div>
+
+{# ── HACCP SLIDE PANEL — opened by working layer or bottom bar ── #}
 <div class="slide-panel" id="tech-panel-haccp">
   <div class="slide-panel-header">
     <span class="slide-panel-title">Food Safety / HACCP — {{ technique.name }}</span>
@@ -646,7 +671,8 @@ function renderKitchenNotesCard(d) {
       </ul>
     </div>`)
     .join('');
-  return html || '<div class="haccp-section"><span style="font-size:12px;color:var(--cream-muted)">No safety notes generated.</span></div>';
+  const card = html || '<div class="haccp-section"><span style="font-size:12px;color:var(--cream-muted)">No safety notes generated.</span></div>';
+  return card + '<div style="margin-top:1.25rem"><button class="haccp-action" onclick="window.print()">Print</button></div>';
 }
 
 // ── Recipe Costing ──
@@ -925,6 +951,9 @@ function renderHACCPError(data) {
 function renderHACCPBrief(b) {
   const generatedDate = b.generated_at
     ? new Date(b.generated_at).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'}) : '';
+  const today = new Date().toISOString().slice(0,10);
+  const sixMonths = (() => { const d=new Date(); d.setMonth(d.getMonth()+6); return d.toISOString().slice(0,10); })();
+  const defaultAllergenComm = 'Allergen status is communicated to all kitchen staff at briefing prior to service. Front-of-house staff are briefed on allergen presence in this dish. Customers with allergies are notified verbally of cross-contamination risk and offered alternatives.';
   return `
     <article class="haccp-brief">
       <header class="haccp-header">
@@ -936,6 +965,20 @@ function renderHACCPBrief(b) {
         </div>
       </header>
       <div class="haccp-actions" id="haccp-actions">${renderHACCPActions(b)}</div>
+      <section class="haccp-section">
+        <span class="haccp-version-badge haccp-version-draft">DRAFT — UNSIGNED</span>
+        <div class="haccp-doc-ctrl-grid">
+          <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Effective date</span><input type="date" class="haccp-input" id="haccp-eff-date" value="${today}"></div>
+          <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Next review</span><input type="date" class="haccp-input" id="haccp-review-date" value="${sixMonths}"></div>
+        </div>
+      </section>
+      <section class="haccp-section">
+        <h3 class="haccp-section-title">Equipment Calibration Verification</h3>
+        <div class="haccp-doc-ctrl-grid">
+          <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-date">Thermometers calibrated</label><input type="date" class="haccp-input" id="haccp-cal-date" value=""></div>
+          <div class="haccp-doc-ctrl-field"><label class="haccp-doc-ctrl-label" for="haccp-cal-by">Calibrated by</label><input type="text" class="haccp-input" id="haccp-cal-by" placeholder="Full name"></div>
+        </div>
+      </section>
       <section class="haccp-section haccp-allergens">
         <h3 class="haccp-section-title">Allergens</h3>
         <div class="haccp-allergen-region">${escapeHtml(b.allergens.region_label||b.allergens.region)}</div>
@@ -961,6 +1004,14 @@ function renderHACCPBrief(b) {
         </div>
       </section>
       ${(b.non_ccp_steps&&b.non_ccp_steps.length)?renderNonCCPSteps(b.non_ccp_steps):''}
+      <section class="haccp-section">
+        <h3 class="haccp-section-title">Allergen Communication Statement</h3>
+        <textarea class="haccp-textarea" rows="3">${escapeHtml(defaultAllergenComm)}</textarea>
+      </section>
+      <section class="haccp-section">
+        <h3 class="haccp-section-title">Record Retention</h3>
+        <p style="font-size:0.85rem;color:rgba(245,241,233,0.65);margin:0;line-height:1.65">All HACCP records, monitoring logs, and corrective action documentation are retained for a minimum of 24 months from date of generation, per Safe Food for Canadians Regulations.</p>
+      </section>
       <section class="haccp-section haccp-signoff">
         <h3 class="haccp-section-title">Person In Charge Sign-Off</h3>
         <div class="haccp-signoff-line">

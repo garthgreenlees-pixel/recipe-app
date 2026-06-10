@@ -64,7 +64,6 @@ main { padding-bottom: 60px; }
   font-size: 0.85rem;
   color: rgba(245,241,233,0.62);
   line-height: 1.75;
-  white-space: pre-wrap;
   min-height: 100px;
 }
 .panel-prompt {
@@ -311,6 +310,68 @@ body.haccp-printing .haccp-dt-row { display: table-row !important; }
 .costing-empty-text {
   font-family: var(--sans); font-size: 0.85rem; color: rgba(245,241,233,0.35); line-height: 1.6;
 }
+
+/* ── WORKING LAYER (Tools & Compliance) ── */
+.t-working-layer {
+  margin: 3rem 0 2rem;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+.t-working-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem;
+}
+.t-working-title {
+  font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--gold);
+}
+.t-working-sub {
+  font-family: var(--serif); font-size: 1.1rem; color: var(--cream);
+  margin-left: 0.75rem;
+}
+.t-tier-chip {
+  font-family: var(--mono); font-size: 0.45rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(201,168,76,0.4);
+  padding: 0.2rem 0.6rem; border: 1px solid rgba(201,168,76,0.12); border-radius: 2px;
+}
+.t-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.t-action-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--cream); background: none; border: 1px solid rgba(245,241,233,0.12);
+  padding: 0.55rem 1.1rem; border-radius: 3px; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+}
+.t-action-btn:hover { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+.t-action-btn svg { flex-shrink: 0; }
+
+/* ── HACCP extras (document control, sign inputs) ── */
+.haccp-section-label {
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  opacity: 0.7; margin: 0 0 0.65rem; font-weight: 500;
+}
+.haccp-version-badge {
+  display: inline-block; padding: 0.2rem 0.65rem; border-radius: 3px;
+  font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 0.75rem;
+}
+.haccp-version-draft { background: rgba(255,200,60,0.12); color: rgba(255,200,60,0.7); border: 1px solid rgba(255,200,60,0.2); }
+.haccp-version-signed { background: rgba(80,180,100,0.12); color: #a8e090; border: 1px solid rgba(80,180,100,0.25); }
+.haccp-doc-ctrl-grid { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
+.haccp-doc-ctrl-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.haccp-doc-ctrl-label { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; }
+.haccp-input {
+  background: rgba(245,241,233,0.04); border: 1px solid rgba(201,168,76,0.18); border-radius: 2px;
+  padding: 0.3rem 0.5rem; font-family: var(--mono); font-size: 0.75rem; color: var(--cream);
+  outline: none; transition: border-color 0.2s;
+}
+.haccp-input:focus { border-color: rgba(201,168,76,0.4); }
+.haccp-textarea {
+  width: 100%; background: rgba(245,241,233,0.04); border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 2px; padding: 0.5rem 0.75rem; font-family: var(--sans); font-size: 0.8rem;
+  color: rgba(245,241,233,0.75); line-height: 1.6; outline: none; resize: vertical;
+  transition: border-color 0.2s; box-sizing: border-box;
+}
+.haccp-textarea:focus { border-color: rgba(201,168,76,0.4); }
 {% endblock %}
 
 {% block scripts %}
