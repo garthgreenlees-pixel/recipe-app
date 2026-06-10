@@ -547,7 +547,7 @@
     </button>
     <button class="t-action-btn" onclick="toggleTechPanel('costing')">
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
-      Recipe costing
+      Cost this recipe
     </button>
   </div>
 </div>
@@ -956,6 +956,10 @@ function renderHACCPBrief(b) {
   const today = new Date().toISOString().slice(0,10);
   const sixMonths = (() => { const d=new Date(); d.setMonth(d.getMonth()+6); return d.toISOString().slice(0,10); })();
   const defaultAllergenComm = 'Allergen status is communicated to all kitchen staff at briefing prior to service. Front-of-house staff are briefed on allergen presence in this dish. Customers with allergies are notified verbally of cross-contamination risk and offered alternatives.';
+  const isSigned = !!(b._savedRecord?.pic_signed_at);
+  const versionBadge = isSigned
+    ? `<span class="haccp-version-badge haccp-version-signed">v${escapeHtml(String(b._savedRecord.version))} — SIGNED · ${escapeHtml(b._savedRecord.pic_name||'')} · ${new Date(b._savedRecord.pic_signed_at).toLocaleDateString()}</span>`
+    : `<span class="haccp-version-badge haccp-version-draft">DRAFT — UNSIGNED</span>`;
   return `
     <article class="haccp-brief">
       <header class="haccp-header">
@@ -968,7 +972,7 @@ function renderHACCPBrief(b) {
       </header>
       <div class="haccp-actions" id="haccp-actions">${renderHACCPActions(b)}</div>
       <section class="haccp-section">
-        <span class="haccp-version-badge haccp-version-draft">DRAFT — UNSIGNED</span>
+        ${versionBadge}
         <div class="haccp-doc-ctrl-grid">
           <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Effective date</span><input type="date" class="haccp-input" id="haccp-eff-date" value="${today}"><span class="haccp-input-print">${today}</span></div>
           <div class="haccp-doc-ctrl-field"><span class="haccp-doc-ctrl-label">Next review</span><input type="date" class="haccp-input" id="haccp-review-date" value="${sixMonths}"><span class="haccp-input-print">${sixMonths}</span></div>
@@ -1012,15 +1016,22 @@ function renderHACCPBrief(b) {
       </section>
       <section class="haccp-section">
         <h3 class="haccp-section-title">Record Retention</h3>
-        <p style="font-size:0.85rem;color:rgba(245,241,233,0.65);margin:0;line-height:1.65">All HACCP records, monitoring logs, and corrective action documentation are retained for a minimum of 24 months from date of generation, per Safe Food for Canadians Regulations.</p>
+        <p style="font-size:0.85rem;color:rgba(245,241,233,0.65);margin:0;line-height:1.65">All HACCP records, monitoring logs, and corrective action documentation are retained per your local regulatory requirements.</p>
       </section>
       <section class="haccp-section haccp-signoff">
         <h3 class="haccp-section-title">Person In Charge Sign-Off</h3>
-        <div class="haccp-signoff-line">
-          <div class="haccp-signoff-field"><label>Name</label><div class="haccp-signoff-blank"></div></div>
-          <div class="haccp-signoff-field"><label>Signature</label><div class="haccp-signoff-blank"></div></div>
-          <div class="haccp-signoff-field"><label>Date</label><div class="haccp-signoff-blank"></div></div>
-        </div>
+        ${isSigned ? `
+          <div class="haccp-signoff-line">
+            <div class="haccp-signoff-field"><label>Name</label><div class="haccp-signoff-blank">${escapeHtml(b._savedRecord.pic_name||'')}</div></div>
+            <div class="haccp-signoff-field"><label>Signature</label><div class="haccp-signoff-blank haccp-sig-display">${escapeHtml(b._savedRecord.pic_name||'')}</div></div>
+            <div class="haccp-signoff-field"><label>Date signed</label><div class="haccp-signoff-blank">${new Date(b._savedRecord.pic_signed_at).toLocaleDateString()}</div></div>
+          </div>` : `
+          <p style="font-size:0.8rem;color:rgba(245,241,233,0.45);margin:0 0 1rem;line-height:1.55">Save the brief first, then type your full name as a digital signature.</p>
+          <div class="haccp-signoff-line">
+            <div class="haccp-signoff-field"><label class="haccp-doc-ctrl-label" for="haccp-pic-name">Full name</label><input type="text" class="haccp-input" id="haccp-pic-name" placeholder="Full name"><span class="haccp-input-print">—</span></div>
+            <div class="haccp-signoff-field"><label class="haccp-doc-ctrl-label" for="haccp-sig">Signature (type full name)</label><input type="text" class="haccp-input haccp-sig-input" id="haccp-sig" placeholder="Type full name as signature"><span class="haccp-input-print">—</span></div>
+          </div>
+          <button class="haccp-action haccp-action-primary" style="margin-top:1rem" onclick="signHACCPBrief()">Sign HACCP brief</button>`}
       </section>
       <footer class="haccp-footer">${escapeHtml(b.footer_note||'Brief structure follows Codex Alimentarius CXC 1-1969 (General Principles of Food Hygiene). Implementation is the responsibility of the operator.')}</footer>
     </article>`;
@@ -1123,11 +1134,14 @@ function attachHACCPInteractivity(root) {
 
 function renderHACCPActions(b) {
   const isSaved = !!b._savedRecord;
+  const isSigned = !!(b._savedRecord?.pic_signed_at);
   const ver = b._savedRecord ? `v${b._savedRecord.version}` : 'unsaved';
   const savedAt = b._savedRecord
     ? new Date(b._savedRecord.saved_at).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'})
     : '';
-  const status = isSaved
+  const status = isSigned
+    ? `<span class="haccp-status-saved">✓ Signed · ${ver} · ${escapeHtml(b._savedRecord.pic_name||'')}</span>`
+    : isSaved
     ? `<span class="haccp-status-saved">Saved · ${ver} · ${escapeHtml(savedAt)}</span>`
     : `<span class="haccp-status-draft">Draft · not saved</span>`;
   const region = (b.allergens?.region || 'EU').toUpperCase();
@@ -1142,10 +1156,9 @@ function renderHACCPActions(b) {
       </select>
     </div>
     <div class="haccp-toolbar">
-      <button class="haccp-action haccp-action-primary" onclick="saveHACCPBrief()">Save</button>
+      ${isSigned?'':`<button class="haccp-action haccp-action-primary" onclick="saveHACCPBrief()">Save</button>`}
       <button class="haccp-action" onclick="printHACCPBrief()">Print</button>
       <button class="haccp-action" onclick="regenerateHACCPBrief()">Regenerate</button>
-      <button class="haccp-action" onclick="toggleHACCPEditMode()">Edit</button>
     </div>`;
 }
 
@@ -1221,6 +1234,47 @@ function printKitchenNotes() {
 async function regenerateHACCPBrief() {
   if (!confirm('Generate a fresh brief? Unsaved changes will be lost. Saved versions are kept.')) return;
   await generateHACCP(true);
+}
+
+async function signHACCPBrief() {
+  const brief = window._currentHACCPBrief;
+  if (!brief) return;
+  const picName = (document.getElementById('haccp-pic-name')?.value || '').trim();
+  const sig = (document.getElementById('haccp-sig')?.value || '').trim();
+  if (!picName || !sig) {
+    alert('Please fill in your full name and typed signature before signing.');
+    return;
+  }
+  try {
+    // Save if not already saved
+    let savedId = brief._savedRecord?.id;
+    if (!savedId) {
+      const body = document.getElementById('haccp-body');
+      const slug = brief.recipe_slug || body?.dataset.recipeSlug;
+      const saveRes = await fetch('/api/haccp/save', {
+        method: 'POST', credentials: 'include',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({brief: {...brief, recipe_slug: slug}, edits: window._currentHACCPEdits || {}})
+      });
+      const saveData = await saveRes.json();
+      if (!saveRes.ok) { alert('Save failed: ' + (saveData.error || 'unknown')); return; }
+      brief._savedRecord = {id: saveData.id, version: saveData.version, saved_at: saveData.saved_at};
+      savedId = saveData.id;
+    }
+    const signRes = await fetch('/api/haccp/sign', {
+      method: 'POST', credentials: 'include',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({id: savedId, pic_name: picName})
+    });
+    const signData = await signRes.json();
+    if (!signRes.ok) { alert('Signing failed: ' + (signData.error || 'unknown')); return; }
+    brief._savedRecord.pic_name = picName;
+    brief._savedRecord.pic_signed_at = signData.pic_signed_at;
+    const body = document.getElementById('haccp-body');
+    if (body) { body.innerHTML = renderHACCPBrief(brief); attachHACCPInteractivity(body); }
+  } catch (e) {
+    alert('Signing failed: ' + e.message);
+  }
 }
 
 async function changeHACCPRegion(newRegion) {

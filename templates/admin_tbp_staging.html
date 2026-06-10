@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staging Queue — Pairings Admin</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #f5f5f0; color: #1a1a1a; line-height: 1.5; font-size: 14px; }
+.header { background: #1a1a1a; color: #fff; padding: 16px 32px;
+          display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 18px; font-weight: 600; }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13px; }
+.nav-links a:hover { color: #fff; }
+.nav-links a.active { color: #fff; }
+.toolbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 32px;
+           display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.toolbar label { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; margin-right: 2px; }
+.toolbar select { padding: 6px 10px; border: 1px solid #ddd; border-radius: 5px;
+                  font-size: 13px; background: #fff; }
+.toolbar a.btn { padding: 6px 14px; background: #1565c0; color: #fff; border-radius: 5px;
+                 text-decoration: none; font-size: 13px; font-weight: 500; }
+.main { max-width: 1100px; margin: 0 auto; padding: 20px 32px; }
+.empty { color: #888; text-align: center; padding: 48px; font-size: 15px; }
+.item-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
+             padding: 16px 20px; margin-bottom: 12px; }
+.item-card.decided { opacity: .35; pointer-events: none; }
+.item-header { display: flex; justify-content: space-between; align-items: flex-start;
+               gap: 12px; margin-bottom: 8px; }
+.item-product { font-weight: 700; font-size: 14px; color: #1a1a1a; }
+.item-producer { font-size: 13px; color: #666; }
+.item-technique { font-size: 12px; color: #1565c0; text-decoration: none; margin-top: 4px; display: block; }
+.item-technique:hover { text-decoration: underline; }
+.item-meta { font-size: 11px; color: #aaa; text-align: right; white-space: nowrap; }
+.type-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px;
+              font-weight: 700; text-transform: uppercase;
+              background: #e3f2fd; color: #0d47a1; margin-right: 6px; }
+.item-rationale { font-size: 13px; color: #555; font-style: italic; margin-bottom: 8px; }
+.source-link { display: block; font-size: 11px; color: #1565c0; margin-bottom: 2px;
+               white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 600px; }
+.actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+.btn-sm { padding: 5px 12px; border: none; border-radius: 4px; font-size: 12px;
+          cursor: pointer; font-weight: 500; }
+.btn-approve { background: #2e7d32; color: #fff; }
+.btn-approve:hover { background: #1b5e20; }
+.btn-reject  { background: #c62828; color: #fff; }
+.btn-reject:hover { background: #b71c1c; }
+.btn-edit    { background: #e65100; color: #fff; }
+.btn-edit:hover { background: #bf360c; }
+.edit-form { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #eee; }
+.edit-form label { font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px; color: #555; }
+.edit-form textarea { width: 100%; padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px;
+                      font-size: 13px; min-height: 60px; font-family: inherit;
+                      resize: vertical; margin-bottom: 10px; }
+.edit-form select { padding: 5px 10px; border: 1px solid #ddd; border-radius: 4px;
+                    font-size: 13px; background: #fff; margin-bottom: 10px; }
+.edit-btns { display: flex; gap: 8px; }
+.no-match-note { font-size: 12px; color: #e65100; font-style: italic; }
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 10px 18px; border-radius: 6px;
+         font-size: 13px; font-weight: 500; z-index: 2000; opacity: 0; transition: opacity .25s; }
+.toast.show { opacity: 1; }
+.toast-ok  { background: #2e7d32; color: #fff; }
+.toast-err { background: #c62828; color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Staging Queue</h1>
+  <div class="nav-links">
+    <a href="/admin/technique-pairings/">Dashboard</a>
+    <a href="/admin/technique-pairings/staging" class="active">Staging</a>
+  </div>
+</div>
+
+<form class="toolbar" method="get">
+  <label>Status</label>
+  <select name="status" onchange="this.form.submit()">
+    {% for s in ['pending','approved','rejected'] %}
+    <option value="{{ s }}"{% if status_filter == s %} selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <label>Batch</label>
+  <select name="batch" onchange="this.form.submit()">
+    <option value="">All batches</option>
+    {% for b in batches %}
+    <option value="{{ b }}"{% if batch_filter == b %} selected{% endif %}>{{ b }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<div class="main">
+  {% if not items %}
+  <div class="empty">No staging items match the current filter.</div>
+  {% endif %}
+
+  {% for item in items %}
+  <div class="item-card" id="staging-{{ item.id }}">
+    <div class="item-header">
+      <div>
+        {% if item.product_name %}
+        <div class="item-product">{{ item.product_name }}</div>
+        {% else %}
+        <div class="item-product no-match-note">⚠ No product match in DB</div>
+        {% endif %}
+        <div class="item-producer">{{ item.producer_name or '—' }}</div>
+        <a href="/admin/technique-pairings/technique/{{ item.technique_id }}" class="item-technique">
+          ↗ {{ item.technique_name }}
+        </a>
+      </div>
+      <div class="item-meta">
+        <span class="type-badge">{{ item.pairing_type }}</span><br>
+        {{ item.batch_id }}<br>
+        {{ item.generated_at.strftime('%Y-%m-%d %H:%M') if item.generated_at else '' }}
+      </div>
+    </div>
+
+    <div class="item-rationale">{{ item.pairing_rationale or '' }}</div>
+
+    {% if item.source_urls %}
+    {% for url in (item.source_urls if item.source_urls is iterable else []) %}
+    <a href="{{ url }}" target="_blank" class="source-link">{{ url }}</a>
+    {% endfor %}
+    {% endif %}
+
+    <div class="actions">
+      {% if item.product_name %}
+      <button class="btn-sm btn-approve" onclick="decide({{ item.id }}, 'approve')">Promote</button>
+      {% endif %}
+      <button class="btn-sm btn-edit" onclick="toggleEdit({{ item.id }})">Edit &amp; Promote</button>
+      <button class="btn-sm btn-reject" onclick="decide({{ item.id }}, 'reject')">Reject</button>
+    </div>
+
+    <div class="edit-form" id="edit-{{ item.id }}">
+      <label>Rationale</label>
+      <textarea id="rt-{{ item.id }}">{{ item.pairing_rationale or '' }}</textarea>
+      <label>Type</label>
+      <select id="typ-{{ item.id }}">
+        {% for t in ['signature','regional','alternative','contrast'] %}
+        <option value="{{ t }}"{% if item.pairing_type == t %} selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+      </select>
+      <div class="edit-btns">
+        <button class="btn-sm btn-approve" onclick="decide({{ item.id }}, 'edit_approve')">Promote with edits</button>
+        <button class="btn-sm" style="background:#eee;color:#555" onclick="toggleEdit({{ item.id }})">Cancel</button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function toast(msg, ok=true) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + (ok ? 'toast-ok' : 'toast-err');
+  setTimeout(() => el.className = 'toast', 2500);
+}
+
+function toggleEdit(id) {
+  const el = document.getElementById(`edit-${id}`);
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+async function decide(id, action) {
+  if (action === 'reject' && !confirm('Reject this staging item?')) return;
+  const body = {action};
+  if (action === 'edit_approve') {
+    body.pairing_rationale = document.getElementById(`rt-${id}`).value;
+    body.pairing_type      = document.getElementById(`typ-${id}`).value;
+  }
+  const r = await fetch(`/admin/technique-pairings/staging/${id}/decide`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(body),
+  });
+  const d = await r.json();
+  if (d.ok) {
+    document.getElementById(`staging-${id}`).classList.add('decided');
+    toast(action === 'reject' ? 'Rejected' : `Promoted (inserted=${d.inserted})`);
+  } else {
+    toast(d.error || 'Error', false);
+  }
+}
+</script>
+</body>
+</html>

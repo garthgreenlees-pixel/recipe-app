@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ volume.name }} — Atlas — Provenance{% endblock %}
+{% block meta_description %}{{ volume.description or ('Provenance Atlas: ' + volume.name) }}{% endblock %}
+
+{% block content %}
+<div style="max-width:1000px;margin:0 auto;padding:2rem 1.5rem 4rem">
+  <div style="margin-bottom:3rem">
+    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;color:var(--stone);text-transform:uppercase;margin-bottom:0.75rem">
+      <a href="/">Provenance</a> / Atlas / {{ volume.name }}
+    </p>
+    <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:0.5rem">Atlas</div>
+    <h1 style="font-family:var(--serif);font-size:2.5rem;font-weight:400;color:var(--cream);margin-bottom:0.75rem">{{ volume.name }}</h1>
+    {% if volume.description %}
+    <p style="color:var(--stone);max-width:680px">{{ volume.description }}</p>
+    {% endif %}
+  </div>
+
+  {% if volume.intro_text %}
+  <div style="background:var(--surface);border-left:2px solid var(--gold-soft);padding:1.25rem 1.5rem;margin-bottom:2.5rem">
+    <p style="color:var(--smoke);font-style:italic">{{ volume.intro_text }}</p>
+  </div>
+  {% endif %}
+
+  <div style="display:flex;flex-direction:column;gap:0.5rem">
+    {% for entry in entries %}
+    <div style="display:grid;grid-template-columns:2rem 1fr;gap:1rem;align-items:start;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:4px">
+      <div style="font-family:var(--mono);font-size:0.7rem;color:var(--stone);padding-top:0.2rem">{{ loop.index }}</div>
+      <div>
+        <a href="/technique/{{ entry.slug }}" style="font-family:var(--serif);font-size:1.05rem;color:var(--cream);text-decoration:none;display:block;margin-bottom:0.3rem">{{ entry.name }}</a>
+        {% if entry.description %}
+        <div style="font-size:0.8rem;color:var(--stone);margin-bottom:0.5rem">{{ entry.description[:120] }}{% if entry.description|length > 120 %}…{% endif %}</div>
+        {% endif %}
+        {% if entry.editorial_note %}
+        <div style="font-size:0.78rem;color:var(--gold-soft);font-style:italic">{{ entry.editorial_note }}</div>
+        {% endif %}
+        <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;color:var(--stone);margin-top:0.35rem">{{ entry.decimal_id or '' }}{% if entry.origin %} &nbsp;·&nbsp; {{ entry.origin[:30] }}{% endif %}</div>
+      </div>
+    </div>
+    {% else %}
+    <p style="color:var(--stone)">No entries in this atlas.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

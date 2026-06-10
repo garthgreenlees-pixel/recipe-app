@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ technique.name }} — Pairings Admin</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #f5f5f0; color: #1a1a1a; line-height: 1.5; font-size: 14px; }
+.header { background: #1a1a1a; color: #fff; padding: 16px 32px;
+          display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 17px; font-weight: 600; }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13px; }
+.nav-links a:hover { color: #fff; }
+.breadcrumb { padding: 10px 32px; font-size: 13px; color: #888; background: #fff;
+              border-bottom: 1px solid #e0e0e0; }
+.breadcrumb a { color: #1565c0; text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.main { max-width: 1280px; margin: 0 auto; padding: 20px 32px; }
+
+/* Technique meta card */
+.meta-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
+             padding: 16px 20px; margin-bottom: 20px; }
+.meta-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; font-size: 13px; color: #666; }
+.meta-tag { padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
+            text-transform: uppercase; background: #f3e5f5; color: #7b1fa2; }
+.origin-text { font-size: 13px; color: #555; margin-top: 8px; font-style: italic;
+               max-height: 56px; overflow: hidden; }
+
+/* Bulk bar */
+.bulk-bar { display: none; position: sticky; top: 0; z-index: 100;
+            background: #1565c0; color: #fff; padding: 10px 20px;
+            border-radius: 8px; margin-bottom: 14px;
+            align-items: center; gap: 14px; flex-wrap: wrap; }
+.bulk-bar.visible { display: flex; }
+.bulk-bar select { padding: 5px 10px; border-radius: 5px; border: none; font-size: 13px; }
+.bulk-bar .count { font-weight: 600; }
+.btn { padding: 6px 14px; border: none; border-radius: 5px; font-size: 13px;
+       cursor: pointer; font-weight: 500; }
+.btn-white { background: #fff; color: #1565c0; }
+.btn-white:hover { background: #e3f2fd; }
+.btn-danger-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.5); }
+.btn-danger-outline:hover { background: rgba(255,255,255,.1); }
+.btn-sm { padding: 4px 10px; font-size: 12px; border-radius: 4px; border: none; cursor: pointer; font-weight: 500; }
+.btn-approve { background: #2e7d32; color: #fff; }
+.btn-approve:hover { background: #1b5e20; }
+.btn-reject  { background: #c62828; color: #fff; }
+.btn-reject:hover { background: #b71c1c; }
+.btn-edit    { background: #e65100; color: #fff; }
+.btn-edit:hover { background: #bf360c; }
+.btn-del { background: #fce4ec; color: #c62828; }
+.btn-del:hover { background: #f8bbd0; }
+.btn-save { background: #1565c0; color: #fff; }
+.btn-save:hover { background: #0d47a1; }
+
+/* Section heading */
+.section-title { font-size: 13px; font-weight: 700; text-transform: uppercase;
+                 letter-spacing: .06em; color: #888; margin: 20px 0 10px; }
+
+/* Pairing table */
+table { width: 100%; border-collapse: collapse; background: #fff;
+        border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; font-size: 13px; }
+thead th { padding: 9px 12px; text-align: left; font-size: 11px; text-transform: uppercase;
+           letter-spacing: .06em; color: #888; background: #fafafa;
+           border-bottom: 1px solid #e0e0e0; }
+tbody tr { border-bottom: 1px solid #f0f0f0; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr.removed { opacity: .35; pointer-events: none; }
+tbody td { padding: 9px 12px; vertical-align: top; }
+.tier-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px;
+              border-radius: 4px; text-transform: uppercase; }
+.tier-2a { background: #e3f2fd; color: #0d47a1; }
+.tier-2b { background: #f3e5f5; color: #6a1b9a; }
+.tier-ed { background: #fff8e1; color: #B8860B; }
+.conf-select, .type-select { padding: 3px 6px; border: 1px solid #ddd; border-radius: 4px;
+                              font-size: 12px; background: #fff; cursor: pointer; }
+.conf-select.partial   { border-color: #a5d6a7; color: #2e7d32; }
+.conf-select.reviewed  { border-color: #ffe082; color: #B8860B; }
+.conf-select.editorial { border-color: #C9A84C; color: #856010; }
+.product-link { color: #1a1a1a; text-decoration: none; font-weight: 500; }
+.product-link:hover { color: #1565c0; text-decoration: underline; }
+.producer-link { color: #555; text-decoration: none; font-size: 12px; }
+.producer-link:hover { color: #1565c0; text-decoration: underline; }
+.region-text { font-size: 12px; color: #888; }
+.rationale-cell { max-width: 320px; }
+.rationale-view { color: #555; font-style: italic; cursor: pointer; }
+.rationale-edit { display: none; width: 100%; }
+.rationale-edit textarea { width: 100%; padding: 4px 8px; border: 1px solid #1565c0;
+                            border-radius: 4px; font-size: 12px; resize: vertical;
+                            min-height: 54px; font-family: inherit; }
+.rationale-edit-btns { display: flex; gap: 6px; margin-top: 4px; }
+
+/* Staging section */
+.staging-row { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
+               padding: 14px 18px; margin-bottom: 10px; }
+.staging-header { display: flex; justify-content: space-between; align-items: flex-start;
+                  gap: 12px; margin-bottom: 8px; }
+.staging-product { font-weight: 600; font-size: 14px; }
+.staging-producer { font-size: 13px; color: #666; }
+.staging-meta { font-size: 12px; color: #999; }
+.staging-rationale { font-size: 13px; color: #555; font-style: italic; margin-bottom: 8px; }
+.staging-urls { font-size: 11px; color: #1565c0; }
+.staging-actions { display: flex; gap: 8px; align-items: center; }
+.staging-edit-form { display: none; margin-top: 10px; padding-top: 10px;
+                     border-top: 1px solid #eee; }
+.staging-edit-form textarea { width: 100%; padding: 6px 10px; border: 1px solid #ddd;
+                               border-radius: 4px; font-size: 13px; min-height: 60px;
+                               font-family: inherit; resize: vertical; margin-bottom: 8px; }
+.staging-edit-form select { padding: 5px 10px; border: 1px solid #ddd; border-radius: 4px;
+                             font-size: 13px; margin-bottom: 8px; background: #fff; }
+.staging-decided { opacity: .4; pointer-events: none; }
+
+/* Confirm modal */
+.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45);
+                  z-index: 1000; align-items: center; justify-content: center; }
+.modal-backdrop.open { display: flex; }
+.modal { background: #fff; border-radius: 10px; padding: 28px 32px; max-width: 560px; width: 90%;
+         box-shadow: 0 8px 32px rgba(0,0,0,.18); }
+.modal h3 { font-size: 16px; margin-bottom: 12px; }
+.modal-list { list-style: none; margin: 12px 0; max-height: 240px; overflow-y: auto; }
+.modal-list li { padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+.modal-list li:last-child { border-bottom: none; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+.btn-confirm { background: #1565c0; color: #fff; padding: 8px 20px; border: none;
+               border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.btn-confirm:hover { background: #0d47a1; }
+.btn-cancel-modal { background: #e0e0e0; color: #333; padding: 8px 20px; border: none;
+                    border-radius: 6px; cursor: pointer; font-size: 14px; }
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 10px 18px; border-radius: 6px;
+         font-size: 13px; font-weight: 500; z-index: 2000; opacity: 0; transition: opacity .25s;
+         pointer-events: none; }
+.toast.show { opacity: 1; }
+.toast-ok  { background: #2e7d32; color: #fff; }
+.toast-err { background: #c62828; color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>{{ technique.name }}</h1>
+  <div class="nav-links">
+    <a href="/admin/technique-pairings/">Dashboard</a>
+    <a href="/admin/technique-pairings/staging">Staging</a>
+    <a href="/technique/{{ technique.id }}">↗ Live page</a>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <a href="/admin/technique-pairings/">Dashboard</a> / {{ technique.name }}
+</div>
+
+<div class="main">
+
+  <div class="meta-card">
+    <h2>{{ technique.name }}</h2>
+    <div class="meta-row">
+      <span class="meta-tag">{{ technique.canon_slug }}</span>
+      <span>ID {{ technique.id }}</span>
+      <span>slug: {{ technique.slug }}</span>
+    </div>
+    {% if technique.origin %}
+    <div class="origin-text">{{ technique.origin[:280] }}{% if technique.origin|length > 280 %}…{% endif %}</div>
+    {% endif %}
+  </div>
+
+  {# ── Bulk bar ──────────────────────────────────────────────────────────── #}
+  <div class="bulk-bar" id="bulkBar">
+    <span class="count"><span id="bulkCount">0</span> selected</span>
+    <select id="bulkConfidence">
+      <option value="">— confidence —</option>
+      <option value="reviewed">→ reviewed</option>
+      <option value="editorial">→ editorial</option>
+      <option value="partial">→ partial</option>
+    </select>
+    <select id="bulkType">
+      <option value="">— type —</option>
+      <option value="signature">→ signature</option>
+      <option value="regional">→ regional</option>
+      <option value="alternative">→ alternative</option>
+      <option value="contrast">→ contrast</option>
+    </select>
+    <button class="btn btn-white" onclick="bulkPreview()">Preview &amp; Apply</button>
+    <button class="btn btn-danger-outline" onclick="clearSelection()">Clear</button>
+  </div>
+
+  {# ── Primary pairings ──────────────────────────────────────────────────── #}
+  {% if pairings %}
+  <div class="section-title">{{ pairings|length }} Pairings</div>
+  <table id="pairingTable">
+    <thead>
+      <tr>
+        <th style="width:30px"><input type="checkbox" id="checkAll" onchange="toggleAll(this)"></th>
+        <th>Product / Producer</th>
+        <th>Region</th>
+        <th>Tier</th>
+        <th>Type</th>
+        <th>Confidence</th>
+        <th>Rationale</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pairings %}
+      <tr id="row-{{ p.id }}" data-id="{{ p.id }}">
+        <td><input type="checkbox" class="pair-cb" value="{{ p.id }}" onchange="onCheckChange()"></td>
+        <td>
+          {% if p.product_slug %}
+          <a href="/beverage/{{ p.product_slug }}" class="product-link" target="_blank">{{ p.product_name }}</a>
+          {% elif p.product_name %}
+          <span class="product-link">{{ p.product_name }}</span>
+          {% else %}<span style="color:#bbb">—</span>{% endif %}
+          {% if p.producer_name %}
+          <br><a href="/admin/technique-pairings/producer/{{ p.producer_id }}" class="producer-link">{{ p.producer_name }}</a>
+          {% endif %}
+        </td>
+        <td class="region-text">
+          {{ p.region_name or '—' }}{% if p.country %}<br><span style="color:#aaa">{{ p.country }}</span>{% endif %}
+        </td>
+        <td>
+          {% if p.display_order <= 50 %}
+          <span class="tier-badge tier-2a">2A</span>
+          {% elif p.display_order <= 60 %}
+          <span class="tier-badge tier-2b">2B</span>
+          {% else %}
+          <span class="tier-badge tier-ed">staged</span>
+          {% endif %}
+        </td>
+        <td>
+          <select class="type-select" onchange="saveField({{ p.id }}, 'pairing_type', this.value)">
+            {% for t in ['signature','regional','alternative','contrast'] %}
+            <option value="{{ t }}"{% if p.pairing_type == t %} selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>
+          <select class="conf-select {{ p.confidence_status }}" id="conf-{{ p.id }}"
+                  onchange="saveField({{ p.id }}, 'confidence_status', this.value); updateConfClass(this)">
+            <option value="partial"{% if p.confidence_status == 'partial' %} selected{% endif %}>partial</option>
+            <option value="reviewed"{% if p.confidence_status == 'reviewed' %} selected{% endif %}>reviewed</option>
+            <option value="editorial"{% if p.confidence_status == 'editorial' %} selected{% endif %}>editorial</option>
+          </select>
+        </td>
+        <td class="rationale-cell">
+          <div class="rationale-view" onclick="editRationale({{ p.id }})" title="Click to edit">
+            {{ p.pairing_rationale or '—' }}
+          </div>
+          <div class="rationale-edit" id="re-{{ p.id }}">
+            <textarea id="rt-{{ p.id }}">{{ p.pairing_rationale or '' }}</textarea>
+            <div class="rationale-edit-btns">
+              <button class="btn-sm btn-save" onclick="saveRationale({{ p.id }})">Save</button>
+              <button class="btn-sm" style="background:#eee;color:#555"
+                      onclick="cancelRationale({{ p.id }})">Cancel</button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <button class="btn-sm btn-del" onclick="deletePairing({{ p.id }})">✕</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#888; margin:20px 0">No pairings yet for this technique.</p>
+  {% endif %}
+
+  {# ── Staging items ─────────────────────────────────────────────────────── #}
+  {% if staging %}
+  <div class="section-title" style="margin-top:32px">{{ staging|length }} Staging Items (pending)</div>
+  {% for s in staging %}
+  <div class="staging-row" id="staging-{{ s.id }}">
+    <div class="staging-header">
+      <div>
+        <div class="staging-product">{{ s.product_name or '(no product match)' }}</div>
+        <div class="staging-producer">{{ s.producer_name or '—' }}</div>
+      </div>
+      <div class="staging-meta">
+        batch: {{ s.batch_id }}<br>
+        {{ s.generated_at.strftime('%Y-%m-%d') if s.generated_at else '' }}
+      </div>
+    </div>
+    <div class="staging-rationale">{{ s.pairing_rationale or '' }}</div>
+    {% if s.source_urls %}
+    <div class="staging-urls">
+      {% for url in (s.source_urls if s.source_urls is iterable else []) %}
+      <a href="{{ url }}" target="_blank" style="display:block; margin-bottom:2px;">{{ url[:80] }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="staging-actions" style="margin-top:10px">
+      {% if s.product_name %}
+      <button class="btn-sm btn-approve" onclick="stagingDecide({{ s.id }}, 'approve')">Promote</button>
+      {% endif %}
+      <button class="btn-sm btn-edit" onclick="toggleStagingEdit({{ s.id }})">Edit &amp; Promote</button>
+      <button class="btn-sm btn-reject" onclick="stagingDecide({{ s.id }}, 'reject')">Reject</button>
+    </div>
+    <div class="staging-edit-form" id="sedit-{{ s.id }}">
+      <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">Rationale</label>
+      <textarea id="srt-{{ s.id }}">{{ s.pairing_rationale or '' }}</textarea>
+      <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">Type</label>
+      <select id="styp-{{ s.id }}">
+        {% for t in ['signature','regional','alternative','contrast'] %}
+        <option value="{{ t }}"{% if s.pairing_type == t %} selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+      </select>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn-sm btn-approve" onclick="stagingDecide({{ s.id }}, 'edit_approve')">Promote with edits</button>
+        <button class="btn-sm" style="background:#eee;color:#555"
+                onclick="toggleStagingEdit({{ s.id }})">Cancel</button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+</div>
+
+{# ── Confirm modal ──────────────────────────────────────────────────────────── #}
+<div class="modal-backdrop" id="bulkModal">
+  <div class="modal">
+    <h3 id="modalTitle">Confirm bulk update</h3>
+    <p id="modalDesc" style="font-size:13px;color:#555;margin-bottom:8px"></p>
+    <ul class="modal-list" id="modalList"></ul>
+    <div class="modal-actions">
+      <button class="btn-cancel-modal" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm" id="modalConfirm">Apply</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TECHNIQUE_ID = {{ technique.id }};
+
+function toast(msg, ok=true) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + (ok ? 'toast-ok' : 'toast-err');
+  setTimeout(() => el.className = 'toast', 2500);
+}
+
+async function api(url, body) {
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(body),
+  });
+  return r.json();
+}
+
+// ── Single-field save ──────────────────────────────────────────────────────
+async function saveField(id, field, value) {
+  const d = await api(`/admin/technique-pairings/pairing/${id}/update`, {[field]: value});
+  if (d.ok) toast('Saved');
+  else toast(d.error || 'Error', false);
+}
+
+function updateConfClass(sel) {
+  sel.className = 'conf-select ' + sel.value;
+}
+
+// ── Rationale inline edit ──────────────────────────────────────────────────
+function editRationale(id) {
+  document.querySelector(`#row-${id} .rationale-view`).style.display = 'none';
+  document.getElementById(`re-${id}`).style.display = 'block';
+}
+function cancelRationale(id) {
+  document.querySelector(`#row-${id} .rationale-view`).style.display = '';
+  document.getElementById(`re-${id}`).style.display = 'none';
+}
+async function saveRationale(id) {
+  const val = document.getElementById(`rt-${id}`).value;
+  const d = await api(`/admin/technique-pairings/pairing/${id}/update`, {pairing_rationale: val});
+  if (d.ok) {
+    document.querySelector(`#row-${id} .rationale-view`).textContent = val;
+    cancelRationale(id);
+    toast('Rationale saved');
+  } else toast(d.error || 'Error', false);
+}
+
+// ── Delete ─────────────────────────────────────────────────────────────────
+async function deletePairing(id) {
+  if (!confirm('Delete this pairing?')) return;
+  const d = await api(`/admin/technique-pairings/pairing/${id}/delete`, {});
+  if (d.ok) {
+    document.getElementById(`row-${id}`).classList.add('removed');
+    toast('Deleted');
+  } else toast(d.error || 'Error', false);
+}
+
+// ── Bulk tag ───────────────────────────────────────────────────────────────
+let _bulkPending = null;
+
+function onCheckChange() {
+  const checked = [...document.querySelectorAll('.pair-cb:checked')];
+  document.getElementById('bulkCount').textContent = checked.length;
+  document.getElementById('bulkBar').classList.toggle('visible', checked.length > 0);
+}
+function toggleAll(cb) {
+  document.querySelectorAll('.pair-cb').forEach(c => { c.checked = cb.checked; });
+  onCheckChange();
+}
+function clearSelection() {
+  document.querySelectorAll('.pair-cb, #checkAll').forEach(c => c.checked = false);
+  onCheckChange();
+}
+async function bulkPreview() {
+  const ids = [...document.querySelectorAll('.pair-cb:checked')].map(c => parseInt(c.value));
+  const conf = document.getElementById('bulkConfidence').value;
+  const type = document.getElementById('bulkType').value;
+  if (!conf && !type) { toast('Choose confidence or type', false); return; }
+  const d = await api(`/admin/technique-pairings/technique/${TECHNIQUE_ID}/bulk`,
+                      {ids, action: 'preview', confidence_status: conf, pairing_type: type});
+  if (!d.count) { toast('No matching rows', false); return; }
+  _bulkPending = {ids, confidence_status: conf, pairing_type: type};
+  document.getElementById('modalTitle').textContent = `Update ${d.count} pairing(s)`;
+  const parts = [];
+  if (conf) parts.push(`confidence → ${conf}`);
+  if (type) parts.push(`type → ${type}`);
+  document.getElementById('modalDesc').textContent = parts.join('   ');
+  const ul = document.getElementById('modalList');
+  ul.innerHTML = d.items.map(i =>
+    `<li><strong>${i.product_name||'—'}</strong> <span style="color:#888">${i.producer_name||''}</span>
+     <span style="float:right;font-size:11px;color:#aaa">${i.current_confidence}</span></li>`
+  ).join('');
+  document.getElementById('bulkModal').classList.add('open');
+  document.getElementById('modalConfirm').onclick = bulkApply;
+}
+function closeModal() {
+  document.getElementById('bulkModal').classList.remove('open');
+  _bulkPending = null;
+}
+async function bulkApply() {
+  if (!_bulkPending) return;
+  closeModal();
+  const d = await api(`/admin/technique-pairings/technique/${TECHNIQUE_ID}/bulk`,
+                      {..._bulkPending, action: 'apply'});
+  if (d.ok) {
+    toast(`Updated ${d.updated} pairing(s)`);
+    setTimeout(() => location.reload(), 900);
+  } else toast(d.error || 'Error', false);
+}
+
+// ── Staging actions ────────────────────────────────────────────────────────
+function toggleStagingEdit(id) {
+  const el = document.getElementById(`sedit-${id}`);
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+async function stagingDecide(id, action) {
+  let body = {action};
+  if (action === 'reject' && !confirm('Reject this staging item?')) return;
+  if (action === 'edit_approve') {
+    body.pairing_rationale = document.getElementById(`srt-${id}`).value;
+    body.pairing_type = document.getElementById(`styp-${id}`).value;
+  }
+  const d = await api(`/admin/technique-pairings/staging/${id}/decide`, body);
+  if (d.ok) {
+    document.getElementById(`staging-${id}`).classList.add('staging-decided');
+    toast(action === 'reject' ? 'Rejected' : `Promoted (inserted=${d.inserted})`);
+  } else toast(d.error || 'Error', false);
+}
+</script>
+</body>
+</html>

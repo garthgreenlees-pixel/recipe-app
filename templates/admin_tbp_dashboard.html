@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technique Pairings — Admin</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #f5f5f0; color: #1a1a1a; line-height: 1.5; font-size: 14px; }
+.header { background: #1a1a1a; color: #fff; padding: 16px 32px;
+          display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 18px; font-weight: 600; }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13px; }
+.nav-links a:hover, .nav-links a.active { color: #fff; }
+.main { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.stat-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 18px 22px; }
+.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+              color: #888; margin-bottom: 6px; }
+.stat-value { font-size: 28px; font-weight: 700; color: #1a1a1a; }
+.stat-value.gold { color: #B8860B; }
+.stat-value.blue { color: #1565c0; }
+.section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px;
+                  padding-bottom: 12px; border-bottom: 1px solid #e0e0e0; }
+.section-header h2 { font-size: 15px; font-weight: 600; }
+.canon-filter { display: flex; gap: 8px; flex-wrap: wrap; }
+.canon-btn { padding: 4px 12px; border: 1px solid #ccc; border-radius: 14px; background: #fff;
+             font-size: 12px; cursor: pointer; color: #555; transition: all .15s; }
+.canon-btn:hover, .canon-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+table { width: 100%; border-collapse: collapse; background: #fff;
+        border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; }
+thead th { padding: 10px 14px; text-align: left; font-size: 11px; text-transform: uppercase;
+           letter-spacing: .06em; color: #888; background: #fafafa;
+           border-bottom: 1px solid #e0e0e0; }
+tbody tr { border-bottom: 1px solid #f0f0f0; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr.hidden { display: none; }
+tbody td { padding: 10px 14px; vertical-align: middle; }
+.technique-name { font-weight: 500; color: #1a1a1a; text-decoration: none; }
+.technique-name:hover { color: #1565c0; text-decoration: underline; }
+.canon-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px;
+             font-weight: 600; text-transform: uppercase; background: #f3e5f5; color: #7b1fa2; }
+.badge-count { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px;
+               font-weight: 600; }
+.badge-editorial { background: #fff8e1; color: #B8860B; }
+.badge-partial   { background: #e8f5e9; color: #2e7d32; }
+.badge-zero      { color: #bbb; }
+.actions { display: flex; gap: 6px; }
+.btn-sm { padding: 4px 10px; border: none; border-radius: 5px; font-size: 12px;
+          cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; }
+.btn-primary { background: #1565c0; color: #fff; }
+.btn-primary:hover { background: #0d47a1; }
+.btn-staging { background: #e65100; color: #fff; }
+.btn-staging:hover { background: #bf360c; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Technique–Beverage Pairings</h1>
+  <div class="nav-links">
+    <a href="/admin/technique-pairings/" class="active">Dashboard</a>
+    <a href="/admin/technique-pairings/staging">Staging{% if staging_pending > 0 %} ({{ staging_pending }}){% endif %}</a>
+    <a href="/admin/techniques">Techniques</a>
+    <a href="/admin/producers/review">Producers</a>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Pairings</div>
+      <div class="stat-value">{{ (stats.values() | sum) }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Editorial / Reviewed</div>
+      <div class="stat-value gold">{{ (stats.get('editorial', 0) + stats.get('reviewed', 0)) }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Partial (auto)</div>
+      <div class="stat-value blue">{{ stats.get('partial', 0) }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Staging Pending</div>
+      <div class="stat-value{% if staging_pending > 0 %} blue{% endif %}">{{ staging_pending }}</div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <h2>Techniques with Pairings</h2>
+    <div class="canon-filter" id="canonFilter">
+      <button class="canon-btn active" onclick="filterCanon(this,'')">All</button>
+      {% for c in canons %}
+      <button class="canon-btn" onclick="filterCanon(this,'{{ c }}')">{{ c }}</button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <table id="techniqueTable">
+    <thead>
+      <tr>
+        <th>Technique</th>
+        <th>Canon</th>
+        <th style="text-align:center">Editorial</th>
+        <th style="text-align:center">Partial</th>
+        <th style="text-align:center">Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in techniques %}
+      <tr data-canon="{{ t.canon_slug }}">
+        <td><a href="/admin/technique-pairings/technique/{{ t.id }}" class="technique-name">{{ t.name }}</a></td>
+        <td><span class="canon-tag">{{ t.canon_slug }}</span></td>
+        <td style="text-align:center">
+          {% if t.n_editorial %}
+          <span class="badge-count badge-editorial">{{ t.n_editorial }}</span>
+          {% else %}<span class="badge-zero">—</span>{% endif %}
+        </td>
+        <td style="text-align:center">
+          {% if t.n_partial %}
+          <span class="badge-count badge-partial">{{ t.n_partial }}</span>
+          {% else %}<span class="badge-zero">—</span>{% endif %}
+        </td>
+        <td style="text-align:center; font-weight:600;">{{ t.total }}</td>
+        <td class="actions">
+          <a href="/admin/technique-pairings/technique/{{ t.id }}" class="btn-sm btn-primary">Review</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+<script>
+function filterCanon(btn, canon) {
+  document.querySelectorAll('#canonFilter .canon-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#techniqueTable tbody tr').forEach(row => {
+    row.classList.toggle('hidden', canon !== '' && row.dataset.canon !== canon);
+  });
+}
+</script>
+</body>
+</html>

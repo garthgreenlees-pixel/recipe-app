@@ -8270,6 +8270,7 @@ table.ingredient-table {{ width: 100%; background: #F5F1E9; border: 1px solid #d
 table.ingredient-table thead {{ background: #ece6d7; }}
 table.ingredient-table thead th {{ font-family: 'DM Mono', monospace; font-size: 9pt; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #807462; text-align: left; padding: 2.5mm 4mm; border-bottom: 1px solid #d9d0b6; }}
 table.ingredient-table thead th.col-cost {{ text-align: right; }}
+table.ingredient-table tbody tr {{ page-break-inside: avoid; }}
 table.ingredient-table tbody td {{ padding: 3mm 4mm; border-bottom: 1px dotted #d9d0b6; vertical-align: top; }}
 table.ingredient-table tbody tr:last-child td {{ border-bottom: none; }}
 

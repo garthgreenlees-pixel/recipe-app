@@ -5,9 +5,18 @@
 {% block bottom_bar %}
 <div class="bottom-bar">
   <a href="/kitchen" class="bottom-bar-btn">← MyKitchen</a>
-  <button class="bottom-bar-btn" id="bbtn-notes" onclick="toggleTechPanel('notes')">Kitchen Notes</button>
-  <button class="bottom-bar-btn" id="bbtn-haccp" onclick="toggleTechPanel('haccp')">Food Safety / HACCP</button>
-  <button class="bottom-bar-btn" id="bbtn-costing" onclick="toggleTechPanel('costing')">Recipe Costing</button>
+  <button class="bottom-bar-btn" id="bbtn-haccp" onclick="toggleTechPanel('haccp')">
+    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
+    HACCP plan
+  </button>
+  <button class="bottom-bar-btn" id="bbtn-notes" onclick="toggleTechPanel('notes')">
+    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
+    Kitchen notes
+  </button>
+  <button class="bottom-bar-btn" id="bbtn-costing" onclick="toggleTechPanel('costing')">
+    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
+    Cost this recipe
+  </button>
 </div>
 {% endblock %}
 
@@ -432,7 +441,7 @@ body.haccp-printing .haccp-dt-row { display: table-row !important; }
 }
 .t-working-title {
   font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.25em;
-  text-transform: uppercase; color: var(--gold);
+  text-transform: uppercase; color: var(--charcoal);
 }
 .t-working-sub {
   font-family: var(--serif); font-size: 1.1rem; color: var(--charcoal);
@@ -443,14 +452,14 @@ body.haccp-printing .haccp-dt-row { display: table-row !important; }
   text-transform: uppercase; color: var(--warm-gray);
   padding: 0.2rem 0.6rem; border: 1px solid var(--line-soft); border-radius: 2px;
 }
-.t-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.t-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .t-action-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--charcoal-soft); background: none; border: 1px solid rgba(31,27,22,0.15);
-  padding: 0.55rem 1.1rem; border-radius: 3px; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--serif); font-style: italic; font-size: 11px; letter-spacing: 0.5px;
+  color: #5A2810; background: transparent; border: 0.5px solid rgba(139,44,26,0.3);
+  padding: 8px 14px; border-radius: 18px; cursor: pointer; transition: background 0.15s, border-color 0.15s;
 }
-.t-action-btn:hover { border-color: var(--gold); color: var(--charcoal); }
+.t-action-btn:hover { background: rgba(254,242,240,0.6); border-color: #8B2C1A; }
 .t-action-btn svg { flex-shrink: 0; }
 
 /* ── HACCP extras (document control, sign inputs) ── */

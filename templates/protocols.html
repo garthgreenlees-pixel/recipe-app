@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}The Protocols — Provenance{% endblock %}
+{% block meta_description %}The rituals of service — how the canon reaches the table. Decanting, temperature, sequence; the disciplines that decide whether everything before them was worth it.{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="https://provenance.kitchen/protocols">
+<meta property="og:title" content="The Protocols — Provenance">
+<meta property="og:description" content="The rituals of service — how the canon reaches the table. Decanting, temperature, sequence; the disciplines that decide whether everything before them was worth it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://provenance.kitchen/protocols">
+<meta property="og:site_name" content="Provenance">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "The Protocols",
+  "description": "The rituals of service — how the canon reaches the table.",
+  "url": "https://provenance.kitchen/protocols"
+}
+</script>
+{% endblock %}
+
+{% block styles %}
+.proto-tier-chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.3);
+  padding: 0.3rem 0.75rem;
+  border-radius: 2px;
+  margin-bottom: 1.25rem;
+}
+.proto-gate {
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 4px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.proto-gate-text {
+  font-size: 0.88rem;
+  color: var(--stone);
+  line-height: 1.6;
+  max-width: 520px;
+}
+.proto-gate-btn {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.35);
+  padding: 0.6rem 1.25rem;
+  border-radius: 2px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+.proto-gate-btn:hover {
+  background: rgba(201,168,76,0.06);
+  border-color: var(--gold);
+}
+.proto-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 2.5rem 0;
+}
+.proto-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem 2rem 1.75rem;
+  margin-bottom: 1rem;
+}
+.proto-card-label {
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.6rem;
+}
+.proto-card-title {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 1.25rem;
+  line-height: 1.25;
+}
+.proto-body p {
+  color: var(--stone);
+  font-size: 0.92rem;
+  line-height: 1.75;
+  margin-bottom: 1.25rem;
+}
+.proto-body p:last-child { margin-bottom: 0; }
+.proto-temp-row {
+  border-left: 2px solid rgba(201,168,76,0.25);
+  padding: 0.75rem 0 0.75rem 1.25rem;
+  margin: 1.25rem 0;
+}
+.proto-temp-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+}
+.proto-temp-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+.proto-temp-range {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--gold);
+}
+.proto-temp-note {
+  font-size: 0.85rem;
+  color: var(--stone);
+  line-height: 1.6;
+  margin: 0;
+}
+.proto-conclusion {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(201,168,76,0.08);
+}
+.proto-locked-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.25rem 1.75rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.proto-locked-title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--smoke);
+}
+.proto-lock-marker {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.45);
+  border: 1px solid rgba(201,168,76,0.18);
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.proto-soon-marker {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--stone);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+{% endblock %}
+
+{% block content %}
+<div style="max-width:800px;margin:0 auto;padding:2rem 1.5rem 4rem">
+
+  <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;color:var(--ink-soft);text-transform:uppercase;margin-bottom:3rem">
+    <a href="/">Provenance</a> / <a href="/canons-v2/">Library</a> / Protocols
+  </p>
+
+  <div style="margin-bottom:3rem;max-width:640px">
+    <div class="proto-tier-chip">The Library</div>
+    <h1 style="font-family:var(--serif);font-size:clamp(2rem,5vw,3.2rem);font-weight:400;color:var(--ink);line-height:1.1;margin-bottom:1rem">The Protocols</h1>
+    <p style="color:var(--ink-soft);font-size:1rem;line-height:1.65;max-width:560px">The rituals of service — how the canon reaches the table. Decanting, the pour, temperature, the sequence; the disciplines that decide whether everything before them was worth it.</p>
+  </div>
+
+  {% if not has_library %}
+  <div class="proto-gate">
+    <p class="proto-gate-text">The Protocols are part of The Library. One protocol is open below to read in full; the rest open with a Library seat.</p>
+    <a href="/pricing" class="proto-gate-btn">Open the Library — from $149 / yr</a>
+  </div>
+  {% endif %}
+
+  <!-- ── Open protocol: Service temperature ── -->
+  <div style="font-family:var(--mono);font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem">
+    Open to all
+    <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+  </div>
+
+  <div class="proto-card">
+    <div class="proto-card-label">Protocol I</div>
+    <h2 class="proto-card-title">Service temperature</h2>
+    <div class="proto-body">
+      <p>"Room temperature" was written when rooms were cellars; a modern dining room runs about twelve degrees too warm for any red worth opening.</p>
+
+      <div class="proto-temp-row">
+        <div class="proto-temp-heading">
+          <span class="proto-temp-label">Reds</span>
+          <span class="proto-temp-range">14–16°C / 57–61°F</span>
+        </div>
+        <p class="proto-temp-note">Cellar-cool, not warm. Above that the alcohol lifts and the fruit goes flabby. The test: the bottle is cool to the back of the hand, never neutral.</p>
+      </div>
+
+      <div class="proto-temp-row">
+        <div class="proto-temp-heading">
+          <span class="proto-temp-label">Whites &amp; rosé</span>
+          <span class="proto-temp-range">8–12°C / 46–54°F</span>
+        </div>
+        <p class="proto-temp-note">Over-chilling locks the aromatics shut; a fine white served too cold is a wasted bottle. The test: condensation beads on the glass, but it isn't painful to hold.</p>
+      </div>
+
+      <div class="proto-temp-row">
+        <div class="proto-temp-heading">
+          <span class="proto-temp-label">Sparkling</span>
+          <span class="proto-temp-range">6–8°C / 43–46°F</span>
+        </div>
+        <p class="proto-temp-note">Colder so the mousse holds its bead. The test: the bubble is fine and slow, not a rush of foam.</p>
+      </div>
+
+      <div class="proto-conclusion">
+        <p>Serve the red down from the rack, not up from the table. The error is almost always too warm, never too cold.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Library protocols ── -->
+  <div class="proto-divider"></div>
+
+  <div style="font-family:var(--mono);font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem">
+    {% if has_library %}The Library{% else %}The Library — locked{% endif %}
+    <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+  </div>
+
+  {% set locked_titles = [
+    "Decanting — sediment & air",
+    "Glassware & the pour",
+    "The pairing protocol — weight, acid, fat",
+    "Sequence & the table",
+    "Coffee service",
+    "Tea service"
+  ] %}
+
+  {% for title in locked_titles %}
+  <div class="proto-locked-card">
+    <span class="proto-locked-title">{{ title }}</span>
+    {% if has_library %}
+    <span class="proto-soon-marker">Written soon</span>
+    {% else %}
+    <span class="proto-lock-marker">The Library</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+</div>
+{% endblock %}

@@ -594,6 +594,8 @@ select.haccp-input{padding:3px 7px}
 .r-supplier-product{font-size:12px;color:var(--charcoal);padding:4px 0;border-bottom:0.5px solid var(--line-soft)}
 .r-supplier-footer{font-size:11px;color:var(--warm-gray)}
 .r-supplier-footer a{color:var(--gold)}
+.r6-pillar--tools .r6-pillar__num { color: var(--charcoal-soft); }
+main { padding-bottom: 60px; }
 </style>
 {% endblock %}
 
@@ -1067,7 +1069,7 @@ select.haccp-input{padding:3px 7px}
   </div>
 
   {# ─── TOOLS & COMPLIANCE ─── #}
-  <section class="r6-pillar" style="padding-bottom: var(--s6);">
+  <section class="r6-pillar r6-pillar--tools" style="padding-bottom: var(--s6);">
     <div class="r6-pillar__head">
       <div>
         <div class="r6-pillar__num">Tools &amp; Compliance</div>
@@ -1079,31 +1081,27 @@ select.haccp-input{padding:3px 7px}
 
 
 
+      {% set tools_seen = [] %}
+      {% for step in steps %}
+        {% if step is mapping and step.tools %}
+          {% for t in step.tools %}
+            {% if t.name not in tools_seen %}{% set _ = tools_seen.append(t.name) %}{% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      {% if tools_seen %}
       <details class="r6-tool">
         <summary>
           <div class="r6-tool__icon">▸ Tools Required</div>
           <div class="r6-tool__name">Equipment list</div>
         </summary>
         <div class="r6-tool__body">
-          {% set tools_seen = [] %}
-          {% for step in steps %}
-            {% if step is mapping and step.tools %}
-              {% for t in step.tools %}
-                {% if t.name not in tools_seen %}
-                  {% set _ = tools_seen.append(t.name) %}
-                {% endif %}
-              {% endfor %}
-            {% endif %}
-          {% endfor %}
-          {% if tools_seen %}
-            <ul style="padding-left: var(--s2);">
-              {% for t in tools_seen %}<li>{{ t }}</li>{% endfor %}
-            </ul>
-          {% else %}
-            No tools listed in the method.
-          {% endif %}
+          <ul style="padding-left: var(--s2);">
+            {% for t in tools_seen %}<li>{{ t }}</li>{% endfor %}
+          </ul>
         </div>
       </details>
+      {% endif %}
 
     </div>
   </section>
@@ -1609,7 +1607,7 @@ function renderHaccpBrief(d, savedMeta) {
 
   // D. Record retention
   html += `<div class="${S}"><div class="${SL}" style="color:#5d6d7e">Record Retention</div>
-    <div class="haccp-text-display">All HACCP records, monitoring logs, and corrective action documentation are retained for a minimum of 24 months from date of generation, per Safe Food for Canadians Regulations.</div>
+    <div class="haccp-text-display">All HACCP records, monitoring logs, and corrective action documentation are retained per your local regulatory requirements.</div>
   </div>`;
 
   // E. Sign-off block
@@ -2261,4 +2259,22 @@ document.addEventListener('keydown', e => {
   if (sb && sb.classList.contains('open')) { closeSupplierPanel(); return; }
 });
 </script>
+{% endblock %}
+
+{% block bottom_bar %}
+<div class="bottom-bar">
+  <a href="/kitchen" class="bottom-bar-btn">← MyKitchen</a>
+  <button class="bottom-bar-btn" onclick="handleAction('haccp','profession')">
+    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
+    HACCP plan
+  </button>
+  <button class="bottom-bar-btn" onclick="handleAction('notes','kitchen')">
+    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
+    Kitchen notes
+  </button>
+  <button class="bottom-bar-btn" onclick="handleAction('costing','kitchen')">
+    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
+    Cost this recipe
+  </button>
+</div>
 {% endblock %}

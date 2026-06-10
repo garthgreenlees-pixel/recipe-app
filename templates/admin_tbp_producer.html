@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ producer.name }} — Producer Pairings</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #f5f5f0; color: #1a1a1a; line-height: 1.5; font-size: 14px; }
+.header { background: #1a1a1a; color: #fff; padding: 16px 32px;
+          display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 18px; font-weight: 600; }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13px; }
+.nav-links a:hover { color: #fff; }
+.breadcrumb { padding: 10px 32px; font-size: 13px; color: #888; background: #fff;
+              border-bottom: 1px solid #e0e0e0; }
+.breadcrumb a { color: #1565c0; text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.main { max-width: 1200px; margin: 0 auto; padding: 20px 32px; }
+.meta-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
+             padding: 16px 22px; margin-bottom: 20px; display: flex;
+             justify-content: space-between; align-items: flex-start; gap: 24px; }
+.meta-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.meta-row { font-size: 13px; color: #666; display: flex; gap: 16px; margin-top: 4px; }
+.meta-stat { text-align: center; }
+.meta-stat-num { font-size: 24px; font-weight: 700; }
+.meta-stat-label { font-size: 11px; color: #888; text-transform: uppercase; }
+
+/* Products summary table */
+.section-title { font-size: 13px; font-weight: 700; text-transform: uppercase;
+                 letter-spacing: .06em; color: #888; margin: 20px 0 10px; }
+table { width: 100%; border-collapse: collapse; background: #fff;
+        border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; font-size: 13px;
+        margin-bottom: 24px; }
+thead th { padding: 9px 14px; text-align: left; font-size: 11px; text-transform: uppercase;
+           letter-spacing: .06em; color: #888; background: #fafafa;
+           border-bottom: 1px solid #e0e0e0; }
+tbody tr { border-bottom: 1px solid #f0f0f0; }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 9px 14px; vertical-align: middle; }
+.product-link { color: #1a1a1a; text-decoration: none; font-weight: 500; }
+.product-link:hover { color: #1565c0; text-decoration: underline; }
+.technique-link { color: #1565c0; text-decoration: none; }
+.technique-link:hover { text-decoration: underline; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px;
+         font-weight: 600; text-transform: uppercase; }
+.badge-partial   { background: #e8f5e9; color: #2e7d32; }
+.badge-reviewed  { background: #fff8e1; color: #B8860B; }
+.badge-editorial { background: #C9A84C22; color: #856010; }
+.badge-type { background: #e3f2fd; color: #0d47a1; }
+.canon-tag { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600;
+             text-transform: uppercase; background: #f3e5f5; color: #7b1fa2; display: inline-block; }
+.rationale-text { font-size: 12px; color: #666; font-style: italic;
+                  max-width: 380px; display: block; }
+.zero { color: #bbb; }
+.conf-select { padding: 3px 6px; border: 1px solid #ddd; border-radius: 4px;
+               font-size: 12px; background: #fff; cursor: pointer; }
+.btn-del { padding: 3px 8px; background: #fce4ec; color: #c62828; border: none;
+           border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 500; }
+.btn-del:hover { background: #f8bbd0; }
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 10px 18px; border-radius: 6px;
+         font-size: 13px; font-weight: 500; z-index: 2000; opacity: 0; transition: opacity .25s; }
+.toast.show { opacity: 1; }
+.toast-ok  { background: #2e7d32; color: #fff; }
+.toast-err { background: #c62828; color: #fff; }
+tr.removed { opacity: .3; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>{{ producer.name }}</h1>
+  <div class="nav-links">
+    <a href="/admin/technique-pairings/">Dashboard</a>
+    <a href="/admin/technique-pairings/staging">Staging</a>
+    <a href="/beverage/producer/{{ producer.id }}" target="_blank">↗ Live page</a>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <a href="/admin/technique-pairings/">Dashboard</a> / Producer: {{ producer.name }}
+</div>
+
+<div class="main">
+
+  <div class="meta-card">
+    <div>
+      <h2>{{ producer.name }}</h2>
+      <div class="meta-row">
+        <span>{{ producer.country or '—' }}</span>
+        <span>{{ producer.producer_type or '—' }}</span>
+        <span>ID {{ producer.id }}</span>
+      </div>
+    </div>
+    <div style="display:flex; gap:28px;">
+      <div class="meta-stat">
+        <div class="meta-stat-num">{{ products|length }}</div>
+        <div class="meta-stat-label">Products</div>
+      </div>
+      <div class="meta-stat">
+        <div class="meta-stat-num">{{ pairings|length }}</div>
+        <div class="meta-stat-label">Pairings</div>
+      </div>
+      <div class="meta-stat">
+        <div class="meta-stat-num">{{ pairings | selectattr('confidence_status', 'in', ['editorial','reviewed']) | list | length }}</div>
+        <div class="meta-stat-label">Editorial</div>
+      </div>
+    </div>
+  </div>
+
+  {# ── Products summary ──────────────────────────────────────────────────── #}
+  {% if products %}
+  <div class="section-title">Products ({{ products|length }})</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Varietal / Style</th>
+        <th style="text-align:center">Pairings</th>
+        <th style="text-align:center">Editorial</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for prod in products %}
+      <tr>
+        <td>
+          {% if prod.product_slug %}
+          <a href="/beverage/{{ prod.product_slug }}" class="product-link" target="_blank">{{ prod.product_name }}</a>
+          {% else %}
+          <span class="product-link">{{ prod.product_name }}</span>
+          {% endif %}
+        </td>
+        <td style="color:#888">{{ prod.subcategory or '—' }}</td>
+        <td style="text-align:center; font-weight:600">
+          {% if prod.pairing_count %}{{ prod.pairing_count }}
+          {% else %}<span class="zero">—</span>{% endif %}
+        </td>
+        <td style="text-align:center">
+          {% if prod.editorial_count %}
+          <span class="badge badge-reviewed">{{ prod.editorial_count }}</span>
+          {% else %}<span class="zero">—</span>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  {# ── All pairings (inverse view) ───────────────────────────────────────── #}
+  {% if pairings %}
+  <div class="section-title">All Technique Pairings ({{ pairings|length }})</div>
+  <table id="pairingTable">
+    <thead>
+      <tr>
+        <th>Technique</th>
+        <th>Canon</th>
+        <th>Product</th>
+        <th>Type</th>
+        <th>Confidence</th>
+        <th>Rationale</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pairings %}
+      <tr id="pr-{{ p.pairing_id }}">
+        <td>
+          <a href="/admin/technique-pairings/technique/{{ p.technique_id }}" class="technique-link">
+            {{ p.technique_name }}
+          </a>
+        </td>
+        <td><span class="canon-tag">{{ p.canon_slug }}</span></td>
+        <td>
+          {% if p.product_slug %}
+          <a href="/beverage/{{ p.product_slug }}" class="product-link" target="_blank">{{ p.product_name }}</a>
+          {% else %}
+          <span>{{ p.product_name or '—' }}</span>
+          {% endif %}
+        </td>
+        <td><span class="badge badge-type">{{ p.pairing_type }}</span></td>
+        <td>
+          <select class="conf-select" onchange="saveConf({{ p.pairing_id }}, this)">
+            {% for c in ['partial','reviewed','editorial'] %}
+            <option value="{{ c }}"{% if p.confidence_status == c %} selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td><span class="rationale-text">{{ (p.pairing_rationale or '')[:100] }}{% if (p.pairing_rationale or '')|length > 100 %}…{% endif %}</span></td>
+        <td>
+          <button class="btn-del" onclick="delPairing({{ p.pairing_id }})">✕</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#888; margin-top:20px">No pairings found for this producer's products.</p>
+  {% endif %}
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function toast(msg, ok=true) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + (ok ? 'toast-ok' : 'toast-err');
+  setTimeout(() => el.className = 'toast', 2500);
+}
+
+async function api(url, body) {
+  const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+  return r.json();
+}
+
+async function saveConf(id, sel) {
+  const d = await api(`/admin/technique-pairings/pairing/${id}/update`, {confidence_status: sel.value});
+  if (d.ok) toast('Saved');
+  else toast(d.error || 'Error', false);
+}
+
+async function delPairing(id) {
+  if (!confirm('Delete this pairing?')) return;
+  const d = await api(`/admin/technique-pairings/pairing/${id}/delete`, {});
+  if (d.ok) {
+    document.getElementById(`pr-${id}`).classList.add('removed');
+    toast('Deleted');
+  } else toast(d.error || 'Error', false);
+}
+</script>
+</body>
+</html>
