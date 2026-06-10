@@ -343,8 +343,8 @@ main { padding-bottom: 60px; }
   .haccp-ccp-row { background: none !important; }
   .haccp-dt-row td { background: none; }
 
-  /* HACCP: section page breaks */
-  .haccp-section { page-break-inside: avoid; }
+  /* HACCP: section flow — titles never orphaned at page bottom; rows never split; sections may break */
+  .haccp-brief h3 { page-break-after: avoid; }
   .haccp-ccps { page-break-before: auto; }
 
   /* HACCP: form controls — hide inputs, show print values */
@@ -352,12 +352,63 @@ main { padding-bottom: 60px; }
   .haccp-textarea { display: none !important; }
   .haccp-input-print {
     display: block !important; color: #1F1B16; font-family: 'DM Mono', monospace;
-    font-size: 8pt; padding: 2pt 0; border-bottom: 1px solid #DDD3BE;
+    font-size: 7.5pt; padding: 1pt 0; border-bottom: 1px solid #DDD3BE;
   }
   .haccp-textarea-print {
     display: block !important; color: #1F1B16; font-family: 'DM Sans', sans-serif;
-    font-size: 9pt; line-height: 1.5; white-space: pre-wrap;
+    font-size: 8pt; line-height: 1.35; white-space: pre-wrap;
   }
+
+  /* ── HACCP: compact working-document scale — target 2-3 pages ── */
+  .haccp-brief { font-size: 8pt; line-height: 1.35; }
+  .haccp-recipe-title { font-size: 16pt; line-height: 1.1; }
+  .haccp-meta { font-size: 7pt; line-height: 1.35; }
+  .haccp-header { padding-bottom: 4pt; margin-bottom: 6pt; }
+  .haccp-section-title { font-size: 9pt; margin: 0 0 3pt; }
+  .haccp-brief .haccp-section { margin-bottom: 8pt; }
+  .haccp-version-badge { font-size: 6.5pt; padding: 1pt 5pt; margin-bottom: 4pt; }
+  .haccp-brief p { font-size: 8pt !important; line-height: 1.35; margin: 0 0 2pt; }
+  .haccp-brief li { font-size: 8pt !important; line-height: 1.35; }
+  .haccp-allergen-region { font-size: 7.5pt; margin-bottom: 2pt; }
+  .haccp-allergen-pills { gap: 2pt; }
+  .haccp-pill { padding: 1pt 5pt; font-size: 7pt; }
+  .haccp-allergen-rationale { font-size: 7.5pt; margin: 2pt 0 0; }
+  /* Flow steps: compact inline run at print */
+  .haccp-flow-stepper { display: block; list-style: none; padding: 0; margin: 0; }
+  .haccp-flow-step { display: inline; padding: 0; background: none; border: none; font-size: 8pt; }
+  .haccp-flow-step::after { content: ' · '; color: #C9A84C; }
+  .haccp-flow-step:last-child::after { content: ''; }
+  .haccp-flow-number {
+    display: inline; min-width: auto; height: auto; line-height: inherit;
+    border-radius: 0; background: none !important; color: #6B6258;
+    font-size: 7pt; font-weight: 600; margin-right: 1pt;
+  }
+  /* Receiving criteria: tighter rows */
+  .haccp-receiving-item { padding: 3pt 0; border-radius: 0; }
+  .haccp-receiving-accept, .haccp-receiving-reject { font-size: 7.5pt; margin-top: 1pt; }
+  .haccp-receiving-ingredient { font-size: 8pt; }
+  /* Non-CCP steps: tighter */
+  .haccp-non-ccp-list li { padding: 2pt 4pt; margin-bottom: 2pt; font-size: 8pt; }
+  /* CCP table: 7.5pt cells, tighter padding */
+  .haccp-ccp-table td { font-size: 7.5pt !important; padding: 2pt 3pt; }
+  .haccp-ccp-table th { font-size: 7pt; padding: 2pt 3pt; }
+  .haccp-hazard-cat { font-size: 6.5pt; padding: 0 3pt; }
+  .haccp-ccp-target { font-size: 7pt; }
+  /* Doc control grid: tighter */
+  .haccp-doc-ctrl-grid { gap: 4pt; margin-top: 3pt; }
+  .haccp-doc-ctrl-label { font-size: 6pt; }
+  /* Sign-off: compact */
+  .haccp-signoff-line { gap: 8pt; padding-top: 2pt; }
+  .haccp-signoff-field label { margin-bottom: 6pt; font-size: 6.5pt; }
+  .haccp-footer { margin-top: 6pt; padding-top: 3pt; font-size: 7pt; }
+  /* Decision tree rows (expanded at print): compact */
+  .haccp-dt-panel { padding: 4pt 6pt; }
+  .haccp-dt-title { font-size: 7pt; margin-bottom: 3pt; }
+  .haccp-dt-question { font-size: 7.5pt; margin-bottom: 1pt; }
+  .haccp-dt-answer { font-size: 7pt; padding: 0 3pt; }
+  .haccp-dt-rationale { font-size: 7pt; }
+  .haccp-dt-conclusion { margin-top: 4pt; padding-top: 3pt; font-size: 7.5pt; }
+  .haccp-dt-q { margin-bottom: 4pt; padding-bottom: 4pt; }
 }
 body.haccp-printing .haccp-dt-row { display: table-row !important; }
 
