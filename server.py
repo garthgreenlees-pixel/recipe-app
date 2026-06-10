@@ -4258,26 +4258,7 @@ def _make_card_thumbnail(image_url):
 
 # ─── Scan (AI recipe extraction) ────────────────────────────────────────────
 
-@app.route("/api/scan", methods=["POST"])
-def scan_recipe():
-    # Collect uploaded images
-    images = []
-    images_b64 = []
-    images_media_types = []
-
-    for key in sorted(request.files.keys()):
-        f = request.files[key]
-        raw = f.read()
-        data, media_type = _prepare_image(raw)
-        b64 = base64.b64encode(data).decode("utf-8")
-        images.append({"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64}})
-        images_b64.append(b64)
-        images_media_types.append(media_type)
-
-    if not images:
-        return jsonify(error="No images uploaded"), 400
-
-    prompt_text = """Extract the recipe from these cookbook page images. Return a JSON object with these fields:
+_SCAN_PROMPT = """Extract the recipe from these cookbook page images. Return a JSON object with these fields:
 {
   "title": "Recipe title",
   "preamble": "Brief description or headnote",
@@ -4299,35 +4280,100 @@ Rules:
 - If the page shows book title/author/publisher info, populate source_book; otherwise leave null
 - Return ONLY valid JSON, no markdown fences"""
 
-    content = images + [{"type": "text", "text": prompt_text}]
 
-    try:
-        response = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=4096,
-            messages=[{"role": "user", "content": content}],
-        )
+def _scan_call(content):
+    """One Anthropic scan call. Returns parsed dict or raises."""
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=4096,
+        messages=[{"role": "user", "content": content}],
+    )
+    text = response.content[0].text.strip()
+    if text.startswith("```"):
+        lines = text.split("\n")[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        text = "\n".join(lines)
+    return json.loads(text)
 
-        response_text = response.content[0].text.strip()
-        # Strip markdown fences if present
-        if response_text.startswith("```"):
-            lines = response_text.split("\n")
-            lines = lines[1:]  # remove opening fence
-            if lines and lines[-1].strip() == "```":
-                lines = lines[:-1]
-            response_text = "\n".join(lines)
 
-        recipe = json.loads(response_text)
+def _scan_with_retry(content, label="batch"):
+    """Try twice; return (recipe_dict, None) or (None, last_exception)."""
+    last_exc = None
+    for attempt in range(2):
+        try:
+            return _scan_call(content), None
+        except Exception as exc:
+            app.logger.warning("scan %s attempt %d failed: %s", label, attempt + 1, exc)
+            last_exc = exc
+            if attempt == 0:
+                _time.sleep(2)
+    return None, last_exc
+
+
+def _merge_scan_pages(pages):
+    """Merge per-page scan results into one recipe dict."""
+    base = dict(pages[0])
+    for p in pages[1:]:
+        base["ingredients"] = (base.get("ingredients") or []) + (p.get("ingredients") or [])
+        base["steps"] = (base.get("steps") or []) + (p.get("steps") or [])
+        if not base.get("title") and p.get("title"):
+            base["title"] = p["title"]
+    return base
+
+
+@app.route("/api/scan", methods=["POST"])
+def scan_recipe():
+    images = []
+    images_b64 = []
+    images_media_types = []
+
+    for key in sorted(request.files.keys()):
+        f = request.files[key]
+        raw = f.read()
+        data, media_type = _prepare_image(raw)
+        b64 = base64.b64encode(data).decode("utf-8")
+        images.append({"type": "image", "source": {"type": "base64", "media_type": media_type, "data": b64}})
+        images_b64.append(b64)
+        images_media_types.append(media_type)
+
+    if not images:
+        return jsonify(error="No images uploaded"), 400
+
+    content = images + [{"type": "text", "text": _SCAN_PROMPT}]
+
+    # Attempt full batch (with one automatic retry)
+    recipe, err = _scan_with_retry(content, label=f"{len(images)}-page batch")
+    if recipe:
         recipe["_images_b64"] = images_b64
         recipe["_images_media_types"] = images_media_types
         return jsonify(recipe)
 
-    except json.JSONDecodeError as e:
-        return jsonify(error=f"Failed to parse the response: {e}"), 500
-    except anthropic.RateLimitError as e:
-        return jsonify(error=f"rate limit: {e}"), 429
-    except Exception as e:
-        return jsonify(error=str(e)), 500
+    # Batch failed — try per-page fallback if multiple pages
+    if len(images) == 1:
+        app.logger.error("scan: single page unreadable after retry: %s", err)
+        return jsonify(error="unreadable")
+
+    app.logger.warning("scan: batch failed (%d pages), trying per-page fallback", len(images))
+    page_results = []
+    failed_pages = []
+    for i, img in enumerate(images):
+        single_content = [img, {"type": "text", "text": _SCAN_PROMPT}]
+        r, e2 = _scan_with_retry(single_content, label=f"page {i + 1}")
+        if r:
+            page_results.append(r)
+        else:
+            app.logger.error("scan: page %d unreadable: %s", i + 1, e2)
+            failed_pages.append(i + 1)
+
+    if not page_results:
+        return jsonify(error="unreadable")
+
+    merged = _merge_scan_pages(page_results)
+    merged["_images_b64"] = images_b64
+    merged["_images_media_types"] = images_media_types
+    merged["failed_pages"] = failed_pages
+    return jsonify(merged)
 
 
 # ─── Cover OCR ───────────────────────────────────────────────────────────────

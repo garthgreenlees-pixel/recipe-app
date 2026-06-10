@@ -102,10 +102,25 @@ var pdfExtracted = [];
       fetch('/api/scan', { method: 'POST', body: fd })
         .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
         .then(function (res) {
-          if (!res.ok) throw new Error(res.data.error || 'Scan failed');
           var recipe = res.data;
+          if (recipe.error === 'unreadable') {
+            var e = new Error('unreadable');
+            e._unreadable = true;
+            throw e;
+          }
+          if (!res.ok) throw new Error('scan_error');
           btnScan.textContent = 'Building your recipe…';
-          if (status) { status.textContent = 'Scan complete — building recipe…'; status.hidden = false; }
+          if (recipe.failed_pages && recipe.failed_pages.length) {
+            var pnums = recipe.failed_pages.join(', ');
+            var plural = recipe.failed_pages.length === 1 ? 'Page' : 'Pages';
+            if (status) {
+              status.textContent = plural + ' ' + pnums + ' couldn’t be read — the recipe was built from the rest. You can rescan the missing page from the editor.';
+              status.classList.remove('is-error');
+              status.hidden = false;
+            }
+          } else {
+            if (status) { status.textContent = 'Scan complete — building recipe…'; status.hidden = false; }
+          }
           return fetch('/api/recipes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -124,14 +139,20 @@ var pdfExtracted = [];
           })
             .then(function (r2) { return r2.json().then(function (d) { return { ok: r2.ok, data: d }; }); })
             .then(function (res2) {
-              if (!res2.ok) throw new Error(res2.data.error || 'Save failed');
+              if (!res2.ok) throw new Error('save_error');
               if (window.ProvenanceProcessing) ProvenanceProcessing.hide();
               window.location.href = '/recipe/' + res2.data.slug + '/edit';
             });
         })
         .catch(function (err) {
           if (window.ProvenanceProcessing) ProvenanceProcessing.hide();
-          if (status) { status.textContent = 'Something went wrong — ' + err.message; status.classList.add('is-error'); status.hidden = false; }
+          var msg;
+          if (err._unreadable) {
+            msg = 'We couldn’t read these pages. Try retaking the photos in good light, or scan fewer pages at once.';
+          } else {
+            msg = 'Something went wrong — please try again.';
+          }
+          if (status) { status.textContent = msg; status.classList.add('is-error'); status.hidden = false; }
           btnScan.disabled = false;
           renderScanQueue();
         });
