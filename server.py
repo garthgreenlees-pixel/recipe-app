@@ -1186,6 +1186,7 @@ def init_db():
     for stmt in [
         "ALTER TABLE recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS allergens JSONB",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS cuisine TEXT",
         "ALTER TABLE menus ADD COLUMN IF NOT EXISTS allergen_notes JSONB DEFAULT '{}'::jsonb",
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS has_atelier_addon BOOLEAN NOT NULL DEFAULT FALSE",
         "ALTER TABLE users ADD COLUMN IF NOT EXISTS closed_at TIMESTAMP",
@@ -1277,6 +1278,48 @@ def _sanitize_tags(tags, limit=6):
     return out
 
 
+_KNOWN_CUISINES = frozenset({
+    'british', 'english', 'scottish', 'welsh', 'irish',
+    'french', 'italian', 'spanish', 'portuguese', 'greek',
+    'german', 'austrian', 'swiss', 'belgian', 'dutch',
+    'swedish', 'danish', 'norwegian', 'finnish',
+    'russian', 'polish', 'hungarian', 'czech',
+    'turkish', 'lebanese', 'syrian', 'moroccan', 'persian',
+    'egyptian', 'israeli',
+    'indian', 'pakistani', 'bangladeshi', 'sri lankan',
+    'chinese', 'japanese', 'korean', 'vietnamese', 'thai',
+    'cambodian', 'indonesian', 'malaysian', 'filipino',
+    'mexican', 'peruvian', 'colombian', 'brazilian', 'argentinian',
+    'cuban', 'jamaican', 'caribbean', 'dominican',
+    'american', 'southern', 'cajun', 'creole',
+    'west african', 'east african', 'ethiopian', 'nigerian',
+    'mediterranean', 'eastern mediterranean', 'middle eastern',
+    'latin american', 'south asian', 'southeast asian',
+    'central asian', 'nordic', 'scandinavian',
+    'georgian', 'armenian', 'azerbaijani', 'balinese', 'acehnese',
+    'sundanese', 'sicilian', 'venetian', 'provencal',
+})
+
+def _sanitize_cuisine(cuisine):
+    """Return a short cuisine label (≤3 words) or None if input is prose."""
+    import re as _re3
+    if not cuisine:
+        return None
+    s = _re3.sub(r'[^\w\s\-/]', '', str(cuisine)).strip().lower()
+    if not s:
+        return None
+    words = s.split()
+    if len(words) <= 3:
+        return s
+    # Too long — it's prose. Try to extract a known cuisine name.
+    for n in range(3, 0, -1):
+        for i in range(len(words) - n + 1):
+            candidate = ' '.join(words[i:i + n])
+            if candidate in _KNOWN_CUISINES:
+                return candidate
+    return None
+
+
 # ─── Static files ────────────────────────────────────────────────────────────
 
 def _format_cuisine(raw):
@@ -1309,7 +1352,7 @@ def _query_user_recipes(user_id, state="imported"):
         conn = get_db()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cur.execute("""
-            SELECT uuid, title, slug, has_image, origin, time_total,
+            SELECT uuid, title, slug, has_image, origin, cuisine, time_total,
                    servings_count, servings_text, template_version,
                    recipe_content_jsonb, tags,
                    quality_hierarchy, sensory_tests, cross_cuisine_parallels,
@@ -1343,7 +1386,7 @@ def _query_user_recipes(user_id, state="imported"):
             ])
             # Cuisine: prefer content_jsonb cuisine key, fall back to origin
             content = r.get("recipe_content_jsonb") or {}
-            cuisine = content.get("cuisine") or r.get("origin") or ""
+            cuisine = r.get("cuisine") or content.get("cuisine") or _sanitize_cuisine(r.get("origin")) or ""
             # Time: prefer content_jsonb, fall back to raw text field
             time_raw = content.get("time_total") or r.get("time_total") or ""
             serves_raw = r.get("servings_count") or r.get("servings_text") or ""
@@ -1386,7 +1429,7 @@ def _query_compose_drafts(user_id):
         conn = get_db()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cur.execute("""
-            SELECT uuid, title, slug, has_image, origin, time_total,
+            SELECT uuid, title, slug, has_image, origin, cuisine, time_total,
                    servings_count, servings_text, template_version,
                    recipe_content_jsonb, tags,
                    quality_hierarchy, sensory_tests, cross_cuisine_parallels,
@@ -1410,7 +1453,7 @@ def _query_compose_drafts(user_id):
                 bool(r.get("beverage_pairings")),
             ])
             content = r.get("recipe_content_jsonb") or {}
-            cuisine = content.get("cuisine") or r.get("origin") or ""
+            cuisine = r.get("cuisine") or content.get("cuisine") or _sanitize_cuisine(r.get("origin")) or ""
             time_raw = content.get("time_total") or r.get("time_total") or ""
             serves_raw = r.get("servings_count") or r.get("servings_text") or ""
             image_url = f"/images/{r['uuid']}/hero.jpg" if r.get("has_image") else None
@@ -1520,9 +1563,9 @@ def _normalize_member_recipe(kitchen_recipe):
     else:
         row.setdefault("image_url", None)
 
-    # Cuisine — prefer content_jsonb, fall back to origin field
+    # Cuisine — dedicated column, then content_jsonb, then sanitize origin prose
     if not row.get("cuisine"):
-        row["cuisine"] = content.get("cuisine") or row.get("origin") or ""
+        row["cuisine"] = content.get("cuisine") or _sanitize_cuisine(row.get("origin")) or ""
 
     # Ingredients — v3 uses ingredient_groups; legacy uses raw ingredients list
     if not row.get("ingredients"):
@@ -5290,7 +5333,7 @@ def create_recipe():
                      servings, source_name, source_url, has_image, is_draft,
                      source_book_title, source_book_author, source_book_publisher,
                      source_book_year, source_book_isbn, source_book_page,
-                     origin, quality_hierarchy, sensory_tests, cross_cuisine_parallels,
+                     origin, cuisine, quality_hierarchy, sensory_tests, cross_cuisine_parallels,
                      flavour_context, lives_or_dies, quality_warnings,
                      ingredient_origin_markers, source_units_raw,
                      servings_text, servings_count,
@@ -5298,7 +5341,7 @@ def create_recipe():
                 VALUES (
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                 )
                 ON CONFLICT (uuid) DO NOTHING
             """, (
@@ -5326,6 +5369,7 @@ def create_recipe():
                 source_book_isbn,
                 source_book_page,
                 structure.get("origin"),
+                _sanitize_cuisine(structure.get("cuisine")),
                 json.dumps(structure["quality_hierarchy"]) if structure.get("quality_hierarchy") else None,
                 json.dumps(structure["sensory_tests"]) if structure.get("sensory_tests") else None,
                 json.dumps(structure["cross_cuisine_parallels"]) if structure.get("cross_cuisine_parallels") else None,
@@ -6461,6 +6505,7 @@ def _enhance_recipe_structure(title, ingredients_text, steps_text):
         f"Recipe: {title}\n\nIngredients:\n{ingredients_text}\n\nSteps:\n{steps_text}\n\n"
         'Return ONLY valid JSON — no markdown fences:\n'
         '{\n'
+        '  "cuisine": "short label — 1 or 2 words, lowercase (e.g. \\"british\\", \\"japanese\\", \\"eastern mediterranean\\"); null if uncertain",\n'
         '  "origin": "1–2 sentence geographic/historical placement",\n'
         '  "quality_hierarchy": [\n'
         '    {"ingredient": "name", "reserve": "best-quality option", "house": "everyday option", "swap_cost": "what you lose"}\n'
