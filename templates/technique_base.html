@@ -311,11 +311,11 @@ body.haccp-printing .haccp-dt-row { display: table-row !important; }
   font-family: var(--sans); font-size: 0.85rem; color: rgba(245,241,233,0.35); line-height: 1.6;
 }
 
-/* ── WORKING LAYER (Tools & Compliance) ── */
+/* ── WORKING LAYER (Tools & Compliance) — light ground, matches recipe r6-pillar ── */
 .t-working-layer {
   margin: 3rem 0 2rem;
   padding: 2rem 0;
-  border-top: 1px solid rgba(201,168,76,0.1);
+  border-top: 1px solid var(--line-soft);
 }
 .t-working-header {
   display: flex; align-items: baseline; justify-content: space-between;
@@ -326,22 +326,22 @@ body.haccp-printing .haccp-dt-row { display: table-row !important; }
   text-transform: uppercase; color: var(--gold);
 }
 .t-working-sub {
-  font-family: var(--serif); font-size: 1.1rem; color: var(--cream);
+  font-family: var(--serif); font-size: 1.1rem; color: var(--charcoal);
   margin-left: 0.75rem;
 }
 .t-tier-chip {
   font-family: var(--mono); font-size: 0.45rem; letter-spacing: 0.1em;
-  text-transform: uppercase; color: rgba(201,168,76,0.4);
-  padding: 0.2rem 0.6rem; border: 1px solid rgba(201,168,76,0.12); border-radius: 2px;
+  text-transform: uppercase; color: var(--warm-gray);
+  padding: 0.2rem 0.6rem; border: 1px solid var(--line-soft); border-radius: 2px;
 }
 .t-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .t-action-btn {
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--cream); background: none; border: 1px solid rgba(245,241,233,0.12);
+  color: var(--charcoal-soft); background: none; border: 1px solid rgba(31,27,22,0.15);
   padding: 0.55rem 1.1rem; border-radius: 3px; cursor: pointer; transition: border-color 0.2s, color 0.2s;
 }
-.t-action-btn:hover { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+.t-action-btn:hover { border-color: var(--gold); color: var(--charcoal); }
 .t-action-btn svg { flex-shrink: 0; }
 
 /* ── HACCP extras (document control, sign inputs) ── */
