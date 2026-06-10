@@ -1469,7 +1469,10 @@ function _haccpCollect() {
 
 async function _haccpGenerateFresh() {
   const {ingredients, method_steps, title} = _haccpCollect();
-  if (!ingredients.length && !method_steps.length) {
+  if (!method_steps.length) {
+    _haccpSetBody('<div class="haccp-loading">This recipe has no method steps yet — add the method to generate a HACCP brief.</div>'); return;
+  }
+  if (!ingredients.length) {
     _haccpSetBody('<div class="haccp-loading">No recipe data found on this page.</div>'); return;
   }
   _haccpSetBody('');

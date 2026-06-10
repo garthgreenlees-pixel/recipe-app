@@ -43,25 +43,60 @@ var pdfExtracted = [];
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 
-  // ── Scan a page — image → /api/scan → /api/recipes (full pipeline) → redirect ──
+  // ── Scan — multi-page queue → /api/scan (all pages in one request) → /api/recipes → redirect ──
+  var scanFiles = [];
+  var scanInput = document.getElementById('scan-file');
+  var scanQueue = document.getElementById('scan-queue');
   var btnScan = document.getElementById('btn-scan');
+
+  function renderScanQueue() {
+    if (!scanQueue) return;
+    if (!scanFiles.length) {
+      scanQueue.hidden = true;
+      if (btnScan) { btnScan.textContent = 'Add a photo to begin →'; btnScan.disabled = true; }
+      return;
+    }
+    scanQueue.hidden = false;
+    scanQueue.innerHTML = scanFiles.map(function (f, i) {
+      return '<div class="scan-queue-item">'
+        + '<span class="scan-queue-item__name">Page ' + (i + 1) + ' — ' + esc(f.name) + '</span>'
+        + '<button type="button" class="scan-queue-item__remove" onclick="removeScanPage(' + i + ')" aria-label="Remove page">×</button>'
+        + '</div>';
+    }).join('');
+    var n = scanFiles.length;
+    if (btnScan) {
+      btnScan.textContent = 'Scan ' + (n === 1 ? '1 page' : n + ' pages') + ' and import →';
+      btnScan.disabled = false;
+    }
+  }
+
+  window.removeScanPage = function (idx) {
+    scanFiles.splice(idx, 1);
+    renderScanQueue();
+  };
+
+  if (scanInput) {
+    scanInput.addEventListener('change', function () {
+      Array.from(scanInput.files).forEach(function (f) { scanFiles.push(f); });
+      scanInput.value = '';
+      renderScanQueue();
+    });
+  }
+
   if (btnScan) {
     btnScan.addEventListener('click', function () {
-      var fileInput = document.getElementById('scan-file');
       var status = document.getElementById('scan-status');
-      if (!fileInput || !fileInput.files || !fileInput.files[0]) {
-        status.textContent = 'Choose a photo first.';
-        status.classList.add('is-error');
-        status.hidden = false;
+      if (!scanFiles.length) {
+        if (status) { status.textContent = 'Choose a photo first.'; status.classList.add('is-error'); status.hidden = false; }
         return;
       }
       btnScan.disabled = true;
-      btnScan.textContent = 'Reading image…';
-      status.classList.remove('is-error');
-      status.hidden = true;
+      var n = scanFiles.length;
+      btnScan.textContent = 'Reading ' + (n === 1 ? '1 page' : n + ' pages') + '…';
+      if (status) { status.classList.remove('is-error'); status.hidden = true; }
 
       var fd = new FormData();
-      fd.append('image0', fileInput.files[0]);
+      scanFiles.forEach(function (f, i) { fd.append('image' + i, f); });
 
       fetch('/api/scan', { method: 'POST', body: fd })
         .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
@@ -69,8 +104,7 @@ var pdfExtracted = [];
           if (!res.ok) throw new Error(res.data.error || 'Scan failed');
           var recipe = res.data;
           btnScan.textContent = 'Building your recipe…';
-          status.textContent = 'Scan complete — building recipe…';
-          status.hidden = false;
+          if (status) { status.textContent = 'Scan complete — building recipe…'; status.hidden = false; }
           return fetch('/api/recipes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -94,12 +128,56 @@ var pdfExtracted = [];
             });
         })
         .catch(function (err) {
-          status.textContent = 'Something went wrong — ' + err.message;
-          status.classList.add('is-error');
-          status.hidden = false;
+          if (status) { status.textContent = 'Something went wrong — ' + err.message; status.classList.add('is-error'); status.hidden = false; }
           btnScan.disabled = false;
-          btnScan.textContent = 'Scan and import →';
+          renderScanQueue();
         });
+    });
+  }
+
+  // ── View / Sort ──────────────────────────────────────────────────────────────
+  var viewBtn = document.querySelector('[data-control="view"]');
+  var sortBtn = document.querySelector('[data-control="sort"]');
+  var viewMode = 'cards';
+  var sortMode = 'newest';
+
+  // Snapshot original card order per grid so "Newest" re-sort can restore it
+  var grids = Array.from(document.querySelectorAll('.cards-grid'));
+  var originalOrders = grids.map(function (g) { return Array.from(g.children); });
+
+  function applyView() {
+    grids.forEach(function (g) { g.classList.toggle('cards-grid--list', viewMode === 'list'); });
+    if (viewBtn) viewBtn.innerHTML = 'View — <strong>' + (viewMode === 'list' ? 'List' : 'Cards') + '</strong> ▾';
+  }
+
+  function applySort() {
+    grids.forEach(function (g, gi) {
+      var cards = Array.from(g.children);
+      if (sortMode === 'az') {
+        cards.sort(function (a, b) {
+          var ta = (a.querySelector('.recipe-card__title') || a).textContent.trim().toLowerCase();
+          var tb = (b.querySelector('.recipe-card__title') || b).textContent.trim().toLowerCase();
+          return ta.localeCompare(tb);
+        });
+      } else {
+        cards = (originalOrders[gi] || []).slice();
+      }
+      cards.forEach(function (c) { g.appendChild(c); });
+    });
+    if (sortBtn) sortBtn.innerHTML = 'Sort — <strong>' + (sortMode === 'az' ? 'A–Z' : 'Newest') + '</strong> ▾';
+  }
+
+  if (viewBtn) {
+    viewBtn.addEventListener('click', function () {
+      viewMode = viewMode === 'cards' ? 'list' : 'cards';
+      applyView();
+    });
+  }
+
+  if (sortBtn) {
+    sortBtn.addEventListener('click', function () {
+      sortMode = sortMode === 'newest' ? 'az' : 'newest';
+      applySort();
     });
   }
 

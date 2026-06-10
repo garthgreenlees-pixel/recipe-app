@@ -11,8 +11,6 @@
   <div class="recipe-card__image">
     {% if recipe.image_url %}
       <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy" onerror="this.onerror=null;this.src='/static/img/recipe-placeholder.svg'">
-    {% else %}
-      <span>{{ recipe.title }}</span>
     {% endif %}
     <span class="recipe-card__tag recipe-card__tag--{{ card_state }}">
       {{ card_state | replace('_', ' ') | title }} · {{ pillars_filled }} of 7
@@ -22,10 +20,9 @@
     {% endif %}
   </div>
   <div class="recipe-card__body">
-    {% if pillars_filled == 0 %}
-      <div class="recipe-card__incomplete">Recipe import incomplete — content pending</div>
-    {% else %}
-    <div class="recipe-card__cuisine">{{ format_cuisine(recipe.cuisine) }}</div>
+    {% if recipe.cuisine %}
+      <div class="recipe-card__cuisine">{{ format_cuisine(recipe.cuisine) }}</div>
+    {% endif %}
     <div class="recipe-card__title">
       {% set title = recipe.title | default('') %}
       {% if ' — ' in title %}
@@ -38,15 +35,18 @@
         {{ title }}
       {% endif %}
     </div>
-    <div class="recipe-card__meta">
-      {% if recipe.time_display %}
-        <span>{{ recipe.time_display }}</span>
-        {% if recipe.serves %}<span class="recipe-card__meta__divider">·</span>{% endif %}
-      {% endif %}
-      {% if recipe.serves %}
-        <span>Serves {{ recipe.serves }}</span>
-      {% endif %}
-    </div>
+    {% if pillars_filled == 0 %}
+      <div class="recipe-card__incomplete">Import pending</div>
+    {% else %}
+      <div class="recipe-card__meta">
+        {% if recipe.time_display %}
+          <span>{{ recipe.time_display }}</span>
+          {% if recipe.serves %}<span class="recipe-card__meta__divider">·</span>{% endif %}
+        {% endif %}
+        {% if recipe.serves %}
+          <span>Serves {{ recipe.serves }}</span>
+        {% endif %}
+      </div>
     {% endif %}
   </div>
   <div class="recipe-card__pillars">

@@ -95,6 +95,13 @@
   .kmodal__submit:disabled { opacity: 0.5; cursor: not-allowed; }
   .kmodal__status { font-size: 13px; color: var(--charcoal-soft, #4A4743); padding: 8px 0; }
   .kmodal__status.is-error { color: #B94040; }
+  /* ── Scan queue ── */
+  .scan-queue { display: flex; flex-direction: column; gap: 4px; margin: 4px 0 8px; }
+  .scan-queue-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: var(--cream-100); border: 1px solid var(--line); }
+  .scan-queue-item__name { flex: 1; font-family: var(--mono); font-size: 11px; color: var(--charcoal-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .scan-queue-item__remove { background: none; border: none; color: var(--warm-gray); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 2px; }
+  .scan-queue-item__remove:hover { color: #B94040; }
+
   /* ── PDF modal ── */
   .kmodal--pdf { max-width: 860px; max-height: 90vh; overflow-y: auto; }
   .pdf-drop-area { border: 1.5px dashed var(--line, #E4DFDA); background: var(--cream-100, #F5F0E8); padding: 2rem; text-align: center; cursor: pointer; font-size: 13px; color: var(--charcoal-soft); line-height: 1.6; margin-bottom: 1rem; }
@@ -313,12 +320,13 @@
     <button class="kmodal__close" data-close-modal aria-label="Close">✕</button>
     <div class="kmodal__eyebrow">▸ Scan</div>
     <h2 class="kmodal__title" id="modal-scan-title">Scan a page</h2>
-    <p class="kmodal__lede">Photo of a cookbook page. We'll read it and structure the recipe.</p>
+    <p class="kmodal__lede">Photograph one or more cookbook pages. We'll read them together and structure the recipe.</p>
     <div class="kmodal__form">
-      <label class="kmodal__label" for="scan-file">Photo or image file</label>
-      <input id="scan-file" class="kmodal__input" type="file" accept="image/*" capture="environment" required>
+      <label class="kmodal__label" for="scan-file">Photos or image files</label>
+      <input id="scan-file" class="kmodal__input" type="file" accept="image/*" capture="environment" multiple>
+      <div id="scan-queue" class="scan-queue" hidden></div>
       <div id="scan-status" class="kmodal__status" hidden></div>
-      <button type="button" class="kmodal__submit" id="btn-scan">Scan and import →</button>
+      <button type="button" class="kmodal__submit" id="btn-scan" disabled>Add a photo to begin →</button>
     </div>
   </div>
 

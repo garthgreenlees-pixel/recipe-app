@@ -190,3 +190,46 @@
 .recipe-card__pillar-dot.is-filled {
   background: var(--gold);
 }
+
+/* List view — toggled by View button */
+.cards-grid--list {
+  grid-template-columns: 1fr;
+  gap: 1px;
+}
+.cards-grid--list .recipe-card {
+  flex-direction: row;
+  align-items: stretch;
+}
+.cards-grid--list .recipe-card__image {
+  aspect-ratio: auto;
+  width: 72px;
+  min-width: 72px;
+  flex-shrink: 0;
+  border-bottom: none;
+  border-right: 1px solid var(--line-soft);
+}
+.cards-grid--list .recipe-card__body {
+  padding: var(--s1) var(--s2);
+  justify-content: center;
+}
+.cards-grid--list .recipe-card__cuisine {
+  font-size: 9px;
+  margin-bottom: 2px;
+}
+.cards-grid--list .recipe-card__title {
+  font-size: 15px;
+  margin-bottom: 0;
+  flex: 0;
+}
+.cards-grid--list .recipe-card__meta {
+  font-size: 9px;
+  padding-top: var(--s1);
+  border-top: none;
+}
+.cards-grid--list .recipe-card__pillars {
+  display: none;
+}
+.cards-grid--list .recipe-card__incomplete {
+  font-size: 9px;
+  flex: 0;
+}
