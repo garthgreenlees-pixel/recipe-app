@@ -1172,7 +1172,7 @@ async function saveHACCPBrief() {
 }
 
 function printHACCPBrief() {
-  // Sync form values to their print-time text nodes before printing
+  // Sync form values to print nodes before cloning
   document.querySelectorAll('.haccp-brief .haccp-input').forEach(input => {
     const printEl = input.parentElement.querySelector('.haccp-input-print');
     if (printEl) printEl.textContent = input.value || '—';
@@ -1180,15 +1180,42 @@ function printHACCPBrief() {
   const textarea = document.querySelector('.haccp-brief .haccp-textarea');
   const textareaPrint = document.querySelector('.haccp-brief .haccp-textarea-print');
   if (textarea && textareaPrint) textareaPrint.textContent = textarea.value || '';
+
+  const source = document.querySelector('.haccp-brief');
+  if (!source) return;
+  const root = document.createElement('div');
+  root.id = 'print-root';
+  root.appendChild(source.cloneNode(true));
+  document.body.appendChild(root);
   document.body.classList.add('haccp-printing');
+
+  const cleanup = () => {
+    document.body.classList.remove('haccp-printing');
+    const r = document.getElementById('print-root');
+    if (r) r.remove();
+  };
+  window.addEventListener('afterprint', cleanup, { once: true });
+  setTimeout(cleanup, 1000);
   window.print();
-  setTimeout(() => document.body.classList.remove('haccp-printing'), 1000);
 }
 
 function printKitchenNotes() {
+  const source = document.querySelector('.kn-print-wrap');
+  if (!source) return;
+  const root = document.createElement('div');
+  root.id = 'print-root';
+  root.appendChild(source.cloneNode(true));
+  document.body.appendChild(root);
   document.body.classList.add('notes-printing');
+
+  const cleanup = () => {
+    document.body.classList.remove('notes-printing');
+    const r = document.getElementById('print-root');
+    if (r) r.remove();
+  };
+  window.addEventListener('afterprint', cleanup, { once: true });
+  setTimeout(cleanup, 1000);
   window.print();
-  setTimeout(() => document.body.classList.remove('notes-printing'), 1000);
 }
 
 async function regenerateHACCPBrief() {

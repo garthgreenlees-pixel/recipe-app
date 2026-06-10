@@ -238,22 +238,11 @@ main { padding-bottom: 60px; }
 @media print {
   @page { size: A4; margin: 2cm; }
 
-  /* Kitchen Notes — scoped to body.notes-printing */
-  body.notes-printing * { visibility: hidden; }
-  body.notes-printing .kn-print-wrap,
-  body.notes-printing .kn-print-wrap * { visibility: visible; }
-  body.notes-printing .kn-print-wrap {
-    position: absolute; top: 0; left: 0; width: 100%; padding: 0; background: white;
-  }
+  /* Scoped print: remove everything except #print-root from layout entirely */
+  body.notes-printing > *:not(#print-root),
+  body.haccp-printing > *:not(#print-root) { display: none !important; }
+  #print-root { display: block; }
   body.notes-printing .kn-print-btn { display: none !important; }
-
-  /* HACCP — scoped to body.haccp-printing */
-  body.haccp-printing * { visibility: hidden; }
-  body.haccp-printing .haccp-brief,
-  body.haccp-printing .haccp-brief * { visibility: visible; }
-  body.haccp-printing .haccp-brief {
-    position: absolute; top: 0; left: 0; width: 100%; padding: 0; background: white;
-  }
 
   /* Print masthead: visible at print time */
   .kn-print-masthead { display: block; }
