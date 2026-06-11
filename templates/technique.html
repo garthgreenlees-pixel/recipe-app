@@ -25,11 +25,11 @@
       {% for line in technique.key_principles.split('\n') if line.strip() %}
       {"@type":"HowToStep","text":{{ line.strip() | tojson }}}{% if not loop.last %},{% endif %}
       {% endfor %}
-    ]}{% if technique.pro_tips %},{% endif %}
+    ]}{% if pro_tips_display %},{% endif %}
     {% endif %}
-    {% if technique.pro_tips %}
+    {% if pro_tips_display %}
     {"@type":"HowToSection","name":"Pro Tips","itemListElement":[
-      {% for line in technique.pro_tips.split('\n') if line.strip() %}
+      {% for line in pro_tips_display.split('\n') if line.strip() %}
       {"@type":"HowToStep","text":{{ line.strip() | tojson }}}{% if not loop.last %},{% endif %}
       {% endfor %}
     ]}

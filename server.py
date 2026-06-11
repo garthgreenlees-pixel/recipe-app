@@ -11356,12 +11356,13 @@ def technique_page(slug):
         technique['lives_or_dies'] = None
         technique['recipe_card'] = None   # frosted version served in band
 
-    # Split RECIPE: blob out of pro_tips display (Cycle B). After stripping
-    # recipe_card for free users, recipe_card is None so split is skipped.
+    # Split RECIPE: blob out of pro_tips display. Check the raw pro_tips text
+    # directly — do NOT gate on recipe_card being present, because recipe_card
+    # is stripped to None for free viewers before this point, which would
+    # otherwise leave the full RECIPE: blob visible in the Pro Tips section.
     _pt = technique.get('pro_tips') or ''
-    if technique.get('recipe_card') and 'RECIPE:' in _pt:
-        _split_idx = _pt.find('RECIPE:')
-        pro_tips_display = _pt[:_split_idx].rstrip()
+    if 'RECIPE:' in _pt:
+        pro_tips_display = _pt[:_pt.find('RECIPE:')].rstrip()
     else:
         pro_tips_display = _pt
 
