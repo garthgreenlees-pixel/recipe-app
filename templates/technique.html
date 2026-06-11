@@ -136,6 +136,10 @@
 .rcp-step { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.65; padding-left: 32px; position: relative; counter-increment: rcp-step; }
 .rcp-step::before { content: counter(rcp-step); position: absolute; left: 0; top: 1px; font-family: var(--mono); font-size: 10px; color: var(--gold); width: 20px; text-align: right; }
 @media print { .rcp-card { border: 1px solid #ccc; background: #fff; } .rcp-meta-label, .rcp-block-label { color: #888; } .rcp-ingredient::before, .rcp-step::before { color: #888; } }
+/* ── Cycle E: Pat's Rule — ingredient origin line ── */
+.rcp-ing-origin { font-size: 12px; color: var(--warm-gray); font-style: italic; margin-top: 3px; padding-left: 14px; line-height: 1.4; }
+.rcp-ing-provider { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.35); font-style: normal; margin-left: 6px; transition: border-color 0.15s; }
+.rcp-ing-provider:hover { border-bottom-color: var(--gold); }
 /* ── Cycle D: Frost band ── */
 .frost-band { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(201,168,76,0.18); }
 .frost-door { font-size: 13px; color: var(--warm-gray); margin-bottom: 2rem; letter-spacing: 0.01em; }
@@ -329,7 +333,25 @@
       <div class="rcp-block-label">Ingredients</div>
       <ul class="rcp-ingredients">
         {% for ing in technique.recipe_card.ingredients %}
-        <li class="rcp-ingredient">{{ ing }}</li>
+        <li class="rcp-ingredient">
+          {{ ing }}
+          {# ── Cycle E: Pat's Rule — origin line for matched ingredients ── #}
+          {% set orig = ingredient_origins.get(ing) if ingredient_origins else None %}
+          {% if orig %}
+          <div class="rcp-ing-origin">
+            {%- if orig.origin_brand and orig.origin_country -%}
+              {{ orig.origin_brand }} · {{ orig.origin_country }}
+            {%- elif orig.origin_brand -%}
+              {{ orig.origin_brand }}
+            {%- elif orig.origin_country -%}
+              {{ orig.origin_country }}
+            {%- endif -%}
+            {% if user_tier in ('profession', 'trade') and orig.supplier_website %}
+            <a href="{{ orig.supplier_website }}" class="rcp-ing-provider" target="_blank" rel="noopener">{{ orig.supplier_name }}</a>
+            {% endif %}
+          </div>
+          {% endif %}
+        </li>
         {% endfor %}
       </ul>
       {% endif %}
@@ -536,7 +558,7 @@
   {# ── Cycle D: Frost band — one door, real excerpts blurred, no full text sent ── #}
   {% if has_frost %}
   <div class="frost-band">
-    <p class="frost-door"><a href="/pricing">Kitchen membership opens the full entry.</a></p>
+    <p class="frost-door"><a href="/pricing">Kitchen membership opens the full Library.</a></p>
 
     {% if frosts.quality_hierarchy %}
     <div class="frost-item">

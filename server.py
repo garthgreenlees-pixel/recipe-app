@@ -10096,6 +10096,67 @@ def _seed_demo_programme():
 _seed_demo_programme()
 
 
+# ─── Canon Cycle E: Pat's Rule — pantry origin matcher ───────────────────────
+
+def _match_pantry_for_recipe(ingredient_lines, cur):
+    """Match recipe ingredient lines against ingredient_master by word boundary.
+
+    Conservative: exact word-boundary match, case-insensitive. Never fuzzy.
+    First match per ingredient line wins. Returns nothing for unmatched lines.
+
+    Returns dict:
+      {ingredient_line: {pantry_name, origin_brand, origin_country,
+                         supplier_name, supplier_website, supplier_id}}
+    """
+    if not ingredient_lines:
+        return {}
+
+    combined = ' '.join(ingredient_lines).lower()
+
+    cur.execute("""
+        SELECT DISTINCT ON (im.canonical_name)
+               im.canonical_name,
+               im.origin_brand,
+               im.origin_country,
+               s.name     AS supplier_name,
+               s.website  AS supplier_website,
+               s.id       AS supplier_id
+        FROM ingredient_master im
+        LEFT JOIN ingredient_products ip
+               ON LOWER(im.canonical_name) = LOWER(ip.name)
+        LEFT JOIN product_suppliers ps ON ip.id = ps.product_id
+        LEFT JOIN suppliers s ON ps.supplier_id = s.id
+        WHERE (im.origin_brand IS NOT NULL AND im.origin_brand != '')
+           OR (im.origin_country IS NOT NULL AND im.origin_country != '')
+        ORDER BY im.canonical_name, s.id NULLS LAST
+    """)
+    pantry_rows = cur.fetchall()
+
+    # Pre-filter to only entries whose name is a substring of the ingredient text
+    patterns = []
+    for row in pantry_rows:
+        name = row[0]
+        if name.lower() not in combined:
+            continue
+        pat = _re.compile(r'\b' + _re.escape(name.lower()) + r'\b', _re.IGNORECASE)
+        patterns.append((name, row[1], row[2], row[3], row[4], row[5], pat))
+
+    result = {}
+    for ing_line in ingredient_lines:
+        for pname, brand, country, sup_name, sup_url, sup_id, pat in patterns:
+            if pat.search(ing_line):
+                result[ing_line] = {
+                    'pantry_name': pname,
+                    'origin_brand': brand,
+                    'origin_country': country,
+                    'supplier_name': sup_name,
+                    'supplier_website': sup_url,
+                    'supplier_id': sup_id,
+                }
+                break  # first match per ingredient line
+    return result
+
+
 # ─── Canon Cycle D: frost helpers ────────────────────────────────────────────
 
 def _frost_words(text, n):
@@ -11332,6 +11393,16 @@ def technique_page(slug):
     technique_pairings_editorial = [p for p in _all_pairings if p['confidence_status'] in ('editorial', 'reviewed')]
     technique_pairings_partial   = [p for p in _all_pairings if p['confidence_status'] == 'partial']
 
+    # Cycle E: Pat's Rule — match recipe ingredients against pantry for members.
+    # Computed at render; no writes. Free viewers get nothing (recipe_card stripped).
+    ingredient_origins = {}
+    if user_tier != 'free':
+        _rc = technique.get('recipe_card')
+        if _rc and isinstance(_rc, dict):
+            _ings = _rc.get('ingredients') or []
+            if _ings:
+                ingredient_origins = _match_pantry_for_recipe(_ings, cur)
+
     cur.close()
     conn.close()
 
@@ -11379,6 +11450,7 @@ def technique_page(slug):
         pro_tips_display=pro_tips_display,
         frosts=frosts,
         has_frost=has_frost,
+        ingredient_origins=ingredient_origins,
     )
 
 
