@@ -11688,7 +11688,12 @@ def techniques_browse():
     )
     total = cur.fetchone()["count"]
 
-    cols = "id, name, slug, category, origin, authority_tier, tier_level, description"
+    # Nav N1c: include recipe/completeness columns so outer ORDER BY can use them
+    cols = (
+        "id, name, slug, category, origin, authority_tier, tier_level, description,"
+        " (recipe_card IS NOT NULL) AS has_recipe,"
+        " (pillar_completeness->>'count')::int AS pillar_count"
+    )
     if _tokens:
         # Relevance rank using cleaned phrase: exact > prefix > phrase-contains > description-only
         rank_expr = (
@@ -11702,8 +11707,9 @@ def techniques_browse():
             f"SELECT * FROM ("
             f"  SELECT DISTINCT ON (lower(name)) {cols}, {rank_expr}"
             f"  FROM technique_references {where}"
-            f"  ORDER BY lower(name), id"
-            f") _d ORDER BY _rank, name LIMIT %s OFFSET %s",
+            f"  ORDER BY lower(name), (recipe_card IS NOT NULL) DESC,"
+            f"    (pillar_completeness->>'count')::int DESC NULLS LAST, id"
+            f") _d ORDER BY _rank, has_recipe DESC, pillar_count DESC NULLS LAST, name LIMIT %s OFFSET %s",
             [_cleaned_q, _cleaned_q, _cleaned_q] + params + [per_page, offset]
         )
     else:
@@ -11711,8 +11717,9 @@ def techniques_browse():
             f"SELECT * FROM ("
             f"  SELECT DISTINCT ON (lower(name)) {cols}"
             f"  FROM technique_references {where}"
-            f"  ORDER BY lower(name), id"
-            f") _d ORDER BY name LIMIT %s OFFSET %s",
+            f"  ORDER BY lower(name), (recipe_card IS NOT NULL) DESC,"
+            f"    (pillar_completeness->>'count')::int DESC NULLS LAST, id"
+            f") _d ORDER BY has_recipe DESC, pillar_count DESC NULLS LAST, name LIMIT %s OFFSET %s",
             params + [per_page, offset]
         )
     techniques = [_serialize_row(r) for r in cur.fetchall()]
