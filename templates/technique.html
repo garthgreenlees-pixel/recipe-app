@@ -108,18 +108,18 @@
 
 /* Technique header */
 .technique-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-.technique-category { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+.technique-category { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-deep); }
 .technique-tier { font-family: var(--mono); font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-light); background: #1A1816; padding: 3px 8px; border-radius: 4px; }
 .technique-authority { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); }
 .technique-title { font-family: var(--serif-alt); font-size: clamp(28px,4vw,44px); font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; color: var(--charcoal); }
 .technique-origin { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; margin-bottom: 32px; font-style: italic; }
 .shelf-line { font-family: var(--mono); font-size: 11px; color: var(--warm-gray); letter-spacing: 0.3px; margin-bottom: 28px; margin-top: -8px; }
-.shelf-link { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); transition: border-color 0.15s; }
-.shelf-link:hover { border-bottom-color: var(--gold); }
+.shelf-link { color: var(--gold-deep); text-decoration: none; border-bottom: 1px solid rgba(138,106,31,0.3); transition: border-color 0.15s; }
+.shelf-link:hover { border-bottom-color: var(--gold-deep); }
 
 /* Sections */
 .section { margin-bottom: 36px; }
-.section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-deep); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .section-label::after { content: ''; flex: 1; height: 1px; background: var(--gold-border); }
 .technique-desc { font-size: 16px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.75; max-width: 680px; }
 .technique-text { font-size: 15px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.75; white-space: pre-wrap; max-width: 680px; }
@@ -128,26 +128,26 @@
 .rcp-card { border: 1px solid var(--gold-border); border-radius: 6px; padding: 24px 28px; max-width: 620px; background: rgba(201,168,76,0.02); }
 .rcp-meta { display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
 .rcp-meta-item { display: flex; flex-direction: column; gap: 2px; }
-.rcp-meta-label { font-family: var(--mono); font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); }
+.rcp-meta-label { font-family: var(--mono); font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold-deep); }
 .rcp-meta-value { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; }
 .rcp-block-label { font-family: var(--mono); font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 10px; }
 .rcp-divider { border: none; border-top: 1px solid var(--gold-border); margin: 18px 0; }
 .rcp-ingredients { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
 .rcp-ingredient { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.5; padding-left: 14px; position: relative; }
-.rcp-ingredient::before { content: '–'; position: absolute; left: 0; color: var(--gold); font-size: 12px; top: 2px; }
+.rcp-ingredient::before { content: '–'; position: absolute; left: 0; color: var(--gold-deep); font-size: 12px; top: 2px; }
 .rcp-steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; counter-reset: rcp-step; }
 .rcp-step { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.65; padding-left: 32px; position: relative; counter-increment: rcp-step; }
-.rcp-step::before { content: counter(rcp-step); position: absolute; left: 0; top: 1px; font-family: var(--mono); font-size: 10px; color: var(--gold); width: 20px; text-align: right; }
+.rcp-step::before { content: counter(rcp-step); position: absolute; left: 0; top: 1px; font-family: var(--mono); font-size: 10px; color: var(--gold-deep); width: 20px; text-align: right; }
 @media print { .rcp-card { border: 1px solid #ccc; background: #fff; } .rcp-meta-label, .rcp-block-label { color: #888; } .rcp-ingredient::before, .rcp-step::before { color: #888; } }
 /* ── Cycle E: Pat's Rule — ingredient origin line ── */
 .rcp-ing-origin { font-size: 12px; color: var(--warm-gray); font-style: italic; margin-top: 3px; padding-left: 14px; line-height: 1.4; }
-.rcp-ing-provider { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.35); font-style: normal; margin-left: 6px; transition: border-color 0.15s; }
-.rcp-ing-provider:hover { border-bottom-color: var(--gold); }
+.rcp-ing-provider { color: var(--gold-deep); text-decoration: none; border-bottom: 1px solid rgba(138,106,31,0.35); font-style: normal; margin-left: 6px; transition: border-color 0.15s; }
+.rcp-ing-provider:hover { border-bottom-color: var(--gold-deep); }
 /* ── Cycle D: Frost band ── */
 .frost-band { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(201,168,76,0.18); }
 .frost-door { font-size: 13px; color: var(--warm-gray); margin-bottom: 2rem; letter-spacing: 0.01em; }
-.frost-door a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.35); transition: border-color 0.15s; }
-.frost-door a:hover { border-bottom-color: var(--gold); }
+.frost-door a { color: var(--gold-deep); text-decoration: none; border-bottom: 1px solid rgba(138,106,31,0.35); transition: border-color 0.15s; }
+.frost-door a:hover { border-bottom-color: var(--gold-deep); }
 .frost-item { margin-bottom: 2rem; }
 .frost-blur-wrap { position: relative; overflow: hidden; max-height: 4.5rem; margin-top: 0.5rem; }
 .frost-blur { filter: blur(3.5px); user-select: none; pointer-events: none; }
@@ -158,7 +158,7 @@
 .source-book { font-size: 13px; color: var(--warm-gray); font-style: italic; }
 .parallels-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
 .parallels-item { font-size: 14px; color: var(--charcoal-soft); line-height: 1.65; padding-left: 16px; position: relative; }
-.parallels-item::before { content: '—'; position: absolute; left: 0; color: var(--gold); font-size: 12px; top: 2px; }
+.parallels-item::before { content: '—'; position: absolute; left: 0; color: var(--gold-deep); font-size: 12px; top: 2px; }
 
 /* Hero image */
 .tech-hero { position: relative; height: 380px; overflow: hidden; }
@@ -265,16 +265,17 @@
   .technique-desc, .technique-text, .flavour-context { font-size: 9.5pt; color: #222; max-width: 100%; }
   .flavour-context { border-left: 2pt solid #888; background: none; padding: 4pt 8pt; }
 
-  /* Recipe card — keep intact, compressed padding */
-  .rcp-card { border: 1pt solid #999; background: #fff; padding: 8pt 10pt; max-width: 100%; box-shadow: none; break-inside: avoid; }
+  /* Recipe card — own page, two-column ingredients */
+  .rcp-card { border: 1pt solid #999; background: #fff; padding: 8pt 10pt; max-width: 100%; box-shadow: none; break-before: page; page-break-before: always; }
   .rcp-meta { gap: 12pt; }
   .rcp-meta-label { color: #555; }
   .rcp-meta-value { font-size: 9.5pt; color: #111; }
   .rcp-block-label { color: #666; font-size: 7.5pt; }
   .rcp-divider { border-top: 0.5pt solid #bbb; }
-  .rcp-ingredient { font-size: 9pt; color: #222; }
+  .rcp-ingredients { display: block; column-count: 2; column-gap: 14pt; }
+  .rcp-ingredient { font-size: 9pt; color: #222; break-inside: avoid; }
   .rcp-ingredient::before { color: #888; }
-  .rcp-step { font-size: 9pt; color: #222; padding-left: 18pt; }
+  .rcp-step { font-size: 9pt; color: #222; padding-left: 18pt; break-inside: avoid; }
   .rcp-step::before { color: #888; }
   .rcp-ing-origin { color: #777; font-size: 8pt; }
   .rcp-ing-provider { color: #555; border-bottom: none; }
@@ -534,7 +535,7 @@
         {% if tier_item is mapping %}
         <div style="margin-bottom:1rem;padding:12px 16px;border-left:2px solid rgba(201,168,76,0.2);background:rgba(201,168,76,0.03);border-radius:0 4px 4px 0">
           {% if tier_item.get('tier_name') %}
-          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:4px">{{ tier_item.tier_name }}</div>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gold-deep);margin-bottom:4px">{{ tier_item.tier_name }}</div>
           {% endif %}
           {% if tier_item.get('criteria') %}
           <p class="technique-text" style="font-size:14px">{{ tier_item.criteria }}</p>
@@ -584,7 +585,7 @@
     {# ── VII Where the Dish Lives or Dies — visually distinct ── #}
     {% if technique.lives_or_dies %}
     <div class="section" style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.3)">
-      <div class="section-label" style="color:var(--gold)">Where the Dish Lives or Dies</div>
+      <div class="section-label" style="color:var(--gold-deep)">Where the Dish Lives or Dies</div>
       <p class="technique-text" style="font-size:16px;border-left:3px solid var(--gold);background:rgba(201,168,76,0.06);padding:12px 16px;font-style:normal;border-radius:0 4px 4px 0">{{ technique.lives_or_dies }}</p>
     </div>
     {% endif %}
@@ -646,7 +647,7 @@
 
     {% if frosts.lives_or_dies %}
     <div class="frost-item" style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,0.3)">
-      <div class="section-label" style="color:var(--gold)">Where the Dish Lives or Dies</div>
+      <div class="section-label" style="color:var(--gold-deep)">Where the Dish Lives or Dies</div>
       <div class="frost-blur-wrap" style="max-height:5.5rem">
         <p class="frost-blur" style="font-size:16px;border-left:3px solid var(--gold);background:rgba(201,168,76,0.06);padding:12px 16px;border-radius:0 4px 4px 0">{{ frosts.lives_or_dies }}</p>
         <div class="frost-fade"></div>
