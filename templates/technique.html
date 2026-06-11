@@ -259,14 +259,14 @@
   body { background: #fff; color: #111; font-size: 9.5pt; }
   .container { max-width: 100%; padding: 0; margin: 0; }
   .technique-title { font-size: 15pt; margin-bottom: 6pt; color: #000; }
-  .section-label { color: #555; font-size: 7.5pt; letter-spacing: 1pt; }
+  .section-label { color: #555; font-size: 7.5pt; letter-spacing: 1pt; break-after: avoid; }
   .section-label::after { background: #ccc; }
   .section { margin-bottom: 8pt; }
   .technique-desc, .technique-text, .flavour-context { font-size: 9.5pt; color: #222; max-width: 100%; }
   .flavour-context { border-left: 2pt solid #888; background: none; padding: 4pt 8pt; }
 
-  /* Recipe card — own page, two-column ingredients */
-  .rcp-card { border: 1pt solid #999; background: #fff; padding: 8pt 10pt; max-width: 100%; box-shadow: none; break-before: page; page-break-before: always; }
+  /* Recipe card — two-column ingredients, natural flow */
+  .rcp-card { border: 1pt solid #999; background: #fff; padding: 8pt 10pt; max-width: 100%; box-shadow: none; }
   .rcp-meta { gap: 12pt; }
   .rcp-meta-label { color: #555; }
   .rcp-meta-value { font-size: 9.5pt; color: #111; }
@@ -685,7 +685,7 @@
   {% endif %}
 
   {% if technique.flavour_context or technique.common_mistakes or technique.species_precision %}
-  <section style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08)">
+  <section class="no-print" style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08)">
     <h3 style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:var(--warm-gray);text-transform:uppercase;margin-bottom:1.5rem">Common Questions</h3>
     {% if technique.flavour_context %}
     <details style="margin-bottom:1rem">
