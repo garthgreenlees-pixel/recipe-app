@@ -10137,14 +10137,17 @@ def _match_pantry_for_recipe(ingredient_lines, cur):
     """)
     pantry_rows = cur.fetchall()
 
-    # Pre-filter to only entries whose name is a substring of the ingredient text
+    # Pre-filter to only entries whose name is a substring of the ingredient text.
+    # Access by column name — cursor is always RealDictCursor in technique_page.
     patterns = []
     for row in pantry_rows:
-        name = row[0]
-        if name.lower() not in combined:
+        name = row['canonical_name']
+        if not name or name.lower() not in combined:
             continue
         pat = _re.compile(r'\b' + _re.escape(name.lower()) + r'\b', _re.IGNORECASE)
-        patterns.append((name, row[1], row[2], row[3], row[4], row[5], pat))
+        patterns.append((name, row['origin_brand'], row['origin_country'],
+                         row['supplier_name'], row['supplier_website'],
+                         row['supplier_id'], pat))
 
     result = {}
     for ing_line in ingredient_lines:
@@ -11400,13 +11403,19 @@ def technique_page(slug):
 
     # Cycle E: Pat's Rule — match recipe ingredients against pantry for members.
     # Computed at render; no writes. Free viewers get nothing (recipe_card stripped).
+    # Structural guard: ANY failure returns {} so the page never goes down.
     ingredient_origins = {}
     if user_tier != 'free':
         _rc = technique.get('recipe_card')
         if _rc and isinstance(_rc, dict):
-            _ings = _rc.get('ingredients') or []
+            _ings = [i for i in (_rc.get('ingredients') or []) if i]
             if _ings:
-                ingredient_origins = _match_pantry_for_recipe(_ings, cur)
+                try:
+                    ingredient_origins = _match_pantry_for_recipe(_ings, cur)
+                except Exception as _e:
+                    app.logger.warning(
+                        f"[pantry_match] {slug}: {type(_e).__name__}: {_e}"
+                    )
 
     cur.close()
     conn.close()
