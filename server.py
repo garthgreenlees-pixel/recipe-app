@@ -11645,6 +11645,20 @@ def techniques_browse():
     per_page = 50
     offset = (page - 1) * per_page
 
+    # ── Nav N1b: token processing — strip filler, AND-match each token ──
+    _SEARCH_FILLER = {
+        'recipe','recipes','recipie','how','to','make','cook','cooking',
+        'best','easy','authentic','real','a','an','the','for','with',
+        'of','and','what','is','do','i',
+    }
+    if q:
+        _words = [w for w in q.lower().split() if w not in _SEARCH_FILLER]
+        _tokens = _words if _words else [q.strip()]
+        _cleaned_q = " ".join(_words) if _words else q.strip()
+    else:
+        _tokens = []
+        _cleaned_q = ""
+
     conditions = []
     params = []
     if cuisine:
@@ -11659,9 +11673,11 @@ def techniques_browse():
         # Exact match on source_book for named shelf line links
         conditions.append("source_book = %s")
         params.append(source_book)
-    if q:
-        conditions.append("(name ILIKE %s OR description ILIKE %s)")
-        params.extend([f"%{q}%", f"%{q}%"])
+    if _tokens:
+        # AND across tokens: every token must appear in name OR description
+        for _tok in _tokens:
+            conditions.append("(name ILIKE %s OR description ILIKE %s)")
+            params.extend([f"%{_tok}%", f"%{_tok}%"])
 
     where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
 
@@ -11673,8 +11689,8 @@ def techniques_browse():
     total = cur.fetchone()["count"]
 
     cols = "id, name, slug, category, origin, authority_tier, tier_level, description"
-    if q:
-        # Relevance rank: exact title > prefix title > name-contains > description-only
+    if _tokens:
+        # Relevance rank using cleaned phrase: exact > prefix > phrase-contains > description-only
         rank_expr = (
             "CASE"
             " WHEN lower(name) = lower(%s) THEN 0"
@@ -11688,7 +11704,7 @@ def techniques_browse():
             f"  FROM technique_references {where}"
             f"  ORDER BY lower(name), id"
             f") _d ORDER BY _rank, name LIMIT %s OFFSET %s",
-            [q, q, q] + params + [per_page, offset]
+            [_cleaned_q, _cleaned_q, _cleaned_q] + params + [per_page, offset]
         )
     else:
         cur.execute(
