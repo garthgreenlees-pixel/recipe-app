@@ -121,6 +121,21 @@
 .technique-desc { font-size: 16px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.75; max-width: 680px; }
 .technique-text { font-size: 15px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.75; white-space: pre-wrap; max-width: 680px; }
 .flavour-context { font-size: 15px; color: var(--charcoal-soft); font-style: italic; line-height: 1.7; padding: 16px 20px; border-left: 3px solid var(--gold-border); background: var(--gold-bg); border-radius: 0 6px 6px 0; max-width: 620px; }
+/* ── Recipe card (Canon Cycle B) ── */
+.rcp-card { border: 1px solid var(--gold-border); border-radius: 6px; padding: 24px 28px; max-width: 620px; background: rgba(201,168,76,0.02); }
+.rcp-meta { display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
+.rcp-meta-item { display: flex; flex-direction: column; gap: 2px; }
+.rcp-meta-label { font-family: var(--mono); font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); }
+.rcp-meta-value { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; }
+.rcp-block-label { font-family: var(--mono); font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 10px; }
+.rcp-divider { border: none; border-top: 1px solid var(--gold-border); margin: 18px 0; }
+.rcp-ingredients { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.rcp-ingredient { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.5; padding-left: 14px; position: relative; }
+.rcp-ingredient::before { content: '–'; position: absolute; left: 0; color: var(--gold); font-size: 12px; top: 2px; }
+.rcp-steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; counter-reset: rcp-step; }
+.rcp-step { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.65; padding-left: 32px; position: relative; counter-increment: rcp-step; }
+.rcp-step::before { content: counter(rcp-step); position: absolute; left: 0; top: 1px; font-family: var(--mono); font-size: 10px; color: var(--gold); width: 20px; text-align: right; }
+@media print { .rcp-card { border: 1px solid #ccc; background: #fff; } .rcp-meta-label, .rcp-block-label { color: #888; } .rcp-ingredient::before, .rcp-step::before { color: #888; } }
 .related-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .related-tag { font-family: var(--mono); font-size: 12px; color: var(--charcoal-soft); background: rgba(201,168,76,0.06); border: 1px solid var(--gold-border); padding: 4px 12px; border-radius: 20px; text-decoration: none; transition: all 0.15s; }
 .related-tag:hover { color: var(--gold); border-color: var(--gold-border); background: var(--gold-bg); }
@@ -250,6 +265,52 @@
   </div>
   {% endif %}
 
+  {# ── Canon Cycle B: recipe card ──────────────────────────────── #}
+  {% if technique.recipe_card %}
+  <div class="section">
+    <div class="section-label">The recipe</div>
+    <div class="rcp-card">
+      <div class="rcp-meta">
+        {% if technique.recipe_card.serves %}
+        <div class="rcp-meta-item">
+          <span class="rcp-meta-label">Serves</span>
+          <span class="rcp-meta-value">{{ technique.recipe_card.serves }}</span>
+        </div>
+        {% endif %}
+        {% if technique.recipe_card.prep %}
+        <div class="rcp-meta-item">
+          <span class="rcp-meta-label">Prep</span>
+          <span class="rcp-meta-value">{{ technique.recipe_card.prep }}</span>
+        </div>
+        {% endif %}
+        {% if technique.recipe_card.total %}
+        <div class="rcp-meta-item">
+          <span class="rcp-meta-label">Total</span>
+          <span class="rcp-meta-value">{{ technique.recipe_card.total }}</span>
+        </div>
+        {% endif %}
+      </div>
+      {% if technique.recipe_card.ingredients %}
+      <div class="rcp-block-label">Ingredients</div>
+      <ul class="rcp-ingredients">
+        {% for ing in technique.recipe_card.ingredients %}
+        <li class="rcp-ingredient">{{ ing }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if technique.recipe_card.steps %}
+      <hr class="rcp-divider">
+      <div class="rcp-block-label">Method</div>
+      <ol class="rcp-steps">
+        {% for step in technique.recipe_card.steps %}
+        <li class="rcp-step">{{ step }}</li>
+        {% endfor %}
+      </ol>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
   {# ── TECHNIQUE–BEVERAGE PAIRINGS ───────────────────────────────��─────────── #}
   {% if technique_pairings_editorial or technique_pairings_partial %}
   <div class="section" id="technique-beverage-pairings">
@@ -304,10 +365,10 @@
   </div>
   {% endif %}
 
-  {% if technique.pro_tips %}
+  {% if pro_tips_display %}
   <div class="section">
     <div class="section-label">Pro Tips</div>
-    <p class="technique-text">{{ technique.pro_tips }}</p>
+    <p class="technique-text">{{ pro_tips_display }}</p>
   </div>
   {% endif %}
 

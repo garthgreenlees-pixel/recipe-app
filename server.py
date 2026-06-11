@@ -10096,6 +10096,96 @@ def _seed_demo_programme():
 _seed_demo_programme()
 
 
+# ─── Canon Cycle B: recipe card parser ───────────────────────────────────────
+
+def parse_recipe_blob(text):
+    """Parse a RECIPE: blob from pro_tips. Returns dict or None on any ambiguity.
+
+    Expected shape:
+        RECIPE:
+        Serves: N | Prep: X min | Total: Y min
+        ---
+        ingredient line
+        ...
+        ---
+        1. step line
+        ...
+    """
+    if not text or 'RECIPE:' not in text:
+        return None
+
+    idx = text.find('RECIPE:')
+    blob = text[idx:]
+    lines = blob.split('\n')
+
+    pos = 1  # skip 'RECIPE:' header line
+
+    # Find metadata line (first non-empty line after header)
+    while pos < len(lines) and not lines[pos].strip():
+        pos += 1
+    if pos >= len(lines):
+        return None
+    meta_line = lines[pos].strip()
+    pos += 1
+
+    if 'Serves' not in meta_line:
+        return None
+
+    # Parse "Serves: N | Prep: X | Total: Y"
+    serves = prep = total = None
+    for part in meta_line.split('|'):
+        part = part.strip()
+        if part.lower().startswith('serves:'):
+            serves = part.split(':', 1)[1].strip()
+        elif part.lower().startswith('prep:'):
+            prep = part.split(':', 1)[1].strip()
+        elif part.lower().startswith('total:'):
+            total = part.split(':', 1)[1].strip()
+
+    if not serves:
+        return None
+
+    # Find first --- delimiter
+    while pos < len(lines) and lines[pos].strip() != '---':
+        pos += 1
+    if pos >= len(lines):
+        return None
+    pos += 1  # skip ---
+
+    # Collect ingredients until second ---
+    ingredients = []
+    while pos < len(lines) and lines[pos].strip() != '---':
+        line = lines[pos].strip()
+        if line:
+            ingredients.append(line)
+        pos += 1
+
+    if not ingredients or pos >= len(lines):
+        return None
+    pos += 1  # skip second ---
+
+    # Collect steps to end of blob
+    steps = []
+    while pos < len(lines):
+        line = lines[pos].strip()
+        if line:
+            clean = _re.sub(r'^\d+[\.\)]\s*', '', line)
+            if clean:
+                steps.append(clean)
+        pos += 1
+
+    if not steps:
+        return None
+
+    return {
+        'serves': serves,
+        'prep': prep,
+        'total': total,
+        'ingredients': ingredients,
+        'steps': steps,
+    }
+
+
 # ─── Beverage helper ──────────────────────────────────────────────────────────
 
 def _serialize_row(row):
@@ -11157,6 +11247,16 @@ def technique_page(slug):
             cuisine_label = _first
 
     canonical_url = f"https://provenance.kitchen/technique/{slug}"
+
+    # Split RECIPE: blob out of pro_tips so it doesn't render twice.
+    # Only applies when recipe_card was successfully parsed and cached.
+    _pt = technique.get('pro_tips') or ''
+    if technique.get('recipe_card') and 'RECIPE:' in _pt:
+        _split_idx = _pt.find('RECIPE:')
+        pro_tips_display = _pt[:_split_idx].rstrip()
+    else:
+        pro_tips_display = _pt
+
     return render_template("technique.html",
         technique=technique,
         canonical_url=canonical_url,
@@ -11167,6 +11267,7 @@ def technique_page(slug):
         technique_pairings_editorial=technique_pairings_editorial,
         technique_pairings_partial=technique_pairings_partial,
         cuisine_label=cuisine_label,
+        pro_tips_display=pro_tips_display,
     )
 
 
