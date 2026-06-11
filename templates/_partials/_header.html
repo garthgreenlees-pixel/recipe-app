@@ -17,6 +17,9 @@
   </div>
 
   <div class="nav-links nav-utility">
+    <a href="/techniques/browse" class="nav-search-icon" aria-label="Find a dish">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="5.8" cy="5.8" r="4.3" stroke="currentColor" stroke-width="1.3"/><path d="M9.3 9.3L12.5 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </a>
     <a href="/pricing">Pricing</a>
     {% if is_authenticated %}
     <a href="/kitchen">MyKitchen</a>
@@ -46,6 +49,7 @@
 <!-- ── MOBILE MENU — single source of truth ── -->
 <div class="mobile-menu" id="mobileMenu">
   <button class="mobile-menu-close" onclick="toggleMobileMenu()">Close ✕</button>
+  <a href="/techniques/browse" onclick="toggleMobileMenu()">Find a dish</a>
   <a href="/library" onclick="toggleMobileMenu()">The Library</a>
   <a href="/drinks" onclick="toggleMobileMenu()">The Atlases</a>
   <a href="/route/pacific-migration-trail" onclick="toggleMobileMenu()">The Routes</a>

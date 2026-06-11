@@ -494,6 +494,51 @@ body {
   flex-wrap: wrap;
 }
 
+/* ── Hero search — Nav N1 ── */
+.hp-hero-search {
+  padding: 0 2rem 2.5rem;
+  max-width: 680px;
+}
+.hp-hero-search form {
+  display: flex;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.hp-hero-search input[type="text"] {
+  flex: 1;
+  padding: 0.875rem 1.25rem;
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--charcoal);
+  background: transparent;
+  border: none;
+  outline: none;
+  min-width: 0;
+}
+.hp-hero-search input[type="text"]::placeholder { color: var(--warm-gray-light); }
+.hp-hero-search input[type="text"]:focus { outline: none; }
+.hp-hero-search button[type="submit"] {
+  padding: 0.875rem 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: var(--charcoal);
+  color: var(--cream-50);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.hp-hero-search button[type="submit"]:hover { background: var(--gold); }
+@media (max-width: 480px) {
+  .hp-hero-search input[type="text"] { font-size: 0.9rem; }
+  .hp-hero-search button[type="submit"] { padding: 0.875rem 1rem; }
+}
+
 </style>
 {% endblock %}
 
@@ -501,6 +546,12 @@ body {
 <section class="hp-hero">
   <h1>Every ingredient has a provenance.<br><span class="italic">Every dish deserves to know it.</span></h1>
   <p class="hp-hero-lede">A reference for the origin of ingredients, the lineage of techniques, and the canon of beverages. For the working kitchen and the curious diner alike.</p>
+  <div class="hp-hero-search">
+    <form action="/techniques/browse" method="get">
+      <input type="text" name="q" placeholder="Find a dish — carbonara, pad thai, beurre blanc…" autocomplete="off">
+      <button type="submit">Find →</button>
+    </form>
+  </div>
   <div class="hp-hero-ctas">
     <a href="/canons-v2/" class="hp-cta hp-cta--ghost">Open the Canon</a>
     <a href="/pricing" class="hp-cta hp-cta--outline">Find your tier</a>
