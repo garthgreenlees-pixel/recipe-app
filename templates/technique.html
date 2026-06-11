@@ -247,17 +247,43 @@
 
   <h1 class="technique-title">{{ technique.name }}</h1>
 
+  {# ── I Origin ───────────────────────────────────────────────── #}
   {% if technique.origin %}
-  <p class="technique-origin">{{ technique.origin }}</p>
+  <div class="section">
+    <div class="section-label">Origin</div>
+    <p class="technique-text">{{ technique.origin }}</p>
+  </div>
   {% endif %}
 
+  {# ── II Description ──────────────────────────────────────────── #}
   {% if technique.description %}
   <div class="section">
-    <div class="section-label">Overview</div>
+    <div class="section-label">Description</div>
     <p class="technique-desc">{{ technique.description }}</p>
   </div>
   {% endif %}
 
+  {# ── III The Thread ──────────────────────────────────────────── #}
+  {% if technique.cross_cuisine_parallels %}
+  <div class="section">
+    <div class="section-label">The Thread</div>
+    <ul class="parallels-list">
+      {% for item in technique.cross_cuisine_parallels %}
+        {% if item is mapping %}
+          <li class="parallels-item">
+            {% if item.connection %}{{ item.connection }}{% endif %}
+            {% if item.technique %} → <a href="/technique/{{ item.technique | lower }}" class="related-tag">{{ item.technique }}</a>{% endif %}
+            {% if item.cuisine %} <span class="cuisine-tag">{{ format_cuisine(item.cuisine) }}</span>{% endif %}
+          </li>
+        {% else %}
+          <li class="parallels-item">{{ item }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {# ── IV Flavour Context ───────────────────────────────────────── #}
   {% if technique.flavour_context %}
   <div class="section">
     <div class="section-label">Flavour Context</div>
@@ -386,25 +412,6 @@
   </div>
   {% endif %}
 
-  {% if technique.cross_cuisine_parallels %}
-  <div class="section">
-    <div class="section-label">Cross-Cuisine Parallels</div>
-    <ul class="parallels-list">
-      {% for item in technique.cross_cuisine_parallels %}
-        {% if item is mapping %}
-          <li class="parallels-item">
-            {% if item.connection %}{{ item.connection | linkify_cuisines }}{% endif %}
-            {% if item.technique %} → <a href="/technique/{{ item.technique | lower }}" class="related-tag">{{ item.technique }}</a>{% endif %}
-            {% if item.cuisine %} <span class="cuisine-tag">{{ format_cuisine(item.cuisine) }}</span>{% endif %}
-          </li>
-        {% else %}
-          <li class="parallels-item">{{ item | linkify_cuisines }}</li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
-
   {% if technique.related_techniques %}
   <div class="section">
     <div class="section-label">Related Techniques</div>
@@ -448,31 +455,42 @@
     </div>
     {% endif %}
 
+    {# ── VI Sensory Tests ── handles dict {'sense': 'desc'} and list [{sense,cue,fail_indicator}] #}
     {% if technique.sensory_tests %}
     <div class="section">
       <div class="section-label">Sensory Tests</div>
-      {% for test in technique.sensory_tests %}
-        {% if test is mapping %}
+      {% if technique.sensory_tests is mapping %}
+        {% for sense, description in technique.sensory_tests.items() %}
         <div style="margin-bottom:0.75rem;display:grid;grid-template-columns:80px 1fr;gap:8px;align-items:start">
-          {% if test.get('sense') %}
-          <span style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(201,168,76,0.5);padding-top:2px">{{ test.sense }}</span>
-          {% endif %}
-          <div>
-            {% if test.get('cue') %}<p style="font-size:14px;color:var(--charcoal-soft)">{{ test.cue }}</p>{% endif %}
-            {% if test.get('fail_indicator') %}<p style="font-size:13px;color:rgba(245,100,80,0.7);margin-top:2px">Fail: {{ test.fail_indicator }}</p>{% endif %}
-          </div>
+          <span style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(201,168,76,0.5);padding-top:2px">{{ sense }}</span>
+          <p style="font-size:14px;color:var(--charcoal-soft);line-height:1.65">{{ description }}</p>
         </div>
-        {% else %}
-        <p class="technique-text">{{ test }}</p>
-        {% endif %}
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+        {% for test in technique.sensory_tests %}
+          {% if test is mapping %}
+          <div style="margin-bottom:0.75rem;display:grid;grid-template-columns:80px 1fr;gap:8px;align-items:start">
+            {% if test.get('sense') %}
+            <span style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(201,168,76,0.5);padding-top:2px">{{ test.sense }}</span>
+            {% endif %}
+            <div>
+              {% if test.get('cue') %}<p style="font-size:14px;color:var(--charcoal-soft)">{{ test.cue }}</p>{% endif %}
+              {% if test.get('fail_indicator') %}<p style="font-size:13px;color:rgba(245,100,80,0.7);margin-top:2px">Fail: {{ test.fail_indicator }}</p>{% endif %}
+            </div>
+          </div>
+          {% else %}
+          <p class="technique-text">{{ test }}</p>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
     </div>
     {% endif %}
 
+    {# ── VII Where the Dish Lives or Dies — visually distinct ── #}
     {% if technique.lives_or_dies %}
-    <div class="section">
-      <div class="section-label">Where the Dish Lives or Dies</div>
-      <p class="technique-text">{{ technique.lives_or_dies }}</p>
+    <div class="section" style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.25)">
+      <div class="section-label" style="color:var(--gold)">Where the Dish Lives or Dies</div>
+      <p class="technique-text" style="font-size:16px;border-left:3px solid rgba(201,168,76,0.4);padding-left:16px;font-style:normal">{{ technique.lives_or_dies }}</p>
     </div>
     {% endif %}
 
