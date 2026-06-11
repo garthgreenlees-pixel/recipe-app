@@ -11332,7 +11332,7 @@ def technique_page(slug):
                 _code = (item.get('technique') or '').lower()
                 item['_slug'] = _code if _code in _valid_slugs else None
 
-    # Related: same cuisine/origin, excluding self
+    # Related: same cuisine/origin, excluding self — cap at 6, deduped by slug
     related_techniques = []
     if technique.get('origin'):
         cur.execute("""
@@ -11340,9 +11340,16 @@ def technique_page(slug):
             FROM technique_references
             WHERE origin = %s AND id != %s
             ORDER BY authority_tier ASC, name
-            LIMIT 4
+            LIMIT 12
         """, (technique['origin'], technique['id']))
-        related_techniques = [_serialize_row(r) for r in cur.fetchall()]
+        _seen_slugs = set()
+        for _r in cur.fetchall():
+            _row = _serialize_row(_r)
+            if _row['slug'] not in _seen_slugs:
+                _seen_slugs.add(_row['slug'])
+                related_techniques.append(_row)
+            if len(related_techniques) >= 6:
+                break
 
     # Fetch Pat's Rule ingredients for this technique
     cur.execute("""
@@ -11417,6 +11424,36 @@ def technique_page(slug):
                         f"[pantry_match] {slug}: {type(_e).__name__}: {_e}"
                     )
 
+    # Cycle F Job 3: Named shelf line — count of sibling entries in same collection.
+    shelf_line = None
+    try:
+        _sb = technique.get('source_book')
+        _cat = technique.get('category')
+        if _sb:
+            cur.execute("SELECT COUNT(*) AS n FROM technique_references WHERE source_book = %s",
+                        (_sb,))
+            _n = cur.fetchone()['n']
+            if _n > 1:
+                from urllib.parse import urlencode as _ue
+                shelf_line = {
+                    'count': _n,
+                    'name': _sb,
+                    'url': '/techniques/browse?' + _ue({'source_book': _sb}),
+                }
+        elif _cat and _cat.lower() not in ('general',):
+            cur.execute("SELECT COUNT(*) AS n FROM technique_references WHERE category = %s",
+                        (_cat,))
+            _n = cur.fetchone()['n']
+            if _n > 1:
+                from urllib.parse import urlencode as _ue
+                shelf_line = {
+                    'count': _n,
+                    'name': _cat,
+                    'url': '/techniques/browse?' + _ue({'category': _cat}),
+                }
+    except Exception as _e:
+        app.logger.warning(f"[shelf_line] {slug}: {_e}")
+
     cur.close()
     conn.close()
 
@@ -11465,6 +11502,7 @@ def technique_page(slug):
         frosts=frosts,
         has_frost=has_frost,
         ingredient_origins=ingredient_origins,
+        shelf_line=shelf_line,
     )
 
 
@@ -11598,6 +11636,7 @@ def techniques_browse():
 
     cuisine = request.args.get("cuisine", "").strip()
     category = request.args.get("category", "").strip()
+    source_book = request.args.get("source_book", "").strip()
     q = request.args.get("q", "").strip()
     try:
         page = max(1, int(request.args.get("page", 1)))
@@ -11616,6 +11655,10 @@ def techniques_browse():
         # Support prefix-style matching for top-level groups like "Provenance 1000" or "Provenance 500"
         conditions.append("category ILIKE %s")
         params.append(f"{category}%")
+    if source_book:
+        # Exact match on source_book for named shelf line links
+        conditions.append("source_book = %s")
+        params.append(source_book)
     if q:
         conditions.append("(name ILIKE %s OR description ILIKE %s)")
         params.extend([f"%{q}%", f"%{q}%"])
