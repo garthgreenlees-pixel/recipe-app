@@ -1,26 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Beverage Menu Builder — Design Service from Aperitif to Digestif | Provenance</title>
-<meta name="description" content="Build a complete beverage programme from Provenance's techniques and beverages. Select courses, receive pairing suggestions by logic type, export a formatted programme card.">
+{% extends "base.html" %}
+
+{% block title %}Beverage Menu Builder — Design Service from Aperitif to Digestif | Provenance{% endblock %}
+
+{% block meta_description %}Build a complete beverage programme from Provenance's techniques and beverages. Select courses, receive pairing suggestions by logic type, export a formatted programme card.{% endblock %}
+
+{% block extra_head %}
 <link rel="canonical" href="https://provenance.kitchen/programme">
 <meta name="robots" content="noindex">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Menu Builder — Provenance">
 <meta name="twitter:description" content="Build a complete beverage programme from aperitif to digestif.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
 <link rel="manifest" href="/static/manifest.json">
 <meta name="theme-color" content="#08080A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block styles %}
 <style>
+:root {
+  --text: #F5F1E9;
+  --text-secondary: rgba(245,241,233,0.70);
+  --text-light: rgba(245,241,233,0.45);
+  --text-dim: rgba(245,241,233,0.25);
+  --gold-bg: rgba(201,168,76,0.08);
+  --gold-border: rgba(201,168,76,0.20);
+  --border: rgba(201,168,76,0.20);
+  --border-subtle: rgba(201,168,76,0.10);
+  --surface: #131210;
+  --surface2: #1A1816;
+  --bg: #08080A;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
@@ -33,35 +48,9 @@
   --mono:'DM Mono',monospace;
 }
 html{-webkit-font-smoothing:antialiased}
-body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
+body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65}
 
-/* ─── NAV ─── */
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
-.nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
-.nav-links{display:flex;align-items:center;gap:2rem}
-.nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
-.nav-links a:hover{color:#C9A84C}
-.nav-links .nav-active{color:rgba(201,168,76,0.75)}
-.nav-p{width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;text-decoration:none;background:transparent;transition:border-color 200ms;flex-shrink:0;}
-.nav-p:hover{border-color:#C9A84C}
-.nav-p span{font-family:var(--serif);font-size:12px;font-weight:400;color:#C9A84C;line-height:1}
-.mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
-.mobile-menu-btn span{display:block;width:24px;height:2px;background:#F5F1E9;transition:all 0.3s}
-.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300}
-.mobile-nav-overlay.active{display:block}
-.mobile-nav{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#1A1816;border-left:1px solid rgba(201,168,76,0.2);padding:2rem 1.5rem;z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;gap:0}
-.mobile-nav.active{right:0}
-.mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
-.mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
-.mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
-@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
-.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:900px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
-.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
-.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
-.footer-links a:hover{color:#C9A84C}
-.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
-
-/* ─── LAYOUT ─── */
+/* ─── NAV ─── *//* ─── LAYOUT ─── */
 .page-wrap{max-width:900px;margin:0 auto;padding:40px 24px 80px}
 .hero{padding:48px 24px 32px;max-width:900px;margin:0 auto}
 .hero-eyebrow{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:rgba(201,168,76,0.55);text-transform:uppercase;margin-bottom:12px}
@@ -166,46 +155,9 @@ input[type=number].field-input{width:80px}
 .saved-notice{display:none;background:rgba(50,120,50,0.15);border:1px solid rgba(80,160,80,0.3);border-radius:6px;padding:12px 18px;margin-top:12px;font-size:13px;color:rgba(140,210,140,0.9)}
 .saved-notice.visible{display:block}
 </style>
-</head>
-<body>
+{% endblock %}
 
-<!-- ─── NAV ─── -->
-<nav class="nav">
-  <a href="/" class="nav-wordmark">Provenance</a>
-  <div class="nav-links">
-    <a href="/recipes">Recipes</a>
-    <a href="/drinks">Drinks</a>
-    <a href="/cuisines">Cuisines</a>
-    <a href="/techniques/browse">Techniques</a>
-    <a href="/about">About</a>
-    <a href="/suppliers">Suppliers</a>
-    {% if is_authenticated %}
-    <a href="/auth/account" style="color:#C9A84C">{{ current_user.display_name or 'Account' }}</a>
-    {% else %}
-    <a href="/auth/login">Enter</a>
-    {% endif %}
-  </div>
-  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
-<div class="mobile-nav" id="mobileNav">
-  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
-  <a href="/">Home</a>
-  <a href="/recipes">Recipes</a>
-  <a href="/drinks">Drinks</a>
-  <a href="/cuisines">Cuisines</a>
-  <a href="/techniques/browse">Techniques</a>
-  <a href="/about" class="mobile-nav-secondary">About</a>
-  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
-  {% if is_authenticated %}
-  <a href="/auth/account" class="mobile-nav-secondary">{{ current_user.display_name or 'Account' }}</a>
-  {% else %}
-  <a href="/auth/login" class="mobile-nav-secondary">Enter</a>
-  {% endif %}
-</div>
-
+{% block content %}
 <!-- ─── HERO ─── -->
 <div class="hero">
   <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
@@ -275,21 +227,6 @@ input[type=number].field-input{width:80px}
 
 </div>
 
-<footer>
-  <div class="about-footer">
-    <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="/recipes">Recipes</a>
-      <a href="/techniques/browse">Techniques</a>
-      <a href="/suppliers">Suppliers</a>
-      <a href="/for-professionals">For Professionals</a>
-      <a href="/methodology">Methodology</a>
-      <a href="/pricing">Pricing</a>
-      <a href="mailto:info@provenance.kitchen">Contact</a>
-    </div>
-    <div class="footer-wm">Provenance</div>
-  </div>
-</footer>
 
 <script>
 // ─── State ───────────────────────────────────────────────────────────────────
@@ -904,14 +841,5 @@ function h(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-function toggleMobileMenu() {
-  var nav = document.getElementById('mobileNav');
-  var overlay = document.getElementById('mobileNavOverlay');
-  nav.classList.toggle('active');
-  overlay.classList.toggle('active');
-  document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
-}
 </script>
-
-</body>
-</html>
+{% endblock %}
