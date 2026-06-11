@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Why {{ technique.name }} Works — The Science & Technique | Provenance</title>
-<meta name="description" content="Why does {{ technique.name }} taste the way it does? The technique, the science, and what separates great execution from good. Professional depth from Provenance.">
+{% extends "base.html" %}
+
+{% block title %}Why {{ technique.name }} Works — The Science & Technique | Provenance{% endblock %}
+
+{% block meta_description %}Why does {{ technique.name }} taste the way it does? The technique, the science, and what separates great execution from good. Professional depth from Provenance.{% endblock %}
+
+{% block extra_head %}
+>
 <link rel="canonical" href="https://provenance.kitchen/technique/{{ technique.slug }}">
 <meta property="og:title" content="Why {{ technique.name }} Works | Provenance">
 <meta property="og:description" content="The technique, the science, and what separates great {{ technique.name }} from good.">
@@ -56,7 +57,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
-<style>
+{% endblock %}
+
+{% block styles %}
+:root {
+  --text: #F5F1E9;
+  --text-secondary: rgba(245,241,233,0.70);
+  --text-light: rgba(245,241,233,0.45);
+  --gold-bg: rgba(201,168,76,0.08);
+  --gold-border: rgba(201,168,76,0.20);
+  --surface: #131210;
+  --cream-dark: #1A1816;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --gold:#C9A84C;--gold-light:#C9A84C;--gold-bg:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.20);
@@ -69,8 +81,8 @@
   --mono:'DM Mono',monospace;
 }
 html{-webkit-font-smoothing:antialiased}
-body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;padding-top:60px}
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,72,64,0.3);}
+body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65}
+
 .nav-wordmark{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:#F5F1E9;text-decoration:none;}
 .nav-links{display:flex;align-items:center;gap:2rem}
 .nav-links a{font-family:var(--sans);font-weight:300;font-size:11px;color:#9C9A93;text-decoration:none;letter-spacing:0.04em;transition:color 200ms;}
@@ -88,12 +100,12 @@ body{background:#08080A;color:var(--text);font-family:var(--sans);font-weight:30
 .mobile-nav a{display:block;padding:1rem 0;border-bottom:1px solid rgba(201,168,76,0.08);color:#F5F1E9;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.05em}
 .mobile-nav a.mobile-nav-secondary{color:rgba(245,241,233,0.45);font-size:0.9rem;margin-top:0.5rem}
 .mobile-nav-close{align-self:flex-end;background:none;border:none;color:rgba(245,241,233,0.45);font-size:1.2rem;cursor:pointer;margin-bottom:1.5rem;padding:0}
-@media(max-width:768px){.nav-links{display:none}.nav-p{display:none}.mobile-menu-btn{display:flex}}
-.about-footer{border-top:1px solid rgba(74,72,64,0.3);padding:2rem;display:flex;align-items:center;justify-content:space-between;max-width:780px;margin:0 auto;flex-wrap:wrap;gap:1rem;}
-.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
-.footer-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6B6962;text-decoration:none;transition:color 180ms;}
-.footer-links a:hover{color:#C9A84C}
-.footer-wm{font-family:var(--serif);font-size:13px;font-weight:400;color:#3A3835}
+.nav-p{display:none}.mobile-menu-btn{display:flex}}
+
+
+
+
+
 .breadcrumb{padding:12px 32px;font-size:13px;color:var(--text-light);border-bottom:1px solid var(--border);background:#08080A}
 .breadcrumb a{color:var(--text-secondary);text-decoration:none}
 .breadcrumb a:hover{color:var(--gold)}
@@ -126,39 +138,9 @@ details[open] summary::after{content:'−'}
 .sensory-sense{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--gold);margin-right:6px}
 .sensory-fail{font-size:13px;color:rgba(245,241,233,0.35);margin-top:3px;font-style:italic}
 @media(max-width:640px){.container{padding:32px 16px 60px}.breadcrumb{padding:10px 16px}}
-</style>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
-</head>
-<body>
+{% endblock %}
 
-<nav class="nav">
-  <a href="/" class="nav-wordmark">Provenance</a>
-  <div class="nav-links">
-    <a href="/recipes">Recipes</a>
-    <a href="/drinks">Drinks</a>
-    <a href="/cuisines">Cuisines</a>
-    <a href="/techniques/browse" class="nav-active">Techniques</a>
-    <a href="/about">About</a>
-    <a href="/suppliers">Suppliers</a>
-  </div>
-  <a href="/auth/account" class="nav-p" aria-label="MyKitchen"><span>P</span></a>
-  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
-<nav class="mobile-nav" id="mobileNav">
-  <button class="mobile-nav-close" onclick="toggleMobileMenu()">✕</button>
-  <a href="/recipes">Recipes</a>
-  <a href="/drinks">Drinks</a>
-  <a href="/cuisines">Cuisines</a>
-  <a href="/techniques/browse">Techniques</a>
-  <a href="/kitchen">MyKitchen</a>
-  <a href="/about" class="mobile-nav-secondary">About</a>
-  <a href="/suppliers" class="mobile-nav-secondary">Suppliers</a>
-</nav>
-
+{% block content %}
 <div class="breadcrumb">
   <a href="/">Home</a><span>/</span><a href="/techniques/browse">Techniques</a><span>/</span><a href="/technique/{{ technique.slug }}">{{ technique.name }}</a><span>/</span>Why It Works
 </div>
@@ -247,28 +229,7 @@ details[open] summary::after{content:'−'}
 
 </div>
 
-<script>
-function toggleMobileMenu(){
-  var nav=document.getElementById('mobileNav');
-  var overlay=document.getElementById('mobileNavOverlay');
-  nav.classList.toggle('active');
-  overlay.classList.toggle('active');
-  document.body.style.overflow=nav.classList.contains('active')?'hidden':'';
-}
-</script>
 
-<div class="about-footer">
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/recipes">Recipes</a>
-    <a href="/techniques/browse">Techniques</a>
-    <a href="/suppliers">Suppliers</a>
-    <a href="/for-professionals">For Professionals</a>
-    <a href="/methodology">Methodology</a>
-    <a href="/kitchen">MyKitchen</a>
-    <a href="mailto:info@provenance.kitchen">Contact</a>
-  </div>
   <span class="footer-wm">Provenance</span>
 </div>
-</body>
-</html>
+{% endblock %}
