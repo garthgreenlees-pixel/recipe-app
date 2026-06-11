@@ -192,8 +192,11 @@ a { color: var(--gold); text-decoration: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2.5rem;
+  padding: 5rem 2rem 3rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -250,7 +253,7 @@ a { color: var(--gold); text-decoration: none; }
   font-size: 0.5rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(245,241,233,0.45);
+  color: rgba(245,241,233,0.72);
   background: none;
   border: none;
   border-right: 1px solid rgba(201,168,76,0.07);

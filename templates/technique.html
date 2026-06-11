@@ -245,7 +245,7 @@
   .container, .rcp-card, .parallels-list, .technique-text, .technique-desc { max-width: 100%; }
 }
 
-/* ── Cycle F: Print stylesheet ── */
+/* ── Cycle F2: Print stylesheet ── */
 @media print {
   /* Structural: hide everything non-essential */
   .site-nav, .breadcrumb, .tech-hero, .t-working-layer,
@@ -253,30 +253,30 @@
   #technique-beverage-pairings, .pairing-suggestion,
   .technique-eyebrow .technique-tier, .technique-eyebrow .technique-authority,
   .tbp-list, .related-list, .parallels-list,
-  .cuisine-tag, .related-tag { display: none !important; }
+  .cuisine-tag, .related-tag, .no-print { display: none !important; }
 
-  /* Page setup */
-  body { background: #fff; color: #111; font-size: 11pt; }
+  /* Page setup — compressed (Cycle F2) */
+  body { background: #fff; color: #111; font-size: 9.5pt; }
   .container { max-width: 100%; padding: 0; margin: 0; }
-  .technique-title { font-size: 22pt; margin-bottom: 8pt; color: #000; }
-  .section-label { color: #555; font-size: 8pt; letter-spacing: 1pt; }
+  .technique-title { font-size: 15pt; margin-bottom: 6pt; color: #000; }
+  .section-label { color: #555; font-size: 7.5pt; letter-spacing: 1pt; }
   .section-label::after { background: #ccc; }
-  .section { margin-bottom: 18pt; break-inside: avoid; }
-  .technique-desc, .technique-text, .flavour-context { font-size: 11pt; color: #222; max-width: 100%; }
-  .flavour-context { border-left: 2pt solid #888; background: none; padding: 6pt 10pt; }
+  .section { margin-bottom: 8pt; }
+  .technique-desc, .technique-text, .flavour-context { font-size: 9.5pt; color: #222; max-width: 100%; }
+  .flavour-context { border-left: 2pt solid #888; background: none; padding: 4pt 8pt; }
 
-  /* Recipe card — clean one-sheet */
-  .rcp-card { border: 1pt solid #999; background: #fff; padding: 16pt 18pt; max-width: 100%; box-shadow: none; break-inside: avoid; }
-  .rcp-meta { gap: 20pt; }
+  /* Recipe card — keep intact, compressed padding */
+  .rcp-card { border: 1pt solid #999; background: #fff; padding: 8pt 10pt; max-width: 100%; box-shadow: none; break-inside: avoid; }
+  .rcp-meta { gap: 12pt; }
   .rcp-meta-label { color: #555; }
-  .rcp-meta-value { font-size: 11pt; color: #111; }
-  .rcp-block-label { color: #666; font-size: 8pt; }
+  .rcp-meta-value { font-size: 9.5pt; color: #111; }
+  .rcp-block-label { color: #666; font-size: 7.5pt; }
   .rcp-divider { border-top: 0.5pt solid #bbb; }
-  .rcp-ingredient { font-size: 10.5pt; color: #222; }
+  .rcp-ingredient { font-size: 9pt; color: #222; }
   .rcp-ingredient::before { color: #888; }
-  .rcp-step { font-size: 10.5pt; color: #222; padding-left: 22pt; }
+  .rcp-step { font-size: 9pt; color: #222; padding-left: 18pt; }
   .rcp-step::before { color: #888; }
-  .rcp-ing-origin { color: #777; font-size: 9pt; }
+  .rcp-ing-origin { color: #777; font-size: 8pt; }
   .rcp-ing-provider { color: #555; border-bottom: none; }
 
   /* Keep only what matters */
@@ -341,7 +341,7 @@
 
   {# ── III The Thread ──────────────────────────────────────────── #}
   {% if technique.cross_cuisine_parallels %}
-  <div class="section">
+  <div class="section no-print">
     <div class="section-label">The Thread</div>
     <ul class="parallels-list">
       {% for item in technique.cross_cuisine_parallels %}
@@ -759,6 +759,14 @@
     <span class="t-tier-chip">Profession+ for HACCP &amp; Costing</span>
   </div>
   <div class="t-actions">
+    <button class="t-action-btn" data-action="share" id="tech-share-btn">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v6M3 3.5L5.5 1 8 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 7v2.5h7V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Share
+    </button>
+    <button class="t-action-btn" onclick="window.print()">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="4" rx="0.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 5h7v4H2z" stroke="currentColor" stroke-width="1.3"/><rect x="3.5" y="7" width="4" height="0.7" fill="currentColor"/><rect x="3.5" y="8.3" width="2.5" height="0.7" fill="currentColor"/><circle cx="8.5" cy="6" r="0.5" fill="currentColor"/></svg>
+      Print
+    </button>
     <button class="t-action-btn" onclick="toggleTechPanel('haccp')">
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
       HACCP plan
@@ -1537,5 +1545,21 @@ function escapeHtml(s) {
   if (s==null) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
+
+// ── Share handler (Web Share API → clipboard fallback) ──
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-action="share"]');
+  if (!btn) return;
+  e.preventDefault();
+  if (navigator.share) {
+    navigator.share({ title: document.title, url: location.href }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(location.href).then(() => {
+      const orig = btn.textContent.trim();
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = orig; }, 1800);
+    }).catch(() => {});
+  }
+});
 </script>
 {% endblock %}

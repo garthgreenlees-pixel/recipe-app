@@ -2247,6 +2247,22 @@ function closeSupplierPanel() {
   });
 })();
 
+// ── Share handler (Web Share API → clipboard fallback) ────────────
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-action="share"]');
+  if (!btn) return;
+  e.preventDefault();
+  if (navigator.share) {
+    navigator.share({ title: document.title, url: location.href }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(location.href).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = orig; }, 1800);
+    }).catch(() => {});
+  }
+});
+
 // ── Escape key handler ────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
