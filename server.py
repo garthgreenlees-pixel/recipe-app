@@ -10096,6 +10096,88 @@ def _seed_demo_programme():
 _seed_demo_programme()
 
 
+# ─── Canon Cycle D: frost helpers ────────────────────────────────────────────
+
+def _frost_words(text, n):
+    """Return first n words of text with trailing ellipsis if truncated."""
+    if not text:
+        return ''
+    words = str(text).split()
+    return ' '.join(words[:n]) + ('…' if len(words) > n else '')
+
+def _frost_excerpt(technique, user_tier):
+    """Build server-side excerpts for free-tier frost band.
+
+    Returns (frosts dict, has_frost bool).
+    For paid tiers returns ({}, False) — no excerpts needed.
+    Caller must strip full gated fields from technique after calling this.
+    """
+    if user_tier != 'free':
+        return {}, False
+
+    qh = technique.get('quality_hierarchy')
+    st = technique.get('sensory_tests')
+    lod = technique.get('lives_or_dies')
+    rc = technique.get('recipe_card')
+
+    # Quality Hierarchy: first 2 rungs, ~30 words
+    qh_ex = None
+    if qh:
+        items = (qh if isinstance(qh, list) else [qh])[:2]
+        parts = []
+        for item in items:
+            if isinstance(item, dict):
+                text = item.get('criteria') or item.get('tier_name') or ''
+            else:
+                text = str(item)
+            w = _frost_words(text, 15)
+            if w:
+                parts.append(w)
+        qh_ex = ' '.join(parts) or None
+
+    # Sensory Tests: first test, ~20 words
+    st_ex = None
+    if st:
+        if isinstance(st, dict):
+            k = next(iter(st))
+            st_ex = f"{k}: {_frost_words(st[k], 20)}"
+        elif isinstance(st, list) and st:
+            t = st[0]
+            if isinstance(t, dict):
+                sense = t.get('sense', '')
+                cue = t.get('cue', '')
+                text = f"{sense}: {cue}" if sense else cue
+            else:
+                text = str(t)
+            st_ex = _frost_words(text, 20)
+
+    # Lives or Dies: first ~25 words
+    lod_ex = _frost_words(lod, 25) if lod else None
+
+    # Recipe card: serves/prep/total + first 3 ingredients + counts; no steps
+    rc_ex = None
+    if rc:
+        ings = rc.get('ingredients') or []
+        steps = rc.get('steps') or []
+        rc_ex = {
+            'serves': rc.get('serves'),
+            'prep': rc.get('prep'),
+            'total': rc.get('total'),
+            'ingredients_preview': ings[:3],
+            'ingredient_count': len(ings),
+            'step_count': len(steps),
+        }
+
+    frosts = {
+        'quality_hierarchy': qh_ex,
+        'sensory_tests': st_ex,
+        'lives_or_dies': lod_ex,
+        'recipe_card': rc_ex,
+    }
+    has_frost = any(v for v in frosts.values() if v)
+    return frosts, has_frost
+
+
 # ─── Canon Cycle B: recipe card parser ───────────────────────────────────────
 
 def parse_recipe_blob(text):
@@ -11164,6 +11246,23 @@ def technique_page(slug):
         elif not isinstance(ccp, list):
             technique['cross_cuisine_parallels'] = list(ccp)
 
+    # Step 0b: Resolve Thread links — mark _slug only for technique codes that
+    # exist as real slugs. Unresolved codes render as plain text in the template.
+    _ccp = technique.get('cross_cuisine_parallels') or []
+    if isinstance(_ccp, list) and _ccp:
+        _tech_codes = [item['technique'].lower() for item in _ccp
+                       if isinstance(item, dict) and item.get('technique')]
+        if _tech_codes:
+            cur.execute("SELECT slug FROM technique_references WHERE slug = ANY(%s)",
+                        (_tech_codes,))
+            _valid_slugs = {r['slug'] for r in cur.fetchall()}
+        else:
+            _valid_slugs = set()
+        for item in _ccp:
+            if isinstance(item, dict):
+                _code = (item.get('technique') or '').lower()
+                item['_slug'] = _code if _code in _valid_slugs else None
+
     # Related: same cuisine/origin, excluding self
     related_techniques = []
     if technique.get('origin'):
@@ -11248,8 +11347,17 @@ def technique_page(slug):
 
     canonical_url = f"https://provenance.kitchen/technique/{slug}"
 
-    # Split RECIPE: blob out of pro_tips so it doesn't render twice.
-    # Only applies when recipe_card was successfully parsed and cached.
+    # Cycle D: build frost excerpts BEFORE stripping — full values must not
+    # reach the template for free viewers.
+    frosts, has_frost = _frost_excerpt(technique, user_tier)
+    if user_tier == 'free':
+        technique['quality_hierarchy'] = None
+        technique['sensory_tests'] = None
+        technique['lives_or_dies'] = None
+        technique['recipe_card'] = None   # frosted version served in band
+
+    # Split RECIPE: blob out of pro_tips display (Cycle B). After stripping
+    # recipe_card for free users, recipe_card is None so split is skipped.
     _pt = technique.get('pro_tips') or ''
     if technique.get('recipe_card') and 'RECIPE:' in _pt:
         _split_idx = _pt.find('RECIPE:')
@@ -11268,6 +11376,8 @@ def technique_page(slug):
         technique_pairings_partial=technique_pairings_partial,
         cuisine_label=cuisine_label,
         pro_tips_display=pro_tips_display,
+        frosts=frosts,
+        has_frost=has_frost,
     )
 
 

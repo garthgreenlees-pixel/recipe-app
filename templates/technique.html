@@ -136,6 +136,15 @@
 .rcp-step { font-size: 14px; color: var(--charcoal-soft); font-weight: 300; line-height: 1.65; padding-left: 32px; position: relative; counter-increment: rcp-step; }
 .rcp-step::before { content: counter(rcp-step); position: absolute; left: 0; top: 1px; font-family: var(--mono); font-size: 10px; color: var(--gold); width: 20px; text-align: right; }
 @media print { .rcp-card { border: 1px solid #ccc; background: #fff; } .rcp-meta-label, .rcp-block-label { color: #888; } .rcp-ingredient::before, .rcp-step::before { color: #888; } }
+/* ── Cycle D: Frost band ── */
+.frost-band { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(201,168,76,0.18); }
+.frost-door { font-size: 13px; color: var(--warm-gray); margin-bottom: 2rem; letter-spacing: 0.01em; }
+.frost-door a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.35); transition: border-color 0.15s; }
+.frost-door a:hover { border-bottom-color: var(--gold); }
+.frost-item { margin-bottom: 2rem; }
+.frost-blur-wrap { position: relative; overflow: hidden; max-height: 4.5rem; margin-top: 0.5rem; }
+.frost-blur { filter: blur(3.5px); user-select: none; pointer-events: none; }
+.frost-fade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(250,247,241,0) 0%, rgba(250,247,241,0.82) 65%, rgba(250,247,241,1) 100%); pointer-events: none; }
 .related-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .related-tag { font-family: var(--mono); font-size: 12px; color: var(--charcoal-soft); background: rgba(201,168,76,0.06); border: 1px solid var(--gold-border); padding: 4px 12px; border-radius: 20px; text-decoration: none; transition: all 0.15s; }
 .related-tag:hover { color: var(--gold); border-color: var(--gold-border); background: var(--gold-bg); }
@@ -272,7 +281,7 @@
         {% if item is mapping %}
           <li class="parallels-item">
             {% if item.connection %}{{ item.connection }}{% endif %}
-            {% if item.technique %} → <a href="/technique/{{ item.technique | lower }}" class="related-tag">{{ item.technique }}</a>{% endif %}
+            {% if item.technique %} → {% if item._slug %}<a href="/technique/{{ item._slug }}" class="related-tag">{{ item.technique }}</a>{% else %}{{ item.technique }}{% endif %}{% endif %}
             {% if item.cuisine %} <span class="cuisine-tag">{{ format_cuisine(item.cuisine) }}</span>{% endif %}
           </li>
         {% else %}
@@ -488,9 +497,9 @@
 
     {# ── VII Where the Dish Lives or Dies — visually distinct ── #}
     {% if technique.lives_or_dies %}
-    <div class="section" style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.25)">
+    <div class="section" style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.3)">
       <div class="section-label" style="color:var(--gold)">Where the Dish Lives or Dies</div>
-      <p class="technique-text" style="font-size:16px;border-left:3px solid rgba(201,168,76,0.4);padding-left:16px;font-style:normal">{{ technique.lives_or_dies }}</p>
+      <p class="technique-text" style="font-size:16px;border-left:3px solid var(--gold);background:rgba(201,168,76,0.06);padding:12px 16px;font-style:normal;border-radius:0 4px 4px 0">{{ technique.lives_or_dies }}</p>
     </div>
     {% endif %}
 
@@ -524,19 +533,67 @@
 
   {% else %}
 
-    {% if technique.quality_hierarchy or technique.sensory_tests or technique.species_precision %}
-    <div style="position:relative;margin-top:2.5rem;padding:2rem;border:1px solid rgba(201,168,76,0.08);border-radius:8px;background:rgba(245,241,233,0.02)">
-      <div style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:rgba(201,168,76,0.35);text-transform:uppercase;margin-bottom:1rem">
-        Quality Hierarchy · Sensory Tests · Species Precision · Ingredient Standards
+  {# ── Cycle D: Frost band — one door, real excerpts blurred, no full text sent ── #}
+  {% if has_frost %}
+  <div class="frost-band">
+    <p class="frost-door"><a href="/pricing">Kitchen membership opens the full entry.</a></p>
+
+    {% if frosts.quality_hierarchy %}
+    <div class="frost-item">
+      <div class="section-label">Quality Hierarchy</div>
+      <div class="frost-blur-wrap">
+        <p class="frost-blur technique-text">{{ frosts.quality_hierarchy }}</p>
+        <div class="frost-fade"></div>
       </div>
-      <p style="font-size:0.85rem;color:rgba(245,241,233,0.4);line-height:1.6;margin-bottom:1.5rem">
-        The complete technique entry — including what separates Reserve from House, the sensory cues that tell you when it's right, the exact ingredients at species precision, and verified suppliers filtered to your region.
-      </p>
-      <a href="/subscribe/kitchen" style="display:inline-block;padding:8px 20px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:4px;color:#C9A84C;font-family:var(--sans);font-size:0.8rem;text-decoration:none;letter-spacing:0.05em">
-        Open The Kitchen — $4.99/month
-      </a>
     </div>
     {% endif %}
+
+    {% if frosts.sensory_tests %}
+    <div class="frost-item">
+      <div class="section-label">Sensory Tests</div>
+      <div class="frost-blur-wrap">
+        <p class="frost-blur technique-text">{{ frosts.sensory_tests }}</p>
+        <div class="frost-fade"></div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if frosts.lives_or_dies %}
+    <div class="frost-item" style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,0.3)">
+      <div class="section-label" style="color:var(--gold)">Where the Dish Lives or Dies</div>
+      <div class="frost-blur-wrap" style="max-height:5.5rem">
+        <p class="frost-blur" style="font-size:16px;border-left:3px solid var(--gold);background:rgba(201,168,76,0.06);padding:12px 16px;border-radius:0 4px 4px 0">{{ frosts.lives_or_dies }}</p>
+        <div class="frost-fade"></div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if frosts.recipe_card %}
+    <div class="frost-item">
+      <div class="section-label">The recipe</div>
+      <div class="rcp-card">
+        <div class="rcp-meta">
+          {% if frosts.recipe_card.serves %}<div class="rcp-meta-item"><span class="rcp-meta-label">Serves</span><span class="rcp-meta-value">{{ frosts.recipe_card.serves }}</span></div>{% endif %}
+          {% if frosts.recipe_card.prep %}<div class="rcp-meta-item"><span class="rcp-meta-label">Prep</span><span class="rcp-meta-value">{{ frosts.recipe_card.prep }}</span></div>{% endif %}
+          {% if frosts.recipe_card.total %}<div class="rcp-meta-item"><span class="rcp-meta-label">Total</span><span class="rcp-meta-value">{{ frosts.recipe_card.total }}</span></div>{% endif %}
+        </div>
+        {% if frosts.recipe_card.ingredients_preview %}
+        <div class="frost-blur-wrap" style="max-height:5.5rem">
+          <ul class="rcp-ingredients frost-blur">
+            {% for ing in frosts.recipe_card.ingredients_preview %}
+            <li class="rcp-ingredient">{{ ing }}</li>
+            {% endfor %}
+          </ul>
+          <div class="frost-fade"></div>
+        </div>
+        {% endif %}
+        <p style="font-size:12px;color:var(--warm-gray);margin-top:12px;font-family:var(--mono);letter-spacing:0.5px">{{ frosts.recipe_card.ingredient_count }} ingredients · {{ frosts.recipe_card.step_count }} steps</p>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+  {% endif %}
 
   {% endif %}
 
