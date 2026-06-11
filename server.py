@@ -10128,7 +10128,12 @@ def _match_pantry_for_recipe(ingredient_lines, cur):
         LEFT JOIN suppliers s ON ps.supplier_id = s.id
         WHERE (im.origin_brand IS NOT NULL AND im.origin_brand != '')
            OR (im.origin_country IS NOT NULL AND im.origin_country != '')
-        ORDER BY im.canonical_name, s.id NULLS LAST
+        ORDER BY im.canonical_name,
+                 CASE WHEN s.state_province IN ('BC','British Columbia') THEN 0
+                      WHEN s.state_province IN ('WA','OR','ID') THEN 1
+                      WHEN s.country = 'CA' THEN 2
+                      ELSE 3 END,
+                 s.id NULLS LAST
     """)
     pantry_rows = cur.fetchall()
 
