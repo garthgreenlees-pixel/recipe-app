@@ -1485,9 +1485,6 @@ def _query_compose_drafts(user_id):
 
 @app.route("/")
 def index():
-    user = get_current_user()
-    if user:
-        return redirect(url_for("kitchen"))
     return render_template("index.html")
 
 
@@ -11709,7 +11706,7 @@ def techniques_browse():
             f"  FROM technique_references {where}"
             f"  ORDER BY lower(name), (recipe_card IS NOT NULL) DESC,"
             f"    (pillar_completeness->>'count')::int DESC NULLS LAST, id"
-            f") _d ORDER BY _rank, has_recipe DESC, pillar_count DESC NULLS LAST, name LIMIT %s OFFSET %s",
+            f") _d ORDER BY has_recipe DESC, _rank, pillar_count DESC NULLS LAST, name LIMIT %s OFFSET %s",
             [_cleaned_q, _cleaned_q, _cleaned_q] + params + [per_page, offset]
         )
     else:
@@ -12821,7 +12818,7 @@ def auth_login():
     session["user_id"] = user["id"]
     if request.form.get("remember_me") == "on":
         session["_remember"] = True
-    next_url = _safe_next(default="/")
+    next_url = _safe_next(default="/kitchen")
     return redirect(next_url)
 
 
