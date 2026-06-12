@@ -62,26 +62,12 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
 }
 .hero .subtitle{
   font-size:17px;color:rgba(255,255,255,0.55);font-style:italic;
-  font-family:var(--serif);margin-bottom:40px;
+  font-family:var(--serif);margin-bottom:0;
 }
-
-/* ─── STAT CARDS ─── */
-.stats-row{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
-  max-width:900px;margin:-32px auto 0;padding:0 24px;position:relative;z-index:10;
+.hero-tagline{
+  font-size:14px;color:rgba(255,255,255,0.38);
+  font-family:var(--sans);margin-top:14px;letter-spacing:0.2px;
 }
-.stat-card{
-  background:#fff;border-radius:12px;padding:24px;text-align:center;
-  border:1px solid var(--border);
-  box-shadow:0 4px 24px rgba(0,0,0,0.06);
-  transition:transform 0.2s ease, box-shadow 0.2s ease;
-}
-.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
-.stat-number{
-  font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold);
-  line-height:1;margin-bottom:4px;
-}
-.stat-label{font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;font-weight:600}
 
 /* ─── CONTAINER ─── */
 .container{max-width:1100px;margin:0 auto;padding:48px 24px 80px}
@@ -89,13 +75,8 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
 /* ─── SECTION ─── */
 .section{margin-bottom:56px}
 .section-header{
-  display:flex;align-items:baseline;gap:12px;margin-bottom:20px;
+  margin-bottom:20px;
   border-bottom:2px solid var(--border);padding-bottom:12px;
-}
-.section-number{
-  font-family:var(--serif);font-size:14px;font-weight:700;color:var(--gold);
-  background:var(--gold-bg);border-radius:20px;padding:2px 12px;
-  white-space:nowrap;
 }
 .section-title{font-family:var(--serif);font-size:28px;font-weight:700;letter-spacing:-0.5px}
 
@@ -193,16 +174,13 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
 
 /* ─── RESPONSIVE ─── */
 @media(max-width:768px){
-  .stats-row{grid-template-columns:repeat(2,1fr)}
   .hero h1{font-size:32px}
-  .stat-number{font-size:32px}
   .ranked-grid{grid-template-columns:1fr}
   .chain-row{flex-direction:column;align-items:stretch}
   .chain-arrow{transform:rotate(90deg);text-align:center}
   .shelf-cards{grid-template-columns:1fr}
 }
 @media(max-width:480px){
-  .stats-row{grid-template-columns:1fr 1fr}
   .section-title{font-size:22px}
 }
 {% endblock %}
@@ -212,26 +190,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
 <div class="hero">
   <h1>The Pantry</h1>
   <p class="subtitle">The full supply chain layer — live from the Pantry</p>
-</div>
-
-<!-- STAT CARDS -->
-<div class="stats-row">
-  <div class="stat-card">
-    <div class="stat-number">{{ stats.products }}</div>
-    <div class="stat-label">Products</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-number">{{ stats.suppliers }}</div>
-    <div class="stat-label">Active Suppliers</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-number">{{ stats.links }}</div>
-    <div class="stat-label">Supply Chain Links</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-number">{{ stats.connected_products }}</div>
-    <div class="stat-label">Connected Products</div>
-  </div>
+  <p class="hero-tagline">{{ stats.products_fmt }} products from {{ stats.suppliers_fmt }} suppliers, every chain traced.</p>
 </div>
 
 <div class="container">
@@ -240,7 +199,6 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
   {% if shelves %}
   <div class="section">
     <div class="section-header">
-      <span class="section-number">01</span>
       <h2 class="section-title">The Shelves</h2>
     </div>
     <p class="shelves-standfirst">The benchmark producers — and why they cannot be copied.</p>
@@ -265,7 +223,6 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
   <!-- TOP SUPPLIERS -->
   <div class="section">
     <div class="section-header">
-      <span class="section-number">02</span>
       <h2 class="section-title">Top Suppliers by Product Count</h2>
     </div>
     <div class="ranked-grid">
@@ -288,7 +245,6 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
   <!-- PRODUCTS BY CATEGORY -->
   <div class="section">
     <div class="section-header">
-      <span class="section-number">02</span>
       <h2 class="section-title">Products by Category</h2>
     </div>
     <div class="pill-grid">
@@ -307,7 +263,6 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
   <!-- SUPPLIERS BY COUNTRY -->
   <div class="section">
     <div class="section-header">
-      <span class="section-number">03</span>
       <h2 class="section-title">Suppliers by Country</h2>
     </div>
     <div class="pill-grid">
@@ -326,7 +281,6 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
   <!-- PAT'S RULE DEMO -->
   <div class="section">
     <div class="section-header">
-      <span class="section-number">04</span>
       <h2 class="section-title">Pat's Rule — Live Supply Chain</h2>
     </div>
     {% if chain_rows %}
@@ -352,7 +306,6 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
   <!-- RECENT PRODUCTS -->
   <div class="section">
     <div class="section-header">
-      <span class="section-number">05</span>
       <h2 class="section-title">Recent Products</h2>
     </div>
     <table class="recent-table">

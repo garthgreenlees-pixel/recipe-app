@@ -8735,6 +8735,8 @@ def ingredients_showcase():
         "suppliers": total_suppliers,
         "links": total_links,
         "connected_products": connected_products,
+        "products_fmt": f"{total_products:,}",
+        "suppliers_fmt": f"{total_suppliers:,}",
     }
 
     # Top suppliers by product count
@@ -8803,17 +8805,30 @@ def ingredients_showcase():
               AND category != 'preserved_pickled'
         ),
         top_cats AS (
-            SELECT DISTINCT category, cat_count
+            SELECT DISTINCT category, cat_count,
+                CASE category
+                    WHEN 'oils_vinegars'         THEN 1
+                    WHEN 'spices_seasonings'     THEN 2
+                    WHEN 'flour_baking'          THEN 3
+                    WHEN 'rice_grains'           THEN 4
+                    WHEN 'seafood_general'       THEN 5
+                    WHEN 'wagyu_premium_protein' THEN 6
+                    WHEN 'dairy_fermented'       THEN 7
+                    WHEN 'produce_specialty'     THEN 8
+                    ELSE 99
+                END AS shelf_order
             FROM qualifying
-            ORDER BY cat_count DESC
-            LIMIT 8
+            WHERE category IN (
+                'oils_vinegars','spices_seasonings','flour_baking','rice_grains',
+                'seafood_general','wagyu_premium_protein','dairy_fermented','produce_specialty'
+            )
         )
         SELECT q.name, q.origin_brand, q.origin_country, q.description,
                q.category, q.cat_count
         FROM qualifying q
         JOIN top_cats tc ON q.category = tc.category
         WHERE q.rn <= 6
-        ORDER BY tc.cat_count DESC, q.category, q.rn
+        ORDER BY tc.shelf_order, q.rn
     """)
 
     _cat_labels = {
