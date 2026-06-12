@@ -2,7 +2,8 @@
 
 **Created:** 2026-06-12
 **Source:** Cross-reference of Source Checklist authority sources + photographed shelf inventory
-**Status:** Version-controlled. Founder's call pending on UNKNOWN rows.
+**Status:** Version-controlled. All UNKNOWN rows resolved per founder ruling 2026-06-12 — see Part IV.
+**Founder ruling 2026-06-12:** All titles in this manifest are OWNED.
 
 ---
 
@@ -26,11 +27,11 @@ These are the books explicitly named in `Provenance_Coquitlam_Source_Checklist.m
 
 | # | Title | Author | Year | ISBN | Priority | Status | Source_photo | Notes |
 |---|---|---|---|---|---|---|---|---|
-| 1 | Escoffier — Le Guide Culinaire (full French edition) | Auguste Escoffier | 1903 (many editions) | 978-2-0813-7444-8 (Flammarion) | P1 | UNKNOWN | — | Not identified in any photo. Source Checklist marks as [~] in progress. Founder's call: owned? which edition? |
-| 2 | Gastronomie Pratique | Ali-Bab (Henri Babinski) | 1907 | — | P2 | UNKNOWN | — | Not identified in any photo. Rare; Source Checklist marks as [ ] not started. Founder's call: owned or to acquire? |
-| 3 | Éloges de la Cuisine Française | Édouard Nignon | 1933 | — | P2 | UNKNOWN | — | Not identified in any photo. Very rare pre-Escoffier reference. Founder's call needed. |
+| 1 | Escoffier — Le Guide Culinaire (full French edition) | Auguste Escoffier | 1903 (many editions) | 978-2-0813-7444-8 (Flammarion) | P1 | OWNED | — | Founder ruling 2026-06-12: owned. [VERIFY] which edition. Not identified in shelf photos — confirm location. |
+| 2 | Gastronomie Pratique | Ali-Bab (Henri Babinski) | 1907 | — | P2 | OWNED | — | Founder ruling 2026-06-12: owned. Not identified in shelf photos — confirm location. |
+| 3 | Éloges de la Cuisine Française | Édouard Nignon | 1933 | — | P2 | OWNED | — | Founder ruling 2026-06-12: owned. Not identified in shelf photos — confirm location. |
 | 4 | Pâtisserie! (Christophe Felder — Collector edition) | Christophe Felder | 2010 | 978-2-7324-4535-0 | P2 | PHOTOGRAPHED FOR REFERENCE | IMG_5925 | **Visible in French-language collection photos.** Source Checklist names "19 untranslated French pastry books" by Felder — this is one. |
-| 5 | Pierre Hermé — Infiniment series | Pierre Hermé | various | various | P2 | UNKNOWN | — | Not identified in any photo. Source Checklist marks as [ ] not started. |
+| 5 | Pierre Hermé — Infiniment series | Pierre Hermé | various | various | P2 | OWNED | — | Founder ruling 2026-06-12: owned. Not identified in shelf photos — confirm which volumes. |
 
 ---
 
@@ -112,8 +113,8 @@ These titles were not named in the Source Checklist but are visible in the photo
 | Category | Count |
 |---|---|
 | Source Checklist authority sources | 5 |
-| — of which OWNED | 1 (Felder Pâtisserie!) |
-| — of which UNKNOWN | 4 (Escoffier, Ali-Bab, Nignon, Hermé) |
+| — of which OWNED | 5 (all — founder ruling 2026-06-12) |
+| — of which UNKNOWN | 0 |
 | Photographed French-canon books (Location A) | 18 |
 | Photographed French-canon books (Location B) | 16 |
 | Digital French-canon books | 1 |
@@ -121,14 +122,14 @@ These titles were not named in the Source Checklist but are visible in the photo
 | Titles needing [VERIFY] | ~20 |
 | New titles not in Source Checklist | 8 |
 
-### UNKNOWN Status — Founder's Call Required
+### Resolved — Founder Ruling 2026-06-12
 
-These four Source Checklist authority sources were **not visible in any photo**. Founder must confirm:
+All four previously UNKNOWN Source Checklist titles are confirmed **OWNED**:
 
-1. **Escoffier — Le Guide Culinaire (full French edition)**: Owned? Which edition? The Source Checklist marks extraction as [~] in progress — implying access exists somewhere. If owned, which shelf/location?
-2. **Ali-Bab — Gastronomie Pratique**: Owned or to acquire? Rare book — available as reprints.
-3. **Édouard Nignon — Éloges de la Cuisine Française**: Owned or to acquire? Very rare, limited reprints.
-4. **Pierre Hermé — Infiniment series**: Owned or to acquire? Multiple volumes in the series.
+1. **Escoffier — Le Guide Culinaire**: OWNED. [VERIFY] which edition and shelf location.
+2. **Ali-Bab — Gastronomie Pratique**: OWNED. Not visible in shelf photos — confirm location.
+3. **Édouard Nignon — Éloges de la Cuisine Française**: OWNED. Not visible in shelf photos — confirm location.
+4. **Pierre Hermé — Infiniment series**: OWNED. Not visible in shelf photos — confirm which volumes held.
 
 ### Christophe Felder — 19 Books
 

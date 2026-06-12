@@ -3,6 +3,7 @@
 **Created:** 2026-06-12
 **Source:** Photographed shelf inventory (23 photos, two locations)
 **Status:** Version-controlled from this date. Update when books arrive or depart.
+**Founder ruling 2026-06-12:** All titles in this manifest are OWNED. [VERIFY] tags on individual rows indicate unresolved bibliographic details (title, author, year) — not ownership status.
 
 ---
 
@@ -107,6 +108,8 @@ Every physical and digital cookbook in the founder's collection, organised by pr
 | 45 | Bangkok | Leela Punyaratabandhu | 2017 | Thai | HC | IMG_3169 | |
 | 46 | Lonely Planet Thailand | Lonely Planet | — | Thai | HC | IMG_3176 | Travel + food reference |
 | 47 | Pepper Thai [VERIFY] | — | — | Thai | HC | IMG_3169 | [VERIFY] |
+| 47a | Thai Food | David Thompson | 2002 | Thai | HC | [VERIFY shelf] | Canonical Thai authority. Ten Speed Press. ISBN 978-1-58008-462-8. **Owned confirmed** — 102 entries extracted (per extraction records). |
+| 47b | Thai Street Food: Authentic Recipes, Vibrant Traditions | David Thompson | 2010 | Thai | HC | [VERIFY shelf] | Ten Speed Press. ISBN 978-1-58008-284-6. [VERIFY owned — not in photo inventory; founder to confirm] |
 
 ### Vietnamese Canon
 
@@ -396,8 +399,8 @@ This is a separate collection, predominantly in French. Photos taken today show 
 
 | Metric | Count |
 |---|---|
-| Total titles catalogued | 181 |
-| Location A (Coquitlam, English) | 136 |
+| Total titles catalogued | 183 |
+| Location A (Coquitlam, English) | 138 |
 | Location B (French-language) | 45 |
 | Hardcopy | 179 |
 | PDF / Digital | 2 |
