@@ -8788,6 +8788,71 @@ def ingredients_showcase():
     """)
     recent_products = [dict(r) for r in cur.fetchall()]
 
+    # Shelves — benchmark producers with editorial depth, grouped by category
+    cur.execute("""
+        WITH qualifying AS (
+            SELECT name, origin_brand, origin_country, description, category,
+                   COUNT(*) OVER (PARTITION BY category) AS cat_count,
+                   ROW_NUMBER() OVER (
+                       PARTITION BY category ORDER BY LENGTH(description) DESC
+                   ) AS rn
+            FROM ingredient_products
+            -- preserved_pickled excluded: known miscategorisation hotspot, returns after recategorisation pass
+            WHERE origin_brand IS NOT NULL AND origin_brand != ''
+              AND description IS NOT NULL AND LENGTH(description) > 30
+              AND category != 'preserved_pickled'
+        ),
+        top_cats AS (
+            SELECT DISTINCT category, cat_count
+            FROM qualifying
+            ORDER BY cat_count DESC
+            LIMIT 8
+        )
+        SELECT q.name, q.origin_brand, q.origin_country, q.description,
+               q.category, q.cat_count
+        FROM qualifying q
+        JOIN top_cats tc ON q.category = tc.category
+        WHERE q.rn <= 6
+        ORDER BY tc.cat_count DESC, q.category, q.rn
+    """)
+
+    _cat_labels = {
+        'spices_seasonings': 'Spices & Seasonings',
+        'produce_specialty': 'Specialty Produce',
+        'preserved_pickled': 'Preserved & Pickled',
+        'flour_baking': 'Flour & Baking',
+        'wagyu_premium_protein': 'Wagyu & Premium Protein',
+        'oils_vinegars': 'Oils & Vinegars',
+        'rice_grains': 'Rice & Grains',
+        'seafood_general': 'Seafood',
+        'dairy_fermented': 'Dairy & Fermented',
+        'chocolate_confection': 'Chocolate & Confection',
+        'charcuterie_cured': 'Charcuterie & Cured',
+    }
+
+    def _truncate(text, limit=160):
+        if not text or len(text) <= limit:
+            return text or ''
+        return text[:limit].rsplit(' ', 1)[0] + '…'
+
+    shelves = []
+    _shelf_index = {}
+    for row in cur.fetchall():
+        cat = row['category']
+        if cat not in _shelf_index:
+            _shelf_index[cat] = len(shelves)
+            shelves.append({
+                'category': cat,
+                'label': _cat_labels.get(cat, cat.replace('_', ' ').title()),
+                'products': [],
+            })
+        shelves[_shelf_index[cat]]['products'].append({
+            'name': row['name'],
+            'origin_brand': row['origin_brand'],
+            'origin_country': row['origin_country'],
+            'description': _truncate(row['description']),
+        })
+
     cur.close()
     conn.close()
 
@@ -8798,6 +8863,7 @@ def ingredients_showcase():
         countries=countries,
         chain_rows=chain_rows,
         recent_products=recent_products,
+        shelves=shelves,
     )
 
 

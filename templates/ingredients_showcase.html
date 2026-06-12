@@ -180,6 +180,17 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
 }
 
 
+/* ─── SHELVES ─── */
+.shelves-standfirst{font-size:15px;color:var(--text-secondary);font-style:italic;margin-bottom:32px}
+.shelf{margin-bottom:40px}
+.shelf-label{font-family:var(--serif);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.shelf-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.shelf-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column}
+.shelf-card-name{font-family:var(--serif);font-size:17px;font-weight:700;line-height:1.25;color:var(--text);margin-bottom:6px}
+.shelf-card-brand{font-size:12px;font-weight:600;color:var(--gold);line-height:1.4}
+.shelf-card-country{font-size:11px;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.shelf-card-why{font-size:13px;color:var(--text-secondary);line-height:1.55;margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
+
 /* ─── RESPONSIVE ─── */
 @media(max-width:768px){
   .stats-row{grid-template-columns:repeat(2,1fr)}
@@ -188,6 +199,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
   .ranked-grid{grid-template-columns:1fr}
   .chain-row{flex-direction:column;align-items:stretch}
   .chain-arrow{transform:rotate(90deg);text-align:center}
+  .shelf-cards{grid-template-columns:1fr}
 }
 @media(max-width:480px){
   .stats-row{grid-template-columns:1fr 1fr}
@@ -224,10 +236,36 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
 
 <div class="container">
 
-  <!-- TOP SUPPLIERS -->
+  <!-- THE SHELVES -->
+  {% if shelves %}
   <div class="section">
     <div class="section-header">
       <span class="section-number">01</span>
+      <h2 class="section-title">The Shelves</h2>
+    </div>
+    <p class="shelves-standfirst">The benchmark producers — and why they cannot be copied.</p>
+    {% for shelf in shelves %}
+    <div class="shelf">
+      <div class="shelf-label">{{ shelf.label }}</div>
+      <div class="shelf-cards">
+        {% for p in shelf.products %}
+        <div class="shelf-card">
+          <div class="shelf-card-name">{{ p.name }}</div>
+          <div class="shelf-card-brand">{{ p.origin_brand }}</div>
+          {% if p.origin_country %}<div class="shelf-card-country">{{ p.origin_country }}</div>{% endif %}
+          <div class="shelf-card-why">{{ p.description }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- TOP SUPPLIERS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-number">02</span>
       <h2 class="section-title">Top Suppliers by Product Count</h2>
     </div>
     <div class="ranked-grid">
