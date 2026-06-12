@@ -51,18 +51,19 @@ Running concurrently alongside the main queue. Priority follows French_Collectio
 
 ## Notable T1 Titles Outside This Queue
 
-These are Tier 1 titles now in the manifest that are NOT part of the 10-canon extraction queue above — either already extracted, a different track, or pending ownership verification.
+These are Tier 1 titles now in the manifest that are NOT part of the 10-canon extraction queue above — either already extracted, a different track, or pending physical location confirmation.
 
 | Title | Manifest # | Canon | Status |
 |---|---|---|---|
 | Thai Food | LM #47a | Thai | **Already extracted** — 102 entries (David Thompson, confirmed) |
+| Thai Street Food | LM #47b | Thai | OWNED — VERIFIED; queue after Thai Food review |
 | Japanese Cooking: A Simple Art | LM #24 | Japanese | Extracted (PDF + HC) |
 | Hot Sour Salty Sweet | LM #125 | SE Asian | Extracted — 45 entries (Duguid & Alford) |
-| Modernist Cuisine | LM #188 | Method / Science | PDF — high-density, not yet processed |
-| Nose to Tail Eating | LM #189 | British (Method) | HC — Fergus Henderson; folded in from working list |
-| Fuchsia Dunlop (5 titles) | LM #195 | Chinese | Extracted per docx — exact titles [VERIFY] |
-| The Flavour Thesaurus | LM #190 | Reference | T1 but [VERIFY owned] — resolve before scheduling |
-| On Food and Cooking (McGee) | LM #191 | Science | T1 but [VERIFY owned] |
+| Modernist Cuisine | LM #188 | Method / Science | OWNED — VERIFIED; PDF high-density, not yet processed |
+| Nose to Tail Eating | LM #189 | British (Method) | OWNED — VERIFIED |
+| Fuchsia Dunlop (5 titles) | LM #195 | Chinese | OWNED — VERIFIED; 5 titles extracted per docx — confirm exact titles at shelf pass |
+| The Flavour Thesaurus | LM #190 | Reference | OWNED — VERIFIED |
+| On Food and Cooking (McGee) | LM #191 | Science | OWNED — VERIFIED |
 
 ---
 
@@ -71,5 +72,5 @@ These are Tier 1 titles now in the manifest that are NOT part of the 10-canon ex
 - **LM** = Library_Manifest.md row number · **FCM** = French_Collection_Manifest.md row number
 - Manifest total after reconcile: **202 titles** (183 photographed + 8 digital + 11 unshelfed)
 - Canons with no catalogued titles (Filipino, Argentine, Brazilian): acquisition needed before extraction
-- [VERIFY owned] titles in Location D need founder confirmation before scheduling
+- Location D titles (LM #189–200) are all OWNED — VERIFIED per founder ruling 2026-06-12; confirm exact bibliographic details at Coquitlam shelf pass before scheduling extraction
 - French Collection parallel track has no fixed endpoint — deepens alongside whatever main-queue canon is running
