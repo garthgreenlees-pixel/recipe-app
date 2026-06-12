@@ -15,6 +15,8 @@ sys.stderr.reconfigure(line_buffering=True)
 import psycopg2, psycopg2.extras
 
 # ── Course vocabulary ────────────────────────────────────────────────────────
+# Dual-slot rule (founder-approved 2026-06-11): festive enriched breads
+# (colomba, panettone, stollen, etc.) dual-slot across pastry AND breads.
 COURSES = [
     "soups",
     "salads",
