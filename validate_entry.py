@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 validate_entry.py — Sashimi Standard validator for Provenance technique entries.
-Built for Māori/NZ extraction session, reusable across all canons.
+Multi-canon: NZ (Māori/NZ), PC (Pacific Corridor), AI (Australian Indigenous), PH (Filipino).
 Checks every entry against the seven-pillar doctrine before commit.
 """
 
@@ -35,6 +35,10 @@ BANNED_WORDS = [
     "a symphony of",        # food-blog
     "game-changer",         # marketing
     "take it to the next level",  # food-blog
+    "unique",               # vague (COMMON_RULES)
+    "various",              # vague (COMMON_RULES)
+    "typically",            # vague (COMMON_RULES)
+    "popular",              # vague (COMMON_RULES)
 ]
 
 # ── Minimum field lengths ─────────────────────────────────────────
@@ -53,6 +57,9 @@ PILLAR_PATTERNS = {
     "origin": [
         r"(?i)\b(origin|cuisine|cultural|geographic|thread)\b",
         r"(?i)\b(māori|maori|aotearoa|nz|new zealand|wellington|auckland|queenstown)\b",
+        r"(?i)\b(samoa|tonga|fiji|cook islands|tahiti|melanesia|vanuatu|solomon|polynesi|pacific)\b",
+        r"(?i)\b(australia|aboriginal|indigenous|yolŋu|noongar|anangu|wiradjuri|budj bim)\b",
+        r"(?i)\b(filipino|philippine|bicolano|ilocano|kapampangan|visayan|tagalog|manila|cebu)\b",
     ],
     "description": [
         r"(?i)\b(description|what it is|technique|method)\b",
@@ -150,6 +157,10 @@ def validate_entry(entry_id: str, text: str) -> ValidationResult:
     # ── 7. Source authority cited ──────────────────────────────────
     authority_indicators = [
         r"(?i)\b(fiso|hiakai|gordon|brown|emett|thornley|tsuji)\b",
+        r"(?i)\b(oliver|fotu|me'a kai)\b",  # Pacific Corridor
+        r"(?i)\b(pascoe|dark emu|csiro|aiatsis|mindy woods|mark olive)\b",  # Australian Indigenous
+        r"(?i)\b(fernandez|palayok|tikim|tayag|fores|besa|dorotan)\b",  # Filipino
+        r"(?i)\b(FAO|herbarium|herbaria)\b",  # Institutional
         r"(?i)\b(source|authority|according to|cited|reference)\b",
         r"(?i)\b(ISBN|published|author)\b",
         r"→",  # Door references indicate source anchoring
@@ -162,15 +173,46 @@ def validate_entry(entry_id: str, text: str) -> ValidationResult:
     if not re.search(r"(?i)(DB:|difficulty:|related:)", text):
         result.warn("No DB metadata line detected")
 
-    # ── 9. Regional / iwi specificity (NZ-specific) ──────────────
-    generic_maori = re.findall(r'(?<!")\bMāori\b(?!")', text)
-    specific_iwi = re.search(
-        r"(?i)\b(ngā rauru|ngāti ruanui|ngāti tama|ngai tahu|kāi tahu|"
-        r"ngāti porou|ngāpuhi|tūhoe|waikato|tainui|te whānau|te arawa|"
-        r"ngāti kahungunu|ngāti raukawa|ngāti maniapoto)\b", text
-    )
-    if len(generic_maori) > 5 and not specific_iwi:
-        result.warn("High 'Māori' count without iwi specificity — consider attributing to specific iwi where sources support it")
+    # ── 9. Regional specificity (canon-aware) ─────────────────────
+    # NZ: iwi specificity
+    if entry_id.startswith("NZ"):
+        generic_maori = re.findall(r'(?<!")\bMāori\b(?!")', text)
+        specific_iwi = re.search(
+            r"(?i)\b(ngā rauru|ngāti ruanui|ngāti tama|ngai tahu|kāi tahu|"
+            r"ngāti porou|ngāpuhi|tūhoe|waikato|tainui|te whānau|te arawa|"
+            r"ngāti kahungunu|ngāti raukawa|ngāti maniapoto)\b", text
+        )
+        if len(generic_maori) > 5 and not specific_iwi:
+            result.warn("High 'Māori' count without iwi specificity — consider attributing to specific iwi where sources support it")
+    # Pacific island codes: island specificity
+    elif entry_id.startswith(("PC", "WS", "FJ", "TO", "CK", "TP", "VU", "SI", "PNG")):
+        generic_pacific = re.findall(r"(?i)\bpacific\b", text)
+        specific_island = re.search(
+            r"(?i)\b(samoa|tonga|fiji|cook islands|tahiti|vanuatu|solomon|"
+            r"papua new guinea|melanesia|polynesia)\b", text
+        )
+        if len(generic_pacific) > 5 and not specific_island:
+            result.warn("High 'Pacific' count without island specificity — attribute to specific island group")
+    # AI: peoples and Country specificity
+    elif entry_id.startswith("AI"):
+        generic_aboriginal = re.findall(r"(?i)\b(aboriginal|indigenous)\b", text)
+        specific_peoples = re.search(
+            r"(?i)\b(yolŋu|noongar|anangu|wiradjuri|budj bim|arrernte|"
+            r"pitjantjatjara|gunditjmara|kaurna|ngarrindjeri|wurundjeri|"
+            r"yolngu|tiwi|jawoyn|larrakia|meriam)\b", text
+        )
+        if len(generic_aboriginal) > 5 and not specific_peoples:
+            result.warn("High generic 'Aboriginal/Indigenous' count — attribute to specific peoples and Country")
+    # PH: regional specificity
+    elif entry_id.startswith("PH"):
+        generic_filipino = re.findall(r"(?i)\bfilipino\b", text)
+        specific_region = re.search(
+            r"(?i)\b(ilocano|bicolano|visayan|kapampangan|tagalog|pangasinan|"
+            r"maranao|tausug|cebuano|waray|pampanga|bicol|ilocos|cebu|manila|"
+            r"mindanao|luzon|visayas)\b", text
+        )
+        if len(generic_filipino) > 5 and not specific_region:
+            result.warn("High generic 'Filipino' count — attribute to specific regional tradition")
 
     # ── 10. Minimum text length ───────────────────────────────────
     if len(text.strip()) < 200:
@@ -198,25 +240,29 @@ def parse_batch_file(filepath: str) -> list:
     """
     Parse a markdown batch file into individual entries.
     Returns list of (entry_id, entry_text) tuples.
+    Supports entry prefixes: NZ-, PC-, AI-, PH-
     """
     content = Path(filepath).read_text(encoding="utf-8")
     entries = []
+    # NZ=Māori/NZ, PC=Pacific(generic), WS=Samoa, FJ=Fiji, TO=Tonga,
+    # CK=Cook Islands, TP=Tahiti, VU=Vanuatu, SI=Solomon Islands,
+    # PNG=Papua New Guinea, AI=Australian Indigenous, PH=Filipino
+    PREFIX = r"(?:NZ|PC|WS|FJ|TO|CK|TP|VU|SI|PNG|AI|PH)"
 
-    # Split on entry headers: ## NZ-01, ### NZ-01, ## ENTRY NZ-01, etc.
-    pattern = r"(?:^|\n)(?:##\s*(?:ENTRY\s+)?)(NZ-\d+[a-z]?\b.*?)(?=\n##\s*(?:ENTRY\s+)?NZ-\d|$)"
+    # Split on entry headers: ## PC-01, ### AI-01, ## ENTRY PH-01, etc.
+    pattern = rf"(?:^|\n)(?:##\s*(?:ENTRY\s+)?)({PREFIX}-\d+[a-z]?\b.*?)(?=\n##\s*(?:ENTRY\s+)?{PREFIX}-\d|$)"
     matches = re.finditer(pattern, content, re.DOTALL)
 
     for m in matches:
         header_and_body = m.group(1)
-        # Extract entry ID from the header
-        id_match = re.match(r"(NZ-\d+[a-z]?)", header_and_body)
+        id_match = re.match(rf"({PREFIX}-\d+[a-z]?)", header_and_body)
         if id_match:
             entry_id = id_match.group(1)
             entries.append((entry_id, header_and_body))
 
-    # Fallback: try bold-header format (**NZ-01 ---**)
+    # Fallback: try bold-header format (**PC-01 ---**)
     if not entries:
-        pattern2 = r"\*\*(NZ-\d+[a-z]?)\s*(?:---|-—)\s*(.*?)\*\*(.*?)(?=\*\*NZ-\d|$)"
+        pattern2 = rf"\*\*({PREFIX}-\d+[a-z]?)\s*(?:---|-—)\s*(.*?)\*\*(.*?)(?=\*\*{PREFIX}-\d|$)"
         matches2 = re.finditer(pattern2, content, re.DOTALL)
         for m in matches2:
             entry_id = m.group(1)
