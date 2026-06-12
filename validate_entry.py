@@ -109,7 +109,9 @@ def validate_entry(entry_id: str, text: str) -> ValidationResult:
     # ── 1. Banned words ───────────────────────────────────────────
     text_lower = text.lower()
     for word in BANNED_WORDS:
-        if word.lower() in text_lower:
+        # Use word-boundary matching to avoid false positives on species names
+        # (e.g., "Coprosma robusta" should not trigger "robust")
+        if re.search(rf"(?i)\b{re.escape(word)}\b", text):
             result.error(f"Banned word/phrase: '{word}'")
 
     # ── 2. Seven pillars present ──────────────────────────────────
