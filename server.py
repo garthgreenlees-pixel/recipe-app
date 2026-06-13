@@ -577,14 +577,14 @@ def p1000_recipes():
     if q:
         cur.execute(
             f"SELECT {cols} FROM technique_references"
-            " WHERE category LIKE %s AND (name ILIKE %s OR category ILIKE %s OR origin ILIKE %s)"
+            " WHERE category LIKE %s AND published IS NOT FALSE AND (name ILIKE %s OR category ILIKE %s OR origin ILIKE %s)"
             " ORDER BY name LIMIT %s OFFSET %s",
             ("Provenance 1000%", f"%{q}%", f"%{q}%", f"%{q}%", per_page + 1, offset),
         )
     else:
         cur.execute(
             f"SELECT {cols} FROM technique_references"
-            " WHERE category LIKE %s ORDER BY name LIMIT %s OFFSET %s",
+            " WHERE category LIKE %s AND published IS NOT FALSE ORDER BY name LIMIT %s OFFSET %s",
             ("Provenance 1000%", per_page + 1, offset),
         )
     rows = cur.fetchall()
@@ -1855,7 +1855,7 @@ def _resolve_recipe_ref(ref, user_id, cur):
     if prefix == 'canon':
         cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (key,))
     elif prefix == 'technique':
-        cur.execute("SELECT * FROM technique_references WHERE slug = %s LIMIT 1", (key,))
+        cur.execute("SELECT * FROM technique_references WHERE slug = %s AND published IS NOT FALSE LIMIT 1", (key,))
     elif prefix == 'kitchen':
         if not user_id:
             return None
@@ -5857,11 +5857,11 @@ def list_techniques():
         per_page = request.args.get("per_page", type=int)
         if page and per_page:
             cur.execute(
-                "SELECT * FROM technique_references ORDER BY id LIMIT %s OFFSET %s",
+                "SELECT * FROM technique_references WHERE published IS NOT FALSE ORDER BY id LIMIT %s OFFSET %s",
                 (per_page, (page - 1) * per_page),
             )
         else:
-            cur.execute("SELECT * FROM technique_references ORDER BY id")
+            cur.execute("SELECT * FROM technique_references WHERE published IS NOT FALSE ORDER BY id")
         rows = cur.fetchall()
         cur.close()
         conn.close()
@@ -5877,7 +5877,7 @@ def list_techniques():
     offset = (page - 1) * per_page
     # Fetch one extra to determine has_more without revealing the total
     cur.execute(
-        "SELECT * FROM technique_references ORDER BY id LIMIT %s OFFSET %s",
+        "SELECT * FROM technique_references WHERE published IS NOT FALSE ORDER BY id LIMIT %s OFFSET %s",
         (per_page + 1, offset),
     )
     rows = cur.fetchall()
@@ -5902,7 +5902,7 @@ def _match_techniques_for_step(step_text):
     step_lower = step_text.lower()
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SELECT * FROM technique_references ORDER BY id")
+    cur.execute("SELECT * FROM technique_references WHERE published IS NOT FALSE ORDER BY id")
     rows = cur.fetchall()
     cur.close()
     conn.close()
@@ -6115,7 +6115,7 @@ def bulk_create_techniques():
 def get_technique(technique_id):
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SELECT * FROM technique_references WHERE id = %s", (technique_id,))
+    cur.execute("SELECT * FROM technique_references WHERE id = %s AND published IS NOT FALSE", (technique_id,))
     row = cur.fetchone()
     cur.close()
     conn.close()
@@ -11377,7 +11377,7 @@ def technique_page(slug):
         return "Database not configured", 503
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SELECT * FROM technique_references WHERE slug = %s", (slug,))
+    cur.execute("SELECT * FROM technique_references WHERE slug = %s AND published IS NOT FALSE", (slug,))
     technique = cur.fetchone()
     if not technique:
         cur.close()
@@ -11654,14 +11654,14 @@ def platform_stats():
         return jsonify(total_techniques=0, total_drinks=0, featured_cuisines=[])
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SELECT COUNT(*) AS count FROM technique_references")
+    cur.execute("SELECT COUNT(*) AS count FROM technique_references WHERE published IS NOT FALSE")
     total_techniques = cur.fetchone()["count"]
     cur.execute("SELECT COUNT(*) AS count FROM beverage_products")
     total_drinks = cur.fetchone()["count"]
     cur.execute("""
         SELECT origin AS cuisine, COUNT(*) AS count
         FROM technique_references
-        WHERE origin IS NOT NULL AND origin != ''
+        WHERE origin IS NOT NULL AND origin != '' AND published IS NOT FALSE
         GROUP BY origin
         ORDER BY count DESC
         LIMIT 8
@@ -11686,14 +11686,14 @@ def cuisines_page():
     cur.execute("""
         SELECT origin AS cuisine, COUNT(*) AS count
         FROM technique_references
-        WHERE origin IS NOT NULL AND origin != ''
+        WHERE origin IS NOT NULL AND origin != '' AND published IS NOT FALSE
         GROUP BY origin
         HAVING COUNT(*) >= 2
         ORDER BY count DESC
         LIMIT 300
     """)
     cuisines = [dict(r) for r in cur.fetchall()]
-    cur.execute("SELECT COUNT(*) AS count FROM technique_references")
+    cur.execute("SELECT COUNT(*) AS count FROM technique_references WHERE published IS NOT FALSE")
     total_techniques = cur.fetchone()["count"]
     cur.close()
     conn.close()
@@ -11757,7 +11757,8 @@ def techniques_browse():
             conditions.append("(name ILIKE %s OR description ILIKE %s)")
             params.extend([f"%{_tok}%", f"%{_tok}%"])
 
-    where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+    conditions.insert(0, "published IS NOT FALSE")
+    where = "WHERE " + " AND ".join(conditions)
 
     # Deduplicated count (collapse duplicate names)
     cur.execute(
@@ -11827,7 +11828,7 @@ def api_filter_cuisines():
         cur.execute("""
             SELECT DISTINCT origin AS cuisine_name
             FROM technique_references
-            WHERE origin IS NOT NULL AND origin != ''
+            WHERE origin IS NOT NULL AND origin != '' AND published IS NOT FALSE
             ORDER BY origin
         """)
         items = [r["cuisine_name"] for r in cur.fetchall() if r["cuisine_name"]]
@@ -11850,7 +11851,7 @@ def api_filter_categories():
                 CASE WHEN category LIKE '%% — %%' THEN TRIM(SPLIT_PART(category, ' — ', 1)) ELSE category END
                 AS cat_group
             FROM technique_references
-            WHERE category IS NOT NULL AND category != ''
+            WHERE category IS NOT NULL AND category != '' AND published IS NOT FALSE
             ORDER BY cat_group
         """)
         items = [r["cat_group"] for r in cur.fetchall() if r["cat_group"]]
@@ -11936,7 +11937,7 @@ def why_it_works(slug):
         return "Database not configured", 503
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SELECT * FROM technique_references WHERE slug = %s", (slug,))
+    cur.execute("SELECT * FROM technique_references WHERE slug = %s AND published IS NOT FALSE", (slug,))
     technique = cur.fetchone()
     if not technique:
         cur.close(); conn.close()
@@ -12016,7 +12017,7 @@ def beyond_recipe(slug):
         return "Database not configured", 503
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SELECT * FROM technique_references WHERE slug = %s", (slug,))
+    cur.execute("SELECT * FROM technique_references WHERE slug = %s AND published IS NOT FALSE", (slug,))
     technique = cur.fetchone()
     if not technique:
         cur.close(); conn.close()
@@ -12035,7 +12036,7 @@ def beyond_recipe(slug):
         cur.execute("""
             SELECT id, name, slug, category, description, origin
             FROM technique_references
-            WHERE origin = %s AND id != %s
+            WHERE origin = %s AND id != %s AND published IS NOT FALSE
             ORDER BY authority_tier ASC, name
             LIMIT 4
         """, (technique['origin'], technique['id']))
@@ -13324,7 +13325,7 @@ def sitemap():
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-    cur.execute("SELECT slug, updated_at FROM technique_references WHERE slug IS NOT NULL AND slug != '' ORDER BY id")
+    cur.execute("SELECT slug, updated_at FROM technique_references WHERE slug IS NOT NULL AND slug != '' AND published IS NOT FALSE ORDER BY id")
     techniques = cur.fetchall()
 
     cur.execute("SELECT slug, created_at AS updated_at FROM recipes WHERE slug IS NOT NULL AND slug != '' ORDER BY id")
