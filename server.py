@@ -8730,8 +8730,6 @@ def ingredients_showcase():
     """Ingredient Intelligence dashboard with live DB data."""
     if not DATABASE_URL:
         return "Database not configured", 503
-    user = get_current_user()
-    user_region = user.get("region", "") if user else ""
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -8900,7 +8898,6 @@ def ingredients_showcase():
         chain_rows=chain_rows,
         recent_products=recent_products,
         shelves=shelves,
-        user_region=user_region,
     )
 
 
