@@ -210,7 +210,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
         {% for p in shelf.products %}
         <div class="shelf-card">
           <div class="shelf-card-name">{{ p.name }}</div>
-          {% if p.has_provider %}<a href="/suppliers?ingredient={{ p.name | urlencode }}&region={{ user_region | urlencode }}" class="shelf-card-brand shelf-card-brand--link">{{ p.origin_brand }}</a>{% else %}<div class="shelf-card-brand">{{ p.origin_brand }}</div>{% endif %}
+          {% if p.has_provider %}<a href="/suppliers?product_id={{ p.id }}" class="shelf-card-brand shelf-card-brand--link">{{ p.origin_brand }}</a>{% else %}<div class="shelf-card-brand">{{ p.origin_brand }}</div>{% endif %}
           {% if p.origin_country %}<div class="shelf-card-country">{{ p.origin_country }}</div>{% endif %}
           <div class="shelf-card-why">{{ p.description }}</div>
         </div>

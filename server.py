@@ -2779,15 +2779,28 @@ def suppliers_page():
         return render_template("suppliers.html", suppliers=[])
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("""
-        SELECT s.id, s.name, s.notes, s.website, s.service_region,
-               s.is_featured, s.country,
-               COUNT(ps.id) as product_count
-        FROM suppliers s
-        LEFT JOIN product_suppliers ps ON s.id = ps.supplier_id
-        GROUP BY s.id
-        ORDER BY s.is_featured DESC NULLS LAST, product_count DESC
-    """)
+    product_id = request.args.get('product_id', type=int)
+    if product_id:
+        cur.execute("""
+            SELECT s.id, s.name, s.notes, s.website, s.service_region,
+                   s.is_featured, s.country,
+                   COUNT(ps.id) as product_count
+            FROM suppliers s
+            JOIN product_suppliers ps ON s.id = ps.supplier_id
+            WHERE ps.product_id = %s AND UPPER(ps.role) = 'PROVIDER'
+            GROUP BY s.id
+            ORDER BY s.is_featured DESC NULLS LAST, product_count DESC
+        """, (product_id,))
+    else:
+        cur.execute("""
+            SELECT s.id, s.name, s.notes, s.website, s.service_region,
+                   s.is_featured, s.country,
+                   COUNT(ps.id) as product_count
+            FROM suppliers s
+            LEFT JOIN product_suppliers ps ON s.id = ps.supplier_id
+            GROUP BY s.id
+            ORDER BY s.is_featured DESC NULLS LAST, product_count DESC
+        """)
     rows = cur.fetchall()
     cur.close()
     conn.close()
@@ -8868,6 +8881,7 @@ def ingredients_showcase():
                 'products': [],
             })
         shelves[_shelf_index[cat]]['products'].append({
+            'id': row['id'],
             'name': row['name'],
             'origin_brand': row['origin_brand'],
             'origin_country': row['origin_country'],
