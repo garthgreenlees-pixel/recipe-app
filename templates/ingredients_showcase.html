@@ -169,6 +169,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
 .shelf-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column}
 .shelf-card-name{font-family:var(--serif);font-size:17px;font-weight:700;line-height:1.25;color:var(--text);margin-bottom:6px}
 .shelf-card-brand{font-size:12px;font-weight:600;color:var(--gold);line-height:1.4}
+.shelf-card-brand--link{border-bottom:1px solid var(--gold);cursor:pointer;text-decoration:none}
 .shelf-card-country{font-size:11px;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
 .shelf-card-why{font-size:13px;color:var(--text-secondary);line-height:1.55;margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
 
@@ -209,7 +210,7 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);line-heig
         {% for p in shelf.products %}
         <div class="shelf-card">
           <div class="shelf-card-name">{{ p.name }}</div>
-          <div class="shelf-card-brand">{{ p.origin_brand }}</div>
+          {% if p.has_provider %}<a href="/suppliers?ingredient={{ p.name | urlencode }}&region={{ user_region | urlencode }}" class="shelf-card-brand shelf-card-brand--link">{{ p.origin_brand }}</a>{% else %}<div class="shelf-card-brand">{{ p.origin_brand }}</div>{% endif %}
           {% if p.origin_country %}<div class="shelf-card-country">{{ p.origin_country }}</div>{% endif %}
           <div class="shelf-card-why">{{ p.description }}</div>
         </div>

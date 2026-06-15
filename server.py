@@ -8717,6 +8717,8 @@ def ingredients_showcase():
     """Ingredient Intelligence dashboard with live DB data."""
     if not DATABASE_URL:
         return "Database not configured", 503
+    user = get_current_user()
+    user_region = user.get("region", "") if user else ""
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -8793,7 +8795,7 @@ def ingredients_showcase():
     # Shelves — benchmark producers with editorial depth, grouped by category
     cur.execute("""
         WITH qualifying AS (
-            SELECT name, origin_brand, origin_country, description, category,
+            SELECT id, name, origin_brand, origin_country, description, category,
                    COUNT(*) OVER (PARTITION BY category) AS cat_count,
                    ROW_NUMBER() OVER (
                        PARTITION BY category ORDER BY LENGTH(description) DESC
@@ -8824,7 +8826,11 @@ def ingredients_showcase():
             )
         )
         SELECT q.name, q.origin_brand, q.origin_country, q.description,
-               q.category, q.cat_count
+               q.category, q.cat_count,
+               EXISTS (
+                   SELECT 1 FROM product_suppliers ps
+                   WHERE ps.product_id = q.id AND UPPER(ps.role) = 'PROVIDER'
+               ) AS has_provider
         FROM qualifying q
         JOIN top_cats tc ON q.category = tc.category
         WHERE q.rn <= 6
@@ -8866,6 +8872,7 @@ def ingredients_showcase():
             'origin_brand': row['origin_brand'],
             'origin_country': row['origin_country'],
             'description': _truncate(row['description']),
+            'has_provider': row['has_provider'],
         })
 
     cur.close()
@@ -8879,6 +8886,7 @@ def ingredients_showcase():
         chain_rows=chain_rows,
         recent_products=recent_products,
         shelves=shelves,
+        user_region=user_region,
     )
 
 
