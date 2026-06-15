@@ -8836,7 +8836,7 @@ def ingredients_showcase():
                 'seafood_general','wagyu_premium_protein','dairy_fermented','produce_specialty'
             )
         )
-        SELECT q.name, q.origin_brand, q.origin_country, q.description,
+        SELECT q.id, q.name, q.origin_brand, q.origin_country, q.description,
                q.category, q.cat_count,
                EXISTS (
                    SELECT 1 FROM product_suppliers ps
