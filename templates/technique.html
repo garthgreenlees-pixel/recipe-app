@@ -1394,6 +1394,7 @@ function renderHACCPActions(b) {
     ? `<span class="haccp-status-saved">Saved · ${ver} · ${escapeHtml(savedAt)}</span>`
     : `<span class="haccp-status-draft">Draft · not saved</span>`;
   const region = (b.allergens?.region || 'EU').toUpperCase();
+  const pdfSlug = b.recipe_slug || '';
   return `
     <div class="haccp-status-row">
       ${status}
@@ -1407,6 +1408,7 @@ function renderHACCPActions(b) {
     <div class="haccp-toolbar">
       ${isSigned?'':`<button class="haccp-action haccp-action-primary" onclick="saveHACCPBrief()">Save</button>`}
       <button class="haccp-action" onclick="printHACCPBrief()">Print</button>
+      ${pdfSlug?`<button class="haccp-action" onclick="window.open('/api/haccp/${pdfSlug}/pdf','_blank')">Download PDF</button>`:''}
       <button class="haccp-action" onclick="regenerateHACCPBrief()">Regenerate</button>
     </div>`;
 }

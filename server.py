@@ -8308,37 +8308,406 @@ Rules:
 def haccp_pdf(slug):
     from weasyprint import HTML as WeasyHTML
     from datetime import datetime
-    if not DATABASE_URL:
-        return "Database not configured", 503
+
+    user = get_current_user()
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SELECT name, description FROM recipes WHERE slug = %s", (slug,))
-    recipe = cur.fetchone()
-    cur.close()
-    conn.close()
-    if not recipe:
-        abort(404)
-    name = html_mod.escape(recipe['name'])
-    desc = html_mod.escape((recipe.get('description') or '')[:300])
-    date_str = datetime.now().strftime('%Y-%m-%d')
-    haccp_html = f"""<!DOCTYPE html><html><head><meta charset="utf-8"><style>
-body{{font-family:Arial,sans-serif;font-size:11px;color:#333;margin:2cm}}
-h1{{font-size:16px;border-bottom:2px solid #C9A84C;padding-bottom:8px}}
-h2{{font-size:13px;margin-top:16px}}
-.critical{{color:#cc0000;font-weight:bold}}
-.footer{{font-size:9px;color:#999;border-top:1px solid #eee;padding-top:8px;margin-top:20px}}
-</style></head><body>
-<h1>HACCP Brief — {name}</h1>
-<p>Generated: {date_str}</p>
-{f'<p>{desc}</p>' if desc else ''}
-<p class="footer">Provenance · Enhanced steps are AI-assisted suggestions. Always verify food safety temperatures with applicable local regulations.</p>
-</body></html>"""
     try:
-        pdf_bytes = WeasyHTML(string=haccp_html).write_pdf()
-        return send_file(io.BytesIO(pdf_bytes), mimetype='application/pdf',
-                         as_attachment=True, download_name=f'haccp-{slug}.pdf')
+        cur.execute("""
+            SELECT id, version, schema_version, brief_json, edits_json,
+                   pic_name, pic_signed_at, generated_at, created_at
+            FROM haccp_briefs
+            WHERE user_id = %s AND recipe_slug = %s
+            ORDER BY version DESC LIMIT 1
+        """, (user["id"], slug))
+        row = cur.fetchone()
+    finally:
+        cur.close()
+        conn.close()
+
+    if not row:
+        return jsonify({"error": "No saved HACCP brief for this recipe"}), 404
+
+    brief = row["brief_json"]
+    if isinstance(brief, str):
+        brief = json.loads(brief)
+    edits = row["edits_json"] or {}
+    if isinstance(edits, str):
+        edits = json.loads(edits)
+    brief = _apply_haccp_edits(brief, edits)
+
+    def _esc(v):
+        return html_mod.escape(str(v)) if v is not None else ''
+
+    now = datetime.now()
+    date_human = now.strftime('%-d %B %Y')
+    gen_stamp = now.strftime('%-d %B %Y · %H:%M')
+    date_str = now.strftime('%Y-%m-%d')
+
+    recipe_name = brief.get("recipe_name") or slug
+    schema_ver = row.get("schema_version") or brief.get("schema_version") or "1.0"
+    version_num = row["version"]
+    pic_name = row.get("pic_name") or ""
+    pic_signed_at = row.get("pic_signed_at")
+    is_signed = bool(pic_signed_at)
+
+    if is_signed:
+        signed_date_str = pic_signed_at.strftime('%-d %b %Y') if pic_signed_at else ""
+        version_label = f'v{version_num} — SIGNED · {html_mod.escape(pic_name)} · {signed_date_str}'
+        badge_cls = 'version-badge signed'
+    else:
+        version_label = f'v{version_num} — DRAFT — UNSIGNED'
+        badge_cls = 'version-badge'
+
+    # Allergens
+    allergens = brief.get("allergens") or {}
+    region_code = (allergens.get("region") or "EU").upper()
+    region_info = HACCP_ALLERGEN_REGIONS.get(region_code, HACCP_ALLERGEN_REGIONS.get("EU", {}))
+    region_label_text = allergens.get("region_label") or region_info.get("label", region_code)
+    all_allergens_list = region_info.get("allergens") or allergens.get("detected") or []
+    detected_set = set(a.lower() for a in (allergens.get("detected") or []))
+    allergen_pills_html = "".join(
+        '<span class="allergen-pill allergen-pill-detected">' + _esc(a.replace("_", " ")) + '</span>'
+        if a.lower() in detected_set else
+        '<span class="allergen-pill allergen-pill-clear">' + _esc(a.replace("_", " ")) + '</span>'
+        for a in all_allergens_list
+    )
+    allergen_rationale_text = _esc(allergens.get("rationale") or "")
+    allergen_rationale_html = (
+        '<p class="allergen-rationale">' + allergen_rationale_text + '</p>'
+        if allergen_rationale_text else ''
+    )
+
+    # Process flow
+    process_flow = brief.get("process_flow") or []
+    flow_items = "".join(
+        '<li class="flow-step"><span class="flow-num">' + str(i + 1) + '</span>'
+        '<span class="flow-label">' + _esc(s.get("label", "")) + '</span></li>'
+        for i, s in enumerate(process_flow)
+    )
+
+    # Receiving criteria (hazard analysis for incoming materials)
+    receiving = brief.get("receiving_criteria") or []
+    if receiving:
+        rc_rows = []
+        for it in receiving:
+            temp = ('≤' + str(it['delivery_temp_max_c']) + '°C') if it.get('delivery_temp_max_c') is not None else '—'
+            rc_rows.append(
+                '<tr>'
+                '<td><strong>' + _esc(it.get('ingredient', '')) + '</strong></td>'
+                '<td class="mono">' + _esc(temp) + '</td>'
+                '<td class="accept">' + _esc(it.get('accept_criteria', '')) + '</td>'
+                '<td class="reject">' + _esc(it.get('reject_criteria', '')) + '</td>'
+                '</tr>'
+            )
+        receiving_section_html = (
+            '<section class="doc-section">'
+            '<h2 class="section-head">Receiving Criteria</h2>'
+            '<table class="data-table">'
+            '<thead><tr><th>Ingredient</th><th>Temp. max</th><th>Accept</th><th>Reject</th></tr></thead>'
+            '<tbody>' + ''.join(rc_rows) + '</tbody>'
+            '</table></section>'
+        )
+    else:
+        receiving_section_html = ''
+
+    # "Where the dish lives or dies" — most critical CCP, shown above the table
+    ccps = brief.get("ccp_table") or []
+    lives_ccp = next((c for c in ccps if (c.get("hazard_category") or "").lower() == "biological"), None)
+    if not lives_ccp and ccps:
+        lives_ccp = ccps[0]
+    if lives_ccp:
+        lives_html = (
+            '<div class="lives-callout">'
+            '<div class="lives-eyebrow">Where the dish lives or dies</div>'
+            '<div class="lives-step">' + _esc(lives_ccp.get("step", "")) + '</div>'
+            '<div class="lives-detail">' + _esc(lives_ccp.get("critical_limit", "")) +
+            ' — ' + _esc(lives_ccp.get("hazard", "")) + '</div>'
+            '</div>'
+        )
+    else:
+        lives_html = ''
+
+    # CCP table rows with inline Codex Decision Tree notes
+    ccp_rows_parts = []
+    for ccp in ccps:
+        cat = (ccp.get("hazard_category") or "").lower()
+        sub_html = (
+            '<div class="ccp-sub">' + _esc(ccp.get("ingredient_or_process", "")) + '</div>'
+            if ccp.get("ingredient_or_process") else ''
+        )
+        ccp_rows_parts.append(
+            '<tr class="ccp-row">'
+            '<td><strong>' + _esc(ccp.get("step", "")) + '</strong>' + sub_html + '</td>'
+            '<td><span class="hazard-cat hazard-' + _esc(cat) + '">' + _esc(ccp.get("hazard_category", "")) + '</span>'
+            '<div class="ccp-sub">' + _esc(ccp.get("hazard", "")) + '</div></td>'
+            '<td class="mono">' + _esc(ccp.get("critical_limit", "")) + '</td>'
+            '<td>' + _esc(ccp.get("monitoring", "")) + '</td>'
+            '<td>' + _esc(ccp.get("corrective_action", "")) + '</td>'
+            '<td>' + _esc(ccp.get("records", "")) + '</td>'
+            '</tr>'
+        )
+        dt = ccp.get("decision_tree") or {}
+        dt_parts = []
+        for qn, key in [
+            ("Q1", "q1_control_measures_exist"),
+            ("Q2", "q2_step_designed_to_eliminate"),
+            ("Q3", "q3_contamination_could_exceed"),
+            ("Q4", "q4_subsequent_step_eliminates"),
+        ]:
+            qobj = dt.get(key)
+            if qobj:
+                ans = qobj.get("answer", "")
+                rat = qobj.get("rationale", "")
+                dt_parts.append(qn + ': ' + _esc(ans) + (' — ' + _esc(rat) if rat else ''))
+        if dt.get("conclusion"):
+            dt_parts.append('Conclusion: ' + _esc(dt["conclusion"]))
+        if dt_parts:
+            ccp_rows_parts.append(
+                '<tr class="dt-row"><td colspan="6" class="dt-cell">'
+                'Codex Decision Tree — ' + ' · '.join(dt_parts) +
+                '</td></tr>'
+            )
+    ccp_rows_html = ''.join(ccp_rows_parts)
+
+    # Non-CCP steps
+    non_ccp = brief.get("non_ccp_steps") or []
+    if non_ccp:
+        nc_items = ''.join(
+            '<li><strong>' + _esc(s.get("step", "")) + '</strong> — ' + _esc(s.get("rationale", "")) + '</li>'
+            for s in non_ccp
+        )
+        non_ccp_section_html = (
+            '<section class="doc-section">'
+            '<h2 class="section-head">Non-CCP Steps</h2>'
+            '<ul class="simple-list">' + nc_items + '</ul>'
+            '</section>'
+        )
+    else:
+        non_ccp_section_html = ''
+
+    # Sign-off block — filled if signed, ruled lines if draft
+    if is_signed:
+        signed_display = pic_signed_at.strftime('%-d %B %Y') if pic_signed_at else '—'
+        signoff_html = (
+            '<div class="signoff-grid">'
+            '<div class="signoff-field"><div class="signoff-label">Full name</div>'
+            '<div class="signoff-value">' + _esc(pic_name) + '</div></div>'
+            '<div class="signoff-field"><div class="signoff-label">Signature (digital)</div>'
+            '<div class="signoff-value signoff-sig">' + _esc(pic_name) + '</div></div>'
+            '<div class="signoff-field"><div class="signoff-label">Date signed</div>'
+            '<div class="signoff-value">' + _esc(signed_display) + '</div></div>'
+            '</div>'
+        )
+    else:
+        signoff_html = (
+            '<div class="signoff-grid">'
+            '<div class="signoff-field"><div class="signoff-label">Full name</div>'
+            '<div class="signoff-line"></div></div>'
+            '<div class="signoff-field"><div class="signoff-label">Signature</div>'
+            '<div class="signoff-line"></div></div>'
+            '<div class="signoff-field"><div class="signoff-label">Date</div>'
+            '<div class="signoff-line"></div></div>'
+            '</div>'
+        )
+
+    footer_note = _esc(
+        brief.get("footer_note") or
+        "Brief structure follows Codex Alimentarius CXC 1-1969 (General Principles of Food Hygiene). "
+        "Implementation is the responsibility of the operator."
+    )
+    allergen_comm = (
+        "Allergen status is communicated to all kitchen staff at briefing prior to service. "
+        "Front-of-house staff are briefed on allergen presence in this dish. "
+        "Customers with allergies are notified verbally of cross-contamination risk and offered alternatives."
+    )
+
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HACCP Brief — {_esc(recipe_name)}</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=DM+Sans:wght@300;500&family=DM+Mono:wght@400;500&display=swap');
+
+@page {{
+  size: A4;
+  margin: 2cm 2cm 3cm 2cm;
+  @bottom-left {{
+    content: "PROVENANCE \00b7 provenance.kitchen";
+    font-family: 'DM Mono', monospace; font-size: 8pt; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #807462;
+  }}
+  @bottom-center {{
+    content: "/recipe/{_esc(slug)}  \00b7  Page " counter(page) " of " counter(pages);
+    font-family: 'DM Mono', monospace; font-size: 8pt; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #807462;
+  }}
+  @bottom-right {{
+    content: "Generated {gen_stamp}";
+    font-family: 'DM Mono', monospace; font-size: 8pt; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #807462;
+  }}
+}}
+body {{ font-family: 'DM Sans', sans-serif; font-weight: 300; color: #1f1b16; margin: 0; padding: 0; }}
+.header {{ display: flex; justify-content: space-between; align-items: baseline; font-family: 'DM Mono', monospace; font-size: 10pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }}
+.header__wordmark {{ color: #C9A84C; }}
+.header__doctype {{ color: #1f1b16; }}
+.title {{ font-family: 'Playfair Display', Georgia, serif; font-size: 22pt; font-weight: 400; letter-spacing: -0.005em; line-height: 1.15; margin: 5mm 0 0 0; color: #1f1b16; }}
+.gold-rule {{ width: 1.5cm; height: 1px; background: #C9A84C; margin: 6mm 0; border: none; }}
+.meta-strip {{ font-family: 'DM Mono', monospace; font-size: 9pt; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #807462; margin-bottom: 8mm; }}
+.meta-sep {{ color: #c4b89e; margin: 0 2mm; }}
+.version-badge {{ display: inline-block; font-family: 'DM Mono', monospace; font-size: 8pt; letter-spacing: 0.1em; text-transform: uppercase; padding: 1mm 3mm; margin-bottom: 5mm; border: 1px solid #c4b89e; color: #807462; }}
+.version-badge.signed {{ border-color: #a85a3f; color: #a85a3f; }}
+.doc-ctrl-grid {{ display: flex; gap: 8mm; margin-bottom: 6mm; }}
+.doc-ctrl-field {{ flex: 1; }}
+.doc-ctrl-label {{ font-family: 'DM Mono', monospace; font-size: 8pt; letter-spacing: 0.1em; text-transform: uppercase; color: #807462; margin-bottom: 2mm; }}
+.doc-ctrl-line {{ border-bottom: 1px solid #807462; height: 5mm; }}
+.doc-section {{ margin-bottom: 8mm; page-break-inside: avoid; }}
+.section-head {{ font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 13pt; font-weight: 400; color: #1f1b16; margin: 0 0 3mm; border: none; }}
+.allergen-box {{ background: #f5f1e9; border-left: 3px solid #a85a3f; padding: 3mm 4mm; margin-bottom: 6mm; page-break-inside: avoid; }}
+.allergen-region {{ font-family: 'DM Mono', monospace; font-size: 8pt; letter-spacing: 0.1em; text-transform: uppercase; color: #807462; margin-bottom: 2mm; }}
+.allergen-pills {{ display: flex; flex-wrap: wrap; gap: 2mm; margin-bottom: 2mm; }}
+.allergen-pill {{ font-family: 'DM Mono', monospace; font-size: 8pt; padding: 0.5mm 2.5mm; border-radius: 2px; }}
+.allergen-pill-detected {{ background: rgba(168,90,63,0.15); color: #a85a3f; border: 1px solid rgba(168,90,63,0.4); }}
+.allergen-pill-clear {{ background: rgba(0,0,0,0.04); color: #b4b2a9; border: 1px solid rgba(0,0,0,0.08); text-decoration: line-through; }}
+.allergen-rationale {{ font-size: 9pt; color: #4a3f33; line-height: 1.45; margin: 0; }}
+.flow-list {{ list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 2mm; }}
+.flow-step {{ display: flex; align-items: center; gap: 1.5mm; background: #f5f1e9; border: 1px solid #d9d0b6; padding: 1.5mm 3mm; font-size: 9pt; }}
+.flow-num {{ display: inline-flex; align-items: center; justify-content: center; min-width: 5mm; height: 5mm; border-radius: 50%; background: rgba(201,168,76,0.2); color: #C9A84C; font-family: 'DM Mono', monospace; font-size: 8pt; font-weight: 500; }}
+.lives-callout {{ background: #f5f1e9; border-left: 3px solid #a85a3f; padding: 3mm 4mm; margin-bottom: 5mm; page-break-inside: avoid; }}
+.lives-eyebrow {{ font-family: 'DM Mono', monospace; font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase; color: #a85a3f; margin-bottom: 1mm; }}
+.lives-step {{ font-family: 'Playfair Display', Georgia, serif; font-size: 12pt; color: #1f1b16; margin-bottom: 1mm; }}
+.lives-detail {{ font-size: 9pt; color: #4a3f33; }}
+.data-table {{ width: 100%; border-collapse: collapse; background: #f5f1e9; border: 1px solid #d9d0b6; font-size: 9pt; }}
+.data-table thead {{ background: #ece6d7; }}
+.data-table thead th {{ font-family: 'DM Mono', monospace; font-size: 8pt; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #807462; text-align: left; padding: 2mm 3mm; border-bottom: 1px solid #d9d0b6; }}
+.data-table tbody td {{ padding: 2.5mm 3mm; border-bottom: 1px dotted #d9d0b6; vertical-align: top; line-height: 1.4; }}
+.data-table tbody tr:last-child td {{ border-bottom: none; }}
+.mono {{ font-family: 'DM Mono', monospace; font-size: 8.5pt; }}
+.accept {{ color: #2d5a3d; }}
+.reject {{ color: #a85a3f; }}
+.ccp-sub {{ font-size: 8pt; color: #807462; margin-top: 1mm; font-style: italic; }}
+.hazard-cat {{ display: inline-block; font-family: 'DM Mono', monospace; font-size: 7.5pt; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5mm 2mm; margin-bottom: 1mm; }}
+.hazard-biological {{ background: rgba(168,90,63,0.12); color: #a85a3f; }}
+.hazard-chemical {{ background: rgba(180,140,60,0.12); color: #7a5f10; }}
+.hazard-physical {{ background: rgba(60,100,160,0.12); color: #3c64a0; }}
+.dt-row td {{ background: #f0ece4; }}
+.dt-cell {{ font-size: 8pt; color: #4a3f33; padding: 2mm 3mm; font-style: italic; border-bottom: 1px solid #d9d0b6; }}
+.simple-list {{ list-style: none; padding: 0; margin: 0; }}
+.simple-list li {{ padding: 1.5mm 0; border-bottom: 1px dotted #d9d0b6; font-size: 9.5pt; }}
+.simple-list li:last-child {{ border-bottom: none; }}
+.annotation {{ font-size: 9.5pt; color: #1f1b16; line-height: 1.55; background: #f5f1e9; padding: 3mm 4mm; }}
+.signoff-grid {{ display: flex; gap: 8mm; margin-top: 3mm; }}
+.signoff-field {{ flex: 1; }}
+.signoff-label {{ font-family: 'DM Mono', monospace; font-size: 8pt; letter-spacing: 0.1em; text-transform: uppercase; color: #807462; margin-bottom: 2mm; }}
+.signoff-value {{ font-size: 10pt; color: #1f1b16; padding-bottom: 1mm; border-bottom: 1px solid #1f1b16; }}
+.signoff-sig {{ font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 12pt; }}
+.signoff-line {{ border-bottom: 1px solid #807462; height: 6mm; }}
+.page-footer {{ font-size: 8pt; color: #807462; border-top: 1px dotted #d9d0b6; padding-top: 3mm; margin-top: 8mm; font-family: 'DM Mono', monospace; letter-spacing: 0.06em; }}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header__wordmark">PROVENANCE</span>
+  <span class="header__doctype">HACCP BRIEF</span>
+</div>
+
+<h1 class="title">{_esc(recipe_name)}</h1>
+<hr class="gold-rule">
+<div class="meta-strip">
+  <span>{date_human}</span><span class="meta-sep">·</span><span>/recipe/{_esc(slug)}</span><span class="meta-sep">·</span><span>Schema {_esc(schema_ver)}</span><span class="meta-sep">·</span><span>Profession tier</span>
+</div>
+
+<section class="doc-section">
+  <div class="{badge_cls}">{version_label}</div>
+  <div class="doc-ctrl-grid">
+    <div class="doc-ctrl-field"><div class="doc-ctrl-label">Effective date</div><div class="doc-ctrl-line"></div></div>
+    <div class="doc-ctrl-field"><div class="doc-ctrl-label">Next review</div><div class="doc-ctrl-line"></div></div>
+  </div>
+</section>
+
+<section class="doc-section">
+  <h2 class="section-head">Allergens</h2>
+  <div class="allergen-box">
+    <div class="allergen-region">{_esc(region_label_text)}</div>
+    <div class="allergen-pills">{allergen_pills_html}</div>
+    {allergen_rationale_html}
+  </div>
+</section>
+
+<section class="doc-section">
+  <h2 class="section-head">Process Flow</h2>
+  <ol class="flow-list">{flow_items}</ol>
+</section>
+
+{receiving_section_html}
+
+<section class="doc-section">
+  <h2 class="section-head">Critical Control Points</h2>
+  {lives_html}
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:16%">Step</th>
+        <th style="width:18%">Hazard</th>
+        <th style="width:14%">Critical Limit</th>
+        <th style="width:18%">Monitoring</th>
+        <th style="width:18%">Corrective Action</th>
+        <th style="width:16%">Records</th>
+      </tr>
+    </thead>
+    <tbody>{ccp_rows_html}</tbody>
+  </table>
+</section>
+
+{non_ccp_section_html}
+
+<section class="doc-section">
+  <h2 class="section-head">Allergen Communication</h2>
+  <div class="annotation">{_esc(allergen_comm)}</div>
+</section>
+
+<section class="doc-section">
+  <h2 class="section-head">Verification</h2>
+  <div class="annotation">Internal HACCP audit conducted quarterly. Document findings and corrective actions taken. Results reviewed by the Person in Charge and retained for inspection.</div>
+</section>
+
+<section class="doc-section">
+  <h2 class="section-head">Record Retention</h2>
+  <div class="annotation">All HACCP records, monitoring logs, and corrective action documentation are retained for a minimum period compliant with applicable local regulatory requirements.</div>
+</section>
+
+<section class="doc-section">
+  <h2 class="section-head">Equipment Calibration Verification</h2>
+  <div class="doc-ctrl-grid">
+    <div class="doc-ctrl-field"><div class="doc-ctrl-label">Thermometers calibrated</div><div class="doc-ctrl-line"></div></div>
+    <div class="doc-ctrl-field"><div class="doc-ctrl-label">Calibrated by</div><div class="doc-ctrl-line"></div></div>
+  </div>
+</section>
+
+<section class="doc-section">
+  <h2 class="section-head">Person in Charge Sign-Off</h2>
+  {signoff_html}
+</section>
+
+<div class="page-footer">{footer_note}</div>
+
+</body>
+</html>"""
+
+    try:
+        pdf_bytes = WeasyHTML(string=html_content).write_pdf()
+        return send_file(
+            io.BytesIO(pdf_bytes),
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f'haccp-{slug}-{date_str}.pdf'
+        )
     except Exception as e:
-        return jsonify(error=str(e)), 500
+        app.logger.exception(f"WeasyPrint error for HACCP brief {slug}")
+        return jsonify({"error": str(e)}), 500
 
 
 def _render_costing_pdf(data):
