@@ -1429,13 +1429,12 @@ function _haccpSetBody(html) { document.getElementById('haccp-body').innerHTML =
 function _haccpUpdateHeaderBtns(isSigned) {
   const c = document.getElementById('haccp-header-btns');
   if (!c) return;
-  const _pdfSlug = typeof RECIPE_SLUG !== 'undefined' ? RECIPE_SLUG : location.pathname.split('/recipe/')[1];
   if (isSigned) {
     c.innerHTML = `<button class="kn-add-btn haccp-btn-new" onclick="haccpGenerateNew()">Generate new version</button>
-      <button class="kn-add-btn" style="background:transparent;color:var(--text-muted);border:0.5px solid var(--divider)" onclick="window.open('/api/haccp/'+_pdfSlug+'/pdf','_blank')">Download PDF</button>`;
+      <button class="kn-add-btn" style="background:transparent;color:var(--text-muted);border:0.5px solid var(--divider)" onclick="window.open('/api/haccp/'+RECIPE_SLUG+'/pdf','_blank')">Download PDF</button>`;
   } else {
     c.innerHTML = `<button class="kn-add-btn haccp-btn-sign" onclick="haccpSign()">Sign &amp; finalise</button>
-      <button class="kn-add-btn" style="background:transparent;color:var(--text-muted);border:0.5px solid var(--divider)" onclick="window.open('/api/haccp/'+_pdfSlug+'/pdf','_blank')">Download PDF</button>`;
+      <button class="kn-add-btn" style="background:transparent;color:var(--text-muted);border:0.5px solid var(--divider)" onclick="window.open('/api/haccp/'+RECIPE_SLUG+'/pdf','_blank')">Download PDF</button>`;
   }
 }
 
