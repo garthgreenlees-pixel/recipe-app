@@ -241,6 +241,11 @@ def parse_entry(block: str, file_source_book: str) -> dict | None:
             r'^##\s+ID-[A-Z]+-\d+\s*\|\s*(.+)', block, re.MULTILINE
         )
     if not header_match:
+        # Format 5: ## THOMPSON ENTRY 1 — Name (Thompson Thai early format)
+        header_match = re.search(
+            r'^##\s+THOMPSON ENTRY\s+\d+\s*[—–-]\s*(.+)', block, re.MULTILINE
+        )
+    if not header_match:
         return None
     name = header_match.group(1).strip()
     # Clean up name: remove trailing markers, colons
@@ -437,6 +442,12 @@ def split_entries(text: str) -> list[str]:
             r'^## ID-[A-Z]+-\d+\s*\|', text, re.MULTILINE
         )]
 
+    # Try format 5: ## THOMPSON ENTRY N — Name (Thompson Thai early format)
+    if not positions:
+        positions = [m.start() for m in re.finditer(
+            r'^## THOMPSON ENTRY\s+\d+', text, re.MULTILINE
+        )]
+
     if not positions:
         return []
 
@@ -463,19 +474,27 @@ def is_technique_file(text: str) -> bool:
     if re.search(r'^## ID-[A-Z]+-\d+\s*\|', text, re.MULTILINE) and \
        re.search(r'\*\*(?:Origin|Quality Hierarchy|Sensory)', text, re.IGNORECASE):
         return True
+    # Format 5: ## THOMPSON ENTRY N — Name (Thompson Thai early format)
+    if re.search(r'^## THOMPSON ENTRY\s+\d+', text, re.MULTILINE):
+        return True
     return False
 
 
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 def fetch_existing_names() -> set[str]:
-    """Fetch all existing technique names from the API (case-insensitive)."""
-    print("Fetching existing techniques from database...")
+    """Fetch all existing technique names directly from DB (case-insensitive)."""
+    print("Fetching existing technique names from database...")
     try:
-        r = requests.get(API_BASE, timeout=30)
-        r.raise_for_status()
-        data = r.json()
-        names = {t["name"].strip().lower() for t in data}
+        import psycopg2
+        READ_DSN = ("postgres://provenance_tester_1:GBN1MbQJMbe_7Ze2Is6dZQSK4hGwXkbW"
+                    "@localhost:5433/provenance_tester_1?sslmode=disable")
+        conn = psycopg2.connect(READ_DSN)
+        cur = conn.cursor()
+        cur.execute("SELECT lower(name) FROM technique_references")
+        names = {row[0] for row in cur.fetchall()}
+        cur.close()
+        conn.close()
         print(f"  Found {len(names)} existing techniques\n")
         return names
     except Exception as e:
@@ -484,16 +503,17 @@ def fetch_existing_names() -> set[str]:
 
 
 def main():
-    if not SOURCE_DIR.is_dir():
-        print(f"Source directory not found: {SOURCE_DIR}")
+    source_dir = Path(sys.argv[1]).expanduser() if len(sys.argv) > 1 else SOURCE_DIR
+    if not source_dir.is_dir():
+        print(f"Source directory not found: {source_dir}")
         sys.exit(1)
 
     # Step 1: Get existing technique names from the database
     existing_names = fetch_existing_names()
 
     # Step 2: Parse all .md files
-    md_files = sorted(SOURCE_DIR.glob("*.md"))
-    print(f"Found {len(md_files)} .md files in {SOURCE_DIR}\n")
+    md_files = sorted(source_dir.glob("*.md"))
+    print(f"Found {len(md_files)} .md files in {source_dir}\n")
 
     all_entries = []
     skipped_existing = []
