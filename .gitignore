@@ -3,3 +3,17 @@ __pycache__/
 *.pyc
 .claude/
 extracted/
+
+# --- staging-ladder cycle 2: ignore clutter ---
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+ENV/
+.DS_Store
+Thumbs.db
+.env.*
+.fly/
+*.log
+last_cycle_report.md
