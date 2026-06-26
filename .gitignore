@@ -17,3 +17,15 @@ Thumbs.db
 .fly/
 *.log
 last_cycle_report.md
+
+# --- cycle 2b: generated analysis output + intermediate data ---
+data/
+cycle_3a_compare/
+database_doctrine_check/
+lighthouse_baseline_*/
+dryrun_clusters*.json
+verify_drafts*.json
+verify_drafts*.jsonl
+cycle_b13_phase1_report.txt
+cycle_b13_schema.txt
+.cycle3_plan.txt
