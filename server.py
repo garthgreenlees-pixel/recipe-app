@@ -13089,15 +13089,19 @@ def update_user(user_id, **kwargs):
         return
     cols = ", ".join(f"{k} = %s" for k in kwargs)
     vals = list(kwargs.values()) + [user_id]
+    conn = None
     try:
         conn = psycopg2.connect(DATABASE_URL_WRITE)
         conn.autocommit = True
         cur = conn.cursor()
         cur.execute(f"UPDATE users SET {cols}, updated_at = NOW() WHERE id = %s", vals)
         cur.close()
-        conn.close()
-    except Exception:
-        pass
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        raise
+    finally:
+        if conn:
+            conn.close()
 
 
 def update_user_by_stripe_customer(customer_id, **kwargs):
@@ -13106,15 +13110,19 @@ def update_user_by_stripe_customer(customer_id, **kwargs):
         return
     cols = ", ".join(f"{k} = %s" for k in kwargs)
     vals = list(kwargs.values()) + [customer_id]
+    conn = None
     try:
         conn = psycopg2.connect(DATABASE_URL_WRITE)
         conn.autocommit = True
         cur = conn.cursor()
         cur.execute(f"UPDATE users SET {cols}, updated_at = NOW() WHERE stripe_customer_id = %s", vals)
         cur.close()
-        conn.close()
-    except Exception:
-        pass
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        raise
+    finally:
+        if conn:
+            conn.close()
 
 
 def user_can_access(required_tier):
@@ -13652,47 +13660,52 @@ def stripe_webhook():
     except (ValueError, stripe.error.SignatureVerificationError):
         return "Invalid signature", 400
 
-    if event.type == "checkout.session.completed":
-        s = event.data.object
-        user_id = s.metadata.get("provenance_user_id")
-        tier = s.metadata.get("tier", "kitchen")
-        subscription_id = getattr(s, "subscription", None)
-        customer_id = getattr(s, "customer", None)
-        if user_id:
-            update_user(
-                int(user_id),
-                subscription_tier=tier,
-                subscription_status="active",
-                stripe_subscription_id=subscription_id,
-                stripe_customer_id=customer_id,
+    try:
+        if event.type == "checkout.session.completed":
+            s = event.data.object
+            user_id = s.metadata.get("provenance_user_id")
+            tier = s.metadata.get("tier", "kitchen")
+            subscription_id = getattr(s, "subscription", None)
+            customer_id = getattr(s, "customer", None)
+            if user_id:
+                update_user(
+                    int(user_id),
+                    subscription_tier=tier,
+                    subscription_status="active",
+                    stripe_subscription_id=subscription_id,
+                    stripe_customer_id=customer_id,
+                )
+
+        elif event.type == "customer.subscription.updated":
+            sub = event.data.object
+            customer_id = sub.customer
+            status = sub.status
+            if status in ("active", "trialing"):
+                sub_status = "active"
+            elif status == "past_due":
+                sub_status = "past_due"
+            else:
+                sub_status = "inactive"
+            update_user_by_stripe_customer(customer_id, subscription_status=sub_status)
+
+        elif event.type == "customer.subscription.deleted":
+            sub = event.data.object
+            customer_id = sub.customer
+            update_user_by_stripe_customer(
+                customer_id,
+                subscription_tier="free",
+                subscription_status="inactive",
+                stripe_subscription_id=None,
             )
 
-    elif event.type == "customer.subscription.updated":
-        sub = event.data.object
-        customer_id = sub.customer
-        status = sub.status
-        if status in ("active", "trialing"):
-            sub_status = "active"
-        elif status == "past_due":
-            sub_status = "past_due"
-        else:
-            sub_status = "inactive"
-        update_user_by_stripe_customer(customer_id, subscription_status=sub_status)
+        elif event.type == "invoice.payment_failed":
+            invoice = event.data.object
+            customer_id = invoice.customer
+            update_user_by_stripe_customer(customer_id, subscription_status="past_due")
 
-    elif event.type == "customer.subscription.deleted":
-        sub = event.data.object
-        customer_id = sub.customer
-        update_user_by_stripe_customer(
-            customer_id,
-            subscription_tier="free",
-            subscription_status="inactive",
-            stripe_subscription_id=None,
-        )
-
-    elif event.type == "invoice.payment_failed":
-        invoice = event.data.object
-        customer_id = invoice.customer
-        update_user_by_stripe_customer(customer_id, subscription_status="past_due")
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        return "Internal error", 500
 
     return "", 200
 
