@@ -29,3 +29,6 @@ verify_drafts*.jsonl
 cycle_b13_phase1_report.txt
 cycle_b13_schema.txt
 .cycle3_plan.txt
+
+# --- extraction lane: status files don't get committed ---
+EXTRACTION_STATUS.md
