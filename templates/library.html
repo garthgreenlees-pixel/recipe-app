@@ -5,58 +5,246 @@
 
 {% block extra_head %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Mono:wght@500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,600;1,600&family=Playfair+Display:ital,wght@1,600&family=Shippori+Mincho:wght@600&family=Zilla+Slab:wght@600&family=Rozha+One&family=Kanit:wght@600&family=Nanum+Myeongjo:wght@700&family=Amiri:wght@700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block styles %}
-.lib-wrap{max-width:1100px;margin:0 auto;padding:48px 24px 80px}
-.lib-eyebrow{font:500 10px/1 "DM Mono",monospace;letter-spacing:.28em;text-transform:uppercase;color:var(--gold,#C9A84C);margin-bottom:14px}
-.lib-heading{font-family:"Playfair Display",serif;font-weight:600;font-size:clamp(2.4rem,5vw,3.8rem);color:var(--charcoal,#1F1B16);line-height:1;margin:0 0 16px}
-.lib-standfirst{font-size:1rem;line-height:1.65;color:var(--ink-soft,#9a8c70);max-width:520px;margin:0 0 52px}
-.lib-shelf-wrap{position:relative}
-.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0 14px;align-items:end}
-@media(max-width:600px){.lib-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:320px){.lib-grid{grid-template-columns:1fr}}
-.book-cover{display:block;text-decoration:none;position:relative;transition:transform .18s ease}
-.book-cover:hover{transform:translateY(-5px)}
-.book-cloth{min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;padding:28px 22px 26px;position:relative;overflow:hidden;box-shadow:-4px 0 10px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.5);border-left:5px solid var(--cb)}
-.book-cloth::before{content:"";position:absolute;inset:0;background:linear-gradient(165deg,var(--ca),var(--cb));z-index:0}
-.book-cloth::after{content:"";position:absolute;inset:0;opacity:.13;pointer-events:none;background-image:repeating-linear-gradient(90deg,#000 0 1px,transparent 1px 3px),repeating-linear-gradient(0deg,#000 0 1px,transparent 1px 3px);background-size:3px 3px;z-index:1}
-.book-cover:hover .book-cloth{box-shadow:-4px 0 10px rgba(0,0,0,.3),0 16px 40px rgba(0,0,0,.65)}
-.book-inner{position:relative;z-index:2;display:flex;flex-direction:column}
-.book-mark{width:10px;height:10px;border:1.5px solid #C9A84C;transform:rotate(45deg);margin-bottom:18px;opacity:.75}
-.book-kicker{font:500 8px/1 "DM Mono",monospace;letter-spacing:.32em;text-transform:uppercase;color:#C9A84C;opacity:.6;margin-bottom:22px}
-.book-title{font-family:"Playfair Display",serif;font-weight:600;font-size:clamp(20px,2.5vw,28px);line-height:.95;color:#C9A84C;letter-spacing:.3px}
-.book-foilrule{height:1.5px;width:40px;background:linear-gradient(90deg,#C9A84C,transparent);margin:12px 0 10px;border:0;display:block}
-.book-count{font:500 8px/1 "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#C9A84C;opacity:.65}
-.lib-shelf-plank{height:16px;background:linear-gradient(to bottom,#7B5733,#5C3D1A);box-shadow:0 6px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.07);border-radius:0 0 3px 3px;margin-bottom:0}
+:root {
+  --paper:   #F4EEE1;
+  --paper-2: #ECE3D1;
+  --ink:     #17130D;
+  --ink-soft:#6E665A;
+  --gilt:    #9A7B3F;
+  --hair:    #D9CFBB;
+}
+body { background: var(--paper); color: var(--ink); }
+
+/* ── Hero ── */
+.lib-hero {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 72px 48px 0;
+}
+.lib-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.lib-eyebrow-gem {
+  width: 7px; height: 7px;
+  background: var(--gilt);
+  transform: rotate(45deg);
+  display: inline-block;
+  flex: none;
+}
+.lib-eyebrow-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gilt);
+}
+.lib-heading {
+  font-family: 'Cormorant', serif;
+  font-weight: 600;
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: .95;
+  letter-spacing: -.02em;
+  margin: 0;
+  color: var(--ink);
+}
+.lib-standfirst {
+  font-family: 'Cormorant', serif;
+  font-style: italic;
+  font-size: clamp(19px, 2vw, 26px);
+  line-height: 1.4;
+  color: var(--ink-soft);
+  max-width: 560px;
+  margin: 18px 0 0;
+}
+
+/* ── Meta row ── */
+.lib-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1180px;
+  margin: 28px auto 0;
+  padding: 0 48px;
+}
+.lib-meta-count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.lib-meta-motto {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--hair);
+}
+
+/* ── Shelf cabinet ── */
+.lib-shelf-section {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 44px 48px 100px;
+}
+.lib-cabinet {
+  background: linear-gradient(172deg, #9A6E3E, #6B4A28);
+  padding: 13px;
+  border-radius: 6px;
+  box-shadow: 0 34px 70px rgba(40,26,12,.22);
+}
+.lib-cabinet-inner {
+  background: #221811;
+  border-radius: 3px;
+  box-shadow: inset 0 16px 30px rgba(0,0,0,.55), inset 0 -2px 0 rgba(255,255,255,.04);
+  padding: 44px 22px 0;
+}
+.lib-spines {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2px 0;
+}
+
+/* ── Individual spine ── */
+.lib-spine {
+  display: block;
+  text-decoration: none;
+  margin: 0 1px;
+  transition: transform .2s ease;
+  flex: none;
+}
+.lib-spine:hover { transform: translateY(-10px); }
+.lib-spine-ghost { pointer-events: none; }
+
+.lib-spine-cloth {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  box-shadow: -3px 0 8px rgba(0,0,0,.3), 0 6px 16px rgba(0,0,0,.42);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0 11px;
+  position: relative;
+  overflow: hidden;
+}
+.lib-mark {
+  width: 7px; height: 7px;
+  border: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  opacity: .72;
+  flex: none;
+}
+.lib-band {
+  width: 58%;
+  height: 3px;
+  opacity: .9;
+  flex: none;
+  margin: 5px 0 0;
+}
+.lib-title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  line-height: 1.04;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.lib-foot {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+  letter-spacing: .06em;
+  opacity: .72;
+  flex: none;
+}
+
+/* ── Shelf plank ── */
+.lib-plank {
+  height: 20px;
+  margin: 0 -22px;
+  background: linear-gradient(to bottom, #7B5733, #54391C);
+  box-shadow: 0 10px 26px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .lib-hero         { padding: 48px 24px 0; }
+  .lib-meta-row     { padding: 0 24px; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .lib-shelf-section{ padding: 36px 16px 80px; }
+  .lib-cabinet      { padding: 8px; }
+  .lib-cabinet-inner{ padding: 28px 10px 0; }
+}
 {% endblock %}
 
 {% block content %}
-<div class="lib-wrap">
-  <p class="lib-eyebrow">Provenance</p>
+<section class="lib-hero">
+  <div class="lib-eyebrow">
+    <span class="lib-eyebrow-gem"></span>
+    <span class="lib-eyebrow-label">The Bound Canon</span>
+  </div>
   <h1 class="lib-heading">The Library</h1>
   <p class="lib-standfirst">The bound volumes of the canon — each a cuisine read end to end, built to the Sashimi Standard.</p>
+</section>
 
-  <div class="lib-shelf-wrap">
-    <div class="lib-grid">
-      {% for canon in canons %}
-      {% set p = canon.design_palette or {} %}
-      <a class="book-cover" href="/canon/{{ canon.slug }}/"
-         style="--ca:{{ p.cloth_a or '#3b3330' }};--cb:{{ p.cloth_b or '#241f1b' }}">
-        <div class="book-cloth">
-          <div class="book-inner">
-            <div class="book-mark"></div>
-            <div class="book-kicker">Provenance</div>
-            <div class="book-title">{{ canon.name }}</div>
-            <hr class="book-foilrule">
-            <div class="book-count">{{ "{:,}".format(canon.entry_count) if canon.entry_count else '—' }} techniques</div>
+<div class="lib-meta-row">
+  <span class="lib-meta-count">{{ published_count }} volumes in the canon · more forthcoming</span>
+  <span class="lib-meta-motto">One standard, no exceptions</span>
+</div>
+
+<section class="lib-shelf-section">
+  <div class="lib-cabinet">
+    <div class="lib-cabinet-inner">
+      <div class="lib-spines">
+
+        {% for s in spines %}
+        <a class="lib-spine" href="{{ s.href }}">
+          <div class="lib-spine-cloth"
+               style="width:{{ s.width_px }}px;height:{{ s.height_px }}px;background:{{ s.cloth_bg }};border-left:4px solid {{ s.edge }};">
+            <span class="lib-mark" style="color:{{ s.mark_color }};"></span>
+            {% if s.bespoke %}
+            <span class="lib-band" style="background:linear-gradient(90deg,transparent,{{ s.foil }},transparent);"></span>
+            {% endif %}
+            <span class="lib-title"
+                  style="font-family:{{ s.font_family }};font-weight:{{ s.font_weight }};font-style:{{ s.font_style }};text-transform:{{ s.text_transform }};letter-spacing:{{ s.letter_spacing }};font-size:{{ s.font_size }}px;color:{{ s.title_color }};">
+              {{ s.name }}
+            </span>
+            <span class="lib-foot" style="color:{{ s.mark_color }};">{{ s.foot }}</span>
+          </div>
+        </a>
+        {% endfor %}
+
+        {% for g in ghosts %}
+        <div class="lib-spine lib-spine-ghost" style="opacity:.6;">
+          <div class="lib-spine-cloth"
+               style="width:{{ g.width_px }}px;height:{{ g.height_px }}px;background:{{ g.cloth_bg }};border-left:4px solid {{ g.edge }};">
+            <span class="lib-mark" style="color:{{ g.title_color }};opacity:.4;"></span>
+            <span class="lib-title"
+                  style="font-family:'Cormorant',serif;font-weight:600;font-size:{{ g.font_size }}px;color:{{ g.title_color }};">
+              {{ g.name }}
+            </span>
+            <span class="lib-foot" style="color:{{ g.title_color }};">{{ g.foot }}</span>
           </div>
         </div>
-      </a>
-      {% endfor %}
+        {% endfor %}
+
+      </div>
+      <div class="lib-plank"></div>
     </div>
-    <div class="lib-shelf-plank"></div>
   </div>
-</div>
+</section>
 {% endblock %}

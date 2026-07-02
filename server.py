@@ -16626,22 +16626,147 @@ def delete_menu_recipe(slug, menu_recipe_id):
 
 # ─── OPT3 Canon routes ───────────────────────────────────────────────────────
 
+SPINE_STYLES = {
+    'japanese':  {'ca': '#1B2848', 'cb': '#0F1730', 'title': '#D8BC7A', 'foil': '#D8BC7A', 'bespoke': True,  'font': "'Shippori Mincho', serif",   'weight': 600},
+    'italian':   {'ca': '#6E2B22', 'cb': '#3A1410', 'title': '#E8D6AE',                                       'font': "'Cormorant', serif",          'weight': 600, 'transform': 'uppercase', 'ls': '3px'},
+    'french':    {'ca': '#5A2230', 'cb': '#371018', 'title': '#D8BC7A', 'foil': '#D8BC7A', 'bespoke': True,  'font': "'Playfair Display', serif",   'weight': 600, 'italic': True},
+    'chinese':   {'ca': '#9A2A1E', 'cb': '#4A1108', 'title': '#F0C652',                                       'font': "'Zilla Slab', serif",         'weight': 600, 'transform': 'uppercase', 'ls': '1.5px'},
+    'indian':    {'ca': '#B5641A', 'cb': '#6E3608', 'title': '#FBE7C2',                                       'font': "'Rozha One', serif",          'weight': 400},
+    'thai':      {'ca': '#186A5A', 'cb': '#0C3A30', 'title': '#F2C84B',                                       'font': "'Kanit', sans-serif",         'weight': 600, 'transform': 'uppercase', 'ls': '2px'},
+    'korean':    {'ca': '#DCD8CC', 'cb': '#C6C0AE', 'title': '#2A6E72', 'light': True, 'accent': '#2A6E72',  'font': "'Nanum Myeongjo', serif",     'weight': 700},
+    'levantine': {'ca': '#5A5320', 'cb': '#332E10', 'title': '#E3C982',                                       'font': "'Amiri', serif",              'weight': 700},
+    'turkish':   {'ca': '#16585F', 'cb': '#0A3036', 'title': '#D98A4E',                                       'font': "'Amiri', serif",              'weight': 700},
+}
+
+
 @app.route("/library")
 def library():
     if not DATABASE_URL:
         return "Database not configured", 503
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    # Published canons — the live shelf
     cur.execute("""
         SELECT slug, name, design_palette, entry_count
         FROM canons
         WHERE status = 'published'
         ORDER BY entry_count DESC NULLS LAST, name
     """)
-    canons = [_serialize_row(r) for r in cur.fetchall()]
+    canon_rows = [_serialize_row(r) for r in cur.fetchall()]
+
+    # Ghost canons: top 4 non-published by technique_references count
+    cur.execute("""
+        SELECT c.slug, c.name,
+               COUNT(tr.id) AS entry_count
+        FROM canons c
+        LEFT JOIN technique_references tr ON tr.canon_slug = c.slug
+        WHERE c.status != 'published'
+        GROUP BY c.slug, c.name
+        ORDER BY COUNT(tr.id) DESC NULLS LAST, c.name
+        LIMIT 4
+    """)
+    ghost_rows = [_serialize_row(r) for r in cur.fetchall()]
+
     cur.close()
     conn.close()
-    return render_template("library.html", canons=canons)
+
+    jitter = [6, -7, 11, -3, 8, -10, 4, -5, 9, -6]
+
+    def build_spine(row, i, is_ghost=False):
+        slug  = row.get('slug', '')
+        count = row.get('entry_count') or 0
+        palette = row.get('design_palette') or {}
+
+        if is_ghost:
+            height_px = 258 + ((i * 41) % 40)
+            width_px  = 52  + ((i * 23) % 16)
+        else:
+            height_px = 252 + min(166, round(count / 22)) + jitter[i % 10]
+            width_px  = round(46 + min(46, count / 55))
+
+        font_size = max(12.5, min(18.5, width_px * 0.23))
+
+        if is_ghost:
+            ca             = '#2a2820'
+            cb             = '#1a1610'
+            title_color    = 'rgba(231,207,148,0.45)'
+            mark_color     = title_color
+            font_family    = "'Cormorant', serif"
+            font_weight    = 600
+            font_style     = 'normal'
+            text_transform = 'none'
+            letter_spacing = '0.4px'
+            bespoke        = False
+            foil           = None
+            edge           = cb
+            cloth_weave    = 'rgba(0,0,0,0.12)'
+            href           = None
+            foot           = 'Soon'
+            light          = False
+        else:
+            st             = SPINE_STYLES.get(slug, {})
+            light          = st.get('light', False)
+            ca             = st.get('ca') or palette.get('cloth_a', '#3b3330')
+            cb             = st.get('cb') or palette.get('cloth_b', '#241f1b')
+            title_color    = st.get('title', '#E7CF94')
+            foil           = st.get('foil')
+            bespoke        = st.get('bespoke', False)
+            font_family    = st.get('font', "'Cormorant', serif")
+            font_weight    = st.get('weight', 600)
+            font_style     = 'italic' if st.get('italic') else 'normal'
+            text_transform = st.get('transform', 'none')
+            letter_spacing = st.get('ls', '0.4px')
+            mark_color     = foil or title_color
+            cloth_weave    = 'rgba(0,0,0,0.045)' if light else 'rgba(0,0,0,0.12)'
+            edge           = st.get('accent', '#9A7B3F') if light else cb
+            href           = f"/canon/{slug}/"
+            foot           = f"{count:,}" if count else '—'
+            if light:
+                ca, cb = '#EFE8D8', '#D8CFB9'
+
+        cloth_bg = (
+            f"repeating-linear-gradient(0deg,{cloth_weave} 0 1px,transparent 1px 3px),"
+            f"linear-gradient(165deg,{ca},{cb})"
+        )
+
+        return {
+            'name':           row.get('name', ''),
+            'slug':           slug,
+            'href':           href,
+            'height_px':      height_px,
+            'width_px':       width_px,
+            'font_size':      round(font_size, 2),
+            'cloth_bg':       cloth_bg,
+            'edge':           edge,
+            'title_color':    title_color,
+            'mark_color':     mark_color,
+            'font_family':    font_family,
+            'font_weight':    font_weight,
+            'font_style':     font_style,
+            'text_transform': text_transform,
+            'letter_spacing': letter_spacing,
+            'bespoke':        bespoke,
+            'foil':           foil,
+            'foot':           foot,
+            'is_ghost':       is_ghost,
+            'light':          light,
+        }
+
+    spines = [build_spine(r, i, False) for i, r in enumerate(canon_rows)]
+    ghosts = [build_spine(r, i, True)  for i, r in enumerate(ghost_rows)]
+
+    _words = {1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six',
+              7: 'Seven', 8: 'Eight', 9: 'Nine', 10: 'Ten', 11: 'Eleven', 12: 'Twelve'}
+    published_count = _words.get(len(spines), str(len(spines)))
+
+    return render_template(
+        "library.html",
+        canons=canon_rows,           # backwards compat
+        spines=spines,
+        ghosts=ghosts,
+        published_count=published_count,
+    )
 
 
 @app.route("/canons-v2/")
