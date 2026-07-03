@@ -361,6 +361,11 @@
 .sp-thumb-index{position:absolute;right:0;top:28px;display:flex;flex-direction:column;gap:3px}
 .sp-thumb{width:20px;height:24px;background:#ECE3D1;border-radius:3px 0 0 3px;border:1px solid #D9CFBB;border-right:none}
 .sp-thumb--active{background:#1B2848;border-color:#1B2848}
+a.sp-thumb{display:block;text-decoration:none}
+a.sp-thumb:hover{background:#C8BAA4}
+a.sp-thumb.sp-thumb--active:hover{background:#0F1730}
+.sp-run--open{color:#9A7B3F;font-style:italic}
+.sp-open-gem{margin-left:8px;vertical-align:middle}
 .sp-recipe-folio{background:#F6EFDD;border-top:1px solid #D9CFBB;max-width:1200px;margin:0 auto;padding:36px 40px 60px}
 .sp-recipe-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid #D9CFBB}
 @media(max-width:768px){
@@ -387,11 +392,9 @@
 {% if technique.cross_cuisine_parallels %}{% set sp_left.n = sp_left.n + 1 %}{% endif %}
 {% if technique.flavour_context %}{% set sp_left.n = sp_left.n + 1 %}{% endif %}
 
-{# Thumb-index position from section_slug length (static, 0-9) #}
-{% set sp_thumb = (technique.section_slug | length % 10) if technique.section_slug else 0 %}
-
 {# Canon running head — degrade gracefully when canon_slug is null #}
 {% set sp_canon = (technique.canon_slug | replace('-', ' ') | title) if technique.canon_slug else 'The Library' %}
+{% set sp_open = technique.open_folio %}
 
 <div class="spread-page">
 
@@ -400,6 +403,7 @@
     <div class="sp-head-left">
       <span class="sp-folio">{{ technique.decimal_id or '—' }}</span>
       <span class="sp-run">{{ sp_canon }}</span>
+      {% if sp_open %}<span class="sp-run sp-run--open">open folio</span>{% endif %}
     </div>
     <div class="sp-head-right">
       <span class="sp-run">{{ technique.name }}</span>
@@ -420,7 +424,7 @@
       <span class="sp-gem"></span>
       <span class="sp-eyebrow-label">{{ technique.category | replace('_', ' ') | title }}</span>
     </div>
-    <h1 class="sp-title">{{ technique.name }}</h1>
+    <h1 class="sp-title">{{ technique.name }}{% if sp_open %}<span class="sp-gem sp-open-gem" aria-label="Open folio"></span>{% endif %}</h1>
     {% if shelf_line %}
     <p class="sp-shelf">One of {{ shelf_line.count }} entries · <a href="{{ shelf_line.url }}" class="sp-shelf-link">{{ shelf_line.name }}</a></p>
     {% endif %}
@@ -486,15 +490,28 @@
     {# RIGHT PAGE — Pillars V–VII #}
     <div class="sp-page sp-page--right">
 
-      {# Thumb-index notches — static, current chapter marked #}
+      {# Thumb-index notches — locked canon section order, current chapter marked #}
       <div class="sp-thumb-index" aria-hidden="true">
-        {% for n in range(10) %}
-        <div class="sp-thumb{% if n == sp_thumb %} sp-thumb--active{% endif %}"></div>
-        {% endfor %}
+        {% if thumb_sections %}
+          {% for sec in thumb_sections %}
+          {% if technique.canon_slug %}
+          <a href="/canon/{{ technique.canon_slug }}/{{ sec }}/" class="sp-thumb{% if sec == technique.section_slug %} sp-thumb--active{% endif %}"></a>
+          {% else %}
+          <div class="sp-thumb{% if sec == technique.section_slug %} sp-thumb--active{% endif %}"></div>
+          {% endif %}
+          {% endfor %}
+          {% for n in range(10 - thumb_sections|length) %}
+          <div class="sp-thumb"></div>
+          {% endfor %}
+        {% else %}
+          {% for n in range(10) %}
+          <div class="sp-thumb"></div>
+          {% endfor %}
+        {% endif %}
       </div>
 
-      {% if has_frost %}
-      {# QUIET CONTENTS: first-line excerpts only, no blur; shown only when has_frost is True #}
+      {% if has_frost and not sp_open %}
+      {# QUIET CONTENTS: first-line excerpts only; suppressed for open_folio entries #}
       <div class="sp-quiet">
         {% if frosts.quality_hierarchy %}
         <div class="sp-pillar sp-pillar--quiet">
@@ -514,9 +531,10 @@
           <p class="sp-quiet-text">{{ frosts.lives_or_dies }}</p>
         </div>
         {% endif %}
+        {% set sp_has_pillar_frost = frosts.quality_hierarchy or frosts.sensory_tests or frosts.lives_or_dies %}
         <footer class="sp-quiet-foot">
           <span class="sp-gem"></span>
-          The full training pages are part of membership.
+          {% if sp_has_pillar_frost %}The full training pages are part of membership.{% else %}The recipe folio is part of membership.{% endif %}
         </footer>
       </div>
 
@@ -607,8 +625,9 @@
       <ul class="rcp-ingredients{% if technique.recipe_card.ingredients | length > 12 %} rcp-ingredients--2col{% endif %}">
         {% for ing in technique.recipe_card.ingredients %}
         <li class="rcp-ingredient">
-          {{ ing }}
-          {% set orig = ingredient_origins.get(ing) if ingredient_origins else None %}
+          {% set _ing_display = (ing.text or ing.name) if ing is mapping else ing %}
+          {{ _ing_display }}
+          {% set orig = ingredient_origins.get(_ing_display) if ingredient_origins else None %}
           {% if orig and (orig.origin_brand or (user_tier in ('profession', 'trade') and orig.supplier_website)) %}
           <div class="rcp-ing-origin">
             {%- if orig.origin_brand and orig.origin_country -%}{{ orig.origin_brand }} · {{ orig.origin_country }}{%- elif orig.origin_brand -%}{{ orig.origin_brand }}{%- elif orig.origin_country -%}{{ orig.origin_country }}{%- endif -%}
@@ -747,10 +766,11 @@
       <ul class="rcp-ingredients{% if technique.recipe_card.ingredients | length > 12 %} rcp-ingredients--2col{% endif %}">
         {% for ing in technique.recipe_card.ingredients %}
         <li class="rcp-ingredient">
-          {{ ing }}
+          {% set _ing_display = (ing.text or ing.name) if ing is mapping else ing %}
+          {{ _ing_display }}
           {# ── Cycle E: Pat's Rule — origin line for matched ingredients ── #}
           {# ── Cycle F Job 4: suppress country-only lines (no brand, no provider link) ── #}
-          {% set orig = ingredient_origins.get(ing) if ingredient_origins else None %}
+          {% set orig = ingredient_origins.get(_ing_display) if ingredient_origins else None %}
           {% if orig and (orig.origin_brand or (user_tier in ('profession', 'trade') and orig.supplier_website)) %}
           <div class="rcp-ing-origin">
             {%- if orig.origin_brand and orig.origin_country -%}

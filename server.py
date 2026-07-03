@@ -684,6 +684,7 @@ def init_db():
         "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS slug VARCHAR(300)",
         "CREATE INDEX IF NOT EXISTS idx_technique_slug ON technique_references(slug)",
         "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS image_url TEXT",
+        "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS open_folio BOOLEAN DEFAULT FALSE",
     ]:
         cur.execute(stmt)
     cur.execute("""
@@ -11920,6 +11921,24 @@ def technique_page(slug):
     except Exception as _e:
         app.logger.warning(f"[shelf_line] {slug}: {_e}")
 
+    # Thumb-index: top 10 sections for current canon, ordered by entry count
+    thumb_sections = []
+    _canon_slug = technique.get('canon_slug')
+    if _canon_slug:
+        try:
+            cur.execute("""
+                SELECT section_slug, COUNT(*) AS n
+                FROM technique_references
+                WHERE canon_slug = %s AND published IS NOT FALSE
+                  AND section_slug IS NOT NULL
+                GROUP BY section_slug
+                ORDER BY COUNT(*) DESC, section_slug
+                LIMIT 10
+            """, (_canon_slug,))
+            thumb_sections = [r['section_slug'] for r in cur.fetchall()]
+        except Exception as _e:
+            app.logger.warning(f"[thumb_sections] {slug}: {_e}")
+
     cur.close()
     conn.close()
 
@@ -11937,8 +11956,9 @@ def technique_page(slug):
 
     # Cycle D: build frost excerpts BEFORE stripping — full values must not
     # reach the template for free viewers.
+    # open_folio entries bypass the strip so logged-out users see full content.
     frosts, has_frost = _frost_excerpt(technique, user_tier)
-    if user_tier == 'free':
+    if user_tier == 'free' and not technique.get('open_folio'):
         technique['quality_hierarchy'] = None
         technique['sensory_tests'] = None
         technique['lives_or_dies'] = None
@@ -11972,6 +11992,7 @@ def technique_page(slug):
         ingredient_origins=ingredient_origins,
         shelf_line=shelf_line,
         spread_mode=spread_mode,
+        thumb_sections=thumb_sections,
     )
 
 
