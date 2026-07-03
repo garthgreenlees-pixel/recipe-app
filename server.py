@@ -11939,6 +11939,42 @@ def technique_page(slug):
         except Exception as _e:
             app.logger.warning(f"[thumb_sections] {slug}: {_e}")
 
+    # Page-turn: prev/next non-thin published neighbours in same canon+section, ordered by name
+    prev_entry = next_entry = section_url = None
+    _s_slug = technique.get('section_slug')
+    if _canon_slug and _s_slug:
+        section_url = f"/canon/{_canon_slug}/{_s_slug}/"
+        try:
+            cur.execute("""
+                WITH ordered AS (
+                  SELECT slug, name,
+                         LAG(slug) OVER (ORDER BY name, id)  AS prev_slug,
+                         LAG(name) OVER (ORDER BY name, id)  AS prev_name,
+                         LEAD(slug) OVER (ORDER BY name, id) AS next_slug,
+                         LEAD(name) OVER (ORDER BY name, id) AS next_name
+                  FROM technique_references
+                  WHERE canon_slug = %s AND section_slug = %s
+                    AND published IS NOT FALSE
+                    AND (
+                      (CASE WHEN origin IS NOT NULL THEN 1 ELSE 0 END) +
+                      (CASE WHEN description IS NOT NULL THEN 1 ELSE 0 END) +
+                      (CASE WHEN flavour_context IS NOT NULL THEN 1 ELSE 0 END) +
+                      (CASE WHEN quality_hierarchy IS NOT NULL THEN 1 ELSE 0 END) >= 2
+                      OR recipe_card IS NOT NULL
+                    )
+                )
+                SELECT prev_slug, prev_name, next_slug, next_name
+                FROM ordered WHERE slug = %s
+            """, (_canon_slug, _s_slug, slug))
+            _pt = cur.fetchone()
+            if _pt:
+                if _pt['prev_slug']:
+                    prev_entry = {'slug': _pt['prev_slug'], 'name': _pt['prev_name']}
+                if _pt['next_slug']:
+                    next_entry = {'slug': _pt['next_slug'], 'name': _pt['next_name']}
+        except Exception as _e:
+            app.logger.warning(f"[page_turn] {slug}: {_e}")
+
     cur.close()
     conn.close()
 
@@ -11993,6 +12029,9 @@ def technique_page(slug):
         shelf_line=shelf_line,
         spread_mode=spread_mode,
         thumb_sections=thumb_sections,
+        prev_entry=prev_entry,
+        next_entry=next_entry,
+        section_url=section_url,
     )
 
 
@@ -16679,18 +16718,20 @@ def library():
     """)
     canon_rows = [_serialize_row(r) for r in cur.fetchall()]
 
-    # Ghost canons: top 4 non-published by technique_references count
+    # Ghost canons: top 3 non-published (exclude meta-canons), prepend pinned Pacific Northwest
     cur.execute("""
         SELECT c.slug, c.name,
                COUNT(tr.id) AS entry_count
         FROM canons c
         LEFT JOIN technique_references tr ON tr.canon_slug = c.slug
         WHERE c.status != 'published'
+          AND c.slug NOT IN ('general', 'provenance-1000')
         GROUP BY c.slug, c.name
         ORDER BY COUNT(tr.id) DESC NULLS LAST, c.name
-        LIMIT 4
+        LIMIT 3
     """)
-    ghost_rows = [_serialize_row(r) for r in cur.fetchall()]
+    ghost_rows = [{'slug': 'pacific-northwest', 'name': 'Pacific Northwest', 'entry_count': 0}] + \
+                 [_serialize_row(r) for r in cur.fetchall()]
 
     cur.close()
     conn.close()
@@ -16811,6 +16852,25 @@ def canons_index():
     return render_template("canons_index.html", canons=canons)
 
 
+_SECTION_DOCTRINE = {
+    'the-method':                    'The foundational moves that define the cuisine.',
+    'the-canonical-dishes':          'The dishes every cook must know cold.',
+    'overview-cultural-context':     'Where the cuisine comes from and why it matters.',
+    'food-culture-and-tradition':    'The rituals and values that shape how this food is made.',
+    'ingredients-and-procurement':   'What to buy, where to find it, and why quality matters.',
+    'ingredient-knowledge':          'The raw materials that make the cuisine.',
+    'techniques':                    'Technique as the foundation of understanding.',
+    'preparation':                   'The core preparation methods.',
+    'regional-cuisine':              'The regional variations and local distinctions.',
+    'pastry-technique':              'The sweet discipline and its standards.',
+    'charcuterie-curing':            'Preservation and transformation through salt and time.',
+    'wet-heat':                      'Braise, steam, poach — water as the medium.',
+    'grains-and-dough':              'Bread, pasta, rice — the backbone of the canon.',
+    'the-canonical-recipes':         'The canon condensed to its most essential recipes.',
+    'general':                       'General techniques and shared principles.',
+}
+
+
 @app.route("/canon/<canon_slug>/")
 def canon_book(canon_slug):
     if not DATABASE_URL:
@@ -16824,13 +16884,53 @@ def canon_book(canon_slug):
         conn.close()
         abort(404)
     canon = _serialize_row(canon)
+    # Per-section real counts + full-depth counts
     cur.execute("""
-        SELECT cs.section_slug, cs.name, cs.description, cs.entry_count, cs.display_order
+        SELECT cs.section_slug, cs.name, cs.description, cs.display_order,
+               COUNT(tr.id) AS real_count,
+               SUM(CASE WHEN (
+                 (CASE WHEN tr.origin IS NOT NULL THEN 1 ELSE 0 END) +
+                 (CASE WHEN tr.description IS NOT NULL THEN 1 ELSE 0 END) +
+                 (CASE WHEN tr.flavour_context IS NOT NULL THEN 1 ELSE 0 END) +
+                 (CASE WHEN tr.quality_hierarchy IS NOT NULL THEN 1 ELSE 0 END)
+               ) >= 2 OR tr.recipe_card IS NOT NULL THEN 1 ELSE 0 END) AS full_count
         FROM canon_sections cs
+        LEFT JOIN technique_references tr
+          ON tr.canon_slug = cs.canon_slug
+          AND tr.section_slug = cs.section_slug
+          AND tr.published IS NOT FALSE
         WHERE cs.canon_slug = %s
+        GROUP BY cs.section_slug, cs.name, cs.description, cs.display_order
         ORDER BY cs.display_order, cs.section_slug
     """, (canon_slug,))
-    sections = [_serialize_row(r) for r in cur.fetchall()]
+    sections = []
+    for r in cur.fetchall():
+        s = _serialize_row(r)
+        s['real_count'] = int(s.get('real_count') or 0)
+        s['full_count'] = int(s.get('full_count') or 0)
+        # Resolve description: DB value → doctrine fallback → empty
+        raw_desc = s.get('description')
+        if not raw_desc or str(raw_desc).strip() in ('', 'None'):
+            raw_desc = _SECTION_DOCTRINE.get(s['section_slug'], '')
+        s['display_desc'] = raw_desc or ''
+        sections.append(s)
+    # Up to 3 highlight entries per section (highest pillar_completeness)
+    cur.execute("""
+        SELECT slug, name, section_slug FROM (
+          SELECT slug, name, section_slug,
+                 ROW_NUMBER() OVER (
+                   PARTITION BY section_slug
+                   ORDER BY (pillar_completeness->>'count')::int DESC NULLS LAST, name
+                 ) AS rn
+          FROM technique_references
+          WHERE canon_slug = %s AND published IS NOT FALSE
+            AND pillar_completeness IS NOT NULL
+        ) sub WHERE rn <= 3
+    """, (canon_slug,))
+    highlights = {}
+    for r in cur.fetchall():
+        sec = r['section_slug']
+        highlights.setdefault(sec, []).append({'slug': r['slug'], 'name': r['name']})
     cur.execute("""
         SELECT id, name, slug, cuisine, recipe_type, description, image_url
         FROM recipes
@@ -16841,7 +16941,8 @@ def canon_book(canon_slug):
     palette = canon.get("design_palette") or {}
     cur.close()
     conn.close()
-    return render_template("canon_book.html", canon=canon, sections=sections, recipes=recipes, palette=palette, book_mode=True)
+    return render_template("canon_book.html", canon=canon, sections=sections, recipes=recipes,
+                           palette=palette, book_mode=True, highlights=highlights)
 
 
 REGION_LABELS = {
@@ -17205,12 +17306,23 @@ def canon_section(canon_slug, section_slug):
 
     cur.execute("""
         SELECT id, name, slug, entry_slug, decimal_id, description, origin, authority_tier,
-               facets->>'region_slug' AS region_slug
+               facets->>'region_slug' AS region_slug,
+               (CASE WHEN origin IS NOT NULL THEN 1 ELSE 0 END) +
+               (CASE WHEN description IS NOT NULL THEN 1 ELSE 0 END) +
+               (CASE WHEN flavour_context IS NOT NULL THEN 1 ELSE 0 END) +
+               (CASE WHEN quality_hierarchy IS NOT NULL THEN 1 ELSE 0 END) AS left_pillar_count,
+               (recipe_card IS NOT NULL) AS has_recipe
         FROM technique_references
-        WHERE canon_slug = %s AND section_slug = %s
+        WHERE canon_slug = %s AND section_slug = %s AND published IS NOT FALSE
         ORDER BY decimal_id, name
     """, (canon_slug, section_slug))
-    entries = [_serialize_row(r) for r in cur.fetchall()]
+    entries = []
+    for r in cur.fetchall():
+        e = _serialize_row(r)
+        e['is_full'] = (e.get('left_pillar_count') or 0) >= 2 or bool(e.get('has_recipe'))
+        entries.append(e)
+    section_total = len(entries)
+    section_full  = sum(1 for e in entries if e['is_full'])
     region_slugs = [e["region_slug"] for e in entries if e.get("region_slug")]
     has_regions = bool(region_slugs)
     regions = []
@@ -17222,7 +17334,8 @@ def canon_section(canon_slug, section_slug):
     conn.close()
     return render_template("canon_section.html",
         canon=canon, section=section, entries=entries,
-        palette=palette, has_regions=has_regions, regions=regions, book_mode=True)
+        palette=palette, has_regions=has_regions, regions=regions,
+        section_total=section_total, section_full=section_full, book_mode=True)
 
 
 @app.route("/canon/<canon_slug>/<section_slug>/<region_slug>/")

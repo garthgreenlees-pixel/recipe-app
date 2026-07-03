@@ -24,6 +24,9 @@
 .ch.dim .ch-name{font-weight:400}
 .ch a{color:inherit;text-decoration:none}
 .ch.live:hover .ch-name{color:var(--accent)}
+.ch-highlights{display:block;font-size:12px;font-style:italic;color:var(--stone);margin-top:4px;max-width:36ch}
+.ch-hi-link{color:var(--stone);text-decoration:none;border-bottom:1px solid transparent}
+.ch-hi-link:hover{color:var(--accent);border-bottom-color:var(--accent)}
 /* Recipes grid */
 .recipes{margin-top:24px;padding-top:4px}
 .rgrid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule)}
@@ -47,7 +50,7 @@
     <div class="bpage-left">
       <div class="cmark"></div>
       <div class="kicker">Provenance</div>
-      <h1 class="title">The {{ canon.name }} Canon</h1>
+      <h1 class="title">{% if canon.name.startswith('The ') %}{{ canon.name }}{% else %}The {{ canon.name }} Canon{% endif %}</h1>
       <hr class="foilrule"/>
     </div>
 
@@ -61,21 +64,30 @@
       <ul class="toc">
         {% set roman = ['I','II','III','IV','V','VI','VII','VIII','IX','X'] %}
         {% for s in sections %}
-          {% if (s.entry_count and s.entry_count > 0) or (s.display_order == 10 and canon.overview_text) %}
+          {% set is_open = (s.real_count and s.real_count > 0) or (s.display_order == 10 and canon.overview_text) %}
+          {% set ch_num %}{% if s.display_order and s.display_order >= 10 and s.display_order <= 100 and s.display_order % 10 == 0 %}{{ roman[(s.display_order // 10) - 1] }}{% endif %}{% endset %}
+          {% if is_open %}
           <li class="ch live">
-            <a href="/canon/{{ canon.slug }}/{{ s.section_slug }}/"><span class="num">{% if s.display_order and s.display_order >= 10 and s.display_order <= 100 and s.display_order % 10 == 0 %}{{ roman[(s.display_order // 10) - 1] }}{% endif %}</span></a>
+            <a href="/canon/{{ canon.slug }}/{{ s.section_slug }}/"><span class="num">{{ ch_num }}</span></a>
             <span>
               <a href="/canon/{{ canon.slug }}/{{ s.section_slug }}/"><span class="ch-name">{{ s.name }}</span></a>
-              <span class="ch-desc">{{ s.description }}</span>
+              {% if s.display_desc %}<span class="ch-desc">{{ s.display_desc }}</span>{% endif %}
+              {% if s.real_count %}<span class="ch-desc" style="font-style:normal;opacity:.65">{{ s.real_count }} entr{{ 'y' if s.real_count == 1 else 'ies' }} · {{ s.full_count }} at depth</span>{% endif %}
+              {% set hi = highlights.get(s.section_slug, []) if highlights else [] %}
+              {% if hi %}
+              <span class="ch-highlights">
+                {% for h in hi %}<a href="/technique/{{ h.slug }}" class="ch-hi-link">{{ h.name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+              </span>
+              {% endif %}
             </span>
             <span class="ch-state">Open</span>
           </li>
           {% else %}
           <li class="ch dim">
-            <span class="num">{% if s.display_order and s.display_order >= 10 and s.display_order <= 100 and s.display_order % 10 == 0 %}{{ roman[(s.display_order // 10) - 1] }}{% endif %}</span>
+            <span class="num">{{ ch_num }}</span>
             <span>
               <span class="ch-name">{{ s.name }}</span>
-              <span class="ch-desc">{{ s.description }}</span>
+              {% if s.display_desc %}<span class="ch-desc">{{ s.display_desc }}</span>{% endif %}
             </span>
             <span class="ch-state">In preparation</span>
           </li>

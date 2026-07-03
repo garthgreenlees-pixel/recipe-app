@@ -27,6 +27,12 @@
 .e-name{font-family:"Playfair Display",serif;font-weight:500;font-size:17px;color:var(--ink)}
 .e-origin{font:500 9px/1 "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--stone);white-space:nowrap}
 .erow:hover .e-name{color:var(--accent)}
+/* Thin entry: dimmed, soft ink, "in the writing" mono suffix */
+.erow--thin .e-name{font-weight:400;color:var(--stone)}
+.erow--thin .e-num{opacity:.55}
+.e-thin-tag{font:400 9px/1 "DM Mono",monospace;letter-spacing:.1em;color:var(--foil);opacity:.7;white-space:nowrap;margin-left:6px}
+/* Honest chapter count */
+.sec-depth{font:400 10px/1 "DM Mono",monospace;letter-spacing:.12em;color:var(--stone);margin-bottom:14px}
 {% endblock %}
 
 {% block main_padding %}0px{% endblock %}
@@ -73,12 +79,15 @@
         </ul>
       {% else %}
         <p class="sec-label">Techniques</p>
+        {% if section_total is defined and section_total %}
+        <p class="sec-depth">{{ section_total }} entr{{ 'y' if section_total == 1 else 'ies' }} · {{ section_full }} at full depth</p>
+        {% endif %}
         <ul class="elist">
           {% for entry in entries %}
           <li>
-            <a class="erow" href="/technique/{{ entry.slug }}">
+            <a class="erow{% if not entry.is_full %} erow--thin{% endif %}" href="/technique/{{ entry.slug }}">
               <span class="e-num">{{ entry.decimal_id or '' }}</span>
-              <span class="e-name">{{ entry.name }}</span>
+              <span class="e-name">{{ entry.name }}{% if not entry.is_full %}<span class="e-thin-tag">· in the writing</span>{% endif %}</span>
               <span class="e-origin">{{ (entry.origin or '')[:26] }}</span>
             </a>
           </li>

@@ -368,6 +368,17 @@ a.sp-thumb.sp-thumb--active:hover{background:#0F1730}
 .sp-open-gem{margin-left:8px;vertical-align:middle}
 .sp-recipe-folio{background:#F6EFDD;border-top:1px solid #D9CFBB;max-width:1200px;margin:0 auto;padding:36px 40px 60px}
 .sp-recipe-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid #D9CFBB}
+/* Page-settle entry animation */
+.spread-page{animation:sp-settle 300ms ease-out}
+@keyframes sp-settle{from{opacity:0;transform:translateX(6px)}to{opacity:1;transform:translateX(0)}}
+/* Fore-edge page-turn affordances */
+.sp-turn-wrap{position:relative;max-width:1200px;margin:0 auto}
+.sp-turn-prev,.sp-turn-next{position:absolute;top:40px;bottom:40px;width:32px;display:flex;align-items:center;justify-content:center;text-decoration:none;opacity:.35;transition:opacity .18s;z-index:2}
+.sp-turn-prev{right:calc(100% + 6px)}
+.sp-turn-next{left:calc(100% + 6px)}
+.sp-turn-prev:hover,.sp-turn-next:hover{opacity:1}
+.sp-turn-label{writing-mode:vertical-rl;font-family:'IBM Plex Mono','DM Mono',monospace;font-size:9px;letter-spacing:.12em;color:#6E665A;white-space:nowrap;overflow:hidden;text-overflow:clip;max-height:220px;line-height:1.4}
+.sp-turn-prev .sp-turn-label{transform:rotate(180deg)}
 @media(max-width:768px){
   .sp-header{padding:18px 16px 12px;flex-direction:column;gap:4px}
   .sp-plate{padding:20px 16px 0}
@@ -397,6 +408,20 @@ a.sp-thumb.sp-thumb--active:hover{background:#0F1730}
 {% set sp_open = technique.open_folio %}
 
 <div class="spread-page">
+
+  {# ── Fore-edge page-turn affordances ── #}
+  {% if section_url %}
+  <div class="sp-turn-wrap">
+    <a class="sp-turn-prev" id="sp-turn-prev"
+       href="{{ ('/technique/' + prev_entry.slug) if prev_entry else section_url }}">
+      <span class="sp-turn-label">{% if prev_entry %}‹ {{ prev_entry.name }}{% else %}Return to the chapter{% endif %}</span>
+    </a>
+    <a class="sp-turn-next" id="sp-turn-next"
+       href="{{ ('/technique/' + next_entry.slug) if next_entry else section_url }}">
+      <span class="sp-turn-label">{% if next_entry %}{{ next_entry.name }} ›{% else %}Return to the chapter{% endif %}</span>
+    </a>
+  </div>
+  {% endif %}
 
   {# ── Folio header — running head + chapter ── #}
   <header class="sp-header">
@@ -652,6 +677,18 @@ a.sp-thumb.sp-thumb--active:hover{background:#0F1730}
   {% endif %}
 
 </div>{# end spread-page #}
+
+{% if section_url %}
+<script>
+(function(){
+  document.addEventListener('keydown', function(e){
+    if (e.ctrlKey || e.metaKey || e.altKey || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); location.href = document.getElementById('sp-turn-prev').href; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); location.href = document.getElementById('sp-turn-next').href; }
+  });
+})();
+</script>
+{% endif %}
 
 {% else %}
 {# ────────────── EXISTING PAGE — byte-identical to pre-transplant ─────── #}
