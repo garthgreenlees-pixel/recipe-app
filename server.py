@@ -11974,7 +11974,7 @@ def technique_page(slug):
     else:
         pro_tips_display = _pt
 
-    spread_mode = (request.args.get('spread') == '1')
+    spread_mode = (request.args.get('classic') != '1')
 
     return render_template("technique.html",
         technique=technique,
