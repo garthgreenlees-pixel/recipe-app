@@ -11954,6 +11954,8 @@ def technique_page(slug):
     else:
         pro_tips_display = _pt
 
+    spread_mode = (request.args.get('spread') == '1')
+
     return render_template("technique.html",
         technique=technique,
         canonical_url=canonical_url,
@@ -11969,6 +11971,7 @@ def technique_page(slug):
         has_frost=has_frost,
         ingredient_origins=ingredient_origins,
         shelf_line=shelf_line,
+        spread_mode=spread_mode,
     )
 
 

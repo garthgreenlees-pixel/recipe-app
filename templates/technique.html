@@ -85,6 +85,7 @@
 }
 </script>
 {% endif %}
+{% if spread_mode %}<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Hanken+Grotesk:wght@300;400&display=swap" rel="stylesheet">{% endif %}
 {% endblock %}
 
 {% block styles %}
@@ -302,9 +303,339 @@
   .has-recipe-print .rcp-ing-origin { font-size: 9pt; color: #666; }
   .has-recipe-print .rcp-ing-provider { color: #444; border-bottom: none; }
 }
+
+/* ─── READING SPREAD (preview behind ?spread=1) ───────────────────────── */
+{% if spread_mode %}body{background:#F4EEE1}{% endif %}
+.spread-page{background:#F4EEE1;min-height:80vh;
+  --charcoal-soft:#3A3028;--warm-gray:#6E665A;--gold-deep:#9A7B3F;
+  --gold-border:rgba(154,123,63,.22);--gold-bg:rgba(154,123,63,.05);
+  --text:#17130D;--text-secondary:#3A3028;--text-light:#6E665A}
+.spread-page *,.spread-page *::before,.spread-page *::after{box-sizing:border-box}
+.sp-header{max-width:1200px;margin:0 auto;padding:22px 40px 16px;display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #D9CFBB}
+.sp-head-left,.sp-head-right{display:flex;align-items:baseline;gap:16px}
+.sp-folio{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#9A7B3F}
+.sp-run{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6E665A}
+.sp-plate{max-width:1200px;margin:0 auto;padding:24px 40px 0}
+.sp-plate img{width:100%;max-height:280px;object-fit:cover;border:1px solid #D9CFBB;display:block}
+.sp-plate-caption{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#6E665A;margin-top:8px;text-align:center}
+.sp-title-zone{max-width:1200px;margin:0 auto;padding:32px 40px 20px}
+.sp-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sp-gem{width:6px;height:6px;background:#9A7B3F;transform:rotate(45deg);display:inline-block;flex:none}
+.sp-eyebrow-label{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#9A7B3F}
+.sp-title{font-family:'Cormorant Garamond','Noto Serif JP','Noto Naskh Arabic',Georgia,serif;font-weight:600;font-size:clamp(28px,5vw,60px);line-height:1.02;letter-spacing:-.02em;color:#17130D;margin:0 0 12px}
+.sp-shelf{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6E665A}
+.sp-shelf-link{color:#9A7B3F;text-decoration:none;border-bottom:1px solid rgba(154,123,63,.3)}
+.sp-shelf-link:hover{border-bottom-color:#9A7B3F}
+.sp-stub{max-width:1200px;margin:0 auto;padding:60px 40px 100px;text-align:center}
+.sp-stub p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:#6E665A}
+.sp-spread{max-width:1200px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sp-page{padding:28px 28px 48px;position:relative}
+.sp-page--left{border-right:1px solid #D9CFBB}
+.sp-page--right{padding-right:54px}
+.sp-pillar{margin-bottom:28px}
+.sp-label{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#9A7B3F;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sp-label::after{content:'';flex:1;height:1px;background:#D9CFBB}
+.sp-text{font-family:'Hanken Grotesk','DM Sans',sans-serif;font-size:14px;color:#17130D;line-height:1.75;white-space:pre-wrap}
+.sp-desc{font-family:'Hanken Grotesk','DM Sans',sans-serif;font-size:15px;color:#17130D;line-height:1.75}
+.sp-flavour{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;line-height:1.6;color:#6E665A;padding:14px 18px;border-left:3px solid #D9CFBB;background:#ECE3D1;border-radius:0 4px 4px 0}
+.sp-thread-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.sp-thread-item{font-family:'Hanken Grotesk','DM Sans',sans-serif;font-size:14px;color:#17130D;line-height:1.65;padding-left:16px;position:relative}
+.sp-thread-item::before{content:'—';position:absolute;left:0;color:#9A7B3F;font-size:12px;top:2px}
+.sp-thread-link{color:#9A7B3F;text-decoration:none;border-bottom:1px solid rgba(154,123,63,.3)}
+.sp-thread-link:hover{border-bottom-color:#9A7B3F}
+.sp-thread-cuisine{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6E665A;margin-left:6px;opacity:.7}
+.sp-qh-item{margin-bottom:12px;padding:10px 14px;border-left:2px solid #D9CFBB;background:#ECE3D1;border-radius:0 4px 4px 0}
+.sp-qh-label{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9A7B3F;margin-bottom:4px}
+.sp-qh-criteria{font-size:14px}
+.sp-qh-markers{font-size:13px;color:#6E665A;line-height:1.6;margin-top:4px}
+.sp-sense-row{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:start;margin-bottom:12px}
+.sp-sense-label{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(154,123,63,.55);padding-top:2px}
+.sp-sense-text{font-size:14px;color:#17130D;line-height:1.65}
+.sp-sense-fail{font-size:13px;color:rgba(142,42,30,.75);margin-top:2px;line-height:1.5}
+.sp-pillar--lives{margin-top:20px;padding-top:20px;border-top:1px solid #D9CFBB;border-left:3px solid #8E2A1E;padding-left:14px}
+.sp-lives{font-size:15px;color:#17130D;line-height:1.7;background:rgba(142,42,30,.04);padding:12px 14px;border-radius:0 4px 4px 0}
+.sp-pillar--quiet{opacity:.5}
+.sp-quiet-text{font-family:'Hanken Grotesk','DM Sans',sans-serif;font-size:14px;color:#6E665A;line-height:1.7}
+.sp-quiet-foot{display:flex;align-items:center;gap:10px;margin-top:28px;padding-top:18px;border-top:1px solid #D9CFBB;font-family:'IBM Plex Mono','DM Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9A7B3F}
+.sp-right-empty{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:#6E665A;padding:24px 0}
+.sp-thumb-index{position:absolute;right:0;top:28px;display:flex;flex-direction:column;gap:3px}
+.sp-thumb{width:20px;height:24px;background:#ECE3D1;border-radius:3px 0 0 3px;border:1px solid #D9CFBB;border-right:none}
+.sp-thumb--active{background:#1B2848;border-color:#1B2848}
+.sp-recipe-folio{background:#F6EFDD;border-top:1px solid #D9CFBB;max-width:1200px;margin:0 auto;padding:36px 40px 60px}
+.sp-recipe-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid #D9CFBB}
+@media(max-width:768px){
+  .sp-header{padding:18px 16px 12px;flex-direction:column;gap:4px}
+  .sp-plate{padding:20px 16px 0}
+  .sp-title-zone{padding:24px 16px 14px}
+  .sp-spread{grid-template-columns:1fr;padding:0 16px 60px}
+  .sp-page--left{border-right:none;border-bottom:1px solid #D9CFBB}
+  .sp-page--right{padding-right:28px}
+  .sp-thumb-index{display:none}
+  .sp-stub{padding:40px 16px 80px}
+  .sp-recipe-folio{padding:24px 16px 48px}
+}
 {% endblock %}
 
 {% block content %}
+{% if spread_mode %}
+{# ── READING SPREAD — bound-volume two-page design ────────────────────── #}
+
+{# Count left-page pillars for thin-entry detection #}
+{% set sp_left = namespace(n=0) %}
+{% if technique.origin %}{% set sp_left.n = sp_left.n + 1 %}{% endif %}
+{% if technique.description %}{% set sp_left.n = sp_left.n + 1 %}{% endif %}
+{% if technique.cross_cuisine_parallels %}{% set sp_left.n = sp_left.n + 1 %}{% endif %}
+{% if technique.flavour_context %}{% set sp_left.n = sp_left.n + 1 %}{% endif %}
+
+{# Thumb-index position from section_slug length (static, 0-9) #}
+{% set sp_thumb = (technique.section_slug | length % 10) if technique.section_slug else 0 %}
+
+{# Canon running head — degrade gracefully when canon_slug is null #}
+{% set sp_canon = (technique.canon_slug | replace('-', ' ') | title) if technique.canon_slug else 'The Library' %}
+
+<div class="spread-page">
+
+  {# ── Folio header — running head + chapter ── #}
+  <header class="sp-header">
+    <div class="sp-head-left">
+      <span class="sp-folio">{{ technique.decimal_id or '—' }}</span>
+      <span class="sp-run">{{ sp_canon }}</span>
+    </div>
+    <div class="sp-head-right">
+      <span class="sp-run">{{ technique.name }}</span>
+    </div>
+  </header>
+
+  {# ── Illustrated plate slot — only if image_url ── #}
+  {% if technique.image_url %}
+  <figure class="sp-plate">
+    <img src="{{ technique.image_url }}" alt="{{ technique.name }}" loading="eager">
+    <figcaption class="sp-plate-caption">{{ technique.name }}</figcaption>
+  </figure>
+  {% endif %}
+
+  {# ── Title zone — unconstrained height for long titles (427 > 80 chars) ── #}
+  <div class="sp-title-zone">
+    <div class="sp-eyebrow">
+      <span class="sp-gem"></span>
+      <span class="sp-eyebrow-label">{{ technique.category | replace('_', ' ') | title }}</span>
+    </div>
+    <h1 class="sp-title">{{ technique.name }}</h1>
+    {% if shelf_line %}
+    <p class="sp-shelf">One of {{ shelf_line.count }} entries · <a href="{{ shelf_line.url }}" class="sp-shelf-link">{{ shelf_line.name }}</a></p>
+    {% endif %}
+  </div>
+
+  {# ── Thin-entry stub: fewer than 2 left-page pillars populated ── #}
+  {% if sp_left.n < 2 %}
+  <div class="sp-stub">
+    <p>This entry is being documented for the Library.</p>
+  </div>
+
+  {% else %}
+
+  {# ── Two-page spread ── #}
+  <div class="sp-spread">
+
+    {# LEFT PAGE — Pillars I–IV #}
+    <div class="sp-page sp-page--left">
+
+      {% if technique.origin %}
+      <div class="sp-pillar">
+        <div class="sp-label">I · Origin</div>
+        <p class="sp-text">{{ technique.origin }}</p>
+      </div>
+      {% endif %}
+
+      {% if technique.description %}
+      <div class="sp-pillar">
+        <div class="sp-label">II · Description</div>
+        <p class="sp-desc">{{ technique.description }}</p>
+      </div>
+      {% endif %}
+
+      {# III Thread — dual-shape: list of {technique,connection,cuisine,_slug} dicts OR plain strings #}
+      {% if technique.cross_cuisine_parallels %}
+      <div class="sp-pillar">
+        <div class="sp-label">III · The Thread</div>
+        <ul class="sp-thread-list">
+          {% for item in technique.cross_cuisine_parallels %}
+            {% if item is mapping %}
+            <li class="sp-thread-item">
+              {% if item.connection %}{{ item.connection }}{% endif %}
+              {% if item.technique %} → {% if item._slug %}<a href="/technique/{{ item._slug }}" class="sp-thread-link">{{ item.technique }}</a>{% else %}{{ item.technique }}{% endif %}{% endif %}
+              {% if item.cuisine %}<span class="sp-thread-cuisine">{{ format_cuisine(item.cuisine) }}</span>{% endif %}
+            </li>
+            {% else %}
+            <li class="sp-thread-item">{{ item }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if technique.flavour_context %}
+      <div class="sp-pillar">
+        <div class="sp-label">IV · Flavour Context</div>
+        <p class="sp-flavour">{{ technique.flavour_context }}</p>
+      </div>
+      {% endif %}
+
+    </div>{# end left page #}
+
+    {# RIGHT PAGE — Pillars V–VII #}
+    <div class="sp-page sp-page--right">
+
+      {# Thumb-index notches — static, current chapter marked #}
+      <div class="sp-thumb-index" aria-hidden="true">
+        {% for n in range(10) %}
+        <div class="sp-thumb{% if n == sp_thumb %} sp-thumb--active{% endif %}"></div>
+        {% endfor %}
+      </div>
+
+      {% if has_frost %}
+      {# QUIET CONTENTS: first-line excerpts only, no blur; shown only when has_frost is True #}
+      <div class="sp-quiet">
+        {% if frosts.quality_hierarchy %}
+        <div class="sp-pillar sp-pillar--quiet">
+          <div class="sp-label">V · Quality Hierarchy</div>
+          <p class="sp-quiet-text">{{ frosts.quality_hierarchy }}</p>
+        </div>
+        {% endif %}
+        {% if frosts.sensory_tests %}
+        <div class="sp-pillar sp-pillar--quiet">
+          <div class="sp-label">VI · Sensory Tests</div>
+          <p class="sp-quiet-text">{{ frosts.sensory_tests }}</p>
+        </div>
+        {% endif %}
+        {% if frosts.lives_or_dies %}
+        <div class="sp-pillar sp-pillar--quiet sp-pillar--lives">
+          <div class="sp-label">VII · Where the Dish Lives or Dies</div>
+          <p class="sp-quiet-text">{{ frosts.lives_or_dies }}</p>
+        </div>
+        {% endif %}
+        <footer class="sp-quiet-foot">
+          <span class="sp-gem"></span>
+          The full training pages are part of membership.
+        </footer>
+      </div>
+
+      {% else %}
+      {# OPEN: paid tier, or free with no gated content (has_frost=False) — show pillars as-is #}
+
+      {# V Quality Hierarchy — polymorphic: list of dicts OR list of plain strings #}
+      {% if technique.quality_hierarchy %}
+      <div class="sp-pillar">
+        <div class="sp-label">V · Quality Hierarchy</div>
+        {% for tier_item in technique.quality_hierarchy %}
+          {% if tier_item is mapping %}
+          <div class="sp-qh-item">
+            {% if tier_item.get('tier_name') %}<div class="sp-qh-label">{{ tier_item.tier_name }}</div>{% endif %}
+            {% if tier_item.get('criteria') %}<p class="sp-text sp-qh-criteria">{{ tier_item.criteria }}</p>{% endif %}
+            {% if tier_item.get('markers') %}<p class="sp-qh-markers">{{ tier_item.markers }}</p>{% endif %}
+          </div>
+          {% else %}
+          <p class="sp-text">{{ tier_item }}</p>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {# VI Sensory Tests — polymorphic: mapping OR list of {sense,cue,fail_indicator} OR list of strings #}
+      {% if technique.sensory_tests %}
+      <div class="sp-pillar">
+        <div class="sp-label">VI · Sensory Tests</div>
+        {% if technique.sensory_tests is mapping %}
+          {% for sense, description in technique.sensory_tests.items() %}
+          <div class="sp-sense-row">
+            <span class="sp-sense-label">{{ sense }}</span>
+            <p class="sp-sense-text">{{ description }}</p>
+          </div>
+          {% endfor %}
+        {% else %}
+          {% for test in technique.sensory_tests %}
+            {% if test is mapping %}
+            <div class="sp-sense-row">
+              {% if test.get('sense') %}<span class="sp-sense-label">{{ test.sense }}</span>{% endif %}
+              <div>
+                {% if test.get('cue') %}<p class="sp-sense-text">{{ test.cue }}</p>{% endif %}
+                {% if test.get('fail_indicator') %}<p class="sp-sense-fail">Fail: {{ test.fail_indicator }}</p>{% endif %}
+              </div>
+            </div>
+            {% else %}
+            <p class="sp-text">{{ test }}</p>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {# VII Lives or Dies — red rule via border-left on pillar--lives #}
+      {% if technique.lives_or_dies %}
+      <div class="sp-pillar sp-pillar--lives">
+        <div class="sp-label">VII · Where the Dish Lives or Dies</div>
+        <p class="sp-lives">{{ technique.lives_or_dies }}</p>
+      </div>
+      {% endif %}
+
+      {# Right page empty — content forthcoming for this entry #}
+      {% if not technique.quality_hierarchy and not technique.sensory_tests and not technique.lives_or_dies %}
+      <p class="sp-right-empty">Further training content for this entry is being completed.</p>
+      {% endif %}
+
+      {% endif %}{# end has_frost / open #}
+
+    </div>{# end right page #}
+
+  </div>{# end sp-spread #}
+  {% endif %}{# end thin-entry / full spread #}
+
+  {# ── Recipe folio — warmer paper (#F6EFDD), reuses rcp-* classes with var overrides ── #}
+  {% if technique.recipe_card %}
+  <div class="sp-recipe-folio">
+    <div class="sp-recipe-head">
+      <span class="sp-run">Take a copy</span>
+    </div>
+    <div class="rcp-card">
+      <div class="rcp-meta">
+        {% if technique.recipe_card.serves %}<div class="rcp-meta-item"><span class="rcp-meta-label">Serves</span><span class="rcp-meta-value">{{ technique.recipe_card.serves }}</span></div>{% endif %}
+        {% if technique.recipe_card.prep %}<div class="rcp-meta-item"><span class="rcp-meta-label">Prep</span><span class="rcp-meta-value">{{ technique.recipe_card.prep }}</span></div>{% endif %}
+        {% if technique.recipe_card.total %}<div class="rcp-meta-item"><span class="rcp-meta-label">Total</span><span class="rcp-meta-value">{{ technique.recipe_card.total }}</span></div>{% endif %}
+      </div>
+      {% if technique.recipe_card.ingredients %}
+      <div class="rcp-block-label">Ingredients</div>
+      <ul class="rcp-ingredients{% if technique.recipe_card.ingredients | length > 12 %} rcp-ingredients--2col{% endif %}">
+        {% for ing in technique.recipe_card.ingredients %}
+        <li class="rcp-ingredient">
+          {{ ing }}
+          {% set orig = ingredient_origins.get(ing) if ingredient_origins else None %}
+          {% if orig and (orig.origin_brand or (user_tier in ('profession', 'trade') and orig.supplier_website)) %}
+          <div class="rcp-ing-origin">
+            {%- if orig.origin_brand and orig.origin_country -%}{{ orig.origin_brand }} · {{ orig.origin_country }}{%- elif orig.origin_brand -%}{{ orig.origin_brand }}{%- elif orig.origin_country -%}{{ orig.origin_country }}{%- endif -%}
+            {% if user_tier in ('profession', 'trade') and orig.supplier_website %}<a href="{{ orig.supplier_website }}" class="rcp-ing-provider" target="_blank" rel="noopener">{{ orig.supplier_name }}</a>{% endif %}
+          </div>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if technique.recipe_card.steps %}
+      <hr class="rcp-divider">
+      <div class="rcp-block-label">Method</div>
+      <ol class="rcp-steps">
+        {% for step in technique.recipe_card.steps %}
+        <li class="rcp-step">{{ step }}</li>
+        {% endfor %}
+      </ol>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>{# end spread-page #}
+
+{% else %}
+{# ────────────── EXISTING PAGE — byte-identical to pre-transplant ─────── #}
 {% set house_ns = namespace(tier=none) %}
 {% if technique.quality_hierarchy %}
   {% for _qh in technique.quality_hierarchy %}
@@ -845,6 +1176,7 @@
 
 {# Hidden file input for invoice scanning — off-screen (not display:none, for iOS compat) #}
 <input type="file" id="costing-invoice-input" accept="image/jpeg,image/png,image/gif,image/webp,image/*" style="opacity:0;position:absolute;top:-9999px;left:-9999px;width:1px;height:1px">
+{% endif %}{# end spread_mode / existing page #}
 {% endblock %}
 
 {% block scripts %}
