@@ -1524,7 +1524,8 @@ def index():
             if r:
                 img_phatthai = r[1] or ""
             cur.execute(
-                "SELECT name, image_url FROM recipes WHERE lower(name) LIKE %s AND is_curated = TRUE LIMIT 1",
+                "SELECT name, image_url FROM technique_references"
+                " WHERE lower(name) LIKE %s AND published IS NOT FALSE ORDER BY id LIMIT 1",
                 ('%beurre blanc%',)
             )
             r = cur.fetchone()
