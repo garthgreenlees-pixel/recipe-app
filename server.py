@@ -685,6 +685,11 @@ def init_db():
         "CREATE INDEX IF NOT EXISTS idx_technique_slug ON technique_references(slug)",
         "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS image_url TEXT",
         "ALTER TABLE technique_references ADD COLUMN IF NOT EXISTS open_folio BOOLEAN DEFAULT FALSE",
+        """CREATE TABLE IF NOT EXISTS reading_ribbons (
+            user_id INT, canon_slug TEXT, section_slug TEXT,
+            entry_slug TEXT, entry_name TEXT,
+            updated_at TIMESTAMPTZ DEFAULT NOW(),
+            PRIMARY KEY (user_id, canon_slug))""",
     ]:
         cur.execute(stmt)
     cur.execute("""
@@ -11927,15 +11932,17 @@ def technique_page(slug):
     if _canon_slug:
         try:
             cur.execute("""
-                SELECT section_slug, COUNT(*) AS n
-                FROM technique_references
-                WHERE canon_slug = %s AND published IS NOT FALSE
-                  AND section_slug IS NOT NULL
-                GROUP BY section_slug
-                ORDER BY COUNT(*) DESC, section_slug
+                SELECT tr.section_slug, cs.name AS section_name, COUNT(*) AS n
+                FROM technique_references tr
+                LEFT JOIN canon_sections cs ON cs.canon_slug = tr.canon_slug
+                    AND cs.section_slug = tr.section_slug
+                WHERE tr.canon_slug = %s AND tr.published IS NOT FALSE
+                  AND tr.section_slug IS NOT NULL
+                GROUP BY tr.section_slug, cs.name
+                ORDER BY COUNT(*) DESC, tr.section_slug
                 LIMIT 10
             """, (_canon_slug,))
-            thumb_sections = [r['section_slug'] for r in cur.fetchall()]
+            thumb_sections = [{'slug': r['section_slug'], 'name': r['section_name'] or r['section_slug'].replace('-', ' ').title()} for r in cur.fetchall()]
         except Exception as _e:
             app.logger.warning(f"[thumb_sections] {slug}: {_e}")
 
@@ -11975,8 +11982,49 @@ def technique_page(slug):
         except Exception as _e:
             app.logger.warning(f"[page_turn] {slug}: {_e}")
 
+    # Riffle: ordered sibling list for fore-edge hold (cap 250, non-thin only)
+    siblings = []
+    if _canon_slug and _s_slug:
+        try:
+            cur.execute("""
+                SELECT slug, name FROM technique_references
+                WHERE canon_slug = %s AND section_slug = %s
+                  AND published IS NOT FALSE
+                  AND (
+                    (CASE WHEN origin IS NOT NULL THEN 1 ELSE 0 END) +
+                    (CASE WHEN description IS NOT NULL THEN 1 ELSE 0 END) +
+                    (CASE WHEN flavour_context IS NOT NULL THEN 1 ELSE 0 END) +
+                    (CASE WHEN quality_hierarchy IS NOT NULL THEN 1 ELSE 0 END) >= 2
+                    OR recipe_card IS NOT NULL
+                  )
+                ORDER BY name LIMIT 250
+            """, (_canon_slug, _s_slug))
+            siblings = [{'slug': r['slug'], 'name': r['name']} for r in cur.fetchall()]
+        except Exception as _e:
+            app.logger.warning(f"[riffle] {slug}: {_e}")
+
     cur.close()
     conn.close()
+
+    # Ribbon: track reading position per logged-in user per canon
+    _uid = session.get("user_id")
+    if _uid and _canon_slug and DATABASE_URL_WRITE:
+        try:
+            _wconn = psycopg2.connect(DATABASE_URL_WRITE)
+            _wcur = _wconn.cursor()
+            _wcur.execute("""
+                INSERT INTO reading_ribbons (user_id, canon_slug, section_slug, entry_slug, entry_name)
+                VALUES (%s, %s, %s, %s, %s)
+                ON CONFLICT (user_id, canon_slug) DO UPDATE
+                SET section_slug=EXCLUDED.section_slug, entry_slug=EXCLUDED.entry_slug,
+                    entry_name=EXCLUDED.entry_name, updated_at=NOW()
+            """, (_uid, _canon_slug, technique.get('section_slug'), slug, technique.get('name')))
+            _wconn.commit()
+            _wcur.close()
+            _wconn.close()
+            app.logger.info(f"[ribbon] uid={_uid} canon={_canon_slug} entry={slug}")
+        except Exception as _ribbon_err:
+            app.logger.warning(f"[ribbon] upsert failed: {_ribbon_err}")
 
     # Derive a short cuisine label from origin for the cuisine browse link.
     # Split on first comma, period-space, or em-dash; hide if >30 chars,
@@ -12032,6 +12080,7 @@ def technique_page(slug):
         prev_entry=prev_entry,
         next_entry=next_entry,
         section_url=section_url,
+        siblings=siblings,
     )
 
 
@@ -16821,6 +16870,21 @@ def library():
     spines = [build_spine(r, i, False) for i, r in enumerate(canon_rows)]
     ghosts = [build_spine(r, i, True)  for i, r in enumerate(ghost_rows)]
 
+    # Trade-tier ribbon marks: highlight spines with a saved reading position
+    _uid_lib = session.get("user_id")
+    _user_lib = get_current_user() if _uid_lib else None
+    if _user_lib and _user_lib.get('subscription_tier') == 'trade' and DATABASE_URL:
+        try:
+            _rconn = get_db()
+            _rcur = _rconn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            _rcur.execute("SELECT canon_slug FROM reading_ribbons WHERE user_id=%s", (_uid_lib,))
+            _ribbon_slugs = {r['canon_slug'] for r in _rcur.fetchall()}
+            _rcur.close(); _rconn.close()
+            for s in spines:
+                s['ribbon_mark'] = s['slug'] in _ribbon_slugs
+        except Exception:
+            pass
+
     _words = {1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six',
               7: 'Seven', 8: 'Eight', 9: 'Nine', 10: 'Ten', 11: 'Eleven', 12: 'Twelve'}
     published_count = _words.get(len(spines), str(len(spines)))
@@ -16832,6 +16896,54 @@ def library():
         ghosts=ghosts,
         published_count=published_count,
     )
+
+
+@app.route("/api/canon/<canon_slug>/search")
+def api_canon_search(canon_slug):
+    q = request.args.get('q', '').strip()
+    if not q or len(q) < 2:
+        return jsonify([])
+    if not DATABASE_URL:
+        return jsonify([]), 503
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT tr.name, tr.slug, tr.section_slug,
+              cs.name AS chapter_name,
+              ((CASE WHEN tr.origin IS NOT NULL THEN 1 ELSE 0 END) +
+               (CASE WHEN tr.description IS NOT NULL THEN 1 ELSE 0 END) +
+               (CASE WHEN tr.flavour_context IS NOT NULL THEN 1 ELSE 0 END) +
+               (CASE WHEN tr.quality_hierarchy IS NOT NULL THEN 1 ELSE 0 END) >= 2
+               OR tr.recipe_card IS NOT NULL) AS is_full
+            FROM technique_references tr
+            LEFT JOIN canon_sections cs ON cs.canon_slug = tr.canon_slug
+              AND cs.section_slug = tr.section_slug
+            WHERE tr.canon_slug = %s
+              AND tr.published IS NOT FALSE
+              AND tr.name ILIKE %s
+            ORDER BY tr.name
+            LIMIT 24
+        """, (canon_slug, f'%{q}%'))
+        rows = cur.fetchall()
+        cur.close(); conn.close()
+        chapters = {}
+        chapter_order = []
+        for r in rows:
+            ch = r['chapter_name'] or r['section_slug'] or 'General'
+            if ch not in chapters:
+                chapters[ch] = []
+                chapter_order.append(ch)
+            chapters[ch].append({
+                'name': r['name'],
+                'slug': r['slug'],
+                'thin': not bool(r['is_full']),
+                'chapter': ch,
+            })
+        return jsonify([{'chapter': ch, 'entries': chapters[ch]} for ch in chapter_order])
+    except Exception as e:
+        app.logger.error(f"[canon_search] {canon_slug}: {e}")
+        return jsonify([]), 500
 
 
 @app.route("/canons-v2/")
@@ -16939,10 +17051,20 @@ def canon_book(canon_slug):
     """, (canon_slug,))
     recipes = [_serialize_row(r) for r in cur.fetchall()]
     palette = canon.get("design_palette") or {}
+    ribbon = None
+    try:
+        _uid = session.get("user_id")
+        if _uid:
+            cur.execute("SELECT entry_slug, entry_name FROM reading_ribbons WHERE user_id=%s AND canon_slug=%s", (_uid, canon_slug))
+            _r = cur.fetchone()
+            if _r:
+                ribbon = {'entry_slug': _r['entry_slug'], 'entry_name': _r['entry_name']}
+    except Exception:
+        pass
     cur.close()
     conn.close()
     return render_template("canon_book.html", canon=canon, sections=sections, recipes=recipes,
-                           palette=palette, book_mode=True, highlights=highlights)
+                           palette=palette, book_mode=True, highlights=highlights, ribbon=ribbon)
 
 
 REGION_LABELS = {
@@ -17330,12 +17452,30 @@ def canon_section(canon_slug, section_slug):
         distinct_slugs = list(dict.fromkeys(region_slugs))
         for rs in _sort_regions(distinct_slugs):
             regions.append({"slug": rs, "label": REGION_LABELS.get(rs, rs.replace('-', ' ').title())})
+    # Dictionary tabs: top-10 sections for chapter-wall fore-edge
+    thumb_sections = []
+    try:
+        cur.execute("""
+            SELECT tr.section_slug, cs.name AS section_name, COUNT(*) AS n
+            FROM technique_references tr
+            LEFT JOIN canon_sections cs ON cs.canon_slug = tr.canon_slug
+                AND cs.section_slug = tr.section_slug
+            WHERE tr.canon_slug = %s AND tr.published IS NOT FALSE
+              AND tr.section_slug IS NOT NULL
+            GROUP BY tr.section_slug, cs.name
+            ORDER BY COUNT(*) DESC, tr.section_slug
+            LIMIT 10
+        """, (canon_slug,))
+        thumb_sections = [{'slug': r['section_slug'], 'name': r['section_name'] or r['section_slug'].replace('-', ' ').title()} for r in cur.fetchall()]
+    except Exception:
+        pass
     cur.close()
     conn.close()
     return render_template("canon_section.html",
         canon=canon, section=section, entries=entries,
         palette=palette, has_regions=has_regions, regions=regions,
-        section_total=section_total, section_full=section_full, book_mode=True)
+        section_total=section_total, section_full=section_full, book_mode=True,
+        thumb_sections=thumb_sections)
 
 
 @app.route("/canon/<canon_slug>/<section_slug>/<region_slug>/")

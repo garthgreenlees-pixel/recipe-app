@@ -27,6 +27,12 @@
 .ch-highlights{display:block;font-size:12px;font-style:italic;color:var(--stone);margin-top:4px;max-width:36ch}
 .ch-hi-link{color:var(--stone);text-decoration:none;border-bottom:1px solid transparent}
 .ch-hi-link:hover{color:var(--accent);border-bottom-color:var(--accent)}
+/* Reading ribbon */
+.bk-ribbon{margin:16px 0 4px;padding:10px 14px;border-left:3px solid var(--accent);background:rgba(var(--accent-rgb,94,34,48),.05);display:flex;align-items:center;gap:10px}
+.bk-ribbon-gem{width:6px;height:6px;background:var(--accent);transform:rotate(45deg);flex:none;opacity:.7}
+.bk-ribbon-link{font:400 13px/1 'IBM Plex Mono','DM Mono',monospace;letter-spacing:.06em;color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+.bk-ribbon-link:hover{border-bottom-color:var(--accent)}
+.bk-ribbon-link em{font-style:italic;font-family:'Playfair Display',serif;font-size:14px}
 /* Recipes grid */
 .recipes{margin-top:24px;padding-top:4px}
 .rgrid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule)}
@@ -94,6 +100,32 @@
           {% endif %}
         {% endfor %}
       </ul>
+
+      {# Reading ribbon — logged-in users see DB ribbon; logged-out see localStorage via JS #}
+      {% if ribbon %}
+      <div class="bk-ribbon" id="bk-ribbon">
+        <span class="bk-ribbon-gem"></span>
+        <a href="/technique/{{ ribbon.entry_slug }}" class="bk-ribbon-link">Resume at <em>{{ ribbon.entry_name }}</em></a>
+      </div>
+      {% else %}
+      <div class="bk-ribbon" id="bk-ribbon" style="display:none">
+        <span class="bk-ribbon-gem"></span>
+        <a href="#" class="bk-ribbon-link" id="bk-ribbon-link">Resume at <em id="bk-ribbon-name"></em></a>
+      </div>
+      <script>
+      (function(){
+        try {
+          var key='ribbon_'+'{{ canon.slug }}';
+          var r=localStorage.getItem(key);
+          if(r){ r=JSON.parse(r); if(r.entry_slug&&r.entry_name){
+            document.getElementById('bk-ribbon-link').href='/technique/'+r.entry_slug;
+            document.getElementById('bk-ribbon-name').textContent=r.entry_name;
+            document.getElementById('bk-ribbon').style.display='flex';
+          }}
+        } catch(e){}
+      })();
+      </script>
+      {% endif %}
 
       {% if recipes %}
       <div class="recipes">

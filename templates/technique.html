@@ -358,19 +358,50 @@
 .sp-quiet-text{font-family:'Hanken Grotesk','DM Sans',sans-serif;font-size:14px;color:#6E665A;line-height:1.7}
 .sp-quiet-foot{display:flex;align-items:center;gap:10px;margin-top:28px;padding-top:18px;border-top:1px solid #D9CFBB;font-family:'IBM Plex Mono','DM Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9A7B3F}
 .sp-right-empty{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:#6E665A;padding:24px 0}
-.sp-thumb-index{position:absolute;right:0;top:28px;display:flex;flex-direction:column;gap:3px}
-.sp-thumb{width:20px;height:24px;background:#ECE3D1;border-radius:3px 0 0 3px;border:1px solid #D9CFBB;border-right:none}
-.sp-thumb--active{background:#1B2848;border-color:#1B2848}
-a.sp-thumb{display:block;text-decoration:none}
-a.sp-thumb:hover{background:#C8BAA4}
-a.sp-thumb.sp-thumb--active:hover{background:#0F1730}
+/* Dictionary tabs — half-moon fore-edge notches */
+.sp-tab-index{position:absolute;right:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-around;padding:20px 0;pointer-events:all}
+.sp-tab{position:relative;width:32px;height:32px}
+a.sp-tab{cursor:pointer;text-decoration:none;display:block}
+.sp-tab-notch{display:block;width:32px;height:32px;border-radius:16px 0 0 16px;border:1px solid #D9CFBB;border-right:none;background:#ECE3D1;transition:background .18s;position:relative}
+.sp-tab--active .sp-tab-notch{background:var(--cloth-a,#1B2848);border-color:var(--cloth-a,#1B2848)}
+a.sp-tab:hover .sp-tab-notch{background:#C8BAA4}
+a.sp-tab.sp-tab--active:hover .sp-tab-notch{background:var(--cloth-b,#0F1730)}
+.sp-tab-num{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:400 8px/1 'IBM Plex Mono','DM Mono',monospace;letter-spacing:.06em;color:#9A7B3F;pointer-events:none}
+.sp-tab--active .sp-tab-num{color:#D9CFBB}
+.sp-tab-label{position:absolute;right:calc(100% + 6px);top:50%;transform:translateY(-50%);background:#3A3028;color:#E7CF94;font:400 9px/1 'IBM Plex Mono','DM Mono',monospace;letter-spacing:.1em;white-space:nowrap;padding:4px 8px;border-radius:3px;opacity:0;transition:opacity .15s;pointer-events:none;z-index:10}
+a.sp-tab:hover .sp-tab-label{opacity:1}
 .sp-run--open{color:#9A7B3F;font-style:italic}
 .sp-open-gem{margin-left:8px;vertical-align:middle}
+/* Kitchen mode toggle */
+.sp-km-toggle{font:400 9px/1 'IBM Plex Mono','DM Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#9A7B3F;background:none;border:1px solid rgba(154,123,63,.3);padding:3px 8px;cursor:pointer;margin-left:8px;transition:background .18s}
+.sp-km-toggle.sp-km-on{background:rgba(154,123,63,.12)}
+/* Concierge search */
+.sp-search-btn{font:400 13px/1 sans-serif;color:#9A7B3F;background:none;border:none;cursor:pointer;padding:2px 6px;margin-left:6px;opacity:.6;vertical-align:middle}
+.sp-search-btn:hover{opacity:1}
+.sp-search-input{font-family:'IBM Plex Mono','DM Mono',monospace;font-size:10px;letter-spacing:.1em;border:none;border-bottom:1px solid #D9CFBB;background:#F4EEE1;color:#17130D;outline:none;width:180px;padding:2px 4px}
+.sp-search-results{position:absolute;top:100%;right:0;min-width:240px;background:#F4EEE1;border:1px solid #D9CFBB;z-index:50;max-height:340px;overflow-y:auto;display:none;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.sp-search-chapter{font:500 9px/1 'IBM Plex Mono','DM Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#9A7B3F;padding:8px 12px 4px}
+.sp-search-entry{display:block;padding:7px 12px;text-decoration:none;color:#17130D;font:400 13px/1.4 'Hanken Grotesk','DM Sans',sans-serif}
+.sp-search-entry:hover,.sp-search-entry.sp-se-active{background:#ECE3D1}
+.sp-search-thin{font:400 9px/1 'IBM Plex Mono','DM Mono',monospace;letter-spacing:.1em;color:#9A7B3F;margin-left:6px}
+/* Kitchen mode: scale, pin pillars VII+VI, hide gilt chrome */
+body.kitchen-mode .sp-spread{font-size:1.35em}
+body.kitchen-mode .sp-tab-index{visibility:hidden}
+body.kitchen-mode .foilrule{visibility:hidden}
+body.kitchen-mode .sp-gem{visibility:hidden}
+body.kitchen-mode .sp-pillar--sensory{position:sticky;top:0;background:#F4EEE1;z-index:10;padding-top:8px}
+body.kitchen-mode .sp-pillar--lives{position:sticky;top:0;background:#F4EEE1;z-index:9;padding-top:8px}
+body.kitchen-mode .sp-turn-prev{width:10vw}
+body.kitchen-mode .sp-turn-next{width:10vw}
 .sp-recipe-folio{background:#F6EFDD;border-top:1px solid #D9CFBB;max-width:1200px;margin:0 auto;padding:36px 40px 60px}
 .sp-recipe-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid #D9CFBB}
-/* Page-settle entry animation */
-.spread-page{animation:sp-settle 300ms ease-out}
-@keyframes sp-settle{from{opacity:0;transform:translateX(6px)}to{opacity:1;transform:translateX(0)}}
+/* Page-settle: 3D fold open on incoming; prefers-reduced-motion → fade */
+.spread-page{animation:sp-fold-in 380ms ease;transform-origin:left center;perspective:2000px}
+@keyframes sp-fold-in{from{opacity:.75;transform:rotateY(-55deg)}to{opacity:1;transform:rotateY(0)}}
+@media(prefers-reduced-motion){
+  .spread-page{animation:sp-settle 300ms ease-out}
+  @keyframes sp-settle{from{opacity:0;transform:translateX(4px)}to{opacity:1;transform:none}}
+}
 /* Fore-edge page-turn affordances */
 .sp-turn-wrap{position:relative;max-width:1200px;margin:0 auto}
 .sp-turn-prev,.sp-turn-next{position:absolute;top:40px;bottom:40px;width:32px;display:flex;align-items:center;justify-content:center;text-decoration:none;opacity:.35;transition:opacity .18s;z-index:2}
@@ -424,14 +455,24 @@ a.sp-thumb.sp-thumb--active:hover{background:#0F1730}
   {% endif %}
 
   {# ── Folio header — running head + chapter ── #}
-  <header class="sp-header">
+  <header class="sp-header" id="sp-header" style="position:relative">
     <div class="sp-head-left">
       <span class="sp-folio">{{ technique.decimal_id or '—' }}</span>
       <span class="sp-run">{{ sp_canon }}</span>
       {% if sp_open %}<span class="sp-run sp-run--open">open folio</span>{% endif %}
+      {% if sp_open or user_tier != 'free' %}
+      <button class="sp-km-toggle" id="sp-km-toggle" type="button">Kitchen</button>
+      {% endif %}
     </div>
-    <div class="sp-head-right">
+    <div class="sp-head-right" style="position:relative">
       <span class="sp-run">{{ technique.name }}</span>
+      {% if technique.canon_slug %}
+      <button class="sp-search-btn" id="sp-search-btn" type="button" title="Search (/)">&#9906;</button>
+      <div id="sp-search-wrap" style="display:none;position:absolute;right:0;top:0;z-index:20">
+        <input class="sp-search-input" id="sp-search-input" type="text" placeholder="Search entries…" autocomplete="off">
+      </div>
+      <div id="sp-search-results" class="sp-search-results"></div>
+      {% endif %}
     </div>
   </header>
 
@@ -515,22 +556,28 @@ a.sp-thumb.sp-thumb--active:hover{background:#0F1730}
     {# RIGHT PAGE — Pillars V–VII #}
     <div class="sp-page sp-page--right">
 
-      {# Thumb-index notches — locked canon section order, current chapter marked #}
-      <div class="sp-thumb-index" aria-hidden="true">
+      {# Dictionary tabs — half-moon fore-edge notches, active tab = cloth colour #}
+      {% set roman_tabs = ['I','II','III','IV','V','VI','VII','VIII','IX','X'] %}
+      <div class="sp-tab-index">
         {% if thumb_sections %}
           {% for sec in thumb_sections %}
           {% if technique.canon_slug %}
-          <a href="/canon/{{ technique.canon_slug }}/{{ sec }}/" class="sp-thumb{% if sec == technique.section_slug %} sp-thumb--active{% endif %}"></a>
+          <a href="/canon/{{ technique.canon_slug }}/{{ sec.slug }}/" class="sp-tab{% if sec.slug == technique.section_slug %} sp-tab--active{% endif %}">
+            <span class="sp-tab-notch"><span class="sp-tab-num">{{ roman_tabs[loop.index0] }}</span></span>
+            <span class="sp-tab-label">{{ sec.name }}</span>
+          </a>
           {% else %}
-          <div class="sp-thumb{% if sec == technique.section_slug %} sp-thumb--active{% endif %}"></div>
+          <div class="sp-tab{% if sec.slug == technique.section_slug %} sp-tab--active{% endif %}">
+            <span class="sp-tab-notch"><span class="sp-tab-num">{{ roman_tabs[loop.index0] }}</span></span>
+          </div>
           {% endif %}
           {% endfor %}
           {% for n in range(10 - thumb_sections|length) %}
-          <div class="sp-thumb"></div>
+          <div class="sp-tab"><span class="sp-tab-notch"></span></div>
           {% endfor %}
         {% else %}
           {% for n in range(10) %}
-          <div class="sp-thumb"></div>
+          <div class="sp-tab"><span class="sp-tab-notch"></span></div>
           {% endfor %}
         {% endif %}
       </div>
@@ -586,7 +633,7 @@ a.sp-thumb.sp-thumb--active:hover{background:#0F1730}
 
       {# VI Sensory Tests — polymorphic: mapping OR list of {sense,cue,fail_indicator} OR list of strings #}
       {% if technique.sensory_tests %}
-      <div class="sp-pillar">
+      <div class="sp-pillar sp-pillar--sensory">
         <div class="sp-label">VI · Sensory Tests</div>
         {% if technique.sensory_tests is mapping %}
           {% for sense, description in technique.sensory_tests.items() %}
@@ -678,17 +725,161 @@ a.sp-thumb.sp-thumb--active:hover{background:#0F1730}
 
 </div>{# end spread-page #}
 
-{% if section_url %}
+{% if siblings %}
+<script id="sp-siblings" type="application/json">{{ siblings | tojson }}</script>
+{% endif %}
+
 <script>
 (function(){
-  document.addEventListener('keydown', function(e){
-    if (e.ctrlKey || e.metaKey || e.altKey || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key === 'ArrowLeft')  { e.preventDefault(); location.href = document.getElementById('sp-turn-prev').href; }
-    if (e.key === 'ArrowRight') { e.preventDefault(); location.href = document.getElementById('sp-turn-next').href; }
+  // ── Ribbon: persist reading position to localStorage (logged-out users) ──
+  {% if technique.canon_slug %}
+  try {
+    localStorage.setItem('ribbon_'+{{ technique.canon_slug | tojson }},
+      JSON.stringify({entry_slug:{{ technique.slug | tojson }},entry_name:{{ technique.name | tojson }}}));
+  } catch(e) {}
+  {% endif %}
+
+  // ── Kitchen Mode ──
+  var kmBtn = document.getElementById('sp-km-toggle');
+  var wl = null;
+  function applyKitchen(on) {
+    document.body.classList.toggle('kitchen-mode', on);
+    if (kmBtn) { kmBtn.textContent = on ? 'Exit' : 'Kitchen'; kmBtn.classList.toggle('sp-km-on', on); }
+    try { on ? sessionStorage.setItem('kitchen','1') : sessionStorage.removeItem('kitchen'); } catch(e){}
+    if (on && navigator.wakeLock) navigator.wakeLock.request('screen').then(function(l){wl=l;}).catch(function(){});
+    else if (!on && wl) { wl.release().catch(function(){}); wl=null; }
+  }
+  try { if (sessionStorage.getItem('kitchen')==='1') applyKitchen(true); } catch(e){}
+  if (kmBtn) kmBtn.addEventListener('click', function(){ applyKitchen(!document.body.classList.contains('kitchen-mode')); });
+
+  // ── Concierge Search ──
+  var searchWrap = document.getElementById('sp-search-wrap');
+  var searchInput = document.getElementById('sp-search-input');
+  var searchResults = document.getElementById('sp-search-results');
+  var searchDebounce = null;
+  var searchTop = null;
+  var searchOpen = false;
+  {% if technique.canon_slug %}var searchCanon = {{ technique.canon_slug | tojson }};{% else %}var searchCanon = null;{% endif %}
+  function openSearch() {
+    if (!searchWrap || !searchCanon) return;
+    searchWrap.style.display = 'block';
+    searchOpen = true;
+    if (searchInput) { searchInput.value = ''; setTimeout(function(){ searchInput.focus(); }, 10); }
+    if (searchResults) searchResults.style.display = 'none';
+  }
+  function closeSearch() {
+    if (searchWrap) searchWrap.style.display = 'none';
+    if (searchResults) searchResults.style.display = 'none';
+    searchOpen = false;
+  }
+  function doSearch(q) {
+    if (!searchResults || !searchCanon || q.length < 2) { if (searchResults) searchResults.style.display='none'; return; }
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(function(){
+      fetch('/api/canon/'+searchCanon+'/search?q='+encodeURIComponent(q))
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+          searchResults.innerHTML=''; searchTop=null;
+          if (!data||!data.length){ searchResults.style.display='none'; return; }
+          var first=true;
+          data.forEach(function(grp){
+            var h=document.createElement('div'); h.className='sp-search-chapter'; h.textContent=grp.chapter;
+            searchResults.appendChild(h);
+            grp.entries.forEach(function(entry){
+              var a=document.createElement('a'); a.className='sp-search-entry'; a.href='/technique/'+entry.slug;
+              a.textContent=entry.name;
+              if (entry.thin) { var t=document.createElement('span'); t.className='sp-search-thin'; t.textContent=' in the writing'; a.appendChild(t); }
+              if (first) { searchTop=a.href; a.classList.add('sp-se-active'); first=false; }
+              searchResults.appendChild(a);
+            });
+          });
+          searchResults.style.display='block';
+        })
+        .catch(function(){ searchResults.style.display='none'; });
+    }, 250);
+  }
+  var searchBtn = document.getElementById('sp-search-btn');
+  if (searchBtn) searchBtn.addEventListener('click', function(){ searchOpen ? closeSearch() : openSearch(); });
+  if (searchInput) {
+    searchInput.addEventListener('input', function(){ doSearch(searchInput.value.trim()); });
+    searchInput.addEventListener('keydown', function(e){
+      if (e.key==='Enter' && searchTop) { e.preventDefault(); navigate(searchTop); }
+      if (e.key==='Escape') closeSearch();
+    });
+    searchInput.addEventListener('blur', function(){ setTimeout(closeSearch, 200); });
+  }
+
+  // ── THE FOLD: outgoing 3D page-turn then navigate ──
+  var FOLD_MS = 380;
+  var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function navigate(href) {
+    if (!href) return;
+    var sp = document.querySelector('.spread-page');
+    if (!sp || reducedMotion) { location.href=href; return; }
+    sp.style.transition = 'opacity '+FOLD_MS+'ms ease,transform '+FOLD_MS+'ms ease';
+    sp.style.transformOrigin = 'left center';
+    sp.style.transform = 'rotateY(-160deg)';
+    sp.style.opacity = '0.05';
+    setTimeout(function(){ location.href=href; }, FOLD_MS-20);
+  }
+  ['sp-turn-prev','sp-turn-next'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('click', function(e){ e.preventDefault(); navigate(el.href); });
   });
+
+  {% if section_url %}
+  // ── THE RIFFLE: hold ArrowLeft/ArrowRight >400ms → flicker entry names ──
+  var siblingsEl = document.getElementById('sp-siblings');
+  var siblings = siblingsEl ? JSON.parse(siblingsEl.textContent) : [];
+  var currentSlug = {{ technique.slug | tojson }};
+  var riffleIdx = Math.max(0, siblings.findIndex(function(s){ return s.slug===currentSlug; }));
+  var holdTimer=null, riffleTimer=null, isRiffling=false;
+  var strip = document.createElement('div');
+  strip.style.cssText='position:fixed;right:0;top:50%;transform:translateY(-50%);background:#3A3028;color:#E7CF94;font:11px/1.4 "IBM Plex Mono","DM Mono",monospace;writing-mode:vertical-rl;padding:12px 8px;opacity:0;transition:opacity .15s;pointer-events:none;z-index:200;max-height:320px;overflow:hidden;border-radius:6px 0 0 6px;letter-spacing:.06em';
+  document.body.appendChild(strip);
+  function riffleStart(dir) {
+    if (!siblings.length) return;
+    isRiffling=true; strip.style.opacity='1';
+    riffleStep(dir);
+  }
+  function riffleStep(dir) {
+    if (!isRiffling) return;
+    riffleIdx=(riffleIdx+dir+siblings.length)%siblings.length;
+    strip.textContent=siblings[riffleIdx].name;
+    riffleTimer=setTimeout(function(){ riffleStep(dir); }, 120);
+  }
+  function riffleStop() {
+    isRiffling=false; clearTimeout(riffleTimer); strip.style.opacity='0';
+    return siblings[riffleIdx]||null;
+  }
+  document.addEventListener('keydown', function(e){
+    if (e.ctrlKey||e.metaKey||e.altKey) return;
+    if (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+    if (e.key==='/') { e.preventDefault(); openSearch(); return; }
+    if (e.key!=='ArrowLeft'&&e.key!=='ArrowRight') return;
+    e.preventDefault();
+    if (isRiffling) return;
+    if (!holdTimer) {
+      var dir = e.key==='ArrowRight' ? 1 : -1;
+      holdTimer = setTimeout(function(){ holdTimer=null; riffleStart(dir); }, 400);
+    }
+  });
+  document.addEventListener('keyup', function(e){
+    if (e.key!=='ArrowLeft'&&e.key!=='ArrowRight') return;
+    clearTimeout(holdTimer); holdTimer=null;
+    if (isRiffling) {
+      var t = riffleStop();
+      if (t && t.slug!==currentSlug) navigate('/technique/'+t.slug);
+    } else {
+      var id = e.key==='ArrowRight' ? 'sp-turn-next' : 'sp-turn-prev';
+      var el = document.getElementById(id);
+      if (el) navigate(el.href);
+    }
+  });
+  {% endif %}{# section_url #}
+
 })();
 </script>
-{% endif %}
 
 {% else %}
 {# ────────────── EXISTING PAGE — byte-identical to pre-transplant ─────── #}

@@ -219,6 +219,9 @@ body { background: var(--paper); color: var(--ink); }
             {% if s.bespoke %}
             <span class="lib-band" style="background:linear-gradient(90deg,transparent,{{ s.foil }},transparent);"></span>
             {% endif %}
+            {% if s.get('ribbon_mark') %}
+            <span style="width:3px;height:14px;background:{{ s.mark_color }};opacity:.85;border-radius:0 0 2px 2px;flex:none;display:block;margin:2px auto;"></span>
+            {% endif %}
             <span class="lib-title"
                   style="font-family:{{ s.font_family }};font-weight:{{ s.font_weight }};font-style:{{ s.font_style }};text-transform:{{ s.text_transform }};letter-spacing:{{ s.letter_spacing }};font-size:{{ s.font_size }}px;color:{{ s.title_color }};">
               {{ s.name }}

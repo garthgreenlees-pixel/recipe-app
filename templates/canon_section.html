@@ -33,6 +33,25 @@
 .e-thin-tag{font:400 9px/1 "DM Mono",monospace;letter-spacing:.1em;color:var(--foil);opacity:.7;white-space:nowrap;margin-left:6px}
 /* Honest chapter count */
 .sec-depth{font:400 10px/1 "DM Mono",monospace;letter-spacing:.12em;color:var(--stone);margin-bottom:14px}
+/* Uncut pages — empty chapter placeholder */
+.uncut-face{list-style:none;padding:28px 0 40px;border-top:1px solid var(--rule)}
+.uncut-fold{display:block;height:22px;margin-bottom:18px;
+  background:repeating-linear-gradient(165deg,#ECE3D1 0 10px,#E0D5C2 10px 12px);
+  border-top:1px solid #C8BBAA;border-bottom:1px solid #C8BBAA;opacity:.85}
+.uncut-text{font-family:"EB Garamond",Georgia,serif;font-style:italic;font-size:18px;color:var(--stone)}
+/* Dictionary tabs on chapter wall */
+.bpage-right{position:relative;overflow:visible}
+.sp-tab-index{position:absolute;right:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-around;padding:20px 0;pointer-events:all}
+.sp-tab{position:relative;width:32px;height:32px}
+a.sp-tab{cursor:pointer;text-decoration:none;display:block}
+.sp-tab-notch{display:block;width:32px;height:32px;border-radius:16px 0 0 16px;border:1px solid var(--rule);border-right:none;background:var(--paper,#F2EBDA);transition:background .18s;position:relative}
+.sp-tab--active .sp-tab-notch{background:var(--cloth-a,#1B2848);border-color:var(--cloth-a,#1B2848)}
+a.sp-tab:hover .sp-tab-notch{background:#C8BAA4}
+a.sp-tab.sp-tab--active:hover .sp-tab-notch{background:var(--cloth-b,#0F1730)}
+.sp-tab-num{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:400 8px/1 "DM Mono",monospace;letter-spacing:.06em;color:var(--foil);pointer-events:none}
+.sp-tab--active .sp-tab-num{color:#D9CFBB}
+.sp-tab-label{position:absolute;right:calc(100% + 6px);top:50%;transform:translateY(-50%);background:#3A3028;color:#E7CF94;font:400 9px/1 "DM Mono",monospace;letter-spacing:.1em;white-space:nowrap;padding:4px 8px;border-radius:3px;opacity:0;transition:opacity .15s;pointer-events:none;z-index:10}
+a.sp-tab:hover .sp-tab-label{opacity:1}
 {% endblock %}
 
 {% block main_padding %}0px{% endblock %}
@@ -58,6 +77,21 @@
     <div class="bspine"></div>
 
     <div class="bpage-right">
+      {# Dictionary tabs — fore-edge notches on chapter wall #}
+      {% if thumb_sections %}
+      {% set roman_tabs = ['I','II','III','IV','V','VI','VII','VIII','IX','X'] %}
+      <div class="sp-tab-index">
+        {% for sec in thumb_sections %}
+        <a href="/canon/{{ canon.slug }}/{{ sec.slug }}/" class="sp-tab{% if sec.slug == section.section_slug %} sp-tab--active{% endif %}">
+          <span class="sp-tab-notch"><span class="sp-tab-num">{{ roman_tabs[loop.index0] }}</span></span>
+          <span class="sp-tab-label">{{ sec.name }}</span>
+        </a>
+        {% endfor %}
+        {% for n in range(10 - thumb_sections|length) %}
+        <div class="sp-tab"><span class="sp-tab-notch"></span></div>
+        {% endfor %}
+      </div>
+      {% endif %}
       <div class="rhead"><span>{{ canon.name }}</span><span>{{ section.name }}</span></div>
       {% if section.display_order == 10 and canon.overview_text %}
         <div class="overview-body">
@@ -92,7 +126,10 @@
             </a>
           </li>
           {% else %}
-          <li style="padding:20px 0;color:var(--stone);font-style:italic">No techniques in this section.</li>
+          <li class="uncut-face">
+            <span class="uncut-fold"></span>
+            <em class="uncut-text">These pages are in the writing.</em>
+          </li>
           {% endfor %}
         </ul>
       {% endif %}
