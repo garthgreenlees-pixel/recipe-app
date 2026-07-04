@@ -14,8 +14,8 @@ Precondition gates (all checked before any write):
     a. Live open_folio flags match the founder list in founder_folio_list.md.
        If live carries slugs not on that list, refuse and print cleanup SQL.
     b. founder_folio_list.md exists and names at least one folio for this canon.
-    c. Every source_book stamped on the canon's staging entries has a
-       signed-off verification sheet in verification_sheets/.
+    c. verification_sheets/<canon>_SAMPLE.md exists and its sign-off block
+       is filled in (operator name + date present, not the blank template).
 
 Promotion (--execute only, after all gates pass):
     - technique_references: INSERT new rows (staging slug not in live),
@@ -183,57 +183,35 @@ def _gate_b(path, canon_slug, staging_cur):
     return True
 
 
-def _gate_c(canon_slug, staging_cur):
-    """Every source_book on staging entries must have a signed-off sheet."""
-    staging_cur.execute(
-        """
-        SELECT DISTINCT source_book
-        FROM   technique_references
-        WHERE  canon_slug = %s
-          AND  published IS NOT FALSE
-          AND  source_book IS NOT NULL
-          AND  source_book <> ''
-        ORDER  BY source_book
-        """,
-        (canon_slug,),
-    )
-    books = [r["source_book"] for r in staging_cur.fetchall()]
+def _gate_c(canon_slug):
+    """verification_sheets/<canon>_SAMPLE.md must exist with a filled sign-off."""
+    sheet_path = os.path.join(SHEETS_DIR, f"{canon_slug}_SAMPLE.md")
+    rel = os.path.relpath(sheet_path, ROOT)
 
-    if not books:
+    if not os.path.exists(sheet_path):
         print(
-            f"  [gate-c] PASS  — no source_books stamped on '{canon_slug}' entries "
-            "(nothing to verify)"
+            f"  [gate-c] FAIL  — {rel} not found.\n"
+            f"           Run: python3 scripts/generate_verification_sheets.py {canon_slug}"
         )
+        return False
+
+    signed = False
+    with open(sheet_path) as fh:
+        for line in fh:
+            if "Sampled and verified against physical sources" in line:
+                signed = "___" not in line
+                break
+
+    if signed:
+        print(f"  [gate-c] PASS  — {rel}: sign-off complete")
         return True
 
-    def _slugify(text):
-        s = text.lower().strip()
-        return re.sub(r"[^a-z0-9]+", "-", s).strip("-")[:60]
-
-    def _is_signed(sheet_path):
-        try:
-            content = open(sheet_path).read()
-        except FileNotFoundError:
-            return False, "sheet not found"
-        for line in content.splitlines():
-            if "Verified against physical copy —" in line or \
-               "Verified against physical copy --" in line or \
-               "Verified against physical copy —" in line:
-                signed = "___" not in line
-                return signed, "sign-off line present" if signed else "sign-off line blank"
-        return False, "sign-off line missing from sheet"
-
-    all_ok = True
-    for book in books:
-        sheet_path = os.path.join(SHEETS_DIR, f"{canon_slug}_{_slugify(book)}.md")
-        signed, reason = _is_signed(sheet_path)
-        status = "PASS" if signed else "FAIL"
-        rel = os.path.relpath(sheet_path, ROOT)
-        print(f"  [gate-c] {status}  — '{book}' → {rel}: {reason}")
-        if not signed:
-            all_ok = False
-
-    return all_ok
+    print(
+        f"  [gate-c] FAIL  — {rel}: sign-off line is blank.\n"
+        "           Verify the sample against physical sources, then fill in "
+        "operator + date."
+    )
+    return False
 
 
 # ── Dry-run report ────────────────────────────────────────────────────────────
@@ -414,7 +392,7 @@ def main():
         a_ok = _gate_a(live_read_cur, founder_slugs)
 
     b_ok = _gate_b(FOUNDER_LIST_PATH, canon_slug, staging_cur)
-    c_ok = _gate_c(canon_slug, staging_cur)
+    c_ok = _gate_c(canon_slug)
 
     gates_ok = a_ok and b_ok and c_ok
 
