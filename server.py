@@ -1491,7 +1491,57 @@ def _query_compose_drafts(user_id):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    counts_techniques = 0
+    counts_recipes = 0
+    img_carbonara = ""
+    img_phatthai = ""
+    img_beurreblanc = ""
+    if DATABASE_URL:
+        try:
+            conn = get_db()
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT
+                  (SELECT COUNT(*) FROM technique_references) AS techniques,
+                  (SELECT COUNT(*) FROM recipes WHERE is_curated = TRUE) AS recipes_std
+            """)
+            row = cur.fetchone()
+            if row:
+                counts_techniques = "{:,}".format(row[0])
+                counts_recipes = "{:,}".format(row[1])
+            cur.execute(
+                "SELECT name, image_url FROM recipes WHERE lower(name) LIKE %s AND is_curated = TRUE LIMIT 1",
+                ('%carbonara%',)
+            )
+            r = cur.fetchone()
+            if r:
+                img_carbonara = r[1] or ""
+            cur.execute(
+                "SELECT name, image_url FROM recipes WHERE (lower(name) LIKE %s OR lower(name) LIKE %s) AND is_curated = TRUE LIMIT 1",
+                ('%phat thai%', '%pad thai%')
+            )
+            r = cur.fetchone()
+            if r:
+                img_phatthai = r[1] or ""
+            cur.execute(
+                "SELECT name, image_url FROM recipes WHERE lower(name) LIKE %s AND is_curated = TRUE LIMIT 1",
+                ('%beurre blanc%',)
+            )
+            r = cur.fetchone()
+            if r:
+                img_beurreblanc = r[1] or ""
+            cur.close()
+            conn.close()
+        except Exception:
+            pass
+    return render_template(
+        "homepage_landing.html",
+        counts_techniques=counts_techniques,
+        counts_recipes=counts_recipes,
+        img_carbonara=img_carbonara,
+        img_phatthai=img_phatthai,
+        img_beurreblanc=img_beurreblanc,
+    )
 
 
 @app.route("/kitchen")

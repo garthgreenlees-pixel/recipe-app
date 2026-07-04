@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provenance — Every dish, known</title>
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G21HCX2D0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-4G21HCX2D0');</script>
+
+<!-- PWA / favicon -->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#0A0A09">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Provenance">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4EEE1; --paper-2:#ECE3D1; --ink:#17130D; --ink-soft:#6E665A;
+    --gilt:#9A7B3F; --hair:#D9CFBB;
+    --night:#13110C; --night-2:#1A1711; --night-ink:#F1EBDD; --night-soft:#A39A88;
+    --night-hair:#2C2820; --gilt-night:#C6A055;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gilt)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 48px}
+  @media(max-width:720px){.wrap{padding:0 22px}}
+
+  header{display:flex;align-items:center;justify-content:space-between;padding:22px 48px;border-bottom:1px solid var(--hair);position:sticky;top:0;background:var(--paper);z-index:20}
+  @media(max-width:720px){header{padding:18px 22px}}
+  .brand{font-family:'Cormorant',serif;font-weight:700;font-size:25px;text-decoration:none;color:var(--ink)}
+  nav{display:flex;gap:26px;align-items:center}
+  .navlink{font-size:12px;letter-spacing:.13em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft)}
+  .navlink:hover{color:var(--ink)}
+  .enter-btn{font-size:12px;letter-spacing:.13em;text-transform:uppercase;text-decoration:none;color:var(--ink);border:1px solid var(--ink);padding:9px 18px;border-radius:2px}
+  @media(max-width:860px){nav .navlink{display:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:60px 0 84px;text-align:center}
+  .hero h1{font-family:'Cormorant',serif;font-weight:600;font-size:clamp(36px,4.8vw,54px);line-height:1.06;margin:18px 0 14px}
+  .hero h1 em{font-style:italic;color:var(--gilt)}
+  .hero .sub{font-size:16px;line-height:1.6;color:var(--ink-soft);max-width:520px;margin:0 auto 34px}
+
+  .dish-tabs{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+  .dish-tab{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;cursor:pointer;background:transparent;border:1px solid var(--hair);color:var(--ink-soft);border-radius:2px;transition:border-color .25s,color .25s}
+  .dish-tab.active{border-color:var(--gilt);color:var(--gilt)}
+
+  /* ---------- THE FOLIO ---------- */
+  .folio{position:relative;max-width:680px;margin:0 auto;background:var(--night);color:var(--night-ink);border:1px solid var(--night-hair);border-radius:3px;padding:44px 48px 34px;text-align:left;box-shadow:0 28px 70px rgba(23,19,13,.22)}
+  @media(max-width:720px){.folio{padding:34px 24px 28px}}
+  .f-title{font-family:'Cormorant',serif;font-size:30px;font-weight:600;padding-right:118px}
+  .f-origin{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--night-soft);margin:6px 0 22px}
+
+  /* the plate — photo slot that blooms in on the seal press */
+  .plate-slot{max-height:0;opacity:0;overflow:hidden;transition:max-height .8s cubic-bezier(.4,0,.2,1),opacity .6s ease .15s,margin .8s cubic-bezier(.4,0,.2,1)}
+  .sourced .plate-slot{max-height:340px;opacity:1;margin-bottom:26px}
+  .plate-frame{position:relative;aspect-ratio:16/8.5;border:1px solid var(--night-hair);border-radius:2px;overflow:hidden;
+    background:
+      radial-gradient(ellipse 62% 78% at 50% 54%, #E8DFCB 0%, #DDD2B8 34%, #C9BC9E 52%, transparent 53%),
+      radial-gradient(ellipse 46% 58% at 50% 52%, rgba(154,123,63,.55) 0%, rgba(122,94,45,.5) 40%, transparent 62%),
+      linear-gradient(160deg, #211D15 0%, #191510 55%, #14110B 100%)}
+  .plate-frame::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 90% at 48% 40%, rgba(241,235,221,.10), transparent 60%)}
+  .plate-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:1}
+  .plate-img.has{display:block}
+  .plate-frame:has(.plate-img.has)::after{background:linear-gradient(180deg, transparent 55%, rgba(19,17,12,.55) 100%)}
+  .plate-label{position:absolute;left:14px;bottom:11px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--night-soft);z-index:2}
+  .plate-name{position:absolute;right:14px;bottom:11px;font-family:'Cormorant',serif;font-style:italic;font-size:15px;color:var(--gilt-night);z-index:2}
+  .sourced .plate-frame{animation:plateIn .9s cubic-bezier(.3,0,.2,1) both}
+  @keyframes plateIn{from{transform:scale(1.04);filter:brightness(.7)}to{transform:none;filter:none}}
+
+  /* ingredient lines */
+  .f-line{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:11px 0;border-bottom:1px dashed var(--night-hair);align-items:baseline}
+  .f-line .q{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--night-soft)}
+  .f-line .n{font-size:15.5px}
+  .f-line .prov{font-family:'Cormorant',serif;font-style:italic;font-size:17.5px;color:var(--gilt-night);opacity:0;display:inline}
+  .sourced .f-line .prov{animation:inkIn .5s ease both}
+  @keyframes inkIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+  /* the dossier */
+  .dossier{max-height:0;opacity:0;overflow:hidden;transition:max-height .55s cubic-bezier(.4,0,.2,1) .5s,opacity .45s ease .5s;border-left:2px solid var(--gilt-night);margin-left:78px}
+  .sourced .dossier{max-height:300px;opacity:1;margin-top:12px;margin-bottom:4px}
+  @media(max-width:720px){.dossier{margin-left:0}}
+  .dossier .d-in{padding:12px 18px}
+  .dossier .d-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gilt-night);margin-bottom:6px}
+  .dossier .d-prod{font-size:14px;font-weight:600}
+  .dossier .d-note{font-size:13px;line-height:1.6;color:var(--night-soft);margin-top:6px}
+
+  /* the full read — method, principle, table */
+  .full{max-height:0;opacity:0;overflow:hidden;transition:max-height 1s cubic-bezier(.4,0,.2,1) .7s,opacity .6s ease .8s}
+  .sourced .full{max-height:1400px;opacity:1}
+  .sec{padding-top:26px}
+  .sec-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gilt-night);margin-bottom:12px}
+  .step{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:9px 0;align-items:baseline}
+  .step .num{font-family:'Cormorant',serif;font-size:19px;color:var(--gilt-night)}
+  .step .txt{font-size:14.5px;line-height:1.6}
+  .step .why{display:block;font-family:'Cormorant',serif;font-style:italic;font-size:14.5px;color:var(--night-soft);margin-top:3px}
+  .sec p{font-size:14.5px;line-height:1.68;color:var(--night-ink)}
+  .sec p .soft{color:var(--night-soft)}
+  .table-pair{border-top:1px solid var(--night-hair);margin-top:24px;padding-top:22px}
+
+
+  .f-status{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--night-soft);padding-top:20px;border-top:1px solid var(--night-hair);margin-top:22px;transition:color .3s}
+  .sourced .f-status{color:var(--gilt-night)}
+
+  /* the seal */
+  .seal{position:absolute;top:30px;right:32px;width:98px;height:98px;border-radius:50%;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;line-height:1.5;background:transparent;border:1.5px solid var(--gilt-night);color:var(--gilt-night);transition:transform .2s ease,background .3s,color .3s;z-index:3}
+  .seal:hover{transform:scale(1.05)}
+  .seal:active{transform:scale(.92)}
+  .sourced .seal{background:var(--gilt-night);color:var(--night)}
+  @media(max-width:720px){.seal{width:82px;height:82px;top:24px;right:20px}}
+
+  .after-line{font-family:'Cormorant',serif;font-style:italic;font-size:19px;color:var(--ink-soft);margin:34px auto 22px;max-width:520px;opacity:0;transition:opacity .5s ease .3s}
+  .after-line.show{opacity:1}
+  .hero-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .cta{display:inline-block;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:14px 22px;border-radius:2px}
+  .cta.primary{background:var(--ink);color:var(--paper)}
+  .cta.ghost{border:1px solid var(--ink);color:var(--ink)}
+
+  /* ---------- INVITATION ---------- */
+  .invite{padding:80px 0;border-top:1px solid var(--hair);background:var(--paper-2)}
+  .invite h2{font-family:'Cormorant',serif;font-weight:600;font-size:clamp(28px,3.4vw,40px);margin:16px 0 8px}
+  .invite .lede{font-size:15.5px;color:var(--ink-soft);max-width:520px;line-height:1.6;margin-bottom:44px}
+  .inv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  @media(max-width:1000px){.inv-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.inv-grid{grid-template-columns:1fr}}
+  .inv{background:var(--paper);border:1px solid var(--hair);border-radius:3px;padding:26px 24px;display:flex;flex-direction:column;text-decoration:none;transition:border-color .3s,transform .3s}
+  .inv:hover{border-color:var(--gilt);transform:translateY(-3px)}
+  .inv .i-name{font-family:'Cormorant',serif;font-size:23px;font-weight:600}
+  .inv .i-n{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gilt);margin:5px 0 12px}
+  .inv p{font-size:13.5px;line-height:1.6;color:var(--ink-soft);flex:1}
+  .inv .go{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gilt);margin-top:16px}
+
+  .member-line{padding:56px 0;text-align:center;border-top:1px solid var(--hair)}
+  .member-line .m-big{font-family:'Cormorant',serif;font-size:clamp(22px,2.8vw,30px);font-weight:600;margin-bottom:10px}
+  .member-line .m-sub{font-size:14.5px;color:var(--ink-soft);margin-bottom:24px}
+
+  footer{padding:36px 48px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px;border-top:1px solid var(--hair)}
+  footer .fb{font-family:'Cormorant',serif;font-weight:700;font-size:20px}
+  footer .fc{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}.f-line .prov{opacity:1}}
+  :focus-visible{outline:2px solid var(--gilt);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="/">Provenance</a>
+  <nav>
+    <a class="navlink" href="/recipes">Recipes</a>
+    <a class="navlink" href="/beverage">Beverages</a>
+    <a class="navlink" href="/library">The Library</a>
+    <a class="navlink" href="/pricing">Pricing</a>
+    {% if is_authenticated %}
+    <a class="enter-btn" href="/kitchen">MyKitchen</a>
+    {% else %}
+    <a class="enter-btn" href="/auth/login">Enter</a>
+    {% endif %}
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">The Same Dish · Two Kitchens</div>
+    <h1>This is your recipe.<br><em>Now press the seal.</em></h1>
+    <p class="sub">Pick a dish. Press the seal. The whole recipe opens — where each ingredient comes from, how the dish is made, and what to pour beside it.</p>
+
+    <div class="dish-tabs" id="dishTabs"></div>
+
+    <div class="folio" id="folio">
+      <button class="seal" id="sealBtn" aria-pressed="false">Press<br>the seal</button>
+      <div class="f-title" id="fTitle"></div>
+      <div class="f-origin" id="fOrigin"></div>
+
+      <div class="plate-slot">
+        <div class="plate-frame">
+          <img class="plate-img" id="plateImg" alt="" src="">
+          <span class="plate-name" id="plateName"></span>
+        </div>
+      </div>
+
+      <div id="fLines"></div>
+
+      <div class="full" id="fFull"></div>
+
+      <div class="f-status" id="fStatus"></div>
+    </div>
+
+    <p class="after-line" id="afterLine">Every recipe in the library reads like this — the whole dish, on one page.</p>
+    <div class="hero-ctas">
+      <a class="cta primary" href="/recipe/spaghetti-carbonara">Open this recipe →</a>
+      <a class="cta ghost" href="/recipes">Browse the recipes</a>
+    </div>
+  </div>
+</section>
+
+<section class="invite">
+  <div class="wrap">
+    <div class="eyebrow">Come in</div>
+    <h2>There's a whole kitchen behind this page.</h2>
+    <p class="lede">Everything works the way the recipe above does — plainly at first glance, deeper the further you read.</p>
+    <div class="inv-grid">
+      <a class="inv" href="/recipes">
+        <span class="i-name">Recipes</span>
+        <span class="i-n">{{ counts_recipes }} at standard</span>
+        <p>Complete recipes, every ingredient traced to a named producer, with the technique explained under each step.</p>
+        <span class="go">Browse recipes →</span>
+      </a>
+      <a class="inv" href="/beverage">
+        <span class="i-name">Beverages</span>
+        <span class="i-n">Wine · beer · spirits · tea</span>
+        <p>What to pour with the dish — and the reason it works, not just the name of the bottle.</p>
+        <span class="go">See the pairings →</span>
+      </a>
+      <a class="inv" href="/library">
+        <span class="i-name">The Library</span>
+        <span class="i-n">{{ counts_techniques }} techniques</span>
+        <p>The knowledge beneath the dishes — how things are actually done, cuisine by cuisine, written to one standard.</p>
+        <span class="go">Open the Library →</span>
+      </a>
+      <a class="inv" href="/pricing">
+        <span class="i-name">For the working kitchen</span>
+        <span class="i-n">The Profession</span>
+        <p>Recipe costing to the cent, HACCP food-safety briefs, and allergen maps across your whole menu.</p>
+        <span class="go">See the tools →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="member-line">
+  <div class="wrap">
+    <div class="m-big">Reading is free. Memberships from $49 a year open the deeper layers.</div>
+    <div class="m-sub">Four memberships, for four kinds of cook — from the home kitchen to the trade.</div>
+    <a class="cta ghost" href="/pricing">See what each unlocks →</a>
+  </div>
+</section>
+
+<footer>
+  <span class="fb">Provenance</span>
+  <span class="fc">© 2026 · One standard, no exceptions</span>
+</footer>
+
+<script>
+const DISHES = [
+  {
+    title:'Spaghetti alla Carbonara', origin:'Rome · Lazio · serves 2',
+    img:'{{ img_carbonara }}',
+    lines:[
+      {qty:'200 g', plain:'spaghetti', prov:'Senatore Cappelli — Pastificio Mancini'},
+      {qty:'150 g', plain:'guanciale', prov:'Suino Casertana, 24-month cure', hero:true},
+      {qty:'4', plain:'egg yolks', prov:'pastured — Lazio'},
+      {qty:'50 g', plain:'pecorino', prov:'Pecorino Romano DOP, grated'},
+      {qty:'—', plain:'black pepper', prov:'Tellicherry, cracked'}
+    ],
+    dossier:{name:'Guanciale', producer:'Casertana-breed cure · Lazio',
+      note:'Hand-salted, cured 24 months. Renders clean — the fat is the sauce. Substitutions are recorded, never silent.'},
+    method:[
+      {txt:'Boil the spaghetti in well-salted water, one minute short of the packet.', why:'It finishes cooking in the pan — the last minute belongs to the sauce.'},
+      {txt:'Render the guanciale in a dry pan until glass-crisp. Keep every drop of fat.', why:'No oil, no butter. The jowl brings its own.'},
+      {txt:'Whisk the yolks, pecorino and cracked pepper to a thick paste.', why:'Paste, not liquid — it needs to coat, not pool.'},
+      {txt:'Toss the drained pasta through the fat, off the heat, with a ladle of pasta water.', why:'The starch in that water is what lets fat and egg hold hands.'},
+      {txt:'Work in the yolk paste, still off the heat, tossing until it turns to silk.', why:'65°C is the line between silk and scramble. The pan’s residual heat is enough.'}
+    ],
+    principle:'Carbonara is an emulsion bound off the heat — starch, rendered fat and yolk, brought together by motion rather than flame. Master that, and cacio e pepe and beurre blanc are already half yours.',
+    table:{pour:'Frascati Superiore', why:'The volcanic acidity cuts the rendered guanciale fat, and the wine’s bitter-almond finish completes what the pepper starts.'}
+  },
+  {
+    title:'Phat Thai', origin:'Bangkok · Thailand · serves 2',
+    img:'{{ img_phatthai }}',
+    lines:[
+      {qty:'200 g', plain:'rice noodles', prov:'Chanthaburi, sun-dried'},
+      {qty:'3 tbsp', plain:'tamarind', prov:'Phetchabun paste, first press', hero:true},
+      {qty:'2 tbsp', plain:'fish sauce', prov:'Phu Quoc anchovy'},
+      {qty:'100 g', plain:'prawns', prov:'Andaman, day-boat'},
+      {qty:'—', plain:'palm sugar', prov:'Ratchaburi coconut palm'}
+    ],
+    dossier:{name:'Tamarind', producer:'Phetchabun, Thailand · first press',
+      note:'Sour before sweet — the paste sets the spine of the dish. First-press pulp, no added sugar.'},
+    method:[
+      {txt:'Soak the noodles in warm water until pliable but not soft.', why:'They finish in the wok. Soft now means mush later.'},
+      {txt:'Stir tamarind, fish sauce and palm sugar together and taste for balance.', why:'Sour leads, sweet follows, salt underneath. Fix it in the bowl, not the wok.'},
+      {txt:'Sear the prawns hard in a screaming-hot wok, then set them aside.', why:'Seconds, not minutes — they come back at the end.'},
+      {txt:'Noodles into the wok with the sauce, tossing until they drink it in.', why:'The noodle cooks in the sauce. That’s the whole trick.'},
+      {txt:'Prawns back, egg through, off the heat while everything still has bite.', why:'The char the wok leaves on the noodle — that breath of smoke is the seasoning.'}
+    ],
+    principle:'Phat thai is a balance struck before the heat starts — sour, sweet and salt settled in the sauce bowl, then committed to fire for only a few minutes. The wok doesn’t build the flavour; it seals a decision already made.',
+    table:{pour:'Riesling Kabinett', why:'The wine’s gentle sweetness answers the tamarind’s sour, and its acidity keeps the palm sugar from sitting heavy.'}
+  },
+  {
+    title:'Beurre Blanc', origin:'Loire · France · makes one sauceboat',
+    img:'{{ img_beurreblanc }}',
+    lines:[
+      {qty:'250 g', plain:'butter', prov:'Beurre de Baratte — Le Gall, Brittany', hero:true},
+      {qty:'100 ml', plain:'muscadet', prov:'Sèvre-et-Maine, sur lie'},
+      {qty:'2', plain:'shallots', prov:'grey shallots — Brittany'},
+      {qty:'2 tbsp', plain:'vinegar', prov:'Orléans-method, white wine'},
+      {qty:'—', plain:'sea salt', prov:'fleur de sel — Guérande'}
+    ],
+    dossier:{name:'Butter', producer:'Le Gall · Brittany',
+      note:'Baratte-churned, cultured 18 hours. The sauce is only as good as the churn.'},
+    method:[
+      {txt:'Reduce the muscadet, vinegar and minced shallots to two spoonfuls of syrup.', why:'This reduction is the anchor — the acid that will hold all that butter upright.'},
+      {txt:'Cut the cold butter into cubes and keep it cold until the moment it’s needed.', why:'Cold butter melts slowly enough to emulsify instead of splitting into oil.'},
+      {txt:'Over low heat, whisk in the butter cube by cube, each one almost gone before the next.', why:'Patience is the recipe. Rushing is the only way to fail it.'},
+      {txt:'Season with fleur de sel. Strain for the dining room, or leave the shallots in for the kitchen table.', why:'Both are correct. One is dressed for service.'},
+      {txt:'Hold it warm, never hot, and never let it boil.', why:'The emulsion lives below a simmer. A boil sends the butter home.'}
+    ],
+    principle:'Beurre blanc is butter persuaded into an acid reduction, cube by cube — an emulsion held by temperature and patience. It is the same conversation as carbonara’s, spoken in French.',
+    table:{pour:'Muscadet Sèvre-et-Maine sur lie', why:'What deglazed the pan meets the plate — the wine’s lees-born texture matches the sauce’s weight, and its salinity points back to Guérande.'}
+  }
+];
+
+let current = 0, sourced = false;
+const tabsEl = document.getElementById('dishTabs');
+DISHES.forEach((d,i)=>{
+  const b=document.createElement('button');
+  b.className='dish-tab'+(i===0?' active':'');
+  b.textContent=d.title;
+  b.addEventListener('click',()=>{ current=i; sourced=false; render(); });
+  tabsEl.appendChild(b);
+});
+
+document.getElementById('sealBtn').addEventListener('click',()=>{ sourced=!sourced; render(); });
+
+function render(){
+  const d = DISHES[current];
+  document.getElementById('folio').classList.toggle('sourced', sourced);
+  document.querySelectorAll('.dish-tab').forEach((t,i)=>t.classList.toggle('active', i===current));
+  document.getElementById('fTitle').textContent = d.title;
+  document.getElementById('fOrigin').textContent = d.origin;
+  document.getElementById('plateName').textContent = d.title;
+  const im = document.getElementById('plateImg');
+  im.classList.remove('has');
+  if(d.img){
+    im.onload = ()=>im.classList.add('has');
+    im.onerror = ()=>im.classList.remove('has');
+    im.src = d.img;
+    im.alt = d.title;
+  } else { im.removeAttribute('src'); }
+
+  document.getElementById('fLines').innerHTML = d.lines.map((l,i)=>{
+    let h = '<div class="f-line"><span class="q">'+l.qty+'</span><span class="n">'+l.plain+
+      '<span class="prov" style="animation-delay:'+(i*0.12)+'s">,&nbsp;'+l.prov+'</span></span></div>';
+    if(l.hero){
+      h += '<div class="dossier"><div class="d-in">'+
+        '<div class="d-eyebrow">The one that matters — '+d.dossier.name+'</div>'+
+        '<div class="d-prod">'+d.dossier.producer+'</div>'+
+        '<div class="d-note">'+d.dossier.note+'</div>'+
+      '</div></div>';
+    }
+    return h;
+  }).join('');
+
+  document.getElementById('fFull').innerHTML =
+    '<div class="sec"><div class="sec-eyebrow">The Method</div>'+
+      d.method.map((s,i)=>'<div class="step"><span class="num">'+(i+1)+'</span><span class="txt">'+s.txt+'<span class="why">'+s.why+'</span></span></div>').join('')+
+    '</div>'+
+    '<div class="sec"><div class="sec-eyebrow">Why it works</div><p>'+d.principle+'</p></div>'+
+    '<div class="sec" style="padding-top:0"><div class="table-pair"><span><div class="sec-eyebrow" style="margin-bottom:5px">Beverage Pairing — '+d.table.pour+'</div><p class="soft" style="color:var(--night-soft);font-size:14px;line-height:1.65">'+d.table.why+'</p></span></div></div>';
+
+  const btn=document.getElementById('sealBtn');
+  btn.innerHTML = sourced ? 'Opened' : 'Press<br>the seal';
+  btn.setAttribute('aria-pressed', sourced);
+  document.getElementById('fStatus').textContent = sourced
+    ? 'The whole dish — traced, explained, ready to cook'
+    : 'An ingredient list, the way most kitchens keep it';
+  document.getElementById('afterLine').classList.toggle('show', sourced);
+}
+render();
+</script>
+</body>
+</html>
