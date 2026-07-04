@@ -1502,8 +1502,8 @@ def index():
             cur = conn.cursor()
             cur.execute("""
                 SELECT
-                  (SELECT COUNT(*) FROM technique_references) AS techniques,
-                  (SELECT COUNT(*) FROM recipes WHERE is_curated = TRUE) AS recipes_std
+                  (SELECT COUNT(*) FROM technique_references WHERE published IS NOT FALSE) AS techniques,
+                  (SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 1000%%' AND published IS NOT FALSE) AS recipes_std
             """)
             row = cur.fetchone()
             if row:
