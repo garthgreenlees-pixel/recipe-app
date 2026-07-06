@@ -19,6 +19,23 @@ td{padding:10px;border-bottom:1px dashed var(--hair);vertical-align:top}
 .ctx{font-size:11px;color:var(--soft)}
 a{color:var(--gilt)}
 .empty{color:var(--soft);font-style:italic;padding:30px 0}
+.status.verified_listed{border-color:#4A6B8A;color:#4A6B8A}
+.status.verified_provider{border-color:#6B7F4F;color:#6B7F4F;background:#EFF2E8}
+.status.flagged{border-color:#A0522D;color:#A0522D}
+.act{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--night);color:var(--giltn);border:none;border-radius:2px;padding:7px 11px;cursor:pointer;margin-bottom:6px}
+.act.wire{background:var(--giltn);color:var(--night)}
+.checkout{margin-top:6px}
+.ck{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--soft);padding:2px 0}
+.ck b{color:var(--ink)}
+.ck-pass{color:#6B7F4F}.ck-fail,.ck-flag{color:#A0522D}.ck-claimed{color:var(--gilt)}.ck-unchecked{color:var(--soft)}
+.wirebox{margin-top:8px;background:#fff;border:1px solid var(--hair);border-radius:3px;padding:10px}
+.psearch{width:100%;padding:8px;border:1px solid var(--hair);border-radius:2px;font-size:12px}
+.presults{max-height:140px;overflow:auto;margin:6px 0}
+.pr{font-size:12px;padding:5px 6px;cursor:pointer;border-bottom:1px dashed var(--hair)}
+.pr:hover{background:#F4EEE1;color:var(--gilt)}
+.chosen{margin:6px 0}
+.chosen .chip{display:inline-block;background:#EFF2E8;border:1px solid #6B7F4F;color:#4a5a38;font-size:11px;padding:3px 8px;border-radius:2px;margin:2px}
+.wmsg{margin-top:6px;font-size:12px;color:#6B7F4F}
 </style>
 {% endblock %}
 {% block content %}
@@ -34,10 +51,10 @@ a{color:var(--gilt)}
 
   {% if queue %}
   <table>
-    <thead><tr><th>Business</th><th>Region</th><th>Source</th><th>From page</th><th>Status</th><th>When</th></tr></thead>
+    <thead><tr><th>Business</th><th>Region</th><th>Source</th><th>From page</th><th>Status</th><th>The ladder</th></tr></thead>
     <tbody>
     {% for q in queue %}
-      <tr>
+      <tr id="row-{{ q.id }}">
         <td>
           <div class="name">{{ q.business_name }}</div>
           {% if q.website %}<a href="{{ q.website }}" target="_blank" rel="noopener">{{ q.website }}</a>{% endif %}
@@ -50,8 +67,21 @@ a{color:var(--gilt)}
           {% if q.product_name %}product: {{ q.product_name }}{% endif %}
           {% if not q.producer_name and not q.product_name %}—{% endif %}
         </td>
-        <td><span class="status {{ q.status }}">{{ q.status.replace('_',' ') }}</span></td>
-        <td class="ctx">{{ q.created_at }}</td>
+        <td><span class="status {{ q.status }}" id="status-{{ q.id }}">{{ q.status.replace('_',' ') }}</span></td>
+        <td>
+          <div class="actions" data-qid="{{ q.id }}" data-regions="{{ q.claimed_regions | join(',') if q.claimed_regions else '' }}">
+            {% if q.status in ['suggested','flagged','checks_running'] %}
+              <button class="act" onclick="runChecks({{ q.id }})">Run checks</button>
+            {% endif %}
+            {% if q.status in ['verified_listed','claim_pending','verified_provider'] %}
+              <button class="act wire" onclick="openWire({{ q.id }})">Wire products →</button>
+            {% endif %}
+            <div class="checkout" id="checks-{{ q.id }}">
+              {% if q.check_results %}{{ q.check_results | tojson }}{% endif %}
+            </div>
+            <div class="wirebox" id="wire-{{ q.id }}" style="display:none"></div>
+          </div>
+        </td>
       </tr>
     {% endfor %}
     </tbody>
@@ -60,4 +90,50 @@ a{color:var(--gilt)}
   <div class="empty">The queue is empty. Member suggestions and founder-collected suppliers will appear here.</div>
   {% endif %}
 </div>
+
+<script>
+function fmtChecks(c){
+  if(!c) return '';
+  var out=[];
+  for(var k in c){ var v=c[k]; out.push('<div class="ck ck-'+(v.status||'')+'"><b>'+k+'</b>: '+(v.status||'')+(v.detail?' — '+v.detail:'')+(v.http_status?' ['+v.http_status+']':'')+'</div>'); }
+  return out.join('');
+}
+function runChecks(id){
+  var box=document.getElementById('checks-'+id); box.innerHTML='<span class="ck">running…</span>';
+  fetch('/admin/beverages/verify/'+id,{method:'POST'}).then(r=>r.json()).then(d=>{
+    if(d.error){ box.innerHTML='<span class="ck ck-fail">'+d.error+'</span>'; return; }
+    box.innerHTML=fmtChecks(d.check_results)+(d.flag_reason?'<div class="ck ck-flag">flag: '+d.flag_reason+'</div>':'');
+    var st=document.getElementById('status-'+id); st.textContent=d.status.replace('_',' '); st.className='status '+d.status;
+    var act=document.querySelector('#row-'+id+' .actions');
+    if(d.status==='verified_listed'){ act.querySelector('.act').outerHTML='<button class="act wire" onclick="openWire('+id+')">Wire products →</button>'; }
+  });
+}
+function openWire(id){
+  var box=document.getElementById('wire-'+id); box.style.display='block';
+  box.innerHTML='<input class="psearch" placeholder="Search a product to wire…" oninput="psearch('+id+',this.value)"><div class="presults" id="pres-'+id+'"></div><div class="chosen" id="chosen-'+id+'"></div><button class="act wire" onclick="doWire('+id+')">Wire &amp; make provider live</button><div class="wmsg" id="wmsg-'+id+'"></div>';
+  box._chosen=[];
+}
+function psearch(id,q){
+  if(q.length<2){document.getElementById('pres-'+id).innerHTML='';return;}
+  fetch('/admin/beverages/product-search?q='+encodeURIComponent(q)).then(r=>r.json()).then(rows=>{
+    document.getElementById('pres-'+id).innerHTML=rows.map(p=>'<div class="pr" onclick="choose('+id+','+p.id+',&quot;'+(p.name||'').replace(/"/g,'')+'&quot;)">'+p.name+(p.producer_name?' · '+p.producer_name:'')+'</div>').join('');
+  });
+}
+function choose(id,pid,name){
+  var box=document.getElementById('wire-'+id); box._chosen=box._chosen||[];
+  if(!box._chosen.some(x=>x.id===pid)){ box._chosen.push({id:pid,name:name}); }
+  document.getElementById('chosen-'+id).innerHTML=box._chosen.map(x=>'<span class="chip">'+x.name+'</span>').join('');
+}
+function doWire(id){
+  var box=document.getElementById('wire-'+id); var msg=document.getElementById('wmsg-'+id);
+  var ids=(box._chosen||[]).map(x=>x.id);
+  if(!ids.length){ msg.textContent='Choose at least one product.'; return; }
+  fetch('/admin/beverages/wire/'+id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_ids:ids})})
+    .then(r=>r.json()).then(d=>{
+      if(d.error){ msg.textContent=d.error; return; }
+      msg.innerHTML='<b>'+d.message+'</b> ('+d.products_wired+' wired)';
+      var st=document.getElementById('status-'+id); st.textContent='verified provider'; st.className='status verified_provider';
+    });
+}
+</script>
 {% endblock %}

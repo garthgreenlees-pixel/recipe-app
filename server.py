@@ -11039,7 +11039,7 @@ def beverage_product_detail(product_id):
             SELECT s.id, s.name, s.city, s.state_province, s.country,
                    s.supplier_type, s.website, bps.region, bps.notes
             FROM beverage_product_suppliers bps
-            JOIN suppliers s ON bps.supplier_id = s.id
+            JOIN suppliers s ON bps.supplier_id = s.id AND s.verification_status = 'verified_provider'
             WHERE bps.product_id = %s
         """, (product_id,))
         result["suppliers"] = [_serialize_row(r) for r in cur.fetchall()]
@@ -11935,6 +11935,185 @@ def admin_beverages_onboard():
     counts = {r["status"]: r["n"] for r in cur.fetchall()}
     cur.close(); conn.close()
     return render_template("admin_beverages_onboard.html", queue=queue, counts=counts)
+
+
+def _run_supplier_checks(business_name, website, claimed_regions):
+    """The automated VERIFIED-LISTED checks (spec §8A) — HONEST about limits.
+    Verifies existence/identity/region. Does NOT verify merit or stock.
+    Returns (results_dict, passed_bool, flag_reason_or_None)."""
+    results = {}
+    passed_site = False
+    passed_identity = False
+    # 1 · website liveness + valid TLS
+    if not website:
+        results["website"] = {"status": "fail", "detail": "no website provided"}
+    else:
+        url = website if website.startswith("http") else "https://" + website
+        try:
+            import requests as _rq
+            r = _rq.get(url, timeout=8, allow_redirects=True,
+                        headers={"User-Agent": "ProvenanceVerifier/1.0"})
+            tls_ok = r.url.startswith("https://")
+            passed_site = (r.status_code < 400)
+            results["website"] = {
+                "status": "pass" if passed_site else "fail",
+                "http_status": r.status_code, "final_url": r.url, "tls": tls_ok,
+            }
+            # 2 · identity — business name tokens appear in the page
+            body = (r.text or "").lower()
+            toks = [t for t in re.split(r"[^a-z0-9]+", business_name.lower()) if len(t) >= 3]
+            hits = sum(1 for t in toks if t in body)
+            passed_identity = bool(toks) and hits >= max(1, len(toks) // 2)
+            results["identity"] = {
+                "status": "pass" if passed_identity else "flag",
+                "detail": f"{hits}/{len(toks)} name tokens found on page",
+            }
+        except Exception as e:
+            results["website"] = {"status": "fail", "detail": f"unreachable: {type(e).__name__}"}
+    # 3 · region — claimed, not independently confirmable here
+    results["region"] = {
+        "status": "claimed" if claimed_regions else "missing",
+        "detail": (", ".join(claimed_regions) if claimed_regions else "no region claimed"),
+    }
+    # 4 · registry cross-check — honest: no automated registry wired
+    results["registry"] = {"status": "unchecked",
+                           "detail": "no automated registry for this jurisdiction — manual confirm"}
+    passed = passed_site and passed_identity and bool(claimed_regions)
+    flag = None
+    if not passed:
+        why = []
+        if not passed_site: why.append("website not live/identifiable")
+        if not passed_identity: why.append("business name not found on site")
+        if not claimed_regions: why.append("no region")
+        flag = "; ".join(why)
+    return results, passed, flag
+
+
+@app.route("/admin/beverages/verify/<int:qid>", methods=["POST"])
+def admin_beverages_verify(qid):
+    """Run the automated checks on a queue row → verified_listed or flagged."""
+    g = _admin_guard_api()
+    if g:
+        return g
+    if (get_current_user() or {}).get("role") != "admin":
+        return jsonify(error="forbidden"), 403
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM supplier_verification_queue WHERE id = %s", (qid,))
+    row = cur.fetchone()
+    if not row:
+        cur.close(); conn.close()
+        return jsonify(error="not found"), 404
+    results, passed, flag = _run_supplier_checks(
+        row["business_name"], row.get("website"), row.get("claimed_regions") or [])
+    new_status = "verified_listed" if passed else "flagged"
+    wconn = psycopg2.connect(DATABASE_URL_WRITE); wconn.autocommit = True
+    wcur = wconn.cursor()
+    wcur.execute(
+        """UPDATE supplier_verification_queue
+             SET status = %s, check_results = %s, flag_reason = %s
+           WHERE id = %s""",
+        (new_status, psycopg2.extras.Json(results), flag, qid))
+    wcur.close(); wconn.close()
+    cur.close(); conn.close()
+    return jsonify(ok=True, status=new_status, check_results=results, flag_reason=flag)
+
+
+@app.route("/admin/beverages/product-search")
+def admin_beverages_product_search():
+    """Fuzzy product search for the wiring UI (published products only)."""
+    g = _admin_guard_api()
+    if g:
+        return g
+    if (get_current_user() or {}).get("role") != "admin":
+        return jsonify(error="forbidden"), 403
+    q = (request.args.get("q") or "").strip()
+    if len(q) < 2:
+        return jsonify([])
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT bp.id, bp.name, bp.category, bpr.name AS producer_name, br.name AS region_name
+        FROM beverage_products bp
+        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id
+        LEFT JOIN beverage_regions br ON bp.region_id = br.id
+        WHERE bp.is_published IS TRUE AND bp.name ILIKE %s
+        ORDER BY bp.name LIMIT 20
+    """, (f"%{q}%",))
+    rows = [_serialize_row(r) for r in cur.fetchall()]
+    cur.close(); conn.close()
+    return jsonify(rows)
+
+
+@app.route("/admin/beverages/wire/<int:qid>", methods=["POST"])
+def admin_beverages_wire(qid):
+    """The assisted lane's wiring (spec §8C): create/select the supplier,
+    insert beverage_product_suppliers rows for the confirmed products, and
+    promote to VERIFIED PROVIDER — gold links go live for its region."""
+    g = _admin_guard_api()
+    if g:
+        return g
+    if (get_current_user() or {}).get("role") != "admin":
+        return jsonify(error="forbidden"), 403
+    data = request.get_json(silent=True) or {}
+    product_ids = data.get("product_ids") or []
+    supplier_type = (data.get("supplier_type") or "distributor").strip()
+    if supplier_type not in ("producer", "importer", "distributor", "retailer", "direct_to_chef"):
+        supplier_type = "distributor"
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM supplier_verification_queue WHERE id = %s", (qid,))
+    row = cur.fetchone()
+    cur.close(); conn.close()
+    if not row:
+        return jsonify(error="not found"), 404
+    if row["status"] not in ("verified_listed", "claim_pending", "verified_provider"):
+        return jsonify(error="run checks first — must be verified_listed"), 409
+    regions = row.get("claimed_regions") or []
+    wconn = psycopg2.connect(DATABASE_URL_WRITE); wconn.autocommit = True
+    wcur = wconn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        # create/select the supplier (verified_provider — the claim is completed here, §8C)
+        wcur.execute("SELECT id FROM suppliers WHERE lower(name) = lower(%s) LIMIT 1",
+                     (row["business_name"],))
+        s = wcur.fetchone()
+        if s:
+            supplier_id = s["id"]
+            wcur.execute("""UPDATE suppliers SET verification_status='verified_provider',
+                              verified_date=NOW(), verification_source='onboard',
+                              website=COALESCE(website,%s), supplier_type=%s WHERE id=%s""",
+                         (row.get("website"), supplier_type, supplier_id))
+        else:
+            wcur.execute("""INSERT INTO suppliers
+                              (name, website, service_region, supplier_type,
+                               verification_status, verified_date, verification_source, is_active)
+                            VALUES (%s,%s,%s,%s,'verified_provider',NOW(),'onboard',TRUE)
+                            RETURNING id""",
+                         (row["business_name"], row.get("website"),
+                          regions[0] if regions else None, supplier_type))
+            supplier_id = wcur.fetchone()["id"]
+        wired = 0
+        for pid in product_ids:
+            try:
+                pid = int(pid)
+            except (TypeError, ValueError):
+                continue
+            wcur.execute("""INSERT INTO beverage_product_suppliers
+                              (product_id, supplier_id, role, region, availability, last_verified)
+                            VALUES (%s,%s,'PROVIDER',%s,'stocked',NOW())
+                            ON CONFLICT DO NOTHING""",
+                         (pid, supplier_id, regions or None))
+            wired += 1
+        wcur.execute("""UPDATE supplier_verification_queue
+                          SET status='verified_provider', resolved_at=NOW() WHERE id=%s""", (qid,))
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        wcur.close(); wconn.close()
+        return jsonify(error="wiring failed"), 500
+    wcur.close(); wconn.close()
+    return jsonify(ok=True, supplier_id=supplier_id, products_wired=wired,
+                   status="verified_provider",
+                   message="Gold links live for this region — the supplier can see their listing now.")
 
 
 @app.route("/beverage/producers/<path:rest>")
@@ -16222,7 +16401,7 @@ def _pats_rule_for_beverages(product_ids, region, cur):
         cur.execute("""
             SELECT bps.product_id, s.name AS supplier_name
             FROM beverage_product_suppliers bps
-            JOIN suppliers s ON bps.supplier_id = s.id
+            JOIN suppliers s ON bps.supplier_id = s.id AND s.verification_status = 'verified_provider'
             WHERE bps.product_id = ANY(%s)
               AND bps.role = 'PROVIDER'
               AND bps.region && %s::text[]
@@ -16307,7 +16486,7 @@ def _suggest_beverages_for_recipe(recipe, limit=5, cur=None):
                 FROM pairing_intelligence pi
                 JOIN beverage_products bp ON pi.beverage_product_id = bp.id AND bp.is_published IS TRUE
                 JOIN beverage_product_suppliers bps ON bps.product_id = bp.id
-                JOIN suppliers s ON bps.supplier_id = s.id
+                JOIN suppliers s ON bps.supplier_id = s.id AND s.verification_status = 'verified_provider'
                 WHERE pi.food_category ILIKE %s
                   AND pi.beverage_product_id IS NOT NULL
                   AND s.tier = 'trade'
