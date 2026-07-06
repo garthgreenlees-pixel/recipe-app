@@ -34,147 +34,145 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;0,700;1,500&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block styles %}
-:root {
-  --text: #F5F1E9;
-  --text-secondary: rgba(245,241,233,0.70);
-  --text-light: rgba(245,241,233,0.45);
-  --gold-bg: rgba(201,168,76,0.08);
-  --gold-border: rgba(201,168,76,0.20);
-  --surface: #131210;
-  --cream-dark: #1A1816;
-}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#8B6914;--gold-light:#C49B2A;--gold-bg:rgba(139,105,20,0.08);--gold-border:rgba(139,105,20,0.2);
-  --cream:#FDFCF9;--cream-dark:#F5F0E8;
-  --text:#1A1A1A;--text-secondary:#6B6B6B;--text-light:#999;
-  --border:#E8E3D8;
-  --serif:'Cormorant Garamond',Georgia,serif;
-  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-  --mono:'DM Mono',monospace;
+  --paper:#F4EEE1;--ink:#17130D;--soft:#6E665A;--gilt:#9A7B3F;--hair:#D9CFBB;
+  --night:#13110C;--nightink:#F1EBDD;--nightsoft:#A39A88;--nighthair:#2C2820;--giltn:#C6A055;
+  --serif:'Cormorant',Georgia,serif;
+  --sans:'Hanken Grotesk',-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
 }
 html{-webkit-font-smoothing:antialiased}
-body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gilt)}
 
+.breadcrumb{padding:14px 44px;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);border-bottom:1px solid var(--hair)}
+.breadcrumb a{color:var(--soft);text-decoration:none;border-bottom:1px dashed var(--hair)}
+.breadcrumb a:hover{color:var(--gilt)}
+.breadcrumb span{margin:0 7px;opacity:.5}
+.container{max-width:880px;margin:0 auto;padding:0 44px 80px}
 
+/* masthead */
+.masthead{padding:34px 0 26px;border-bottom:1px solid var(--hair)}
+.masthead h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,4.2vw,46px);line-height:1.08;margin:10px 0 6px}
+.masthead h1 .sub{font-style:italic;font-weight:500;color:var(--gilt);font-size:.62em}
+.m-region{font-size:14.5px;color:var(--soft);margin-top:2px}
+.m-region a{color:var(--gilt);text-decoration:none;border-bottom:1px solid var(--hair)}
+.meta{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-top:10px}
+.badges{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.badge{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:5px 10px;border-radius:2px;border:1px solid var(--hair);color:var(--soft)}
+.badge.v{border-color:var(--gilt);color:var(--gilt)}
+.badge.v::before{content:"● ";}
 
+/* narrative + drop-cap */
+.narrative{padding:30px 0 4px;max-width:640px}
+.narrative h2{font-family:var(--serif);font-style:italic;font-weight:500;font-size:20px;color:var(--gilt);margin-bottom:12px}
+.narrative p{font-size:15.5px;line-height:1.7;margin-bottom:14px}
+.narrative p.lead:first-letter{font-family:var(--serif);font-size:44px;float:left;line-height:.9;padding-right:8px;color:var(--gilt)}
 
+/* facts grid */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:26px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);margin-top:24px}
+.fact .k{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gilt);margin-bottom:5px}
+.fact .val{font-size:14px;line-height:1.5;color:var(--ink)}
+.fact .signal{color:var(--gilt)}
 
-.breadcrumb{padding:12px 32px;font-size:13px;color:var(--text-light);border-bottom:1px solid var(--border)}
-.breadcrumb a{color:var(--text-secondary);text-decoration:none}
-.breadcrumb a:hover{color:var(--gold)}
-.breadcrumb span{margin:0 8px;opacity:0.4}
-.container{max-width:860px;margin:0 auto;padding:48px 32px 80px}
-.producer-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.producer-type-label{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
-.producer-verified{font-family:var(--mono);font-size:11px;letter-spacing:0.5px;color:var(--text-light)}
-.producer-title{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-1px;margin-bottom:12px}
-.producer-region{font-size:14px;color:var(--text-secondary);font-weight:300;margin-bottom:32px}
-.producer-region a{color:var(--gold);text-decoration:none}
-.producer-region a:hover{text-decoration:underline}
-.section{margin-bottom:40px}
-.section-label{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-.producer-desc{font-size:16px;color:var(--text-secondary);font-weight:300;line-height:1.7;max-width:600px}
-.product-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.product-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 20px;text-decoration:none;color:var(--text);transition:all 0.2s;display:block}
-.product-card:hover{border-color:var(--gold-border);box-shadow:0 4px 12px rgba(139,105,20,0.08)}
-.product-category{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);margin-bottom:6px}
-.product-name{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:4px}
-.product-region{font-size:13px;color:var(--text-secondary);font-weight:300}
-.product-tier{display:inline-block;margin-top:10px;font-size:11px;color:var(--gold);letter-spacing:0.5px}
-.meta-row{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:32px}
-.meta-item{font-size:13px;color:var(--text-secondary)}
-.meta-item strong{font-weight:500;color:var(--text);display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);margin-bottom:4px}
-@media(max-width:600px){.container{padding:32px 20px 60px}.breadcrumb{padding:10px 20px}}
+/* product shelf */
+.shelfhead{display:flex;justify-content:space-between;align-items:baseline;padding:30px 0 12px}
+.shelfhead h2{font-family:var(--serif);font-weight:600;font-size:25px}
+.prods{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.prod{background:var(--night);color:var(--nightink);border:1px solid var(--nighthair);border-radius:3px;padding:18px 20px;text-decoration:none;display:block;transition:transform .25s,border-color .25s}
+.prod:hover{transform:translateY(-3px);border-color:var(--giltn)}
+.prod .k{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--nightsoft)}
+.prod .n{font-family:var(--serif);font-size:20px;font-weight:600;margin:6px 0 2px}
+.prod .d{font-size:12.5px;color:var(--nightsoft);line-height:1.55}
+.prod .t{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--giltn);margin-top:8px}
+
+/* provider / origin block */
+.provider{margin:34px 0 10px;background:var(--night);color:var(--nightink);border-radius:3px;padding:26px 30px;border-left:3px solid var(--giltn)}
+.provider .ey{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--giltn);margin-bottom:10px}
+.provider .origin{font-size:14px;color:var(--nightsoft);line-height:1.65}
+.provider .origin b{color:var(--nightink)}
+.provider .honest{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--giltn);margin-top:10px}
+
+.gatechip{margin:26px 0 0;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);border:1px dashed var(--hair);padding:9px 12px;border-radius:2px;display:inline-block}
+@media(max-width:700px){.facts,.prods{grid-template-columns:1fr}.container{padding:0 20px 60px}.breadcrumb{padding:12px 20px}}
 {% endblock %}
 
 {% block content %}
 <div class="breadcrumb">
-  <a href="/beverage">Beverage</a>
-  {% if producer.region_id %}
-  <span>/</span>
-  <a href="/beverage/regions/{{ producer.region_id }}">{{ producer.region_name or 'Region' }}</a>
-  {% endif %}
-  <span>/</span>
-  {{ producer.name }}
+  <a href="/beverages">Beverages</a>
+  {% if producer.region_name %}<span>·</span><a href="/beverages/cellar/">{{ producer.region_name }}'s cellar</a>{% endif %}
+  {% if producer.producer_type %}<span>·</span>{{ producer.producer_type.replace('_',' ') }}{% endif %}
+  <span>·</span>{{ producer.name }}
 </div>
 
 <div class="container">
-  <div class="producer-eyebrow">
-    {% if producer.producer_type %}
-    <span class="producer-type-label">{{ producer.producer_type.replace('_', ' ') }}</span>
+  <section class="masthead">
+    <div class="eyebrow">{{ producer.producer_type.replace('_',' ') if producer.producer_type else 'Producer' }}{% if producer.region_name %} · {{ producer.region_name }}{% endif %}{% if producer.country %}, {{ producer.country }}{% endif %}</div>
+    <h1>{{ producer.name }}</h1>
+    {% if producer.region_name %}
+    <div class="m-region">{% if producer.region_id %}<a href="/beverage/regions/{{ producer.region_id }}">{{ producer.region_name }}</a>{% else %}{{ producer.region_name }}{% endif %}{% if producer.country %}, {{ producer.country }}{% endif %}</div>
     {% endif %}
-    {% if producer.is_verified %}
-    <span class="producer-verified">Verified</span>
-    {% endif %}
-    {% if producer.quality_tier %}
-    <span class="producer-verified">{{ producer.quality_tier }}</span>
-    {% endif %}
-  </div>
-
-  <h1 class="producer-title">{{ producer.name }}</h1>
-
-  {% if producer.region_name or producer.country %}
-  <div class="producer-region">
-    {% if producer.region_id %}
-    <a href="/beverage/regions/{{ producer.region_id }}">{{ producer.region_name }}</a>{% if producer.country %}, {{ producer.country }}{% endif %}
-    {% else %}
-    {{ producer.country or '' }}
-    {% endif %}
-  </div>
-  {% endif %}
-
-  {% if producer.philosophy_description or producer.production_philosophy %}
-  <div class="section">
-    <div class="section-label">Philosophy</div>
-    <div class="producer-desc">{{ producer.philosophy_description or producer.production_philosophy }}</div>
-  </div>
-  {% endif %}
+    {% set metabits = [] %}
+    {% if producer.key_personnel %}{% set _ = metabits.append(producer.key_personnel) %}{% endif %}
+    {% if producer.production_details %}{% set _ = metabits.append(producer.production_details) %}{% endif %}
+    {% if metabits %}<div class="meta">{{ metabits | join(' · ') }}</div>{% endif %}
+    <div class="badges">
+      {% if producer.is_verified %}<span class="badge v">Verified</span>{% endif %}
+      {% if producer.quality_tier %}<span class="badge">{{ producer.quality_tier }}</span>{% endif %}
+      {% if producer.authority_tier %}<span class="badge">{{ producer.authority_tier.replace('_',' ') }}</span>{% endif %}
+      {% if producer.producer_website %}<span class="badge"><a href="{{ producer.producer_website }}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">Website ↗</a></span>{% endif %}
+    </div>
+  </section>
 
   {% if producer.reputation_narrative %}
-  <div class="section">
-    <div class="section-label">Reputation</div>
-    <div class="producer-desc">{{ producer.reputation_narrative }}</div>
-  </div>
+  <section class="narrative">
+    <h2>The reputation — the story that sells at the table</h2>
+    {% for para in producer.reputation_narrative.split('\n\n') %}{% if para.strip() %}<p{% if loop.first %} class="lead"{% endif %}>{{ para.strip() }}</p>{% endif %}{% endfor %}
+  </section>
   {% endif %}
 
-  {% if producer.price_positioning or producer.allocation_notes %}
-  <div class="meta-row">
-    {% if producer.price_positioning %}
-    <div class="meta-item"><strong>Pricing</strong>{{ producer.price_positioning }}</div>
-    {% endif %}
-    {% if producer.allocation_notes %}
-    <div class="meta-item"><strong>Allocation</strong>{{ producer.allocation_notes }}</div>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  {% if products %}
-  <div class="section">
-    <div class="section-label">Benchmark product{% if products|length > 1 %}s{% endif %}</div>
-    <div class="product-list">
-      {% for p in products %}
-      <a href="/beverage/products/{{ p.id }}" class="product-card">
-        <div class="product-category">{{ (p.category or '').replace('_', ' ') }}</div>
-        <div class="product-name">{{ p.name }}</div>
-        {% if p.region_name %}
-        <div class="product-region">{{ p.region_name }}</div>
-        {% endif %}
-        {% if p.quality_tier %}
-        <div class="product-tier">{{ p.quality_tier }}</div>
-        {% endif %}
-      </a>
-      {% endfor %}
+  <div class="facts">
+    <div class="fact">
+      <div class="k">Practice</div>
+      <div class="val">{{ producer.philosophy_description or producer.production_philosophy or 'Not yet documented.' }}</div>
+    </div>
+    <div class="fact">
+      <div class="k">Positioning</div>
+      <div class="val">{% if producer.price_positioning %}{{ producer.price_positioning }}{% endif %}{% if producer.allocation_notes %}{% if producer.price_positioning %} · {% endif %}{{ producer.allocation_notes }}{% endif %}{% if not producer.price_positioning and not producer.allocation_notes %}Not yet documented.{% endif %}</div>
+    </div>
+    <div class="fact">
+      <div class="k">Importer lines</div>
+      <div class="val">US — {{ producer.importer_us or 'not yet' }} · UK — {{ producer.importer_uk or 'not yet' }} · Japan — {{ producer.importer_japan or 'not yet' }}<br><span class="signal">Each absence is a signal the demand ledger holds.</span></div>
     </div>
   </div>
+
+  {% if products %}
+  <div class="shelfhead"><h2>What they make</h2><span class="eyebrow">{{ products|length }} shown</span></div>
+  <div class="prods">
+    {% for p in products %}
+    <a class="prod" href="/beverage/products/{{ p.id }}">
+      <span class="k">{{ (p.category or '').replace('_',' ') }}{% if p.region_name %} · {{ p.region_name }}{% endif %}</span>
+      <div class="n">{{ p.name }}</div>
+      {% if p.description %}<div class="d">{{ p.description | striptags | truncate(90, killwords=True, end='…') }}</div>{% endif %}
+      {% if p.quality_tier %}<div class="t">{{ p.quality_tier }}</div>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
   {% endif %}
 
-  {% if not products %}
-  <div style="font-size:13px;color:var(--text-light);font-weight:300">No benchmark products catalogued for this producer yet.</div>
+  <div class="provider">
+    <div class="ey">Where to get it — Pat's Rule</div>
+    <p class="origin"><b>Origin:</b> {{ producer.name }}{% if producer.region_name %}, {{ producer.region_name }}{% endif %} — named here for every reader, everywhere, as the discovery authority.</p>
+    <p class="honest">Local providers for this maker aren't wired yet — when a stockist in your region carries it, this is the page that will say so.</p>
+  </div>
+
+  {% if user_role == 'admin' %}
+  <span class="gatechip">Publish gate · is_published TRUE — verified {{ '✓' if producer.is_verified else '✗' }} · narrative {{ '✓' if producer.reputation_narrative else '✗' }} · region {{ '✓' if producer.region_id else '✗' }} · admin-only chip</span>
   {% endif %}
 </div>
 
