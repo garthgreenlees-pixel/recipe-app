@@ -3107,7 +3107,9 @@ def _find_pairings_for_user_recipe(recipe_title, limit=3):
                 JOIN technique_beverage_pairings tbp ON tbp.technique_id = tr.id
                 LEFT JOIN beverage_products bp ON bp.id = tbp.beverage_product_id
                 LEFT JOIN beverage_producers bprod ON bprod.id = tbp.beverage_producer_id
-                WHERE {conditions}
+                     AND bprod.is_published IS TRUE
+                WHERE (tbp.beverage_producer_id IS NULL OR bprod.id IS NOT NULL)
+                  AND ({conditions})
                 ORDER BY tr.id DESC,
                          CASE tbp.confidence_status
                            WHEN 'editorial' THEN 1
@@ -3215,6 +3217,7 @@ def _suggested_beverages_for_recipe(recipe_name, cur, limit=4):
         JOIN beverage_products bp ON bp.id = tbp.beverage_product_id
         LEFT JOIN beverage_regions br ON br.id = bp.region_id
         LEFT JOIN beverage_producers bpr ON bpr.id = bp.producer_id
+             AND bpr.is_published IS TRUE
         WHERE {conditions}
         ORDER BY bp.name ASC
         LIMIT %s
@@ -11024,7 +11027,7 @@ def beverage_product_detail(product_id):
     cur.execute("""
         SELECT pr.* FROM beverage_producers pr
         JOIN beverage_product_producers bpp ON pr.id = bpp.producer_id
-        WHERE bpp.product_id = %s
+        WHERE bpp.product_id = %s AND pr.is_published IS TRUE
     """, (product_id,))
     result["producers"] = [_serialize_row(r) for r in cur.fetchall()]
 
@@ -11081,7 +11084,7 @@ def beverage_producers_list():
     query = """SELECT bp.*, br.name AS region_name, br.country AS region_country
                FROM beverage_producers bp
                LEFT JOIN beverage_regions br ON bp.region_id = br.id
-               WHERE 1=1"""
+               WHERE bp.is_published IS TRUE"""
     params = []
 
     producer_type = request.args.get("type", "").strip()
@@ -11118,7 +11121,7 @@ def beverage_producer_detail(producer_id):
         SELECT bp.*, br.name AS region_name
         FROM beverage_producers bp
         LEFT JOIN beverage_regions br ON bp.region_id = br.id
-        WHERE bp.id = %s
+        WHERE bp.id = %s AND bp.is_published IS TRUE
     """, (producer_id,))
     row = cur.fetchone()
     if not row:
@@ -11439,7 +11442,7 @@ def pairings_for_technique(technique_id):
                bpr.name AS producer_name
         FROM pairing_intelligence pi
         LEFT JOIN beverage_products bp ON pi.beverage_product_id = bp.id
-        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id
+        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
         WHERE pi.food_technique_id = %s
         ORDER BY
           CASE pi.confidence WHEN 'classic' THEN 1 WHEN 'established' THEN 2
@@ -11609,7 +11612,7 @@ def beverage_browse():
     total_regions = cur.fetchone()["count"]
     cur.execute("SELECT COUNT(*) AS count FROM beverage_products")
     total_products = cur.fetchone()["count"]
-    cur.execute("SELECT COUNT(*) AS count FROM beverage_producers")
+    cur.execute("SELECT COUNT(*) AS count FROM beverage_producers WHERE is_published IS TRUE")
     total_producers = cur.fetchone()["count"]
     cur.execute("SELECT COUNT(*) AS count FROM pairing_intelligence")
     total_pairings = cur.fetchone()["count"]
@@ -11702,7 +11705,7 @@ def beverage_region_page(region_id):
     cur.execute("""
         SELECT bp.*, bpr.name AS producer_name
         FROM beverage_products bp
-        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id
+        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
         WHERE bp.region_id = %s
         ORDER BY bp.quality_tier, bp.name
     """, (region_id,))
@@ -11744,7 +11747,7 @@ def beverage_product_page(product_id):
     cur.execute("""
         SELECT pr.* FROM beverage_producers pr
         JOIN beverage_product_producers bpp ON pr.id = bpp.producer_id
-        WHERE bpp.product_id = %s
+        WHERE bpp.product_id = %s AND pr.is_published IS TRUE
     """, (product_id,))
     producers = [_serialize_row(r) for r in cur.fetchall()]
 
@@ -11782,7 +11785,7 @@ def beverage_producer_page(producer_id):
         SELECT bp.*, br.name AS region_name, br.id AS region_id
         FROM beverage_producers bp
         LEFT JOIN beverage_regions br ON bp.region_id = br.id
-        WHERE bp.id = %s
+        WHERE bp.id = %s AND bp.is_published IS TRUE
     """, (producer_id,))
     producer = cur.fetchone()
     if not producer:
@@ -11907,8 +11910,10 @@ def technique_page(slug):
         FROM technique_beverage_pairings tbp
         LEFT JOIN beverage_products  bp  ON tbp.beverage_product_id = bp.id
         LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, tbp.beverage_producer_id) = bpr.id
+             AND bpr.is_published IS TRUE
         LEFT JOIN beverage_regions   br  ON bp.region_id = br.id
         WHERE tbp.technique_id = %s
+          AND (tbp.beverage_producer_id IS NULL OR bpr.id IS NOT NULL)
     """
     _tbp_order = """
         ORDER BY
@@ -12176,7 +12181,7 @@ def beverage_by_slug(slug):
     cur.execute("""
         SELECT pr.* FROM beverage_producers pr
         JOIN beverage_product_producers bpp ON pr.id = bpp.producer_id
-        WHERE bpp.product_id = %s
+        WHERE bpp.product_id = %s AND pr.is_published IS TRUE
     """, (product_id,))
     producers = [_serialize_row(r) for r in cur.fetchall()]
 
@@ -12886,7 +12891,7 @@ def programme_pairings():
                br.name AS region_name
         FROM pairing_intelligence pi
         JOIN beverage_products bp ON pi.beverage_product_id = bp.id
-        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id
+        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
         LEFT JOIN beverage_regions br ON bp.region_id = br.id
     """
 
@@ -12963,7 +12968,7 @@ def programme_service():
         SELECT bp.*, bpr.name AS producer_name,
                br.name AS region_name, br.country
         FROM beverage_products bp
-        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id
+        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
         LEFT JOIN beverage_regions br ON bp.region_id = br.id
         WHERE bp.id = %s
     """, (beverage_id,))
@@ -13035,7 +13040,7 @@ def programme_beverages():
                    bpr.name AS producer_name, br.name AS region_name,
                    similarity(LOWER(bp.name), LOWER(%s)) AS sim
             FROM beverage_products bp
-            LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id
+            LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
             LEFT JOIN beverage_regions br ON bp.region_id = br.id
             WHERE (similarity(LOWER(bp.name), LOWER(%s)) > 0.15 OR LOWER(bp.name) ILIKE %s)
               AND (%s = '' OR bp.category ILIKE %s)
@@ -13049,7 +13054,7 @@ def programme_beverages():
             SELECT bp.id, bp.name, bp.category, bp.quality_tier,
                    bpr.name AS producer_name, br.name AS region_name
             FROM beverage_products bp
-            LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id
+            LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
             LEFT JOIN beverage_regions br ON bp.region_id = br.id
             WHERE bp.category ILIKE %s
             ORDER BY bp.quality_tier, bp.name
@@ -13910,7 +13915,7 @@ def sitemap():
     cur.execute("SELECT id, updated_at FROM beverage_regions ORDER BY id")
     bev_regions = cur.fetchall()
 
-    cur.execute("SELECT id, updated_at FROM beverage_producers ORDER BY id")
+    cur.execute("SELECT id, updated_at FROM beverage_producers WHERE is_published IS TRUE ORDER BY id")
     bev_producers = cur.fetchall()
 
     cur.close()
@@ -17905,8 +17910,10 @@ def technique_beverage_pairings(technique_id):
         FROM technique_beverage_pairings tbp
         LEFT JOIN beverage_products  bp  ON tbp.beverage_product_id  = bp.id
         LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, tbp.beverage_producer_id) = bpr.id
+             AND bpr.is_published IS TRUE
         LEFT JOIN beverage_regions   br  ON bp.region_id = br.id
         WHERE tbp.technique_id = %(technique_id)s
+          AND (tbp.beverage_producer_id IS NULL OR bpr.id IS NOT NULL)
           {region_clause}
         ORDER BY
             CASE tbp.confidence_status
