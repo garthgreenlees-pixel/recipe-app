@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Supplier Onboarding — Admin{% endblock %}
+{% block styles %}
+:root{--paper:#F4EEE1;--ink:#17130D;--soft:#6E665A;--gilt:#9A7B3F;--hair:#D9CFBB;--night:#13110C;--giltn:#C6A055}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:36px 44px 80px}
+h1{font-family:'Cormorant',Georgia,serif;font-weight:600;font-size:34px;margin-bottom:4px}
+.lede{color:var(--soft);font-size:14px;margin-bottom:22px;max-width:620px;line-height:1.6}
+.counts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.chip{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--hair);border-radius:2px;padding:7px 11px;color:var(--soft)}
+.chip b{color:var(--gilt)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gilt);border-bottom:1px solid var(--hair);padding:8px 10px}
+td{padding:10px;border-bottom:1px dashed var(--hair);vertical-align:top}
+.name{font-family:'Cormorant',serif;font-size:17px;font-weight:600}
+.status{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:2px;border:1px solid var(--hair);color:var(--soft)}
+.status.suggested{border-color:var(--gilt);color:var(--gilt)}
+.ctx{font-size:11px;color:var(--soft)}
+a{color:var(--gilt)}
+.empty{color:var(--soft);font-style:italic;padding:30px 0}
+</style>
+{% endblock %}
+{% block content %}
+<div class="wrap">
+  <h1>Supplier onboarding</h1>
+  <p class="lede">The verification queue and the assisted lane, one ladder. Every member suggestion and founder-collected supplier lands here at <b>suggested</b>; nothing renders publicly until the checks pass. This is the Trade-tier pipeline — a pre-qualified lead per row.</p>
+
+  <div class="counts">
+    {% for st in ['suggested','checks_running','verified_listed','claim_pending','verified_provider','flagged','rejected'] %}
+      <span class="chip">{{ st.replace('_',' ') }} <b>{{ counts.get(st, 0) }}</b></span>
+    {% endfor %}
+  </div>
+
+  {% if queue %}
+  <table>
+    <thead><tr><th>Business</th><th>Region</th><th>Source</th><th>From page</th><th>Status</th><th>When</th></tr></thead>
+    <tbody>
+    {% for q in queue %}
+      <tr>
+        <td>
+          <div class="name">{{ q.business_name }}</div>
+          {% if q.website %}<a href="{{ q.website }}" target="_blank" rel="noopener">{{ q.website }}</a>{% endif %}
+          {% if q.note %}<div class="ctx">"{{ q.note }}"</div>{% endif %}
+        </td>
+        <td>{{ q.claimed_regions | join(', ') if q.claimed_regions else '—' }}</td>
+        <td class="ctx">{{ q.source.replace('_',' ') }}</td>
+        <td class="ctx">
+          {% if q.producer_name %}producer: {{ q.producer_name }}{% endif %}
+          {% if q.product_name %}product: {{ q.product_name }}{% endif %}
+          {% if not q.producer_name and not q.product_name %}—{% endif %}
+        </td>
+        <td><span class="status {{ q.status }}">{{ q.status.replace('_',' ') }}</span></td>
+        <td class="ctx">{{ q.created_at }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">The queue is empty. Member suggestions and founder-collected suppliers will appear here.</div>
+  {% endif %}
+</div>
+{% endblock %}

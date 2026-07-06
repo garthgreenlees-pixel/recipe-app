@@ -99,6 +99,15 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-heigh
 .provider .honest{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--giltn);margin-top:10px}
 
 .gatechip{margin:26px 0 0;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);border:1px dashed var(--hair);padding:9px 12px;border-radius:2px;display:inline-block}
+.suggest{margin-top:22px;border:1px solid var(--giltn);border-radius:2px;padding:20px 22px}
+.suggest .s-head{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--giltn);margin-bottom:4px}
+.suggest .s-sub{font-size:13.5px;color:var(--nightsoft);line-height:1.6;margin-bottom:14px}
+.s-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.s-grid input{background:transparent;border:1px solid var(--nighthair);border-radius:2px;padding:10px 12px;color:var(--nightink);font-family:var(--sans);font-size:13px}
+.suggest button{margin-top:12px;background:var(--giltn);color:var(--night);border:none;border-radius:2px;padding:11px 20px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.s-fine{margin-top:10px;font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--nightsoft)}
+.s-msg{margin-top:8px;font-size:12px;color:var(--giltn)}
+@media(max-width:700px){.s-grid{grid-template-columns:1fr}}
 @media(max-width:700px){.facts,.prods{grid-template-columns:1fr}.container{padding:0 20px 60px}.breadcrumb{padding:12px 20px}}
 {% endblock %}
 
@@ -169,7 +178,35 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-heigh
     <div class="ey">Where to get it — Pat's Rule</div>
     <p class="origin"><b>Origin:</b> {{ producer.name }}{% if producer.region_name %}, {{ producer.region_name }}{% endif %} — named here for every reader, everywhere, as the discovery authority.</p>
     <p class="honest">Local providers for this maker aren't wired yet — when a stockist in your region carries it, this is the page that will say so.</p>
+
+    <div class="suggest" id="suggestBox">
+      <div class="s-head">Know who should carry it?</div>
+      <p class="s-sub">Name the importer, shop, or distributor who belongs on this page. If the checks confirm them, this cellar gets deeper — and you'll be the first to know.</p>
+      <div class="s-grid">
+        <input id="sg_name" placeholder="Business name">
+        <input id="sg_region" placeholder="Region" value="{{ current_user.user_location if current_user and current_user.user_location else '' }}">
+        <input id="sg_web" placeholder="Website">
+        <input id="sg_note" placeholder="A note, if you like">
+      </div>
+      <button type="button" onclick="submitSuggest({{ producer.id }})">Suggest a supplier</button>
+      <div class="s-fine">Four fields, nothing more · enters the verification queue · nothing renders publicly until the checks pass</div>
+      <div class="s-msg" id="sg_msg"></div>
+    </div>
   </div>
+  <script>
+  function submitSuggest(producerId){
+    var name=document.getElementById('sg_name').value.trim();
+    var msg=document.getElementById('sg_msg');
+    if(!name){ msg.textContent='A business name, at least.'; return; }
+    fetch('/beverages/suggest-supplier',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({business_name:name,region:document.getElementById('sg_region').value,
+        website:document.getElementById('sg_web').value,note:document.getElementById('sg_note').value,
+        producer_id:producerId})})
+      .then(function(r){return r.json();})
+      .then(function(d){ document.getElementById('suggestBox').innerHTML='<div class="s-head">'+((d&&d.message)||'Noted — thank you.')+'</div>'; })
+      .catch(function(){ msg.textContent='That did not go through. Try again.'; });
+  }
+  </script>
 
   {% if user_role == 'admin' %}
   <span class="gatechip">Publish gate · is_published TRUE — verified {{ '✓' if producer.is_verified else '✗' }} · narrative {{ '✓' if producer.reputation_narrative else '✗' }} · region {{ '✓' if producer.region_id else '✗' }} · admin-only chip</span>

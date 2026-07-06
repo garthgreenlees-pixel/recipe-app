@@ -11809,9 +11809,132 @@ def beverage_producer_page(producer_id):
     cur.close()
     conn.close()
 
+    # Visibility Doctrine §3: no local provider wired yet → this view is a demand signal.
+    _fire_demand_event("view", producer_id=producer_id,
+                       origin_region=producer.get("region_name") or producer.get("country"))
+
     canonical_url = f"https://provenance.kitchen/beverage/producers/{producer_id}"
     return render_template("beverage_producer.html",
         producer=producer, products=products, canonical_url=canonical_url)
+
+
+# ─── Visibility Doctrine: demand ledger + supplier onboarding (spec v1.1 §7/§8) ──
+
+def _fire_demand_event(kind, *, product_id=None, producer_id=None,
+                       origin_region=None, search_terms=None):
+    """Best-effort demand-ledger write. Region only — never personal data.
+    Fire-and-forget: any failure is swallowed so it can never break a page."""
+    if not DATABASE_URL_WRITE:
+        return
+    try:
+        reader_region = get_user_location()
+    except Exception:
+        reader_region = "global"
+    conn = None
+    try:
+        conn = psycopg2.connect(DATABASE_URL_WRITE)
+        conn.autocommit = True
+        cur = conn.cursor()
+        cur.execute(
+            """INSERT INTO beverage_demand_ledger
+                 (product_id, producer_id, origin_region, reader_region,
+                  event_kind, search_terms, local_provider_absent)
+               VALUES (%s, %s, %s, %s, %s, %s, TRUE)""",
+            (product_id, producer_id, origin_region, reader_region, kind, search_terms),
+        )
+        cur.close()
+    except Exception as e:
+        try:
+            sentry_sdk.capture_exception(e)
+        except Exception:
+            pass
+    finally:
+        if conn:
+            conn.close()
+
+
+@app.route("/beverages/suggest-supplier", methods=["POST"])
+def suggest_supplier():
+    """Suggest-a-Supplier (spec §8B). One tap, four fields. Every suggestion:
+    enters the verification queue at SUGGESTED, fires a demand-ledger event,
+    is attributed to the suggesting member (queue row only, never the ledger)."""
+    if not DATABASE_URL_WRITE:
+        return jsonify(error="unavailable"), 503
+    data = request.get_json(silent=True) or request.form
+    business_name = (data.get("business_name") or "").strip()
+    if not business_name:
+        return jsonify(error="business name required"), 400
+    region = (data.get("region") or "").strip() or get_user_location()
+    website = (data.get("website") or "").strip() or None
+    note = (data.get("note") or "").strip() or None
+    ctx_product = data.get("product_id") or None
+    ctx_producer = data.get("producer_id") or None
+    try:
+        ctx_product = int(ctx_product) if ctx_product else None
+    except (TypeError, ValueError):
+        ctx_product = None
+    try:
+        ctx_producer = int(ctx_producer) if ctx_producer else None
+    except (TypeError, ValueError):
+        ctx_producer = None
+    user = get_current_user()
+    conn = None
+    try:
+        conn = psycopg2.connect(DATABASE_URL_WRITE)
+        conn.autocommit = True
+        cur = conn.cursor()
+        cur.execute(
+            """INSERT INTO supplier_verification_queue
+                 (business_name, website, claimed_regions, source,
+                  suggested_by_user_id, context_product_id, context_producer_id,
+                  note, status)
+               VALUES (%s, %s, %s, 'member_suggestion', %s, %s, %s, %s, 'suggested')""",
+            (business_name, website, [region] if region else None,
+             user.get("id") if user else None, ctx_product, ctx_producer, note),
+        )
+        cur.close()
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        return jsonify(error="could not record"), 500
+    finally:
+        if conn:
+            conn.close()
+    # Fire the demand-ledger 'suggestion' event (region only — attribution stays in the queue).
+    _fire_demand_event("suggestion", product_id=ctx_product, producer_id=ctx_producer)
+    return jsonify(ok=True, message="Noted — if the checks confirm them, your cellar gets deeper.")
+
+
+@app.route("/admin/beverages/onboard")
+def admin_beverages_onboard():
+    """The assisted lane (spec §8C) + the suggestion pipeline. Admin-only.
+    Lists the verification queue; the founder rules on it. Read-only view for
+    now (verification checks + product wiring are the next increment)."""
+    g = _admin_guard()
+    if g:
+        return g
+    if session.get("role") != "admin" and (get_current_user() or {}).get("role") != "admin":
+        abort(403)
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT q.*,
+               bp.name  AS product_name,
+               bpr.name AS producer_name
+        FROM supplier_verification_queue q
+        LEFT JOIN beverage_products  bp  ON bp.id  = q.context_product_id
+        LEFT JOIN beverage_producers bpr ON bpr.id = q.context_producer_id
+        ORDER BY
+          CASE q.status WHEN 'suggested' THEN 1 WHEN 'checks_running' THEN 2
+                        WHEN 'verified_listed' THEN 3 WHEN 'claim_pending' THEN 4
+                        WHEN 'flagged' THEN 5 ELSE 6 END,
+          q.created_at DESC
+        LIMIT 500
+    """)
+    queue = [_serialize_row(r) for r in cur.fetchall()]
+    cur.execute("SELECT status, COUNT(*) AS n FROM supplier_verification_queue GROUP BY status")
+    counts = {r["status"]: r["n"] for r in cur.fetchall()}
+    cur.close(); conn.close()
+    return render_template("admin_beverages_onboard.html", queue=queue, counts=counts)
 
 
 @app.route("/beverage/producers/<path:rest>")
