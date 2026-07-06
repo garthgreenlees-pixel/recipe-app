@@ -11961,7 +11961,7 @@ def _run_supplier_checks(business_name, website, claimed_regions):
             }
             # 2 · identity — business name tokens appear in the page
             body = (r.text or "").lower()
-            toks = [t for t in re.split(r"[^a-z0-9]+", business_name.lower()) if len(t) >= 3]
+            toks = [t for t in _re.split(r"[^a-z0-9]+", business_name.lower()) if len(t) >= 3]
             hits = sum(1 for t in toks if t in body)
             passed_identity = bool(toks) and hits >= max(1, len(toks) // 2)
             results["identity"] = {
