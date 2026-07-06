@@ -11037,7 +11037,7 @@ def beverage_product_detail(product_id):
     try:
         cur.execute("""
             SELECT s.id, s.name, s.city, s.state_province, s.country,
-                   s.supplier_type, s.website, bps.region, bps.notes
+                   s.supplier_type, s.website, bps.region, bps.availability
             FROM beverage_product_suppliers bps
             JOIN suppliers s ON bps.supplier_id = s.id AND s.verification_status = 'verified_provider'
             WHERE bps.product_id = %s
