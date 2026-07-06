@@ -106,13 +106,13 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-heigh
 <div class="breadcrumb">
   <a href="/beverages">Beverages</a>
   {% if producer.region_name %}<span>·</span><a href="/beverages/cellar/">{{ producer.region_name }}'s cellar</a>{% endif %}
-  {% if producer.producer_type %}<span>·</span>{{ producer.producer_type.replace('_',' ') }}{% endif %}
+  {% if producer.producer_type %}<span>·</span>{{ producer.producer_type | string | replace('_',' ') }}{% endif %}
   <span>·</span>{{ producer.name }}
 </div>
 
 <div class="container">
   <section class="masthead">
-    <div class="eyebrow">{{ producer.producer_type.replace('_',' ') if producer.producer_type else 'Producer' }}{% if producer.region_name %} · {{ producer.region_name }}{% endif %}{% if producer.country %}, {{ producer.country }}{% endif %}</div>
+    <div class="eyebrow">{{ producer.producer_type | string | replace('_',' ') if producer.producer_type else 'Producer' }}{% if producer.region_name %} · {{ producer.region_name }}{% endif %}{% if producer.country %}, {{ producer.country }}{% endif %}</div>
     <h1>{{ producer.name }}</h1>
     {% if producer.region_name %}
     <div class="m-region">{% if producer.region_id %}<a href="/beverage/regions/{{ producer.region_id }}">{{ producer.region_name }}</a>{% else %}{{ producer.region_name }}{% endif %}{% if producer.country %}, {{ producer.country }}{% endif %}</div>
@@ -124,7 +124,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-heigh
     <div class="badges">
       {% if producer.is_verified %}<span class="badge v">Verified</span>{% endif %}
       {% if producer.quality_tier %}<span class="badge">{{ producer.quality_tier }}</span>{% endif %}
-      {% if producer.authority_tier %}<span class="badge">{{ producer.authority_tier.replace('_',' ') }}</span>{% endif %}
+      {% if producer.authority_tier %}<span class="badge">{{ producer.authority_tier | string | replace('_',' ') }}</span>{% endif %}
       {% if producer.producer_website %}<span class="badge"><a href="{{ producer.producer_website }}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">Website ↗</a></span>{% endif %}
     </div>
   </section>
@@ -156,7 +156,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-heigh
   <div class="prods">
     {% for p in products %}
     <a class="prod" href="/beverage/products/{{ p.id }}">
-      <span class="k">{{ (p.category or '').replace('_',' ') }}{% if p.region_name %} · {{ p.region_name }}{% endif %}</span>
+      <span class="k">{{ (p.category or '') | string | replace('_',' ') }}{% if p.region_name %} · {{ p.region_name }}{% endif %}</span>
       <div class="n">{{ p.name }}</div>
       {% if p.description %}<div class="d">{{ p.description | striptags | truncate(90, killwords=True, end='…') }}</div>{% endif %}
       {% if p.quality_tier %}<div class="t">{{ p.quality_tier }}</div>{% endif %}
