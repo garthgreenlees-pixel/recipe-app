@@ -251,7 +251,7 @@
 const DISHES = [
   {
     title:'Spaghetti alla Carbonara', origin:'Rome · Lazio · serves 2',
-    img:'{{ img_carbonara }}',
+    img:{{ img_carbonara|tojson }},
     lines:[
       {qty:'200 g', plain:'spaghetti', prov:'Senatore Cappelli — Pastificio Mancini'},
       {qty:'150 g', plain:'guanciale', prov:'Suino Casertana, 24-month cure', hero:true},
@@ -273,7 +273,7 @@ const DISHES = [
   },
   {
     title:'Phat Thai', origin:'Bangkok · Thailand · serves 2',
-    img:'{{ img_phatthai }}',
+    img:{{ img_phatthai|tojson }},
     lines:[
       {qty:'200 g', plain:'rice noodles', prov:'Chanthaburi, sun-dried'},
       {qty:'3 tbsp', plain:'tamarind', prov:'Phetchabun paste, first press', hero:true},
@@ -295,7 +295,7 @@ const DISHES = [
   },
   {
     title:'Beurre Blanc', origin:'Loire · France · makes one sauceboat',
-    img:'{{ img_beurreblanc }}',
+    img:{{ img_beurreblanc|tojson }},
     lines:[
       {qty:'250 g', plain:'butter', prov:'Beurre de Baratte — Le Gall, Brittany', hero:true},
       {qty:'100 ml', plain:'muscadet', prov:'Sèvre-et-Maine, sur lie'},

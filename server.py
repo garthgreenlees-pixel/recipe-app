@@ -1533,8 +1533,9 @@ def index():
                 img_beurreblanc = r[1] or ""
             cur.close()
             conn.close()
-        except Exception:
-            pass
+        except Exception as e:
+            app.logger.error("homepage counts/images query failed: %s", e)
+            sentry_sdk.capture_exception(e)
     return render_template(
         "homepage_landing.html",
         counts_techniques=counts_techniques,
@@ -11557,6 +11558,10 @@ Rules:
 # ─── Beverage browse page ─────────────────────────────────────────────────────
 
 @app.route("/beverage")
+def beverage_singular_redirect():
+    return redirect("/beverages", code=301)
+
+
 @app.route("/beverages")
 def beverage_browse():
     if not DATABASE_URL:
