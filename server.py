@@ -11569,120 +11569,141 @@ def beverage_singular_redirect():
 
 @app.route("/beverages")
 def beverage_browse():
+    """The region door — the reader's cellar (Visibility Doctrine / spec v1.1 §3).
+    Local by default, global by discovery. Replaces the old Browse by Tradition page."""
+    return _render_cellar(None)
+
+
+@app.route("/beverages/cellar/")
+def beverage_cellar_index():
+    return redirect("/beverages")
+
+
+@app.route("/beverages/cellar/<slug>")
+def beverage_cellar(slug):
+    """The atlas: stand in any other region's cellar. Region guides, never walls."""
+    countries = _cellar_countries()
+    for c in countries:
+        if c["slug"] == slug:
+            return _render_cellar(c["country"])
+    abort(404)
+
+
+# The six shelves (founder-approved mockup 1) — producer_type -> shelf.
+_SHELVES = [
+    ("wine",        "Wine",         ["winery"]),
+    ("coffee",      "Coffee",       ["coffee_estate"]),
+    ("spirits",     "Spirits",      ["distillery"]),
+    ("beer-cider",  "Beer & Cider", ["brewery", "kombucha_brewery"]),
+    ("tea",         "Tea",          ["tea_garden"]),
+    ("sake",        "Sake",         ["sake_brewery"]),
+]
+
+# Reader region token prefix -> beverage country label (as stored in the data).
+_TOKEN_COUNTRY = {
+    "CA": "Canada", "US": "USA", "AU": "Australia", "NZ": "New Zealand",
+    "FR": "France", "IT": "Italy", "JP": "Japan", "DE": "Germany",
+    "ES": "Spain", "PT": "Portugal", "AT": "Austria", "GR": "Greece",
+    "CN": "China", "TW": "Taiwan", "IN": "India", "MX": "Mexico",
+}
+
+
+def _country_slug(country):
+    return _re.sub(r"[^a-z0-9]+", "-", (country or "").lower()).strip("-")
+
+
+def _cellar_countries():
+    """Countries with a published presence, for the atlas. Published-only counts."""
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT country, SUM(producers) AS producers, SUM(products) AS products FROM (
+            SELECT bpr.country, COUNT(*) AS producers, 0 AS products
+            FROM beverage_producers bpr
+            WHERE bpr.is_published IS TRUE AND bpr.country IS NOT NULL
+            GROUP BY bpr.country
+            UNION ALL
+            SELECT br.country, 0, COUNT(*)
+            FROM beverage_products bp
+            JOIN beverage_regions br ON bp.region_id = br.id
+            WHERE bp.is_published IS TRUE AND br.country IS NOT NULL
+            GROUP BY br.country
+        ) x GROUP BY country ORDER BY SUM(producers) + SUM(products) DESC
+    """)
+    out = []
+    for r in cur.fetchall():
+        out.append({"country": r["country"], "slug": _country_slug(r["country"]),
+                    "producers": int(r["producers"]), "products": int(r["products"])})
+    cur.close(); conn.close()
+    return out
+
+
+def _render_cellar(country):
+    """Render a cellar. country=None -> the reader's own cellar (local by default)."""
     if not DATABASE_URL:
-        return render_template("beverage.html",
-            regions=[], categories=[], pairing_food_types=[],
-            total_regions=0, total_products=0, total_producers=0,
-            total_pairings=0, tradition_counts={t:0 for t in ['wine','spirits','sake','tea','coffee','beer','ceremonial','fortified','non_alcoholic','fermented','water']})
+        abort(503)
+    reader_token = get_user_location()
+    reader_label = dict(VALID_REGIONS).get(reader_token, reader_token)
+    home = country is not None
+    if country is None:
+        country = _TOKEN_COUNTRY.get((reader_token or "").split("-")[0].upper())
+    cellar_label = country or "the world"
+    if not home and country and reader_token != "global":
+        # the reader's own door keeps the province-grain label (spec §2)
+        cellar_label = reader_label if reader_token in dict(VALID_REGIONS) else country
 
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cscope = "AND bpr.country = %(country)s" if country else ""
+    params = {"country": country}
 
-    # Top-level regions (no parent)
-    cur.execute("""
-        SELECT br.*, COUNT(bp.id) AS product_count
-        FROM beverage_regions br
-        LEFT JOIN beverage_products bp ON bp.region_id = br.id AND bp.is_published IS TRUE
-        WHERE br.parent_region_id IS NULL
-        GROUP BY br.id
-        ORDER BY br.country, br.name
-    """)
-    regions = [_serialize_row(r) for r in cur.fetchall()]
+    shelves = []
+    for key, label, types in _SHELVES:
+        cur.execute(f"""
+            SELECT bpr.id, bpr.name, bpr.producer_type, bpr.quality_tier,
+                   bpr.reputation_narrative, bpr.philosophy_description,
+                   br.name AS region_name, bpr.country
+            FROM beverage_producers bpr
+            LEFT JOIN beverage_regions br ON bpr.region_id = br.id
+            WHERE bpr.is_published IS TRUE AND bpr.producer_type = ANY(%(types)s) {cscope}
+            ORDER BY (bpr.reputation_narrative IS NOT NULL) DESC, bpr.name
+            LIMIT 3
+        """, {**params, "types": types})
+        rows = [_serialize_row(r) for r in cur.fetchall()]
+        cur.execute(f"""
+            SELECT COUNT(*) AS n FROM beverage_producers bpr
+            WHERE bpr.is_published IS TRUE AND bpr.producer_type = ANY(%(types)s) {cscope}
+        """, {**params, "types": types})
+        total = cur.fetchone()["n"]
+        shelves.append({"key": key, "label": label, "producers": rows, "count": total})
 
-    # Categories with counts
-    cur.execute("""
-        SELECT category, COUNT(*) AS count
-        FROM beverage_products
-        WHERE category IS NOT NULL AND is_published IS TRUE
-        GROUP BY category
-        ORDER BY count DESC
-    """)
-    categories = [_serialize_row(r) for r in cur.fetchall()]
+    # honest counts, published only, same scope the shelves use
+    cur.execute(f"""
+        SELECT COUNT(*) AS n FROM beverage_producers bpr
+        WHERE bpr.is_published IS TRUE {cscope}
+    """, params)
+    total_producers = cur.fetchone()["n"]
+    if country:
+        cur.execute("""
+            SELECT COUNT(*) AS n FROM beverage_products bp
+            JOIN beverage_regions br ON bp.region_id = br.id
+            WHERE bp.is_published IS TRUE AND br.country = %(country)s
+        """, params)
+    else:
+        cur.execute("SELECT COUNT(*) AS n FROM beverage_products WHERE is_published IS TRUE")
+    total_products = cur.fetchone()["n"]
+    cur.close(); conn.close()
 
-    # Food profiles for pairing browse
-    cur.execute("""
-        SELECT DISTINCT food_category, COUNT(*) AS count
-        FROM pairing_intelligence
-        WHERE food_category IS NOT NULL
-        GROUP BY food_category
-        ORDER BY count DESC
-    """)
-    pairing_food_types = [_serialize_row(r) for r in cur.fetchall()]
-
-    # Stats
-    cur.execute("SELECT COUNT(*) AS count FROM beverage_regions")
-    total_regions = cur.fetchone()["count"]
-    cur.execute("SELECT COUNT(*) AS count FROM beverage_products WHERE is_published IS TRUE")
-    total_products = cur.fetchone()["count"]
-    cur.execute("SELECT COUNT(*) AS count FROM beverage_producers WHERE is_published IS TRUE")
-    total_producers = cur.fetchone()["count"]
-    cur.execute("SELECT COUNT(*) AS count FROM pairing_intelligence")
-    total_pairings = cur.fetchone()["count"]
-
-    # Tradition counts (group DB categories into 11 traditions)
-    _cat_to_trad = {
-        # fortified — checked BEFORE wine so wine_fortified doesn't fall into wine
-        'wine_fortified': 'fortified', 'fortified': 'fortified',
-        # wine — excludes wine_fortified (handled above)
-        'wine_still': 'wine', 'wine_sparkling': 'wine',
-        'wine_dessert': 'wine', 'wine_orange': 'wine', 'wine_natural': 'wine',
-        'wine_rose': 'wine', 'wine': 'wine', 'sparkling': 'wine',
-        # spirits
-        'spirits_whiskey': 'spirits', 'spirits_brandy': 'spirits',
-        'spirits_gin': 'spirits', 'spirits_rum': 'spirits', 'spirits_agave': 'spirits',
-        'spirits_liqueur': 'spirits', 'spirits_vodka': 'spirits', 'spirits_tequila': 'spirits',
-        'gin': 'spirits', 'baijiu': 'spirits', 'shochu': 'spirits',
-        # sake
-        'sake': 'sake',
-        # coffee
-        'coffee': 'coffee',
-        # beer
-        'beer_ale': 'beer', 'beer_lager': 'beer', 'beer_wild': 'beer',
-        'wild beer': 'beer', 'beer': 'beer',
-        # tea
-        'tea': 'tea',
-        # fermented — checked BEFORE na so na_fermented doesn't fall into non_alcoholic
-        'na_fermented': 'fermented', 'fermented': 'fermented',
-        # non-alcoholic — excludes na_fermented (handled above)
-        'na_crafted': 'non_alcoholic', 'na_dealcoholised': 'non_alcoholic',
-        'NA': 'non_alcoholic', 'non_alcoholic': 'non_alcoholic',
-        # ceremonial / traditional
-        'ceremonial': 'ceremonial', 'traditional_cultural': 'ceremonial',
-        # water
-        'water': 'water',
-    }
-    tradition_counts = {t: 0 for t in ['wine','spirits','sake','tea','coffee','beer','ceremonial','fortified','non_alcoholic','fermented','water']}
-    for cat_row in categories:
-        trad = _cat_to_trad.get(cat_row['category'])
-        if trad:
-            tradition_counts[trad] += int(cat_row['count'])
-
-    # Pre-fetch first 20 Wine products for stable first paint (mirrors /recipes initial_recipes pattern).
-    # Uses the same JOIN + category LIKE filter the /api/beverage/products handler uses.
-    cur.execute(
-        "SELECT bp.*, br.name AS region_name, br.country AS region_country"
-        " FROM beverage_products bp"
-        " LEFT JOIN beverage_regions br ON bp.region_id = br.id"
-        " WHERE bp.category LIKE %s AND bp.is_published IS TRUE"
-        " ORDER BY bp.name LIMIT 20",
-        ("wine%",)
+    countries = _cellar_countries()
+    return render_template("beverages_cellar.html",
+        cellar_label=cellar_label, cellar_country=country, is_home=(not home),
+        reader_token=reader_token, reader_label=reader_label,
+        shelves=shelves, total_producers=total_producers, total_products=total_products,
+        atlas=countries, valid_regions=VALID_REGIONS,
+        canonical_url=("https://provenance.kitchen/beverages" if not home
+                       else f"https://provenance.kitchen/beverages/cellar/{_country_slug(country)}"),
     )
-    initial_products = [_serialize_row(r) for r in cur.fetchall()]
 
-    cur.close()
-    conn.close()
-
-    return render_template("beverage.html",
-        regions=regions,
-        categories=categories,
-        pairing_food_types=pairing_food_types,
-        total_regions=total_regions,
-        total_products=total_products,
-        total_producers=total_producers,
-        total_pairings=total_pairings,
-        tradition_counts=tradition_counts,
-        initial_products=initial_products,
-    )
 
 
 # ─── Beverage individual page routes ─────────────────────────────────────────

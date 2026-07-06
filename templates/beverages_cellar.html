@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}{% if is_home %}Beverages — your cellar — Provenance{% else %}{{ cellar_label }}'s cellar — Provenance Beverages{% endif %}{% endblock %}
+
+{% block meta_description %}{{ total_products }} pours and {{ total_producers }} producers{% if cellar_country %} from {{ cellar_label }}{% endif %} — wine, coffee, spirits, beer & cider, tea and sake, held to one standard.{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ canonical_url }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block styles %}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--paper:#F4EEE1;--ink:#17130D;--soft:#6E665A;--gilt:#9A7B3F;--hair:#D9CFBB;
+      --night:#13110C;--nightink:#F1EBDD;--nightsoft:#A39A88;--nighthair:#2C2820;--giltn:#C6A055}
+body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-serif;line-height:1.65}
+.cellar-wrap{max-width:1080px;margin:0 auto;padding:0 44px}
+.cellar-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gilt)}
+
+.door{padding:56px 0 30px}
+.door h1{font-family:'Cormorant',serif;font-weight:600;font-size:clamp(34px,4.4vw,50px);line-height:1.08;margin:14px 0 10px}
+.door h1 em{font-style:italic;color:var(--gilt)}
+.door .sub{color:var(--soft);font-size:15.5px;max-width:560px;line-height:1.6}
+.regionline{display:flex;align-items:center;gap:14px;margin-top:22px;flex-wrap:wrap}
+.regionchip{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--gilt);color:var(--gilt);
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;padding:9px 14px;border-radius:2px}
+.regionchip .dot{width:7px;height:7px;border-radius:50%;background:var(--gilt)}
+.regionsel{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);
+  background:transparent;border:1px dashed var(--hair);border-radius:2px;padding:8px 10px;cursor:pointer}
+.counts{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-top:16px}
+.backdoor{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gilt);text-decoration:none;border-bottom:1px dashed var(--gilt)}
+
+.shelfhead{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--hair);padding:34px 0 10px}
+.shelfhead h2{font-family:'Cormorant',serif;font-weight:600;font-size:26px}
+.shelfhead .n{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gilt)}
+.shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:18px 0 8px}
+@media(max-width:800px){.shelf{grid-template-columns:1fr}.cellar-wrap{padding:0 22px}}
+.pcard{background:var(--night);color:var(--nightink);border:1px solid var(--nighthair);border-radius:3px;padding:20px 22px;text-decoration:none;display:block;transition:transform .25s,border-color .25s}
+.pcard:hover{transform:translateY(-3px);border-color:var(--giltn)}
+.pcard .k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--nightsoft)}
+.pcard .n{font-family:'Cormorant',serif;font-size:22px;font-weight:600;margin:7px 0 3px;color:var(--nightink)}
+.pcard .r{font-family:'Cormorant',serif;font-style:italic;font-size:15px;color:var(--giltn)}
+.pcard .p{font-size:12.5px;color:var(--nightsoft);line-height:1.55;margin-top:10px}
+.emptyshelf{border:1px dashed var(--hair);border-radius:3px;padding:22px 24px;margin:18px 0 8px}
+.emptyshelf .line{font-family:'Cormorant',serif;font-style:italic;font-size:18px;color:var(--gilt)}
+.emptyshelf .sub{font-size:13px;color:var(--soft);margin-top:5px}
+.emptyshelf a{color:var(--gilt)}
+
+.atlas{margin-top:48px;background:var(--night);color:var(--nightink);border-radius:3px;padding:38px 40px 34px}
+.atlas h2{font-family:'Cormorant',serif;font-weight:600;font-size:28px;margin:10px 0 6px;color:var(--nightink)}
+.atlas h2 em{font-style:italic;color:var(--giltn)}
+.atlas .sub{color:var(--nightsoft);font-size:14px;max-width:560px;line-height:1.6}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+@media(max-width:800px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{border:1px solid var(--nighthair);padding:14px 16px;border-radius:2px;text-decoration:none;color:var(--nightink);transition:border-color .25s;display:block}
+.tile:hover{border-color:var(--giltn)}
+.tile .t{font-family:'Cormorant',serif;font-size:18px;font-weight:600}
+.tile .c{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--nightsoft);margin-top:3px}
+.cellar-foot{padding:40px 0 70px}
+{% endblock %}
+
+{% block content %}
+<div class="cellar-wrap">
+
+  <section class="door">
+    <div class="cellar-eyebrow">Beverages</div>
+    {% if is_home %}
+    <h1>You're standing in <em>{{ cellar_label }}'s</em> cellar.</h1>
+    <p class="sub">Your region's makers first — every pour on these shelves is made near you. The rest of the world is one step away, and nothing is ever walled off.</p>
+    {% else %}
+    <h1>You're standing in <em>{{ cellar_label }}'s</em> cellar.</h1>
+    <p class="sub">A visit through the atlas. Look around freely — providers, when shown, still answer to your own region ({{ reader_label }}).</p>
+    {% endif %}
+    <div class="regionline">
+      {% if is_home %}
+      <span class="regionchip"><span class="dot"></span> {{ reader_label }}</span>
+      <select class="regionsel" onchange="if(this.value)window.location='/beverages?loc='+this.value">
+        <option value="">Change region…</option>
+        {% for tok, label in valid_regions %}
+        <option value="{{ tok }}"{% if tok == reader_token %} selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      {% else %}
+      <a class="backdoor" href="/beverages">← Back to your cellar ({{ reader_label }})</a>
+      {% endif %}
+    </div>
+    <div class="counts">{{ total_producers }} producers · {{ total_products }} pours{% if cellar_country %} from {{ cellar_country }}{% endif %} · honest counts, published only</div>
+  </section>
+
+  {% for shelf in shelves %}
+  <div class="shelfhead" id="{{ shelf.key }}">
+    <h2>{{ shelf.label }}</h2>
+    <span class="n">{{ shelf.count }} on this shelf</span>
+  </div>
+  {% if shelf.producers %}
+  <div class="shelf">
+    {% for pr in shelf.producers %}
+    <a class="pcard" href="/beverage/producers/{{ pr.id }}">
+      <span class="k">{{ (pr.producer_type or '') | string | replace('_',' ') }}{% if pr.region_name %} · {{ pr.region_name }}{% endif %}</span>
+      <div class="n">{{ pr.name }}</div>
+      {% if pr.quality_tier %}<div class="r">{{ pr.quality_tier }}</div>{% endif %}
+      {% set blurb = pr.reputation_narrative or pr.philosophy_description %}
+      {% if blurb %}<p class="p">{{ blurb | striptags | truncate(110, killwords=True, end='…') }}</p>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="emptyshelf">
+    <div class="line">Nothing from {{ cellar_label }} on this shelf yet.</div>
+    <div class="sub">The first maker to be carried here will be named on this page — <a href="#atlas">the world's {{ shelf.label | lower }} shelf is one step away</a>.</div>
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  <div class="atlas" id="atlas">
+    <div class="cellar-eyebrow" style="color:var(--giltn)">The Atlas</div>
+    <h2>Step into <em>any other cellar.</em></h2>
+    <p class="sub">Region filters guide; they never wall anything off. A curious reader anywhere can stand in any cellar and look around.</p>
+    <div class="tiles">
+      {% for c in atlas %}
+      <a class="tile" href="/beverages/cellar/{{ c.slug }}">
+        <div class="t">{{ c.country }}</div>
+        <div class="c">{{ c.producers }} producers · {{ c.products }} pours</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="cellar-foot"></div>
+</div>
+{% endblock %}
