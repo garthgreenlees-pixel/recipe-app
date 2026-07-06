@@ -59,6 +59,13 @@ body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-
 .tile .t{font-family:'Cormorant',serif;font-size:18px;font-weight:600}
 .tile .c{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--nightsoft);margin-top:3px}
 .cellar-foot{padding:40px 0 70px}
+.allcellars{margin-top:18px;background:transparent;border:1px dashed var(--nighthair);border-radius:2px;color:var(--nightsoft);
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;padding:9px 14px;cursor:pointer}
+.allcellars:hover{border-color:var(--giltn);color:var(--giltn)}
+.cellartail{margin-top:14px;line-height:2.1}
+.cellartail a{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--nightsoft);text-decoration:none;border-bottom:1px dotted var(--nighthair);white-space:nowrap}
+.cellartail a:hover{color:var(--giltn);border-bottom-color:var(--giltn)}
+.cellartail .sep{color:var(--nighthair);margin:0 8px}
 {% endblock %}
 
 {% block content %}
@@ -119,13 +126,22 @@ body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-
     <h2>Step into <em>any other cellar.</em></h2>
     <p class="sub">Region filters guide; they never wall anything off. A curious reader anywhere can stand in any cellar and look around.</p>
     <div class="tiles">
-      {% for c in atlas %}
+      {% for c in atlas_main %}
       <a class="tile" href="/beverages/cellar/{{ c.slug }}">
         <div class="t">{{ c.country }}</div>
         <div class="c">{{ c.producers }} producers · {{ c.products }} pours</div>
       </a>
       {% endfor %}
     </div>
+    {% if atlas_rest %}
+    <button type="button" class="allcellars" id="allCellarsBtn"
+            onclick="var l=document.getElementById('cellarTail');var open=l.style.display!=='none';l.style.display=open?'none':'block';this.querySelector('span').textContent=open?'▾':'▴';">
+      All cellars ({{ atlas_main|length + atlas_rest|length }}) <span>▾</span>
+    </button>
+    <div class="cellartail" id="cellarTail" style="display:none">
+      {% for c in atlas_rest %}<a href="/beverages/cellar/{{ c.slug }}">{{ c.country }}</a>{% if not loop.last %}<span class="sep">·</span>{% endif %}{% endfor %}
+    </div>
+    {% endif %}
   </div>
 
   <div class="cellar-foot"></div>

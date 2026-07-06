@@ -11695,11 +11695,18 @@ def _render_cellar(country):
     cur.close(); conn.close()
 
     countries = _cellar_countries()
+    # The atlas invites, it doesn't inventory: full tiles only for cellars with
+    # real depth (>=3 published producers, top 12); the long tail collapses.
+    ranked = sorted(countries, key=lambda c: (-c["producers"], c["country"]))
+    atlas_main = [c for c in ranked if c["producers"] >= 3][:12]
+    _main = {c["slug"] for c in atlas_main}
+    atlas_rest = sorted((c for c in countries if c["slug"] not in _main),
+                        key=lambda c: c["country"])
     return render_template("beverages_cellar.html",
         cellar_label=cellar_label, cellar_country=country, is_home=(not home),
         reader_token=reader_token, reader_label=reader_label,
         shelves=shelves, total_producers=total_producers, total_products=total_products,
-        atlas=countries, valid_regions=VALID_REGIONS,
+        atlas_main=atlas_main, atlas_rest=atlas_rest, valid_regions=VALID_REGIONS,
         canonical_url=("https://provenance.kitchen/beverages" if not home
                        else f"https://provenance.kitchen/beverages/cellar/{_country_slug(country)}"),
     )
