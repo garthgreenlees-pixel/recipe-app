@@ -2179,7 +2179,7 @@ def about_page():
                 SELECT
                   (SELECT COUNT(*) FROM technique_references) AS techniques,
                   (SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 1000%%') AS p1000,
-                  (SELECT COUNT(*) FROM beverage_products) AS beverages,
+                  (SELECT COUNT(*) FROM beverage_products WHERE is_published IS TRUE) AS beverages,
                   (SELECT COUNT(*) FROM suppliers) AS suppliers
             """)
             row = cur.fetchone()
@@ -3106,9 +3106,11 @@ def _find_pairings_for_user_recipe(recipe_title, limit=3):
                 FROM technique_references tr
                 JOIN technique_beverage_pairings tbp ON tbp.technique_id = tr.id
                 LEFT JOIN beverage_products bp ON bp.id = tbp.beverage_product_id
+                     AND bp.is_published IS TRUE
                 LEFT JOIN beverage_producers bprod ON bprod.id = tbp.beverage_producer_id
                      AND bprod.is_published IS TRUE
                 WHERE (tbp.beverage_producer_id IS NULL OR bprod.id IS NOT NULL)
+                  AND (tbp.beverage_product_id IS NULL OR bp.id IS NOT NULL)
                   AND ({conditions})
                 ORDER BY tr.id DESC,
                          CASE tbp.confidence_status
@@ -3155,7 +3157,7 @@ def _find_pairings_for_user_recipe(recipe_title, limit=3):
                    pi.beverage_product_id,
                    bp.name AS bp_name, bp.slug AS bp_slug
             FROM pairing_intelligence pi
-            LEFT JOIN beverage_products bp ON bp.id = pi.beverage_product_id
+            LEFT JOIN beverage_products bp ON bp.id = pi.beverage_product_id AND bp.is_published IS TRUE
             WHERE pi.is_published = TRUE
               AND pi.food_category = %s
               AND pi.beverage_category IS NOT NULL
@@ -3214,7 +3216,7 @@ def _suggested_beverages_for_recipe(recipe_name, cur, limit=4):
             tbp.pairing_type AS relationship_type
         FROM technique_references tr
         JOIN technique_beverage_pairings tbp ON tbp.technique_id = tr.id
-        JOIN beverage_products bp ON bp.id = tbp.beverage_product_id
+        JOIN beverage_products bp ON bp.id = tbp.beverage_product_id AND bp.is_published IS TRUE
         LEFT JOIN beverage_regions br ON br.id = bp.region_id
         LEFT JOIN beverage_producers bpr ON bpr.id = bp.producer_id
              AND bpr.is_published IS TRUE
@@ -4956,7 +4958,7 @@ def compose_recipe():
                 SELECT pi.pairing_type, pi.flavour_logic, pi.food_category, pi.meal_context,
                        bp.name AS beverage_name, bp.category AS beverage_category
                 FROM pairing_intelligence pi
-                LEFT JOIN beverage_products bp ON pi.beverage_product_id = bp.id
+                LEFT JOIN beverage_products bp ON pi.beverage_product_id = bp.id AND bp.is_published IS TRUE
                 WHERE pi.food_category ILIKE ANY(%s)
                    OR pi.food_flavour_profile ILIKE ANY(%s)
                 ORDER BY CASE pi.confidence WHEN 'classic' THEN 1 WHEN 'established' THEN 2 ELSE 3 END
@@ -9037,7 +9039,7 @@ def _compute_platform_counts():
         queries = [
             ("technique_count", "SELECT COUNT(*) FROM technique_references"),
             ("recipe_count",    "SELECT COUNT(*) FROM recipes"),
-            ("beverage_count",  "SELECT COUNT(*) FROM beverage_products"),
+            ("beverage_count",  "SELECT COUNT(*) FROM beverage_products WHERE is_published IS TRUE"),
             ("supplier_count",  "SELECT COUNT(DISTINCT s.id) FROM suppliers s JOIN product_suppliers ps ON ps.supplier_id = s.id WHERE s.is_active = TRUE"),
             ("drink_count",     "SELECT COUNT(*) FROM technique_references WHERE category LIKE 'Provenance 500 Drinks%'"),
             ("canon_count",     "SELECT COUNT(*) FROM canons WHERE status != 'archived'"),
@@ -10973,7 +10975,7 @@ def beverage_products_list():
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-    query = "SELECT bp.*, br.name AS region_name, br.country AS region_country FROM beverage_products bp LEFT JOIN beverage_regions br ON bp.region_id = br.id WHERE 1=1"
+    query = "SELECT bp.*, br.name AS region_name, br.country AS region_country FROM beverage_products bp LEFT JOIN beverage_regions br ON bp.region_id = br.id WHERE 1=1 AND bp.is_published IS TRUE"
     params = []
 
     category = request.args.get("category", "").strip()
@@ -11014,7 +11016,7 @@ def beverage_product_detail(product_id):
         SELECT bp.*, br.name AS region_name, br.country AS region_country
         FROM beverage_products bp
         LEFT JOIN beverage_regions br ON bp.region_id = br.id
-        WHERE bp.id = %s
+        WHERE bp.id = %s AND bp.is_published IS TRUE
     """, (product_id,))
     row = cur.fetchone()
     if not row:
@@ -11134,7 +11136,7 @@ def beverage_producer_detail(producer_id):
         SELECT p.id, p.name, p.category, p.quality_tier, p.description
         FROM beverage_products p
         JOIN beverage_product_producers bpp ON p.id = bpp.product_id
-        WHERE bpp.producer_id = %s
+        WHERE bpp.producer_id = %s AND p.is_published IS TRUE
         ORDER BY p.name
     """, (producer_id,))
     result["products"] = [_serialize_row(r) for r in cur.fetchall()]
@@ -11380,7 +11382,7 @@ def pairings_list():
                bp.name AS product_name, bp.category AS product_category,
                bp.quality_tier, bp.description AS product_description
         FROM pairing_intelligence pi
-        LEFT JOIN beverage_products bp ON pi.beverage_product_id = bp.id
+        LEFT JOIN beverage_products bp ON pi.beverage_product_id = bp.id AND bp.is_published IS TRUE
         WHERE 1=1
     """
     params = []
@@ -11441,7 +11443,7 @@ def pairings_for_technique(technique_id):
                bp.quality_tier, bp.description AS product_description,
                bpr.name AS producer_name
         FROM pairing_intelligence pi
-        LEFT JOIN beverage_products bp ON pi.beverage_product_id = bp.id
+        LEFT JOIN beverage_products bp ON pi.beverage_product_id = bp.id AND bp.is_published IS TRUE
         LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
         WHERE pi.food_technique_id = %s
         ORDER BY
@@ -11580,7 +11582,7 @@ def beverage_browse():
     cur.execute("""
         SELECT br.*, COUNT(bp.id) AS product_count
         FROM beverage_regions br
-        LEFT JOIN beverage_products bp ON bp.region_id = br.id
+        LEFT JOIN beverage_products bp ON bp.region_id = br.id AND bp.is_published IS TRUE
         WHERE br.parent_region_id IS NULL
         GROUP BY br.id
         ORDER BY br.country, br.name
@@ -11591,7 +11593,7 @@ def beverage_browse():
     cur.execute("""
         SELECT category, COUNT(*) AS count
         FROM beverage_products
-        WHERE category IS NOT NULL
+        WHERE category IS NOT NULL AND is_published IS TRUE
         GROUP BY category
         ORDER BY count DESC
     """)
@@ -11610,7 +11612,7 @@ def beverage_browse():
     # Stats
     cur.execute("SELECT COUNT(*) AS count FROM beverage_regions")
     total_regions = cur.fetchone()["count"]
-    cur.execute("SELECT COUNT(*) AS count FROM beverage_products")
+    cur.execute("SELECT COUNT(*) AS count FROM beverage_products WHERE is_published IS TRUE")
     total_products = cur.fetchone()["count"]
     cur.execute("SELECT COUNT(*) AS count FROM beverage_producers WHERE is_published IS TRUE")
     total_producers = cur.fetchone()["count"]
@@ -11661,7 +11663,7 @@ def beverage_browse():
         "SELECT bp.*, br.name AS region_name, br.country AS region_country"
         " FROM beverage_products bp"
         " LEFT JOIN beverage_regions br ON bp.region_id = br.id"
-        " WHERE bp.category LIKE %s"
+        " WHERE bp.category LIKE %s AND bp.is_published IS TRUE"
         " ORDER BY bp.name LIMIT 20",
         ("wine%",)
     )
@@ -11706,7 +11708,7 @@ def beverage_region_page(region_id):
         SELECT bp.*, bpr.name AS producer_name
         FROM beverage_products bp
         LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
-        WHERE bp.region_id = %s
+        WHERE bp.region_id = %s AND bp.is_published IS TRUE
         ORDER BY bp.quality_tier, bp.name
     """, (region_id,))
     products = [_serialize_row(r) for r in cur.fetchall()]
@@ -11736,7 +11738,7 @@ def beverage_product_page(product_id):
         SELECT bp.*, br.name AS region_name, br.country AS region_country
         FROM beverage_products bp
         LEFT JOIN beverage_regions br ON bp.region_id = br.id
-        WHERE bp.id = %s
+        WHERE bp.id = %s AND bp.is_published IS TRUE
     """, (product_id,))
     product = cur.fetchone()
     if not product:
@@ -11799,7 +11801,7 @@ def beverage_producer_page(producer_id):
         FROM beverage_products p
         JOIN beverage_product_producers bpp ON p.id = bpp.product_id
         LEFT JOIN beverage_regions br ON p.region_id = br.id
-        WHERE bpp.producer_id = %s
+        WHERE bpp.producer_id = %s AND p.is_published IS TRUE
         ORDER BY p.quality_tier, p.name
     """, (producer_id,))
     products = [_serialize_row(r) for r in cur.fetchall()]
@@ -11909,11 +11911,13 @@ def technique_page(slug):
                br.name  AS region_name
         FROM technique_beverage_pairings tbp
         LEFT JOIN beverage_products  bp  ON tbp.beverage_product_id = bp.id
+             AND bp.is_published IS TRUE
         LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, tbp.beverage_producer_id) = bpr.id
              AND bpr.is_published IS TRUE
         LEFT JOIN beverage_regions   br  ON bp.region_id = br.id
         WHERE tbp.technique_id = %s
           AND (tbp.beverage_producer_id IS NULL OR bpr.id IS NOT NULL)
+          AND (tbp.beverage_product_id IS NULL OR bp.id IS NOT NULL)
     """
     _tbp_order = """
         ORDER BY
@@ -12167,8 +12171,9 @@ def beverage_by_slug(slug):
         SELECT bp.*, br.name AS region_name, br.country AS region_country
         FROM beverage_products bp
         LEFT JOIN beverage_regions br ON bp.region_id = br.id
-        WHERE bp.slug = %s
-           OR LOWER(REGEXP_REPLACE(REGEXP_REPLACE(bp.name, '[^a-zA-Z0-9 -]', '', 'g'), ' +', '-', 'g')) = %s
+        WHERE (bp.slug = %s
+           OR LOWER(REGEXP_REPLACE(REGEXP_REPLACE(bp.name, '[^a-zA-Z0-9 -]', '', 'g'), ' +', '-', 'g')) = %s)
+          AND bp.is_published IS TRUE
         LIMIT 1
     """, (slug, slug))
     product = cur.fetchone()
@@ -12217,7 +12222,7 @@ def platform_stats():
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("SELECT COUNT(*) AS count FROM technique_references WHERE published IS NOT FALSE")
     total_techniques = cur.fetchone()["count"]
-    cur.execute("SELECT COUNT(*) AS count FROM beverage_products")
+    cur.execute("SELECT COUNT(*) AS count FROM beverage_products WHERE is_published IS TRUE")
     total_drinks = cur.fetchone()["count"]
     cur.execute("""
         SELECT origin AS cuisine, COUNT(*) AS count
@@ -12437,12 +12442,12 @@ def drinks_page():
     cur.execute("""
         SELECT category, COUNT(*) AS count
         FROM beverage_products
-        WHERE category IS NOT NULL
+        WHERE category IS NOT NULL AND is_published IS TRUE
         GROUP BY category
         ORDER BY count DESC
     """)
     categories = [dict(r) for r in cur.fetchall()]
-    cur.execute("SELECT COUNT(*) AS count FROM beverage_products")
+    cur.execute("SELECT COUNT(*) AS count FROM beverage_products WHERE is_published IS TRUE")
     total_drinks = cur.fetchone()["count"]
     cur.execute("SELECT COUNT(*) AS count FROM technique_references WHERE category LIKE 'Provenance 500 Drinks%%'")
     p500_total = cur.fetchone()["count"]
@@ -12890,7 +12895,7 @@ def programme_pairings():
                bpr.name AS producer_name,
                br.name AS region_name
         FROM pairing_intelligence pi
-        JOIN beverage_products bp ON pi.beverage_product_id = bp.id
+        JOIN beverage_products bp ON pi.beverage_product_id = bp.id AND bp.is_published IS TRUE
         LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
         LEFT JOIN beverage_regions br ON bp.region_id = br.id
     """
@@ -12970,7 +12975,7 @@ def programme_service():
         FROM beverage_products bp
         LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
         LEFT JOIN beverage_regions br ON bp.region_id = br.id
-        WHERE bp.id = %s
+        WHERE bp.id = %s AND bp.is_published IS TRUE
     """, (beverage_id,))
     prod_row = cur.fetchone()
     if not prod_row:
@@ -13044,6 +13049,7 @@ def programme_beverages():
             LEFT JOIN beverage_regions br ON bp.region_id = br.id
             WHERE (similarity(LOWER(bp.name), LOWER(%s)) > 0.15 OR LOWER(bp.name) ILIKE %s)
               AND (%s = '' OR bp.category ILIKE %s)
+              AND bp.is_published IS TRUE
             ORDER BY sim DESC, bp.name
             LIMIT %s
         """, (q, q, f"%{q.lower()}%", category, f"%{category}%", limit))
@@ -13056,7 +13062,7 @@ def programme_beverages():
             FROM beverage_products bp
             LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
             LEFT JOIN beverage_regions br ON bp.region_id = br.id
-            WHERE bp.category ILIKE %s
+            WHERE bp.category ILIKE %s AND bp.is_published IS TRUE
             ORDER BY bp.quality_tier, bp.name
             LIMIT %s
         """, (cat_filter, limit))
@@ -13908,7 +13914,7 @@ def sitemap():
     cur.execute("""
         SELECT COALESCE(slug, LOWER(REGEXP_REPLACE(REGEXP_REPLACE(name, '[^a-zA-Z0-9 -]', '', 'g'), ' +', '-', 'g'))) AS slug,
                updated_at
-        FROM beverage_products ORDER BY id
+        FROM beverage_products WHERE is_published IS TRUE ORDER BY id
     """)
     bev_products = cur.fetchall()
 
@@ -16176,7 +16182,7 @@ def _suggest_beverages_for_recipe(recipe, limit=5, cur=None):
                 SELECT pi.food_profile, pi.food_category, pi.pairing_type, pi.flavour_logic,
                        pi.confidence, bp.id AS beverage_product_id, bp.category
                 FROM pairing_intelligence pi
-                JOIN beverage_products bp ON pi.beverage_product_id = bp.id
+                JOIN beverage_products bp ON pi.beverage_product_id = bp.id AND bp.is_published IS TRUE
                 JOIN beverage_product_suppliers bps ON bps.product_id = bp.id
                 JOIN suppliers s ON bps.supplier_id = s.id
                 WHERE pi.food_category ILIKE %s
@@ -16213,7 +16219,7 @@ def _suggest_beverages_for_recipe(recipe, limit=5, cur=None):
             SELECT pi.food_profile, pi.food_category, pi.pairing_type, pi.flavour_logic,
                    pi.confidence, bp.id AS beverage_product_id, bp.category
             FROM pairing_intelligence pi
-            JOIN beverage_products bp ON pi.beverage_product_id = bp.id
+            JOIN beverage_products bp ON pi.beverage_product_id = bp.id AND bp.is_published IS TRUE
             WHERE {where}
               AND pi.beverage_product_id IS NOT NULL
             ORDER BY pi.confidence DESC
@@ -17909,11 +17915,13 @@ def technique_beverage_pairings(technique_id):
             br.country     AS region_country
         FROM technique_beverage_pairings tbp
         LEFT JOIN beverage_products  bp  ON tbp.beverage_product_id  = bp.id
+             AND bp.is_published IS TRUE
         LEFT JOIN beverage_producers bpr ON COALESCE(bp.producer_id, tbp.beverage_producer_id) = bpr.id
              AND bpr.is_published IS TRUE
         LEFT JOIN beverage_regions   br  ON bp.region_id = br.id
         WHERE tbp.technique_id = %(technique_id)s
           AND (tbp.beverage_producer_id IS NULL OR bpr.id IS NOT NULL)
+          AND (tbp.beverage_product_id IS NULL OR bp.id IS NOT NULL)
           {region_clause}
         ORDER BY
             CASE tbp.confidence_status
@@ -18974,8 +18982,9 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                         """SELECT bp.id, bp.name, br.name AS region
                            FROM beverage_products bp
                            LEFT JOIN beverage_regions br ON br.id = bp.region_id
-                           WHERE br.country = ANY(%s)
-                              OR bp.name ~* %s
+                           WHERE (br.country = ANY(%s)
+                              OR bp.name ~* %s)
+                              AND bp.is_published IS TRUE
                            ORDER BY bp.id LIMIT 80""",
                         (cuisine_countries, cuisine_regex or 'zzzz_no_match'),
                     )
@@ -18984,12 +18993,13 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                         """SELECT bp.id, bp.name, br.name AS region
                            FROM beverage_products bp
                            LEFT JOIN beverage_regions br ON br.id = bp.region_id
-                           WHERE bp.name                  ~* %s
+                           WHERE (bp.name                  ~* %s
                               OR COALESCE(br.name,    '') ~* %s
                               OR COALESCE(br.country, '') ~* %s
                               OR bp.name                  ~* %s
                               OR COALESCE(br.name,    '') ~* %s
-                              OR COALESCE(br.country, '') ~* %s
+                              OR COALESCE(br.country, '') ~* %s)
+                              AND bp.is_published IS TRUE
                            ORDER BY bp.id LIMIT 80""",
                         (kw_pattern, kw_pattern, kw_pattern,
                          cuisine_regex, cuisine_regex, cuisine_regex),
@@ -18999,9 +19009,10 @@ def _build_candidate_pools_for_canon(canon, parsed_brief=None):
                         """SELECT bp.id, bp.name, br.name AS region
                            FROM beverage_products bp
                            LEFT JOIN beverage_regions br ON br.id = bp.region_id
-                           WHERE bp.name                  ~* %s
+                           WHERE (bp.name                  ~* %s
                               OR COALESCE(br.name,    '') ~* %s
-                              OR COALESCE(br.country, '') ~* %s
+                              OR COALESCE(br.country, '') ~* %s)
+                              AND bp.is_published IS TRUE
                            ORDER BY bp.id LIMIT 80""",
                         (kw_pattern, kw_pattern, kw_pattern),
                     )
@@ -19610,7 +19621,7 @@ def _enrich_invention_lineage(invention, cur):
             """SELECT bp.id, bp.name, br.name AS region
                FROM beverage_products bp
                LEFT JOIN beverage_regions br ON br.id = bp.region_id
-               WHERE bp.id = ANY(%s)""",
+               WHERE bp.id = ANY(%s) AND bp.is_published IS TRUE""",
             (id_list,)
         )
         by_id = {r['id']: dict(r) for r in cur.fetchall()}
