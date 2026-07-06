@@ -11912,7 +11912,7 @@ def admin_beverages_onboard():
     g = _admin_guard()
     if g:
         return g
-    if session.get("role") != "admin" and (get_current_user() or {}).get("role") != "admin":
+    if (get_current_user() or {}).get("role") not in ("admin", "founder"):
         abort(403)
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -11995,7 +11995,7 @@ def admin_beverages_verify(qid):
     g = _admin_guard_api()
     if g:
         return g
-    if (get_current_user() or {}).get("role") != "admin":
+    if (get_current_user() or {}).get("role") not in ("admin", "founder"):
         return jsonify(error="forbidden"), 403
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -12025,7 +12025,7 @@ def admin_beverages_product_search():
     g = _admin_guard_api()
     if g:
         return g
-    if (get_current_user() or {}).get("role") != "admin":
+    if (get_current_user() or {}).get("role") not in ("admin", "founder"):
         return jsonify(error="forbidden"), 403
     q = (request.args.get("q") or "").strip()
     if len(q) < 2:
@@ -12053,7 +12053,7 @@ def admin_beverages_wire(qid):
     g = _admin_guard_api()
     if g:
         return g
-    if (get_current_user() or {}).get("role") != "admin":
+    if (get_current_user() or {}).get("role") not in ("admin", "founder"):
         return jsonify(error="forbidden"), 403
     data = request.get_json(silent=True) or {}
     product_ids = data.get("product_ids") or []
@@ -12084,13 +12084,18 @@ def admin_beverages_wire(qid):
                               website=COALESCE(website,%s), supplier_type=%s WHERE id=%s""",
                          (row.get("website"), supplier_type, supplier_id))
         else:
+            # country is NOT NULL on suppliers; derive from the region token
+            # (e.g. 'CA-BC' -> 'CA'); service_region is text[].
+            country = "Unknown"
+            if regions:
+                country = regions[0].split("-")[0].upper() or "Unknown"
             wcur.execute("""INSERT INTO suppliers
-                              (name, website, service_region, supplier_type,
+                              (name, website, country, service_region, supplier_type,
                                verification_status, verified_date, verification_source, is_active)
-                            VALUES (%s,%s,%s,%s,'verified_provider',NOW(),'onboard',TRUE)
+                            VALUES (%s,%s,%s,%s,%s,'verified_provider',NOW(),'onboard',TRUE)
                             RETURNING id""",
-                         (row["business_name"], row.get("website"),
-                          regions[0] if regions else None, supplier_type))
+                         (row["business_name"], row.get("website"), country,
+                          regions or None, supplier_type))
             supplier_id = wcur.fetchone()["id"]
         wired = 0
         for pid in product_ids:
