@@ -487,9 +487,13 @@ def fetch_existing_names() -> set[str]:
     print("Fetching existing technique names from database...")
     try:
         import psycopg2
-        READ_DSN = ("postgres://provenance_tester_1:GBN1MbQJMbe_7Ze2Is6dZQSK4hGwXkbW"
-                    "@localhost:5433/provenance_tester_1?sslmode=disable")
-        conn = psycopg2.connect(READ_DSN)
+        from dotenv import load_dotenv
+        load_dotenv()
+        read_dsn = os.environ.get("DATABASE_URL")
+        if not read_dsn:
+            print("  ERROR: DATABASE_URL is not set (check .env)")
+            sys.exit(1)
+        conn = psycopg2.connect(read_dsn)
         cur = conn.cursor()
         cur.execute("SELECT lower(name) FROM technique_references")
         names = {row[0] for row in cur.fetchall()}
