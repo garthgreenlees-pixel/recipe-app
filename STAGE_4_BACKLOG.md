@@ -38,8 +38,11 @@ Items parked for Stage 4 (the audit fix-list stage), each with a one-line reason
   rights.
 
 ## From Stage 3b discovery (2026-07-06)
-- **Product publish flag decision.** `beverage_products.is_published` is FALSE
-  on 5,366 of 5,771 rows (flag never used operationally). Enforcing it today
-  would empty the public cellar. Decide with the 3b publish-flip batch:
-  batch-publish vetted products then enforce, OR retire the product flag in
-  favour of the producer gate. Founder ruling needed.
+- ~~**Product publish flag decision.**~~ RESOLVED 2026-07-06: founder ruled
+  "invisible everywhere, one doctrine for the whole cellar." Product publish
+  gate enforced across all public surfaces (commit 482568a), proven on
+  staging, queued as live cargo. No longer a Stage 4 item.
+- **Batch-publish vetted products.** With the gate enforced, only 405 of
+  5,771 products are public. The 553-producer load + product publishing (spec
+  L1–L4) is the path to opening the rest — 3b data-load work, step-down
+  eligible, founder decides which products publish.
