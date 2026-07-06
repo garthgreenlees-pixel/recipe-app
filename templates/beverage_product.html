@@ -5,7 +5,6 @@
 {% block meta_description %}{{ product.description[:160] if product.description else product.name ~ ' — Provenance beverage knowledge.' }}{% endblock %}
 
 {% block extra_head %}
->
 <link rel="canonical" href="{{ canonical_url }}">
 <meta property="og:title" content="{{ product.name }} — Provenance Beverage">
 <meta property="og:description" content="{{ product.description[:160] if product.description else product.name ~ ' — Provenance beverage knowledge.' }}">
