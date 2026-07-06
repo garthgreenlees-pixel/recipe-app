@@ -1,5 +1,8 @@
-# THE BEVERAGE EXPERIENCE — Stage 3a Specification v1
+# THE BEVERAGE EXPERIENCE — Stage 3a Specification v1.1
 **Date:** 2026-07-05 · **Status:** AWAITING FOUNDER APPROVAL — nothing below is built until approved
+**v1.1 amendments (founder corrections):** verification at scale via the graded
+trust ladder (§8A) · the Suggest-a-Supplier button as platform doctrine (§8B) ·
+the founder's push onboarding recast as the assisted lane on the same ladder (§8C)
 **Governing doctrine:** `Doctrines/VISIBILITY_DOCTRINE.md` — *local by default, global by discovery; the gap is the signal.*
 **Governing standard:** The Sashimi Standard, applied to beverage entries exactly as to food.
 **Founder rulings encoded:** interview answers Q1–Q9 (2026-07-05) + the two-week push directives.
@@ -141,7 +144,7 @@ CREATE TABLE beverage_demand_ledger (
     origin_region       TEXT,            -- producer's origin (region/country label)
     reader_region       TEXT NOT NULL,   -- province/state grain
     reader_city         TEXT,            -- when known; never required
-    event_kind          TEXT NOT NULL CHECK (event_kind IN ('view','search')),
+    event_kind          TEXT NOT NULL CHECK (event_kind IN ('view','search','suggestion')),
     search_terms        TEXT,            -- 'search' events only
     local_provider_absent BOOLEAN NOT NULL DEFAULT TRUE,
     created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -149,44 +152,156 @@ CREATE TABLE beverage_demand_ledger (
 -- No user id. No session id. No IP. Region only — nothing else, ever.
 ```
 
-**Firing points (server-side, both, all readers incl. anonymous):**
+**Firing points (server-side, all readers incl. anonymous):**
 1. **`view`** — a product page renders and no `beverage_product_suppliers`
    row matches the reader's region → one row.
 2. **`search`** — a cellar search returns results none of which have a local
    provider (or returns nothing local for a product-shaped query) → one row.
+3. **`suggestion`** — a reader submits the Suggest-a-Supplier form (§8B) →
+   one row, region only. The suggestion's attribution lives in the
+   suggestion queue table, never in the ledger — the ledger stays
+   personal-data-free without exception.
 
 Write is fire-and-forget (never blocks or breaks the page). This ledger is a
 foundational Trade-tier asset; aggregation views for Trade come later — in
 this stage it only accumulates.
 
-## 8 · The supplier onboarding path (push directive 1)
+## 8 · Verification at scale — one system, two doors in
 
-**The concrete route from a handshake to live gold links — one supplier in
-one sitting.** Standing rule unchanged: **no business entity ships on a
-public page unverified** (web-verified presence before anything renders).
+**The method changes; the standard does not.** Founder hand-vetting was the
+founding pass, not the operating model. Verification is system-work on a
+graded trust ladder; founder attention is **exceptions-only** — the system
+flags what fails or looks wrong, the founder rules on flags, never on the
+queue at large. The hard line stands: **nothing renders as a provider
+without passing the checks; nothing unverified ships on a public page, ever.**
 
-**What the founder collects (one page of questions, on paper or phone):**
+### 8A · The trust ladder
+
+| Rung | Public? | What it means |
+|---|---|---|
+| **SUGGESTED** | No — queue only | Exists only in the verification queue. Nothing renders anywhere. |
+| **VERIFIED-LISTED** | Yes — as a *listing* (name · region · website) | The automated checks passed. No gold links, no product wiring — a listing, not a provider. No human required. |
+| **VERIFIED PROVIDER** | Yes — **gold links live** | The business itself has claimed the listing via its own-domain email AND its carried products are wired into `beverage_product_suppliers`. This is the Pat's Rule tier. |
+
+**The automated checks (VERIFIED-LISTED bar) — concretely:**
+1. **Website liveness & identity** — the claimed domain answers over valid
+   TLS; the site's own content names the business; domain registration age
+   recorded (young domains are auto-flagged, not auto-failed).
+2. **Contact at the business's own domain** — the contact email's domain
+   matches the business domain and the domain accepts mail (MX present).
+   Free-mail contacts (gmail etc.) never pass this check alone → flag.
+3. **Region confirmed** — a published address, service area, or phone
+   prefix on the business's own site (or registry record) consistent with
+   the claimed province/state.
+4. **Registry / address cross-check where available** — BC & federal
+   corporate registries, US state lookups, and public liquor-licence
+   registers for alcohol categories. "Where available" is honest: coverage
+   varies by jurisdiction; absence of a registry match records as
+   *unchecked*, not as *failed*.
+
+**The claim step (VERIFIED PROVIDER bar):** a confirmation link sent to the
+own-domain address; the click is the claim. Then product wiring per §8C
+step 2–3. Both must hold before a single gold link renders.
+
+**What the checks can and cannot catch — stated honestly:**
+- They verify **existence, identity, and region**. They do NOT verify
+  merit, stock reliability, or service quality — merit stays editorial,
+  and the quality bar for being *featured* (rather than merely listed)
+  remains an editorial act.
+- They can be fooled by a live website for a dying business, a reseller
+  overstating its service region, or a determined spoof on a lookalike
+  domain. Mitigations: domain-age flags, exact-domain email matching,
+  registry cross-checks — and every anomaly (check disagreement, young
+  domain, licence mismatch, duplicate-looking business) goes to the
+  **founder flag queue**. Flags are the only place founder time is spent.
+- A VERIFIED PROVIDER later failing a re-check (dead site, bounced domain
+  mail) is auto-demoted to VERIFIED-LISTED and flagged — gold links come
+  down before anyone has to notice.
+
+**Queue shape (schema change — stop-point 2, built in 3b after approval):**
+
+```sql
+CREATE TABLE supplier_verification_queue (
+    id                  BIGSERIAL PRIMARY KEY,
+    business_name       TEXT NOT NULL,
+    website             TEXT,
+    claimed_regions     TEXT[],          -- province/state tokens
+    supplier_type       TEXT,            -- importer/distributor/retailer/producer-direct
+    source              TEXT NOT NULL CHECK (source IN ('member_suggestion','founder_assisted','inbound')),
+    suggested_by_user_id INTEGER,        -- attribution lives HERE, never in the ledger
+    context_product_id  INTEGER,         -- the page the suggestion came from, if any
+    context_producer_id INTEGER,
+    note                TEXT,
+    status              TEXT NOT NULL DEFAULT 'suggested'
+                        CHECK (status IN ('suggested','checks_running','verified_listed',
+                                          'claim_pending','verified_provider','flagged','rejected')),
+    check_results       JSONB DEFAULT '{}'::jsonb,   -- per-check pass/fail/unchecked + evidence URLs
+    flag_reason         TEXT,
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    resolved_at         TIMESTAMPTZ
+);
+```
+
+Rungs map onto the Network's `suppliers` table via a `verification_status`
+column (same three values); renderers read the rung, nothing else.
+
+### 8B · The Suggest-a-Supplier button — platform doctrine, not a footnote
+
+**Placement:** every product page and every producer page — and **most
+prominently on every origin-only rendering**, where it is the page's call
+to action: *"Not yet carried in your region — know who should carry it?
+Suggest a supplier."*
+
+**Flow — one tap, four fields at most:** business name · region (prefilled
+with the reader's region) · website · optional note. Nothing else asked.
+
+**Every suggestion, on submit:**
+1. Enters the verification queue at SUGGESTED (`source='member_suggestion'`,
+   context product/producer recorded);
+2. Fires a demand-ledger `suggestion` event (region only — §7);
+3. Is attributed to the suggesting member in the QUEUE row (anonymous
+   readers may still suggest; their rows simply carry no attribution).
+
+**The close of the loop:** when a suggestion becomes a live listing, the
+suggesting member is told — a note from Provenance, in the house voice:
+their cellar got deeper because of them.
+
+**The pipeline:** the suggestion queue doubles as a Trade-tier sales
+pipeline — every suggested supplier is a pre-qualified lead for the
+platform to onboard. **This stage captures and verifies. Outreach
+automation is later work** — named here so nobody builds it early.
+
+### 8C · The assisted lane — the founder's push onboarding (push directive 1)
+
+The push path from v1 remains in full, recast as **the assisted lane on the
+same ladder**: what the founder collects in one sitting simply completes
+the VERIFIED PROVIDER checks in person. One system, two doors in — the
+rungs and the bar are identical whichever door a supplier walks through.
+
+**What the founder collects (one page, on paper or phone):**
 1. Business name, website, and public evidence (catalogue/storefront/licence)
 2. Type: importer · distributor · retailer · producer-direct
 3. Regions served (province/state tokens; multiple allowed)
-4. Contact (internal only — never rendered)
-5. Their carried list relevant to the canon (names, or their catalogue export)
+4. Contact at the business's own domain (internal only — never rendered)
+5. Their carried list relevant to the canon (names, or a catalogue export)
 
 **The wiring (admin surface — `/admin/beverages/onboard`):**
-1. Create/select the supplier row (the Network's existing `suppliers` table —
-   same table as the ingredient Network; a supplier can serve both worlds).
-   Verification fields filled; unverified suppliers cannot be saved as
-   renderable.
-2. Paste their carried list → the tool fuzzy-matches against
-   `beverage_products` (name + producer + region), founder confirms each
-   match — misses are logged for later product creation, never guessed.
+1. Create/select the supplier row (the Network's `suppliers` table — one
+   table serves beverage and ingredient worlds). The §8A checklist renders
+   inline; the founder confirms each check with evidence in hand —
+   `source='founder_assisted'`, results recorded in `check_results` the
+   same as the automated path. The claim step can complete on the spot
+   (they open the confirmation mail at the table).
+2. Paste their carried list → fuzzy-match against `beverage_products`
+   (name + producer + region), founder confirms each match — misses are
+   logged for later product creation, never guessed.
 3. Confirmed matches insert `beverage_product_suppliers` rows
    (product · supplier · region availability · stocked/ordered-in note).
-4. **Gold links are live for that region the moment the rows land.** The
-   founder can show the supplier their own listing the same sitting.
+4. **Gold links live for that region the moment the rows land** — the
+   supplier sees their own listing before the sitting ends.
 
 Producer-direct onboarding (a distillery selling at the door) uses the same
-path — the producer is both ORIGIN and their region's PROVIDER.
+lane — the producer is both ORIGIN and their region's PROVIDER.
 
 ## 9 · Data loads (two-databases rule — every load names its target)
 
@@ -208,8 +323,15 @@ path — the producer is both ORIGIN and their region's PROVIDER.
 
 **Then:** 4. region model + region door rebuild · 5. L1–L2 loads + narratives
 (step-down) · 6. pairing-tier migration + grammar rendering · 7. demand ledger
-+ firing points · 8. cellar search · 9. product pages full depth ·
-10. promotion to live per the Two-Site rules.
++ firing points · 8. **the Suggest-a-Supplier button + verification queue and
+automated checks (§8A/§8B)** — the button ships with the pages that carry it;
+until the automated checks land, submissions queue as SUGGESTED and wait ·
+9. cellar search · 10. product pages full depth · 11. promotion to live per
+the Two-Site rules.
+
+Note on the assisted lane: it does NOT wait for item 8 — the week-one
+onboarding surface (item 3) records the §8A checklist manually, so the
+founder's push runs from day one on the same ladder.
 
 Model step-down recommendation (§5 of the kickoff): items 2, 5, and the
 narrative composition are step-down eligible; items 1, 6, 7 stay at judgment
