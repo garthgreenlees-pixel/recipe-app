@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 2 — Producer Page (a PNW roaster)</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;0,700;1,500&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F4EEE1;--paper2:#ECE3D1;--ink:#17130D;--soft:#6E665A;--gilt:#9A7B3F;--hair:#D9CFBB;
+        --night:#13110C;--nightink:#F1EBDD;--nightsoft:#A39A88;--nighthair:#2C2820;--giltn:#C6A055}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-serif}
+  .sample{position:fixed;bottom:14px;right:14px;z-index:50;background:var(--night);color:var(--giltn);
+    font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:7px 12px;border-radius:2px;opacity:.9}
+  header{display:flex;justify-content:space-between;align-items:center;padding:20px 44px;border-bottom:1px solid var(--hair)}
+  .brand{font-family:'Cormorant',serif;font-weight:700;font-size:24px;text-decoration:none;color:var(--ink)}
+  nav{display:flex;gap:24px;align-items:center}
+  .nl{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--soft);text-decoration:none}
+  .enter{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);padding:8px 16px;border-radius:2px;text-decoration:none}
+  .wrap{max-width:880px;margin:0 auto;padding:0 44px}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gilt)}
+  .crumb{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);padding:18px 0 0}
+  .crumb a{color:var(--soft);text-decoration:none;border-bottom:1px dashed var(--hair)}
+
+  .masthead{padding:34px 0 26px;border-bottom:1px solid var(--hair)}
+  .masthead h1{font-family:'Cormorant',serif;font-weight:600;font-size:clamp(32px,4.2vw,46px);line-height:1.08;margin:10px 0 6px}
+  .badges{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .badge{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:5px 10px;border-radius:2px;border:1px solid var(--hair);color:var(--soft)}
+  .badge.v{border-color:var(--gilt);color:var(--gilt)}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-top:8px}
+
+  .narrative{padding:30px 0 4px;max-width:640px}
+  .narrative h2{font-family:'Cormorant',serif;font-style:italic;font-weight:500;font-size:20px;color:var(--gilt);margin-bottom:12px}
+  .narrative p{font-size:15.5px;line-height:1.7;margin-bottom:14px}
+  .narrative p:first-of-type::first-letter{font-family:'Cormorant',serif;font-size:44px;float:left;line-height:.9;padding-right:8px;color:var(--gilt)}
+
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:26px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);margin-top:24px}
+  @media(max-width:700px){.facts{grid-template-columns:1fr}}
+  .fact .k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gilt);margin-bottom:5px}
+  .fact .v{font-size:14px;line-height:1.5}
+
+  .shelfhead{display:flex;justify-content:space-between;align-items:baseline;padding:30px 0 12px}
+  .shelfhead h2{font-family:'Cormorant',serif;font-weight:600;font-size:25px}
+  .prods{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media(max-width:700px){.prods{grid-template-columns:1fr}}
+  .prod{background:var(--night);color:var(--nightink);border:1px solid var(--nighthair);border-radius:3px;padding:18px 20px;text-decoration:none;display:block;transition:transform .25s,border-color .25s}
+  .prod:hover{transform:translateY(-3px);border-color:var(--giltn)}
+  .prod .k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--nightsoft)}
+  .prod .n{font-family:'Cormorant',serif;font-size:20px;font-weight:600;margin:6px 0 2px}
+  .prod .d{font-size:12.5px;color:var(--nightsoft);line-height:1.55}
+
+  .provider{margin:34px 0 10px;background:var(--night);color:var(--nightink);border-radius:3px;padding:28px 32px;border-left:3px solid var(--giltn)}
+  .provider .ey{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--giltn);margin-bottom:10px}
+  .provider .origin{font-size:13.5px;color:var(--nightsoft);line-height:1.6;margin-bottom:14px}
+  .provider .origin b{color:var(--nightink);font-weight:600}
+  .provline{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-top:1px dashed var(--nighthair)}
+  .provline .n{font-size:15px;border-bottom:1px solid var(--giltn);padding-bottom:1px}
+  .provline .w{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--nightsoft)}
+  .gatechip{margin:26px 0 0;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);border:1px dashed var(--hair);padding:9px 12px;border-radius:2px;display:inline-block}
+  footer{margin-top:50px;padding:28px 44px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+</style>
+</head>
+<body>
+<div class="sample">Mockup · sample data · no real business named</div>
+
+<header>
+  <a class="brand" href="#">Provenance</a>
+  <nav><a class="nl" href="#">Recipes</a><a class="nl" href="#">Beverages</a><a class="nl" href="#">The Library</a><a class="nl" href="#">Pricing</a><a class="enter" href="#">Enter</a></nav>
+</header>
+
+<div class="wrap">
+  <div class="crumb"><a href="#">Beverages</a> · <a href="#">British Columbia's cellar</a> · <a href="#">Coffee</a> · The roaster</div>
+
+  <section class="masthead">
+    <div class="eyebrow">Roaster · North Vancouver, British Columbia</div>
+    <h1>A North Shore Roastery <span style="font-family:'Cormorant',serif;font-style:italic;font-weight:500;color:var(--gilt)">— sample producer</span></h1>
+    <div class="meta">Founded 2014 · Founder-roasted · 38,000 kg green / year</div>
+    <div class="badges">
+      <span class="badge v">● Verified</span>
+      <span class="badge">Single origins · washed &amp; natural</span>
+      <span class="badge">Direct relationships · 6 farms</span>
+    </div>
+  </section>
+
+  <section class="narrative">
+    <h2>The reputation — the story that sells at the table</h2>
+    <p>The roastery sits where the mountain road flattens out, two blocks from the Wednesday farmers' market, and the queue on Saturday mornings tells you most of what you need to know. The roaster came up through restaurant kitchens before the roasting machine, and it shows: the cupping table is run like a pass, the curves are logged like fridge temps, and nothing ships that wouldn't be served.</p>
+    <p>The house style is clarity over darkness — washed Ethiopias that read as jasmine and lemon peel, a Huila that holds its sweetness into the cup's last third. Six farm relationships are named on the bags, visited on a rota, paid above C-price, and the roastery publishes what it pays. This is the register the Library trusts: the provenance is on the label because it is real.</p>
+  </section>
+
+  <div class="facts">
+    <div class="fact"><div class="k">Practice</div><div class="v">Small-batch drum roasting; weekly cupping; production log public on request.</div></div>
+    <div class="fact"><div class="k">Sourcing</div><div class="v">Direct trade, six named farms — Ethiopia, Colombia, Guatemala, PNG.</div></div>
+    <div class="fact"><div class="k">Importer lines</div><div class="v">US — not yet · UK — not yet · Japan — not yet. <span style="color:var(--gilt)">Each absence is a signal the ledger already holds.</span></div></div>
+  </div>
+
+  <div class="shelfhead"><h2>What they make</h2><span class="eyebrow">4 of 7 shown</span></div>
+  <div class="prods">
+    <a class="prod" href="#"><span class="k">Washed · Yirgacheffe</span><div class="n">Ethiopia — Idido washing station</div><div class="d">Jasmine, lemon peel, black tea finish. The shop's calling card.</div></a>
+    <a class="prod" href="#"><span class="k">Washed · Huila</span><div class="n">Colombia — two-farm lot</div><div class="d">Red apple and panela; holds sweet as it cools.</div></a>
+    <a class="prod" href="#"><span class="k">Natural · Sidama</span><div class="n">Ethiopia — dried-on-bed lot</div><div class="d">Blueberry register, kept honest by a light hand.</div></a>
+    <a class="prod" href="#"><span class="k">House blend</span><div class="n">The Line Cook's Blend</div><div class="d">Brazil and Ethiopia; balanced for milk, honest black.</div></a>
+  </div>
+
+  <div class="provider">
+    <div class="ey">Where to get it — Pat's Rule, rendered for your region: British Columbia</div>
+    <p class="origin"><b>Origin:</b> the roastery itself, North Vancouver — the maker is named above, permanently, for every reader in every region. <b>Providers</b> below are yours; a Tokyo reader sees this same page with an honest origin-only line instead — and their look is counted.</p>
+    <div class="provline"><span class="n">The roastery door — North Vancouver</span><span class="w">Producer-direct · daily</span></div>
+    <div class="provline"><span class="n">A Lonsdale grocer</span><span class="w">Stocked weekly</span></div>
+    <div class="provline"><span class="n">An East Vancouver café group</span><span class="w">Ordered in</span></div>
+  </div>
+
+  <span class="gatechip">Publish gate · is_published TRUE — verified ✓ narrative ✓ region ✓ (admin-only chip, never rendered to readers)</span>
+</div>
+
+<footer><span>Provenance</span><span>One standard, no exceptions</span></footer>
+</body>
+</html>

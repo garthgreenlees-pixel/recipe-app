@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 1 — The Region Door (/beverages)</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;0,700;1,500&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F4EEE1;--paper2:#ECE3D1;--ink:#17130D;--soft:#6E665A;--gilt:#9A7B3F;--hair:#D9CFBB;
+        --night:#13110C;--nightink:#F1EBDD;--nightsoft:#A39A88;--nighthair:#2C2820;--giltn:#C6A055}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-serif}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .sample{position:fixed;bottom:14px;right:14px;z-index:50;background:var(--night);color:var(--giltn);
+    font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:7px 12px;border-radius:2px;opacity:.9}
+  header{display:flex;justify-content:space-between;align-items:center;padding:20px 44px;border-bottom:1px solid var(--hair);position:sticky;top:0;background:var(--paper);z-index:20}
+  .brand{font-family:'Cormorant',serif;font-weight:700;font-size:24px;text-decoration:none;color:var(--ink)}
+  nav{display:flex;gap:24px;align-items:center}
+  .nl{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--soft);text-decoration:none}
+  .nl.on{color:var(--gilt);border-bottom:1px solid var(--gilt);padding-bottom:2px}
+  .enter{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);padding:8px 16px;border-radius:2px;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 44px}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gilt)}
+
+  .door{padding:56px 0 30px}
+  .door h1{font-family:'Cormorant',serif;font-weight:600;font-size:clamp(34px,4.4vw,50px);line-height:1.08;margin:14px 0 10px}
+  .door h1 em{font-style:italic;color:var(--gilt)}
+  .door .sub{color:var(--soft);font-size:15.5px;max-width:560px;line-height:1.6}
+  .regionline{display:flex;align-items:center;gap:14px;margin-top:22px;flex-wrap:wrap}
+  .regionchip{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--gilt);color:var(--gilt);
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;padding:9px 14px;border-radius:2px;cursor:pointer}
+  .regionchip .dot{width:7px;height:7px;border-radius:50%;background:var(--gilt)}
+  .changer{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);border-bottom:1px dashed var(--hair);cursor:pointer}
+  .counts{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-top:16px}
+
+  .shelfhead{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--hair);padding:34px 0 10px}
+  .shelfhead h2{font-family:'Cormorant',serif;font-weight:600;font-size:26px}
+  .shelfhead h2 em{font-style:italic;color:var(--gilt);font-size:18px;margin-left:8px}
+  .shelfhead a{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gilt);text-decoration:none}
+  .shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:18px 0 8px}
+  @media(max-width:800px){.shelf{grid-template-columns:1fr}}
+  .card{background:var(--night);color:var(--nightink);border:1px solid var(--nighthair);border-radius:3px;padding:20px 22px;text-decoration:none;display:block;transition:transform .25s,border-color .25s}
+  .card:hover{transform:translateY(-3px);border-color:var(--giltn)}
+  .card .k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--nightsoft)}
+  .card .n{font-family:'Cormorant',serif;font-size:22px;font-weight:600;margin:7px 0 3px;color:var(--nightink)}
+  .card .r{font-family:'Cormorant',serif;font-style:italic;font-size:15px;color:var(--giltn)}
+  .card .p{font-size:12.5px;color:var(--nightsoft);line-height:1.55;margin-top:10px}
+  .card .prov{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-top:12px;padding-top:10px;border-top:1px dashed var(--nighthair);color:var(--giltn)}
+  .card .prov.none{color:var(--nightsoft)}
+
+  .atlas{margin-top:48px;background:var(--night);color:var(--nightink);border-radius:3px;padding:38px 40px 34px}
+  .atlas h2{font-family:'Cormorant',serif;font-weight:600;font-size:28px;margin:10px 0 6px}
+  .atlas h2 em{font-style:italic;color:var(--giltn)}
+  .atlas .sub{color:var(--nightsoft);font-size:14px;max-width:560px;line-height:1.6}
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+  @media(max-width:800px){.tiles{grid-template-columns:repeat(2,1fr)}}
+  .tile{border:1px solid var(--nighthair);padding:14px 16px;border-radius:2px;text-decoration:none;color:var(--nightink);transition:border-color .25s}
+  .tile:hover{border-color:var(--giltn)}
+  .tile .t{font-family:'Cormorant',serif;font-size:18px;font-weight:600}
+  .tile .c{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--nightsoft);margin-top:3px}
+  footer{margin-top:56px;padding:30px 44px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+</style>
+</head>
+<body>
+<div class="sample">Mockup · sample data · no real business named</div>
+
+<header>
+  <a class="brand" href="#">Provenance</a>
+  <nav>
+    <a class="nl" href="#">Recipes</a>
+    <a class="nl on" href="#">Beverages</a>
+    <a class="nl" href="#">The Library</a>
+    <a class="nl" href="#">Pricing</a>
+    <a class="enter" href="#">Enter</a>
+  </nav>
+</header>
+
+<section class="door wrap">
+  <div class="eyebrow">Beverages</div>
+  <h1>You're standing in <em>British Columbia's</em> cellar.</h1>
+  <p class="sub">Your region's makers first — every pour on these shelves is carried near you, or made near you. The rest of the world is one step away, and nothing is ever walled off.</p>
+  <div class="regionline">
+    <span class="regionchip"><span class="dot"></span> British Columbia</span>
+    <span class="changer">Change region</span>
+  </div>
+  <div class="counts">217 producers · 704 pours carried or made in BC · honest counts, published only</div>
+</section>
+
+<div class="wrap">
+
+  <div class="shelfhead"><h2>Wine <em>the benches and the valleys</em></h2><a href="#">The BC wine shelf →</a></div>
+  <div class="shelf">
+    <a class="card" href="#"><span class="k">Grower · Naramata Bench</span><div class="n">A Naramata Bench grower</div><div class="r">Okanagan Valley — Pinot Noir, Riesling</div><p class="p">Clay-bank vines above the lake; wild-ferment cellar, old oak only.</p><div class="prov">Carried in BC · 2 providers</div></a>
+    <a class="card" href="#"><span class="k">Grower · Similkameen</span><div class="n">A Similkameen organic estate</div><div class="r">Similkameen Valley — Cabernet Franc</div><p class="p">Wind-scoured gravel; the valley that dries its own fruit on the vine.</p><div class="prov">Carried in BC · 3 providers</div></a>
+    <a class="card" href="#"><span class="k">Grower · Cowichan</span><div class="n">A Cowichan Valley farmgate</div><div class="r">Vancouver Island — Ortega, Pinot Gris</div><p class="p">Island fruit, sea fog, early picking — the coastal register.</p><div class="prov">Farmgate · producer-direct</div></a>
+  </div>
+
+  <div class="shelfhead"><h2>Coffee <em>the roasters</em></h2><a href="#">The BC coffee shelf →</a></div>
+  <div class="shelf">
+    <a class="card" href="#"><span class="k">Roaster · North Vancouver</span><div class="n">A North Shore roastery</div><div class="r">Single origins — washed Ethiopia, Huila</div><p class="p">Light-to-medium curves, cupped weekly; the mountain-town Saturday queue.</p><div class="prov">Roastery door + 4 BC grocers</div></a>
+    <a class="card" href="#"><span class="k">Roaster · Victoria</span><div class="n">An island small-batch roaster</div><div class="r">Direct-trade Guatemala, PNG</div><p class="p">Harbour-city third wave; producer relationships named on every bag.</p><div class="prov">Carried in BC · 2 providers</div></a>
+    <a class="card" href="#"><span class="k">Roaster · Vancouver</span><div class="n">An east-side espresso house</div><div class="r">House blend — Brazil, Ethiopia</div><p class="p">The blend the line cooks drink; balanced for milk, honest black.</p><div class="prov">Cafés + roastery direct</div></a>
+  </div>
+
+  <div class="shelfhead"><h2>Spirits <em>the stills</em></h2><a href="#">The BC spirits shelf →</a></div>
+  <div class="shelf">
+    <a class="card" href="#"><span class="k">Distiller · Pemberton</span><div class="n">A valley potato distillery</div><div class="r">Vodka, gin — glacial water</div><p class="p">Farm-grown mash, mountain water; the valley's spirit in both senses.</p><div class="prov">Carried in BC · 5 providers</div></a>
+    <a class="card" href="#"><span class="k">Distiller · Okanagan</span><div class="n">A bench-land craft still</div><div class="r">Brandy, fruit spirits</div><p class="p">Orchard fruit distilled minutes from the tree — eau de vie country.</p><div class="prov">Tasting room + 2 providers</div></a>
+    <a class="card" href="#"><span class="k">Distiller · Victoria</span><div class="n">An island gin house</div><div class="r">Coastal-botanical gin</div><p class="p">Foraged botanicals; the shoreline in the glass.</p><div class="prov">Carried in BC · 4 providers</div></a>
+  </div>
+
+  <div class="shelfhead"><h2>Beer &amp; Cider <em>the taprooms and the orchards</em></h2><a href="#">The BC shelf →</a></div>
+  <div class="shelf">
+    <a class="card" href="#"><span class="k">Brewer · East Vancouver</span><div class="n">A Yeast Van saison house</div><div class="r">Mixed-ferment, barrel program</div><p class="p">Brett and patience; the neighbourhood that made BC beer serious.</p><div class="prov">Taproom + private stores</div></a>
+    <a class="card" href="#"><span class="k">Cidermaker · Kelowna</span><div class="n">An old-orchard cidery</div><div class="r">Heritage apples, keeved cider</div><p class="p">Pre-war orchard blocks; cider treated like the valley's wine.</p><div class="prov">Carried in BC · 3 providers</div></a>
+    <a class="card" href="#"><span class="k">Kombucha · North Vancouver</span><div class="n">A North Shore kombucha house</div><div class="r">Small-batch, oolong-based</div><p class="p">The doctrine's own example — brewed over the bridge, poured at the pass.</p><div class="prov">Producer-direct + 6 BC grocers</div></a>
+  </div>
+
+  <div class="shelfhead"><h2>Tea &amp; Sake <em>the quiet shelves</em></h2><a href="#">Open both →</a></div>
+  <div class="shelf">
+    <a class="card" href="#"><span class="k">Tea merchant · Vancouver</span><div class="n">A Chinatown tea house</div><div class="r">Aged sheng, high-mountain oolong</div><p class="p">Three generations of sourcing; gongfu service at the back table.</p><div class="prov">Carried in BC · shopfront</div></a>
+    <a class="card" href="#"><span class="k">Sake · Vancouver Island</span><div class="n">An island sake brewery</div><div class="r">Junmai, namazake seasonal</div><p class="p">BC-grown rice, cold coastal brewing — the Pacific answer to Niigata.</p><div class="prov">Brewery door + 2 providers</div></a>
+    <a class="card" href="#"><span class="k">Sake · Niigata, Japan</span><div class="n">A Niigata nigori brewer</div><div class="r">Nigori, junmai ginjo</div><p class="p">Snow-country softness. Not yet carried in BC — the page says so, plainly.</p><div class="prov none">No BC provider yet · origin renders · the look is counted</div></a>
+  </div>
+
+  <div class="atlas">
+    <div class="eyebrow" style="color:var(--giltn)">The Atlas</div>
+    <h2>Step into <em>any other cellar.</em></h2>
+    <p class="sub">Region filters guide; they never wall anything off. A reader in Tokyo can stand in this cellar and look around — and you can stand in theirs.</p>
+    <div class="tiles">
+      <a class="tile" href="#"><div class="t">Oregon</div><div class="c">Willamette · 61 producers</div></a>
+      <a class="tile" href="#"><div class="t">Washington</div><div class="c">Columbia Valley · 74 producers</div></a>
+      <a class="tile" href="#"><div class="t">France</div><div class="c">925 regions mapped</div></a>
+      <a class="tile" href="#"><div class="t">Japan</div><div class="c">Sake · whisky · tea</div></a>
+      <a class="tile" href="#"><div class="t">Italy</div><div class="c">The DOC matrix</div></a>
+      <a class="tile" href="#"><div class="t">New Zealand</div><div class="c">Central Otago · Marlborough</div></a>
+      <a class="tile" href="#"><div class="t">Mexico</div><div class="c">Agave · café de olla</div></a>
+      <a class="tile" href="#"><div class="t">Every region →</div><div class="c">The full atlas</div></a>
+    </div>
+  </div>
+</div>
+
+<footer><span>Provenance</span><span>One standard, no exceptions</span></footer>
+</body>
+</html>
