@@ -46,3 +46,13 @@ Items parked for Stage 4 (the audit fix-list stage), each with a one-line reason
   5,771 products are public. The 553-producer load + product publishing (spec
   L1–L4) is the path to opening the rest — 3b data-load work, step-down
   eligible, founder decides which products publish.
+
+## Discovered during 3b onboarding (2026-07-06)
+- **Pre-existing role-case mismatch in beverage_product_suppliers.** The CHECK
+  constraint allows lowercase `origin`/`provider`, but the menu-suggest
+  queries (server.py ~16357/16411) filter uppercase `'PROVIDER'`/`'ORIGIN'` —
+  they can never match, which is one reason the junction sat empty. The 3b
+  onboarding wiring uses constraint-valid lowercase `provider` and renders via
+  the product-detail supplier block (no role filter). Reconcile the menu-suggest
+  queries to lowercase so wired providers also surface in menu beverage
+  suggestions. Not blocking the onboarding path.

@@ -12105,7 +12105,7 @@ def admin_beverages_wire(qid):
                 continue
             wcur.execute("""INSERT INTO beverage_product_suppliers
                               (product_id, supplier_id, role, region, availability, last_verified)
-                            VALUES (%s,%s,'PROVIDER',%s,'stocked',NOW())
+                            VALUES (%s,%s,'provider',%s,'stocked',NOW())
                             ON CONFLICT DO NOTHING""",
                          (pid, supplier_id, regions or None))
             wired += 1
