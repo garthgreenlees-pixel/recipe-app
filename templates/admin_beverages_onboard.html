@@ -76,7 +76,8 @@ a{color:var(--gilt)}
               <button class="act wire" onclick="openWire({{ q.id }})">Wire products →</button>
             {% endif %}
             <div class="checkout" id="checks-{{ q.id }}">
-              {% if q.check_results %}{{ q.check_results | tojson }}{% endif %}
+              {% if q.check_results %}{% for k, v in q.check_results.items() %}<div class="ck ck-{{ v.status }}"><b>{{ k }}</b>: {{ v.status }}{% if v.detail %} — {{ v.detail }}{% endif %}</div>{% endfor %}{% endif %}
+              {% if q.flag_reason %}<div class="ck ck-flag">flag: {{ q.flag_reason }}</div>{% endif %}
             </div>
             <div class="wirebox" id="wire-{{ q.id }}" style="display:none"></div>
           </div>
