@@ -11766,14 +11766,40 @@ def beverage_product_page(product_id):
     except Exception as e:
         app.logger.warning(f"recipes-using lookup failed for beverage {product_id}: {e}")
 
+    # Pat's Rule: verified providers for the reader's region (Visibility Doctrine).
+    reader_region = get_user_location()
+    providers = []
+    try:
+        cur.execute("""
+            SELECT s.id, s.name, s.website, s.city, s.state_province, s.country,
+                   bps.region, bps.availability
+            FROM beverage_product_suppliers bps
+            JOIN suppliers s ON bps.supplier_id = s.id
+                 AND s.verification_status = 'verified_provider'
+            WHERE bps.product_id = %s
+        """, (product_id,))
+        for r in cur.fetchall():
+            r = _serialize_row(r)
+            regs = r.get("region") or []
+            if not regs or reader_region == "global" or reader_region in regs:
+                providers.append(r)
+    except Exception as e:
+        app.logger.warning(f"providers lookup failed for beverage {product_id}: {e}")
+
     cur.close()
     conn.close()
+
+    # No local provider → this view is a demand signal (the gap is the signal).
+    if not providers:
+        _fire_demand_event("view", product_id=product_id,
+                           origin_region=(product.get("region_name") or product.get("region_country")))
 
     product_slug = product.get('slug') or _slugify(product['name'])
     canonical_url = f"https://provenance.kitchen/beverage/{product_slug}"
     return render_template("beverage_product.html",
         product=product, producers=producers, pairings=pairings,
-        recipes_using=recipes_using, canonical_url=canonical_url)
+        recipes_using=recipes_using, providers=providers,
+        reader_region=reader_region, canonical_url=canonical_url)
 
 
 @app.route("/beverage/producers/<int:producer_id>")
