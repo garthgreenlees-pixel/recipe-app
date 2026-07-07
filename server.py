@@ -4672,6 +4672,13 @@ def serve_image(recipe_uuid, filename):
     filepath = image_dir / filename
     if filepath.is_file():
         return send_file(filepath)
+    # 'hero.jpg' is the canonical public URL used across cards/recipe/cook pages,
+    # but images are stored as main.jpg (+ miniature.jpg). Alias so they resolve.
+    if filename == "hero.jpg":
+        for alt_name in ("main.jpg", "miniature.jpg"):
+            alt = image_dir / alt_name
+            if alt.is_file():
+                return send_file(alt)
     return jsonify(error="Not found"), 404
 
 
