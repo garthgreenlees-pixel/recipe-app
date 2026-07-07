@@ -114,7 +114,8 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-heigh
 <div class="breadcrumb">
   <a href="/beverages">Beverages</a>
   {% if producer.country %}<span>·</span><a href="/beverages/cellar/{{ producer.country | lower | replace(' ','-') }}">{{ producer.country }}'s cellar</a>{% endif %}
-  {% if producer.producer_type %}<span>·</span>{{ producer.producer_type | string | replace('_',' ') }}{% endif %}
+  {% set _shelf = {'winery':'wine','coffee_estate':'coffee','distillery':'spirits','brewery':'beer-cider','kombucha_brewery':'beer-cider','tea_garden':'tea','sake_brewery':'sake'}.get(producer.producer_type) %}
+  {% if _shelf and producer.country %}<span>·</span><a href="/beverages/cellar/{{ producer.country | lower | replace(' ','-') }}#{{ _shelf }}">{{ _shelf | replace('-',' & ') | title }} shelf</a>{% elif producer.producer_type %}<span>·</span>{{ producer.producer_type | string | replace('_',' ') }}{% endif %}
   <span>·</span>{{ producer.name }}
 </div>
 

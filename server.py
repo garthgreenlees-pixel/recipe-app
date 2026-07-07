@@ -12187,6 +12187,9 @@ def pairing_dish_search():
     return jsonify(rows)
 
 
+from urllib.parse import quote as _q
+
+
 @app.route("/beverages/pairing")
 def pairing_room():
     """The pairing room — start with the plate (spec v1.1 §6, mockup 3)."""
@@ -12216,8 +12219,14 @@ def pairing_room():
 
     picks = _grammar_resolve(dish, reader_token)
 
+    # cycle 3.1: bottles opened from the room carry the plate home with them
+    _plate_keys = ("dish", "tid", "custom", "weight", "fat", "salt", "acid",
+                   "sweet", "smoke", "heat", "aromatic", "plate_name")
+    plate_qs = "&".join(f"{k}={_q(str(request.args[k]))}"
+                        for k in _plate_keys if request.args.get(k)) or (f"dish={dish_key}" if dish_key else "")
     return render_template("pairing_room.html",
         dishes=PAIRING_DISHES, dish_key=dish_key, dish=dish, picks=picks,
+        plate_qs=plate_qs,
         dish_source=dish_source, tid=tid,
         reader_token=reader_token, reader_label=reader_label,
         canonical_url="https://provenance.kitchen/beverages/pairing"
@@ -12305,6 +12314,14 @@ def beverage_product_page(product_id):
     except Exception as e:
         app.logger.warning(f"recipes-using lookup failed for beverage {product_id}: {e}")
 
+    # navigation seams (cycle 3.1): the bottle knows its cellar and its shelf
+    _SHELF_OF = {"wine": "wine", "coffee": "coffee", "tea": "tea", "sake": "sake",
+                 "beer": "beer-cider", "spirits": "spirits", "baijiu": "spirits",
+                 "shochu": "spirits"}
+    shelf_key = _SHELF_OF.get((product.get("category") or "").split("_")[0])
+    cellar_slug = _country_slug(product.get("region_country")) if product.get("region_country") else None
+    plate_qs = (request.args.get("plate") or "").strip() or None
+
     # Pat's Rule: verified providers for the reader's region (Visibility Doctrine).
     reader_region = get_user_location()
     providers = []
@@ -12338,7 +12355,9 @@ def beverage_product_page(product_id):
     return render_template("beverage_product.html",
         product=product, producers=producers, pairings=pairings,
         recipes_using=recipes_using, providers=providers,
-        reader_region=reader_region, canonical_url=canonical_url)
+        reader_region=reader_region, shelf_key=shelf_key,
+        cellar_slug=cellar_slug, plate_qs=plate_qs,
+        canonical_url=canonical_url)
 
 
 @app.route("/beverage/producers/<int:producer_id>")

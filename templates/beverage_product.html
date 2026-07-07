@@ -142,14 +142,17 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
 
 {% block content %}
 <div class="breadcrumb">
-  <a href="/beverage">Beverage</a>
-  {% if product.region_id %}
-  <span>/</span>
-  <a href="/beverage/regions/{{ product.region_id }}">{{ product.region_name or 'Region' }}</a>
-  {% endif %}
-  <span>/</span>
-  {{ product.name }}
+  <a href="/beverages">Beverages</a>
+  {% if cellar_slug %}<span>·</span><a href="/beverages/cellar/{{ cellar_slug }}">{{ product.region_country }}'s cellar</a>{% endif %}
+  {% if shelf_key and cellar_slug %}<span>·</span><a href="/beverages/cellar/{{ cellar_slug }}#{{ shelf_key }}">{{ shelf_key | replace('-',' & ') | title }} shelf</a>{% endif %}
+  {% if product.region_id %}<span>·</span><a href="/beverage/regions/{{ product.region_id }}">{{ product.region_name or 'Region' }}</a>{% endif %}
+  <span>·</span>{{ product.name }}
 </div>
+{% if plate_qs %}
+<div style="max-width:860px;margin:14px auto 0;padding:0 32px">
+  <a href="/beverages/pairing?{{ plate_qs }}" style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px dashed var(--gold)">← Back to the plate</a>
+</div>
+{% endif %}
 
 <div class="container">
   <div class="product-eyebrow">
@@ -193,13 +196,10 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
         {% endif %}
       {% endfor %}
       {% if product.service_specs %}
-      <div class="serviceline">Service —
-        {% if product.service_specs.temp_c %}{{ product.service_specs.temp_c }}°C{% endif %}
-        {% if product.service_specs.temperature %}{{ product.service_specs.temperature }}{% endif %}
-        {% if product.service_specs.decant_minutes %} · decant {{ product.service_specs.decant_minutes }} min{% endif %}
-        {% if product.service_specs.vessel %} · {{ product.service_specs.vessel }}{% endif %}
-        {% if product.service_specs.pour %} · {{ product.service_specs.pour }}{% endif %}
-      </div>
+      <div class="serviceline" style="margin-bottom:6px">Service</div>
+      {% for k, v in product.service_specs.items() %}
+        {% if v %}<div class="dp-row"><span class="k">{{ k | replace('_',' ') }}</span><span class="v">{{ v }}{% if k in ('temp_c','brew_temp_c') %}°C{% endif %}{% if k == 'decant_minutes' %} min{% endif %}</span></div>{% endif %}
+      {% endfor %}
       {% endif %}
     </div>
     {% if _lib != 'full_content' %}

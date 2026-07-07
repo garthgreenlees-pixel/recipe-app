@@ -64,3 +64,6 @@ Items parked for Stage 4 (the audit fix-list stage), each with a one-line reason
   missing on tea (43 of 64 published) and baijiu (8 of 8); those pours fall
   back to a neutral weight in the grammar's rank. Grind lane: backfill
   flavour_weight for tea and baijiu published rows. Data-only; no code.
+- **service_specs backfill (grind lane).** 97 of 405 published pours carry no
+  service_specs (temperature/vessel/pour). Data-only; the sommelier panel's
+  service rows render only where data exists.
