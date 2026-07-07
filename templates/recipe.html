@@ -730,11 +730,13 @@ main { padding-bottom: 60px; }
       {% set _dek = recipe.description or recipe.preamble or recipe.summary or '' %}
       {% if _dek %}<p class="r6-dek">{{ _dek }}</p>{% endif %}
       {# ── FACT STRIP — Serves · Total · Origin · Standard; a cell renders only if it has data ── #}
-      {% set t_total  = recipe.total_time  or recipe.time_total  or (recipe.time and recipe.time.total) %}
+      {% set _mins = (recipe.prep_time_mins or 0) + (recipe.cook_time_mins or 0) %}
+      {% set t_total  = recipe.total_time  or recipe.time_total  or (recipe.time and recipe.time.total) or ((_mins ~ ' min') if _mins else '') %}
       {% set _s = recipe.servings %}
       {% if _s is string %}{% set _s_text = _s %}
       {% elif _s is iterable and _s is not string and _s and _s[0] is mapping %}{% set _s_text = ((_s[0].count or '') ~ (' ' ~ _s[0].unit if _s[0].unit else '')) | trim %}
       {% elif _s is iterable and _s is not string and _s %}{% set _s_text = _s | join(', ') %}
+      {% elif _s and _s is not iterable %}{% set _s_text = _s | string %}
       {% else %}{% set _s_text = '' %}
       {% endif %}
       {% set t_serves = recipe.yield_desc or recipe.servings_text or (recipe.servings_count ~ ' serves' if recipe.servings_count else '') or _s_text %}
