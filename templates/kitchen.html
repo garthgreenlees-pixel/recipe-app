@@ -427,7 +427,7 @@
           <a class="rc" href="/recipe/{{ recipe.slug }}">
             <div class="rc__head">
               <span class="rc__mono">{{ (recipe.title or 'P') | trim | first | upper }}</span>
-              {% if recipe.image_url %}<img class="rc__img" src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy" onerror="this.remove()">{% endif %}
+              {% if recipe.image_url %}<img class="rc__img" src="{{ recipe.image_url }}" alt="{{ recipe.title }}" onerror="this.remove()">{% endif %}
               <span class="rc__badge">{% if skey == 'compose_draft' %}Compose draft · l'Atelier{% else %}{{ _statebadge[skey] }} · {{ recipe.pillars_filled }} of 7{% endif %}</span>
               {% if recipe.requires_haccp %}<span class="rc__haccp">HACCP</span>{% endif %}
             </div>
