@@ -94,7 +94,7 @@ var pdfExtracted = [];
       var n = scanFiles.length;
       btnScan.textContent = 'Reading ' + (n === 1 ? '1 page' : n + ' pages') + '…';
       if (status) { status.classList.remove('is-error'); status.hidden = true; }
-      if (window.ProvenanceProcessing) ProvenanceProcessing.show({ messages: ['Reading pages…', 'Extracting recipe…', 'Building your recipe…'] });
+      if (window.ProvenanceProcessing) ProvenanceProcessing.show({ messages: ['Reading the pages…', 'Writing the recipe…', 'Setting the table…'] });
 
       var fd = new FormData();
       scanFiles.forEach(function (f, i) { fd.append('image' + i, f); });
@@ -230,7 +230,7 @@ var pdfExtracted = [];
       btnUrl.textContent = 'Fetching recipe…';
       status.classList.remove('is-error');
       status.hidden = true;
-      if (window.ProvenanceProcessing) ProvenanceProcessing.show({ messages: ['Fetching the page…', 'Building your recipe…', 'Running enhancement…'] });
+      if (window.ProvenanceProcessing) ProvenanceProcessing.show({ messages: ['Reading the page…', 'Writing the recipe…', 'Setting the table…'] });
 
       fetch('/api/import-url', {
         method: 'POST',

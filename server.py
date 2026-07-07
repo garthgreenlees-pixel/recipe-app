@@ -1318,12 +1318,9 @@ def _sanitize_cuisine(cuisine):
     words = s.split()
     if len(words) <= 3:
         return s
-    # Too long — it's prose. Try to extract a known cuisine name.
-    for n in range(3, 0, -1):
-        for i in range(len(words) - n + 1):
-            candidate = ' '.join(words[i:i + n])
-            if candidate in _KNOWN_CUISINES:
-                return candidate
+    # Too long — it's prose (an origin/history paragraph). Do NOT keyword-scan it:
+    # that mislabels dishes by their origin story (al pastor → "Lebanese"). Cuisine
+    # is set explicitly by the enhancement composer (F4), not scraped from prose.
     return None
 
 
@@ -2153,9 +2150,12 @@ def _parse_import_file(filename, raw):
 
 def _insert_imported_recipe(user_id, p):
     """Insert one parsed recipe as a kitchen recipe. Returns slug or None (skipped)."""
-    title = (p.get("title") or "Imported recipe").strip()[:200] or "Imported recipe"
-    ingredients = _parse_ingredients_text(p.get("ingredients_text") or "")
-    steps = _parse_steps_text(p.get("steps_text") or "")
+    import html as _html
+    title = _html.unescape(p.get("title") or "Imported recipe").strip()[:200] or "Imported recipe"
+    ingredients = [_clean_ingredient_row(i) if isinstance(i, dict) else i
+                   for i in _parse_ingredients_text(p.get("ingredients_text") or "")]
+    steps = [_html.unescape(s) if isinstance(s, str) else s
+             for s in _parse_steps_text(p.get("steps_text") or "")]
     if not ingredients and not steps:
         return None  # nothing usable — skip, don't create an empty recipe
     ruuid = str(uuid.uuid4()).upper()
@@ -2395,6 +2395,43 @@ def _generate_haccp_brief_internal(title, ingredients, method_steps, allergen_re
             if attempt < 2:
                 _time.sleep(1)
     return None
+
+
+def _get_or_build_safety_notes(recipe_dict, slug):
+    """F3 — published safety notes for a slug; if none exist yet, GENERATE them
+    from this recipe's own ingredients + method (same composer as import) and
+    store, then return. Backfills existing shelf recipes on first view."""
+    notes = _published_safety_notes(slug)
+    if notes:
+        return notes
+    try:
+        ings = recipe_dict.get("ingredients") or []
+        _ing = "\n".join((i.get("name", "") if isinstance(i, dict) else str(i)) for i in ings)
+        steps = recipe_dict.get("steps") or []
+        _st = "\n".join(s for s in steps if isinstance(s, str))
+        title = recipe_dict.get("title") or recipe_dict.get("name") or ""
+        if not (_ing or _st):
+            return []
+        extras = _compose_recipe_extras(title, _ing, _st)
+        if extras.get("safety_notes"):
+            _store_safety_notes(slug, extras["safety_notes"])
+            return _published_safety_notes(slug)
+    except Exception as e:
+        app.logger.warning("_get_or_build_safety_notes failed: %s", e)
+    return []
+
+
+def _recipe_needs_review(quality_warnings):
+    """F2b — True if a coherence flag was stored in quality_warnings."""
+    qw = quality_warnings
+    if isinstance(qw, str):
+        try:
+            qw = json.loads(qw)
+        except Exception:
+            return False
+    if isinstance(qw, list):
+        return any(isinstance(x, dict) and x.get("needs_review") for x in qw)
+    return False
 
 
 def _get_or_build_haccp_brief(recipe, region):
@@ -4006,9 +4043,10 @@ def recipe_page(slug):
                     _row["servings_text"] = _norm_yield
             _recipe_dict = _normalize_member_recipe(_row)
             _recipe_dict["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_recipe_dict))
-            # Pairings — stored JSONB first, then LLM-derived fallback
-            _stored_pairings = kitchen_recipe.get("beverage_pairings")
-            _pairings = _stored_pairings if _stored_pairings else _find_pairings_for_user_recipe(kitchen_recipe.get("title", ""))
+            # F5 — user recipes render the composed editorial pairing passage, not
+            # the render-time token-matched product grid (which produced duplicate
+            # baijiu cards with no click-through). No passage → the section hides.
+            _pairings = []
             _sourced = _get_kitchen_recipe_suppliers_from_markers(kitchen_recipe, get_user_location())
             _region = get_user_location() or "CA"
             cur.close()
@@ -4032,7 +4070,9 @@ def recipe_page(slug):
                 region=_region,
                 format_cuisine=_format_cuisine,
                 is_owner=bool(user and user.get("id") == kitchen_recipe.get("user_id")),
-                safety_notes=_published_safety_notes(slug),
+                safety_notes=_get_or_build_safety_notes(_recipe_dict, slug),
+                pairing_passage=kitchen_recipe.get("pairing_passage"),
+                needs_review=_recipe_needs_review(kitchen_recipe.get("quality_warnings")),
             )
         cur.close()
         conn.close()
@@ -4144,7 +4184,9 @@ def recipe_page(slug):
         region=_region,
         format_cuisine=_format_cuisine,
         is_owner=bool(_user and recipe.get("user_id") and _user.get("id") == recipe.get("user_id")),
-        safety_notes=_published_safety_notes(slug),
+        safety_notes=_get_or_build_safety_notes(dict(recipe), slug),
+        pairing_passage=None,
+        needs_review=False,
     )
 
 
@@ -4963,6 +5005,140 @@ def _parse_steps_text(text):
         if clean:
             out.append(clean)
     return out
+
+
+# ─── Cycle 5: import cleanup, coherence gate, and per-recipe extras ──────────
+def _clean_ingredient_row(ing):
+    """F2a — repair one extracted ingredient row: decode entities, pull a dual
+    imperial measure out of the name into the note, parse a quantity embedded in
+    the name into count/unit, and never leave a '/' fragment in the name."""
+    import html as _html
+    if not isinstance(ing, dict):
+        return ing
+    name = _html.unescape(str(ing.get("name") or "")).strip()
+    info = _html.unescape(str(ing.get("info") or "")).strip()
+    count = ("" if ing.get("count") in (None, "") else str(ing.get("count"))).strip()
+    unit = str(ing.get("unit") or "").strip()
+    _U = r"(?:lb|lbs|oz|kg|g|ml|l|cups?|tbsp|tsp|cloves?|slices?)"
+    # 1) dual measure leaked into the name: leading "/ 1.2 lb ..."
+    m = _re.match(r"^/\s*([\d.\s/]+?)\s*(" + _U + r")\b\.?\s*(.*)$", name, _re.I)
+    if m:
+        imperial = (m.group(1).strip() + " " + m.group(2)).strip()
+        name = m.group(3).strip()
+        info = (imperial + ("; " + info if info else "")) if imperial else info
+    # 2) quantity embedded at the start of the name when count is empty
+    if not count:
+        m2 = _re.match(r"^(\d+\.?\d*)\s*(" + _U + r")?\b\.?\s*(.*)$", name, _re.I)
+        if m2 and m2.group(1) and m2.group(3):
+            count = m2.group(1)
+            unit = unit or (m2.group(2) or "")
+            name = m2.group(3).strip()
+    name = _re.sub(r"^[\s/,;.-]+", "", name).strip()
+    info = _re.sub(r"^[\s,;.-]+", "", info).strip()
+    ing["name"], ing["info"], ing["count"], ing["unit"] = name, info, count, unit
+    return ing
+
+
+def _clean_extracted_recipe(recipe):
+    """F2a — run the cleanup pass over an extracted recipe dict, every import path."""
+    import html as _html
+    if not isinstance(recipe, dict):
+        return recipe
+    if recipe.get("title"):
+        recipe["title"] = _html.unescape(str(recipe["title"])).strip()
+    if recipe.get("preamble"):
+        recipe["preamble"] = _html.unescape(str(recipe["preamble"]))
+    if isinstance(recipe.get("ingredients"), list):
+        recipe["ingredients"] = [_clean_ingredient_row(i) if isinstance(i, dict) else i
+                                 for i in recipe["ingredients"]]
+    if isinstance(recipe.get("steps"), list):
+        recipe["steps"] = [_html.unescape(s) if isinstance(s, str) else s for s in recipe["steps"]]
+    return recipe
+
+
+# A small common-word set — enough to score cooking English without a full lexicon.
+_COMMON_WORDS = set("""the a an and or of to in on with for from into over under at by as is are be
+add mix stir heat cook bake roast fry boil simmer season salt pepper oil butter water
+pan pot bowl oven medium high low until then and remove place set aside pour cut slice
+chop dice mince serve minutes minute hour hours degrees over low high heat combine whisk
+fold rest cover drain reserve toss coat marinate blend until smooth about warm cool warm
+onion garlic chicken pork beef fish egg eggs flour sugar cream milk sauce dough chile chiles
+tortillas pineapple achiote""".split())
+
+
+def _method_needs_review(steps):
+    """F2b — coherence gate. Heuristic score of readable cooking English; flags
+    egregious scan misreads. Returns (needs_review: bool, reason: str)."""
+    text = " ".join(s for s in (steps or []) if isinstance(s, str)).lower()
+    words = _re.findall(r"[a-z']+", text)
+    if len(words) < 12:
+        return False, ""
+    known = sum(1 for w in words if w in _COMMON_WORDS)
+    ratio = known / max(1, len(words))
+    # adjacent duplicate words ("adobo adobo", "the the") — a strong misread tell
+    dups = sum(1 for i in range(1, len(words)) if words[i] == words[i - 1] and len(words[i]) > 3)
+    if ratio < 0.30 or dups >= 2:
+        return True, "the scan read poorly"
+    return False, ""
+
+
+SAFETY_DISCLAIMER_LINE = "Working notes, not a food-safety compliance document."
+
+
+def _compose_recipe_extras(title, ingredients_text, method_text):
+    """F3/F4/F5 — one composer call at import: the dish's cuisine (its tradition,
+    never its origin-history), a single editorial pairing passage, and safety
+    notes generated from the recipe's own ingredients + method (HACCP-brief
+    pattern). Returns a dict; degrades to {} on any failure."""
+    prompt = (
+        "You are Provenance's culinary editor. Return ONLY valid JSON, no fences:\n"
+        '{"cuisine": "the dish\'s culinary tradition as one short label (e.g. Mexican, '
+        'Italian, Japanese) — the cuisine it belongs to NOW, never its historical/immigrant origin",\n'
+        ' "pairing_passage": "ONE short editorial passage (max 2 sentences) naming one real '
+        'beverage that suits this dish and the structural reason why — mirror/cut/echo a flavour. '
+        'No lists, no producers, just the pour and the why.",\n'
+        ' "safety_notes": "a short, practical working-notes paragraph on the genuine food-safety '
+        'points for THIS recipe, drawn only from its ingredients and method: raw/undercooked '
+        'proteins or egg, holding temperatures, cross-contamination, and the main allergens. '
+        'Plain kitchen English. Never claim regulatory compliance."}\n\n'
+        f"Recipe: {title}\nIngredients:\n{(ingredients_text or '')[:1500]}\n\nMethod:\n{(method_text or '')[:2000]}\n"
+    )
+    try:
+        resp = client.messages.create(
+            model="claude-haiku-4-5-20251001", max_tokens=900,
+            messages=[{"role": "user", "content": prompt}])
+        text = resp.content[0].text.strip()
+        if text.startswith("```"):
+            text = "\n".join(text.split("\n")[1:])
+            if text.rstrip().endswith("```"):
+                text = text.rstrip()[:-3]
+        data = json.loads(text)
+        return {
+            "cuisine": (data.get("cuisine") or "").strip()[:60],
+            "pairing_passage": (data.get("pairing_passage") or "").strip(),
+            "safety_notes": (data.get("safety_notes") or "").strip(),
+        }
+    except Exception as e:
+        app.logger.warning("compose_recipe_extras failed: %s", e)
+        return {}
+
+
+def _store_safety_notes(recipe_slug, notes_md, summary=""):
+    """Upsert generated safety notes into recipe_shelf_notes (scope='safety')."""
+    if not recipe_slug or not notes_md:
+        return
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO recipe_shelf_notes (recipe_slug, scope, note_md, summary, is_published, source)
+            VALUES (%s, 'safety', %s, %s, TRUE, 'generated')
+            ON CONFLICT (recipe_slug, scope) DO UPDATE
+              SET note_md = EXCLUDED.note_md, is_published = TRUE, updated_at = now()
+        """, (recipe_slug, notes_md, (summary or "")[:200]))
+        cur.close(); conn.close()
+    except Exception as e:
+        app.logger.warning("_store_safety_notes failed: %s", e)
 
 
 def save_hero_image(recipe_uuid, image_b64):
@@ -5984,6 +6160,8 @@ def create_recipe():
         for _ing in _ings:
             if isinstance(_ing, dict) and _ing.get("name"):
                 _ing["name"] = _clean_ingredient_name(_ing["name"])
+    # F2a — post-extraction cleanup (entities, dual measures, embedded qty)
+    _clean_extracted_recipe(data)
     recipes = load_recipes()
 
     recipe_uuid = str(uuid.uuid4()).upper()
@@ -6241,6 +6419,30 @@ def create_recipe():
             f"[CREATE_RECIPE] title={recipe['title']!r} uuid={recipe_uuid} "
             f"db_write=SKIPPED (no DATABASE_URL_WRITE)"
         )
+
+    # F3/F4/F5 — compose per-recipe extras (cuisine = tradition, one pairing
+    # passage, generated safety notes) + F2b coherence flag. Best-effort.
+    try:
+        _ing_lines = "\n".join(
+            ((str(i.get("count") or "") + " " + (i.get("unit") or "") + " " + (i.get("name") or "")).strip()
+             for i in (data.get("ingredients") or []) if isinstance(i, dict)))
+        _step_lines = "\n".join(s for s in (data.get("steps") or []) if isinstance(s, str))
+        _needs_review, _review_reason = _method_needs_review(data.get("steps") or [])
+        _extras = _compose_recipe_extras(recipe["title"], _ing_lines, _step_lines)
+        if DATABASE_URL_WRITE and (_extras.get("cuisine") or _extras.get("pairing_passage") or _needs_review):
+            _c = get_db(); _cu = _c.cursor()
+            if _extras.get("cuisine"):
+                _cu.execute("UPDATE user_kitchen_recipes SET cuisine=%s WHERE uuid=%s", (_extras["cuisine"].lower(), recipe_uuid))
+            if _extras.get("pairing_passage"):
+                _cu.execute("UPDATE user_kitchen_recipes SET pairing_passage=%s WHERE uuid=%s", (_extras["pairing_passage"], recipe_uuid))
+            if _needs_review:
+                _cu.execute("UPDATE user_kitchen_recipes SET quality_warnings = COALESCE(quality_warnings,'[]'::jsonb) || %s::jsonb WHERE uuid=%s",
+                            (json.dumps([{"needs_review": True, "reason": _review_reason}]), recipe_uuid))
+            _cu.close(); _c.close()
+        if _extras.get("safety_notes"):
+            _store_safety_notes(recipe_slug, _extras["safety_notes"])
+    except Exception as _e:
+        app.logger.warning("post-insert extras failed: %s", _e)
 
     return jsonify(recipe), 201
 

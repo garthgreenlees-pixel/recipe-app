@@ -3,6 +3,10 @@
 Items parked for Stage 4 (the audit fix-list stage), each with a one-line reason.
 
 ## Image storage + secrets ops — founder-logged 2026-07-07 (from the scan cycle)
+- **staging password-reset emails silently fail — no email key.** No
+  RESEND_API_KEY (or SMTP/email secret) is set on `provenance-staging`, so the
+  password-reset flow can't send mail — resets fail silently. Set an email secret
+  on staging (or make the flow surface a clear error when no mailer is configured).
 - **Staging image volume — images die on deploy.** `EXTRACTED_DIR` on
   `provenance-staging` is ephemeral (no persistent volume), so scanned/uploaded
   hero images (`main.jpg`) vanish on every deploy/restart — that's why staging
