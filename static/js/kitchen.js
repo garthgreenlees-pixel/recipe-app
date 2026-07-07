@@ -103,6 +103,11 @@ var pdfExtracted = [];
         .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
         .then(function (res) {
           var recipe = res.data;
+          if (recipe.error === 'no_recipe_text') {
+            var en = new Error('no_recipe_text');
+            en._noRecipeText = true;
+            throw en;
+          }
           if (recipe.error === 'unreadable') {
             var e = new Error('unreadable');
             e._unreadable = true;
@@ -134,7 +139,8 @@ var pdfExtracted = [];
               steps: recipe.steps || [],
               source_book: recipe.source_book || {},
               _images_b64: recipe._images_b64 || [],
-              _images_media_types: recipe._images_media_types || []
+              _images_media_types: recipe._images_media_types || [],
+              _hero_custom_b64: recipe._hero_custom_b64 || null
             })
           })
             .then(function (r2) { return r2.json().then(function (d) { return { ok: r2.ok, data: d }; }); })
@@ -147,7 +153,9 @@ var pdfExtracted = [];
         .catch(function (err) {
           if (window.ProvenanceProcessing) ProvenanceProcessing.hide();
           var msg;
-          if (err._unreadable) {
+          if (err._noRecipeText) {
+            msg = 'These look like photos of the finished dish — include the recipe page too, and we’ll read it and attach the photo.';
+          } else if (err._unreadable) {
             msg = 'We couldn’t read these pages. Try retaking the photos in good light, or scan fewer pages at once.';
           } else {
             msg = 'Something went wrong — please try again.';

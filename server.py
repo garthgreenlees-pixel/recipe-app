@@ -4841,13 +4841,24 @@ def _detect_media_type(data: bytes) -> str:
 
 
 def _prepare_image(data: bytes) -> tuple[bytes, str]:
-    """Detect format and convert HEIC to JPEG. Returns (image_bytes, media_type)."""
+    """Detect format, convert HEIC→JPEG, and DOWNSCALE to a vision-API-safe size.
+    Full-resolution phone photos (multi-megapixel) can error or degrade the vision
+    call; the API itself works best at ≤1568px on the long edge. Returns
+    (image_bytes, media_type)."""
     media_type = _detect_media_type(data)
-    if media_type == "image/heic":
+    try:
         img = Image.open(io.BytesIO(data))
-        buf = io.BytesIO()
-        img.convert("RGB").save(buf, format="JPEG", quality=92)
-        return buf.getvalue(), "image/jpeg"
+        needs_convert = media_type == "image/heic"
+        needs_resize = max(img.size) > 1568
+        if needs_convert or needs_resize:
+            img = img.convert("RGB")
+            if needs_resize:
+                img.thumbnail((1568, 1568), Image.Resampling.LANCZOS)
+            buf = io.BytesIO()
+            img.save(buf, format="JPEG", quality=88)
+            return buf.getvalue(), "image/jpeg"
+    except Exception as exc:
+        app.logger.warning("_prepare_image: could not process image (%s); passing through", exc)
     return data, media_type
 
 
@@ -4865,7 +4876,9 @@ def _make_card_thumbnail(image_url):
 
 # ─── Scan (AI recipe extraction) ────────────────────────────────────────────
 
-_SCAN_PROMPT = """Extract the recipe from these cookbook page images. Return a JSON object with these fields:
+_SCAN_PROMPT = """You are given one or more images, 0-indexed in the order provided, that a user scanned to save a recipe. Some images are RECIPE TEXT pages (title, ingredients, method). Some may be PHOTOS OF THE FINISHED DISH with no recipe text — that is expected and fine.
+
+Extract the recipe from the TEXT page(s). Return a single JSON object with these fields:
 {
   "title": "Recipe title",
   "preamble": "Brief description or headnote",
@@ -4876,12 +4889,18 @@ _SCAN_PROMPT = """Extract the recipe from these cookbook page images. Return a J
     {"count": "2", "unit": "cups", "name": "flour", "info": "sifted", "group": ""}
   ],
   "steps": ["Step 1 text verbatim", "Step 2 text verbatim"],
-  "source_book": {"title": null, "author": null, "publisher": null, "year": null, "isbn": null, "page": null}
+  "source_book": {"title": null, "author": null, "publisher": null, "year": null, "isbn": null, "page": null},
+  "dish_photo_indexes": [0-based indexes of images that are photos of the finished dish / have NO readable recipe text],
+  "no_recipe_text": false
 }
+
+If NONE of the images contains readable recipe text (for example every image is just a photo of a finished dish), return EXACTLY this and nothing else:
+{"no_recipe_text": true}
 
 Rules:
 - Extract ALL ingredients with precise quantities — do not simplify or combine
 - Include ALL steps verbatim — do not rewrite, merge, or add steps
+- A dish photo is never a failure — list its index in dish_photo_indexes and read the recipe from the other page(s)
 - Include at most 6 tags: clean facet labels only — lowercase short noun phrases like cuisine, dish family, or key technique (e.g. "italian", "braised", "pasta"); no stopwords, no punctuation, no more than 3 words each, never a sentence fragment
 - If there are ingredient groups (e.g. "For the sauce"), set the group field
 - If the page shows book title/author/publisher info, populate source_book; otherwise leave null
@@ -4947,40 +4966,45 @@ def scan_recipe():
     if not images:
         return jsonify(error="No images uploaded"), 400
 
+    def _has_recipe_text(r):
+        return bool(r) and not r.get("no_recipe_text") and (r.get("ingredients") or r.get("steps"))
+
     content = images + [{"type": "text", "text": _SCAN_PROMPT}]
 
     # Attempt full batch (with one automatic retry)
     recipe, err = _scan_with_retry(content, label=f"{len(images)}-page batch")
-    if recipe:
-        recipe["_images_b64"] = images_b64
-        recipe["_images_media_types"] = images_media_types
-        return jsonify(recipe)
 
-    # Batch failed — try per-page fallback if multiple pages
-    if len(images) == 1:
-        app.logger.error("scan: single page unreadable after retry: %s", err)
-        return jsonify(error="unreadable")
+    # Batch unparseable and multiple images — per-page fallback that treats a
+    # text-less page as a DISH PHOTO (not a failure), never blaming the photos.
+    if not _has_recipe_text(recipe) and not (recipe and recipe.get("no_recipe_text")) and len(images) > 1:
+        app.logger.warning("scan: batch unparseable (%d pages), per-page fallback", len(images))
+        page_results, dish_idx = [], []
+        for i, img in enumerate(images):
+            r, _e = _scan_with_retry([img, {"type": "text", "text": _SCAN_PROMPT}], label=f"page {i + 1}")
+            if _has_recipe_text(r):
+                page_results.append(r)
+            else:
+                dish_idx.append(i)  # no readable recipe text → a dish photo
+        recipe = _merge_scan_pages(page_results) if page_results else {"no_recipe_text": True}
+        if page_results:
+            recipe["dish_photo_indexes"] = dish_idx
 
-    app.logger.warning("scan: batch failed (%d pages), trying per-page fallback", len(images))
-    page_results = []
-    failed_pages = []
-    for i, img in enumerate(images):
-        single_content = [img, {"type": "text", "text": _SCAN_PROMPT}]
-        r, e2 = _scan_with_retry(single_content, label=f"page {i + 1}")
-        if r:
-            page_results.append(r)
-        else:
-            app.logger.error("scan: page %d unreadable: %s", i + 1, e2)
-            failed_pages.append(i + 1)
+    # No readable recipe text anywhere → honest error (never "we couldn't read them")
+    if not recipe or recipe.get("no_recipe_text") or not _has_recipe_text(recipe):
+        app.logger.info("scan: no recipe text in %d image(s)", len(images))
+        return jsonify(error="no_recipe_text")
 
-    if not page_results:
-        return jsonify(error="unreadable")
-
-    merged = _merge_scan_pages(page_results)
-    merged["_images_b64"] = images_b64
-    merged["_images_media_types"] = images_media_types
-    merged["failed_pages"] = failed_pages
-    return jsonify(merged)
+    # Route: dish photos → hero; text pages → source images.
+    dish_idx = [i for i in (recipe.get("dish_photo_indexes") or [])
+                if isinstance(i, int) and 0 <= i < len(images_b64)]
+    hero_b64 = images_b64[dish_idx[0]] if dish_idx else None
+    recipe.pop("dish_photo_indexes", None)
+    recipe.pop("no_recipe_text", None)
+    recipe["_images_b64"] = [b for i, b in enumerate(images_b64) if i not in dish_idx]
+    recipe["_images_media_types"] = [m for i, m in enumerate(images_media_types) if i not in dish_idx]
+    if hero_b64:
+        recipe["_hero_custom_b64"] = hero_b64
+    return jsonify(recipe)
 
 
 # ─── Cover OCR ───────────────────────────────────────────────────────────────
