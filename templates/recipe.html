@@ -1836,7 +1836,7 @@ function renderCostBreakdown(data) {
     {% elif gate_for_tier('profession') == 'preview_then_prompt' %}
     {{ upgrade_prompt('profession', 'cost') }}
     {% else %}
-    {{ upgrade_prompt('kitchen', 'visitor') }}
+    {{ upgrade_prompt('kitchen', 'default') }}
     {% endif %}
   </div>`;
   body.innerHTML=html;
