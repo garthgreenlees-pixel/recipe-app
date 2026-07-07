@@ -90,7 +90,7 @@
   .rc{ display:flex; flex-direction:column; text-decoration:none; color:var(--k-ink); background:var(--k-paper); border:1px solid var(--k-hair); border-radius:2px; min-height:372px; transition:border-color .2s, transform .2s; overflow:hidden; }
   .rc:hover{ border-color:var(--k-leaf); transform:translateY(-3px); }
   .rc__head{ position:relative; height:150px; background:var(--k-paper2); display:flex; align-items:center; justify-content:center; overflow:hidden; }
-  .rc__head img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .rc__head img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; z-index:1; }
   .rc__mono{ font-family:var(--k-serif); font-size:66px; color:#C7A86A; opacity:.45; }
   .rc__badge{ position:absolute; top:10px; left:10px; background:var(--k-paper); border:1px solid var(--k-hair); padding:5px 10px; font-family:var(--k-mono); font-size:9px; text-transform:uppercase; letter-spacing:.16em; color:var(--k-gilt); }
   .rc__haccp{ position:absolute; top:10px; right:10px; background:var(--k-ink); color:var(--k-paper); padding:5px 8px; font-family:var(--k-mono); font-size:8px; letter-spacing:.12em; text-transform:uppercase; }
@@ -262,10 +262,10 @@
     <p class="k-hero__tag">Everything you cook, held to the canon — {{ recipe_total }} recipe{{ "s" if recipe_total != 1 }} and counting, on one shelf.</p>
 
     <div class="k-tools">
-      <form method="get" action="/kitchen/search" class="k-search">
-        <input type="text" name="q" placeholder="Search your kitchen — name, cuisine, ingredient…" value="{{ request.args.get('q', '') }}">
+      <div class="k-search">
+        <input type="text" id="kSearch" autocomplete="off" placeholder="Search your kitchen — name, cuisine, ingredient…" onkeydown="if(event.key==='Enter')event.preventDefault();">
         <span class="i">⌕</span>
-      </form>
+      </div>
       <div class="k-add" id="kAdd">
         <button type="button" class="k-add__btn" onclick="document.getElementById('kAdd').classList.toggle('is-open')">+ Add a recipe ▾</button>
         <div class="k-add__menu">
@@ -421,11 +421,13 @@
              data-sourced="{{ '1' if recipe.sourced else '0' }}"
              data-ref="{{ recipe.uuid }}"
              data-collections="{{ recipe.collections | join(' ') }}"
-             data-title="{{ recipe.title }}">
+             data-title="{{ recipe.title }}"
+             data-search="{{ recipe.search_text | default('') }}">
           <button type="button" class="rc__add{% if recipe.collections %} has{% endif %}" data-add-ref="{{ recipe.uuid }}" title="Add to collection" aria-label="Add to collection">⊕</button>
           <a class="rc" href="/recipe/{{ recipe.slug }}">
             <div class="rc__head">
-              {% if recipe.image_url %}<img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy">{% else %}<span class="rc__mono">{{ (recipe.title or 'P') | trim | first | upper }}</span>{% endif %}
+              <span class="rc__mono">{{ (recipe.title or 'P') | trim | first | upper }}</span>
+              {% if recipe.image_url %}<img class="rc__img" src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy" onerror="this.remove()">{% endif %}
               <span class="rc__badge">{% if skey == 'compose_draft' %}Compose draft · l'Atelier{% else %}{{ _statebadge[skey] }} · {{ recipe.pillars_filled }} of 7{% endif %}</span>
               {% if recipe.requires_haccp %}<span class="rc__haccp">HACCP</span>{% endif %}
             </div>
@@ -468,6 +470,24 @@
         c.style.display = ok ? '' : 'none'; if(ok) n++;
       });
       shown.textContent = (f==='all'?'All ':'Showing ')+n;
+    });
+  }
+  // live search — filters the shelf as you type (name · cuisine · ingredient),
+  // no page submit. Enter never leaves the shelf.
+  var search=document.getElementById('kSearch');
+  if(search){
+    var gcards=[].slice.call(document.querySelectorAll('#kGrid .kcard'));
+    var shownEl=document.getElementById('kShown');
+    var total=gcards.length;
+    search.addEventListener('input', function(){
+      var q=(search.value||'').trim().toLowerCase();
+      if(chips){ [].forEach.call(chips.children,function(c){c.classList.remove('on');}); var allc=chips.querySelector('[data-key="all"]'); if(allc && !q) allc.classList.add('on'); }
+      var n=0;
+      gcards.forEach(function(c){
+        var ok = !q || (c.getAttribute('data-search')||'').indexOf(q)>=0;
+        c.style.display = ok ? '' : 'none'; if(ok) n++;
+      });
+      if(shownEl) shownEl.textContent = q ? ('Found '+n) : ('All '+total);
     });
   }
   // migrate panel toggles (button + dropdown item), and close the add menu

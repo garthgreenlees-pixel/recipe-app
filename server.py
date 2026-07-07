@@ -1464,6 +1464,8 @@ def _query_user_recipes(user_id, state="imported"):
                 "card_tags": _sanitize_tags(raw_tags, limit=2),
                 "sourced": _recipe_has_sourcing(r.get("ingredient_origin_markers")),
                 "recent": _is_recent(r.get("created_at")),
+                "search_text": ((r.get("title") or "") + " " + (cuisine or "") + " "
+                                + " ".join([(_i.get("name") or "") for _i in (r.get("ingredients") or []) if isinstance(_i, dict)])).lower(),
             })
         return out
     except Exception as e:
@@ -1533,6 +1535,8 @@ def _query_compose_drafts(user_id):
                 "card_tags": _sanitize_tags(raw_tags, limit=2),
                 "sourced": _recipe_has_sourcing(r.get("ingredient_origin_markers")),
                 "recent": _is_recent(r.get("created_at")),
+                "search_text": ((r.get("title") or "") + " " + (cuisine or "") + " "
+                                + " ".join([(_i.get("name") or "") for _i in (r.get("ingredients") or []) if isinstance(_i, dict)])).lower(),
             })
         return out
     except Exception as e:
