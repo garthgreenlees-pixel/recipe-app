@@ -120,6 +120,21 @@
 .r6-btn:hover { background: var(--charcoal-soft); border-color: var(--charcoal-soft); color: var(--cream-50); }
 .r6-btn--ghost { background: transparent; color: var(--charcoal); }
 .r6-btn--ghost:hover { border-color: var(--gold); color: var(--charcoal); background: transparent; }
+/* Overflow 'More' menu — secondary actions collapse here so the dish leads */
+.r6-more { position: relative; display: inline-block; }
+.r6-more__menu {
+  position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  min-width: 214px; background: var(--cream-50, #FAFAF7); border: 1px solid var(--line);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.18); z-index: 50; display: none;
+}
+.r6-more.open .r6-more__menu { display: block; }
+.r6-more__menu a {
+  display: block; padding: 11px 16px; font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--charcoal);
+  text-decoration: none; border-bottom: 1px solid var(--line);
+}
+.r6-more__menu a:last-child { border-bottom: 0; }
+.r6-more__menu a:hover { background: var(--cream-100, #F5F0E8); color: var(--gold-deep, #9A7B3F); }
 
 /* pillar layout */
 .r6-pillar {
@@ -701,18 +716,22 @@ main { padding-bottom: 60px; }
     </div>
   </section>
 
-  {# ─── ACTION ROW ─── #}
+  {# ─── PRIMARY ACTION ─── the dish leads; one primary (Cook Mode), everything
+        else collapses into the overflow so the recipe isn't buried under buttons. #}
   <div class="r6-actions">
     <a href="/recipe/{{ recipe.slug }}/cook" class="r6-btn">Cook Mode →</a>
-    <a href="#" class="r6-btn r6-btn--ghost" id="rAddShopping" data-slug="{{ recipe.slug }}">Add to shopping list</a>
-    <a href="#" class="r6-btn r6-btn--ghost" id="rAddMenu" data-slug="{{ recipe.slug }}">Add to a menu</a>
-    <a href="#" class="r6-btn r6-btn--ghost" data-action="save">Save</a>
-    <a href="{{ url_for('suggest_supplier_form') }}?recipe={{ recipe.slug }}" class="r6-btn r6-btn--ghost">Suggest a supplier</a>
-    <a href="#" class="r6-btn r6-btn--ghost" onclick="window.print(); return false;">Print</a>
-    <a href="#" class="r6-btn r6-btn--ghost" data-action="share">Share</a>
-    {% if is_owner %}
-      <a href="/recipe/{{ recipe.slug }}/edit" class="r6-btn r6-btn--ghost">Edit</a>
-    {% endif %}
+    <div class="r6-more" id="rMore">
+      <button type="button" class="r6-btn r6-btn--ghost" id="rMoreBtn" aria-haspopup="true" aria-expanded="false" onclick="rToggleMore(event)">More ⋯</button>
+      <div class="r6-more__menu" id="rMoreMenu" role="menu">
+        <a href="#" id="rAddShopping" data-slug="{{ recipe.slug }}" role="menuitem">Add to shopping list</a>
+        <a href="#" id="rAddMenu" data-slug="{{ recipe.slug }}" role="menuitem">Add to a menu</a>
+        <a href="#" data-action="save" role="menuitem">Save</a>
+        <a href="{{ url_for('suggest_supplier_form') }}?recipe={{ recipe.slug }}" role="menuitem">Suggest a supplier</a>
+        <a href="#" onclick="window.print(); return false;" role="menuitem">Print</a>
+        <a href="#" data-action="share" role="menuitem">Share</a>
+        {% if is_owner %}<a href="/recipe/{{ recipe.slug }}/edit" role="menuitem">Edit</a>{% endif %}
+      </div>
+    </div>
   </div>
   <script>
   (function(){
@@ -756,6 +775,12 @@ main { padding-bottom: 60px; }
       document.addEventListener('click', function(e){ if(pop && !pop.contains(e.target) && e.target!==mn){ pop.remove(); pop=null; } });
     }
   })();
+  // Overflow 'More' menu toggle
+  function rToggleMore(e){ if(e) e.preventDefault(); var m=document.getElementById('rMore'); if(!m) return;
+    var open=m.classList.toggle('open'); var b=document.getElementById('rMoreBtn'); if(b) b.setAttribute('aria-expanded', open?'true':'false'); }
+  document.addEventListener('click', function(e){
+    var m=document.getElementById('rMore'); if(m && m.classList.contains('open') && !m.contains(e.target)) { m.classList.remove('open'); var b=document.getElementById('rMoreBtn'); if(b) b.setAttribute('aria-expanded','false'); }
+  });
   </script>
 
   {# Safety notes are NOT an inline body panel — per the design they are a
