@@ -134,6 +134,56 @@
   body.k-evening{ --k-paper:#13110C; --k-paper2:#1A1711; --k-ink:#F1EBDD; --k-soft:#A39A88; --k-hair:#2C2820; --k-gilt:#C6A055; }
   body.k-evening .k-foot__mark{ color:var(--k-nightink); }
 
+  /* ── Collections shelf (coloured spines) ── */
+  .k-coll{ padding:54px 0 0; }
+  .k-coll__head{ display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:20px; }
+  .k-coll__eyebrow{ font-family:var(--k-mono); font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--k-gilt); }
+  .k-coll__new{ font-family:var(--k-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--k-ink); border:0; background:none; border-bottom:1px solid var(--k-gilt); padding:0 0 2px; cursor:pointer; }
+  .k-coll__shelf{ display:flex; gap:14px; overflow-x:auto; padding-bottom:8px; }
+  .k-spine{ flex:none; width:186px; display:flex; text-decoration:none; color:var(--k-ink); background:var(--k-paper); border:1px solid var(--k-hair); transition:border-color .2s, transform .2s; cursor:pointer; position:relative; }
+  .k-spine:hover{ border-color:var(--k-gilt); transform:translateY(-3px); }
+  .k-spine.on{ border-color:var(--k-ink); }
+  .k-spine__c{ flex:none; width:8px; }
+  .k-spine__b{ padding:16px 14px; display:flex; flex-direction:column; justify-content:space-between; min-height:96px; flex:1; }
+  .k-spine__n{ font-family:var(--k-serif); font-weight:600; font-size:18px; line-height:1.08; }
+  .k-spine__ct{ font-family:var(--k-mono); font-size:10px; letter-spacing:.08em; color:var(--k-soft); }
+  .k-spine__x{ position:absolute; top:6px; right:6px; border:0; background:none; color:var(--k-soft); font-size:13px; cursor:pointer; opacity:0; transition:opacity .15s; padding:2px 5px; }
+  .k-spine:hover .k-spine__x{ opacity:1; }
+  .k-spine__x:hover{ color:#B94040; }
+  .k-coll__empty{ font-family:var(--k-serif); font-style:italic; font-size:15px; color:var(--k-soft); }
+
+  /* add-to-collection control on cards */
+  .kcard{ position:relative; }
+  .rc__add{ position:absolute; top:8px; right:8px; z-index:5; width:26px; height:26px; border-radius:50%; border:1px solid var(--k-hair); background:var(--k-paper); color:var(--k-soft); font-size:15px; line-height:1; cursor:pointer; opacity:0; transition:opacity .15s, border-color .15s; display:flex; align-items:center; justify-content:center; }
+  .kcard:hover .rc__add{ opacity:1; }
+  .rc__add:hover{ border-color:var(--k-gilt); color:var(--k-gilt); }
+  .rc__add.has{ opacity:1; border-color:var(--k-leaf); color:var(--k-leaf); }
+
+  /* collections popover */
+  .k-pop{ position:fixed; z-index:950; width:230px; background:var(--k-paper); border:1px solid var(--k-hair); box-shadow:0 18px 44px rgba(0,0,0,.28); display:none; }
+  .k-pop.is-open{ display:block; }
+  .k-pop__h{ font-family:var(--k-mono); font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--k-soft); padding:12px 14px 8px; }
+  .k-pop__item{ display:flex; align-items:center; gap:10px; padding:9px 14px; cursor:pointer; font-size:13px; color:var(--k-ink); }
+  .k-pop__item:hover{ background:var(--k-paper2); }
+  .k-pop__dot{ width:9px; height:9px; border-radius:2px; flex:none; }
+  .k-pop__check{ margin-left:auto; color:var(--k-leaf); font-size:12px; }
+  .k-pop__new{ border-top:1px solid var(--k-hair); color:var(--k-gilt); font-family:var(--k-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:11px 14px; cursor:pointer; }
+  .k-pop__new:hover{ background:var(--k-paper2); }
+
+  /* menus folder */
+  .k-menus__folder{ display:inline-flex; align-items:center; gap:12px; background:var(--k-paper2); border:1px solid var(--k-hair); border-bottom:3px solid var(--k-gilt); cursor:pointer; padding:12px 18px; border-radius:3px 3px 0 0; color:var(--k-ink); }
+  .k-menus__folder .fi{ font-size:15px; }
+  .k-menus__folder .ft{ font-family:var(--k-serif); font-style:italic; font-weight:600; font-size:22px; }
+  .k-menus__folder .fc{ font-family:var(--k-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--k-soft); background:var(--k-paper); border:1px solid var(--k-hair); padding:3px 8px; border-radius:10px; }
+  .k-menus__folder .fcaret{ font-family:var(--k-mono); font-size:12px; color:var(--k-soft); transition:transform .25s; }
+  .k-menus.is-open .k-menus__folder .fcaret{ transform:rotate(180deg); }
+  .k-nextup{ display:flex; align-items:center; justify-content:space-between; gap:18px; padding:16px 20px; border:1px solid var(--k-hair); border-top:0; text-decoration:none; color:var(--k-ink); background:var(--k-paper); }
+  .k-nextup:hover{ background:var(--k-paper2); }
+  .k-nextup__tag{ font-family:var(--k-mono); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--k-gilt); border:1px solid var(--k-gilt); padding:3px 7px; margin-right:12px; }
+  .k-menus__list{ display:none; }
+  .k-menus.is-open .k-menus__list{ display:block; }
+  .k-menus.is-open .k-nextup{ display:none; }
+
   /* ── Modal overlay ── */
   .kmodal-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.72); z-index: 900; display: none; align-items: center; justify-content: center; }
   .kmodal-overlay.is-open { display: flex; }
@@ -248,19 +298,49 @@
 
     <div class="k-stats">
       <div class="k-stat"><div class="k">Recipes</div><div class="v">{{ kitchen_stats.recipes }}</div></div>
+      <div class="k-stat"><div class="k">Collections</div><div class="v">{{ kitchen_stats.collections }}</div></div>
       <div class="k-stat"><div class="k">Sourced</div><div class="v">{{ kitchen_stats.sourced }}</div></div>
-      <div class="k-stat"><div class="k">Enhanced</div><div class="v">{{ kitchen_stats.enhanced }}</div></div>
-      <div class="k-stat"><div class="k">Drafts</div><div class="v">{{ kitchen_stats.drafts }}</div></div>
+      <div class="k-stat"><div class="k">Cooked this week</div><div class="v">{{ kitchen_stats.cooked_week }}</div></div>
     </div>
   </div>
 </section>
 
 <div class="k-body">
 
-  {# ─── MENUS ─── #}
-  <section class="k-menus">
+  {# ─── COLLECTIONS ─── #}
+  <section class="k-coll">
+    <div class="k-coll__head">
+      <div class="k-coll__eyebrow">Your Collections</div>
+      <button type="button" class="k-coll__new" id="kCollNew">+ New collection</button>
+    </div>
+    <div class="k-coll__shelf" id="kCollShelf">
+      {% if user_collections %}
+        {% for c in user_collections %}
+        <div class="k-spine" data-collection="{{ c.id }}" role="button" tabindex="0">
+          <span class="k-spine__c" style="background:linear-gradient(165deg,{{ c.colour }},rgba(0,0,0,0.35));"></span>
+          <span class="k-spine__b">
+            <span class="k-spine__n">{{ c.name }}</span>
+            <span class="k-spine__ct">{{ c.count }} recipe{{ "s" if c.count != 1 }}</span>
+          </span>
+          <button type="button" class="k-spine__x" data-del="{{ c.id }}" title="Delete collection" aria-label="Delete collection">✕</button>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="k-coll__empty">No collections yet — group recipes into Weeknight, Christmas Table, To Try… hit <b>+ New collection</b> or the ⊕ on any card.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  {# ─── MENUS (collapsible folder) ─── #}
+  <section class="k-menus{% if not next_menu %} is-open{% endif %}" id="kMenus">
     <div class="k-menus__head">
-      <h2>Menus</h2>
+      {% if has_library %}
+      <button type="button" class="k-menus__folder" id="kMenusFolder">
+        <span class="fi">📁</span><span class="ft">Menus</span>
+        <span class="fc">{{ user_menus|length }} menu{{ "s" if user_menus|length != 1 }}</span>
+        <span class="fcaret">▾</span>
+      </button>
+      {% else %}<h2>Menus</h2>{% endif %}
       <div class="k-menus__actions">
         <a href="/atelier" class="k-menus__act">+ Compose a menu <span class="sub">l'Atelier</span></a>
         {% if has_library %}<a href="/menu/new" class="k-menus__act">+ New menu</a>{% endif %}
@@ -268,6 +348,17 @@
     </div>
     {% if has_library %}
       {% if user_menus %}
+        {% if next_menu %}
+        <a href="/menu/{{ next_menu.slug }}" class="k-nextup">
+          <span style="display:flex;align-items:center;">
+            <span class="k-nextup__tag">Next up</span>
+            <span><span class="k-menu-title">{{ next_menu.title }}</span>
+            <span class="k-menu-meta">{{ next_menu.event_date }} · {{ next_menu.cover_count }} cover{{ "s" if next_menu.cover_count != 1 }}</span></span>
+          </span>
+          <span class="k-menu-counts">{{ next_menu.course_count }} course{{ "s" if next_menu.course_count != 1 }} · {{ next_menu.dish_count }} dish{{ "es" if next_menu.dish_count != 1 }}</span>
+        </a>
+        {% endif %}
+        <div class="k-menus__list">
         {% for m in user_menus %}
         <a href="/menu/{{ m.slug }}" class="k-menu-row">
           <div>
@@ -277,6 +368,7 @@
           <div class="k-menu-counts">{{ m.course_count }} course{{ "s" if m.course_count != 1 }}<br>{{ m.dish_count }} dish{{ "es" if m.dish_count != 1 }}</div>
         </a>
         {% endfor %}
+        </div>
       {% else %}
         <p class="k-menus__empty">No menus yet — start with the season.</p>
       {% endif %}
@@ -325,7 +417,11 @@
              data-cuisine="{{ (recipe.cuisine or '') | replace('·',' ') | trim }}"
              data-recent="{{ '1' if recipe.recent else '0' }}"
              data-veg="{{ '1' if _veg else '0' }}"
-             data-sourced="{{ '1' if recipe.sourced else '0' }}">
+             data-sourced="{{ '1' if recipe.sourced else '0' }}"
+             data-ref="{{ recipe.uuid }}"
+             data-collections="{{ recipe.collections | join(' ') }}"
+             data-title="{{ recipe.title }}">
+          <button type="button" class="rc__add{% if recipe.collections %} has{% endif %}" data-add-ref="{{ recipe.uuid }}" title="Add to collection" aria-label="Add to collection">⊕</button>
           <a class="rc" href="/recipe/{{ recipe.slug }}">
             <div class="rc__head">
               {% if recipe.image_url %}<img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy">{% else %}<span class="rc__mono">{{ (recipe.title or 'P') | trim | first | upper }}</span>{% endif %}
@@ -383,6 +479,140 @@
     var a=document.getElementById('kAdd');
     if(a && a.classList.contains('is-open') && !a.contains(e.target)) a.classList.remove('is-open');
   });
+})();
+</script>
+
+{# ─── Collections popover + data ─── #}
+<div class="k-pop" id="kPop"></div>
+<script>window.__COLLECTIONS = {{ user_collections | tojson }};</script>
+<script>
+(function(){
+  var cols = window.__COLLECTIONS || [];
+  var pop = document.getElementById('kPop');
+  var shelf = document.getElementById('kCollShelf');
+  var grid = document.getElementById('kGrid');
+  var activeRef = null;
+
+  function post(url, body, method){
+    return fetch(url, {method: method||'POST', headers:{'Content-Type':'application/json'},
+      body: body?JSON.stringify(body):undefined}).then(function(r){ return r.ok?r.json():Promise.reject(r); });
+  }
+  function cardFor(ref){ return grid ? grid.querySelector('.kcard[data-ref="'+ref+'"]') : null; }
+  function cardCols(card){ return (card.getAttribute('data-collections')||'').split(' ').filter(Boolean); }
+
+  function renderShelf(){
+    if(!shelf) return;
+    if(!cols.length){ shelf.innerHTML = '<p class="k-coll__empty">No collections yet — group recipes into Weeknight, Christmas Table, To Try… hit <b>+ New collection</b> or the ⊕ on any card.</p>'; return; }
+    shelf.innerHTML = cols.map(function(c){
+      return '<div class="k-spine" data-collection="'+c.id+'" role="button" tabindex="0">'
+        + '<span class="k-spine__c" style="background:linear-gradient(165deg,'+c.colour+',rgba(0,0,0,0.35));"></span>'
+        + '<span class="k-spine__b"><span class="k-spine__n">'+esc(c.name)+'</span>'
+        + '<span class="k-spine__ct">'+c.count+' recipe'+(c.count!==1?'s':'')+'</span></span>'
+        + '<button type="button" class="k-spine__x" data-del="'+c.id+'" title="Delete collection" aria-label="Delete collection">✕</button></div>';
+    }).join('');
+  }
+  function esc(s){ return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function bump(id, d){ var c=cols.filter(function(x){return x.id===id;})[0]; if(c){ c.count=Math.max(0,c.count+d);} renderShelf(); }
+
+  function openPop(btn, ref){
+    activeRef = ref;
+    var card = cardFor(ref); var mem = card?cardCols(card):[];
+    pop.innerHTML = '<div class="k-pop__h">Add “'+esc((card&&card.getAttribute('data-title'))||'recipe')+'” to…</div>'
+      + cols.map(function(c){
+          var on = mem.indexOf(c.id)>=0;
+          return '<div class="k-pop__item" data-cid="'+c.id+'"><span class="k-pop__dot" style="background:'+c.colour+'"></span>'
+            + esc(c.name) + (on?'<span class="k-pop__check">✓</span>':'') + '</div>';
+        }).join('')
+      + '<div class="k-pop__new" data-newfor="'+ref+'">+ New collection…</div>';
+    var r = btn.getBoundingClientRect();
+    pop.style.top = Math.min(r.bottom+6, window.innerHeight-260)+'px';
+    pop.style.left = Math.max(12, Math.min(r.left-200, window.innerWidth-242))+'px';
+    pop.classList.add('is-open');
+  }
+  function closePop(){ pop.classList.remove('is-open'); activeRef=null; }
+
+  function toggleMembership(cid){
+    var ref = activeRef; var card = cardFor(ref); if(!card) return;
+    var mem = cardCols(card); var on = mem.indexOf(cid)>=0;
+    var url = '/api/collections/'+cid+'/recipes'+(on?('/'+ref):'');
+    post(url, on?undefined:{recipe_ref:ref}, on?'DELETE':'POST').then(function(){
+      if(on){ mem = mem.filter(function(x){return x!==cid;}); bump(cid,-1); }
+      else { mem.push(cid); bump(cid,1); }
+      card.setAttribute('data-collections', mem.join(' '));
+      var addBtn = card.querySelector('.rc__add'); if(addBtn) addBtn.classList.toggle('has', mem.length>0);
+      openPop(card.querySelector('.rc__add'), ref); // re-render checks
+    }).catch(function(){ alert('Could not update collection.'); });
+  }
+
+  function createCollection(name, thenAddRef){
+    return post('/api/collections', {name:name}).then(function(c){
+      cols.push(c); renderShelf();
+      if(thenAddRef){ activeRef=thenAddRef; toggleMembership(c.id); }
+    });
+  }
+
+  // ⊕ on cards
+  if(grid) grid.addEventListener('click', function(e){
+    var add = e.target.closest('.rc__add');
+    if(add){ e.preventDefault(); e.stopPropagation();
+      var ref = add.getAttribute('data-add-ref');
+      if(pop.classList.contains('is-open') && activeRef===ref){ closePop(); } else { openPop(add, ref); }
+    }
+  });
+  // popover interactions
+  pop.addEventListener('click', function(e){
+    var item = e.target.closest('.k-pop__item');
+    if(item){ toggleMembership(item.getAttribute('data-cid')); return; }
+    var nf = e.target.closest('.k-pop__new');
+    if(nf){ var n=(prompt('Name this collection')||'').trim(); if(n){ createCollection(n, nf.getAttribute('data-newfor')); } }
+  });
+  // + New collection (shelf header)
+  var cn = document.getElementById('kCollNew');
+  if(cn) cn.addEventListener('click', function(){ var n=(prompt('Name this collection')||'').trim(); if(n) createCollection(n); });
+
+  // spine click → filter shelf; spine ✕ → delete
+  if(shelf) shelf.addEventListener('click', function(e){
+    var del = e.target.closest('.k-spine__x');
+    if(del){ e.stopPropagation(); var id=del.getAttribute('data-del');
+      if(confirm('Delete this collection? Recipes stay in your kitchen.')){
+        post('/api/collections/'+id, null, 'DELETE').then(function(){
+          cols = cols.filter(function(x){return x.id!==id;}); renderShelf();
+          if(grid) grid.querySelectorAll('.kcard').forEach(function(card){
+            var m=cardCols(card).filter(function(x){return x!==id;});
+            card.setAttribute('data-collections', m.join(' '));
+            var a=card.querySelector('.rc__add'); if(a) a.classList.toggle('has', m.length>0);
+          });
+        });
+      }
+      return;
+    }
+    var spine = e.target.closest('.k-spine');
+    if(spine && grid){
+      var id2 = spine.getAttribute('data-collection');
+      var was = spine.classList.contains('on');
+      shelf.querySelectorAll('.k-spine').forEach(function(s){s.classList.remove('on');});
+      var shown=document.getElementById('kShown'); var n=0;
+      grid.querySelectorAll('.kcard').forEach(function(card){
+        var ok = was || cardCols(card).indexOf(id2)>=0;
+        card.style.display = ok?'':'none'; if(ok) n++;
+      });
+      if(!was){ spine.classList.add('on'); if(shown) shown.textContent='In collection · '+n; }
+      else if(shown){ shown.textContent='All '+grid.querySelectorAll('.kcard').length; }
+      // clear chip active state
+      var chips=document.getElementById('kChips');
+      if(chips){ [].forEach.call(chips.children,function(c){c.classList.remove('on');}); if(!was){} else { chips.querySelector('[data-key="all"]').classList.add('on'); } }
+    }
+  });
+
+  // close popover on outside click / esc
+  document.addEventListener('click', function(e){
+    if(pop.classList.contains('is-open') && !pop.contains(e.target) && !e.target.closest('.rc__add')) closePop();
+  });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closePop(); });
+
+  // menus folder toggle
+  var mf = document.getElementById('kMenusFolder');
+  if(mf) mf.addEventListener('click', function(){ document.getElementById('kMenus').classList.toggle('is-open'); });
 })();
 </script>
 

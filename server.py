@@ -1597,6 +1597,80 @@ def index():
     )
 
 
+# Spine palette for new collections (design trademark colours, rotated by count).
+_COLLECTION_PALETTE = [
+    "#3F6090", "#7A2230", "#9A7B3F", "#6E3B23", "#5A2230",
+    "#2E6B45", "#1F5559", "#4D5320", "#5B3A66", "#84431F",
+]
+
+
+def _query_user_collections(user_id):
+    """List a user's collections with live recipe counts, ordered for the shelf."""
+    if not DATABASE_URL:
+        return []
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT c.id, c.name, c.colour, c.sort_order,
+                   COUNT(cr.recipe_ref) AS n
+            FROM user_collections c
+            LEFT JOIN collection_recipes cr ON cr.collection_id = c.id
+            WHERE c.user_id = %s
+            GROUP BY c.id
+            ORDER BY c.sort_order, c.created_at
+        """, (user_id,))
+        rows = cur.fetchall()
+        cur.close(); conn.close()
+        return [{"id": str(r["id"]), "name": r["name"], "colour": r["colour"],
+                 "count": int(r["n"])} for r in rows]
+    except Exception as e:
+        app.logger.warning(f"_query_user_collections failed: {e}")
+        return []
+
+
+def _query_collection_membership(user_id):
+    """Map recipe_ref -> [collection_id, ...] for this user's collections."""
+    if not DATABASE_URL:
+        return {}
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT cr.recipe_ref, cr.collection_id
+            FROM collection_recipes cr
+            JOIN user_collections c ON c.id = cr.collection_id
+            WHERE c.user_id = %s
+        """, (user_id,))
+        out = {}
+        for r in cur.fetchall():
+            out.setdefault(r["recipe_ref"], []).append(str(r["collection_id"]))
+        cur.close(); conn.close()
+        return out
+    except Exception as e:
+        app.logger.warning(f"_query_collection_membership failed: {e}")
+        return {}
+
+
+def _cooked_this_week(user_id):
+    """Count cook events logged in the last 7 days (the Cooked-this-week stat)."""
+    if not DATABASE_URL:
+        return 0
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT COUNT(*) FROM recipe_cook_log
+            WHERE user_id = %s AND cooked_at >= now() - interval '7 days'
+        """, (user_id,))
+        n = cur.fetchone()[0]
+        cur.close(); conn.close()
+        return int(n)
+    except Exception as e:
+        app.logger.warning(f"_cooked_this_week failed: {e}")
+        return 0
+
+
 @app.route("/kitchen")
 def kitchen():
     user = get_current_user()
@@ -1610,9 +1684,17 @@ def kitchen():
         "compose_draft": _query_compose_drafts(user_id),
     }
     total = sum(len(v) for v in recipes_by_state.values())
+    # ── Collections + cook log (Cycle 2) ──
+    user_collections_list = _query_user_collections(user_id)
+    _membership = _query_collection_membership(user_id)
+    for _lst in recipes_by_state.values():
+        for _r in _lst:
+            _r["collections"] = _membership.get(_r["uuid"], [])
+    cooked_week = _cooked_this_week(user_id)
     # ── Menus (Library+) ──
     has_library = user_can_access("library")
     user_menus = []
+    next_menu = None
     if has_library:
         _mc = get_db()
         _mcur = _mc.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1627,25 +1709,32 @@ def kitchen():
             ORDER BY m.event_date DESC NULLS LAST, m.updated_at DESC
         """, (user_id,))
         user_menus = [dict(r) for r in _mcur.fetchall()]
+        _today = _dt.now().date()
+        _upcoming = []
         for m in user_menus:
             m["id"] = str(m["id"])
             m["course_count"] = int(m["course_count"])
             m["dish_count"] = int(m["dish_count"])
-            if m.get("event_date"):
-                m["event_date"] = m["event_date"].isoformat()
+            _ev = m.get("event_date")
+            if _ev and _ev >= _today:
+                _upcoming.append((_ev, m))
+            m["event_date"] = _ev.isoformat() if _ev else None
             if m.get("updated_at"):
                 m["updated_at"] = m["updated_at"].isoformat()
+        # Next up = earliest upcoming dated menu
+        next_menu = min(_upcoming, key=lambda t: t[0])[1] if _upcoming else None
         _mcur.close(); _mc.close()
-    # Real stat counts for the working-shelf band. Sourced is now real (derived
-    # from ingredient_origin_markers per card). Enhanced/Drafts kept as honest
-    # substitutes per founder ruling until Collections + Cooked-this-week land
-    # (Cycle 2), when the design's canonical four go fully real.
+    # Real stat counts. With Collections + Cooked-this-week now built, the
+    # design's canonical four (Recipes · Collections · Sourced · Cooked) are all
+    # honest. Enhanced/Drafts remain available as filter chips (nothing lost).
     _sourced_count = sum(
         1 for _lst in recipes_by_state.values() for _r in _lst if _r.get("sourced")
     )
     kitchen_stats = {
         "recipes": total,
+        "collections": len(user_collections_list),
         "sourced": _sourced_count,
+        "cooked_week": cooked_week,
         "enhanced": len(recipes_by_state["enhanced"]),
         "drafts": len(recipes_by_state["compose_draft"]),
         "menus": len(user_menus),
@@ -1667,7 +1756,125 @@ def kitchen():
         format_cuisine=_format_cuisine,
         has_library=has_library,
         user_menus=user_menus,
+        next_menu=next_menu,
+        user_collections=user_collections_list,
+        collection_palette=_COLLECTION_PALETTE,
     )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Collections + cook log (MyKitchen Cycle 2)
+# ─────────────────────────────────────────────────────────────────────────────
+@app.route("/api/collections", methods=["POST"])
+def api_create_collection():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "auth"}), 401
+    data = request.get_json(silent=True) or {}
+    name = (data.get("name") or "").strip()[:60]
+    if not name:
+        return jsonify({"error": "Name required"}), 400
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("SELECT COUNT(*) AS n FROM user_collections WHERE user_id = %s", (user["id"],))
+        n = int(cur.fetchone()["n"])
+        colour = (data.get("colour") or _COLLECTION_PALETTE[n % len(_COLLECTION_PALETTE)])
+        cur.execute("""
+            INSERT INTO user_collections (user_id, name, colour, sort_order)
+            VALUES (%s, %s, %s, %s) RETURNING id
+        """, (user["id"], name, colour, n))
+        cid = str(cur.fetchone()["id"])
+        conn.commit(); cur.close(); conn.close()
+        return jsonify({"id": cid, "name": name, "colour": colour, "count": 0})
+    except Exception as e:
+        app.logger.warning(f"api_create_collection failed: {e}")
+        return jsonify({"error": "server"}), 500
+
+
+@app.route("/api/collections/<cid>", methods=["DELETE"])
+def api_delete_collection(cid):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "auth"}), 401
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM user_collections WHERE id = %s AND user_id = %s", (cid, user["id"]))
+        deleted = cur.rowcount
+        conn.commit(); cur.close(); conn.close()
+        return jsonify({"ok": deleted > 0})
+    except Exception as e:
+        app.logger.warning(f"api_delete_collection failed: {e}")
+        return jsonify({"error": "server"}), 500
+
+
+@app.route("/api/collections/<cid>/recipes", methods=["POST"])
+def api_collection_add(cid):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "auth"}), 401
+    data = request.get_json(silent=True) or {}
+    ref = (data.get("recipe_ref") or "").strip()
+    if not ref:
+        return jsonify({"error": "recipe_ref required"}), 400
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        # ownership check on the collection
+        cur.execute("SELECT 1 FROM user_collections WHERE id = %s AND user_id = %s", (cid, user["id"]))
+        if not cur.fetchone():
+            cur.close(); conn.close()
+            return jsonify({"error": "not found"}), 404
+        cur.execute("""
+            INSERT INTO collection_recipes (collection_id, recipe_ref)
+            VALUES (%s, %s) ON CONFLICT DO NOTHING
+        """, (cid, ref))
+        conn.commit(); cur.close(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        app.logger.warning(f"api_collection_add failed: {e}")
+        return jsonify({"error": "server"}), 500
+
+
+@app.route("/api/collections/<cid>/recipes/<ref>", methods=["DELETE"])
+def api_collection_remove(cid, ref):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "auth"}), 401
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("""
+            DELETE FROM collection_recipes cr USING user_collections c
+            WHERE cr.collection_id = c.id AND c.id = %s AND c.user_id = %s AND cr.recipe_ref = %s
+        """, (cid, user["id"], ref))
+        removed = cur.rowcount
+        conn.commit(); cur.close(); conn.close()
+        return jsonify({"ok": removed > 0})
+    except Exception as e:
+        app.logger.warning(f"api_collection_remove failed: {e}")
+        return jsonify({"error": "server"}), 500
+
+
+@app.route("/api/cook-log", methods=["POST"])
+def api_cook_log():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "auth"}), 401
+    data = request.get_json(silent=True) or {}
+    ref = (data.get("recipe_ref") or "").strip()
+    if not ref:
+        return jsonify({"error": "recipe_ref required"}), 400
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("INSERT INTO recipe_cook_log (user_id, recipe_ref) VALUES (%s, %s)", (user["id"], ref))
+        conn.commit(); cur.close(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        app.logger.warning(f"api_cook_log failed: {e}")
+        return jsonify({"error": "server"}), 500
 
 
 @app.route("/table")

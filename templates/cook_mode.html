@@ -793,9 +793,25 @@ document.addEventListener('DOMContentLoaded', initUnits);
 // ── Navigation ─────────────────────────────────────────
 const totalSteps = parseInt(document.getElementById('cm-total-steps')?.textContent || '0', 10);
 
+function logCooked() {
+  if (!CM_IS_AUTHENTICATED || !CM_RECIPE_SLUG) return;
+  try {
+    fetch('/api/cook-log', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({recipe_ref: CM_RECIPE_SLUG})});
+    var t = document.createElement('div');
+    t.textContent = 'Logged — cooked today ✓';
+    t.style.cssText = 'position:fixed;left:50%;bottom:88px;transform:translateX(-50%);z-index:9999;'
+      + 'background:#13110C;color:#C6A055;font-family:monospace;font-size:12px;letter-spacing:.12em;'
+      + 'text-transform:uppercase;padding:12px 20px;border:1px solid #C6A055;';
+    document.body.appendChild(t);
+    setTimeout(function(){ t.style.transition='opacity .5s'; t.style.opacity='0'; setTimeout(function(){t.remove();},500); }, 2200);
+  } catch(e) {}
+}
+
 function navStep(dir) {
   if (!totalSteps) return;
   if (currentStep === totalSteps && dir === 1) {
+    logCooked();
     clearFocus();
     currentStep = 1;
     updateNavState();
