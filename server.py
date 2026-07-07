@@ -11960,7 +11960,12 @@ def _dish_axes_from_text(name, blob):
 
 
 _MORNING_TOKENS = ["breakfast", "viennoiserie", "morning", "brunch", "petit d\u00e9jeuner",
-                   "petit dejeuner", "congee", "tamago kake gohan", "porridge"]
+                   "petit dejeuner", "congee", "tamago kake gohan", "porridge",
+                   # ruling 2.4(b): a text stating a named morning serve signals
+                   # morning service exactly as "breakfast" does \u2014 stated, not inferred
+                   "caf\u00e9 au lait", "cafe au lait", "espresso", "cappuccino",
+                   "flat white", "macchiato", "americano", "breakfast tea",
+                   "english breakfast"]
 
 
 def _dish_service_context(blob):
