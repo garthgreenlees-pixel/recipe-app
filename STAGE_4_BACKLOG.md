@@ -56,3 +56,11 @@ Items parked for Stage 4 (the audit fix-list stage), each with a one-line reason
   the product-detail supplier block (no role filter). Reconcile the menu-suggest
   queries to lowercase so wired providers also surface in menu beverage
   suggestions. Not blocking the onboarding path.
+
+## Grind-lane log from pairing-grammar diagnosis (2026-07-06, founder-ordered 2.3b)
+- **flavour_weight thin on two families.** All 405 published pours carry
+  flavour_markers (100% coverage, every family) — the croissant silence was
+  ranking logic, since fixed, NOT missing data. But `flavour_weight` is
+  missing on tea (43 of 64 published) and baijiu (8 of 8); those pours fall
+  back to a neutral weight in the grammar's rank. Grind lane: backfill
+  flavour_weight for tea and baijiu published rows. Data-only; no code.
