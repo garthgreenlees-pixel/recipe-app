@@ -1652,6 +1652,49 @@ def _query_collection_membership(user_id):
         return {}
 
 
+# The one approved disclaimer line for safety notes (founder ruling B5, 2026-07-07).
+# It rides EVERY safety note. These are editorial working notes — never a HACCP
+# document, never labeled HACCP.
+SAFETY_NOTE_DISCLAIMER = "Working notes, not a food-safety compliance document."
+
+
+def _render_safety_note_html(md):
+    """Minimal, safe render of a grind safety note: escape everything, then allow
+    only **bold**, and turn blank lines into paragraph breaks. Returns Markup."""
+    import re as _re_local
+    text = (md or "").strip()
+    esc = (text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    esc = _re_local.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", esc)
+    paras = [p.strip().replace("\n", "<br>") for p in _re_local.split(r"\n\s*\n", esc) if p.strip()]
+    return Markup("".join("<p>" + p + "</p>" for p in paras))
+
+
+def _published_safety_notes(slug):
+    """Published grind safety notes for a recipe slug. Each dict carries the
+    rendered HTML plus the mandatory disclaimer. Scope is 'safety' — these are
+    NEVER HACCP briefs and must never be labeled as such."""
+    if not DATABASE_URL or not slug:
+        return []
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT note_md, summary FROM recipe_shelf_notes
+            WHERE recipe_slug = %s AND scope = 'safety' AND is_published = TRUE
+            ORDER BY created_at
+        """, (slug,))
+        rows = cur.fetchall()
+        cur.close(); conn.close()
+        return [{
+            "summary": r.get("summary") or "",
+            "html": _render_safety_note_html(r.get("note_md")),
+            "disclaimer": SAFETY_NOTE_DISCLAIMER,
+        } for r in rows]
+    except Exception as e:
+        app.logger.warning(f"_published_safety_notes failed: {e}")
+        return []
+
+
 def _cooked_this_week(user_id):
     """Count cook events logged in the last 7 days (the Cooked-this-week stat)."""
     if not DATABASE_URL:
@@ -3706,6 +3749,7 @@ def recipe_page(slug):
                 region=_region,
                 format_cuisine=_format_cuisine,
                 is_owner=bool(user and user.get("id") == kitchen_recipe.get("user_id")),
+                safety_notes=_published_safety_notes(slug),
             )
         cur.close()
         conn.close()
@@ -3817,7 +3861,57 @@ def recipe_page(slug):
         region=_region,
         format_cuisine=_format_cuisine,
         is_owner=bool(_user and recipe.get("user_id") and _user.get("id") == recipe.get("user_id")),
+        safety_notes=_published_safety_notes(slug),
     )
+
+
+_TIMER_UNIT_SECONDS = {"hour": 3600, "hr": 3600, "h": 3600,
+                       "minute": 60, "min": 60, "m": 60,
+                       "second": 1, "sec": 1, "s": 1}
+_TIMER_RE = _re.compile(
+    r"(\d+)(?:\s*[-–]\s*(\d+))?\s*(hours?|hrs?|minutes?|mins?|seconds?|secs?)\b",
+    _re.IGNORECASE,
+)
+
+
+def _infer_timer_seconds(text):
+    """Infer a step timer (seconds) from the first duration phrase in the step
+    text — e.g. 'simmer for 8–10 minutes' -> 600 (upper bound so it never rings
+    early). Returns None when no plausible duration is present."""
+    if not text:
+        return None
+    m = _TIMER_RE.search(str(text))
+    if not m:
+        return None
+    lo, hi, unit = m.group(1), m.group(2), m.group(3).lower().rstrip("s")
+    unit_s = _TIMER_UNIT_SECONDS.get(unit) or _TIMER_UNIT_SECONDS.get(unit[:3])
+    if not unit_s:
+        return None
+    val = int(hi or lo)
+    secs = val * unit_s
+    if secs <= 0 or secs > 6 * 3600:   # ignore absurd/aging durations (>6h)
+        return None
+    return secs
+
+
+def _augment_step_timers(recipe_dict):
+    """Normalise recipe steps to dicts and fill timer_seconds from step text
+    where the enrichment left it empty, so cook-mode timers have real data."""
+    steps = recipe_dict.get("steps")
+    if not isinstance(steps, list):
+        return
+    out = []
+    for s in steps:
+        if isinstance(s, dict):
+            d = dict(s)
+            text = d.get("instruction") or d.get("text") or d.get("body") or ""
+            if not d.get("timer_seconds"):
+                d["timer_seconds"] = _infer_timer_seconds(text)
+            out.append(d)
+        else:
+            out.append({"instruction": str(s), "insight": "",
+                        "timer_seconds": _infer_timer_seconds(str(s))})
+    recipe_dict["steps"] = out
 
 
 @app.route("/recipe/<slug>/cook")
@@ -3858,6 +3952,7 @@ def recipe_cook_mode(slug):
                 for s in _enhanced
             ]
         _recipe_dict["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_recipe_dict))
+        _augment_step_timers(_recipe_dict)
         return render_template("cook_mode.html", recipe=_recipe_dict)
     # Fall back to public recipes table
     cur.execute("SELECT * FROM recipes WHERE slug = %s", (slug,))
@@ -3868,6 +3963,7 @@ def recipe_cook_mode(slug):
         abort(404)
     _canon_recipe = dict(recipe)
     _canon_recipe["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_canon_recipe))
+    _augment_step_timers(_canon_recipe)
     return render_template("cook_mode.html", recipe=_canon_recipe)
 
 

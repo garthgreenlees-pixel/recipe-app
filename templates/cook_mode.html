@@ -138,8 +138,23 @@ body{font-family:var(--serif);font-size:16px;line-height:1.7;background:var(--bg
 .cm-ing-row{
   display:flex;align-items:baseline;gap:10px;
   padding:11px 0;border-bottom:0.5px solid var(--divider);
+  cursor:pointer;
 }
 .cm-ing-row:last-child{border-bottom:none}
+.cm-ing-check{
+  flex-shrink:0;width:18px;height:18px;border:1.5px solid var(--divider);
+  border-radius:3px;align-self:center;position:relative;transition:all .15s;
+}
+.cm-ing-row.is-checked .cm-ing-check{background:var(--gold);border-color:var(--gold);}
+.cm-ing-row.is-checked .cm-ing-check::after{
+  content:'✓';position:absolute;inset:0;text-align:center;line-height:16px;
+  font-size:12px;color:#13110C;
+}
+.cm-ing-row.is-checked .cm-ing-qty,
+.cm-ing-row.is-checked .cm-ing-name,
+.cm-ing-row.is-checked .cm-ing-info{
+  text-decoration:line-through;opacity:.5;
+}
 .cm-ing-qty{
   font-family:var(--serif);font-size:15px;font-weight:400;
   color:var(--cream);flex-shrink:0;min-width:72px;white-space:nowrap;
@@ -594,7 +609,8 @@ select.haccp-input{padding:3px 7px}
     {% elif ing is not mapping and ing[:3] == '## ' %}
     <li class="cm-ing-heading">{{ ing[3:] }}</li>
     {% else %}
-    <li class="cm-ing-row"{% if ing is mapping and ing.count %} data-base-qty="{{ ing.count }}" data-base-unit="{{ ing.unit or '' }}"{% endif %}>
+    <li class="cm-ing-row"{% if ing is mapping and ing.count %} data-base-qty="{{ ing.count }}" data-base-unit="{{ ing.unit or '' }}"{% endif %} onclick="cmToggleIng(this)">
+      <span class="cm-ing-check" aria-hidden="true"></span>
       <span class="cm-ing-qty">
         {% if ing is mapping %}{{ ing.count or '' }}{% if ing.unit %}&thinsp;{{ ing.unit }}{% endif %}{% endif %}
       </span>
@@ -792,6 +808,8 @@ document.addEventListener('DOMContentLoaded', initUnits);
 
 // ── Navigation ─────────────────────────────────────────
 const totalSteps = parseInt(document.getElementById('cm-total-steps')?.textContent || '0', 10);
+
+function cmToggleIng(row) { if (row) row.classList.toggle('is-checked'); }
 
 function logCooked() {
   if (!CM_IS_AUTHENTICATED || !CM_RECIPE_SLUG) return;

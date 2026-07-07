@@ -596,6 +596,19 @@ select.haccp-input{padding:3px 7px}
 .r-supplier-footer a{color:var(--gold-deep)}
 .r6-pillar--tools .r6-pillar__num { color: var(--charcoal-soft); }
 main { padding-bottom: 60px; }
+/* ── Safety notes (grind, scope 'safety') — editorial working notes.
+      NEVER a HACCP document; never labeled HACCP. Disclaimer rides every note. ── */
+.r6-safety{max-width:1100px;margin:0 auto;padding:8px var(--s4) 0;}
+.r6-safety__panel{border:1px solid var(--line,#E4DFDA);border-left:3px solid var(--gold,#C9A84C);background:var(--cream-100,#F5F0E8);padding:20px 22px;}
+.r6-safety__eyebrow{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep,#9A7B3F);display:flex;align-items:center;gap:9px;}
+.r6-safety__eyebrow .dot{width:6px;height:6px;background:var(--gold,#C9A84C);transform:rotate(45deg);display:inline-block;}
+.r6-safety__disclaimer{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--warm-gray,#8A8580);font-style:italic;margin:6px 0 16px;}
+.r6-safety__note{padding-top:14px;margin-top:14px;border-top:0.5px solid var(--line,#E4DFDA);}
+.r6-safety__note:first-of-type{padding-top:0;margin-top:0;border-top:0;}
+.r6-safety__sum{font-family:var(--display);font-style:italic;font-size:16px;color:var(--charcoal,#1A1916);margin-bottom:6px;}
+.r6-safety__body{font-size:14px;line-height:1.6;color:var(--charcoal-soft,#4A4743);}
+.r6-safety__body p{margin:0 0 8px;}
+.r6-safety__foot{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--warm-gray,#8A8580);font-style:italic;margin-top:8px;}
 </style>
 {% endblock %}
 
@@ -703,6 +716,24 @@ main { padding-bottom: 60px; }
       <a href="/recipe/{{ recipe.slug }}/edit" class="r6-btn r6-btn--ghost">Edit</a>
     {% endif %}
   </div>
+
+  {# ─── SAFETY NOTES (grind, scope 'safety') — editorial working notes.
+        NEVER HACCP; the approved disclaimer rides the panel and every note. ─── #}
+  {% if safety_notes %}
+  <section class="r6-safety">
+    <div class="r6-safety__panel">
+      <div class="r6-safety__eyebrow"><span class="dot"></span> Safety notes</div>
+      <div class="r6-safety__disclaimer">{{ safety_notes[0].disclaimer }}</div>
+      {% for note in safety_notes %}
+      <div class="r6-safety__note">
+        {% if note.summary %}<div class="r6-safety__sum">{{ note.summary }}</div>{% endif %}
+        <div class="r6-safety__body">{{ note.html }}</div>
+        <div class="r6-safety__foot">{{ note.disclaimer }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 
   {# ─── PILLAR I — INGREDIENTS ─── #}
   <section class="r6-pillar">
