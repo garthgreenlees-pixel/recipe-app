@@ -12105,7 +12105,19 @@ def _grammar_resolve(dish, reader_token, limit=6, per_cat_cap=2):
         na = [c for c in scored if _fam(c[3]) in _NA_FAMS]
         # coffee and tea are the morning pours of record — they lead within NA
         na.sort(key=lambda c: -(c[0] + (1.5 if _fam(c[3]) in ("coffee", "tea") else 0)))
-        _fill(na, limit, per_cat, picks)
+        # round-robin by family (2.4 proof: "a tea by serve" must seat when it
+        # holds a move) — best of each NA family first, then second-bests
+        by_fam = {}
+        for c in na:
+            by_fam.setdefault(_fam(c[3]), []).append(c)
+        rr = []
+        rnd = 0
+        while any(len(v) > rnd for v in by_fam.values()):
+            for f in ("coffee", "tea", "na", "water"):
+                if f in by_fam and len(by_fam[f]) > rnd:
+                    rr.append(by_fam[f][rnd])
+            rnd += 1
+        _fill(rr, limit, per_cat, picks)
         alc = [c for c in scored if _fam(c[3]) not in _NA_FAMS]
         _fill(alc, min(len(picks) + 2, limit + 2), per_cat, picks, quiet=True)
     else:
@@ -12125,7 +12137,13 @@ def _grammar_resolve(dish, reader_token, limit=6, per_cat_cap=2):
             p["is_preparation"] = True
             exp = expr_best.get(prod.get("category"))
             if exp:
-                p["expression"] = exp[1]["name"]
+                # coffee: any bean honestly expresses the serve; tea: only a
+                # leaf of the same style (serve name inside the product name)
+                if prod.get("category") == "tea":
+                    if prod["name"].split()[0].lower() in exp[1]["name"].lower():
+                        p["expression"] = exp[1]["name"]
+                else:
+                    p["expression"] = exp[1]["name"]
     ids = [p["product"]["id"] for p in picks if not p.get("is_preparation")]
     carried = set()
     if ids:
