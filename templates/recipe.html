@@ -97,6 +97,26 @@
   margin-bottom: var(--s2); color: var(--charcoal);
 }
 .r6-hero__title-block h1 em { font-style: italic; color: var(--charcoal-soft); }
+/* Dek — the story sentence, italic serif, under the title (design pattern) */
+.r6-dek {
+  font-family: var(--display); font-style: italic; font-weight: 500;
+  font-size: 21px; line-height: 1.4; color: var(--charcoal-soft);
+  max-width: 600px; margin: 0 auto var(--s3); text-align: center;
+}
+/* Fact strip — Serves · Total · Origin · Standard */
+.r6-facts {
+  display: flex; justify-content: center; flex-wrap: wrap;
+  margin-bottom: var(--s3);
+}
+.r6-fact { padding: 0 24px; border-left: 1px solid var(--line); }
+.r6-fact:first-child { border-left: 0; }
+.r6-fact__k {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--gold-deep, #9A7B3F); margin-bottom: 6px;
+}
+.r6-fact__v { font-family: var(--display); font-size: 21px; line-height: 1; color: var(--charcoal); }
+/* Market List inline note — the ingredient's own spec/prep line (existing data) */
+.r6-ing-note { font-size: 13.5px; line-height: 1.5; color: var(--charcoal-soft); margin: 3px 0 2px; }
 .r6-meta {
   font-family: var(--mono); font-size: 12px; text-transform: uppercase;
   letter-spacing: 0.12em; color: var(--warm-gray);
@@ -620,6 +640,22 @@ main { padding-bottom: 60px; }
 .sn-body{font-size:14px;line-height:1.6;color:var(--charcoal-soft,#4A4743);}
 .sn-body p{margin:0 0 8px;}
 .sn-foot{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--warm-gray,#8A8580);font-style:italic;margin-top:8px;}
+/* ── Sourced Through Provenance — producer cards (design pattern) ── */
+.r6-sourced{max-width:1100px;margin:0 auto;padding:56px var(--s4) 40px;}
+.r6-sourced__intro{max-width:640px;margin-bottom:36px;}
+.r6-sourced__eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-deep,#9A7B3F);margin-bottom:14px;}
+.r6-sourced__title{font-family:var(--display);font-weight:600;font-size:clamp(28px,3.4vw,42px);line-height:1.08;margin:0;color:var(--charcoal);}
+.r6-sourced__lede{font-size:16px;line-height:1.6;color:var(--charcoal-soft);margin:16px 0 0;}
+.r6-producers{border-top:1px solid var(--line);}
+.r6-producer{display:flex;align-items:flex-start;gap:20px;border-bottom:1px solid var(--line);padding:26px 0;}
+.r6-producer__initial{flex:none;width:48px;height:48px;border-radius:50%;border:1px solid var(--gold,#C9A84C);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:20px;color:var(--gold-deep,#9A7B3F);}
+.r6-producer__body{flex:1;min-width:0;}
+.r6-producer__name{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.15;color:var(--charcoal);}
+.r6-producer__name a{color:var(--charcoal);text-decoration:none;border-bottom:1px solid var(--gold);}
+.r6-producer__origin{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--charcoal-soft);margin-top:7px;}
+.r6-producer__products{font-size:14px;line-height:1.5;color:var(--charcoal-soft);margin-top:11px;max-width:560px;}
+.r6-producer__room{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf,#3F6090);text-decoration:none;}
+.r6-producer__room:hover{color:var(--charcoal);}
 </style>
 {% endblock %}
 
@@ -690,28 +726,25 @@ main { padding-bottom: 60px; }
           {{ recipe_name }}
         {% endif %}
       </h1>
-      <div class="r6-meta">
-        {% set t_active = recipe.active_time or recipe.time_active or (recipe.time and recipe.time.active) %}
-        {% set t_total  = recipe.total_time  or recipe.time_total  or (recipe.time and recipe.time.total) %}
-        {# Resolve servings to a display string — handles array, legacy string, int, and empty #}
-        {% set _s = recipe.servings %}
-        {% if _s is string %}{% set _s_text = _s %}
-        {% elif _s is iterable and _s is not string and _s and _s[0] is mapping %}{% set _s_text = ((_s[0].count or '') ~ (' ' ~ _s[0].unit if _s[0].unit else '')) | trim %}
-        {% elif _s is iterable and _s is not string and _s %}{% set _s_text = _s | join(', ') %}
-        {% else %}{% set _s_text = '' %}
-        {% endif %}
-        {% set t_serves = recipe.yield_desc or recipe.servings_text or (recipe.servings_count ~ ' serves' if recipe.servings_count else '') or _s_text %}
-        {% if t_active %}
-          <span>Active: {{ t_active }}</span>
-          <span class="r6-meta__div">·</span>
-        {% endif %}
-        {% if t_total %}
-          <span>Total: {{ t_total }}</span>
-          <span class="r6-meta__div">·</span>
-        {% endif %}
-        {% if t_serves %}
-          <span>{{ t_serves }}</span>
-        {% endif %}
+      {# ── DEK — the recipe's story sentence, from existing description; no composing ── #}
+      {% set _dek = recipe.description or recipe.preamble or recipe.summary or '' %}
+      {% if _dek %}<p class="r6-dek">{{ _dek }}</p>{% endif %}
+      {# ── FACT STRIP — Serves · Total · Origin · Standard; a cell renders only if it has data ── #}
+      {% set t_total  = recipe.total_time  or recipe.time_total  or (recipe.time and recipe.time.total) %}
+      {% set _s = recipe.servings %}
+      {% if _s is string %}{% set _s_text = _s %}
+      {% elif _s is iterable and _s is not string and _s and _s[0] is mapping %}{% set _s_text = ((_s[0].count or '') ~ (' ' ~ _s[0].unit if _s[0].unit else '')) | trim %}
+      {% elif _s is iterable and _s is not string and _s %}{% set _s_text = _s | join(', ') %}
+      {% else %}{% set _s_text = '' %}
+      {% endif %}
+      {% set t_serves = recipe.yield_desc or recipe.servings_text or (recipe.servings_count ~ ' serves' if recipe.servings_count else '') or _s_text %}
+      {% set f_origin = recipe.origin_provenance or recipe.origin_estate or '' %}
+      {% set f_standard = recipe.standard or recipe.provenance_standard or '' %}
+      <div class="r6-facts">
+        {% if t_serves %}<div class="r6-fact"><div class="r6-fact__k">Serves</div><div class="r6-fact__v">{{ t_serves }}</div></div>{% endif %}
+        {% if t_total %}<div class="r6-fact"><div class="r6-fact__k">Total</div><div class="r6-fact__v">{{ t_total }}</div></div>{% endif %}
+        {% if f_origin %}<div class="r6-fact"><div class="r6-fact__k">Origin</div><div class="r6-fact__v">{{ f_origin }}</div></div>{% endif %}
+        {% if f_standard %}<div class="r6-fact"><div class="r6-fact__k">Standard</div><div class="r6-fact__v">{{ f_standard }}</div></div>{% endif %}
       </div>
     </div>
   </section>
@@ -786,11 +819,11 @@ main { padding-bottom: 60px; }
   {# Safety notes are NOT an inline body panel — per the design they are a
      compact tools-row control opening a modal (see #sn-overlay). #}
 
-  {# ─── PILLAR I — INGREDIENTS ─── #}
+  {# ─── THE MARKET LIST (ingredients) ─── #}
   <section class="r6-pillar">
     <div class="r6-pillar__head">
       <div>
-        <h2>Ingredients</h2>
+        <h2>The Market List</h2>
       </div>
       <div class="r6-serves" id="r6-serves-ctrl" data-slug="{{ recipe.slug }}" data-total-cost="{{ cost_breakdown.total_cost if cost_breakdown else 0 }}">
         Serves
@@ -818,6 +851,7 @@ main { padding-bottom: 60px; }
                 <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
                 <span class="r6-ing__name">{{ ing.name }}</span>
               </div>
+              {% if ing is mapping and ing.info %}<div class="r6-ing-note">{{ ing.info }}</div>{% endif %}
               {% set marker = origin_map.get(ing.name if ing is mapping else '') %}
               {% if marker and marker.origin_marker %}
                 <div class="r-ing-origin"{% if marker.suppliers and marker.suppliers | length > 0 %} onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')"{% endif %}>{{ marker.origin_marker }}</div>
@@ -841,6 +875,7 @@ main { padding-bottom: 60px; }
                 <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
                 <span class="r6-ing__name">{{ ing.name or ing.get('ingredient', '') }}</span>
               </div>
+              {% if ing is mapping and ing.info %}<div class="r6-ing-note">{{ ing.info }}</div>{% endif %}
               {% set marker = origin_map.get(ing.name or ing.get('ingredient', '')) %}
               {% if marker and marker.origin_marker %}
                 <div class="r-ing-origin"{% if marker.suppliers and marker.suppliers | length > 0 %} onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')"{% endif %}>{{ marker.origin_marker }}</div>
@@ -865,7 +900,7 @@ main { padding-bottom: 60px; }
   <section class="r6-pillar">
     <div class="r6-pillar__head">
       <div>
-        <h2>Method</h2>
+        <h2>The Method</h2>
       </div>
       {% if steps %}<div class="r6-pillar__badge">{{ steps | length }} steps</div>{% endif %}
     </div>
@@ -1028,33 +1063,28 @@ main { padding-bottom: 60px; }
     </div>
   {% endif %}
 
-  {# ─── SUPPLIER PANEL ─── #}
+  {# ─── SOURCED THROUGH PROVENANCE — producer cards, design pattern ─── #}
   {% if recipe_suppliers %}
-  <section class="r6-pillar">
-    <div class="r6-pillar__head">
-      <div>
-        <div class="r6-pillar__num">Sourcing</div>
-        <h2>Where to find these ingredients</h2>
-      </div>
-      <div class="r6-pillar__badge">Region: {{ region }}</div>
+  <section class="r6-sourced">
+    <div class="r6-sourced__intro">
+      <div class="r6-sourced__eyebrow">Sourced Through Provenance</div>
+      <h2 class="r6-sourced__title">The hands behind the plate.</h2>
+      <p class="r6-sourced__lede">Every ingredient here is tied to a verified producer — an estate an ocean away, or a grower within reach of your kitchen. You meet them inside Provenance, never sent off elsewhere.</p>
     </div>
-    <div class="r6-suppliers">
+    <div class="r6-producers">
       {% for sup in recipe_suppliers[:6] %}
-        <div class="r6-supplier">
-          <div class="r6-supplier__name">
-            {% if sup.website %}
-              <a href="{{ sup.website if sup.website.startswith('http') else 'https://' + sup.website }}" target="_blank" rel="noopener" class="r6-gold-link">{{ sup.name }}</a>
-            {% else %}
-              {{ sup.name }}
-            {% endif %}
+      <div class="r6-producer">
+        <div class="r6-producer__initial">{{ (sup.name or 'P') | trim | first | upper }}</div>
+        <div class="r6-producer__body">
+          <div class="r6-producer__name">
+            {% if sup.website %}<a href="{{ sup.website if sup.website.startswith('http') else 'https://' + sup.website }}" target="_blank" rel="noopener" class="r6-gold-link">{{ sup.name }}</a>{% else %}{{ sup.name }}{% endif %}
           </div>
-          {% if sup.city or sup.country %}
-            <div class="r6-supplier__loc">{{ [sup.city, sup.state_province, sup.country] | select | join(', ') }}</div>
-          {% endif %}
-          {% if sup.products %}
-            <div class="r6-supplier__products">{{ sup.products | map(attribute='name') | list | join(' · ') | truncate(80) }}</div>
-          {% endif %}
+          {% set _loc = [sup.city, sup.state_province, sup.country] | select | join(', ') %}
+          {% if _loc %}<div class="r6-producer__origin">{{ _loc }}</div>{% endif %}
+          {% if sup.products %}<div class="r6-producer__products">{{ sup.products | map(attribute='name') | list | unique | join(' · ') | truncate(90) }}</div>{% endif %}
+          {% if sup.id %}<a href="#" class="r6-producer__room" onclick="openSupplierPanelFull('{{ sup.id }}'); return false;">Open the producer's room →</a>{% endif %}
         </div>
+      </div>
       {% endfor %}
     </div>
   </section>
