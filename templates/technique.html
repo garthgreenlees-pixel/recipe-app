@@ -1031,7 +1031,7 @@ body.kitchen-mode .sp-turn-next{width:10vw}
   {% endif %}
 
   {# ── TECHNIQUE–BEVERAGE PAIRINGS ───────────────────────────────��─────────── #}
-  {% if technique_pairings_editorial or technique_pairings_partial %}
+  {% if technique_pairings_editorial or technique_pairings_partial or technique_pairings_deduction %}
   <div class="section" id="technique-beverage-pairings">
     <div class="section-label">Wine &amp; Beverage Pairings</div>
     <ul class="tbp-list">
@@ -1072,10 +1072,30 @@ body.kitchen-mode .sp-turn-next{width:10vw}
       </li>
       {% endfor %}
 
+      {# Founder ruling 2.1 — the interim bridge: the cellar's deduction,
+         rendered only while no editorial pairing exists for this dish.
+         Verbally and visually distinct from founder editorial. #}
+      {% if not technique_pairings_editorial and technique_pairings_deduction %}
+      <li style="list-style:none;margin:6px 0 10px;font-family:'DM Mono','IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#8B6914;border-top:1px dashed #D9CFBB;padding-top:14px">The cellar's deduction — structural, awaiting the founder's signature</li>
+      {% for d in technique_pairings_deduction %}
+      <li class="tbp-item" style="border-left:2px dashed #C9A84C;padding-left:12px">
+        <a href="/beverage/products/{{ d.product.id }}" class="tbp-link tbp-link--partial">
+          {% if d.product.producer_name %}<span class="tbp-producer">{{ d.product.producer_name }}</span>{% endif %}
+          <span class="tbp-wine">{{ d.product.name }}</span>
+          <span class="tbp-badge">{{ d.move }}</span>
+        </a>
+        <p class="tbp-rationale tbp-rationale--partial">{{ d.why }}</p>
+        {% if not d.carried %}
+        <p style="font-family:'DM Mono','IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#948B7F;margin:2px 0 0">Not yet carried in your region — its page renders origin-only, and the look is counted.</p>
+        {% endif %}
+      </li>
+      {% endfor %}
+      {% endif %}
+
     </ul>
   </div>
   {% endif %}
-  {# Total=0: no section rendered — existing Beverage Pairing Note in related section serves as fallback #}
+  {# Ruling 2.1: the block never renders empty — deduction bridges until editorial lands #}
 
   {% if technique.key_principles %}
   <div class="section">

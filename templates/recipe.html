@@ -948,6 +948,11 @@ main { padding-bottom: 60px; }
             <div class="r6-pairing__role r6-pairing__role--{{ role }}">{{ role | title }}</div>
             {% if p.region %}<div class="r6-pairing__region">{{ p.region }}</div>{% endif %}
             <div class="r6-pairing__name">{{ p.name or p.beverage_name }}</div>
+            {% if p.source == 'cellar_deduction' %}
+              <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8B6914;margin-top:4px">The cellar's deduction — awaiting the founder's signature</div>
+              {% if p.why %}<div style="font-family:var(--display);font-style:italic;font-size:13px;color:var(--charcoal-soft);margin-top:3px">{{ p.why }}</div>{% endif %}
+              {% if not p.carried %}<div style="font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--warm-gray);margin-top:3px">Not yet carried in your region — the look is counted.</div>{% endif %}
+            {% endif %}
             {% if gate_for_tier('library') == 'full_content' %}
               {% if p.origin_producer or p.local_provider %}
                 <div style="font-family: var(--mono); font-size: 11px; color: var(--charcoal-soft); margin-top: 4px;">

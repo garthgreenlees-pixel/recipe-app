@@ -3187,7 +3187,38 @@ def _find_pairings_for_user_recipe(recipe_title, limit=3):
                 "beverage_product_id": bp_id,
                 "pantry_url": f"/beverage/products/{bp_id}" if bp_id else None,
             })
-        return results
+        if results:
+            return results
+
+        # ── Level 3 (founder ruling 2.1): the cellar's deduction — the block
+        # never renders empty while the 534 await sign-off. Structure derived
+        # from the recipe title's own words; honestly labeled downstream.
+        try:
+            axes, aromatics = _dish_axes_from_text(recipe_title, recipe_title)
+            if any(axes.get(k) for k in ("fat", "salt", "acid", "sweet", "smoke", "heat")) or aromatics:
+                dish = {"name": recipe_title, "axes": axes, "aromatics": aromatics}
+                picks = _grammar_resolve(dish, get_user_location(), limit=3)
+                return [{
+                    "beverage_category": pk["product"].get("category") or "",
+                    "beverage_style": "",
+                    "beverage_name": pk["product"]["name"],
+                    "name": pk["product"]["name"],
+                    "region": pk["product"].get("region_name") or "",
+                    "beverage_description": pk["why"],
+                    "why": pk["why"],
+                    "flavour_logic": "",
+                    "confidence": "deduction",
+                    "pairing_type": pk["move"],
+                    "relationship_type": pk["move"],
+                    "source": "cellar_deduction",
+                    "matched_on": recipe_title,
+                    "carried": pk["carried"],
+                    "beverage_product_id": pk["product"]["id"],
+                    "pantry_url": f"/beverage/products/{pk['product']['id']}",
+                } for pk in picks]
+        except Exception as _de:
+            app.logger.warning(f"recipe pairing deduction failed: {_de}")
+        return []
 
     except Exception:
         return []
@@ -11977,6 +12008,57 @@ def _dish_from_params(args):
     }
 
 
+def _grammar_resolve(dish, reader_token, limit=6, per_cat_cap=2):
+    """Resolve a dish structure against the published cellar. Shared by the
+    pairing room and the interim bridge (founder ruling 2.1): returns picks
+    [{move, why, product, carried}] — the cellar's deduction, never editorial."""
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT bp.id, bp.name, bp.slug, bp.category, bp.subcategory, bp.description,
+               bp.flavour_markers, bp.flavour_weight, bp.flavour_profile_type,
+               bp.deductive_profile, bp.quality_tier,
+               bpr.name AS producer_name, br.name AS region_name, br.country
+        FROM beverage_products bp
+        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
+        LEFT JOIN beverage_regions br ON bp.region_id = br.id
+        WHERE bp.is_published IS TRUE
+    """)
+    products = [_serialize_row(r) for r in cur.fetchall()]
+    scored = []
+    for prod in products:
+        axes, evidence, aromatics = _bottle_axes(prod)
+        res = _grammar_move(dish, axes, evidence, aromatics)
+        if res:
+            move, score, why = res
+            scored.append((score, move, why, prod))
+    scored.sort(key=lambda t: -t[0])
+    picks, per_cat = [], {}
+    for score, move, why, prod in scored:
+        cat = (prod.get("category") or "").split("_")[0]
+        if per_cat.get(cat, 0) >= per_cat_cap:
+            continue
+        picks.append({"move": move, "why": why, "product": prod, "score": round(score, 2)})
+        per_cat[cat] = per_cat.get(cat, 0) + 1
+        if len(picks) >= limit:
+            break
+    ids = [p["product"]["id"] for p in picks]
+    carried = set()
+    if ids:
+        cur.execute("""
+            SELECT DISTINCT bps.product_id
+            FROM beverage_product_suppliers bps
+            JOIN suppliers s ON s.id = bps.supplier_id
+                 AND s.verification_status = 'verified_provider'
+            WHERE bps.product_id = ANY(%s) AND %s = ANY(bps.region)
+        """, (ids, reader_token))
+        carried = {r["product_id"] for r in cur.fetchall()}
+    cur.close(); conn.close()
+    for p in picks:
+        p["carried"] = p["product"]["id"] in carried
+    return picks
+
+
 @app.route("/api/pairing/dish-search")
 def pairing_dish_search():
     """Library-first search for the dish door. Published entries only."""
@@ -12029,56 +12111,7 @@ def pairing_room():
     reader_token = get_user_location()
     reader_label = dict(VALID_REGIONS).get(reader_token, reader_token)
 
-    conn = get_db()
-    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("""
-        SELECT bp.id, bp.name, bp.slug, bp.category, bp.subcategory, bp.description,
-               bp.flavour_markers, bp.flavour_weight, bp.flavour_profile_type,
-               bp.deductive_profile, bp.quality_tier,
-               bpr.name AS producer_name, br.name AS region_name, br.country
-        FROM beverage_products bp
-        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
-        LEFT JOIN beverage_regions br ON bp.region_id = br.id
-        WHERE bp.is_published IS TRUE
-    """)
-    products = [_serialize_row(r) for r in cur.fetchall()]
-
-    scored = []
-    for prod in products:
-        axes, evidence, aromatics = _bottle_axes(prod)
-        res = _grammar_move(dish, axes, evidence, aromatics)
-        if res:
-            move, score, why = res
-            scored.append((score, move, why, prod))
-    scored.sort(key=lambda t: -t[0])
-
-    # category-agnostic table: at most 2 per category, and at least two
-    # beverage families represented before the list is full.
-    picks, per_cat = [], {}
-    for score, move, why, prod in scored:
-        cat = (prod.get("category") or "").split("_")[0]
-        if per_cat.get(cat, 0) >= 2:
-            continue
-        picks.append({"move": move, "why": why, "product": prod, "score": round(score, 2)})
-        per_cat[cat] = per_cat.get(cat, 0) + 1
-        if len(picks) >= 6:
-            break
-
-    # Doctrine §4: a suggestion may name an uncarried bottle — mark it honestly.
-    ids = [p["product"]["id"] for p in picks]
-    carried = set()
-    if ids:
-        cur.execute("""
-            SELECT DISTINCT bps.product_id
-            FROM beverage_product_suppliers bps
-            JOIN suppliers s ON s.id = bps.supplier_id
-                 AND s.verification_status = 'verified_provider'
-            WHERE bps.product_id = ANY(%s) AND %s = ANY(bps.region)
-        """, (ids, reader_token))
-        carried = {r["product_id"] for r in cur.fetchall()}
-    cur.close(); conn.close()
-    for p in picks:
-        p["carried"] = p["product"]["id"] in carried
+    picks = _grammar_resolve(dish, reader_token)
 
     return render_template("pairing_room.html",
         dishes=PAIRING_DISHES, dish_key=dish_key, dish=dish, picks=picks,
@@ -12688,6 +12721,18 @@ def technique_page(slug):
                                       if p['confidence_status'] in ('partial', 'unverified')]
     else:
         technique_pairings_partial = []
+    # Founder ruling 2.1 — the interim bridge: where no editorial pairing
+    # exists, the block renders the grammar's live deduction, honestly
+    # labeled. Editorial replaces deduction as the founder signs off.
+    technique_pairings_deduction = []
+    if not technique_pairings_editorial:
+        try:
+            _bridge_dish = _dish_from_technique(technique['id'])
+            if _bridge_dish:
+                technique_pairings_deduction = _grammar_resolve(
+                    _bridge_dish, user_region or get_user_location(), limit=4)
+        except Exception as _bridge_e:
+            app.logger.warning(f"pairing bridge failed for technique {technique['id']}: {_bridge_e}")
 
     # Cycle E: Pat's Rule — match recipe ingredients against pantry for members.
     # Computed at render; no writes. Free viewers get nothing (recipe_card stripped).
@@ -12877,6 +12922,7 @@ def technique_page(slug):
         user_region=user_region,
         technique_ingredients=technique_ingredients,
         technique_pairings_editorial=technique_pairings_editorial,
+        technique_pairings_deduction=technique_pairings_deduction,
         technique_pairings_partial=technique_pairings_partial,
         cuisine_label=cuisine_label,
         pro_tips_display=pro_tips_display,
