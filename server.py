@@ -1585,10 +1585,28 @@ def kitchen():
             if m.get("updated_at"):
                 m["updated_at"] = m["updated_at"].isoformat()
         _mcur.close(); _mc.close()
+    # Real stat counts for the working-shelf band (design wants four; only
+    # these have honest backing — Collections/Sourced/Cooked have no data yet).
+    kitchen_stats = {
+        "recipes": total,
+        "enhanced": len(recipes_by_state["enhanced"]),
+        "drafts": len(recipes_by_state["compose_draft"]),
+        "menus": len(user_menus),
+    }
+    # cuisines present in the shelf, for the filter chips (real, from the cards)
+    _cuis = []
+    for _lst in recipes_by_state.values():
+        for _r in _lst:
+            _c = (_r.get("cuisine") or "").split("·")[0].split(",")[0].strip()
+            if _c and _c not in _cuis:
+                _cuis.append(_c)
+    kitchen_cuisines = sorted(_cuis)[:6]
     return render_template(
         "kitchen.html",
         recipes_by_state=recipes_by_state,
         recipe_total=total,
+        kitchen_stats=kitchen_stats,
+        kitchen_cuisines=kitchen_cuisines,
         format_cuisine=_format_cuisine,
         has_library=has_library,
         user_menus=user_menus,
