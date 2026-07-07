@@ -55,9 +55,14 @@
 
   <section class="editor-section">
     <label class="editor-label">Ingredients</label>
-    <div class="editor-help">One per line — e.g. "200g spaghetti", "1 cup flour", "2 large eggs". Use "## Section" to group.</div>
-    <textarea id="editIngredients" class="editor-textarea editor-mono" rows="12"
-              placeholder="200g chicken breast&#10;2 tbsp olive oil&#10;3 garlic cloves, crushed&#10;1 lemon, zested and juiced">{% if recipe.ingredients %}{% for i in recipe.ingredients %}{% if i is string %}{{ i }}{% elif i.group == 'heading' %}## {{ i.name }}{% else %}{{ i.count }}{% if i.count and i.unit %} {% endif %}{{ i.unit }}{% if (i.count or i.unit) and i.name %} {% endif %}{{ i.name }}{% if i.info %}, {{ i.info }}{% endif %}{% endif %}
+    <div class="editor-help">Row by row — quantity · unit · ingredient · note. Add a section to group.</div>
+    <div id="ingRows" class="ing-rows"></div>
+    <div class="ing-toolbar">
+      <button type="button" class="ing-add" onclick="ingAddRow()">+ Add ingredient</button>
+      <button type="button" class="ing-add ing-add--ghost" onclick="ingAddSection()">+ Section</button>
+    </div>
+    {# hidden source of truth — the structured rows serialize into this; save reads it unchanged #}
+    <textarea id="editIngredients" class="editor-textarea editor-mono" rows="12" style="display:none;">{% if recipe.ingredients %}{% for i in recipe.ingredients %}{% if i is string %}{{ i }}{% elif i.group == 'heading' %}## {{ i.name }}{% else %}{{ i.count }}{% if i.count and i.unit %} {% endif %}{{ i.unit }}{% if (i.count or i.unit) and i.name %} {% endif %}{{ i.name }}{% if i.info %}, {{ i.info }}{% endif %}{% endif %}
 {% endfor %}{% endif %}</textarea>
   </section>
 
@@ -169,6 +174,20 @@
 }
 .editor-title { font-size: 1.4rem; font-weight: 500; }
 .editor-textarea { resize: vertical; line-height: 1.6; }
+/* Structured ingredient rows */
+.ing-rows { display: flex; flex-direction: column; gap: 6px; }
+.ing-row { display: grid; grid-template-columns: 74px 84px 1fr 1fr 28px; gap: 8px; align-items: center; }
+.ing-row input { border: 1px solid var(--line-soft, #DDD3BE); background: var(--cream-100, #F5F0E8); padding: 8px 10px; font-size: 13px; font-family: var(--body); color: var(--charcoal, #1A1916); outline: none; width: 100%; box-sizing: border-box; }
+.ing-row input:focus { border-color: var(--gold, #C9A84C); }
+.ing-row__qty, .ing-row__unit { font-family: var(--mono); }
+.ing-row__rm { border: 0; background: none; color: var(--warm-gray, #8A8580); cursor: pointer; font-size: 15px; }
+.ing-row__rm:hover { color: #B94040; }
+.ing-row--section { grid-template-columns: 1fr 28px; }
+.ing-row--section input { font-family: var(--display); font-style: italic; font-weight: 600; }
+.ing-toolbar { display: flex; gap: 10px; margin-top: 10px; }
+.ing-add { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 14px; border: 1px solid var(--charcoal, #1A1916); background: var(--charcoal, #1A1916); color: var(--cream-50, #FAFAF7); cursor: pointer; }
+.ing-add--ghost { background: transparent; color: var(--charcoal, #1A1916); }
+.ing-add--ghost:hover { border-color: var(--gold, #C9A84C); }
 .editor-mono { font-family: var(--mono, monospace); font-size: 0.88rem; }
 .editor-footer {
   display: flex; gap: 0.6rem; padding-top: 1.5rem;
@@ -198,6 +217,58 @@
 </style>
 
 <script>
+// ── Structured ingredient rows (write-from-scratch) — parse the hidden textarea
+//    into rows, render editable rows, and serialize back on every edit so the
+//    existing save (which reads #editIngredients) is untouched. ──
+(function(){
+  var UNITS=['g','kg','mg','ml','l','cup','cups','tbsp','tbsp.','tsp','tsp.','oz','lb','lbs','clove','cloves','slice','slices','pinch','pinches','can','cans','bunch','bunches','large','small','medium','tin','tins','stick','sticks','sprig','sprigs','handful','knob','dash','head','heads'];
+  var ta=document.getElementById('editIngredients'), host=document.getElementById('ingRows');
+  if(!ta||!host) return;
+  function parseLine(line){
+    line=(line||'').trim(); if(!line) return null;
+    if(line.slice(0,2)==='##') return {section:line.slice(2).trim()};
+    var note=''; var cm=line.split(/,(.+)/); if(cm.length>1){ line=cm[0].trim(); note=(cm[1]||'').trim(); }
+    var qty='', unit='';
+    var qm=line.match(/^([\d.,\/¼½¾\s-]+)\s+(.*)$/);
+    if(qm && /\d|[¼½¾]/.test(qm[1])){ qty=qm[1].trim(); line=qm[2]; }
+    var um=line.match(/^(\S+)\s+(.+)$/);
+    if(um && UNITS.indexOf(um[1].toLowerCase())>=0){ unit=um[1]; line=um[2]; }
+    return {qty:qty, unit:unit, item:line.trim(), note:note};
+  }
+  function esc(s){ return (s||'').replace(/"/g,'&quot;'); }
+  function rowHtml(r){
+    if(r.section!==undefined)
+      return '<div class="ing-row ing-row--section"><input class="ing-row__section" placeholder="Section (e.g. For the sauce)" value="'+esc(r.section)+'"><button type="button" class="ing-row__rm" onclick="ingRemove(this)" aria-label="Remove">✕</button></div>';
+    return '<div class="ing-row">'
+      +'<input class="ing-row__qty" placeholder="200" value="'+esc(r.qty)+'">'
+      +'<input class="ing-row__unit" placeholder="g" value="'+esc(r.unit)+'">'
+      +'<input class="ing-row__item" placeholder="ingredient" value="'+esc(r.item)+'">'
+      +'<input class="ing-row__note" placeholder="note (optional)" value="'+esc(r.note)+'">'
+      +'<button type="button" class="ing-row__rm" onclick="ingRemove(this)" aria-label="Remove">✕</button></div>';
+  }
+  function serialize(){
+    var lines=[];
+    host.querySelectorAll('.ing-row').forEach(function(row){
+      if(row.classList.contains('ing-row--section')){ var s=row.querySelector('.ing-row__section').value.trim(); if(s) lines.push('## '+s); return; }
+      var q=row.querySelector('.ing-row__qty').value.trim(), u=row.querySelector('.ing-row__unit').value.trim(),
+          it=row.querySelector('.ing-row__item').value.trim(), n=row.querySelector('.ing-row__note').value.trim();
+      if(!q&&!u&&!it&&!n) return;
+      var parts=[]; if(q)parts.push(q); if(u)parts.push(u); if(it)parts.push(it);
+      var line=parts.join(' '); if(n) line+=', '+n; lines.push(line);
+    });
+    ta.value=lines.join('\n');
+  }
+  window.ingRemove=function(btn){ var row=btn.closest('.ing-row'); if(row){ row.remove(); serialize(); } };
+  window.ingAddRow=function(){ host.insertAdjacentHTML('beforeend', rowHtml({qty:'',unit:'',item:'',note:''})); var r=host.lastElementChild; r.querySelector('.ing-row__qty').focus(); };
+  window.ingAddSection=function(){ host.insertAdjacentHTML('beforeend', rowHtml({section:''})); host.lastElementChild.querySelector('input').focus(); };
+  // init from the hidden textarea
+  var rows=(ta.value||'').split('\n').map(parseLine).filter(Boolean);
+  if(!rows.length) rows=[{qty:'',unit:'',item:'',note:''}];
+  host.innerHTML=rows.map(rowHtml).join('');
+  host.addEventListener('input', serialize);
+  serialize();
+})();
+
 const _edEl = document.querySelector('.recipe-editor');
 const _slug = _edEl.dataset.slug;
 const _uuid = _edEl.dataset.uuid;
