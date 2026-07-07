@@ -368,7 +368,7 @@
 .sc-factor{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--gold-deep);text-align:center}
 .sc-apply{font-family:var(--mono);font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:var(--text);color:var(--cream);border:none;border-radius:2px;padding:10px 20px;cursor:pointer;width:100%}
 
-/* ── Safety Notes modal ─────────────────────────────── */
+/* ── My Notes (personal pad) modal ─────────────────────────────── */
 .kn-overlay{position:fixed;inset:0;background:rgba(28,25,23,0.82);z-index:9000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px 0 32px}
 .kn-overlay.open{display:flex}
 .kn-modal{background:var(--cream);width:100%;max-width:620px;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;margin:auto}
@@ -1132,12 +1132,13 @@ main { padding-bottom: 60px; }
   </div>
 
   {# ─── ACTION BUTTONS ROW ─── #}
-  {# Safety notes (your own) sits with Cost/Scale; the HACCP brief is a separate
-     professional document, placed apart so it never reads as the same class. #}
+  {# 'My notes' is the personal per-user pad. The composed 'Safety notes' surface
+     is the inline panel above (grind, scope 'safety') — not a button here. The
+     HACCP brief is a separate professional document, placed apart at the end. #}
   <div class="r-actions">
     <button class="r-action-btn" onclick="handleAction('notes','kitchen')">
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
-      Safety notes
+      My notes
     </button>
     <button class="r-action-btn" onclick="handleAction('costing','kitchen')">
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
@@ -1238,7 +1239,7 @@ main { padding-bottom: 60px; }
 <div id="kn-overlay" class="kn-overlay" onclick="if(event.target===this)closeNotesModal()">
   <div class="kn-modal">
     <div class="kn-header">
-      <span class="kn-title">Safety notes — {{ recipe.name or recipe.title }}</span>
+      <span class="kn-title">My notes — {{ recipe.name or recipe.title }}</span>
       <button class="kn-close" onclick="closeNotesModal()">✕</button>
     </div>
     <div class="kn-body" id="kn-body"></div>
@@ -1355,7 +1356,7 @@ function handleAction(action, requiredTier) {
 
 const PEEK_CONTENT = {
   'haccp': {title:'HACCP brief — Profession plan feature',desc:'A working hazard-analysis brief built from this recipe — temperature control windows, cross-contamination checkpoints, and critical control points. A working document, not a certificate of compliance. Available on the Profession plan.',preview:'Step 1 — Receiving: Verify protein delivery temp ≤3°C. Reject if packaging compromised.\nStep 2 — Prep: Separate raw proteins from ready-to-eat on dedicated colour-coded boards.',cta:'Open The Profession'},
-  'notes': {title:'Your safety notes, attached to this recipe',desc:'Add mise en place timings, sourcing notes, plating reminders, service margin adjustments. Synced across devices, private to you.',preview:'Mise en place: Butter compound — day before. Reduce stock — 2 hrs ahead.\nService note: Rest 6 min covered, slice against grain.',cta:'Open The Kitchen'},
+  'notes': {title:'My notes — your private pad for this recipe',desc:'Add mise en place timings, sourcing notes, plating reminders, service margin adjustments. Synced across devices, private to you.',preview:'Mise en place: Butter compound — day before. Reduce stock — 2 hrs ahead.\nService note: Rest 6 min covered, slice against grain.',cta:'Open The Kitchen'},
   'costing': {title:'Live food cost, margin, and yield analysis',desc:'Every ingredient priced against your supplier network. Adjust portion size, see margin move in real time.',preview:'Ingredient cost: $4.82 per portion\nGP at $28 menu price: 82.8%\nYield loss factored: 18% trim…',cta:'Open The Kitchen'},
   'scale': {title:'Scale this recipe for any cover count',desc:'From a dinner for four to a banquet for four hundred — every quantity recalculated.',preview:'Original: 4 portions → Scale to: 48\nButter sauce: 80g → 896g (emulsion risk flag above 400g)\nRoasting time: +18min at full tray load…',cta:'Open The Library'},
 };
@@ -1377,7 +1378,7 @@ function closePeek() {
   document.body.style.overflow = '';
 }
 
-// ── Safety Notes Modal ────────────────────────────────
+// ── My Notes (personal pad) Modal ─────────────────────────────────
 function openNotesModal() {
   document.getElementById('kn-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2370,7 +2371,7 @@ document.addEventListener('keydown', e => {
   <a href="/kitchen" class="bottom-bar-btn">← MyKitchen</a>
   <button class="bottom-bar-btn" onclick="handleAction('notes','kitchen')">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
-    Safety notes
+    My notes
   </button>
   <button class="bottom-bar-btn" onclick="handleAction('costing','kitchen')">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
