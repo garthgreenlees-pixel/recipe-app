@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}The pairing room — {{ dish.name }} — Provenance{% endblock %}
+
+{% block meta_description %}Start with the plate. {{ dish.name }} resolved to pours across the cellar — the move named, the reason written out.{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ canonical_url }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block styles %}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--paper:#F4EEE1;--ink:#17130D;--soft:#6E665A;--gilt:#9A7B3F;--hair:#D9CFBB;
+      --night:#13110C;--nightink:#F1EBDD;--nightsoft:#A39A88;--nighthair:#2C2820;--giltn:#C6A055}
+body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-serif;line-height:1.65}
+.pr-wrap{max-width:880px;margin:0 auto;padding:0 44px 80px}
+.pr-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gilt)}
+.pr-head{padding:52px 0 8px}
+.pr-head h1{font-family:'Cormorant',serif;font-weight:600;font-size:clamp(32px,4.2vw,46px);line-height:1.08;margin:12px 0 8px}
+.pr-head h1 em{font-style:italic;color:var(--gilt)}
+.pr-head .sub{color:var(--soft);font-size:15.5px;max-width:560px;line-height:1.6}
+.dishes{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 6px}
+.dish{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:10px 16px;border:1px solid var(--hair);border-radius:2px;color:var(--soft);text-decoration:none;transition:all .2s}
+.dish:hover{border-color:var(--gilt);color:var(--gilt)}
+.dish.on{border-color:var(--gilt);color:var(--gilt);background:rgba(154,123,63,.07)}
+.structure{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);
+  border-left:2px solid var(--gilt);padding:6px 0 6px 14px;margin:18px 0 8px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin:26px 0 4px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+.legend b{color:var(--gilt);font-weight:500}
+
+.moves{background:var(--night);color:var(--nightink);border-radius:3px;padding:8px 30px 14px;margin-top:18px}
+.move{display:grid;grid-template-columns:92px 1fr;gap:16px;padding:17px 0;border-bottom:1px dashed var(--nighthair);align-items:start}
+.move:last-child{border-bottom:0}
+.move .tag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--giltn);border:1px solid var(--nighthair);padding:5px 8px;border-radius:2px;text-align:center}
+.move .b{font-size:14.5px;line-height:1.6}
+.move .b a{font-family:'Cormorant',serif;font-size:19px;font-weight:600;color:var(--nightink);text-decoration:none;border-bottom:1px solid var(--giltn);padding-bottom:1px}
+.move .b a:hover{color:var(--giltn)}
+.move .b .meta{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--nightsoft);margin-left:10px}
+.move .b .why{display:block;font-family:'Cormorant',serif;font-style:italic;font-size:15px;color:var(--nightsoft);margin-top:5px}
+.move .b .faraway{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--nightsoft);display:inline-block;margin-top:7px;border:1px dashed var(--nighthair);padding:3px 7px;border-radius:2px}
+.pr-foot{margin-top:22px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.pr-foot a{color:var(--gilt)}
+@media(max-width:700px){.pr-wrap{padding:0 22px 60px}.move{grid-template-columns:1fr}}
+{% endblock %}
+
+{% block content %}
+<div class="pr-wrap">
+
+  <section class="pr-head">
+    <div class="pr-eyebrow">Beverages · The pairing room</div>
+    <h1>Start with <em>the plate.</em></h1>
+    <p class="sub">Name the dish's structure and the whole cellar answers — wine, sake, tea, coffee, beer or spirits on structural merit, never category habit. The move is always named; the reason is always written out.</p>
+  </section>
+
+  <div class="dishes">
+    {% for key, d in dishes.items() %}
+    <a class="dish{% if key == dish_key %} on{% endif %}" href="/beverages/pairing?dish={{ key }}">{{ d.name }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="structure">The plate, read structurally — {{ dish.structure_line }}</div>
+
+  <div class="legend"><span><b>Bridge</b> — shared note</span><span><b>Cut</b> — cleanse</span><span><b>Contrast</b> — opposition</span></div>
+
+  <div class="moves">
+    {% for p in picks %}
+    <div class="move">
+      <span class="tag">{{ p.move }}</span>
+      <div class="b">
+        <a href="/beverage/products/{{ p.product.id }}">{{ p.product.name }}</a>
+        <span class="meta">{{ (p.product.category or '') | string | replace('_',' ') }}{% if p.product.producer_name %} · {{ p.product.producer_name }}{% endif %}{% if p.product.region_name %} · {{ p.product.region_name }}{% endif %}</span>
+        <span class="why">{{ p.why }}</span>
+        {% if not p.carried %}
+        <span class="faraway">Not yet carried in {{ reader_label }} — its page renders origin-only, and the look is counted.</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+    {% if not picks %}
+    <div class="move"><span class="tag">—</span><div class="b"><span class="why">The cellar is quiet on this one — no published pour holds a structural claim to this plate yet.</span></div></div>
+    {% endif %}
+  </div>
+
+  <div class="pr-foot">Suggestions are structural, drawn from each pour's own recorded markers · <a href="/beverages">back to your cellar</a></div>
+
+</div>
+{% endblock %}

@@ -3109,7 +3109,8 @@ def _find_pairings_for_user_recipe(recipe_title, limit=3):
                      AND bp.is_published IS TRUE
                 LEFT JOIN beverage_producers bprod ON bprod.id = tbp.beverage_producer_id
                      AND bprod.is_published IS TRUE
-                WHERE (tbp.beverage_producer_id IS NULL OR bprod.id IS NOT NULL)
+                WHERE tbp.confidence_status IN ('editorial', 'reviewed')
+                  AND (tbp.beverage_producer_id IS NULL OR bprod.id IS NOT NULL)
                   AND (tbp.beverage_product_id IS NULL OR bp.id IS NOT NULL)
                   AND ({conditions})
                 ORDER BY tr.id DESC,
@@ -11713,6 +11714,239 @@ def _render_cellar(country):
 
 
 
+# ─── The Pairing Grammar — dish structure → bottles (spec v1.1 §6, mockup 3) ──
+# Deterministic and evidence-based: every "why" quotes a real marker from the
+# bottle's own flavour data. No category habit — wine, sake, tea, coffee, beer
+# and spirits all answer on structural merit.
+
+PAIRING_DISHES = {
+    "scallops-vanilla-shiso": {
+        "name": "Seared scallops, vanilla nage, shiso tempura",
+        "axes": {"weight": 2, "fat": 3, "salt": 2, "acid": 1, "sweet": 2, "smoke": 0, "heat": 0},
+        "aromatics": ["vanilla", "shiso", "anise", "herbal", "cream", "brine"],
+        "structure_line": "light-to-mid weight · nage fat · sweet shellfish · vanilla and shiso leading",
+    },
+    "spanish-paella": {
+        "name": "Spanish paella",
+        "axes": {"weight": 4, "fat": 2, "salt": 3, "acid": 1, "sweet": 1, "smoke": 3, "heat": 1},
+        "aromatics": ["saffron", "smoke", "toast", "brine", "pepper"],
+        "structure_line": "mid-full weight · socarrat smoke · saffron · sea-salt savour",
+    },
+    "pnw-clam-chowder": {
+        "name": "Pacific Northwest clam chowder",
+        "axes": {"weight": 5, "fat": 5, "salt": 4, "acid": 0, "sweet": 1, "smoke": 2, "heat": 0},
+        "aromatics": ["brine", "cream", "smoke", "bacon", "thyme"],
+        "structure_line": "full weight · cream and bacon fat · clam brine · a thread of smoke",
+    },
+}
+
+_WEIGHT_MAP = {"light": 1, "medium-light": 2, "medium": 3, "medium-full": 4, "full": 5}
+
+_AXIS_VOCAB = {
+    "acid":  ["acid", "acidity", "racy", "crisp", "citrus", "lemon", "lime", "zesty",
+              "tart", "green apple", "grapefruit", "yuzu"],
+    "carb":  ["sparkling", "bubbles", "mousse", "carbonation", "effervescent", "pétillant", "spritz"],
+    "sweet": ["sweet", "off-dry", "honey", "demi-sec", "kabinett", "nigori", "late harvest",
+              "botrytis", "ice wine", "jaggery", "caramel", "maple", "apricot", "candied"],
+    "tannin": ["tannin", "tannic", "grip", "structured", "black tea", "oak", "cedar", "astringen"],
+    "smoke": ["smoke", "smoky", "peat", "peated", "lapsang", "charred", "roasted", "toasted",
+              "bonfire", "ember", "mezcal", "gunflint"],
+    "umami": ["umami", "savoury", "savory", "koji", "rice", "flor", "yeast", "lees", "broth",
+              "mushroom", "seaweed", "dashi"],
+    "saline": ["saline", "salinity", "briny", "brine", "maritime", "coastal", "sea spray",
+               "oyster", "manzanilla", "fino", "mineral"],
+    "cream": ["cream", "creamy", "silk", "silky", "round", "buttery", "texture", "weight"],
+}
+
+_CATEGORY_BASE = {
+    "wine_sparkling": {"acid": 4, "carb": 5},
+    "wine_still": {"acid": 3},
+    "wine_fortified": {"umami": 3, "saline": 2},
+    "wine_dessert": {"sweet": 5, "acid": 3},
+    "sake": {"umami": 4, "cream": 3, "acid": 1},
+    "shochu": {"umami": 2},
+    "tea": {"tannin": 3},
+    "coffee": {"smoke": 2, "tannin": 2},
+    "beer_ale": {"carb": 4, "tannin": 1},
+    "beer_wild": {"carb": 4, "acid": 4},
+    "spirits_whiskey": {"smoke": 2, "tannin": 2},
+    "spirits_agave": {"smoke": 3},
+    "baijiu": {"umami": 3},
+    "na_fermented": {"carb": 3, "acid": 3},
+    "na_dealcoholised": {"acid": 2},
+}
+
+
+def _bottle_axes(prod):
+    """Derive structural axes + quotable evidence from the bottle's own data."""
+    text_bits = []
+    markers = prod.get("flavour_markers") or []
+    if isinstance(markers, str):
+        markers = [m.strip(' "{}') for m in markers.split(",") if m.strip()]
+    text_bits.extend(markers)
+    dp = prod.get("deductive_profile") or {}
+    if isinstance(dp, dict):
+        text_bits.extend(str(v) for v in dp.values())
+    for f in ("description", "flavour_profile_type", "subcategory", "name"):
+        if prod.get(f):
+            text_bits.append(str(prod[f]))
+    blob = " · ".join(text_bits).lower()
+
+    axes = dict(_CATEGORY_BASE.get(prod.get("category") or "", {}))
+    evidence = {}
+    for axis, words in _AXIS_VOCAB.items():
+        hits = [w for w in words if w in blob]
+        if hits:
+            axes[axis] = min(5, axes.get(axis, 0) + 1 + len(hits))
+            # quote the most specific real marker containing the hit
+            src = next((m for m in markers if any(w in str(m).lower() for w in hits)), None)
+            evidence[axis] = str(src) if src else None
+    axes["weight"] = _WEIGHT_MAP.get(prod.get("flavour_weight") or "", 3)
+    aromatics = {str(m).lower() for m in markers}
+    return axes, evidence, aromatics
+
+
+def _grammar_move(dish, axes, evidence, aromatics):
+    """Return (move, score, why) for the strongest structural relationship, or
+    None. Every why is one honest sommelier sentence; quotes are real markers."""
+    d = dish["axes"]
+    briny = "brine" in dish["aromatics"]
+    cands = []
+
+    def _ev(axis, default):
+        m = evidence.get(axis)
+        return (f"'{m}'", True) if m else (default, False)
+
+    # CUT — acid, bead or tannin scrubs fat and salt.
+    richness = d["fat"] + d["salt"]
+    if richness >= 5:
+        rich_word = "cream and salt" if d["fat"] >= 4 else ("salt and savour" if d["salt"] >= d["fat"] else "fat")
+        agents = [("carb", "the bead", "a fine, persistent bead"),
+                  ("acid", "the acidity", "bright acidity")]
+        if not briny:  # tannin against brine turns metallic — never the cut agent on a briny dish
+            agents.append(("tannin", "the tannin", "fine-grained tannin"))
+        for axis, what, default in agents:
+            if axes.get(axis, 0) >= 3:
+                ev, _ = _ev(axis, default)
+                why = (f"Cut — {what} ({ev}) scrubs the {rich_word} between bites; "
+                       f"the palate arrives clean at every pass.")
+                cands.append(("Cut", axes[axis] + richness * 0.45, why))
+
+    # BRIDGE — every shared note evaluated; the strongest carries.
+    if d["smoke"] >= 2 and axes.get("smoke", 0) >= 2:
+        ev, _ = _ev("smoke", "a smoky register")
+        cands.append(("Bridge", 3.5 + axes["smoke"],
+                      f"Bridge — the dish's smoke meets {ev} in the pour; smoke speaking to smoke."))
+    if briny and axes.get("saline", 0) >= 2:
+        ev, _ = _ev("saline", "a saline edge")
+        cands.append(("Bridge", 3.0 + axes["saline"],
+                      f"Bridge — the dish's brine meets {ev} in the glass; salt water on both sides."))
+    if d["sweet"] >= 2 and 2 <= axes.get("sweet", 0) <= 4:
+        ev, _ = _ev("sweet", "gentle sweetness")
+        cands.append(("Bridge", 2.5 + axes["sweet"],
+                      f"Bridge — the dish's sweetness answers {ev} without either tipping over."))
+    if axes.get("umami", 0) >= 3 and (d["salt"] >= 3 or briny):
+        ev, _ = _ev("umami", "deep umami")
+        cands.append(("Bridge", 2.5 + axes["umami"],
+                      f"Bridge — {ev} in the pour meets the dish's savour underneath; depth answering depth."))
+    overlap = set()
+    for a in dish["aromatics"]:
+        for m in aromatics:
+            if a in m or (len(m) > 3 and m in a):
+                overlap.add(m)
+    if overlap:
+        m = max(overlap, key=len)
+        cands.append(("Bridge", 4.2,
+                      f"Bridge — the dish's {next(a for a in dish['aromatics'] if a in m or m in a)} "
+                      f"finds '{m}' in the glass; a shared note, carried across."))
+
+    # CONTRAST — an opposition that teaches.
+    if d["salt"] >= 3 and axes.get("sweet", 0) >= 3:
+        ev, _ = _ev("sweet", "its sweetness")
+        cands.append(("Contrast", axes["sweet"] + d["salt"] * 0.4,
+                      f"Contrast — set {ev} against the dish's salt and both sharpen; the opposition teaches."))
+    elif d["sweet"] >= 2 and d["fat"] >= 3 and axes.get("saline", 0) >= 3 and axes.get("sweet", 0) <= 1:
+        ev, _ = _ev("saline", "a mineral cut")
+        cands.append(("Contrast", axes["saline"] + 1,
+                      f"Contrast — bone-dry and saline ({ev}) against a sweet, creamy plate; "
+                      f"each makes the other speak louder."))
+
+    if not cands:
+        return None
+    move, score, why = max(cands, key=lambda c: c[1])
+    # weight agreement nudges the rank, never creates a match
+    score += 1.5 - abs(axes.get("weight", 3) - d["weight"]) * 0.3
+    return move, score, why
+
+@app.route("/beverages/pairing")
+def pairing_room():
+    """The pairing room — start with the plate (spec v1.1 §6, mockup 3)."""
+    if not DATABASE_URL:
+        abort(503)
+    dish_key = request.args.get("dish") or "scallops-vanilla-shiso"
+    dish = PAIRING_DISHES.get(dish_key)
+    if dish is None:
+        abort(404)
+    reader_token = get_user_location()
+    reader_label = dict(VALID_REGIONS).get(reader_token, reader_token)
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT bp.id, bp.name, bp.slug, bp.category, bp.subcategory, bp.description,
+               bp.flavour_markers, bp.flavour_weight, bp.flavour_profile_type,
+               bp.deductive_profile, bp.quality_tier,
+               bpr.name AS producer_name, br.name AS region_name, br.country
+        FROM beverage_products bp
+        LEFT JOIN beverage_producers bpr ON bp.producer_id = bpr.id AND bpr.is_published IS TRUE
+        LEFT JOIN beverage_regions br ON bp.region_id = br.id
+        WHERE bp.is_published IS TRUE
+    """)
+    products = [_serialize_row(r) for r in cur.fetchall()]
+
+    scored = []
+    for prod in products:
+        axes, evidence, aromatics = _bottle_axes(prod)
+        res = _grammar_move(dish, axes, evidence, aromatics)
+        if res:
+            move, score, why = res
+            scored.append((score, move, why, prod))
+    scored.sort(key=lambda t: -t[0])
+
+    # category-agnostic table: at most 2 per category, and at least two
+    # beverage families represented before the list is full.
+    picks, per_cat = [], {}
+    for score, move, why, prod in scored:
+        cat = (prod.get("category") or "").split("_")[0]
+        if per_cat.get(cat, 0) >= 2:
+            continue
+        picks.append({"move": move, "why": why, "product": prod, "score": round(score, 2)})
+        per_cat[cat] = per_cat.get(cat, 0) + 1
+        if len(picks) >= 6:
+            break
+
+    # Doctrine §4: a suggestion may name an uncarried bottle — mark it honestly.
+    ids = [p["product"]["id"] for p in picks]
+    carried = set()
+    if ids:
+        cur.execute("""
+            SELECT DISTINCT bps.product_id
+            FROM beverage_product_suppliers bps
+            JOIN suppliers s ON s.id = bps.supplier_id
+                 AND s.verification_status = 'verified_provider'
+            WHERE bps.product_id = ANY(%s) AND %s = ANY(bps.region)
+        """, (ids, reader_token))
+        carried = {r["product_id"] for r in cur.fetchall()}
+    cur.close(); conn.close()
+    for p in picks:
+        p["carried"] = p["product"]["id"] in carried
+
+    return render_template("pairing_room.html",
+        dishes=PAIRING_DISHES, dish_key=dish_key, dish=dish, picks=picks,
+        reader_token=reader_token, reader_label=reader_label,
+        canonical_url=f"https://provenance.kitchen/beverages/pairing?dish={dish_key}")
+
+
 # ─── Beverage individual page routes ─────────────────────────────────────────
 
 @app.route("/beverage/regions/<int:region_id>")
@@ -12283,9 +12517,10 @@ def technique_page(slug):
     _tbp_order = """
         ORDER BY
             CASE tbp.confidence_status
-                WHEN 'editorial' THEN 1
-                WHEN 'reviewed'  THEN 2
-                WHEN 'partial'   THEN 3
+                WHEN 'editorial'  THEN 1
+                WHEN 'reviewed'   THEN 2
+                WHEN 'unverified' THEN 3
+                WHEN 'partial'    THEN 3
                 ELSE 4
             END,
             tbp.display_order, tbp.id
@@ -12304,7 +12539,14 @@ def technique_page(slug):
 
     _all_pairings = [_serialize_row(r) for r in cur.fetchall()]
     technique_pairings_editorial = [p for p in _all_pairings if p['confidence_status'] in ('editorial', 'reviewed')]
-    technique_pairings_partial   = [p for p in _all_pairings if p['confidence_status'] == 'partial']
+    # Spec v1.1 §6: unverified renders on admin/staging surfaces only —
+    # founders/admins see it (to sign off); the public does not.
+    _viewer_role = (get_current_user() or {}).get('role')
+    if _viewer_role in ('admin', 'founder'):
+        technique_pairings_partial = [p for p in _all_pairings
+                                      if p['confidence_status'] in ('partial', 'unverified')]
+    else:
+        technique_pairings_partial = []
 
     # Cycle E: Pat's Rule — match recipe ingredients against pantry for members.
     # Computed at render; no writes. Free viewers get nothing (recipe_card stripped).
@@ -18286,9 +18528,10 @@ def technique_beverage_pairings(technique_id):
           {region_clause}
         ORDER BY
             CASE tbp.confidence_status
-                WHEN 'editorial' THEN 1
-                WHEN 'reviewed'  THEN 2
-                WHEN 'partial'   THEN 3
+                WHEN 'editorial'  THEN 1
+                WHEN 'reviewed'   THEN 2
+                WHEN 'unverified' THEN 3
+                WHEN 'partial'    THEN 3
                 ELSE 4
             END,
             tbp.display_order,
@@ -18302,7 +18545,11 @@ def technique_beverage_pairings(technique_id):
 
     # Split into rendering tiers
     editorial = [r for r in rows if r["confidence_status"] in ("editorial", "reviewed")]
-    partial   = [r for r in rows if r["confidence_status"] == "partial"]
+    # unverified: admin/staging surfaces only (spec v1.1 §6)
+    if (get_current_user() or {}).get("role") in ("admin", "founder"):
+        partial = [r for r in rows if r["confidence_status"] in ("partial", "unverified")]
+    else:
+        partial = []
 
     return jsonify({
         "technique_id": technique_id,
@@ -18406,9 +18653,10 @@ def admin_tbp_technique(technique_id):
         WHERE tbp.technique_id = %s
         ORDER BY
             CASE tbp.confidence_status
-                WHEN 'editorial' THEN 1
-                WHEN 'reviewed'  THEN 2
-                WHEN 'partial'   THEN 3
+                WHEN 'editorial'  THEN 1
+                WHEN 'reviewed'   THEN 2
+                WHEN 'unverified' THEN 3
+                WHEN 'partial'    THEN 3
                 ELSE 4
             END,
             tbp.display_order, tbp.id

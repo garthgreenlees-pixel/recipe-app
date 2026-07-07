@@ -94,6 +94,9 @@ body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-
       {% endif %}
     </div>
     <div class="counts">{{ total_producers }} producers · {{ total_products }} pours{% if cellar_country %} from {{ cellar_country }}{% endif %} · honest counts, published only</div>
+    {% if is_home %}
+    <div style="margin-top:18px"><a class="backdoor" href="/beverages/pairing">The pairing room — start with the plate →</a></div>
+    {% endif %}
   </section>
 
   {% for shelf in shelves %}
