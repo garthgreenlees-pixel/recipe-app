@@ -290,11 +290,12 @@
       <div class="k-migrate__sources">
         <span>Paprika</span><span>Mela</span><span>AnyList</span><span>Whisk / Samsung Food</span><span>NYT Cooking</span><span>Plain CSV</span>
       </div>
-      <div class="k-migrate__drop" id="kMigrateDrop" data-modal="pdf">
-        Drop a backup file here — <b>.zip · .paprikarecipes · .json · .csv</b><br>
-        <span class="k-migrate__note">or import one at a time now: URL · Scan · PDF · Write</span>
+      <div class="k-migrate__drop" id="kMigrateDrop" onclick="document.getElementById('kMigrateFile').click()">
+        Drop a backup file here — <b>.paprikarecipes · .melarecipes · .json · .csv · .zip</b><br>
+        <span class="k-migrate__note">or click to choose a file</span>
       </div>
-      <div class="k-migrate__note" style="margin-top:14px;">Bulk file import lands this deadline. Until then, the buttons above import any single recipe straight to your shelf.</div>
+      <input type="file" id="kMigrateFile" accept=".paprikarecipes,.melarecipes,.melarecipe,.json,.csv,.zip" style="display:none">
+      <div class="k-migrate__note" id="kMigrateStatus" style="margin-top:14px;">We import the lot, structure each to the canon, and land them on your shelf.</div>
     </div>
 
     <div class="k-stats">
@@ -495,6 +496,27 @@
   function openMig(){ if(mig){ mig.classList.add('is-open'); var a=document.getElementById('kAdd'); if(a) a.classList.remove('is-open'); mig.scrollIntoView({behavior:'smooth',block:'nearest'}); } }
   var mt=document.getElementById('kMigrateToggle'); if(mt) mt.addEventListener('click', function(){ mig.classList.toggle('is-open'); });
   var am=document.getElementById('kAddMigrate'); if(am) am.addEventListener('click', openMig);
+  // bulk importer — upload an export file to /api/kitchen/migrate
+  var mfile=document.getElementById('kMigrateFile'), mdrop=document.getElementById('kMigrateDrop'), mstat=document.getElementById('kMigrateStatus');
+  function doImport(file){
+    if(!file) return;
+    mstat.textContent = 'Reading “'+file.name+'” — importing…';
+    var fd=new FormData(); fd.append('file', file);
+    fetch('/api/kitchen/migrate',{method:'POST',body:fd})
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if(d.error){ mstat.textContent = d.message || 'We couldn’t read that export. Try Paprika, Mela, JSON or CSV.'; return; }
+        mstat.textContent = 'Imported '+d.imported+' recipe'+(d.imported!==1?'s':'')+(d.skipped?(' · '+d.skipped+' skipped (no ingredients/method)'):'')+'. Reloading your shelf…';
+        setTimeout(function(){ location.href='/kitchen'; }, 1400);
+      })
+      .catch(function(){ mstat.textContent = 'Something went wrong — please try again.'; });
+  }
+  if(mfile) mfile.addEventListener('change', function(){ doImport(mfile.files[0]); });
+  if(mdrop){
+    mdrop.addEventListener('dragover', function(e){ e.preventDefault(); mdrop.style.borderColor='var(--k-giltn)'; });
+    mdrop.addEventListener('dragleave', function(){ mdrop.style.borderColor=''; });
+    mdrop.addEventListener('drop', function(e){ e.preventDefault(); mdrop.style.borderColor=''; if(e.dataTransfer.files.length) doImport(e.dataTransfer.files[0]); });
+  }
   // close add menu on outside click
   document.addEventListener('click', function(e){
     var a=document.getElementById('kAdd');

@@ -2,6 +2,45 @@
 
 Items parked for Stage 4 (the audit fix-list stage), each with a one-line reason.
 
+## Image storage + secrets ops — founder-logged 2026-07-07 (from the scan cycle)
+- **Staging image volume — images die on deploy.** `EXTRACTED_DIR` on
+  `provenance-staging` is ephemeral (no persistent volume), so scanned/uploaded
+  hero images (`main.jpg`) vanish on every deploy/restart — that's why staging
+  cards fall back to the monogram. Attach a Fly volume to staging and mount the
+  image dir on it so images survive deploys.
+- **`fly secrets set` needs a machine restart to apply.** After setting a secret
+  the value shows "Staged" and a subsequent `fly deploy` re-stages it; the running
+  machine keeps the old value until `fly machine restart`. Bit us on the scan key.
+  Document in the deploy runbook: after any secret change, restart the machine and
+  verify before proving.
+- **Verify LIVE's image volume exists BEFORE promotion.** The `hero.jpg→main.jpg`
+  alias fixes serving, but images only persist if a volume is mounted. Confirm
+  `provenance-tester-1` has a persistent volume for the image dir (and that
+  existing hero images are on it) before promoting anything image-dependent.
+
+## Stable walk access — founder-ordered 2026-07-07 (do AFTER MyKitchen ships)
+**Problem:** staging logins break repeatedly and there is no self-service reset
+(staging has no outbound email, so the password-reset flow is dead). Fixing a
+login by hand is costing the founder real walk time — and the founder's walks
+ARE the quality gate, so access to them must never be the bottleneck.
+Scope this as ONE small cycle:
+- **Deploy-durable walk seats.** Idempotent seeding of fixed walk accounts
+  (e.g. `smoke@test.local`, plus one per tier: kitchen/library/profession) with
+  a known, non-secret, **pbkdf2** password hash (NOT scrypt — local `hashlib`
+  on this Mac lacks `scrypt`, which silently produced a blank hash before). Run
+  the upsert on every boot / as a re-applied migration so no deploy can wipe or
+  drift it. The seat survives every deploy by construction.
+- **Login proven as a deploy proof-step.** "Walk seat login proven ✓" becomes a
+  standard line in EVERY cycle report — the walk credential is verified as part
+  of the same machine-proof that checks the feature. (Adopt this line now, ahead
+  of the cycle, since each cycle already logs in to prove.)
+- **Founder one-liner reset.** A tiny script — `scripts/staging_reset_pw.sh
+  <email> <password>` — that opens the staging DB proxy, writes a pbkdf2 hash,
+  and confirms, so the founder can reset any staging password without a
+  conversation. (Same shape usable for live via a separate guarded flag.)
+- Interim (works today): `smoke@test.local` / `walk_2026` (pbkdf2), 14-recipe
+  seat; reset by hand via the staging proxy when it drifts.
+
 ## From the credential rotation (2026-07-06)
 - **Batch scripts → env vars.** ~280 tracked scripts hardcode
   `provenance_tester_1:GBN1MbQJ…` (add_recipes_*, backfill_*, publish_*,

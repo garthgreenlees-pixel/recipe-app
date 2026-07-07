@@ -2047,6 +2047,162 @@ def api_shopping_clear():
         return jsonify({"error": "server"}), 500
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Bulk library importer (MyKitchen Cycle 4) — Paprika / Mela / JSON / CSV
+# ─────────────────────────────────────────────────────────────────────────────
+def _import_joinmaybe(v):
+    """A recipe field that may be a list of strings/dicts or a newline string."""
+    if isinstance(v, list):
+        return "\n".join(str(x.get("name") if isinstance(x, dict) else x) for x in v)
+    return v or ""
+
+
+def _norm_import_record(r, source_label):
+    return {
+        "title": (r.get("title") or r.get("name") or "Imported recipe"),
+        "ingredients_text": _import_joinmaybe(r.get("ingredients")),
+        "steps_text": _import_joinmaybe(r.get("directions") or r.get("instructions") or r.get("steps") or r.get("text")),
+        "servings": r.get("servings") or r.get("yield") or "",
+        "source": r.get("source") or r.get("source_url") or r.get("link") or r.get("url") or source_label,
+    }
+
+
+def _parse_paprika(raw):
+    """.paprikarecipes = zip of .paprikarecipe files, each gzipped JSON."""
+    import zipfile, gzip
+    out = []
+    with zipfile.ZipFile(io.BytesIO(raw)) as z:
+        for n in z.namelist():
+            if not n.lower().endswith(".paprikarecipe"):
+                continue
+            blob = z.read(n)
+            try:
+                r = json.loads(gzip.decompress(blob))
+            except Exception:
+                try:
+                    r = json.loads(blob)
+                except Exception:
+                    continue
+            if isinstance(r, dict):
+                out.append(_norm_import_record(r, "Paprika"))
+    return out
+
+
+def _parse_mela(raw, name):
+    """.melarecipe = plain JSON; .melarecipes = zip of them."""
+    import zipfile
+    if name.endswith(".melarecipe"):
+        try:
+            return [_norm_import_record(json.loads(raw), "Mela")]
+        except Exception:
+            return []
+    out = []
+    with zipfile.ZipFile(io.BytesIO(raw)) as z:
+        for n in z.namelist():
+            if not n.lower().endswith(".melarecipe"):
+                continue
+            try:
+                out.append(_norm_import_record(json.loads(z.read(n)), "Mela"))
+            except Exception:
+                continue
+    return out
+
+
+def _parse_json_recipes(raw):
+    data = json.loads(raw)
+    items = data if isinstance(data, list) else (data.get("recipes") if isinstance(data, dict) and isinstance(data.get("recipes"), list) else [data])
+    return [_norm_import_record(r, "JSON import") for r in items if isinstance(r, dict)]
+
+
+def _parse_csv_recipes(raw):
+    import csv
+    text = raw.decode("utf-8", "ignore")
+    out = []
+    for row in csv.DictReader(io.StringIO(text)):
+        low = {(k or "").strip().lower(): (v or "") for k, v in row.items()}
+        rec = {
+            "title": low.get("title") or low.get("name") or "Imported recipe",
+            "ingredients": (low.get("ingredients") or "").replace(";", "\n"),
+            "directions": (low.get("directions") or low.get("instructions") or low.get("steps") or "").replace(";", "\n"),
+            "servings": low.get("servings") or low.get("yield") or "",
+            "source": low.get("source") or low.get("url") or "CSV import",
+        }
+        out.append(_norm_import_record(rec, "CSV import"))
+    return out
+
+
+def _parse_import_file(filename, raw):
+    """Route an uploaded export file to the right parser. Never raises → [] on unknown."""
+    name = (filename or "").lower()
+    try:
+        if name.endswith(".paprikarecipes"):
+            return _parse_paprika(raw)
+        if name.endswith(".melarecipes") or name.endswith(".melarecipe"):
+            return _parse_mela(raw, name)
+        if name.endswith(".json"):
+            return _parse_json_recipes(raw)
+        if name.endswith(".csv"):
+            return _parse_csv_recipes(raw)
+        if name.endswith(".zip"):
+            # Unknown zip — try Paprika then Mela shapes
+            return _parse_paprika(raw) or _parse_mela(raw, ".melarecipes")
+    except Exception as e:
+        app.logger.warning("import parse failed for %s: %s", name, e)
+    return []
+
+
+def _insert_imported_recipe(user_id, p):
+    """Insert one parsed recipe as a kitchen recipe. Returns slug or None (skipped)."""
+    title = (p.get("title") or "Imported recipe").strip()[:200] or "Imported recipe"
+    ingredients = _parse_ingredients_text(p.get("ingredients_text") or "")
+    steps = _parse_steps_text(p.get("steps_text") or "")
+    if not ingredients and not steps:
+        return None  # nothing usable — skip, don't create an empty recipe
+    ruuid = str(uuid.uuid4()).upper()
+    slug = make_kitchen_slug(title, ruuid.replace("-", "")[:6])
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO user_kitchen_recipes
+            (uuid, user_id, title, slug, preamble, tags, ingredients, steps, servings_text, source_name, is_draft, created_at)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE, now())
+        ON CONFLICT (uuid) DO NOTHING
+    """, (ruuid, user_id, title, slug, "", json.dumps([]), json.dumps(ingredients),
+          json.dumps(steps), str(p.get("servings") or ""), (p.get("source") or "Import")[:200]))
+    cur.close(); conn.close()
+    return slug
+
+
+@app.route("/api/kitchen/migrate", methods=["POST"])
+def api_kitchen_migrate():
+    user = get_current_user()
+    if not user:
+        return jsonify(error="auth"), 401
+    f = request.files.get("file")
+    if not f or not f.filename:
+        return jsonify(error="No file uploaded"), 400
+    raw = f.read()
+    if len(raw) > 25 * 1024 * 1024:
+        return jsonify(error="File too large (max 25 MB)"), 400
+    parsed = _parse_import_file(f.filename, raw)
+    if not parsed:
+        return jsonify(error="unreadable",
+                       message="We couldn't read that export. Supported: Paprika (.paprikarecipes), Mela (.melarecipes), JSON, and CSV."), 200
+    imported, failed, first_slug = 0, 0, None
+    for p in parsed[:1000]:
+        try:
+            slug = _insert_imported_recipe(user["id"], p)
+            if slug:
+                imported += 1
+                first_slug = first_slug or slug
+            else:
+                failed += 1
+        except Exception as e:
+            app.logger.warning("import insert failed: %s", e)
+            failed += 1
+    return jsonify(ok=True, imported=imported, skipped=failed, total=len(parsed), first_slug=first_slug)
+
+
 @app.route("/table")
 def table():
     return render_template("table.html")
