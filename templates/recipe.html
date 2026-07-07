@@ -596,19 +596,15 @@ select.haccp-input{padding:3px 7px}
 .r-supplier-footer a{color:var(--gold-deep)}
 .r6-pillar--tools .r6-pillar__num { color: var(--charcoal-soft); }
 main { padding-bottom: 60px; }
-/* ── Safety notes (grind, scope 'safety') — editorial working notes.
-      NEVER a HACCP document; never labeled HACCP. Disclaimer rides every note. ── */
-.r6-safety{max-width:1100px;margin:0 auto;padding:8px var(--s4) 0;}
-.r6-safety__panel{border:1px solid var(--line,#E4DFDA);border-left:3px solid var(--gold,#C9A84C);background:var(--cream-100,#F5F0E8);padding:20px 22px;}
-.r6-safety__eyebrow{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep,#9A7B3F);display:flex;align-items:center;gap:9px;}
-.r6-safety__eyebrow .dot{width:6px;height:6px;background:var(--gold,#C9A84C);transform:rotate(45deg);display:inline-block;}
-.r6-safety__disclaimer{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--warm-gray,#8A8580);font-style:italic;margin:6px 0 16px;}
-.r6-safety__note{padding-top:14px;margin-top:14px;border-top:0.5px solid var(--line,#E4DFDA);}
-.r6-safety__note:first-of-type{padding-top:0;margin-top:0;border-top:0;}
-.r6-safety__sum{font-family:var(--display);font-style:italic;font-size:16px;color:var(--charcoal,#1A1916);margin-bottom:6px;}
-.r6-safety__body{font-size:14px;line-height:1.6;color:var(--charcoal-soft,#4A4743);}
-.r6-safety__body p{margin:0 0 8px;}
-.r6-safety__foot{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--warm-gray,#8A8580);font-style:italic;margin-top:8px;}
+/* ── Safety notes MODAL body (compact control in the tools row → modal).
+      NEVER a HACCP document; never labeled HACCP. Disclaimer on header + note. ── */
+.sn-disclaimer{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--warm-gray,#8A8580);font-style:italic;padding:0 0 4px;}
+.sn-note{padding-top:16px;margin-top:16px;border-top:0.5px solid var(--line,#E4DFDA);}
+.sn-note:first-of-type{padding-top:6px;margin-top:0;border-top:0;}
+.sn-sum{font-family:var(--display);font-style:italic;font-size:16px;color:var(--charcoal,#1A1916);margin-bottom:6px;}
+.sn-body{font-size:14px;line-height:1.6;color:var(--charcoal-soft,#4A4743);}
+.sn-body p{margin:0 0 8px;}
+.sn-foot{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--warm-gray,#8A8580);font-style:italic;margin-top:8px;}
 </style>
 {% endblock %}
 
@@ -762,23 +758,8 @@ main { padding-bottom: 60px; }
   })();
   </script>
 
-  {# ─── SAFETY NOTES (grind, scope 'safety') — editorial working notes.
-        NEVER HACCP; the approved disclaimer rides the panel and every note. ─── #}
-  {% if safety_notes %}
-  <section class="r6-safety">
-    <div class="r6-safety__panel">
-      <div class="r6-safety__eyebrow"><span class="dot"></span> Safety notes</div>
-      <div class="r6-safety__disclaimer">{{ safety_notes[0].disclaimer }}</div>
-      {% for note in safety_notes %}
-      <div class="r6-safety__note">
-        {% if note.summary %}<div class="r6-safety__sum">{{ note.summary }}</div>{% endif %}
-        <div class="r6-safety__body">{{ note.html }}</div>
-        <div class="r6-safety__foot">{{ note.disclaimer }}</div>
-      </div>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
+  {# Safety notes are NOT an inline body panel — per the design they are a
+     compact tools-row control opening a modal (see #sn-overlay). #}
 
   {# ─── PILLAR I — INGREDIENTS ─── #}
   <section class="r6-pillar">
@@ -1136,6 +1117,12 @@ main { padding-bottom: 60px; }
      is the inline panel above (grind, scope 'safety') — not a button here. The
      HACCP brief is a separate professional document, placed apart at the end. #}
   <div class="r-actions">
+    {% if safety_notes %}
+    <button class="r-action-btn" onclick="openSafetyModal()">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.2" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 3.2v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5.5" cy="7.9" r="0.7" fill="currentColor"/></svg>
+      Safety notes
+    </button>
+    {% endif %}
     <button class="r-action-btn" onclick="handleAction('notes','kitchen')">
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
       My notes
@@ -1235,7 +1222,33 @@ main { padding-bottom: 60px; }
   </div>
 </div>
 
-<!-- ═══ SAFETY NOTES MODAL ══════════════════════════════ -->
+{# ═══ SAFETY NOTES MODAL — composed grind content (scope='safety'), read-only.
+     Same modal pattern as the other tools; disclaimer on header AND every note.
+     Never labeled HACCP. ═══ #}
+{% if safety_notes %}
+<div id="sn-overlay" class="kn-overlay" onclick="if(event.target===this)closeSafetyModal()">
+  <div class="kn-modal">
+    <div class="kn-header">
+      <div>
+        <span style="font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:3px">Safety notes — {{ recipe.name or recipe.title }}</span>
+        <span class="sn-disclaimer">{{ safety_notes[0].disclaimer }}</span>
+      </div>
+      <button class="kn-close" onclick="closeSafetyModal()">✕</button>
+    </div>
+    <div class="kn-body">
+      {% for note in safety_notes %}
+      <div class="sn-note">
+        {% if note.summary %}<div class="sn-sum">{{ note.summary }}</div>{% endif %}
+        <div class="sn-body">{{ note.html }}</div>
+        <div class="sn-foot">{{ note.disclaimer }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ═══ MY NOTES (personal pad) MODAL ══════════════════════════════ -->
 <div id="kn-overlay" class="kn-overlay" onclick="if(event.target===this)closeNotesModal()">
   <div class="kn-modal">
     <div class="kn-header">
@@ -1379,6 +1392,15 @@ function closePeek() {
 }
 
 // ── My Notes (personal pad) Modal ─────────────────────────────────
+function openSafetyModal() {
+  var el = document.getElementById('sn-overlay');
+  if (el) el.classList.add('open');
+}
+function closeSafetyModal() {
+  var el = document.getElementById('sn-overlay');
+  if (el) el.classList.remove('open');
+}
+
 function openNotesModal() {
   document.getElementById('kn-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2356,6 +2378,8 @@ document.addEventListener('keydown', e => {
   const co = document.getElementById('costing-overlay');
   const pk = document.getElementById('peek-sheet');
   const sb = document.getElementById('supplier-sheet');
+  const sn = document.getElementById('sn-overlay');
+  if (sn && sn.classList.contains('open')) { closeSafetyModal(); return; }
   if (sc && sc.classList.contains('open')) { closeScaleModal(); return; }
   if (kn && kn.classList.contains('open')) { closeNotesModal(); return; }
   if (ha && ha.classList.contains('open')) { closeHaccpModal(); return; }
@@ -2369,6 +2393,12 @@ document.addEventListener('keydown', e => {
 {% block bottom_bar %}
 <div class="bottom-bar">
   <a href="/kitchen" class="bottom-bar-btn">← MyKitchen</a>
+  {% if safety_notes %}
+  <button class="bottom-bar-btn" onclick="openSafetyModal()">
+    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4.2" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 3.2v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5.5" cy="7.9" r="0.7" fill="currentColor"/></svg>
+    Safety notes
+  </button>
+  {% endif %}
   <button class="bottom-bar-btn" onclick="handleAction('notes','kitchen')">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
     My notes
