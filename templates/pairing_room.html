@@ -120,8 +120,13 @@ body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-
     <div class="move"{% if p.quiet %} style="opacity:.55"{% endif %}>
       <span class="tag">{{ p.move }}</span>
       <div class="b">
+        {% if p.is_preparation %}
+        <span style="font-family:'Cormorant',serif;font-size:19px;font-weight:600;color:var(--nightink)">{{ p.product.name }}{% if p.expression %} <span style="font-style:italic;color:var(--giltn);font-size:16px">— {{ p.expression }}</span>{% endif %}</span>
+        <span class="meta">{{ (p.product.category or '') | string | replace('_',' ') }} · the serve</span>
+        {% else %}
         <a href="/beverage/products/{{ p.product.id }}">{{ p.product.name }}</a>
         <span class="meta">{{ (p.product.category or '') | string | replace('_',' ') }}{% if p.product.producer_name %} · {{ p.product.producer_name }}{% endif %}{% if p.product.region_name %} · {{ p.product.region_name }}{% endif %}</span>
+        {% endif %}
         <span class="why">{{ p.why }}</span>
         {% if p.quiet %}
         <span class="faraway">behind the morning pours — where the service allows</span>

@@ -3201,8 +3201,8 @@ def _find_pairings_for_user_recipe(recipe_title, limit=3):
                 return [{
                     "beverage_category": pk["product"].get("category") or "",
                     "beverage_style": "",
-                    "beverage_name": pk["product"]["name"],
-                    "name": pk["product"]["name"],
+                    "beverage_name": pk["product"]["name"] + (f" — {pk['expression']}" if pk.get("expression") else ""),
+                    "name": pk["product"]["name"] + (f" — {pk['expression']}" if pk.get("expression") else ""),
                     "region": pk["product"].get("region_name") or "",
                     "beverage_description": pk["why"],
                     "why": pk["why"],
@@ -3213,8 +3213,9 @@ def _find_pairings_for_user_recipe(recipe_title, limit=3):
                     "source": "cellar_deduction",
                     "matched_on": recipe_title,
                     "carried": pk["carried"],
-                    "beverage_product_id": pk["product"]["id"],
-                    "pantry_url": f"/beverage/products/{pk['product']['id']}",
+                    "beverage_product_id": None if pk.get("is_preparation") else pk["product"]["id"],
+                    "pantry_url": (None if pk.get("is_preparation")
+                                   else f"/beverage/products/{pk['product']['id']}"),
                 } for pk in picks]
         except Exception as _de:
             app.logger.warning(f"recipe pairing deduction failed: {_de}")
@@ -12041,13 +12042,44 @@ def _grammar_resolve(dish, reader_token, limit=6, per_cat_cap=2):
         WHERE bp.is_published IS TRUE
     """)
     products = [_serialize_row(r) for r in cur.fetchall()]
-    scored = []
+
+    # Ruling 2.4: pairings name DRINKS, not beans. Canonical serves come from
+    # beverage_preparations; coffee/tea PRODUCTS never surface as picks —
+    # they may only appear as the expression of a serve.
+    preparations = []
+    try:
+        cur.execute("""
+            SELECT id, name, slug, category, description, flavour_markers,
+                   flavour_weight, flavour_profile_type, deductive_profile
+            FROM beverage_preparations WHERE is_published IS TRUE
+        """)
+        preparations = [_serialize_row(r) for r in cur.fetchall()]
+    except Exception:
+        pass  # table may not exist on live until the migration rides
+
+    _SERVE_FAMS = {"coffee", "tea"}
+    scored, expr_best = [], {}
     for prod in products:
         axes, evidence, aromatics = _bottle_axes(prod)
         res = _grammar_move(dish, axes, evidence, aromatics)
+        if not res:
+            continue
+        move, score, why = res
+        fam = (prod.get("category") or "").split("_")[0]
+        if fam in _SERVE_FAMS:
+            # bean/leaf: candidate EXPRESSION only, never the pick itself
+            cur_best = expr_best.get(prod.get("category"))
+            if cur_best is None or score > cur_best[0]:
+                expr_best[prod.get("category")] = (score, prod)
+            continue
+        scored.append((score, move, why, prod))
+    for prep in preparations:
+        axes, evidence, aromatics = _bottle_axes(prep)
+        res = _grammar_move(dish, axes, evidence, aromatics)
         if res:
             move, score, why = res
-            scored.append((score, move, why, prod))
+            prep["is_preparation"] = True
+            scored.append((score, move, why, prep))
     scored.sort(key=lambda t: -t[0])
 
     _NA_FAMS = {"coffee", "tea", "na", "water"}
@@ -12086,7 +12118,15 @@ def _grammar_resolve(dish, reader_token, limit=6, per_cat_cap=2):
                 score, move, why, prod = best_na
                 picks[-1] = {"move": move, "why": why, "product": prod,
                              "score": round(score, 2), "quiet": False}
-    ids = [p["product"]["id"] for p in picks]
+    # a serve is expressed through a published bean/leaf where one earned a move
+    for p in picks:
+        prod = p["product"]
+        if prod.get("is_preparation"):
+            p["is_preparation"] = True
+            exp = expr_best.get(prod.get("category"))
+            if exp:
+                p["expression"] = exp[1]["name"]
+    ids = [p["product"]["id"] for p in picks if not p.get("is_preparation")]
     carried = set()
     if ids:
         cur.execute("""
@@ -12099,7 +12139,8 @@ def _grammar_resolve(dish, reader_token, limit=6, per_cat_cap=2):
         carried = {r["product_id"] for r in cur.fetchall()}
     cur.close(); conn.close()
     for p in picks:
-        p["carried"] = p["product"]["id"] in carried
+        # a serve is a drink, not a bottle — the §4 carried mark doesn't apply
+        p["carried"] = True if p.get("is_preparation") else (p["product"]["id"] in carried)
     return picks
 
 
