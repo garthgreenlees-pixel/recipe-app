@@ -44,6 +44,29 @@ body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-
 .move .b .faraway{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--nightsoft);display:inline-block;margin-top:7px;border:1px dashed var(--nighthair);padding:3px 7px;border-radius:2px}
 .pr-foot{margin-top:22px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
 .pr-foot a{color:var(--gilt)}
+.platebox{position:relative;margin:26px 0 4px}
+.platebox input{width:100%;border:1.5px solid var(--hair);background:transparent;padding:15px 18px;
+  font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink);outline:none}
+.platebox input:focus{border-color:var(--gilt)}
+.dresults{position:absolute;top:100%;left:0;right:0;background:var(--paper);border:1px solid var(--hair);
+  border-top:0;z-index:30;max-height:280px;overflow:auto;box-shadow:0 18px 40px rgba(23,19,13,.14)}
+.dres{display:flex;justify-content:space-between;gap:12px;padding:11px 16px;cursor:pointer;border-bottom:1px dashed var(--hair);font-size:14px}
+.dres:hover{background:#ECE3D1;color:var(--gilt)}
+.dres .o{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+#builder{border:1px solid var(--hair);border-radius:3px;padding:20px 22px;margin:14px 0 4px;background:rgba(154,123,63,.04)}
+.b-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 22px}
+@media(max-width:800px){.b-grid{grid-template-columns:repeat(2,1fr)}}
+.b-axis{display:flex;flex-direction:column;gap:6px}
+.b-axis.b-wide{grid-column:1 / -1}
+.b-name{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+.b-name b{color:var(--gilt)}
+.b-name i{text-transform:none;letter-spacing:0}
+.b-axis input[type=range]{accent-color:#9A7B3F}
+.b-axis input[type=text]{border:1px solid var(--hair);background:transparent;padding:10px 12px;font-size:13px;font-family:'Hanken Grotesk',sans-serif;color:var(--ink);outline:none}
+.b-go{margin-top:16px;background:var(--gilt);color:var(--paper);border:0;border-radius:2px;padding:11px 20px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.b-note{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-left:12px}
+.structure b{font-family:'Cormorant',serif;font-size:14px;letter-spacing:0;text-transform:none;color:var(--ink)}
 @media(max-width:700px){.pr-wrap{padding:0 22px 60px}.move{grid-template-columns:1fr}}
 {% endblock %}
 
@@ -56,13 +79,39 @@ body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-
     <p class="sub">Name the dish's structure and the whole cellar answers — wine, sake, tea, coffee, beer or spirits on structural merit, never category habit. The move is always named; the reason is always written out.</p>
   </section>
 
+  <div class="platebox">
+    <input type="text" id="dishSearch" placeholder="What's on the plate? — search the Library: a dish, a technique…" autocomplete="off">
+    <div class="dresults" id="dishResults"></div>
+  </div>
+
   <div class="dishes">
     {% for key, d in dishes.items() %}
     <a class="dish{% if key == dish_key %} on{% endif %}" href="/beverages/pairing?dish={{ key }}">{{ d.name }}</a>
     {% endfor %}
+    <button type="button" class="dish{% if dish_source == 'custom' %} on{% endif %}" onclick="var b=document.getElementById('builder');b.style.display=b.style.display==='none'?'block':'none'">Build the plate ▾</button>
   </div>
 
-  <div class="structure">The plate, read structurally — {{ dish.structure_line }}</div>
+  <form id="builder" method="get" action="/beverages/pairing" style="display:{{ 'block' if dish_source == 'custom' else 'none' }}">
+    <input type="hidden" name="custom" value="1">
+    <div class="b-grid">
+      {% for k in ['weight','fat','salt','acid','sweet','smoke','heat'] %}
+      <label class="b-axis">
+        <span class="b-name">{{ k }} <b id="v_{{ k }}">{{ dish.axes[k] if dish_source == 'custom' else 3 if k == 'weight' else 0 }}</b></span>
+        <input type="range" name="{{ k }}" min="{{ 1 if k == 'weight' else 0 }}" max="5" step="1"
+               value="{{ dish.axes[k] if dish_source == 'custom' else 3 if k == 'weight' else 0 }}"
+               oninput="document.getElementById('v_{{ k }}').textContent=this.value">
+      </label>
+      {% endfor %}
+      <label class="b-axis b-wide">
+        <span class="b-name">dominant aromatics <i>(comma-separated)</i></span>
+        <input type="text" name="aromatic" placeholder="e.g. vanilla, shiso, brine" value="{{ dish.aromatics | join(', ') if dish_source == 'custom' else '' }}">
+      </label>
+    </div>
+    <button type="submit" class="b-go">Resolve the plate →</button>
+    <span class="b-note">No inference — your judgment in, bottles out.</span>
+  </form>
+
+  <div class="structure">{% if dish_source == 'library' %}<b>{{ dish.name }}</b> · {% elif dish_source == 'custom' %}<b>{{ dish.name }}</b> · {% else %}The plate, read structurally — {% endif %}{{ dish.structure_line }}{% if dish_source == 'library' %} · <a href="#" onclick="prefillBuilder();return false" style="color:var(--gilt)">adjust this plate →</a>{% endif %}</div>
 
   <div class="legend"><span><b>Bridge</b> — shared note</span><span><b>Cut</b> — cleanse</span><span><b>Contrast</b> — opposition</span></div>
 
@@ -88,4 +137,33 @@ body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-
   <div class="pr-foot">Suggestions are structural, drawn from each pour's own recorded markers · <a href="/beverages">back to your cellar</a></div>
 
 </div>
+<script>
+(function(){
+  var box=document.getElementById('dishSearch'), out=document.getElementById('dishResults'), t;
+  box.addEventListener('input', function(){
+    clearTimeout(t); var q=this.value.trim();
+    if(q.length<2){ out.innerHTML=''; return; }
+    t=setTimeout(function(){
+      fetch('/api/pairing/dish-search?q='+encodeURIComponent(q)).then(function(r){return r.json()}).then(function(rows){
+        out.innerHTML=rows.map(function(r){
+          return '<div class="dres" onclick="window.location=\'/beverages/pairing?tid='+r.id+'\'">'+
+                 '<span>'+r.name+'</span><span class="o">'+(r.origin||'')+'</span></div>';
+        }).join('') || '<div class="dres"><span>The Library is quiet on that one.</span></div>';
+      });
+    }, 220);
+  });
+  document.addEventListener('click', function(e){ if(!e.target.closest('.platebox')) out.innerHTML=''; });
+})();
+function prefillBuilder(){
+  var axes = {{ dish.axes | tojson }};
+  var arom = {{ dish.aromatics | tojson }};
+  var f = document.getElementById('builder');
+  f.style.display='block';
+  ['weight','fat','salt','acid','sweet','smoke','heat'].forEach(function(k){
+    var inp=f.querySelector('[name='+k+']'); if(inp && axes[k]!==undefined){ inp.value=axes[k]; document.getElementById('v_'+k).textContent=axes[k]; }
+  });
+  var a=f.querySelector('[name=aromatic]'); if(a) a.value=(arom||[]).join(', ');
+  f.scrollIntoView({behavior:'smooth'});
+}
+</script>
 {% endblock %}

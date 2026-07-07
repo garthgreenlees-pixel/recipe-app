@@ -11878,15 +11878,154 @@ def _grammar_move(dish, axes, evidence, aromatics):
     score += 1.5 - abs(axes.get("weight", 3) - d["weight"]) * 0.3
     return move, score, why
 
+# ── The dish door (cycle 2.2): Library-first search + chef-built structure ──
+
+_DISH_VOCAB = {
+    "fat":   ["butter", "cream", "lard", "guanciale", "bacon", "pork belly", "duck fat", "confit",
+              "coconut milk", "cheese", "egg yolk", "yolk", "fried", "tempura", "ghee", "aioli",
+              "mayonnaise", "marbl", "sausage", "chorizo", "olive oil", "brown butter"],
+    "salt":  ["cured", "brined", "soy", "fish sauce", "miso", "anchov", "salted", "caper",
+              "olive", "parmesan", "pecorino", "prosciutto", "salt", "nam pla", "bottarga", "feta"],
+    "acid":  ["vinegar", "citrus", "lime", "lemon", "tamarind", "yuzu", "pickle", "sour",
+              "verjus", "sumac", "kefir", "buttermilk", "gastrique"],
+    "sweet": ["sugar", "honey", "caramel", "mirin", "sweet", "jaggery", "palm sugar", "glaze",
+              "maple", "molasses", "hoisin", "kecap manis", "date"],
+    "smoke": ["smoked", "smoke", "grill", "char", "barbecue", "bbq", "socarrat", "tandoor",
+              "ember", "fire-roasted", "burnt", "bonfire", "lapsang"],
+    "heat":  ["chili", "chilli", "cayenne", "gochujang", "sambal", "spicy", "harissa",
+              "sichuan", "peppercorn", "black pepper", "jalape", "bird's eye", "wasabi"],
+}
+_DISH_HEAVY = ["braise", "stew", "roast", "confit", "short rib", "oxtail", "cassoulet",
+               "gratin", "chowder", "ragu", "rag\u00f9", "curry", "lasagn", "daube"]
+_DISH_LIGHT = ["salad", "crudo", "ceviche", "raw", "steam", "poach", "broth", "consomm",
+               "tartare", "carpaccio", "sashimi", "granita"]
+_DISH_AROMATIC = ["vanilla", "shiso", "saffron", "basil", "thyme", "rosemary", "anise",
+                  "fennel", "dill", "mint", "coriander", "cilantro", "lemongrass", "ginger",
+                  "truffle", "mushroom", "cherry", "apple", "cardamom", "cinnamon", "nutmeg",
+                  "star anise", "kaffir", "makrut", "juniper", "sage", "tarragon", "oregano",
+                  "smoke", "brine", "toast", "pepper", "cream", "bacon"]
+_DISH_BRINE = ["clam", "oyster", "mussel", "scallop", "anchov", "seaweed", "kombu", "dashi",
+               "fish sauce", "shellfish", "prawn", "shrimp", "crab", "uni", "roe", "brine",
+               "nori", "sea urchin", "squid", "octopus"]
+
+
+def _dish_axes_from_text(name, blob):
+    """Derive the eight structural axes from Library text. Deterministic,
+    evidence-counted; never invents what the text does not say."""
+    low = (name + " \u00b7 " + blob).lower()
+    axes = {}
+    for axis, words in _DISH_VOCAB.items():
+        hits = sum(1 for w in words if w in low)
+        axes[axis] = min(5, hits and hits + 1)
+    weight = 3
+    weight += sum(1 for w in _DISH_HEAVY if w in low)
+    weight -= sum(1 for w in _DISH_LIGHT if w in low)
+    axes["weight"] = max(1, min(5, weight))
+    aromatics = [a for a in _DISH_AROMATIC if a in low]
+    if any(b in low for b in _DISH_BRINE) and "brine" not in aromatics:
+        aromatics.append("brine")
+    return axes, aromatics[:8]
+
+
+def _dish_from_technique(tid):
+    """Library-first: read a technique's structure from the platform's own data."""
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT id, name, slug, origin, description, flavour_context, recipe_card
+        FROM technique_references
+        WHERE id = %s AND published IS NOT FALSE
+    """, (tid,))
+    row = cur.fetchone()
+    cur.close(); conn.close()
+    if not row:
+        return None
+    blob = " ".join(str(row.get(f) or "") for f in ("description", "flavour_context"))
+    if row.get("recipe_card"):
+        blob += " " + str(row["recipe_card"])
+    axes, aromatics = _dish_axes_from_text(row["name"], blob)
+    line = " \u00b7 ".join(f"{k} {axes[k]}" for k in
+                            ("weight", "fat", "salt", "acid", "sweet", "smoke", "heat"))
+    return {
+        "name": row["name"],
+        "axes": axes,
+        "aromatics": aromatics,
+        "structure_line": f"read from the Library entry \u2014 {line}"
+                          + (f" \u00b7 aromatics: {', '.join(aromatics)}" if aromatics else ""),
+        "tid": row["id"],
+    }
+
+
+def _dish_from_params(args):
+    """Chef's own structure: the eight controls, set by hand. No inference."""
+    axes = {}
+    for k in ("weight", "fat", "salt", "acid", "sweet", "smoke", "heat"):
+        try:
+            axes[k] = max(0, min(5, int(args.get(k, 0))))
+        except (TypeError, ValueError):
+            axes[k] = 0
+    axes["weight"] = max(1, axes["weight"] or 3)
+    aromatics = [a.strip().lower() for a in (args.get("aromatic") or "").split(",") if a.strip()][:8]
+    line = " \u00b7 ".join(f"{k} {axes[k]}" for k in
+                            ("weight", "fat", "salt", "acid", "sweet", "smoke", "heat"))
+    return {
+        "name": args.get("plate_name") or "Your plate",
+        "axes": axes,
+        "aromatics": aromatics,
+        "structure_line": f"your plate, as set \u2014 {line}"
+                          + (f" \u00b7 aromatics: {', '.join(aromatics)}" if aromatics else ""),
+    }
+
+
+@app.route("/api/pairing/dish-search")
+def pairing_dish_search():
+    """Library-first search for the dish door. Published entries only."""
+    if not DATABASE_URL:
+        return jsonify([])
+    q = (request.args.get("q") or "").strip()
+    if len(q) < 2:
+        return jsonify([])
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT id, name, origin,
+               similarity(lower(name), lower(%s)) AS sim
+        FROM technique_references
+        WHERE published IS NOT FALSE
+          AND (lower(name) ILIKE %s OR similarity(lower(name), lower(%s)) > 0.25)
+        ORDER BY sim DESC, name
+        LIMIT 10
+    """, (q, f"%{q.lower()}%", q))
+    rows = [{"id": r["id"], "name": r["name"], "origin": (r["origin"] or "").split(",")[0][:40]}
+            for r in cur.fetchall()]
+    cur.close(); conn.close()
+    return jsonify(rows)
+
+
 @app.route("/beverages/pairing")
 def pairing_room():
     """The pairing room — start with the plate (spec v1.1 §6, mockup 3)."""
     if not DATABASE_URL:
         abort(503)
-    dish_key = request.args.get("dish") or "scallops-vanilla-shiso"
-    dish = PAIRING_DISHES.get(dish_key)
-    if dish is None:
-        abort(404)
+    # The dish door: Library entry (tid) > chef-built plate (custom) > worked example
+    dish_key = request.args.get("dish")
+    dish_source = "example"
+    tid = request.args.get("tid", type=int)
+    if tid:
+        dish = _dish_from_technique(tid)
+        if dish is None:
+            abort(404)
+        dish_key = None
+        dish_source = "library"
+    elif request.args.get("custom"):
+        dish = _dish_from_params(request.args)
+        dish_key = None
+        dish_source = "custom"
+    else:
+        dish_key = dish_key or "scallops-vanilla-shiso"
+        dish = PAIRING_DISHES.get(dish_key)
+        if dish is None:
+            abort(404)
     reader_token = get_user_location()
     reader_label = dict(VALID_REGIONS).get(reader_token, reader_token)
 
@@ -11943,8 +12082,10 @@ def pairing_room():
 
     return render_template("pairing_room.html",
         dishes=PAIRING_DISHES, dish_key=dish_key, dish=dish, picks=picks,
+        dish_source=dish_source, tid=tid,
         reader_token=reader_token, reader_label=reader_label,
-        canonical_url=f"https://provenance.kitchen/beverages/pairing?dish={dish_key}")
+        canonical_url="https://provenance.kitchen/beverages/pairing"
+                      + (f"?dish={dish_key}" if dish_key else ""))
 
 
 # ─── Beverage individual page routes ─────────────────────────────────────────
