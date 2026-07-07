@@ -790,7 +790,6 @@ main { padding-bottom: 60px; }
   <section class="r6-pillar">
     <div class="r6-pillar__head">
       <div>
-        <div class="r6-pillar__num">Pillar I</div>
         <h2>Ingredients</h2>
       </div>
       <div class="r6-serves" id="r6-serves-ctrl" data-slug="{{ recipe.slug }}" data-total-cost="{{ cost_breakdown.total_cost if cost_breakdown else 0 }}">
@@ -866,7 +865,6 @@ main { padding-bottom: 60px; }
   <section class="r6-pillar">
     <div class="r6-pillar__head">
       <div>
-        <div class="r6-pillar__num">Pillar II</div>
         <h2>Method</h2>
       </div>
       {% if steps %}<div class="r6-pillar__badge">{{ steps | length }} steps</div>{% endif %}
@@ -895,194 +893,133 @@ main { padding-bottom: 60px; }
     {% endif %}
   </section>
 
-  {# ─── PILLAR III — QUALITY HIERARCHY (Library+) ─── #}
+  {# ─── QUALITY HIERARCHY (Library+) — renders only if real content exists;
+        gated viewers see ONE clean frosted gate, one button, correct voice. ─── #}
+  {% set qh = recipe.quality_hierarchy if recipe.quality_hierarchy is iterable and recipe.quality_hierarchy is not string and recipe.quality_hierarchy is not mapping else [] %}
+  {% if qh %}
   <section class="r6-pillar">
     <div class="r6-pillar__head">
       <div>
-        <div class="r6-pillar__num">Pillar III</div>
         <h2>Quality Hierarchy</h2>
       </div>
       <div class="r6-pillar__badge"><span class="r6-tier-chip r6-tier-chip--library">Library+</span></div>
     </div>
-    {% set qh = recipe.quality_hierarchy if recipe.quality_hierarchy is iterable and recipe.quality_hierarchy is not string and recipe.quality_hierarchy is not mapping else [] %}
     {% if is_owner or gate_for_tier('library') == 'full_content' %}
-      {% if qh %}
+      <table class="r6-table">
+        <thead><tr><th>Ingredient</th><th>Reserve</th><th>House</th><th>What the swap costs</th></tr></thead>
+        <tbody>
+          {% for row in qh %}<tr><td>{{ row.ingredient }}</td><td>{{ row.reserve }}</td><td>{{ row.house }}</td><td class="r6-table__swap">{{ row.swap_cost }}</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      {% call upgrade_prompt('library', 'quality_hierarchy') %}
         <table class="r6-table">
-          <thead>
-            <tr>
-              <th>Ingredient</th><th>Reserve</th><th>House</th><th>What the swap costs</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Ingredient</th><th>Reserve</th><th>House</th><th>What the swap costs</th></tr></thead>
           <tbody>
-            {% for row in qh %}
-              <tr>
-                <td>{{ row.ingredient }}</td>
-                <td>{{ row.reserve }}</td>
-                <td>{{ row.house }}</td>
-                <td class="r6-table__swap">{{ row.swap_cost }}</td>
-              </tr>
-            {% endfor %}
+            {% for row in qh %}<tr><td>{{ row.ingredient }}</td><td>{{ row.reserve }}</td><td>{{ row.house }}</td><td class="r6-table__swap">{{ row.swap_cost }}</td></tr>{% endfor %}
           </tbody>
         </table>
-      {% else %}
-        <div class="r6-empty">Quality hierarchy not yet recorded for this recipe.</div>
-      {% endif %}
-    {% elif gate_for_tier('library') == 'preview_then_prompt' %}
-      {% call upgrade_prompt('library', 'quality_hierarchy') %}
-        {% if qh %}
-          <table class="r6-table">
-            <thead>
-              <tr>
-                <th>Ingredient</th><th>Reserve</th><th>House</th><th>What the swap costs</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for row in qh %}
-                <tr>
-                  <td>{{ row.ingredient }}</td>
-                  <td>{{ row.reserve }}</td>
-                  <td>{{ row.house }}</td>
-                  <td class="r6-table__swap">{{ row.swap_cost }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% endif %}
       {% endcall %}
-    {% else %}
-      {{ upgrade_prompt('kitchen', 'visitor') }}
     {% endif %}
   </section>
+  {% endif %}
 
-  {# ─── PILLAR IV — SENSORY TESTS ─── #}
+  {# ─── SENSORY TESTS — only if present ─── #}
+  {% if sashimi %}
   <section class="r6-pillar">
     <div class="r6-pillar__head">
       <div>
-        <div class="r6-pillar__num">Pillar IV</div>
         <h2>Sensory Tests</h2>
       </div>
     </div>
-    {% if sashimi %}
-      <div class="r6-lod">
-        <div class="r6-lod__eyebrow">Where the dish lives or dies</div>
-        <div class="r6-lod__body">{{ sashimi }}</div>
-      </div>
-    {% else %}
-      <div class="r6-empty">No sensory tests recorded yet.</div>
-    {% endif %}
+    <div class="r6-lod">
+      <div class="r6-lod__eyebrow">Where the dish lives or dies</div>
+      <div class="r6-lod__body">{{ sashimi }}</div>
+    </div>
   </section>
+  {% endif %}
 
-  {# ─── PILLAR V — CROSS-CUISINE PARALLELS (Library+ for deductive grid) ─── #}
+  {# ─── CROSS-CUISINE PARALLELS (Library+ for grid) — only if present ─── #}
+  {% if cross_parallels %}
   <section class="r6-pillar">
     <div class="r6-pillar__head">
       <div>
-        <div class="r6-pillar__num">Pillar V</div>
         <h2>Cross-Cuisine Parallels</h2>
       </div>
       <div class="r6-pillar__badge"><span class="r6-tier-chip r6-tier-chip--library">Library+ for full grid</span></div>
     </div>
-    {% if cross_parallels %}
-      <div class="r6-parallels">
-        {% for p in cross_parallels %}
-          <a href="/techniques/{{ p.slug or '#' }}" class="r6-parallel">
-            <div class="r6-parallel__cuisine">{{ format_cuisine(p.cuisine or p.tradition) }}</div>
-            <div class="r6-parallel__name">{{ p.name }}</div>
-          </a>
-        {% endfor %}
-      </div>
+    <div class="r6-parallels">
+      {% for p in cross_parallels %}
+        <a href="/techniques/{{ p.slug or '#' }}" class="r6-parallel">
+          <div class="r6-parallel__cuisine">{{ format_cuisine(p.cuisine or p.tradition) }}</div>
+          <div class="r6-parallel__name">{{ p.name }}</div>
+        </a>
+      {% endfor %}
+    </div>
+    {% if recipe.deductive_grid %}
       {% if gate_for_tier('library') == 'full_content' %}
-        {% if recipe.deductive_grid %}
-          <div class="r6-step__note" style="margin-top: var(--s2);">
-            <strong>The deductive grid:</strong> {{ recipe.deductive_grid }}
-          </div>
-        {% endif %}
+        <div class="r6-step__note" style="margin-top: var(--s2);"><strong>The deductive grid:</strong> {{ recipe.deductive_grid }}</div>
       {% elif gate_for_tier('library') == 'preview_then_prompt' %}
         {% call upgrade_prompt('library', 'default') %}
-          {% if recipe.deductive_grid %}
-            <div class="r6-step__note" style="margin-top: var(--s2);">
-              <strong>The deductive grid:</strong> {{ recipe.deductive_grid }}
-            </div>
-          {% endif %}
+          <div class="r6-step__note" style="margin-top: var(--s2);"><strong>The deductive grid:</strong> {{ recipe.deductive_grid }}</div>
         {% endcall %}
-      {% else %}
-        {{ upgrade_prompt('kitchen', 'visitor') }}
       {% endif %}
-    {% else %}
-      <div class="r6-empty">No cross-cuisine parallels recorded yet.</div>
     {% endif %}
   </section>
+  {% endif %}
 
-  {# ─── PILLAR VI — BEVERAGE PAIRINGS (Library+ for named producers) ─── #}
+  {# ─── BEVERAGE PAIRINGS (Library+ for named producers) — only if present ─── #}
+  {% set beverage_list = pairings or recipe.pairings or [] %}
+  {% if beverage_list %}
   <section class="r6-pillar">
     <div class="r6-pillar__head">
       <div>
-        <div class="r6-pillar__num">Pillar VI</div>
         <h2>Beverage Pairings</h2>
       </div>
       <div class="r6-pillar__badge"><span class="r6-tier-chip r6-tier-chip--library">Library+ for named producers</span></div>
     </div>
-    {% set beverage_list = pairings or recipe.pairings or [] %}
-    {% if beverage_list %}
-      <div class="r6-pairings">
-        {% for p in beverage_list %}
-          {% set role = p.relationship_type or p.role or p.pairing_type or 'complement' %}
-          <div class="r6-pairing">
-            <div class="r6-pairing__role r6-pairing__role--{{ role }}">{{ role | title }}</div>
-            {% if p.region %}<div class="r6-pairing__region">{{ p.region }}</div>{% endif %}
-            <div class="r6-pairing__name">{{ p.name or p.beverage_name }}</div>
-            {% if p.source == 'cellar_deduction' %}
-              <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8B6914;margin-top:4px">The cellar's deduction — awaiting the founder's signature</div>
-              {% if p.why %}<div style="font-family:var(--display);font-style:italic;font-size:13px;color:var(--charcoal-soft);margin-top:3px">{{ p.why }}</div>{% endif %}
-              {% if not p.carried %}<div style="font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--warm-gray);margin-top:3px">Not yet carried in your region — the look is counted.</div>{% endif %}
+    <div class="r6-pairings">
+      {% for p in beverage_list %}
+        {% set role = p.relationship_type or p.role or p.pairing_type or 'complement' %}
+        <div class="r6-pairing">
+          <div class="r6-pairing__role r6-pairing__role--{{ role }}">{{ role | title }}</div>
+          {% if p.region %}<div class="r6-pairing__region">{{ p.region }}</div>{% endif %}
+          <div class="r6-pairing__name">{{ p.name or p.beverage_name }}</div>
+          {% if p.source == 'cellar_deduction' %}
+            <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8B6914;margin-top:4px">The cellar's deduction — awaiting the founder's signature</div>
+            {% if p.why %}<div style="font-family:var(--display);font-style:italic;font-size:13px;color:var(--charcoal-soft);margin-top:3px">{{ p.why }}</div>{% endif %}
+            {% if not p.carried %}<div style="font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--warm-gray);margin-top:3px">Not yet carried in your region — the look is counted.</div>{% endif %}
+          {% endif %}
+          {% if gate_for_tier('library') == 'full_content' %}
+            {% if p.origin_producer or p.local_provider %}
+              <div style="font-family: var(--mono); font-size: 11px; color: var(--charcoal-soft); margin-top: 4px;">
+                {% if p.origin_producer %}<a href="#" class="r6-gold-link">{{ p.origin_producer }}</a>{% endif %}
+                {% if p.local_provider %} · <a href="#" class="r6-gold-link">{{ p.local_provider }}</a>{% endif %}
+              </div>
             {% endif %}
-            {% if gate_for_tier('library') == 'full_content' %}
-              {% if p.origin_producer or p.local_provider %}
-                <div style="font-family: var(--mono); font-size: 11px; color: var(--charcoal-soft); margin-top: 4px;">
-                  {% if p.origin_producer %}<a href="#" class="r6-gold-link">{{ p.origin_producer }}</a>{% endif %}
-                  {% if p.local_provider %} · <a href="#" class="r6-gold-link">{{ p.local_provider }}</a>{% endif %}
-                </div>
-              {% endif %}
-            {% elif gate_for_tier('library') == 'preview_then_prompt' %}
-              {{ upgrade_prompt('library', 'beverage_producer', compact=true) }}
-            {% else %}
-              {{ upgrade_prompt('kitchen', 'visitor', compact=true) }}
-            {% endif %}
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="r6-empty">No beverage pairings recorded yet.</div>
-    {% endif %}
+          {% elif gate_for_tier('library') == 'preview_then_prompt' %}
+            {{ upgrade_prompt('library', 'beverage_producer', compact=true) }}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
   </section>
+  {% endif %}
 
-  {# ─── PILLAR VII — ORIGIN & LINEAGE ─── #}
+  {# ─── ORIGIN & LINEAGE — only if present ─── #}
+  {% if origin_text %}
   <section class="r6-pillar">
     <div class="r6-pillar__head">
       <div>
-        <div class="r6-pillar__num">Pillar VII</div>
         <h2>Origin &amp; Lineage</h2>
       </div>
     </div>
-    {% if origin_text %}
-      <div class="r6-lineage">
-        {% if '<p>' in origin_text %}
-          {{ origin_text | safe }}
-        {% else %}
-          <p>{{ origin_text }}</p>
-        {% endif %}
-        {% if recipe.tradition_tags %}
-          <div class="r6-lineage__cited">Tradition: {{ recipe.tradition_tags | join(' · ') }}</div>
-        {% endif %}
-      </div>
-    {% else %}
-      <div class="r6-empty">
-        No lineage yet for this recipe.
-        {% if is_owner %}
-          <br><a href="/recipe/{{ recipe.slug }}/edit#lineage" class="r6-gold-link" style="font-size:12px;">Add your story →</a>
-        {% endif %}
-      </div>
-    {% endif %}
+    <div class="r6-lineage">
+      {% if '<p>' in origin_text %}{{ origin_text | safe }}{% else %}<p>{{ origin_text }}</p>{% endif %}
+      {% if recipe.tradition_tags %}<div class="r6-lineage__cited">Tradition: {{ recipe.tradition_tags | join(' · ') }}</div>{% endif %}
+    </div>
   </section>
+  {% endif %}
 
   {# ─── TRADITION TAGS ─── #}
   {% if trad_tags %}
@@ -1137,34 +1074,8 @@ main { padding-bottom: 60px; }
     </div>
   </div>
 
-  {# ─── ACTION BUTTONS ROW ─── #}
-  {# 'My notes' is the personal per-user pad. The composed 'Safety notes' surface
-     is the inline panel above (grind, scope 'safety') — not a button here. The
-     HACCP brief is a separate professional document, placed apart at the end. #}
-  <div class="r-actions">
-    {% if safety_notes %}
-    <button class="r-action-btn" onclick="openSafetyModal()">
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.2" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 3.2v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5.5" cy="7.9" r="0.7" fill="currentColor"/></svg>
-      Safety notes
-    </button>
-    {% endif %}
-    <button class="r-action-btn" onclick="handleAction('notes','kitchen')">
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
-      My notes
-    </button>
-    <button class="r-action-btn" onclick="handleAction('costing','kitchen')">
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
-      Cost this recipe
-    </button>
-    <button class="r-action-btn" onclick="handleAction('scale','library')">
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="1" fill="currentColor"/><path d="M5.5 1.5v2M5.5 7.5v2M1.5 5.5h2M7.5 5.5h2" stroke="currentColor" stroke-width="1.2"/></svg>
-      Scale recipe
-    </button>
-    <button class="r-action-btn" onclick="handleAction('haccp','profession')">
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
-      HACCP brief
-    </button>
-  </div>
+  {# Tools render ONCE — the pinned bottom bar (working-layer pattern, matches
+     Cook Mode) is the single tools presence. The old in-page pill row is removed. #}
 
   {# ─── TOOLS & COMPLIANCE ─── #}
   <section class="r6-pillar r6-pillar--tools" style="padding-bottom: var(--s6);">
@@ -2431,6 +2342,10 @@ document.addEventListener('keydown', e => {
   <button class="bottom-bar-btn" onclick="handleAction('costing','kitchen')">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
     Cost this recipe
+  </button>
+  <button class="bottom-bar-btn" onclick="handleAction('scale','library')">
+    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="1" fill="currentColor"/><path d="M5.5 1.5v2M5.5 7.5v2M1.5 5.5h2M7.5 5.5h2" stroke="currentColor" stroke-width="1.2"/></svg>
+    Scale recipe
   </button>
   <button class="bottom-bar-btn" onclick="handleAction('haccp','profession')">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><path d="M5.5 1L2 3v4l3.5 2.5L9 7V3L5.5 1z" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5l1 1 2-2" stroke="currentColor" stroke-width="1.2"/></svg>
