@@ -237,7 +237,7 @@
       <div class="k-chips" id="kChips">
         <button class="k-chip on" data-filter="all" data-key="all">All</button>
         {% for skey, slabel in _states %}{% if recipes_by_state[skey] %}<button class="k-chip" data-filter="state" data-key="{{ skey }}">{{ slabel }}</button>{% endif %}{% endfor %}
-        {% for c in kitchen_cuisines %}<button class="k-chip" data-filter="cuisine" data-key="{{ c }}">{{ c }}</button>{% endfor %}
+        {% for c in kitchen_cuisines %}<button class="k-chip" data-filter="cuisine" data-key="{{ c }}">{{ c | replace('-', ' ') | title }}</button>{% endfor %}
       </div>
     </div>
     <div class="k-grid" id="kGrid">
