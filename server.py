@@ -1925,7 +1925,7 @@ def _recipe_ingredients_for_slug(slug):
     user's kitchen recipes. Ingredients are the stored JSONB rows."""
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SELECT title, ingredients FROM recipes WHERE slug = %s", (slug,))
+    cur.execute("SELECT name AS title, ingredients FROM recipes WHERE slug = %s", (slug,))
     row = cur.fetchone()
     if not row:
         cur.execute("SELECT title, ingredients FROM user_kitchen_recipes WHERE slug = %s", (slug,))
