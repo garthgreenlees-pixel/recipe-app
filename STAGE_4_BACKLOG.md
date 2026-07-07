@@ -67,3 +67,13 @@ Items parked for Stage 4 (the audit fix-list stage), each with a one-line reason
 - **service_specs backfill (grind lane).** 97 of 405 published pours carry no
   service_specs (temperature/vessel/pour). Data-only; the sommelier panel's
   service rows render only where data exists.
+
+## FINDING 3 — the ceviche gap (founder-logged 2026-07-06; becomes CYCLE 4 after MyKitchen)
+Leche de tigre resolved to nothing sharp. Causes and fixes in founder's order:
+(a) mixed drinks — the ~500 drink recipes become pairable entries with
+structure and markers (a michelada or chicha morada should have answered);
+(b) world non-alcoholic serves (Thai and beyond) join beverage_preparations —
+grind-lane content once shapes exist; (c) free-text dish entry (dish door
+item 3) — founder sets ANTHROPIC_API_KEY on staging himself. Cycle 4 must be
+scoped precisely against approved spec v1.1 and STOP for founder approval of
+the plan before any build — must not balloon.
