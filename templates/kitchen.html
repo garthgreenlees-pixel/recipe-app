@@ -86,6 +86,54 @@
   .k-btn--ghost{ background:transparent; color:var(--k-ink); border-color:var(--k-hair); }
   .k-btn--ghost:hover{ border-color:var(--k-gilt); }
 
+  /* ── Recipe card (Recipe Card.dc.html spec) ── */
+  .rc{ display:flex; flex-direction:column; text-decoration:none; color:var(--k-ink); background:var(--k-paper); border:1px solid var(--k-hair); border-radius:2px; min-height:372px; transition:border-color .2s, transform .2s; overflow:hidden; }
+  .rc:hover{ border-color:var(--k-leaf); transform:translateY(-3px); }
+  .rc__head{ position:relative; height:150px; background:var(--k-paper2); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .rc__head img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .rc__mono{ font-family:var(--k-serif); font-size:66px; color:#C7A86A; opacity:.45; }
+  .rc__badge{ position:absolute; top:10px; left:10px; background:var(--k-paper); border:1px solid var(--k-hair); padding:5px 10px; font-family:var(--k-mono); font-size:9px; text-transform:uppercase; letter-spacing:.16em; color:var(--k-gilt); }
+  .rc__haccp{ position:absolute; top:10px; right:10px; background:var(--k-ink); color:var(--k-paper); padding:5px 8px; font-family:var(--k-mono); font-size:8px; letter-spacing:.12em; text-transform:uppercase; }
+  .rc__body{ padding:19px 20px 21px; display:flex; flex-direction:column; flex:1; }
+  .rc__cuisine{ font-family:var(--k-mono); font-size:10px; text-transform:uppercase; letter-spacing:.22em; color:var(--k-gilt); margin-bottom:12px; }
+  .rc__tags{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:13px; }
+  .rc__tags span{ font-family:var(--k-mono); font-size:9px; text-transform:uppercase; color:var(--k-soft); border:1px solid var(--k-hair); padding:4px 9px; }
+  .rc__title{ font-family:var(--k-serif); font-weight:600; font-size:23px; line-height:1.12; letter-spacing:-.01em; margin:0 0 16px; color:var(--k-ink); }
+  .rc__foot{ margin-top:auto; border-top:1px dashed var(--k-hair); padding-top:13px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .rc__meta{ font-family:var(--k-mono); font-size:11px; letter-spacing:.05em; color:var(--k-soft); }
+  .rc__sourced{ display:inline-flex; align-items:center; gap:6px; font-family:var(--k-mono); font-size:9px; text-transform:uppercase; letter-spacing:.14em; color:var(--k-leaf); white-space:nowrap; }
+  .rc__sourced .dot{ width:6px; height:6px; border-radius:50%; background:var(--k-leaf); }
+
+  /* ── Migrate panel ── */
+  .k-migrate-row{ margin-top:14px; }
+  .k-migrate-toggle{ display:inline-flex; align-items:center; gap:9px; background:transparent; color:var(--k-nightink); border:1px solid rgba(241,235,221,.35); cursor:pointer; padding:11px 22px; font-family:var(--k-mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; }
+  .k-migrate-toggle:hover{ border-color:var(--k-giltn); color:var(--k-giltn); }
+  .k-migrate{ display:none; border:1px solid rgba(198,160,85,.4); background:rgba(244,238,225,.04); padding:26px 28px; margin-top:20px; max-width:760px; }
+  .k-migrate.is-open{ display:block; }
+  .k-migrate__head{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .k-migrate__head h3{ font-family:var(--k-serif); font-style:italic; font-weight:600; font-size:22px; color:var(--k-paper); margin:0; }
+  .k-migrate__pill{ font-family:var(--k-mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--k-giltn); border:1px solid rgba(198,160,85,.4); padding:4px 8px; }
+  .k-migrate p{ font-size:14.5px; line-height:1.6; color:rgba(244,238,225,.78); margin:12px 0 18px; max-width:560px; }
+  .k-migrate__sources{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+  .k-migrate__sources span{ font-family:var(--k-mono); font-size:10px; letter-spacing:.08em; color:rgba(244,238,225,.7); border:1px solid rgba(241,235,221,.22); padding:7px 12px; }
+  .k-migrate__drop{ border:1.5px dashed rgba(241,235,221,.3); padding:22px; text-align:center; font-size:13.5px; color:rgba(244,238,225,.7); cursor:pointer; }
+  .k-migrate__drop:hover{ border-color:var(--k-giltn); }
+  .k-migrate__drop b{ color:var(--k-giltn); font-weight:500; }
+  .k-migrate__note{ font-family:var(--k-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:rgba(244,238,225,.45); margin-top:10px; }
+
+  /* ── Footer + Evening toggle ── */
+  .k-foot{ border-top:1px solid var(--k-hair); }
+  .k-foot__in{ max-width:1180px; margin:0 auto; padding:40px 48px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .k-foot__mark{ font-family:var(--k-serif); font-weight:700; font-size:18px; color:var(--k-ink); }
+  .k-foot__std{ font-family:var(--k-mono); font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--k-soft); }
+  .k-eve{ background:transparent; border:1px solid rgba(241,235,221,.3); color:var(--k-nightsoft); font-family:var(--k-mono); font-size:9px; letter-spacing:.16em; text-transform:uppercase; padding:6px 11px; cursor:pointer; }
+  .k-eve:hover{ border-color:var(--k-giltn); color:var(--k-giltn); }
+
+  /* Evening theme — body-level override */
+  body.k-evening .k-body{ background:var(--k-night); }
+  body.k-evening{ --k-paper:#13110C; --k-paper2:#1A1711; --k-ink:#F1EBDD; --k-soft:#A39A88; --k-hair:#2C2820; --k-gilt:#C6A055; }
+  body.k-evening .k-foot__mark{ color:var(--k-nightink); }
+
   /* ── Modal overlay ── */
   .kmodal-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.72); z-index: 900; display: none; align-items: center; justify-content: center; }
   .kmodal-overlay.is-open { display: flex; }
@@ -157,7 +205,9 @@
 {# ─── DARK WORKING-SHELF HERO ─── #}
 <section class="k-hero">
   <div class="k-hero__in">
-    <div class="k-eyebrow"><span class="diamond"></span> Your Working Shelf</div>
+    <div class="k-eyebrow"><span class="diamond"></span> Your Working Shelf
+      <button type="button" class="k-eve" id="kEve" style="margin-left:auto;" onclick="document.body.classList.toggle('k-evening')">Evening</button>
+    </div>
     <h1>MyKitchen</h1>
     <p class="k-hero__tag">Everything you cook, held to the canon — {{ recipe_total }} recipe{{ "s" if recipe_total != 1 }} and counting, on one shelf.</p>
 
@@ -169,19 +219,38 @@
       <div class="k-add" id="kAdd">
         <button type="button" class="k-add__btn" onclick="document.getElementById('kAdd').classList.toggle('is-open')">+ Add a recipe ▾</button>
         <div class="k-add__menu">
+          <a class="k-add__item" id="kAddMigrate" style="background:rgba(63,96,144,.07);"><span class="n" style="color:var(--k-leaf);">⇄</span><span><span class="t">Bring your whole library</span><span class="d">Migrate from Paprika, Mela, AnyList &amp; more</span></span></a>
           <a class="k-add__item" data-modal="url"><span class="n">I</span><span><span class="t">Import a URL</span><span class="d">Paste a link — we structure it to the canon</span></span></a>
           <a class="k-add__item" data-modal="scan"><span class="n">II</span><span><span class="t">Scan a page</span><span class="d">Camera or cookbook upload</span></span></a>
           <a class="k-add__item" data-modal="write"><span class="n">III</span><span><span class="t">Write from scratch</span><span class="d">A blank seven-pillar editor</span></span></a>
           <a class="k-add__item" data-modal="pdf"><span class="n">IV</span><span><span class="t">Import a PDF</span><span class="d">Drop a cookbook, pick the pages</span></span></a>
         </div>
       </div>
+      <button type="button" class="k-migrate-toggle" id="kMigrateToggle">⇄ Bring your library</button>
+    </div>
+
+    {# migrate panel — real, wired to existing add paths now; bulk parse in Cycle 4 #}
+    <div class="k-migrate" id="kMigrate">
+      <div class="k-migrate__head">
+        <h3>Switch in one move — keep every recipe.</h3>
+        <span class="k-migrate__pill">No re-typing</span>
+      </div>
+      <p>Export from your current app and drop the file here. We structure each one to the canon and find the named producers behind your ingredients.</p>
+      <div class="k-migrate__sources">
+        <span>Paprika</span><span>Mela</span><span>AnyList</span><span>Whisk / Samsung Food</span><span>NYT Cooking</span><span>Plain CSV</span>
+      </div>
+      <div class="k-migrate__drop" id="kMigrateDrop" data-modal="pdf">
+        Drop a backup file here — <b>.zip · .paprikarecipes · .json · .csv</b><br>
+        <span class="k-migrate__note">or import one at a time now: URL · Scan · PDF · Write</span>
+      </div>
+      <div class="k-migrate__note" style="margin-top:14px;">Bulk file import lands this deadline. Until then, the buttons above import any single recipe straight to your shelf.</div>
     </div>
 
     <div class="k-stats">
       <div class="k-stat"><div class="k">Recipes</div><div class="v">{{ kitchen_stats.recipes }}</div></div>
+      <div class="k-stat"><div class="k">Sourced</div><div class="v">{{ kitchen_stats.sourced }}</div></div>
       <div class="k-stat"><div class="k">Enhanced</div><div class="v">{{ kitchen_stats.enhanced }}</div></div>
       <div class="k-stat"><div class="k">Drafts</div><div class="v">{{ kitchen_stats.drafts }}</div></div>
-      <div class="k-stat"><div class="k">Menus</div><div class="v">{{ kitchen_stats.menus }}</div></div>
     </div>
   </div>
 </section>
@@ -231,19 +300,48 @@
       </div>
     </div>
   {% else %}
-    {% set _states = [('imported','Imported'),('enhanced','Enhanced'),('canon_saved','Saved'),('compose_draft','Drafts')] %}
+    {% set _states = [('imported','Imported'),('enhanced','Enhanced'),('canon_saved','From the Canon'),('compose_draft','Drafts')] %}
+    {% set _statebadge = {'imported':'Imported','enhanced':'Enhanced','canon_saved':'From the Canon','compose_draft':'Compose draft'} %}
+    {% set _vegwords = ['vegetarian','vegan','veg'] %}
+    {% set ns = namespace(any_recent=false, any_veg=false) %}
+    {% for skey, slabel in _states %}{% for r in recipes_by_state[skey] %}
+      {% if r.recent %}{% set ns.any_recent = true %}{% endif %}
+      {% for t in r.card_tags %}{% if t|lower in _vegwords %}{% set ns.any_veg = true %}{% endif %}{% endfor %}
+    {% endfor %}{% endfor %}
     <div class="k-chips-row">
       <span class="k-shown" id="kShown">All {{ recipe_total }}</span>
       <div class="k-chips" id="kChips">
         <button class="k-chip on" data-filter="all" data-key="all">All</button>
+        {% if ns.any_recent %}<button class="k-chip" data-filter="recent" data-key="recent">Recently added</button>{% endif %}
         {% for skey, slabel in _states %}{% if recipes_by_state[skey] %}<button class="k-chip" data-filter="state" data-key="{{ skey }}">{{ slabel }}</button>{% endif %}{% endfor %}
         {% for c in kitchen_cuisines %}<button class="k-chip" data-filter="cuisine" data-key="{{ c }}">{{ c | replace('-', ' ') | title }}</button>{% endfor %}
+        {% if ns.any_veg %}<button class="k-chip" data-filter="veg" data-key="veg">Vegetarian</button>{% endif %}
       </div>
     </div>
     <div class="k-grid" id="kGrid">
       {% for skey, slabel in _states %}{% for recipe in recipes_by_state[skey] %}
-        <div class="kcard" data-state="{{ skey }}" data-cuisine="{{ (recipe.cuisine or '') | replace('·',' ') | trim }}">
-          {% include '_partials/_recipe_card.html' %}
+        {% set _veg = recipe.card_tags | map('lower') | select('in', _vegwords) | list | length > 0 %}
+        <div class="kcard" data-state="{{ skey }}"
+             data-cuisine="{{ (recipe.cuisine or '') | replace('·',' ') | trim }}"
+             data-recent="{{ '1' if recipe.recent else '0' }}"
+             data-veg="{{ '1' if _veg else '0' }}"
+             data-sourced="{{ '1' if recipe.sourced else '0' }}">
+          <a class="rc" href="/recipe/{{ recipe.slug }}">
+            <div class="rc__head">
+              {% if recipe.image_url %}<img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy">{% else %}<span class="rc__mono">{{ (recipe.title or 'P') | trim | first | upper }}</span>{% endif %}
+              <span class="rc__badge">{% if skey == 'compose_draft' %}Compose draft · l'Atelier{% else %}{{ _statebadge[skey] }} · {{ recipe.pillars_filled }} of 7{% endif %}</span>
+              {% if recipe.requires_haccp %}<span class="rc__haccp">HACCP</span>{% endif %}
+            </div>
+            <div class="rc__body">
+              {% if recipe.cuisine %}<div class="rc__cuisine">{{ recipe.cuisine | replace('·',' · ') }}</div>{% endif %}
+              {% if recipe.card_tags %}<div class="rc__tags">{% for t in recipe.card_tags %}<span>{{ t }}</span>{% endfor %}</div>{% endif %}
+              <h3 class="rc__title">{{ recipe.title }}</h3>
+              <div class="rc__foot">
+                <span class="rc__meta">{% if recipe.time_display %}{{ recipe.time_display }}{% endif %}{% if recipe.time_display and recipe.serves %} · {% endif %}{% if recipe.serves %}Serves {{ recipe.serves }}{% endif %}</span>
+                {% if recipe.sourced %}<span class="rc__sourced"><span class="dot"></span>Sourced</span>{% endif %}
+              </div>
+            </div>
+          </a>
         </div>
       {% endfor %}{% endfor %}
     </div>
@@ -254,23 +352,47 @@
 
 <script>
 (function(){
-  var chips=document.getElementById('kChips'); if(!chips) return;
-  var cards=[].slice.call(document.querySelectorAll('#kGrid .kcard'));
-  var shown=document.getElementById('kShown');
-  chips.addEventListener('click', function(e){
-    var b=e.target.closest('.k-chip'); if(!b) return;
-    [].forEach.call(chips.children, function(c){ c.classList.remove('on'); });
-    b.classList.add('on');
-    var f=b.getAttribute('data-filter'), key=(b.getAttribute('data-key')||'').toLowerCase(), n=0;
-    cards.forEach(function(c){
-      var ok = f==='all' || (f==='state' && c.getAttribute('data-state')===key) ||
-               (f==='cuisine' && (c.getAttribute('data-cuisine')||'').toLowerCase().indexOf(key)>=0);
-      c.style.display = ok ? '' : 'none'; if(ok) n++;
+  // chip filtering over the single shelf
+  var chips=document.getElementById('kChips');
+  if(chips){
+    var cards=[].slice.call(document.querySelectorAll('#kGrid .kcard'));
+    var shown=document.getElementById('kShown');
+    chips.addEventListener('click', function(e){
+      var b=e.target.closest('.k-chip'); if(!b) return;
+      [].forEach.call(chips.children, function(c){ c.classList.remove('on'); });
+      b.classList.add('on');
+      var f=b.getAttribute('data-filter'), key=(b.getAttribute('data-key')||'').toLowerCase(), n=0;
+      cards.forEach(function(c){
+        var ok = f==='all'
+          || (f==='state'  && c.getAttribute('data-state')===key)
+          || (f==='cuisine' && (c.getAttribute('data-cuisine')||'').toLowerCase().indexOf(key)>=0)
+          || (f==='recent' && c.getAttribute('data-recent')==='1')
+          || (f==='veg'    && c.getAttribute('data-veg')==='1');
+        c.style.display = ok ? '' : 'none'; if(ok) n++;
+      });
+      shown.textContent = (f==='all'?'All ':'Showing ')+n;
     });
-    shown.textContent = (f==='all'?'All ':'Showing ')+n;
+  }
+  // migrate panel toggles (button + dropdown item), and close the add menu
+  var mig=document.getElementById('kMigrate');
+  function openMig(){ if(mig){ mig.classList.add('is-open'); var a=document.getElementById('kAdd'); if(a) a.classList.remove('is-open'); mig.scrollIntoView({behavior:'smooth',block:'nearest'}); } }
+  var mt=document.getElementById('kMigrateToggle'); if(mt) mt.addEventListener('click', function(){ mig.classList.toggle('is-open'); });
+  var am=document.getElementById('kAddMigrate'); if(am) am.addEventListener('click', openMig);
+  // close add menu on outside click
+  document.addEventListener('click', function(e){
+    var a=document.getElementById('kAdd');
+    if(a && a.classList.contains('is-open') && !a.contains(e.target)) a.classList.remove('is-open');
   });
 })();
 </script>
+
+{# ─── FOOTER ─── #}
+<footer class="k-foot">
+  <div class="k-foot__in">
+    <span class="k-foot__mark">Provenance</span>
+    <span class="k-foot__std">One standard, no exceptions</span>
+  </div>
+</footer>
 
 {# ─── MODALS ─── #}
 <div id="kitchen-overlay" class="kmodal-overlay" aria-hidden="true">

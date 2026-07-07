@@ -1347,6 +1347,51 @@ def _format_cuisine(raw):
     return " · ".join(p.title() for p in parts)
 
 
+_SOURCE_PANTRY_STOP = {
+    "water", "salt", "kosher salt", "sea salt", "flaky sea salt", "fine salt",
+    "pepper", "black pepper", "cracked black pepper", "white pepper",
+    "butter", "unsalted butter", "salted butter",
+    "oil", "olive oil", "vegetable oil", "neutral oil",
+    "flour", "all-purpose flour", "ap flour",
+    "sugar", "granulated sugar", "white sugar",
+    "ice", "ice water", "boiling water", "tamarind water",
+}
+
+
+def _is_recent(dt, days=14):
+    """True if a timestamp is within the last `days` (for the Recently-added chip)."""
+    if not dt:
+        return False
+    try:
+        now = _dt.now(dt.tzinfo) if getattr(dt, "tzinfo", None) else _dt.now()
+        return (now - dt) <= _timedelta(days=days)
+    except Exception:
+        return False
+
+
+def _recipe_has_sourcing(markers):
+    """Cheap per-card 'Sourced' verdict: True if any non-pantry ingredient marker
+    carries at least one resolved supplier. Deliberately DB-free (the full
+    origin/provider classification in _get_kitchen_recipe_suppliers_from_markers
+    is too heavy to run per card in the kitchen list)."""
+    if isinstance(markers, str):
+        try:
+            markers = json.loads(markers)
+        except Exception:
+            return False
+    if not markers:
+        return False
+    for m in markers:
+        if not isinstance(m, dict):
+            continue
+        name = (m.get("ingredient_name") or "").strip().lower()
+        if name in _SOURCE_PANTRY_STOP:
+            continue
+        if m.get("suppliers") or m.get("matched_supplier_ids"):
+            return True
+    return False
+
+
 def _query_user_recipes(user_id, state="imported"):
     """Return a list of card-ready dicts from user_kitchen_recipes for one user.
 
@@ -1363,7 +1408,8 @@ def _query_user_recipes(user_id, state="imported"):
                    servings_count, servings_text, template_version,
                    recipe_content_jsonb, tags,
                    quality_hierarchy, sensory_tests, cross_cuisine_parallels,
-                   lives_or_dies, beverage_pairings, ingredients, steps
+                   lives_or_dies, beverage_pairings, ingredients, steps,
+                   ingredient_origin_markers, created_at
             FROM user_kitchen_recipes
             WHERE user_id = %s AND is_draft = FALSE AND slug IS NOT NULL
             ORDER BY updated_at DESC
@@ -1416,6 +1462,8 @@ def _query_user_recipes(user_id, state="imported"):
                 "serves": serves_raw,
                 "requires_haccp": _detect_raw_served(*_recipe_dict_to_haccp_inputs(r)),
                 "card_tags": _sanitize_tags(raw_tags, limit=2),
+                "sourced": _recipe_has_sourcing(r.get("ingredient_origin_markers")),
+                "recent": _is_recent(r.get("created_at")),
             })
         return out
     except Exception as e:
@@ -1440,7 +1488,8 @@ def _query_compose_drafts(user_id):
                    servings_count, servings_text, template_version,
                    recipe_content_jsonb, tags,
                    quality_hierarchy, sensory_tests, cross_cuisine_parallels,
-                   lives_or_dies, beverage_pairings, ingredients, steps
+                   lives_or_dies, beverage_pairings, ingredients, steps,
+                   ingredient_origin_markers, created_at
             FROM user_kitchen_recipes
             WHERE user_id = %s AND is_draft = TRUE AND slug IS NOT NULL
             ORDER BY updated_at DESC
@@ -1482,6 +1531,8 @@ def _query_compose_drafts(user_id):
                 "serves": serves_raw,
                 "requires_haccp": _detect_raw_served(*_recipe_dict_to_haccp_inputs(r)),
                 "card_tags": _sanitize_tags(raw_tags, limit=2),
+                "sourced": _recipe_has_sourcing(r.get("ingredient_origin_markers")),
+                "recent": _is_recent(r.get("created_at")),
             })
         return out
     except Exception as e:
@@ -1585,10 +1636,16 @@ def kitchen():
             if m.get("updated_at"):
                 m["updated_at"] = m["updated_at"].isoformat()
         _mcur.close(); _mc.close()
-    # Real stat counts for the working-shelf band (design wants four; only
-    # these have honest backing — Collections/Sourced/Cooked have no data yet).
+    # Real stat counts for the working-shelf band. Sourced is now real (derived
+    # from ingredient_origin_markers per card). Enhanced/Drafts kept as honest
+    # substitutes per founder ruling until Collections + Cooked-this-week land
+    # (Cycle 2), when the design's canonical four go fully real.
+    _sourced_count = sum(
+        1 for _lst in recipes_by_state.values() for _r in _lst if _r.get("sourced")
+    )
     kitchen_stats = {
         "recipes": total,
+        "sourced": _sourced_count,
         "enhanced": len(recipes_by_state["enhanced"]),
         "drafts": len(recipes_by_state["compose_draft"]),
         "menus": len(user_menus),
