@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
 
 {% block title %}{{ product.name }} — Provenance Beverage{% endblock %}
 
@@ -117,6 +118,26 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
   flex-shrink:0;font-family:var(--mono);font-size:10px;
   letter-spacing:1px;text-transform:uppercase;color:var(--text-light);
 }
+/* ── The sommelier reading layer (spec §5, mockup 3) ── */
+.somm-panel{background:#13110C;color:#F1EBDD;border-radius:8px;padding:24px 28px;margin-bottom:20px;position:relative}
+.somm-panel .sp-label{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:#C6A055;margin-bottom:14px}
+.somm-panel .sp-label .tierchip{font-size:8.5px;border:1px solid #4A6B8A;color:#7f9cb5;border-radius:3px;padding:2px 7px;margin-left:8px;letter-spacing:1px}
+.dp-row{display:flex;justify-content:space-between;gap:18px;padding:8px 0;border-bottom:1px dashed #2C2820;font-size:13.5px}
+.dp-row .k{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#A39A88;flex:none;padding-top:2px}
+.dp-row .v{text-align:right;color:#F1EBDD;line-height:1.55}
+.ladder-rung{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:9px 0;border-bottom:1px dashed #2C2820;font-size:13.5px;line-height:1.55}
+.ladder-rung .t{font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:#C6A055;padding-top:2px}
+.serviceline{font-family:var(--mono);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:#A39A88;margin-top:14px;padding-top:12px;border-top:1px solid #2C2820}
+.frosted .fr-inner{filter:blur(3px);opacity:.5;pointer-events:none;user-select:none}
+.frosted .fr-veil{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px}
+.suggestp{margin-top:14px;border:1px solid #C6A055;border-radius:4px;padding:18px 20px;background:#13110C;color:#F1EBDD}
+.suggestp .s-head{font-family:var(--serif);font-style:italic;font-size:18px;color:#C6A055;margin-bottom:4px}
+.suggestp .s-sub{font-size:12.5px;color:#A39A88;line-height:1.55;margin-bottom:12px}
+.suggestp .s-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.suggestp input{background:transparent;border:1px solid #2C2820;border-radius:3px;padding:9px 11px;color:#F1EBDD;font-family:var(--sans);font-size:12.5px}
+.suggestp button{margin-top:10px;background:#C6A055;color:#13110C;border:0;border-radius:3px;padding:9px 16px;font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+.suggestp .s-msg{margin-top:6px;font-size:12px;color:#C6A055}
+@media(max-width:600px){.suggestp .s-grid,.ladder-rung{grid-template-columns:1fr}}
 {% endblock %}
 
 {% block content %}
@@ -156,6 +177,51 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
   </div>
   {% endif %}
 
+  {# ── THE SOMMELIER READING LAYER — spec v1.1 §5, Library tier ── #}
+  {% set _lib = gate_for_tier('library') %}
+  {% if product.deductive_profile %}
+  <div class="somm-panel {{ 'frosted' if _lib != 'full_content' }}">
+    <div class="sp-label">The deductive profile <span class="tierchip">Library</span></div>
+    <div class="{{ 'fr-inner' if _lib != 'full_content' }}">
+      {% set _dp = product.deductive_profile %}
+      {% for k in ['colour','appearance','nose','palate','finish','conclusion'] %}
+        {% if _dp.get(k) %}<div class="dp-row"><span class="k">{{ k }}</span><span class="v">{{ _dp[k] }}</span></div>{% endif %}
+      {% endfor %}
+      {% for k, v in _dp.items() %}
+        {% if k not in ['colour','appearance','nose','palate','finish','conclusion'] and v %}
+        <div class="dp-row"><span class="k">{{ k | replace('_',' ') }}</span><span class="v">{{ v }}</span></div>
+        {% endif %}
+      {% endfor %}
+      {% if product.service_specs %}
+      <div class="serviceline">Service —
+        {% if product.service_specs.temp_c %}{{ product.service_specs.temp_c }}°C{% endif %}
+        {% if product.service_specs.temperature %}{{ product.service_specs.temperature }}{% endif %}
+        {% if product.service_specs.decant_minutes %} · decant {{ product.service_specs.decant_minutes }} min{% endif %}
+        {% if product.service_specs.vessel %} · {{ product.service_specs.vessel }}{% endif %}
+        {% if product.service_specs.pour %} · {{ product.service_specs.pour }}{% endif %}
+      </div>
+      {% endif %}
+    </div>
+    {% if _lib != 'full_content' %}
+    <div class="fr-veil">{{ upgrade_prompt('library', 'beverage_deductive', compact=true) }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if product.quality_hierarchy %}
+  <div class="somm-panel {{ 'frosted' if _lib != 'full_content' }}">
+    <div class="sp-label">The quality ladder <span class="tierchip">Library</span></div>
+    <div class="{{ 'fr-inner' if _lib != 'full_content' }}">
+      {% for rung in product.quality_hierarchy %}
+      <div class="ladder-rung"><span class="t">{{ rung.tier }}</span><span>{{ rung.criteria }}</span></div>
+      {% endfor %}
+    </div>
+    {% if _lib != 'full_content' %}
+    <div class="fr-veil">{{ upgrade_prompt('library', 'quality_hierarchy', compact=true) }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
   {% if product.deductive_profile and product.deductive_profile.nose %}
   <div class="section">
     <div class="section-label">Tasting profile</div>
@@ -187,6 +253,41 @@ body{background:var(--cream);color:var(--text);font-family:var(--sans);font-weig
     {% endfor %}
     <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#A39A88;margin-top:12px;padding-top:10px;border-top:1px solid #2C2820">Origin earns the citation · provider earns the click</div>
   </div>
+  {% endif %}
+
+  {% if not providers %}
+  {# Doctrine §4 + §8B: origin-only rendering carries the invitation, loudest here #}
+  <div class="section" style="background:#13110C;color:#F1EBDD;border-radius:8px;padding:22px 24px;border-left:3px solid #C6A055">
+    <div class="section-label" style="color:#C6A055">Not yet carried in {{ reader_region }}</div>
+    <p style="font-family:var(--serif);font-style:italic;font-size:17px;color:#C6A055;margin-bottom:6px">The pour exists; it simply hasn't crossed to your shelf yet.</p>
+    <p style="font-size:13px;color:#A39A88;line-height:1.6">This look is counted — the gap is the signal that brings it here.</p>
+    <div class="suggestp" id="suggestBox">
+      <div class="s-head">Know who should carry it?</div>
+      <p class="s-sub">Name the importer, shop, or distributor who belongs on this page. If the checks confirm them, your cellar gets deeper — and you'll be the first to know.</p>
+      <div class="s-grid">
+        <input id="sg_name" placeholder="Business name">
+        <input id="sg_region" placeholder="Region" value="{{ reader_region if reader_region != 'global' else '' }}">
+        <input id="sg_web" placeholder="Website">
+        <input id="sg_note" placeholder="A note, if you like">
+      </div>
+      <button type="button" onclick="submitSuggest()">Suggest a supplier</button>
+      <div class="s-msg" id="sg_msg"></div>
+    </div>
+  </div>
+  <script>
+  function submitSuggest(){
+    var name=document.getElementById('sg_name').value.trim();
+    var msg=document.getElementById('sg_msg');
+    if(!name){ msg.textContent='A business name, at least.'; return; }
+    fetch('/beverages/suggest-supplier',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({business_name:name,region:document.getElementById('sg_region').value,
+        website:document.getElementById('sg_web').value,note:document.getElementById('sg_note').value,
+        product_id:{{ product.id }}})})
+      .then(function(r){return r.json();})
+      .then(function(d){ document.getElementById('suggestBox').innerHTML='<div class="s-head">'+((d&&d.message)||'Noted — thank you.')+'</div>'; })
+      .catch(function(){ msg.textContent='That did not go through. Try again.'; });
+  }
+  </script>
   {% endif %}
 
   {% if pairings %}
