@@ -1078,7 +1078,8 @@ body.kitchen-mode .sp-turn-next{width:10vw}
       {% if not technique_pairings_editorial and technique_pairings_deduction %}
       <li style="list-style:none;margin:6px 0 10px;font-family:'DM Mono','IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#8B6914;border-top:1px dashed #D9CFBB;padding-top:14px">The cellar's deduction — structural, awaiting the founder's signature</li>
       {% for d in technique_pairings_deduction %}
-      <li class="tbp-item" style="border-left:2px dashed #C9A84C;padding-left:12px">
+      <li class="tbp-item" style="border-left:2px dashed #C9A84C;padding-left:12px{% if d.quiet %};opacity:.55{% endif %}">
+        {% if d.quiet %}<span style="font-family:'DM Mono','IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:#948B7F">behind the morning pours — where the service allows</span>{% endif %}
         <a href="/beverage/products/{{ d.product.id }}" class="tbp-link tbp-link--partial">
           {% if d.product.producer_name %}<span class="tbp-producer">{{ d.product.producer_name }}</span>{% endif %}
           <span class="tbp-wine">{{ d.product.name }}</span>

@@ -117,12 +117,15 @@ body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk',sans-
 
   <div class="moves">
     {% for p in picks %}
-    <div class="move">
+    <div class="move"{% if p.quiet %} style="opacity:.55"{% endif %}>
       <span class="tag">{{ p.move }}</span>
       <div class="b">
         <a href="/beverage/products/{{ p.product.id }}">{{ p.product.name }}</a>
         <span class="meta">{{ (p.product.category or '') | string | replace('_',' ') }}{% if p.product.producer_name %} · {{ p.product.producer_name }}{% endif %}{% if p.product.region_name %} · {{ p.product.region_name }}{% endif %}</span>
         <span class="why">{{ p.why }}</span>
+        {% if p.quiet %}
+        <span class="faraway">behind the morning pours — where the service allows</span>
+        {% endif %}
         {% if not p.carried %}
         <span class="faraway">Not yet carried in {{ reader_label }} — its page renders origin-only, and the look is counted.</span>
         {% endif %}

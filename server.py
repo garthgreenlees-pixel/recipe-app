@@ -11958,6 +11958,19 @@ def _dish_axes_from_text(name, blob):
     return axes, aromatics[:8]
 
 
+_MORNING_TOKENS = ["breakfast", "viennoiserie", "morning", "brunch", "petit d\u00e9jeuner",
+                   "petit dejeuner", "congee", "tamago kake gohan", "porridge"]
+
+
+def _dish_service_context(blob):
+    """Meal-context axis (ruling 2.3a): derived from the entry's own text only —
+    never invented. Ambiguous -> None (no alcohol filter)."""
+    low = blob.lower()
+    if any(t in low for t in _MORNING_TOKENS):
+        return "morning"
+    return None
+
+
 def _dish_from_technique(tid):
     """Library-first: read a technique's structure from the platform's own data."""
     conn = get_db()
@@ -11975,14 +11988,17 @@ def _dish_from_technique(tid):
     if row.get("recipe_card"):
         blob += " " + str(row["recipe_card"])
     axes, aromatics = _dish_axes_from_text(row["name"], blob)
+    context = _dish_service_context(row["name"] + " " + blob)
     line = " \u00b7 ".join(f"{k} {axes[k]}" for k in
                             ("weight", "fat", "salt", "acid", "sweet", "smoke", "heat"))
     return {
         "name": row["name"],
         "axes": axes,
         "aromatics": aromatics,
+        "context": context,
         "structure_line": f"read from the Library entry \u2014 {line}"
-                          + (f" \u00b7 aromatics: {', '.join(aromatics)}" if aromatics else ""),
+                          + (f" \u00b7 aromatics: {', '.join(aromatics)}" if aromatics else "")
+                          + (f" \u00b7 service: {context}" if context else ""),
         "tid": row["id"],
     }
 
@@ -12033,15 +12049,43 @@ def _grammar_resolve(dish, reader_token, limit=6, per_cat_cap=2):
             move, score, why = res
             scored.append((score, move, why, prod))
     scored.sort(key=lambda t: -t[0])
+
+    _NA_FAMS = {"coffee", "tea", "na", "water"}
+
+    def _fam(prod):
+        return (prod.get("category") or "").split("_")[0]
+
+    def _fill(cands, limit_n, per_cat, picks, quiet=False):
+        for score, move, why, prod in cands:
+            cat = _fam(prod)
+            if per_cat.get(cat, 0) >= per_cat_cap:
+                continue
+            picks.append({"move": move, "why": why, "product": prod,
+                          "score": round(score, 2), "quiet": quiet})
+            per_cat[cat] = per_cat.get(cat, 0) + 1
+            if len(picks) >= limit_n:
+                break
+
     picks, per_cat = [], {}
-    for score, move, why, prod in scored:
-        cat = (prod.get("category") or "").split("_")[0]
-        if per_cat.get(cat, 0) >= per_cat_cap:
-            continue
-        picks.append({"move": move, "why": why, "product": prod, "score": round(score, 2)})
-        per_cat[cat] = per_cat.get(cat, 0) + 1
-        if len(picks) >= limit:
-            break
+    if dish.get("context") == "morning":
+        # Ruling 2.3a: morning dishes answer FIRST with coffee, tea and other
+        # morning-appropriate pours; alcohol only behind them, quietly.
+        na = [c for c in scored if _fam(c[3]) in _NA_FAMS]
+        # coffee and tea are the morning pours of record — they lead within NA
+        na.sort(key=lambda c: -(c[0] + (1.5 if _fam(c[3]) in ("coffee", "tea") else 0)))
+        _fill(na, limit, per_cat, picks)
+        alc = [c for c in scored if _fam(c[3]) not in _NA_FAMS]
+        _fill(alc, min(len(picks) + 2, limit + 2), per_cat, picks, quiet=True)
+    else:
+        _fill(scored, limit, per_cat, picks)
+        # Every dish's answer includes a non-alcoholic pour whenever one can
+        # honestly bridge or cut (ruling 2.3a) — NA is a first-class citizen.
+        if picks and not any(_fam(p["product"]) in _NA_FAMS for p in picks):
+            best_na = next((c for c in scored if _fam(c[3]) in _NA_FAMS), None)
+            if best_na:
+                score, move, why, prod = best_na
+                picks[-1] = {"move": move, "why": why, "product": prod,
+                             "score": round(score, 2), "quiet": False}
     ids = [p["product"]["id"] for p in picks]
     carried = set()
     if ids:
