@@ -981,7 +981,7 @@ async function _cmHaccpGenerateFresh() {
   } catch(err) {
     clearTimeout(timeout);
     if (err&&err.name==='AbortError') _cmHaccpSetBody('<div class="haccp-loading">HACCP generation is taking longer than expected. Refresh and try again.</div>');
-    else if (err&&err.status===502) _cmHaccpSetBody('<div class="haccp-loading">Could not generate a complete HACCP plan. The recipe may be missing structural detail.</div>');
+    else if (err&&err.status===502) _cmHaccpSetBody('<div class="haccp-loading">Could not generate a complete HACCP brief. The recipe may be missing structural detail.</div>');
     else _cmHaccpSetBody('<div class="haccp-loading">Something went wrong. Try again in a moment.</div>');
   }
 }
