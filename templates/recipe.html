@@ -646,8 +646,9 @@ main { padding-bottom: 60px; }
 .r6-sourced__eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-deep,#9A7B3F);margin-bottom:14px;}
 .r6-sourced__title{font-family:var(--display);font-weight:600;font-size:clamp(28px,3.4vw,42px);line-height:1.08;margin:0;color:var(--charcoal);}
 .r6-sourced__lede{font-size:16px;line-height:1.6;color:var(--charcoal-soft);margin:16px 0 0;}
-.r6-producers{border-top:1px solid var(--line);}
-.r6-producer{display:flex;align-items:flex-start;gap:20px;border-bottom:1px solid var(--line);padding:26px 0;}
+.r6-producers{display:grid;grid-template-columns:1fr 1fr;column-gap:44px;border-top:1px solid var(--line);}
+.r6-producer{display:flex;align-items:flex-start;gap:16px;border-bottom:1px solid var(--line);padding:18px 0;}
+@media(max-width:720px){ .r6-producers{grid-template-columns:1fr;} }
 .r6-producer__initial{flex:none;width:48px;height:48px;border-radius:50%;border:1px solid var(--gold,#C9A84C);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:20px;color:var(--gold-deep,#9A7B3F);}
 .r6-producer__body{flex:1;min-width:0;}
 .r6-producer__name{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.15;color:var(--charcoal);}
@@ -1106,46 +1107,10 @@ main { padding-bottom: 60px; }
     </div>
   </div>
 
-  {# Tools render ONCE — the pinned bottom bar (working-layer pattern, matches
-     Cook Mode) is the single tools presence. The old in-page pill row is removed. #}
-
-  {# ─── TOOLS & COMPLIANCE ─── #}
-  <section class="r6-pillar r6-pillar--tools" style="padding-bottom: var(--s6);">
-    <div class="r6-pillar__head">
-      <div>
-        <div class="r6-pillar__num">Tools &amp; Compliance</div>
-        <h2>The working layer</h2>
-      </div>
-      <div class="r6-pillar__badge"><span class="r6-tier-chip r6-tier-chip--profession">Profession+ — HACCP brief and costing</span></div>
-    </div>
-    <div class="r6-tools-grid">
-
-
-
-      {% set tools_seen = [] %}
-      {% for step in steps %}
-        {% if step is mapping and step.tools %}
-          {% for t in step.tools %}
-            {% if t.name not in tools_seen %}{% set _ = tools_seen.append(t.name) %}{% endif %}
-          {% endfor %}
-        {% endif %}
-      {% endfor %}
-      {% if tools_seen %}
-      <details class="r6-tool">
-        <summary>
-          <div class="r6-tool__icon">▸ Tools Required</div>
-          <div class="r6-tool__name">Equipment list</div>
-        </summary>
-        <div class="r6-tool__body">
-          <ul style="padding-left: var(--s2);">
-            {% for t in tools_seen %}<li>{{ t }}</li>{% endfor %}
-          </ul>
-        </div>
-      </details>
-      {% endif %}
-
-    </div>
-  </section>
+  {# Tools render ONCE — the pinned bottom bar (working-layer pattern, matching
+     Cook Mode) is the tools' single home. The end-of-page 'Tools & Compliance'
+     section was removed as an orphaned duplicate; gating badges live inside the
+     tool modals where they already render. #}
 
 
 </div>
@@ -1466,23 +1431,9 @@ function scStep(delta) {
   _scUpdateFactor();
 }
 function scApply() {
-  const factor = _scCurrent / RECIPE_YIELD;
-  document.querySelectorAll('.r-ing-qty').forEach(el => {
-    const orig = el.dataset.orig !== undefined ? el.dataset.orig : el.textContent;
-    if (!el.dataset.orig) el.dataset.orig = orig;
-    el.textContent = orig.replace(/(\d+\.?\d*)/g, (m, n) => {
-      const s = parseFloat(n) * factor;
-      return s % 1 === 0 ? String(s) : s.toFixed(1);
-    });
-  });
-  const yieldEl = document.getElementById('r-meta-yield');
-  if (yieldEl) {
-    if (!yieldEl.dataset.origYield) yieldEl.dataset.origYield = yieldEl.textContent;
-    yieldEl.textContent = yieldEl.dataset.origYield.replace(/(\d+\.?\d*)/, (m, n) => {
-      const s = parseFloat(n) * factor;
-      return s % 1 === 0 ? String(s) : s.toFixed(1);
-    });
-  }
+  // Drive the ONE scaling engine (defined in recipe-detail.js) so the modal and
+  // the inline Serves stepper never disagree. Falls back to a no-op if absent.
+  if (window.applyServings) window.applyServings(_scCurrent);
   closeScaleModal();
 }
 

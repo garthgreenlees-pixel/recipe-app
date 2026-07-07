@@ -7,24 +7,40 @@
 
   if (ctrl && countEl) {
     var base = parseInt(countEl.dataset.base, 10) || 4;
-    var current = base;
     var totalCost = parseFloat(ctrl.dataset.totalCost) || 0;
 
     var perPortionEl = document.getElementById('r6-cost-per-portion');
     var portionLabelEl = document.getElementById('r6-cost-portion-label');
 
+    // The ONE scaling engine. Both the inline Serves stepper and the Scale modal
+    // call this, so they can never disagree. Scales every .r6-ing__qty from its
+    // stored original by (n / base).
+    window.applyServings = function (n) {
+      n = Math.max(1, parseInt(n, 10) || base);
+      var factor = n / base;
+      document.querySelectorAll('.r6-ing__qty').forEach(function (el) {
+        if (el.dataset.orig === undefined) el.dataset.orig = el.textContent;
+        el.textContent = el.dataset.orig.replace(/(\d+\.?\d*)/g, function (m, num) {
+          var s = parseFloat(num) * factor;
+          return (s % 1 === 0) ? String(s) : s.toFixed(1);
+        });
+      });
+      countEl.textContent = n;
+      var scNum = document.getElementById('sc-num');
+      if (scNum) scNum.textContent = n;
+      if (totalCost > 0) {
+        var cpp = (totalCost / n).toFixed(2);
+        if (perPortionEl) perPortionEl.textContent = '$' + cpp;
+        if (portionLabelEl) portionLabelEl.textContent = '(' + n + ' portions)';
+      }
+      return n;
+    };
+
     ctrl.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-delta]');
       if (!btn) return;
       var delta = parseInt(btn.dataset.delta, 10);
-      current = Math.max(1, current + delta);
-      countEl.textContent = current;
-
-      if (totalCost > 0) {
-        var cpp = (totalCost / current).toFixed(2);
-        if (perPortionEl) perPortionEl.textContent = '$' + cpp;
-        if (portionLabelEl) portionLabelEl.textContent = '(' + current + ' portions)';
-      }
+      window.applyServings((parseInt(countEl.textContent, 10) || base) + delta);
     });
   }
 
