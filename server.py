@@ -4974,6 +4974,14 @@ def scan_recipe():
     # Attempt full batch (with one automatic retry)
     recipe, err = _scan_with_retry(content, label=f"{len(images)}-page batch")
 
+    if request.args.get("debug"):
+        _dbg = {"n_images": len(images), "err": repr(err), "recipe_keys": list(recipe.keys()) if isinstance(recipe, dict) else None}
+        try:
+            _dbg["raw_first"] = _scan_call(content) if recipe is None else recipe
+        except Exception as _e:
+            _dbg["raw_error"] = repr(_e)
+        return jsonify(_debug=_dbg)
+
     # Batch unparseable and multiple images — per-page fallback that treats a
     # text-less page as a DISH PHOTO (not a failure), never blaming the photos.
     if not _has_recipe_text(recipe) and not (recipe and recipe.get("no_recipe_text")) and len(images) > 1:
