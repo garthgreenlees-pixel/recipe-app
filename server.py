@@ -5100,7 +5100,10 @@ def _compose_recipe_extras(title, ingredients_text, method_text):
         ' "safety_notes": "a short, practical working-notes paragraph on the genuine food-safety '
         'points for THIS recipe, drawn only from its ingredients and method: raw/undercooked '
         'proteins or egg, holding temperatures, cross-contamination, and the main allergens. '
-        'Plain kitchen English. Never claim regulatory compliance."}\n\n'
+        'Plain kitchen English. Never claim regulatory compliance.",\n'
+        ' "method_readable": true if the METHOD below reads as coherent, sensible cooking '
+        'instructions; false if it looks garbled, OCR-misread, or nonsensical (word-salad like '
+        '"clay carnal our medium heat" or "prepare the adobo adobo").}\n\n'
         f"Recipe: {title}\nIngredients:\n{(ingredients_text or '')[:1500]}\n\nMethod:\n{(method_text or '')[:2000]}\n"
     )
     try:
@@ -5117,6 +5120,7 @@ def _compose_recipe_extras(title, ingredients_text, method_text):
             "cuisine": (data.get("cuisine") or "").strip()[:60],
             "pairing_passage": (data.get("pairing_passage") or "").strip(),
             "safety_notes": (data.get("safety_notes") or "").strip(),
+            "method_readable": data.get("method_readable", True),
         }
     except Exception as e:
         app.logger.warning("compose_recipe_extras failed: %s", e)
@@ -6427,8 +6431,13 @@ def create_recipe():
             ((str(i.get("count") or "") + " " + (i.get("unit") or "") + " " + (i.get("name") or "")).strip()
              for i in (data.get("ingredients") or []) if isinstance(i, dict)))
         _step_lines = "\n".join(s for s in (data.get("steps") or []) if isinstance(s, str))
-        _needs_review, _review_reason = _method_needs_review(data.get("steps") or [])
+        _heur_review, _review_reason = _method_needs_review(data.get("steps") or [])
         _extras = _compose_recipe_extras(recipe["title"], _ing_lines, _step_lines)
+        # F2b — the composer's coherence verdict is authoritative (a wordlist can't
+        # catch real-word garble); the heuristic is a cheap fallback if the call fails.
+        _needs_review = (_extras.get("method_readable") is False) or _heur_review
+        if _needs_review and not _review_reason:
+            _review_reason = "the scan read poorly"
         if DATABASE_URL_WRITE and (_extras.get("cuisine") or _extras.get("pairing_passage") or _needs_review):
             _c = get_db(); _cu = _c.cursor()
             if _extras.get("cuisine"):
