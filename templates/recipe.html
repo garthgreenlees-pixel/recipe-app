@@ -708,6 +708,8 @@ main { padding-bottom: 60px; }
   {# ─── ACTION ROW ─── #}
   <div class="r6-actions">
     <a href="/recipe/{{ recipe.slug }}/cook" class="r6-btn">Cook Mode →</a>
+    <a href="#" class="r6-btn r6-btn--ghost" id="rAddShopping" data-slug="{{ recipe.slug }}">Add to shopping list</a>
+    <a href="#" class="r6-btn r6-btn--ghost" id="rAddMenu" data-slug="{{ recipe.slug }}">Add to a menu</a>
     <a href="#" class="r6-btn r6-btn--ghost" data-action="save">Save</a>
     <a href="{{ url_for('suggest_supplier_form') }}?recipe={{ recipe.slug }}" class="r6-btn r6-btn--ghost">Suggest a supplier</a>
     <a href="#" class="r6-btn r6-btn--ghost" onclick="window.print(); return false;">Print</a>
@@ -716,6 +718,49 @@ main { padding-bottom: 60px; }
       <a href="/recipe/{{ recipe.slug }}/edit" class="r6-btn r6-btn--ghost">Edit</a>
     {% endif %}
   </div>
+  <script>
+  (function(){
+    function toast(msg, href){
+      var t=document.createElement('div');
+      t.innerHTML = msg + (href?' <a href="'+href+'" style="color:#C6A055;text-decoration:underline;">view →</a>':'');
+      t.style.cssText='position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:9999;background:#13110C;color:#F1EBDD;font-family:monospace;font-size:12px;letter-spacing:.06em;padding:12px 20px;border:1px solid #C6A055;';
+      document.body.appendChild(t);
+      setTimeout(function(){ t.style.transition='opacity .5s'; t.style.opacity='0'; setTimeout(function(){t.remove();},500); }, 4000);
+    }
+    var sh=document.getElementById('rAddShopping');
+    if(sh) sh.addEventListener('click', function(e){ e.preventDefault();
+      fetch('/api/shopping-list/add-recipe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slug:sh.getAttribute('data-slug')})})
+        .then(function(r){ if(r.status===401){ toast('Sign in to build a shopping list.'); return null;} return r.json(); })
+        .then(function(d){ if(d&&d.added!=null) toast(d.added+' ingredient'+(d.added!==1?'s':'')+' added to your list.', '/shopping'); else if(d&&d.error) toast('Nothing to add.'); });
+    });
+    var mn=document.getElementById('rAddMenu');
+    if(mn){
+      var pop;
+      mn.addEventListener('click', function(e){ e.preventDefault();
+        if(pop){ pop.remove(); pop=null; return; }
+        fetch('/api/menus').then(function(r){ if(r.status===401||r.status===403){ toast('Menus are a Library feature.'); return null;} return r.json(); })
+        .then(function(d){ if(!d) return;
+          var menus = d.menus||d||[];
+          if(!menus.length){ toast('No menus yet — create one first.', '/menu/new'); return; }
+          pop=document.createElement('div');
+          pop.style.cssText='position:fixed;z-index:9999;background:#F4EEE1;border:1px solid #D9CFBB;box-shadow:0 18px 44px rgba(0,0,0,.28);width:240px;';
+          pop.innerHTML='<div style="font-family:monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#6E665A;padding:11px 14px;">Add to a menu…</div>'
+            + menus.map(function(m){ return '<div class="rmenu-pick" data-slug="'+m.slug+'" style="padding:10px 14px;cursor:pointer;font-family:serif;font-size:15px;color:#17130D;">'+(m.title||m.slug)+'</div>'; }).join('');
+          var r=mn.getBoundingClientRect();
+          pop.style.top=(r.bottom+6)+'px'; pop.style.left=r.left+'px';
+          document.body.appendChild(pop);
+          pop.addEventListener('click', function(ev){ var p=ev.target.closest('.rmenu-pick'); if(!p) return;
+            fetch('/api/menu/'+p.getAttribute('data-slug')+'/recipes',{method:'POST',headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({recipe_ref:mn.getAttribute('data-slug'),course_name:'Mains',course_order:1})})
+              .then(function(r){ return r.json(); }).then(function(){ toast('Added to “'+p.textContent+'”.','/menu/'+p.getAttribute('data-slug')); });
+            pop.remove(); pop=null;
+          });
+        });
+      });
+      document.addEventListener('click', function(e){ if(pop && !pop.contains(e.target) && e.target!==mn){ pop.remove(); pop=null; } });
+    }
+  })();
+  </script>
 
   {# ─── SAFETY NOTES (grind, scope 'safety') — editorial working notes.
         NEVER HACCP; the approved disclaimer rides the panel and every note. ─── #}

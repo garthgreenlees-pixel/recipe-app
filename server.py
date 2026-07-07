@@ -1920,6 +1920,129 @@ def api_cook_log():
         return jsonify({"error": "server"}), 500
 
 
+def _recipe_ingredients_for_slug(slug):
+    """Fetch (title, ingredient-list) for a slug from canon recipes or the
+    user's kitchen recipes. Ingredients are the stored JSONB rows."""
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT title, ingredients FROM recipes WHERE slug = %s", (slug,))
+    row = cur.fetchone()
+    if not row:
+        cur.execute("SELECT title, ingredients FROM user_kitchen_recipes WHERE slug = %s", (slug,))
+        row = cur.fetchone()
+    cur.close(); conn.close()
+    if not row:
+        return None, []
+    ings = row.get("ingredients") or []
+    if isinstance(ings, str):
+        try:
+            ings = json.loads(ings)
+        except Exception:
+            ings = []
+    return row.get("title") or "Recipe", ings
+
+
+@app.route("/api/shopping-list/add-recipe", methods=["POST"])
+def api_shopping_add_recipe():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "auth"}), 401
+    data = request.get_json(silent=True) or {}
+    slug = (data.get("slug") or "").strip()
+    title, ings = _recipe_ingredients_for_slug(slug)
+    if not ings:
+        return jsonify({"error": "no ingredients"}), 404
+    added = 0
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        for ing in ings:
+            if not isinstance(ing, dict):
+                name = str(ing).strip()
+                if name.startswith("## ") or not name:
+                    continue
+                qty = unit = None
+            else:
+                if (ing.get("group") == "heading"):
+                    continue
+                name = (ing.get("name") or "").strip()
+                if not name:
+                    continue
+                qty = (str(ing.get("count")).strip() if ing.get("count") not in (None, "") else None)
+                unit = (ing.get("unit") or None)
+            cur.execute("""
+                INSERT INTO shopping_list_items (user_id, name, qty, unit, source_slug, source_title)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (user["id"], name, qty, unit, slug, title))
+            added += 1
+        cur.close(); conn.close()
+        return jsonify({"ok": True, "added": added})
+    except Exception as e:
+        app.logger.warning(f"api_shopping_add_recipe failed: {e}")
+        return jsonify({"error": "server"}), 500
+
+
+@app.route("/shopping")
+def shopping_list_page():
+    user = get_current_user()
+    if not user:
+        return _login_redirect()
+    items = []
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT id, name, qty, unit, source_slug, source_title, is_checked
+            FROM shopping_list_items WHERE user_id = %s
+            ORDER BY is_checked, source_title NULLS LAST, created_at
+        """, (user["id"],))
+        for r in cur.fetchall():
+            d = dict(r); d["id"] = str(d["id"]); items.append(d)
+        cur.close(); conn.close()
+    except Exception as e:
+        app.logger.warning(f"shopping_list_page failed: {e}")
+    return render_template("shopping.html", items=items)
+
+
+@app.route("/api/shopping-list/toggle/<iid>", methods=["POST"])
+def api_shopping_toggle(iid):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "auth"}), 401
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE shopping_list_items SET is_checked = NOT is_checked
+            WHERE id = %s AND user_id = %s
+        """, (iid, user["id"]))
+        cur.close(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        app.logger.warning(f"api_shopping_toggle failed: {e}")
+        return jsonify({"error": "server"}), 500
+
+
+@app.route("/api/shopping-list/clear", methods=["POST"])
+def api_shopping_clear():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "auth"}), 401
+    checked_only = bool((request.get_json(silent=True) or {}).get("checked_only"))
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        if checked_only:
+            cur.execute("DELETE FROM shopping_list_items WHERE user_id = %s AND is_checked", (user["id"],))
+        else:
+            cur.execute("DELETE FROM shopping_list_items WHERE user_id = %s", (user["id"],))
+        cur.close(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        app.logger.warning(f"api_shopping_clear failed: {e}")
+        return jsonify({"error": "server"}), 500
+
+
 @app.route("/table")
 def table():
     return render_template("table.html")

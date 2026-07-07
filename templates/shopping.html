@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Shopping list — Provenance{% endblock %}
+{% block meta_robots %}noindex{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,600;1,600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --s-paper:#F4EEE1; --s-paper2:#ECE3D1; --s-ink:#17130D; --s-soft:#6E665A; --s-gilt:#9A7B3F; --s-hair:#D9CFBB; --s-night:#13110C;
+         --s-serif:'Cormorant',serif; --s-sans:'Hanken Grotesk',sans-serif; --s-mono:'IBM Plex Mono',monospace; }
+  .sl-hero{ background:var(--s-night); color:#F1EBDD; padding:56px 0 44px; }
+  .sl-hero__in{ max-width:840px; margin:0 auto; padding:0 32px; }
+  .sl-eyebrow{ font-family:var(--s-mono); font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:#C6A055; display:flex; align-items:center; gap:10px; }
+  .sl-eyebrow .d{ width:7px; height:7px; background:#C6A055; transform:rotate(45deg); display:inline-block; }
+  .sl-hero h1{ font-family:var(--s-serif); font-weight:600; font-size:clamp(38px,6vw,64px); margin:12px 0 0; color:var(--s-paper); }
+  .sl-body{ max-width:840px; margin:0 auto; padding:32px; }
+  .sl-actions{ display:flex; gap:10px; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:22px; }
+  .sl-count{ font-family:var(--s-mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--s-gilt); }
+  .sl-btn{ font-family:var(--s-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; padding:9px 14px; border:1px solid var(--s-hair); background:transparent; color:var(--s-ink); cursor:pointer; text-decoration:none; }
+  .sl-btn:hover{ border-color:var(--s-gilt); color:var(--s-gilt); }
+  .sl-group{ margin-bottom:26px; }
+  .sl-group__h{ font-family:var(--s-mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--s-soft); border-bottom:1px solid var(--s-hair); padding-bottom:8px; margin-bottom:6px; }
+  .sl-group__h a{ color:var(--s-gilt); text-decoration:none; }
+  .sl-row{ display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:0.5px solid var(--s-hair); cursor:pointer; }
+  .sl-check{ width:18px; height:18px; border:1.5px solid var(--s-hair); border-radius:3px; flex:none; position:relative; }
+  .sl-row.done .sl-check{ background:var(--s-gilt); border-color:var(--s-gilt); }
+  .sl-row.done .sl-check::after{ content:'✓'; position:absolute; inset:0; text-align:center; line-height:16px; font-size:12px; color:var(--s-night); }
+  .sl-qty{ font-family:var(--s-mono); font-size:13px; color:var(--s-soft); min-width:64px; }
+  .sl-name{ font-family:var(--s-serif); font-size:19px; color:var(--s-ink); }
+  .sl-row.done .sl-name, .sl-row.done .sl-qty{ text-decoration:line-through; opacity:.5; }
+  .sl-empty{ text-align:center; padding:60px 20px; }
+  .sl-empty h2{ font-family:var(--s-serif); font-style:italic; font-size:26px; color:var(--s-ink); }
+  .sl-empty p{ color:var(--s-soft); }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="sl-hero">
+  <div class="sl-hero__in">
+    <div class="sl-eyebrow"><span class="d"></span> The Market List</div>
+    <h1>Shopping list</h1>
+  </div>
+</section>
+
+<div class="sl-body">
+  {% if items %}
+  <div class="sl-actions">
+    <span class="sl-count">{{ items | selectattr('is_checked','equalto',false) | list | length }} to buy · {{ items | length }} total</span>
+    <span style="display:flex;gap:10px;">
+      <button class="sl-btn" id="slClearChecked">Clear ticked</button>
+      <button class="sl-btn" id="slClearAll">Clear all</button>
+    </span>
+  </div>
+
+  {% set groups = items | groupby('source_title') %}
+  {% for title, rows in groups %}
+  <div class="sl-group">
+    <div class="sl-group__h">{% if rows[0].source_slug %}<a href="/recipe/{{ rows[0].source_slug }}">{{ title or 'Added by hand' }}</a>{% else %}{{ title or 'Added by hand' }}{% endif %}</div>
+    {% for it in rows %}
+    <div class="sl-row{% if it.is_checked %} done{% endif %}" data-id="{{ it.id }}" onclick="slToggle(this)">
+      <span class="sl-check"></span>
+      <span class="sl-qty">{% if it.qty %}{{ it.qty }}{% endif %}{% if it.unit %} {{ it.unit }}{% endif %}</span>
+      <span class="sl-name">{{ it.name }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  {% else %}
+  <div class="sl-empty">
+    <h2>Nothing on the list yet.</h2>
+    <p>Open any recipe and hit <b>Add to shopping list</b> — the ingredients land here, grouped by dish.</p>
+    <p style="margin-top:18px;"><a class="sl-btn" href="/kitchen">← Back to MyKitchen</a></p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function slToggle(row){
+  row.classList.toggle('done');
+  fetch('/api/shopping-list/toggle/'+row.getAttribute('data-id'), {method:'POST'});
+}
+(function(){
+  function clear(checkedOnly){
+    fetch('/api/shopping-list/clear', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({checked_only:checkedOnly})}).then(function(){ location.reload(); });
+  }
+  var a=document.getElementById('slClearAll'); if(a) a.addEventListener('click', function(){ if(confirm('Clear the whole list?')) clear(false); });
+  var c=document.getElementById('slClearChecked'); if(c) c.addEventListener('click', function(){ clear(true); });
+})();
+</script>
+{% endblock %}
