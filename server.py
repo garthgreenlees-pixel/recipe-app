@@ -7963,7 +7963,8 @@ def _supplier_in_region(row, region_code):
 # core match with no differing identity qualifier. Used by both supplier surfaces.
 _IDENTITY_QUALIFIERS_G = {"black", "smoked", "dried", "fermented", "pickled",
                          "roasted", "ground", "powdered", "candied", "preserved",
-                         "toasted", "cured", "aged", "green", "wild"}
+                         "toasted", "cured", "aged", "green", "wild",
+                         "powder", "sauce", "juice", "extract", "paste", "syrup"}
 
 
 def _core_stem(name):
@@ -7972,8 +7973,10 @@ def _core_stem(name):
         if n.startswith(prefix):
             n = n[len(prefix):]
             break
-    for suffix in (" chunks", " chunk", " powder", " whole", " flakes", " flake",
-                   " juice", " sauce", " extract", " cloves", " clove", " sprigs",
+    # benign forms only (same ingredient, different cut/pack); powder/sauce/juice/
+    # extract/paste are identity-changing and handled as qualifiers, not stripped.
+    for suffix in (" chunks", " chunk", " whole", " flakes", " flake",
+                   " cloves", " clove", " sprigs",
                    " sprig", " leaves", " leaf", " heads", " head", " bunch",
                    " fillets", " fillet", " thighs", " thigh", " breast"):
         if n.endswith(suffix):
@@ -7995,8 +7998,10 @@ def _core_match(pname, iname):
     pw, iw = ps.split(), is_.split()
     if (set(pw) ^ set(iw)) & _IDENTITY_QUALIFIERS_G:
         return False
-    short, long_ = (pw, iw) if len(pw) <= len(iw) else (iw, pw)
-    return long_[-len(short):] == short
+    if len(iw) > len(pw):
+        pw, iw = iw, pw  # iw = the shorter core
+    # the shorter core must appear as a contiguous whole-word run in the longer
+    return any(pw[k:k + len(iw)] == iw for k in range(len(pw) - len(iw) + 1))
 
 
 def _localize_markers(markers, user_loc):
@@ -8121,8 +8126,8 @@ def _get_kitchen_recipe_suppliers_from_markers(recipe_dict, user_loc="global"):
             if n.startswith(prefix):
                 n = n[len(prefix):]
                 break
-        for suffix in (" chunks", " chunk", " powder", " whole", " flakes", " flake",
-                       " juice", " sauce", " extract", " cloves", " clove", " sprigs",
+        for suffix in (" chunks", " chunk", " whole", " flakes", " flake",
+                       " cloves", " clove", " sprigs",
                        " sprig", " leaves", " leaf", " heads", " head", " bunch",
                        " fillets", " fillet", " thighs", " thigh", " breast"):
             if n.endswith(suffix):
@@ -8182,7 +8187,8 @@ def _get_kitchen_recipe_suppliers_from_markers(recipe_dict, user_loc="global"):
     # token/substring overlap is NOT enough.
     _IDENTITY_QUALIFIERS = {"black", "smoked", "dried", "fermented", "pickled",
                             "roasted", "ground", "powdered", "candied", "preserved",
-                            "toasted", "cured", "aged", "green", "wild"}
+                            "toasted", "cured", "aged", "green", "wild",
+                            "powder", "sauce", "juice", "extract", "paste", "syrup"}
 
     def _cores_match(pstem, istem):
         if not pstem or not istem:
@@ -8190,8 +8196,9 @@ def _get_kitchen_recipe_suppliers_from_markers(recipe_dict, user_loc="global"):
         pw, iw = pstem.split(), istem.split()
         if (set(pw) ^ set(iw)) & _IDENTITY_QUALIFIERS:
             return False  # an identity qualifier on one side but not the other → different thing
-        short, long_ = (pw, iw) if len(pw) <= len(iw) else (iw, pw)
-        return long_[-len(short):] == short  # the shorter core is a whole-word tail of the longer
+        if len(iw) > len(pw):
+            pw, iw = iw, pw
+        return any(pw[k:k + len(iw)] == iw for k in range(len(pw) - len(iw) + 1))
 
     def _product_matches_recipe(product_name, ingredient_stems):
         """True only when the product IS one of this supplier's recipe ingredients."""
