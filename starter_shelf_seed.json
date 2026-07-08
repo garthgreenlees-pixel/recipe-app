@@ -69,11 +69,30 @@
   ],
   "origin": "Roman working-class tradition, possibly connected to the carbonari charcoal workers of the Apennines. The modern recipe is contested — some trace it to 1944, when American soldiers mixed rations of bacon and egg powder with Italian pasta. Others insist the technique predates the war. What is certain: it has never contained cream. The cream version is a postwar export misunderstanding that has never been corrected.",
   "quality_hierarchy": [
-   "1. Guanciale from Lazio pig cheeks — not pancetta, not bacon. The fat structure is fundamentally different and cannot be replicated by substitution.",
-   "2. Pecorino Romano DOP — aged sheep milk cheese with a sharpness that balances the fat. Parmesan alone produces a blander result.",
-   "3. Spaghetti or rigatoni only — rigatoni ridges trap the sauce; spaghetti coats evenly. Penne is wrong. Tagliatelle is wrong.",
-   "4. Whole black peppercorns, cracked fresh at the pan before serving. Pre-ground pepper is a different ingredient.",
-   "5. Egg yolks, not whole eggs — the fat content of yolks produces the emulsification. A whole egg dilutes it."
+   {
+    "ingredient": "guanciale",
+    "reserve": "Lazio-cured guanciale, sliced thick, rendered slowly so the fat runs clear and the edges crisp without burning",
+    "house": "pancetta tesa, unsmoked, cut into lardons",
+    "swap_cost": "Pancetta's leaner, firmer fat renders differently and delivers less of the unctuous, porky sweetness that the egg emulsion is built around"
+   },
+   {
+    "ingredient": "Pecorino Romano",
+    "reserve": "Pecorino Romano DOP, aged, finely grated on a microplane immediately before use",
+    "house": "equal-split blend of Pecorino Romano and Parmigiano Reggiano DOP",
+    "swap_cost": "The split softens the cheese's edge and reduces the saline sharpness that cuts through the guanciale fat"
+   },
+   {
+    "ingredient": "eggs",
+    "reserve": "four yolks plus one whole egg per 100 g dry pasta, from free-range hens with deep-orange yolks",
+    "house": "standard supermarket yolks at the same ratio",
+    "swap_cost": "Paler, less fatty yolks produce a thinner emulsion with less body and a weaker golden colour in the finished sauce"
+   },
+   {
+    "ingredient": "black pepper",
+    "reserve": "whole Tellicherry or Sarawak peppercorns, cracked coarse in a mortar and toasted briefly in the guanciale fat",
+    "house": "whole peppercorns cracked fresh in a mill directly over the pan",
+    "swap_cost": "Skipping the brief toast in fat removes the bloomed, aromatic dimension that makes pepper structural rather than merely sharp in this dish"
+   }
   ],
   "sensory_tests": [
    "The sauce should coat each strand in a glossy, barely translucent film — not pooled at the bottom.",
@@ -81,13 +100,24 @@
    "The pepper should be visible as black flecks throughout, never ground fine."
   ],
   "cross_cuisine_parallels": [
-   "Korean gyeranjjim (steamed egg custard) — uses the same heat-threshold technique in reverse, steaming at precise temperature to set without curdling.",
-   "French sauce hollandaise — the same fundamental challenge: emulsifying fat with egg at a temperature that thickens without scrambling.",
-   "Neapolitan pasta e uova — a simpler ancestor using whole egg, olive oil, and cheese, without the guanciale fat emulsification."
+   {
+    "name": "sauce hollandaise",
+    "cuisine": "French"
+   },
+   {
+    "name": "gyeranjjim",
+    "cuisine": "Korean"
+   },
+   {
+    "name": "pasta e uova",
+    "cuisine": "Neapolitan Italian"
+   }
   ],
   "lives_or_dies": "The 30-second window when pasta meets egg off heat. Too hot: scrambled eggs. Too cold: a grainy, broken sauce. The pasta water you reserved — starchy, salted — is the only rescue tool you have. Add it by the tablespoon.",
   "beverage_pairings": null,
-  "flavour_context": "Hot pasta emulsifies cold egg yolk and Pecorino Romano off the heat. The residual temperature of freshly drained spaghetti — around 80°C — is exactly sufficient to thicken the yolk proteins without scrambling them. The pasta must be moved constantly. The bowl must be warm. The timing window is 30 seconds."
+  "flavour_context": "Hot pasta emulsifies cold egg yolk and Pecorino Romano off the heat. The residual temperature of freshly drained spaghetti — around 80°C — is exactly sufficient to thicken the yolk proteins without scrambling them. The pasta must be moved constantly. The bowl must be warm. The timing window is 30 seconds.",
+  "pairing_passage": "At the Table: pour a young Frascati Superiore or Cesanese del Piglio — both from the Castelli Romani hills immediately south of Rome — whose high acidity and restrained fruit cut the egg-fat emulsion without competing with the pepper. The geographic logic holds too: the wine and the dish were built in the same kitchen climate, on the same table.",
+  "order_index": 0
  },
  {
   "key": "tonkotsu-ramen",
@@ -189,11 +219,30 @@
   ],
   "origin": "Hakata, Fukuoka prefecture, 1941. Miyamoto Tokio's Nankin Senyoji restaurant. The discovery was accidental: a cook left pork bones on a full boil rather than the expected simmer. The resulting milky-white broth — tonkotsu — became the defining food of Fukuoka. The violent boil that produces opacity is not a mistake to be corrected but the entire point of the technique.",
   "quality_hierarchy": [
-   "1. Pork trotters and neck bones, split before cooking — the surface area of exposed marrow and connective tissue determines collagen yield.",
-   "2. Fresh sun-dried ramen noodles — the alkaline water (kansui) creates the characteristic yellow colour and springy texture that dried noodles cannot replicate.",
-   "3. Chashu from pork belly, braised in mirin, sake, and soy for 4 hours minimum — sliced thin and torched before serving.",
-   "4. Soft-boiled tamago marinated for 12 hours in soy and mirin — the white should be firm, the yolk jammy.",
-   "5. Tare added at the bowl, not during broth making — shoyu or shio concentrate adjusts flavour without being cooked in."
+   {
+    "ingredient": "pork trotters & neck bones",
+    "reserve": "fresh-split trotters and neck bones from a heritage breed (Berkshire/Kurobuta), high collagen and fat content, sourced same-day from a butcher who breaks them to order",
+    "house": "commercial split pork trotters and neck bones, pre-packaged, adequate gelatin yield when boiled long enough",
+    "swap_cost": "reduced collagen density and sweetness in the fat; the broth will be thinner and require longer boiling to approach the same body"
+   },
+   {
+    "ingredient": "fresh ramen noodles",
+    "reserve": "fresh kansui noodles milled and cut the same day, high-protein bread flour, calibrated alkalinity for firm bite and yellow hue",
+    "house": "commercially produced fresh or frozen ramen noodles with kansui, consistent but less nuanced chew",
+    "swap_cost": "loss of that tight, snapping spring in the bite; noodles begin absorbing broth faster and go slack sooner in the bowl"
+   },
+   {
+    "ingredient": "pork belly (chashu)",
+    "reserve": "skin-on pork belly, even fat-to-meat ratio, from a free-range animal — fat renders cleanly, flesh stays moist through a 4-hour braise",
+    "house": "standard supermarket pork belly, skin-off, acceptable fat layer",
+    "swap_cost": "less rendered fat coating each slice; the torch caramelisation has less surface lipid to work with and the flavour edge is duller"
+   },
+   {
+    "ingredient": "eggs (tamago)",
+    "reserve": "high-welfare, high-yolk-fat eggs (Burford Brown or equivalent) — deeply orange yolk sets jammy at exactly 6 minutes 30 seconds, absorbs marinade visibly",
+    "house": "standard free-range eggs, paler yolk, acceptable texture after 12-hour marinade",
+    "swap_cost": "the yolk colour and richness are visibly diminished; the jammy centre is still achievable but delivers less fat and flavour on the palate"
+   }
   ],
   "sensory_tests": [
    "The broth should be opaque white when poured cold into a glass — not pale or translucent.",
@@ -201,13 +250,24 @@
    "Noodles should have slight resistance at the core even after 90 seconds in boiling broth — not fully soft."
   ],
   "cross_cuisine_parallels": [
-   "French pot-au-feu — long bone broth, served separately from the solid elements, same philosophy of time-extracted gelatin.",
-   "Korean seolleongtang — ox bone broth, same long boil, same opacity goal, same collagen-forward approach.",
-   "Cantonese pork bone congee — same bone base, different starch vehicle, same low-and-slow extraction principle."
+   {
+    "name": "pot-au-feu",
+    "cuisine": "French"
+   },
+   {
+    "name": "seolleongtang",
+    "cuisine": "Korean"
+   },
+   {
+    "name": "pork bone congee",
+    "cuisine": "Cantonese"
+   }
   ],
   "lives_or_dies": "The fat ring that forms across the surface when the bowl is assembled. This ring insulates the temperature and delivers flavour at the lip of every sip. A bowl served without it is technically correct and spiritually empty.",
   "beverage_pairings": null,
-  "flavour_context": "Split pork trotters and neck bones are brought to a full rolling boil and held there for 18 hours minimum. This is not simmering — the violent agitation forces fat and collagen into emulsification. The opacity cannot be achieved at lower temperatures. The final broth should be white, creamy, and leave a coating on the inside of every vessel it touches."
+  "flavour_context": "Split pork trotters and neck bones are brought to a full rolling boil and held there for 18 hours minimum. This is not simmering — the violent agitation forces fat and collagen into emulsification. The opacity cannot be achieved at lower temperatures. The final broth should be white, creamy, and leave a coating on the inside of every vessel it touches.",
+  "pairing_passage": "At the Table: a cold, dry Sapporo-style lager — low bitterness, high carbonation — cuts the fat ring cleanly between sips and resets the palate without competing with the broth's umami depth; the fizz does the structural work that a richer drink would smother.",
+  "order_index": 1
  },
  {
   "key": "chicken-tikka-masala",
@@ -315,11 +375,30 @@
   ],
   "origin": "Glasgow, 1970s — most authorities cite Ali Ahmed Aslam of Shish Mahal, who added tomato cream and spices to dry tandoor-cooked chicken tikka to satisfy a customer who wanted sauce. Or pre-Partition Punjab, where butter chicken (murgh makhani) at Moti Mahal restaurant in Delhi was already established by the late 1940s. Both accounts may be true simultaneously. The dish belongs to both British and Punjabi identity, and the argument has become its own story.",
   "quality_hierarchy": [
-   "1. Chicken thighs, not breast — the fat content prevents drying under tandoor or high broiler heat.",
-   "2. Full-fat whole-milk yogurt for the marinade — low-fat splits under acid and heat.",
-   "3. Kashmiri chilli powder — the source of the orange-red colour, with heat that is present but not dominant.",
-   "4. Ghee, not oil — the flavour profile of clarified butter fat is structurally distinct and not replicable.",
-   "5. Whole spices (cardamom, cloves, cinnamon, black pepper) bloomed in hot ghee before any other addition."
+   {
+    "ingredient": "chicken thighs",
+    "reserve": "skin-on, bone-in thighs, deboned at home — maximum fat and collagen integrity",
+    "house": "pre-trimmed boneless skinless thighs from the butcher case",
+    "swap_cost": "slightly less richness in the finished bite, still structurally sound under high heat"
+   },
+   {
+    "ingredient": "full-fat yogurt",
+    "reserve": "whole-milk Greek yogurt or fresh dahi, strained overnight — dense, stable protein matrix",
+    "house": "standard whole-milk plain yogurt, unstrained",
+    "swap_cost": "more surface moisture on the chicken, reducing the intensity of char and marinade adhesion"
+   },
+   {
+    "ingredient": "Kashmiri chilli powder",
+    "reserve": "pure single-origin Kashmiri mirch, coarse-ground — low Scoville, vivid orange pigment, fruity top note",
+    "house": "mild paprika blended with a small quantity of cayenne to approximate heat level",
+    "swap_cost": "the orange-red colour becomes flatter and the subtle fruity character of the dried chilli is absent"
+   },
+   {
+    "ingredient": "kasuri methi",
+    "reserve": "hand-rubbed dried fenugreek leaves, sealed jar, used within six months — volatile aromatics intact",
+    "house": "older store-bought kasuri methi, rubbed between palms before adding",
+    "swap_cost": "the finishing perfume — a faintly bitter, maple-adjacent note — weakens noticeably and the sauce reads as one-dimensional"
+   }
   ],
   "sensory_tests": [
    "The chicken surface must show carbon blistering — not brown, but black at the edges.",
@@ -327,13 +406,24 @@
    "The colour: deep orange from Kashmiri chilli, not the yellow-orange that paprika produces."
   ],
   "cross_cuisine_parallels": [
-   "Thai red curry — coconut milk base instead of cream, same bloomed-whole-spice structure, same overnight protein prep.",
-   "Georgian chakapuli — lamb in tart fruit sauce, same yogurt-marinade logic for tenderness.",
-   "Peruvian pollo a la brasa — yogurt-marinated and charred, different aromatics, same two-stage principle."
+   {
+    "name": "Murgh Makhani (Butter Chicken)",
+    "cuisine": "Punjabi / North Indian"
+   },
+   {
+    "name": "Pollo a la Brasa",
+    "cuisine": "Peruvian"
+   },
+   {
+    "name": "Thai Red Curry (Kaeng Phet)",
+    "cuisine": "Thai"
+   }
   ],
   "lives_or_dies": "The char. Without black blistering from a tandoor or a very hot broiler, the tikka component is merely baked chicken. The carbon is not aesthetic — it provides the smoky bitterness that cuts through the richness of the masala and gives the dish its two-part identity.",
   "beverage_pairings": null,
-  "flavour_context": "Two-stage cooking. Stage one: the yogurt marinade. Full-fat yogurt with Kashmiri chilli, garam masala, and lemon juice, applied overnight at 4°C. The proteins in the yogurt begin denaturing the chicken's surface — this is the moisture-retention mechanism, not flavouring alone. Stage two: the masala base. Ghee first, whole spices bloomed until the cumin seeds pop audibly, then aromatics sweated until they disappear entirely into the base."
+  "flavour_context": "Two-stage cooking. Stage one: the yogurt marinade. Full-fat yogurt with Kashmiri chilli, garam masala, and lemon juice, applied overnight at 4°C. The proteins in the yogurt begin denaturing the chicken's surface — this is the moisture-retention mechanism, not flavouring alone. Stage two: the masala base. Ghee first, whole spices bloomed until the cumin seeds pop audibly, then aromatics sweated until they disappear entirely into the base.",
+  "pairing_passage": "At the table, a cold-fermented lager — Pilsner Urquell is the canonical example — works on structural grounds: the soft carbonic bite scrubs fat from the palate after each cream-laden mouthful, and the mild cereal malt neither competes with nor flattens the layered spice, letting the kasuri methi finish register cleanly.",
+  "order_index": 2
  },
  {
   "key": "beef-bourguignon",
@@ -441,11 +531,30 @@
   ],
   "origin": "Burgundy, France. The technique predates Julia Child's 1961 Mastering the Art of French Cooking by centuries — Burgundy wine was surplus, beef was working stock, and a long braise solved both problems. Child's contribution was translating a peasant dish into American kitchens without condescension. The dish is French in its bones and her interpretation is still the best in English.",
   "quality_hierarchy": [
-   "1. Beef chuck or brisket — not 'stewing steak.' Cut to 5cm cubes and dried on a rack overnight if time allows.",
-   "2. Burgundy Pinot Noir, AOC Bourgogne minimum — a cheap wine makes a cheap braise.",
-   "3. Smoked pork belly lardons — not pancetta; the smoking adds depth.",
-   "4. Pearl onions, not chopped — they caramelise whole, hold their shape, and provide texture contrast in the finished dish.",
-   "5. Bouquet garni: thyme, bay leaf, parsley stems, and leek green — tied tightly, removed before serving."
+   {
+    "ingredient": "beef chuck or beef cheeks",
+    "reserve": "beef cheeks — dense collagen-rich muscle that melts to a glossy, almost gelatinous texture after three hours",
+    "house": "beef chuck, cut to 5 cm cubes and thoroughly dried before searing",
+    "swap_cost": "chuck yields a slightly less unctuous sauce and the pieces can break apart rather than holding a clean slice"
+   },
+   {
+    "ingredient": "Burgundy or Pinot Noir",
+    "reserve": "AOC Bourgogne Pinot Noir — bright acidity, earthy red-fruit notes, and no residual sweetness to muddy the reduction",
+    "house": "any honest, dry Pinot Noir with genuine acidity and no oak sweetness",
+    "swap_cost": "a cheap or jammy wine loses its acid structure during reduction and leaves a flat, slightly sweet sauce rather than a bright, mineral one"
+   },
+   {
+    "ingredient": "lardons",
+    "reserve": "smoked pork belly cut into thick lardons — the smoking adds a low bass note that pancetta or bacon cannot replicate",
+    "house": "unsmoked pork belly lardons rendered long and slow until the fat is fully rendered",
+    "swap_cost": "depth of smoke is absent and the fat layer contributes less aromatic complexity to the braising liquid"
+   },
+   {
+    "ingredient": "pearl onions",
+    "reserve": "fresh pearl onions, blanched and peeled — they caramelise whole and hold their shape through the braise",
+    "house": "frozen pearl onions, fully thawed and dried before browning",
+    "swap_cost": "frozen onions soften faster and can collapse before the braise is finished, losing the textural contrast that defines the garnish"
+   }
   ],
   "sensory_tests": [
    "The beef should yield without falling apart when pressed with a spoon — structural integrity remains.",
@@ -453,13 +562,24 @@
    "The colour of the finished sauce: deep mahogany, not pale brown."
   ],
   "cross_cuisine_parallels": [
-   "Korean galbi jjim — braised short ribs with soy, sake, and ginger. The wine is replaced by fermented grain liquor, but the long-braise extraction logic is identical.",
-   "Flemish carbonade — beer-braised beef with mustard and thyme. Belgium's version of the same principle, with ale replacing wine.",
-   "Moroccan tagine — slow-braised meat with aromatics in a sealed vessel. North African spices replace French herbs; the philosophy of patience is identical."
+   {
+    "name": "Galbi Jjim",
+    "cuisine": "Korean"
+   },
+   {
+    "name": "Carbonade Flamande",
+    "cuisine": "Belgian"
+   },
+   {
+    "name": "Tagine of beef",
+    "cuisine": "Moroccan"
+   }
   ],
   "lives_or_dies": "The sauce reduction after the braise. Strain it, discard the solids, and reduce over high heat until it coats a spoon and holds its sheen. An unfinished sauce is dilute dishwater poured over excellent beef. A properly finished sauce is the reason the dish takes three hours.",
   "beverage_pairings": null,
-  "flavour_context": "Lard the beef, dry it thoroughly, brown it in batches in hot fat. Never crowd the pan — steam is the enemy of crust. Each batch must be fully seared before the next goes in. Deglaze with Burgundy Pinot Noir. The wine must be good enough to drink: three hours of reduction concentrates everything in it, including its faults."
+  "flavour_context": "Lard the beef, dry it thoroughly, brown it in batches in hot fat. Never crowd the pan — steam is the enemy of crust. Each batch must be fully seared before the next goes in. Deglaze with Burgundy Pinot Noir. The wine must be good enough to drink: three hours of reduction concentrates everything in it, including its faults.",
+  "pairing_passage": "At the table, serve the same appellation you cooked with — a village-level Burgundy such as a Gevrey-Chambertin or Volnay — because the Pinot Noir's bright acidity and iron-edged earthiness mirror the reduction's own mineral structure, cutting through the fat of the lardons without competing with the wine-forward sauce.",
+  "order_index": 3
  },
  {
   "key": "pad-thai",
@@ -571,11 +691,30 @@
   ],
   "origin": "Bangkok, 1930s-40s. Prime Minister Plaek Phibunsongkhram's nationalist campaign to standardise Thai identity included food. Government-distributed recipes promoted this noodle dish as a symbol of Thai modernity and frugality during rice shortage. Street vendors were licensed to sell it at set prices. The result is a 'traditional' dish that was deliberately invented — which makes its global ubiquity either ironic or perfect.",
   "quality_hierarchy": [
-   "1. Tamarind paste made from a block — commercial tamarind sauce is sweetened, diluted, and imprecise.",
-   "2. Fish sauce: Tiparos or Megachef — the fermentation quality is the foundation of the dish's umami.",
-   "3. Rice noodles soaked in cold water, not boiled — they finish cooking in the wok.",
-   "4. Dried shrimp for the base umami layer — there is no vegan substitute that achieves the same result.",
-   "5. Tofu pressed for a minimum of 30 minutes — wet tofu releases water that drops the wok temperature and prevents caramelisation."
+   {
+    "ingredient": "tamarind paste",
+    "reserve": "hand-pressed from a block of wet tamarind pulp, strained",
+    "house": "jarred ready-made tamarind concentrate",
+    "swap_cost": "the sour note becomes blunter and slightly fermented-sweet rather than bright and clean"
+   },
+   {
+    "ingredient": "fish sauce",
+    "reserve": "Tiparos or Megachef — long-fermented, single-press",
+    "house": "generic supermarket fish sauce",
+    "swap_cost": "the umami base loses depth and the salt reads sharp rather than rounded"
+   },
+   {
+    "ingredient": "flat rice noodles",
+    "reserve": "fresh sen lek, same-day from an Asian grocer",
+    "house": "dried rice stick noodles, cold-soaked until pliable",
+    "swap_cost": "the strand loses some silkiness and wok absorption speed is slower"
+   },
+   {
+    "ingredient": "palm sugar",
+    "reserve": "unrefined palm sugar discs — caramel-bitter, fudge-textured",
+    "house": "light brown sugar",
+    "swap_cost": "the sweetness becomes one-dimensional, losing the slight bitter-caramel register that balances the tamarind"
+   }
   ],
   "sensory_tests": [
    "The noodles should show pale gold caramelisation on their underside — visible char without burning.",
@@ -583,13 +722,24 @@
    "Bean sprouts added in the final 10 seconds must retain audible crunch."
   ],
   "cross_cuisine_parallels": [
-   "Singapore char kway teow — flat rice noodles, wok hei, lard, dried shrimp. The closest structural parallel.",
-   "Vietnamese bún bò Huế — rice noodles, fermented shrimp paste, tamarind-adjacent sourness from lemongrass.",
-   "Japanese yakisoba — wheat noodles fried with Worcestershire-style sauce, same wok caramelisation technique."
+   {
+    "name": "Char kway teow",
+    "cuisine": "Singaporean-Malaysian"
+   },
+   {
+    "name": "Bún bò Huế",
+    "cuisine": "Vietnamese"
+   },
+   {
+    "name": "Yakisoba",
+    "cuisine": "Japanese"
+   }
   ],
   "lives_or_dies": "The first 45 seconds after the noodles hit the wok. Nothing moves. The char develops at the contact surface. Then the scramble. Everything before this moment is preparation. This moment is the cooking.",
   "beverage_pairings": null,
-  "flavour_context": "Wok hei — the breath of the wok. The Maillard reaction on flat rice noodles in a 300°C+ carbon-steel wok produces a surface caramelisation that no home hob can fully replicate. The technique requires a seasoned wok, a burner capable of generating sustained extreme heat, and the discipline to hold still for 45 seconds while the noodles char. Move too soon and the wok drops temperature and the dish steams."
+  "flavour_context": "Wok hei — the breath of the wok. The Maillard reaction on flat rice noodles in a 300°C+ carbon-steel wok produces a surface caramelisation that no home hob can fully replicate. The technique requires a seasoned wok, a burner capable of generating sustained extreme heat, and the discipline to hold still for 45 seconds while the noodles char. Move too soon and the wok drops temperature and the dish steams.",
+  "pairing_passage": "A dry, off-dry Riesling — Alsatian or Clare Valley — works structurally because its residual sugar absorbs the tamarind heat while the high acid mirrors the lime and cuts the lard richness without flattening the dish's fermented umami layer; alternatively, a cold Singha lager serves the same acid-fat-heat mediation with less aromatic competition.",
+  "order_index": 4
  },
  {
   "key": "tom-yum-goong",
@@ -690,12 +840,30 @@
   ],
   "origin": "Central Thailand. Tom means boiling, yum means mixed or seasoned. The goong (prawn) version became the global export dish, but early versions used freshwater fish or wild river prawns. During the 1997 Asian financial crisis, Thai economists named their recovery the 'Tom Yum Economy' after this dish's combination of heat, acidity, and resilience. The dish has carried its country's identity farther than any other Thai export.",
   "quality_hierarchy": [
-   "1. Galangal — not ginger. They are different genera with entirely different aromatic profiles. Galangal is piney, camphor-forward; ginger is warm and sweet.",
-   "2. Kaffir lime leaves torn by hand, never chopped — tearing opens the oils along natural cell boundaries without releasing bitterness from the cut edge.",
-   "3. Thai bird's eye chillies, split lengthways to release their heat into the broth.",
-   "4. Fish sauce: Tiparos or Megachef — the umami backbone of the entire dish.",
-   "5. Fresh prawns with shells on — the shells add body and sweetness that peeled prawns cannot provide.",
-   "6. Straw mushrooms or oyster mushrooms, never button — button mushrooms dilute the broth."
+   {
+    "ingredient": "prawns",
+    "reserve": "live or day-boat whole shell-on tiger prawns",
+    "house": "fresh shell-on large prawns from a reliable fishmonger",
+    "swap_cost": "peeled prawns shed the shell-derived sweetness and body that carry the broth"
+   },
+   {
+    "ingredient": "fish sauce",
+    "reserve": "Megachef or Tiparos aged fish sauce, pale amber, single-strain anchovies",
+    "house": "any clean Thai fish sauce without caramel colouring or sugar additives",
+    "swap_cost": "cheaper blended sauces introduce muddiness that flattens the salt-umami distinction"
+   },
+   {
+    "ingredient": "nam prik pao",
+    "reserve": "hand-pounded roasted chilli paste from a Thai grocer, oil-floating surface visible",
+    "house": "reputable jarred nam prik pao such as Mae Pranom",
+    "swap_cost": "generic chilli pastes lack the roasted-smoky depth that underpins the broth's second register"
+   },
+   {
+    "ingredient": "lemongrass",
+    "reserve": "fresh stalks harvested young, inner core pale and fragrant, no dried tip",
+    "house": "fresh supermarket lemongrass bruised hard before use",
+    "swap_cost": "dried or frozen lemongrass delivers citrus top-notes only, losing the grassy low-frequency aroma"
+   }
   ],
   "sensory_tests": [
    "The broth should be clear and amber-tinted, not cloudy.",
@@ -703,13 +871,24 @@
    "Prawns should curl into a C-shape but not tighten into an O — the difference between cooked and overcooked."
   ],
   "cross_cuisine_parallels": [
-   "Vietnamese phở — broth-first construction, aromatic infusion in liquid, similar herb-forward clarity.",
-   "Filipino sinigang — tamarind sour broth with protein and vegetables. The Malay-Polynesian tradition of sour broth.",
-   "Moroccan chermoula — similar aromatics-first construction (herb/citrus/cumin), different medium."
+   {
+    "name": "Sinigang na Hipon",
+    "cuisine": "Filipino"
+   },
+   {
+    "name": "Phở bò",
+    "cuisine": "Vietnamese"
+   },
+   {
+    "name": "Bouillabaisse",
+    "cuisine": "Provençal French"
+   }
   ],
   "lives_or_dies": "The first sip. The simultaneous hit of hot, sour, salty, and umami in the first mouthful. If any of the four elements dominates, the soup is unbalanced. If all four arrive together, the soup is correct.",
   "beverage_pairings": null,
-  "flavour_context": "Aromatics-first broth construction. Galangal, lemongrass, and kaffir lime leaves are bruised — not sliced, not chopped — and added to boiling liquid. They infuse as the broth comes to temperature, then are removed before the protein is added. They flavour the broth; they are not eaten. This is the distinction between Thai and most Western soup traditions."
+  "flavour_context": "Aromatics-first broth construction. Galangal, lemongrass, and kaffir lime leaves are bruised — not sliced, not chopped — and added to boiling liquid. They infuse as the broth comes to temperature, then are removed before the protein is added. They flavour the broth; they are not eaten. This is the distinction between Thai and most Western soup traditions.",
+  "pairing_passage": "A dry, high-acid sparkling wine — Blanc de Blancs Champagne or a good Crémant d'Alsace — works structurally because its effervescence scrubs the fat from coconut milk off the palate between sips, while the wine's own acidity mirrors the lime without competing against it, resetting the mouth for the next clean hit of the four-element balance.",
+  "order_index": 5
  },
  {
   "key": "ceviche",
@@ -803,11 +982,30 @@
   ],
   "origin": "Peru — the Moche civilisation on Peru's northern coast used tumbo fruit and salt to cure fish 2,000 years before the Spanish arrived. The lime came with colonisation in the 16th century and sharpened the technique. Lima's current style — pure, minimal leche de tigre — is a distinct expression from Peruvian regional variants, and from Mexican ceviche, which uses tomato, coriander, and onion in a fundamentally different register.",
   "quality_hierarchy": [
-   "1. Sashimi-grade sea bass (corvina) or the freshest fish available today — this dish has no hiding place for fish that is less than perfect.",
-   "2. Key limes, not Persian limes — higher acidity and more aromatic volatile compounds.",
-   "3. Ají amarillo, fresh or paste — the heat and golden colour that is specific to Peru.",
-   "4. Red onion, sliced hair-thin and briefly rinsed in cold water to remove the raw sharpness.",
-   "5. Fresh coriander leaves only, not stems — the stems are too assertive."
+   {
+    "ingredient": "firm white fish",
+    "reserve": "Sashimi-grade corvina (sea bass) or wild flounder, purchased the morning of service",
+    "house": "The freshest available white-fleshed fish from a trusted fishmonger — tilapia, halibut, or snapper",
+    "swap_cost": "Any compromise in freshness is irreversible; the acid cures but does not sanitise, and off-notes intensify in the leche de tigre"
+   },
+   {
+    "ingredient": "fresh lime juice",
+    "reserve": "Key limes, juiced to order — higher acidity and more aromatic volatile compounds than Persian limes",
+    "house": "Persian limes, freshly squeezed — rounder, less perfumed, still functional",
+    "swap_cost": "The curing action is slightly softer and the citrus top-note flattens, losing the brightness that defines a proper leche de tigre"
+   },
+   {
+    "ingredient": "ají amarillo paste",
+    "reserve": "Fresh ají amarillo chillies, blended to paste the same day",
+    "house": "Good-quality jarred ají amarillo paste — the standard outside Peru and perfectly acceptable",
+    "swap_cost": "Some of the fruity, floral volatiles that distinguish ají amarillo from generic heat are muted; the golden colour holds but the aromatic lift diminishes"
+   },
+   {
+    "ingredient": "red onion",
+    "reserve": "Hair-thin sliced red onion, rinsed briefly in cold water, added at the last moment before serving",
+    "house": "Red onion sliced thin and added earlier — still correct but slightly more pungent",
+    "swap_cost": "The raw sharpness reasserts itself and can dominate the delicate acidity of the cure"
+   }
   ],
   "sensory_tests": [
    "The fish surface should be opaque-white but the interior should remain translucent — not fully cooked through.",
@@ -815,13 +1013,24 @@
    "The onion should have lost its aggression but retained its texture."
   ],
   "cross_cuisine_parallels": [
-   "Tahitian poisson cru — coconut milk replaces lime, same acid-free curing principle, same raw-fish ethos.",
-   "Mexican aguachile — extra-spicy, cucumber, minimal curing time; the northern Mexican interpretation.",
-   "Japanese sashimi — no acid curing at all. The raw comparison that illustrates precisely what the acid changes."
+   {
+    "name": "Poisson cru",
+    "cuisine": "Tahitian / French Polynesian"
+   },
+   {
+    "name": "Aguachile",
+    "cuisine": "Mexican (Sinaloan)"
+   },
+   {
+    "name": "Sashimi",
+    "cuisine": "Japanese"
+   }
   ],
   "lives_or_dies": "The leche de tigre — the cloudy, acidic, spiced liquid that forms as the fish cures. This is not a byproduct. It is the heart of the dish. Peruvian restaurants serve it in a separate shot glass. It contains the flavour of everything that happened in the bowl and should be drunk.",
   "beverage_pairings": null,
-  "flavour_context": "Chemical denaturation, not heat. Citric acid from lime juice denatures the fish's surface proteins — the same process that heat achieves, but at room temperature and with different textural outcomes. Optimal marination in the Peruvian style: 3–5 minutes. The fish continues to 'cook' in the acid. Beyond 20 minutes, the proteins over-denature and the flesh becomes rubbery."
+  "flavour_context": "Chemical denaturation, not heat. Citric acid from lime juice denatures the fish's surface proteins — the same process that heat achieves, but at room temperature and with different textural outcomes. Optimal marination in the Peruvian style: 3–5 minutes. The fish continues to 'cook' in the acid. Beyond 20 minutes, the proteins over-denature and the flesh becomes rubbery.",
+  "pairing_passage": "At the Table: serve with a well-chilled Pisco Sour — the egg-white foam softens the aggression of the lime without killing it, the grape-spirit base echoes Peru's own larder, and the residual bitterness of Angostura on the foam mirrors the ají heat without competing with the fish.",
+  "order_index": 6
  },
  {
   "key": "shakshuka",
@@ -915,11 +1124,30 @@
   ],
   "origin": "Ottoman Empire, diffused across North Africa and the Levant over several centuries. Tunisia, Israel, Libya, and Palestine all claim it as national heritage. The name is likely Maghrebi Arabic — possibly from 'shak-shak' (to move) or from Berber 'chakchouka.' The argument is unresolved and perhaps should remain so. The dish belongs to an entire geography.",
   "quality_hierarchy": [
-   "1. San Marzano DOP canned tomatoes in winter, ripe fresh tomatoes in summer — the difference is measurable, not subjective.",
-   "2. Harissa, Tunisian-style or rose harissa — more complex than cayenne or chilli flakes alone.",
-   "3. Eggs at room temperature — cold eggs crack the surface tension of the hot sauce.",
-   "4. Cumin seeds bloomed in oil before any other addition — the foundation of the flavour.",
-   "5. Feta or labneh at serving — the dairy cuts the acid sharpness and completes the dish."
+   {
+    "ingredient": "whole plum tomatoes",
+    "reserve": "San Marzano DOP canned tomatoes (winter) or sun-ripened fresh plum tomatoes at peak summer",
+    "house": "good-quality canned whole plum tomatoes, any reliable brand",
+    "swap_cost": "Less natural sweetness and body; the sauce needs longer reduction to compensate for higher water content and flatter flavour"
+   },
+   {
+    "ingredient": "eggs",
+    "reserve": "Fresh free-range or pasture-raised eggs, at room temperature, yolks deeply coloured",
+    "house": "Standard free-range eggs, brought to room temperature before use",
+    "swap_cost": "Paler yolks and less richness at the centre; cold eggs also risk uneven cooking, with whites setting unevenly around a still-cold yolk"
+   },
+   {
+    "ingredient": "Aleppo pepper (pul biber)",
+    "reserve": "Authentic pul biber — sun-dried, oiled, coarsely ground, with its characteristic fruity heat and low burn",
+    "house": "A mix of sweet paprika and a pinch of cayenne as an approximation",
+    "swap_cost": "The distinctive fruity, slightly briny warmth is lost; cayenne-based substitutes deliver sharper, less complex heat without the background sweetness"
+   },
+   {
+    "ingredient": "feta cheese",
+    "reserve": "Greek PDO feta in brine — firm, tangy, crumbles cleanly over the hot sauce",
+    "house": "Any firm, well-salted white brine cheese (Bulgarian, French)",
+    "swap_cost": "Softer texture and milder acidity; the dairy contrast against the sauce is present but less defined"
+   }
   ],
   "sensory_tests": [
    "When the lid is lifted, whites should be matt opaque; yolks should still be domed, not flat.",
@@ -927,13 +1155,24 @@
    "The sauce should bubble at the edges only — not in the centre where the eggs sit."
   ],
   "cross_cuisine_parallels": [
-   "Turkish çılbır — poached eggs in garlic yogurt with Aleppo butter. Same egg-in-sauce architecture, different base medium.",
-   "Italian uova al purgatorio — eggs in spiced tomato, Southern Italian. Either an ancestor or a parallel evolution.",
-   "Mexican huevos rancheros — eggs on tortilla with tomato-chile salsa. The New World translation of the same impulse."
+   {
+    "name": "Uova al purgatorio",
+    "cuisine": "Southern Italian"
+   },
+   {
+    "name": "Çılbır",
+    "cuisine": "Turkish"
+   },
+   {
+    "name": "Huevos rancheros",
+    "cuisine": "Mexican"
+   }
   ],
   "lives_or_dies": "The moment the lid comes off: egg whites should be matt and opaque, yolks still domed and liquid. A yolk that has set hard is a failure of timing. A white that is still translucent is a failure of patience. The window between them is approximately 90 seconds.",
   "beverage_pairings": null,
-  "flavour_context": "The tomato and pepper base must reduce for 20 minutes before eggs are added — not 10, not 15. The sauce must be thick enough that egg whites sit in wells and set without sinking. A lid is placed to trap steam and cook the whites from above. The eggs are never stirred. The timing is everything."
+  "flavour_context": "The tomato and pepper base must reduce for 20 minutes before eggs are added — not 10, not 15. The sauce must be thick enough that egg whites sit in wells and set without sinking. A lid is placed to trap steam and cook the whites from above. The eggs are never stirred. The timing is everything.",
+  "pairing_passage": "At the table, a chilled dry rosé from the southern Mediterranean — a Provence-style or Lebanese example with its mineral backbone and red-fruit restraint — holds the line against the Aleppo pepper's fruity heat without competing with the yolk's richness; the wine's acidity mirrors the tomato's own and keeps each bite clean.",
+  "order_index": 7
  },
  {
   "key": "gratin-de-crozets-au-beaufort-savoyard-mountain-sustenance",
@@ -1014,12 +1253,52 @@
    "Bake 25-30 minutes until surface is golden brown with darker spots and edges are bubbling vigorously. The gratin should be set but still creamy within. Rest 10 minutes before serving — the residual heat will finish the cooking while the sauce settles to proper consistency."
   ],
   "origin": "In the high valleys of Tarentaise, where Beaufort wheels age in mountain caves and buckwheat thrives in thin alpine air, this gratin represents the marriage of necessity and terroir. Crozets — those small, square pasta made from sarrasin flour — were born from the practical wisdom of Savoyard cooks who understood that buckwheat could survive where wheat could not. When bathed in cream and crowned with aged Beaufort, they transform into something that speaks to both hunger and heritage.",
-  "quality_hierarchy": null,
+  "quality_hierarchy": [
+   {
+    "ingredient": "Beaufort d'alpage",
+    "reserve": "Beaufort d'alpage AOP (summer transhumance milk, cave-aged minimum 5 months, deep nutty complexity)",
+    "house": "Beaufort d'été AOP (lower-altitude summer milk, milder but still properly structured)",
+    "swap_cost": "The gratin loses its signature lanolin-and-hay depth; the sauce reads as rich but generically cheesy rather than unmistakably Savoyard"
+   },
+   {
+    "ingredient": "crozets de Savoie",
+    "reserve": "Crozets de Savoie IGP au sarrasin (buckwheat, hand-cut, artisan-dried — earthy, bite-retentive)",
+    "house": "Crozets de blé tendre IGP (plain wheat, widely available, cook up softer)",
+    "swap_cost": "The buckwheat's mineral bitterness, which counterbalances the fat of the cream and cheese, is absent; the dish becomes heavier and one-dimensional"
+   },
+   {
+    "ingredient": "crème fraîche épaisse",
+    "reserve": "Crème fraîche épaisse de Normandie AOP or Isigny AOP (45% fat, cultured, gently tangy)",
+    "house": "Crème fraîche épaisse de grande surface (30–35% fat, less cultured character)",
+    "swap_cost": "The sauce thins under oven heat and loses the slight lactic acidity that cuts the richness of the Beaufort"
+   },
+   {
+    "ingredient": "poivre blanc de Penja",
+    "reserve": "Poivre blanc de Penja IGP (Cameroon, floral-musky, PGI-protected harvest)",
+    "house": "Poivre blanc de Sarawak (Malaysia, clean heat, widely available)",
+    "swap_cost": "The distinctive fermented-fruit top note of Penja disappears; heat remains but the aromatic contrast with nutmeg is blunted"
+   }
+  ],
   "sensory_tests": null,
-  "cross_cuisine_parallels": null,
+  "cross_cuisine_parallels": [
+   {
+    "name": "Mac and Cheese (baked, roux-bound)",
+    "cuisine": "American"
+   },
+   {
+    "name": "Pastitsio",
+    "cuisine": "Greek"
+   },
+   {
+    "name": "Fideuà al forn de fideos gruesos con queso",
+    "cuisine": "Catalan"
+   }
+  ],
   "lives_or_dies": null,
   "beverage_pairings": null,
-  "flavour_context": null
+  "flavour_context": null,
+  "pairing_passage": "At the table, a Roussette de Savoie from the Altesse grape — its high natural acidity and flinty minerality cutting cleanly through the cream-and-Beaufort richness — is the classic regional answer; the wine's slight almond finish echoes the buckwheat crozets without competing with the cheese.",
+  "order_index": 8
  },
  {
   "key": "yuzu-kosho-cured-hiramasa-with-freeze-dried-yuzu-snow",
@@ -1100,12 +1379,52 @@
    "Just before service, dust each plate with remaining freeze-dried yuzu powder using fine-mesh sieve—powder should fall like snow, some adhering to fish oils, some to plate. Garnish with shiso leaves and mitsuba, drizzle yuzu-mirin mixture around plate perimeter."
   ],
   "origin": "In Kyushu's citrus groves, yuzu ripens as autumn surrenders to winter, its aromatic oils most concentrated in the coldest months. This dish honors the Japanese mastery of preservation—both ancient fermentation in yuzu kosho and modern lyophilization—capturing the fruit's essence in two temporal states. The freeze-dried yuzu becomes snow that dissolves on the tongue, releasing summer's memory into winter's present.",
-  "quality_hierarchy": null,
+  "quality_hierarchy": [
+   {
+    "ingredient": "Hiramasa kingfish fillet",
+    "reserve": "Day-boat, sashimi-grade Hiramasa (yellowtail amberjack) with bright white fat lines and firm, translucent flesh — ideally from South Australian or New Zealand aquaculture operations known for clean cold-water stock",
+    "house": "Fresh, sashimi-grade farmed yellowtail from a trusted fishmonger, inspected same day",
+    "swap_cost": "Slightly looser texture and a milder fat profile reduce the contrast against the bracingly acidic cure"
+   },
+   {
+    "ingredient": "Yuzu kosho",
+    "reserve": "Artisan green yuzu kosho made with hand-harvested unripe yuzu zest and fresh chilli, fermented in small batches — Nakatsu or Beppu regional producers set the benchmark",
+    "house": "A reputable imported commercial yuzu kosho (Yakami Orchard or similar) refrigerated and used well within its date",
+    "swap_cost": "The volatile citrus oils that give the paste its high, almost floral heat diminish noticeably, flattening the cure's top note"
+   },
+   {
+    "ingredient": "Freeze-dried yuzu powder",
+    "reserve": "Single-origin freeze-dried yuzu powder retaining full essential-oil content, pale cream-yellow in colour with intense nose — Japanese specialist producers only",
+    "house": "A reliable imported freeze-dried yuzu powder from a high-turnover Japanese food supplier, stored airtight away from light",
+    "swap_cost": "The 'snow' loses aromatic lift and visual brightness, reading as dusty rather than luminous on the plate"
+   },
+   {
+    "ingredient": "Kanazawa sea salt",
+    "reserve": "Authentic Kanazawa (Ishikawa Prefecture) evaporated sea salt — mineral-dense, slightly sweet finish from the Japan Sea coastal water chemistry",
+    "house": "A fine-flake Japanese sea salt or high-quality Korean solar salt as the closest structural substitute",
+    "swap_cost": "The cure's mineral sweetness is replaced by a sharper, more one-dimensional salinity that can overpower the delicate yuzu perfume"
+   }
+  ],
   "sensory_tests": null,
-  "cross_cuisine_parallels": null,
+  "cross_cuisine_parallels": [
+   {
+    "name": "Gravlax",
+    "cuisine": "Scandinavian"
+   },
+   {
+    "name": "Tiradito",
+    "cuisine": "Peruvian-Japanese (Nikkei)"
+   },
+   {
+    "name": "Ceviche blanco con leche de tigre",
+    "cuisine": "Peruvian"
+   }
+  ],
   "lives_or_dies": null,
   "beverage_pairings": null,
-  "flavour_context": null
+  "flavour_context": null,
+  "pairing_passage": "At the Table: Pour a glass of aged koshu (Château Mercian or Grace Wine, Yamanashi), whose oxidative, walnut-honey character and restrained stone-fruit acidity mirror the saline-citrus tension of the cure without competing with the yuzu kosho's volatile heat — the wine's umami depth, a byproduct of extended skin contact unique to the koshu grape, acts as a structural echo of the white soy in the dish.",
+  "order_index": 9
  },
  {
   "key": "lasagne-verdi-bolognese",
@@ -1242,28 +1561,28 @@
   "origin": "Emilia-Romagna, Italy (specifically Bologna). Lasagne Verdi is the green pasta variant of the classical Bolognese lasagne, combining spinach-enriched sheets with the region's canonical ragù—a slow-cooked meat sauce foundational to Northern Italian cuisine.",
   "quality_hierarchy": [
    {
-    "house": "tinned whole peeled tomatoes, non-DOP",
+    "ingredient": "San Marzano tomatoes",
     "reserve": "DOP San Marzano (Campania)",
-    "swap_cost": "Loss of natural sweetness and low acidity; imbalance in ragù depth",
-    "ingredient": "San Marzano tomatoes"
+    "house": "Tinned whole peeled tomatoes, non-DOP",
+    "swap_cost": "Loss of natural sweetness and low acidity; imbalance in ragù depth"
    },
    {
-    "house": "Parmigiano-Reggiano DOP (18 months)",
+    "ingredient": "Parmigiano",
     "reserve": "Parmigiano-Reggiano DOP (24+ months)",
-    "swap_cost": "Reduced umami complexity and crystalline texture; thinner browning layer",
-    "ingredient": "Parmigiano"
+    "house": "Parmigiano-Reggiano DOP (18 months)",
+    "swap_cost": "Reduced umami complexity and crystalline texture; thinner browning layer"
    },
    {
-    "house": "ground beef (80/20)",
+    "ingredient": "Beef",
     "reserve": "Hand-cut beef chuck or brisket",
-    "swap_cost": "Pre-ground loses textural integrity during 4-hour simmer; less flavour extraction",
-    "ingredient": "beef (coarse)"
+    "house": "Ground beef (80/20)",
+    "swap_cost": "Pre-ground loses textural integrity during the long simmer; less flavour extraction"
    },
    {
-    "house": "All-purpose flour",
+    "ingredient": "00 flour",
     "reserve": "Italian Type 00 (soft wheat, low protein)",
-    "swap_cost": "Slightly tougher, less silken pasta sheets; compromised delicacy",
-    "ingredient": "00 flour"
+    "house": "All-purpose flour",
+    "swap_cost": "Slightly tougher, less silken pasta sheets; compromised delicacy in the finished layer"
    }
   ],
   "sensory_tests": [
@@ -1290,19 +1609,23 @@
   ],
   "cross_cuisine_parallels": [
    {
-    "dish": "Lasagne à la Bolognese (classical French adaptation)",
-    "cuisine": "French",
-    "mechanism": "Adoption of Italian ragù structure with béchamel; French culinary authority legitimised the dish via Escoffier"
+    "name": "Lasagne à la Bolognese (classical French adaptation)",
+    "cuisine": "French"
    },
    {
-    "dish": "Pastırma layered meat pie",
-    "cuisine": "Turkish",
-    "mechanism": "Slow-cooked meat layered with starch vehicle; preservation through extended cooking and fat"
+    "name": "Pastırma layered meat pie",
+    "cuisine": "Turkish"
+   },
+   {
+    "name": "Moussaka",
+    "cuisine": "Greek"
    }
   ],
   "lives_or_dies": "The béchamel must be structurally integrated into every layer—it is not garnish but load-bearing element; omit it and the ragù collapses the pasta into undifferentiated mush.",
   "beverage_pairings": null,
-  "flavour_context": "Ragù's 4-hour minimum simmer breaks down collagen and myofibril proteins into gelatinous umami-rich matrix; milk added late (not standard in all ragù) softens acidity and adds body without curdling. Spinach in pasta provides mineral earthiness (chlorophyll, iron) that balances meat richness. Béchamel acts as moisture barrier and emulsifier, preventing sauce seepage while creating creamy-savoury interstice. Parmigiano's lactose and casein proteolyse during baking, forming crust that seals and concentrates flavour. Undercooking pasta by 3 minutes exploits residual starch gelatinisation in oven heat (carryover cooking ~50°C rise); fully al dente pasta will hypergelatinise and lose structural integrity."
+  "flavour_context": "Ragù's 4-hour minimum simmer breaks down collagen and myofibril proteins into gelatinous umami-rich matrix; milk added late (not standard in all ragù) softens acidity and adds body without curdling. Spinach in pasta provides mineral earthiness (chlorophyll, iron) that balances meat richness. Béchamel acts as moisture barrier and emulsifier, preventing sauce seepage while creating creamy-savoury interstice. Parmigiano's lactose and casein proteolyse during baking, forming crust that seals and concentrates flavour. Undercooking pasta by 3 minutes exploits residual starch gelatinisation in oven heat (carryover cooking ~50°C rise); fully al dente pasta will hypergelatinise and lose structural integrity.",
+  "pairing_passage": "At the Table: a Sangiovese-based Chianti Classico Riserva — with its firm tannin structure and bright acidity — cuts through the fat of the béchamel and pancetta while mirroring the tomato's natural tartness, keeping each forkful of ragù from becoming cloying.",
+  "order_index": 10
  },
  {
   "key": "chicken-paprikash",
@@ -1335,8 +1658,8 @@
     "group": "chicken paprikash"
    },
    {
-    "info": "page 338",
-    "name": "to 3 tablespoons Schmaltz",
+    "info": "",
+    "name": "schmaltz (chicken fat)",
     "unit": "",
     "count": "2",
     "group": "chicken paprikash"
@@ -1363,8 +1686,8 @@
     "group": "chicken paprikash"
    },
    {
-    "info": "page 334",
-    "name": "Rachael's Chicken Stock",
+    "info": "",
+    "name": "chicken stock",
     "unit": "cups",
     "count": "2.5",
     "group": "chicken paprikash"
@@ -1426,15 +1749,15 @@
     "group": "spaetzle"
    },
    {
-    "info": "page 322 (1 cup)",
-    "name": "(or more) Crème Fraîche",
+    "info": "or more, to serve",
+    "name": "crème fraîche",
     "unit": "ml",
     "count": "240",
     "group": "to serve"
    },
    {
-    "info": "page 317 (1 cup)",
-    "name": "Ohio Peppers",
+    "info": "to serve",
+    "name": "pickled banana peppers",
     "unit": "ml",
     "count": "240",
     "group": "to serve"
@@ -1453,11 +1776,32 @@
    "And be sure to say, \"Waiter, there is too much pepper on my paprikash. But I would be proud to partake of your pecan piliffle,\" as you serve it."
   ],
   "origin": "Hungarian classic braised chicken dish, traditionally served with egg noodles or dumplings; the spaetzle preparation here represents a Central European fusion, substituting the typical Hungarian egg pasta.",
-  "quality_hierarchy": {
-   "tier1": "Proper marination (6+ hours) and low-temperature dark meat cooking (175°F) for collagen breakdown and texture; fond management and sauce reduction",
-   "tier2": "Even searing without crowding; correct spaetzle dough consistency and board-cutting technique to achieve proper texture; final sauce pulse to break vegetables without over-blending",
-   "tier3": "Salt seasoning adjustments; crème fraîche and peppers as finishing garnish; dill stem infusion and fresh dill garnish balance"
-  },
+  "quality_hierarchy": [
+   {
+    "ingredient": "Sweet paprika",
+    "reserve": "Hungarian noble-sweet (Édesnemes) paprika, freshly opened, deep brick-red with no dusty or oxidized smell",
+    "house": "Standard supermarket sweet paprika",
+    "swap_cost": "Loses the fruity, slightly smoky depth that defines the sauce's identity; the dish reads as generic rather than distinctly Hungarian"
+   },
+   {
+    "ingredient": "Chicken leg quarters",
+    "reserve": "Pasture-raised or heritage-breed leg quarters with visible fat cap and connective tissue intact",
+    "house": "Standard supermarket leg quarters",
+    "swap_cost": "Less collagen renders into the braise, producing a thinner sauce body and less gelatinous, meaty texture in the finished chicken"
+   },
+   {
+    "ingredient": "Schmaltz (chicken fat)",
+    "reserve": "House-rendered schmaltz from roasted chicken scraps, strained clean",
+    "house": "Neutral vegetable oil or store-bought schmaltz",
+    "swap_cost": "Forfeits the savory, poultry-forward fat layer that ties the bloomed paprika and fond together in the sauce base"
+   },
+   {
+    "ingredient": "Heavy cream",
+    "reserve": "High-fat double cream (40%+) or crème fraîche for finish, adding tang and stability",
+    "house": "Standard heavy whipping cream (36%)",
+    "swap_cost": "Sauce is slightly less stable under residual heat and lacks the subtle lactic acidity that lifts the richness"
+   }
+  ],
   "sensory_tests": [
    {
     "cue": "Paprika bloom and caramelization on chicken surface before braising",
@@ -1482,24 +1826,23 @@
   ],
   "cross_cuisine_parallels": [
    {
-    "dish": "Spätzle with brown butter and crispy onions",
-    "cuisine": "German",
-    "mechanism": "Egg noodle base with hand-cut technique; butter toss prevents sticking and adds richness"
+    "name": "Coq au vin blanc with cream liaison",
+    "cuisine": "French"
    },
    {
-    "dish": "Paprikash (Paprikahendl)",
-    "cuisine": "Austrian",
-    "mechanism": "Braised poultry with paprika-forward spice, sour cream finish, and vegetable-infused sauce"
+    "name": "Spätzle with brown butter and crispy onions",
+    "cuisine": "German"
    },
    {
-    "dish": "Coq au vin with cream liaison",
-    "cuisine": "French",
-    "mechanism": "Long braise of dark poultry meat, fond deglazing, wine reduction, cream enrichment"
+    "name": "Paprikahendl (Paprikahuhn)",
+    "cuisine": "Austrian"
    }
   ],
   "lives_or_dies": "Proper fond management and low-temperature dark meat braising create the sauce's body and chicken's tender texture; paprika must bloom in fat before liquid addition to avoid raw spice flavor.",
   "beverage_pairings": null,
-  "flavour_context": "Paprika's lipophilic compounds activate during searing and bloom in fat, building depth. Marination allows salt penetration into dark meat, breaking down myofibrillar proteins for tenderness at 175°F (higher than standard 165°F). Wine reduction removes harsh alcohol while concentrating acidity to balance cream's richness. Dill stems steep in braising liquid, releasing volatile oils; fresh dill added at finish preserves bright, grassy notes. Crème fraîche and pickled peppers provide acidic counterpoint and textural contrast against the soft spaetzle and braised chicken."
+  "flavour_context": "Paprika's lipophilic compounds activate during searing and bloom in fat, building depth. Marination allows salt penetration into dark meat, breaking down myofibrillar proteins for tenderness at 175°F (higher than standard 165°F). Wine reduction removes harsh alcohol while concentrating acidity to balance cream's richness. Dill stems steep in braising liquid, releasing volatile oils; fresh dill added at finish preserves bright, grassy notes. Crème fraîche and pickled peppers provide acidic counterpoint and textural contrast against the soft spaetzle and braised chicken.",
+  "pairing_passage": "At the Table: Pour a dry Tokaji Furmint or a Badacsony Olaszrizling — both carry the high, cleansing acidity needed to cut through the cream-enriched paprika sauce without overwhelming the dill's herbal lift. The wine's mineral backbone also echoes the dish's gentle sweetness from the roasted red peppers without competing with it.",
+  "order_index": 11
  },
  {
   "key": "negroni",
@@ -1552,26 +1895,40 @@
    "Hold orange peel skin-side down 5cm above the drink and express it — squeeze the zest so the fine oil mist catches the light. Run the peel around the rim, then place it on the ice. Serve without a straw."
   ],
   "origin": "Florence, 1919. Count Camillo Negroni, a regular at Caffè Casoni, asked bartender Fosco Scarselli to strengthen his Americano by replacing soda water with gin. The lemon garnish became orange. The drink spread slowly — arriving in London cocktail culture in the 1970s, becoming a marker of taste by the 2000s, and achieving global dominance by the 2010s. It is now one of the most ordered cocktails in the world.",
-  "quality_hierarchy": [
-   "1. London Dry gin — Tanqueray, Beefeater. Not flavoured gin; not new-world botanical gin. The juniper profile is structural.",
-   "2. Campari — no substitute. Aperol produces a different, lighter drink. Campari produces a Negroni.",
-   "3. Sweet vermouth: Carpano Antica Formula or Cocchi Vermouth di Torino. Cheap vermouth makes a flat, oxidised Negroni.",
-   "4. A single large ice cube or sphere in the serving glass — functional, not decorative. Maximum surface area, minimum melt rate.",
-   "5. Orange peel expressed over the surface — not dropped in. Press the oils across the liquid and rim the glass."
-  ],
+  "quality_hierarchy": null,
   "sensory_tests": [
    "The drink should be translucent ruby, not opaque.",
    "The nose: orange peel oil and juniper, before the glass reaches the lips.",
    "The palate sequence: citrus and gin first, Campari bitterness second, sweet vermouth finish."
   ],
-  "cross_cuisine_parallels": [
-   "Boulevardier — Negroni with rye whiskey replacing gin. Darker, heavier, better in winter.",
-   "Mezcal Negroni — mezcal replacing gin. Smoky and structurally identical.",
-   "Sbagliato — Prosecco replacing gin. Lower alcohol, same proportions, lighter expression."
-  ],
+  "cross_cuisine_parallels": null,
   "lives_or_dies": "The orange oil expression. Hold the peel skin-side down over the glass, press until the fine spray of oil catches the light, then run the peel along the rim. Done correctly, the aromatics arrive before the first sip. Done incorrectly, the garnish is just decoration.",
   "beverage_pairings": null,
-  "flavour_context": "Build in a mixing glass, not a shaker. 20–30 rotations over large cracked ice. The goal is dilution and temperature reduction without introducing air bubbles, which cloud the drink and shorten its structural life in the glass. Only cocktails containing citrus or dairy are shaken."
+  "flavour_context": "Build in a mixing glass, not a shaker. 20–30 rotations over large cracked ice. The goal is dilution and temperature reduction without introducing air bubbles, which cloud the drink and shorten its structural life in the glass. Only cocktails containing citrus or dairy are shaken.",
+  "producer_showcase": [
+   {
+    "product": "Tanqueray London Dry Gin",
+    "producer": "Diageo (Charles Tanqueray & Co.)",
+    "origin": "Cameronbridge, Scotland, UK"
+   },
+   {
+    "product": "Campari",
+    "producer": "Campari Group",
+    "origin": "Sesto San Giovanni, Milan, Italy"
+   },
+   {
+    "product": "Carpano Antica Formula Sweet Vermouth",
+    "producer": "Fratelli Branca Distillerie",
+    "origin": "Turin, Piedmont, Italy"
+   },
+   {
+    "product": "Navel Orange (fresh peel)",
+    "producer": "Various citrus growers",
+    "origin": "Mediterranean / Southern Italy or Spain"
+   }
+  ],
+  "pairing_passage": null,
+  "order_index": 12
  },
  {
   "key": "mojito",
@@ -1629,26 +1986,45 @@
    "Garnish with remaining 2 mint sprigs, slapped against your palm first. Add a lime wheel if desired. Serve with a straw."
   ],
   "origin": "Havana, Cuba. La Bodeguita del Medio and El Floridita both claim it. The precursor, El Draque, dates to the 1580s — Sir Francis Drake's physician used aguardiente, wild mint, lime, and sugar as a scurvy remedy for the crew. The Mojito arrived in its modern form when Bacardi Carta Blanca replaced aguardiente in the late 19th century and the drink moved from necessity to pleasure.",
-  "quality_hierarchy": [
-   "1. Cuban-style white rum: Bacardi Carta Blanca, Havana Club 3-year. Not dark rum, not spiced rum, not aged rum.",
-   "2. Fresh lime juice only. The difference between fresh and bottled lime is not subtle.",
-   "3. Spearmint (Mentha spicata), not peppermint. Peppermint is medicinal and aggressive in a cold drink.",
-   "4. Demerara syrup or raw cane sugar — white sugar is correct but lacks depth.",
-   "5. Soda water, never tonic. Tonic carries quinine bitterness that fights the mint."
-  ],
+  "quality_hierarchy": null,
   "sensory_tests": [
    "The mint should be bruised but visibly whole — not macerated, not fragmented.",
    "The drink should smell of spearmint oil, not herb tea.",
    "The soda water should be heard as much as tasted — the carbonation is part of the architecture."
   ],
-  "cross_cuisine_parallels": [
-   "Caipirinha — cachaça, lime, sugar, no mint. The Brazilian cousin that shows what the base tastes like without the herb.",
-   "Southside — gin, lime, mint, sugar, shaken. The Manhattan speakeasy-era variant.",
-   "Dark and Stormy — dark rum, ginger beer, lime. The Caribbean cousin with a different aromatic register."
-  ],
+  "cross_cuisine_parallels": null,
   "lives_or_dies": "The bruise, not the pound. The mint releases its aromatic oils at the first moment of impact. The second the leaves are shredded rather than bruised, the drink has taken a wrong turn that cannot be corrected by more rum.",
   "beverage_pairings": null,
-  "flavour_context": "Muddle gently. Press the mint firmly against the sugar and lime juice — once to release the oils from the leaves, once to confirm the bruise. Stop immediately. Over-muddling releases chlorophyll from broken leaf tissue, turning the drink green, bitter, and herbal in the wrong direction."
+  "flavour_context": "Muddle gently. Press the mint firmly against the sugar and lime juice — once to release the oils from the leaves, once to confirm the bruise. Stop immediately. Over-muddling releases chlorophyll from broken leaf tissue, turning the drink green, bitter, and herbal in the wrong direction.",
+  "producer_showcase": [
+   {
+    "product": "Havana Club 3 Años",
+    "producer": "Cuba Ron S.A. (joint venture with Pernod Ricard)",
+    "origin": "Santiago de Cuba, Cuba"
+   },
+   {
+    "product": "Fresh Persian Limes",
+    "producer": "Various smallholder growers",
+    "origin": "Veracruz, Mexico (primary global supply)"
+   },
+   {
+    "product": "Billington's Unrefined Golden Caster Sugar",
+    "producer": "Billington's (ABF Sugar)",
+    "origin": "Mauritius (cane source); refined in Liverpool, England"
+   },
+   {
+    "product": "Fresh Spearmint (Mentha spicata)",
+    "producer": "Various horticultural growers",
+    "origin": "Kentish market gardens, England, or Florida, USA (commercial supply)"
+   },
+   {
+    "product": "Fever-Tree Premium Club Soda",
+    "producer": "Fever-Tree Ltd.",
+    "origin": "London, England (spring water sourced from Shropshire, UK)"
+   }
+  ],
+  "pairing_passage": null,
+  "order_index": 13
  },
  {
   "key": "cha-yen",
@@ -1716,7 +2092,31 @@
   "cross_cuisine_parallels": null,
   "lives_or_dies": null,
   "beverage_pairings": null,
-  "flavour_context": null
+  "flavour_context": null,
+  "producer_showcase": [
+   {
+    "product": "Cha Tra Mue Number One Thai Tea Blend",
+    "producer": "Cha Tra Mue (Moon Coffee)",
+    "origin": "Bangkok, Thailand"
+   },
+   {
+    "product": "Carnation Sweetened Condensed Milk",
+    "producer": "Nestlé",
+    "origin": "Mogi Mirim, São Paulo, Brazil (Thai market production)"
+   },
+   {
+    "product": "Carnation Evaporated Milk",
+    "producer": "Nestlé",
+    "origin": "Thailand"
+   },
+   {
+    "product": "Mitr Phol White Granulated Sugar",
+    "producer": "Mitr Phol Sugar Corporation",
+    "origin": "Suphanburi, Thailand"
+   }
+  ],
+  "pairing_passage": null,
+  "order_index": 14
  },
  {
   "key": "agua-de-jamaica",
@@ -1769,7 +2169,31 @@
   "cross_cuisine_parallels": null,
   "lives_or_dies": null,
   "beverage_pairings": null,
-  "flavour_context": null
+  "flavour_context": null,
+  "producer_showcase": [
+   {
+    "product": "Dried Jamaica (Hibiscus) Calyces",
+    "producer": "Rancho El Paraíso / Cooperativa de Productores de Jamaica de Guerrero",
+    "origin": "Guerrero, Mexico (primary domestic producing state)"
+   },
+   {
+    "product": "Zulka Morena Pure Cane Sugar",
+    "producer": "Zucarmex",
+    "origin": "Veracruz, Mexico"
+   },
+   {
+    "product": "Epura Purified Water",
+    "producer": "PepsiCo México",
+    "origin": "Mexico"
+   },
+   {
+    "product": "Hielería San Juan Block Ice / Cubed Ice",
+    "producer": "Distribuidora de Hielo San Juan",
+    "origin": "Mexico City, Mexico"
+   }
+  ],
+  "pairing_passage": null,
+  "order_index": 15
  },
  {
   "key": "horchata",
@@ -1837,7 +2261,36 @@
   "cross_cuisine_parallels": null,
   "lives_or_dies": null,
   "beverage_pairings": null,
-  "flavour_context": null
+  "flavour_context": null,
+  "producer_showcase": [
+   {
+    "product": "Iberia Extra Long Grain White Rice",
+    "producer": "Iberia Foods Corporation",
+    "origin": "Milled in Louisiana, USA (from domestic and imported rice)"
+   },
+   {
+    "product": "Canela Mexicana (Ceylon Cinnamon Sticks)",
+    "producer": "El Guapo Spices (Maggi/Nestlé brand)",
+    "origin": "Sri Lanka / distributed via New Orleans, Louisiana, USA"
+   },
+   {
+    "product": "C&H Pure Cane Sugar",
+    "producer": "C&H Sugar Company (ASR Group)",
+    "origin": "Crockett, California, USA (cane sourced from Hawaii and tropics)"
+   },
+   {
+    "product": "Nielsen-Massey Pure Vanilla Extract",
+    "producer": "Nielsen-Massey Vanillas",
+    "origin": "Waukegan, Illinois, USA (vanilla beans from Madagascar/Mexico)"
+   },
+   {
+    "product": "McCormick Ground Cinnamon",
+    "producer": "McCormick & Company",
+    "origin": "Hunt Valley, Maryland, USA (cassia sourced from Indonesia/Vietnam)"
+   }
+  ],
+  "pairing_passage": null,
+  "order_index": 16
  },
  {
   "key": "limonana",
@@ -1897,6 +2350,30 @@
   "cross_cuisine_parallels": null,
   "lives_or_dies": null,
   "beverage_pairings": null,
-  "flavour_context": null
+  "flavour_context": null,
+  "producer_showcase": [
+   {
+    "product": "Eureka lemons",
+    "producer": "Sunkist Growers",
+    "origin": "California, USA"
+   },
+   {
+    "product": "Fresh spearmint (Mentha spicata)",
+    "producer": "Koppert Cress",
+    "origin": "Monster, Netherlands"
+   },
+   {
+    "product": "Domino Pure Cane Sugar",
+    "producer": "Domino Foods, Inc.",
+    "origin": "Baltimore, Maryland, USA"
+   },
+   {
+    "product": "Evian Natural Spring Water",
+    "producer": "Société Anonyme des Eaux Minérales d'Évian",
+    "origin": "Évian-les-Bains, Haute-Savoie, France"
+   }
+  ],
+  "pairing_passage": null,
+  "order_index": 17
  }
 ]

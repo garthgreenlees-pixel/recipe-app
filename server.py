@@ -1018,6 +1018,7 @@ def init_db():
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS cross_cuisine_parallels JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS flavour_context TEXT",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS lives_or_dies TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS producer_showcase JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS quality_warnings JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS ingredient_origin_markers JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS source_units_raw JSONB",
@@ -4074,6 +4075,7 @@ def recipe_page(slug):
                 format_cuisine=_format_cuisine,
                 is_owner=bool(user and user.get("id") == kitchen_recipe.get("user_id")),
                 pairing_passage=kitchen_recipe.get("pairing_passage"),
+                producer_showcase=_resolve_producer_showcase(kitchen_recipe.get("producer_showcase"), _region),
                 needs_review=_recipe_needs_review(kitchen_recipe.get("quality_warnings")),
             )
         cur.close()
@@ -5218,20 +5220,27 @@ def seed_starter_shelf(user_id, conn=None):
         conn.autocommit = True
     cur = conn.cursor()
     seeded = 0
-    for e in manifest:
+    for i, e in enumerate(manifest):
         try:
             ruuid = str(uuid.uuid4())
             slug = make_kitchen_slug(e["title"], ruuid[:6])
             has_img = _copy_seed_hero(e["key"], ruuid)
+            # L1 — shelf orders by updated_at DESC. Stamp each row now()-i seconds
+            # in manifest order (dishes first, drinks last) so the shelf renders
+            # dishes → drinks deterministically for every seeded seat.
+            order_secs = int(e.get("order_index", i))
             cur.execute("""
                 INSERT INTO user_kitchen_recipes
                     (uuid, user_id, title, slug, preamble, tags, ingredients, steps,
                      servings_text, cuisine, origin, quality_hierarchy, sensory_tests,
                      cross_cuisine_parallels, lives_or_dies, flavour_context,
-                     beverage_pairings, has_image, is_draft, source_name,
-                     template_version, created_at, updated_at)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-                        FALSE,%s,'legacy',now(),now())
+                     beverage_pairings, pairing_passage, producer_showcase,
+                     has_image, is_draft, source_name, template_version,
+                     created_at, updated_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+                        FALSE,%s,'legacy',
+                        now() - (%s * interval '1 second'),
+                        now() - (%s * interval '1 second'))
                 ON CONFLICT (uuid) DO NOTHING
             """, (
                 ruuid, user_id, e["title"], slug, e.get("preamble") or "",
@@ -5241,7 +5250,8 @@ def seed_starter_shelf(user_id, conn=None):
                 _jd(e.get("quality_hierarchy")), _jd(e.get("sensory_tests")),
                 _jd(e.get("cross_cuisine_parallels")), e.get("lives_or_dies"),
                 e.get("flavour_context"), _jd(e.get("beverage_pairings")),
-                has_img, "Provenance starter shelf",
+                e.get("pairing_passage"), _jd(e.get("producer_showcase")),
+                has_img, "Provenance starter shelf", order_secs, order_secs,
             ))
             seeded += 1
         except Exception as ex:
@@ -5250,6 +5260,56 @@ def seed_starter_shelf(user_id, conn=None):
     if own:
         conn.close()
     return seeded
+
+
+def _resolve_producer_showcase(showcase, region_raw):
+    """L5 — for each named bottle in a drink's producer showcase, attach a local
+    provider ONLY when a real cellar stockist serves the reader's region (Pat's
+    Rule). Never invents: exact-name match against beverage_products, and the
+    provider comes from a real beverage_product_suppliers row or not at all —
+    origin-only text otherwise."""
+    if not showcase:
+        return showcase
+    if isinstance(showcase, str):
+        try:
+            showcase = json.loads(showcase)
+        except Exception:
+            return None
+    region_code = (region_raw or "").split("-")[-1].strip() or None
+    out = []
+    conn = None
+    try:
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        for b in showcase:
+            entry = dict(b)
+            entry["provider"] = None
+            entry["provider_url"] = None
+            pname = (b.get("product") or "").strip()
+            if pname and region_code:
+                cur.execute("SELECT id FROM beverage_products WHERE lower(name) = lower(%s) LIMIT 1", (pname,))
+                prow = cur.fetchone()
+                if prow:
+                    cur.execute("""
+                        SELECT s.name, s.website, s.state_province, s.service_region
+                        FROM beverage_product_suppliers bps
+                        JOIN suppliers s ON s.id = bps.supplier_id
+                        WHERE bps.product_id = %s
+                    """, (prow["id"],))
+                    for s in cur.fetchall():
+                        if _supplier_in_region(s, region_code):
+                            entry["provider"] = s.get("name")
+                            entry["provider_url"] = s.get("website")
+                            break
+            out.append(entry)
+        cur.close()
+    except Exception as e:
+        app.logger.warning(f"[showcase] resolve failed: {e}")
+        return showcase
+    finally:
+        if conn:
+            conn.close()
+    return out
 
 
 def load_share_tokens():

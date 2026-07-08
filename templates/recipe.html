@@ -677,6 +677,14 @@ main { padding-bottom: 60px; }
 .r6-review a{color:#8A4B26;text-decoration:underline;font-weight:600;}
 /* ── Editorial pairing passage (F5) ── */
 .r6-pairing-passage{font-family:var(--display);font-style:italic;font-size:20px;line-height:1.5;color:var(--charcoal,#1A1916);max-width:640px;}
+/* L5 — The Bottles (drink producer showcase) */
+.r6-bottles{display:grid;grid-template-columns:1fr 1fr;gap:20px 44px;border-top:1px solid var(--line,#E4DFDA);padding-top:22px;max-width:900px;}
+@media(max-width:720px){.r6-bottles{grid-template-columns:1fr;}}
+.r6-bottle{border-left:2px solid var(--gold,#C9A84C);padding-left:14px;}
+.r6-bottle__name{font-family:var(--display);font-weight:600;font-size:18px;line-height:1.2;color:var(--charcoal,#1A1916);}
+.r6-bottle__maker{font-size:13.5px;line-height:1.5;color:var(--charcoal-soft,#4A4743);margin-top:4px;}
+.r6-bottle__origin{color:var(--warm-gray,#8A8580);}
+.r6-bottle__provider{display:inline-block;margin-top:7px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--leaf,#3F6090);text-decoration:none;border-bottom:1px solid var(--gold,#C9A84C);}
 </style>
 {% endblock %}
 
@@ -697,7 +705,7 @@ main { padding-bottom: 60px; }
 {% endif %}
 {% set sashimi = recipe.sashimi_standard or recipe.lives_or_dies %}
 {% set origin_text = recipe.origin_provenance or recipe.origin or (recipe.full_content.origin if recipe.full_content else None) or recipe.description %}
-{% set cross_parallels = recipe.cross_cuisine_parallels or [] %}
+{% set cross_parallels = (recipe.cross_cuisine_parallels | selectattr('name') | list) if (recipe.cross_cuisine_parallels is iterable and recipe.cross_cuisine_parallels is not string and recipe.cross_cuisine_parallels is not mapping) else [] %}
 {% set trad_tags = recipe.tradition_tags or [] %}
 {% set cuisine_slug = (recipe.cuisine_canon or recipe.cuisine or '') | lower | replace(' ', '-') | replace('_', '-') %}
 {% from "_partials/upgrade_prompt.html" import upgrade_prompt with context %}
@@ -965,7 +973,7 @@ main { padding-bottom: 60px; }
 
   {# ─── QUALITY HIERARCHY (Library+) — renders only if real content exists;
         gated viewers see ONE clean frosted gate, one button, correct voice. ─── #}
-  {% set qh = recipe.quality_hierarchy if recipe.quality_hierarchy is iterable and recipe.quality_hierarchy is not string and recipe.quality_hierarchy is not mapping else [] %}
+  {% set qh = (recipe.quality_hierarchy | selectattr('ingredient') | list) if (recipe.quality_hierarchy is iterable and recipe.quality_hierarchy is not string and recipe.quality_hierarchy is not mapping) else [] %}
   {% if qh %}
   <section class="r6-pillar">
     <div class="r6-pillar__head">
@@ -1044,6 +1052,27 @@ main { padding-bottom: 60px; }
   <section class="r6-pillar">
     <div class="r6-pillar__head"><div><h2>At the Table</h2></div></div>
     <div class="r6-pairing-passage">{{ pairing_passage }}</div>
+  </section>
+  {% endif %}
+
+  {# ─── THE BOTTLES (L5) — a drink's producer showcase: named bottles/ingredients
+        tied to real makers + origin. A provider link ONLY where a real cellar
+        stockist serves the reader's region (Pat's Rule); origin-only otherwise.
+        Server never invents a supplier. Renders only when composed. ─── #}
+  {% if producer_showcase %}
+  <section class="r6-pillar">
+    <div class="r6-pillar__head"><div><h2>The Bottles</h2></div></div>
+    <div class="r6-bottles">
+      {% for b in producer_showcase %}
+      {% if b.product %}
+      <div class="r6-bottle">
+        <div class="r6-bottle__name">{{ b.product }}</div>
+        <div class="r6-bottle__maker">{{ b.producer }}{% if b.origin %} <span class="r6-bottle__origin">· {{ b.origin }}</span>{% endif %}</div>
+        {% if b.provider %}<a class="r6-bottle__provider"{% if b.provider_url %} href="{{ b.provider_url }}"{% endif %}>Carried in {{ region }} — {{ b.provider }}</a>{% endif %}
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
   </section>
   {% endif %}
 
