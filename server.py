@@ -4073,7 +4073,7 @@ def recipe_page(slug):
                 region=_region,
                 format_cuisine=_format_cuisine,
                 is_owner=bool(user and user.get("id") == kitchen_recipe.get("user_id")),
-                safety_notes=_get_or_build_safety_notes(_recipe_dict, slug),
+                safety_notes=_published_safety_notes(slug),
                 pairing_passage=kitchen_recipe.get("pairing_passage"),
                 needs_review=_recipe_needs_review(kitchen_recipe.get("quality_warnings")),
             )
@@ -4189,7 +4189,7 @@ def recipe_page(slug):
         region=_region,
         format_cuisine=_format_cuisine,
         is_owner=bool(_user and recipe.get("user_id") and _user.get("id") == recipe.get("user_id")),
-        safety_notes=_get_or_build_safety_notes(dict(recipe), slug),
+        safety_notes=_published_safety_notes(slug),
         pairing_passage=None,
         needs_review=False,
     )
@@ -9056,6 +9056,67 @@ def haccp_generate_for_recipe():
         return jsonify({"error": "Brief generated but could not be saved — please try again."}), 500
 
     return jsonify({"ok": True, "brief_id": brief_id})
+
+
+@app.route("/api/recipe/<slug>/safety-notes/generate", methods=["POST"])
+def safety_notes_generate(slug):
+    """H2 — on-demand safety notes for the toolbar button. If a note already
+    exists it is returned as-is; otherwise it is generated from the recipe's own
+    ingredients + method (same composer as import), stored, and returned. These
+    are grind SAFETY notes, never a HACCP brief."""
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "auth"}), 401
+    slug = (slug or "").strip()
+    if not slug:
+        return jsonify({"error": "slug required"}), 400
+
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM recipes WHERE slug = %s LIMIT 1", (slug,))
+    recipe = cur.fetchone()
+    if not recipe:
+        cur.execute(
+            "SELECT * FROM user_kitchen_recipes WHERE slug = %s AND user_id = %s LIMIT 1",
+            (slug, user["id"]),
+        )
+        recipe = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not recipe:
+        return jsonify({"error": "Recipe not found"}), 404
+
+    ings = recipe.get("ingredients") or []
+    if isinstance(ings, str):
+        try:
+            ings = json.loads(ings)
+        except Exception:
+            ings = []
+    steps = recipe.get("steps") or []
+    if isinstance(steps, str):
+        try:
+            steps = json.loads(steps)
+        except Exception:
+            steps = []
+    # _get_or_build_safety_notes takes step items as strings; flatten dict steps.
+    steps = [(s.get("text") or s.get("instruction") or "") if isinstance(s, dict) else s for s in steps]
+
+    recipe_dict = {
+        "title": recipe.get("name") or recipe.get("title") or "",
+        "ingredients": ings,
+        "steps": steps,
+    }
+    try:
+        notes = _get_or_build_safety_notes(recipe_dict, slug)
+    except Exception as e:
+        app.logger.error(f"[safety] generate failed for {slug}: {e}")
+        return jsonify({"error": "Generation failed — please try again."}), 502
+
+    return jsonify({"ok": True, "notes": [{
+        "summary": n.get("summary", ""),
+        "html": str(n.get("html", "")),
+        "disclaimer": n.get("disclaimer", ""),
+    } for n in notes]})
 
 
 @app.route("/api/haccp/save", methods=["POST"])

@@ -1153,6 +1153,9 @@ main { padding-bottom: 60px; }
   {# ─── SAFETY NOTES — the bottom section is the single home (F3). Generated per
         recipe from its own ingredients + method. NEVER labeled HACCP; the approved
         disclaimer rides the header. ─── #}
+  {# H2 — anchor always present so the toolbar button can inject a freshly
+     generated section here when the recipe had no note yet. #}
+  <div id="r6-safety-anchor">
   {% if safety_notes %}
   <section class="r6-safetysec">
     <div class="r6-safetysec__head">
@@ -1168,6 +1171,7 @@ main { padding-bottom: 60px; }
     {% endfor %}
   </section>
   {% endif %}
+  </div>
 
 
 </div>
@@ -1389,6 +1393,49 @@ function openSafetyModal() {
 function closeSafetyModal() {
   var el = document.getElementById('sn-overlay');
   if (el) el.classList.remove('open');
+}
+
+// ── H2 — Safety notes toolbar button, two paths ──────────────────
+// Has a note → scroll to the bottom section. No note yet → generate one
+// on demand (same engine pattern as the HACCP button), with a visible
+// "Writing…" state, inject it, then scroll. Never a dead click.
+function _renderSafetySection(notes) {
+  var sec = document.createElement('section');
+  sec.className = 'r6-safetysec';
+  var head = document.createElement('div'); head.className = 'r6-safetysec__head';
+  head.innerHTML = '<div class="r6-safetysec__eyebrow"><span class="diamond"></span> Safety notes</div>';
+  var disc = document.createElement('div'); disc.className = 'r6-safetysec__disc';
+  disc.textContent = (notes[0] && notes[0].disclaimer) || '';
+  head.appendChild(disc); sec.appendChild(head);
+  notes.forEach(function (n) {
+    var note = document.createElement('div'); note.className = 'r6-safetysec__note';
+    if (n.summary) { var s = document.createElement('div'); s.className = 'r6-safetysec__sum'; s.textContent = n.summary; note.appendChild(s); }
+    var body = document.createElement('div'); body.className = 'r6-safetysec__body'; body.innerHTML = n.html || ''; note.appendChild(body);
+    var foot = document.createElement('div'); foot.className = 'r6-safetysec__foot'; foot.textContent = n.disclaimer || ''; note.appendChild(foot);
+    sec.appendChild(note);
+  });
+  return sec;
+}
+function openSafetyNotes(btn) {
+  var s = document.querySelector('.r6-safetysec');
+  if (s) { s.scrollIntoView({ behavior: 'smooth' }); return; }
+  var label = btn.querySelector('.sn-btn-label');
+  var orig = label ? label.textContent : '';
+  if (label) label.textContent = 'Writing the safety notes…';
+  btn.disabled = true; btn.style.opacity = '0.7';
+  fetch('/api/recipe/' + btn.dataset.slug + '/safety-notes/generate', { method: 'POST' })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (d) {
+      btn.disabled = false; btn.style.opacity = '';
+      if (label) label.textContent = orig;
+      if (!d.ok || !(d.notes && d.notes.length)) { if (label) label.textContent = 'No safety notes needed'; return; }
+      var anchor = document.getElementById('r6-safety-anchor');
+      if (anchor) { anchor.innerHTML = ''; anchor.appendChild(_renderSafetySection(d.notes)); anchor.querySelector('.r6-safetysec').scrollIntoView({ behavior: 'smooth' }); }
+    })
+    .catch(function () {
+      btn.disabled = false; btn.style.opacity = '';
+      if (label) label.textContent = orig || 'Safety notes';
+    });
 }
 
 function openNotesModal() {
@@ -2370,9 +2417,9 @@ document.addEventListener('keydown', e => {
 <div class="bottom-bar">
   <a href="/kitchen" class="bottom-bar-btn">← MyKitchen</a>
   {# G3 — My notes retired; Safety notes takes its slot, targeting the bottom section. #}
-  <button class="bottom-bar-btn" onclick="var s=document.querySelector('.r6-safetysec'); if(s) s.scrollIntoView({behavior:'smooth'});">
+  <button class="bottom-bar-btn" data-slug="{{ recipe.slug }}" onclick="openSafetyNotes(this)">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4.2" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 3.2v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5.5" cy="7.9" r="0.7" fill="currentColor"/></svg>
-    Safety notes
+    <span class="sn-btn-label">Safety notes</span>
   </button>
   <button class="bottom-bar-btn" onclick="handleAction('costing','kitchen')">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
