@@ -190,8 +190,11 @@
   border-bottom: 1px dotted var(--line-soft); font-size: 14px;
   align-items: baseline;
 }
-.r6-ing__qty { font-family: var(--mono); font-size: 12px; color: var(--warm-gray); }
+.r6-ing__qty { font-family: var(--mono); font-size: 12px; color: var(--warm-gray); white-space: nowrap; }
 .r6-ing__name { color: var(--charcoal); }
+/* G2a — the note rides inline in secondary type, never a full-width orphan row */
+.r6-ing__note-inline { font-size: 12.5px; font-style: italic; color: var(--warm-gray, #8A8580); }
+.r6-ing__note-inline::before { content: " — "; color: var(--line-soft, #DDD3BE); font-style: normal; }
 
 /* serves control */
 .r6-serves {
@@ -875,16 +878,18 @@ main { padding-bottom: 60px; }
           <div class="r6-ing-group">
             {% if grp.group %}<div class="r6-ing-group-name">{{ grp.group }}</div>{% endif %}
             {% for ing in (grp.get('items') or []) %}
+              {% set _nm = (ing.name if ing is mapping else ing) | trim %}
+              {% if _nm %}  {# G2a — a nameless row (qty, no name) never renders #}
               <div class="r6-ing">
-                <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
-                <span class="r6-ing__name">{{ ing.name }}</span>
+                <span class="r6-ing__qty">{{ ing.count or ing.amount or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
+                <span class="r6-ing__name">{{ _nm }}{% if ing is mapping and ing.info %}<span class="r6-ing__note-inline">{{ ing.info }}</span>{% endif %}</span>
               </div>
-              {% if ing is mapping and ing.info %}<div class="r6-ing-note">{{ ing.info }}</div>{% endif %}
-              {% set marker = origin_map.get(ing.name if ing is mapping else '') %}
+              {% set marker = origin_map.get(_nm) %}
               {% if marker and marker.origin_marker %}
-                <div class="r-ing-origin"{% if marker.suppliers and marker.suppliers | length > 0 %} onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')"{% endif %}>{{ marker.origin_marker }}</div>
-              {% elif marker and marker.suppliers and marker.suppliers | length > 0 %}
-                <div class="r-ing-origin" onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')">Sourced by Provenance</div>
+                <div class="r-ing-origin"{% if marker.local_provider_id %} onclick="openSupplierPanelFull('{{ marker.local_provider_id }}')"{% endif %}>{{ marker.origin_marker }}</div>
+              {% elif marker and marker.local_provider_id %}
+                <div class="r-ing-origin" onclick="openSupplierPanelFull('{{ marker.local_provider_id }}')">Sourced by Provenance</div>
+              {% endif %}
               {% endif %}
             {% endfor %}
           </div>
@@ -899,18 +904,20 @@ main { padding-bottom: 60px; }
                 <div class="r6-ing-group-name">{{ _grp }}</div>
                 {% set _ns.cur_grp = _grp %}
               {% endif %}
+              {% set _nm = (ing.name or ing.get('ingredient', '')) | trim %}
+              {% if _nm %}  {# G2a — nameless rows never render #}
               <div class="r6-ing">
-                <span class="r6-ing__qty">{{ ing.amount or ing.count or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
-                <span class="r6-ing__name">{{ ing.name or ing.get('ingredient', '') }}</span>
+                <span class="r6-ing__qty">{{ ing.count or ing.amount or '' }}{% if ing.unit %} {{ ing.unit }}{% endif %}</span>
+                <span class="r6-ing__name">{{ _nm }}{% if ing.info %}<span class="r6-ing__note-inline">{{ ing.info }}</span>{% endif %}</span>
               </div>
-              {% if ing is mapping and ing.info %}<div class="r6-ing-note">{{ ing.info }}</div>{% endif %}
-              {% set marker = origin_map.get(ing.name or ing.get('ingredient', '')) %}
+              {% set marker = origin_map.get(_nm) %}
               {% if marker and marker.origin_marker %}
-                <div class="r-ing-origin"{% if marker.suppliers and marker.suppliers | length > 0 %} onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')"{% endif %}>{{ marker.origin_marker }}</div>
-              {% elif marker and marker.suppliers and marker.suppliers | length > 0 %}
-                <div class="r-ing-origin" onclick="openSupplierPanelFull('{{ marker.suppliers[0].id }}')">Sourced by Provenance</div>
+                <div class="r-ing-origin"{% if marker.local_provider_id %} onclick="openSupplierPanelFull('{{ marker.local_provider_id }}')"{% endif %}>{{ marker.origin_marker }}</div>
+              {% elif marker and marker.local_provider_id %}
+                <div class="r-ing-origin" onclick="openSupplierPanelFull('{{ marker.local_provider_id }}')">Sourced by Provenance</div>
               {% endif %}
-            {% else %}
+              {% endif %}
+            {% elif ing | trim %}
               <div class="r6-ing">
                 <span class="r6-ing__qty"></span>
                 <span class="r6-ing__name">{{ ing }}</span>
@@ -2362,10 +2369,10 @@ document.addEventListener('keydown', e => {
 {% block bottom_bar %}
 <div class="bottom-bar">
   <a href="/kitchen" class="bottom-bar-btn">← MyKitchen</a>
-  {# Safety notes retired from the toolbar — they own the bottom section now (F3). #}
-  <button class="bottom-bar-btn" onclick="handleAction('notes','kitchen')">
-    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><rect x="2" y="1" width="7" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h3M4 6h3M4 8h1.5" stroke="currentColor" stroke-width="1"/></svg>
-    My notes
+  {# G3 — My notes retired; Safety notes takes its slot, targeting the bottom section. #}
+  <button class="bottom-bar-btn" onclick="var s=document.querySelector('.r6-safetysec'); if(s) s.scrollIntoView({behavior:'smooth'});">
+    <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4.2" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 3.2v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5.5" cy="7.9" r="0.7" fill="currentColor"/></svg>
+    Safety notes
   </button>
   <button class="bottom-bar-btn" onclick="handleAction('costing','kitchen')">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>

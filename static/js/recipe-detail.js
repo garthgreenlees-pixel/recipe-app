@@ -12,18 +12,52 @@
     var perPortionEl = document.getElementById('r6-cost-per-portion');
     var portionLabelEl = document.getElementById('r6-cost-portion-label');
 
+    // G2b — round a scaled quantity to a cook's number, unit-aware.
+    function kround(v, unit) {
+      unit = (unit || '').toLowerCase().replace(/\.$/, '');
+      if (unit === 'g') { var st = v < 100 ? 5 : (v < 1000 ? 10 : 25); return String(Math.round(v / st) * st); }
+      if (unit === 'mg') { return String(Math.round(v / 50) * 50); }
+      if (unit === 'kg' || unit === 'l') { return String(Math.round(v * 20) / 20); }
+      if (unit === 'ml') {
+        if (v > 500) return String(Math.round(v / 25) * 25);
+        var ladder = [1.25, 2.5, 3.75, 5, 7.5, 10, 15, 20, 30, 45, 60, 80, 125, 175, 250, 375, 500];
+        var best = ladder[0];
+        ladder.forEach(function (x) { if (Math.abs(x - v) < Math.abs(best - v)) best = x; });
+        return String(best);
+      }
+      // countables (onion, clove, egg, no unit) — whole or common half, never 1.8
+      var half = Math.round(v * 2) / 2;
+      if (Math.abs(half - Math.round(half)) <= 0.2) return String(Math.round(half));
+      return String(half);
+    }
     // The ONE scaling engine. Both the inline Serves stepper and the Scale modal
     // call this, so they can never disagree. Scales every .r6-ing__qty from its
-    // stored original by (n / base).
+    // stored original by (n / base), rounded to cook's numbers.
     window.applyServings = function (n) {
       n = Math.max(1, parseInt(n, 10) || base);
       var factor = n / base;
       document.querySelectorAll('.r6-ing__qty').forEach(function (el) {
         if (el.dataset.orig === undefined) el.dataset.orig = el.textContent;
-        el.textContent = el.dataset.orig.replace(/(\d+\.?\d*)/g, function (m, num) {
-          var s = parseFloat(num) * factor;
-          return (s % 1 === 0) ? String(s) : s.toFixed(1);
-        });
+        var t = el.dataset.orig.trim();
+        var mm = t.match(/^(\d+\.?\d*)\s*(.*)$/);
+        if (mm) {
+          el.textContent = kround(parseFloat(mm[1]) * factor, mm[2]) + (mm[2] ? ' ' + mm[2] : '');
+        } else {
+          el.textContent = t.replace(/(\d+\.?\d*)/g, function (m, num) {
+            var s = parseFloat(num) * factor; return (s % 1 === 0) ? String(s) : s.toFixed(1);
+          });
+        }
+      });
+      // G2c — imperial fragments in notes go stale when scaled: drop them off-base,
+      // restore at base serves.
+      document.querySelectorAll('.r6-ing__note-inline').forEach(function (el) {
+        if (el.dataset.orig === undefined) el.dataset.orig = el.textContent;
+        if (factor === 1) { el.textContent = el.dataset.orig; }
+        else {
+          el.textContent = el.dataset.orig
+            .replace(/\s*\(?\d+\.?\d*\s*(?:lb|lbs|oz)\)?/gi, '')
+            .replace(/\(\s*\)/g, '').replace(/\s{2,}/g, ' ').trim();
+        }
       });
       countEl.textContent = n;
       var scNum = document.getElementById('sc-num');

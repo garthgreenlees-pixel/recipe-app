@@ -4042,6 +4042,9 @@ def recipe_page(slug):
                 if _norm_yield:
                     _row["servings_text"] = _norm_yield
             _recipe_dict = _normalize_member_recipe(_row)
+            # G1 — resolve a click-through provider only when a supplier serves the
+            # reader's region; foreign suppliers stay origin-only.
+            _localize_markers(_recipe_dict.get("ingredient_origin_markers"), get_user_location())
             _recipe_dict["requires_haccp"] = _detect_raw_served(*_recipe_dict_to_haccp_inputs(_recipe_dict))
             # F5 — user recipes render the composed editorial pairing passage, not
             # the render-time token-matched product grid (which produced duplicate
@@ -5020,12 +5023,12 @@ def _clean_ingredient_row(ing):
     count = ("" if ing.get("count") in (None, "") else str(ing.get("count"))).strip()
     unit = str(ing.get("unit") or "").strip()
     _U = r"(?:lb|lbs|oz|kg|g|ml|l|cups?|tbsp|tsp|cloves?|slices?)"
+    imperial = ""
     # 1) dual measure leaked into the name: leading "/ 1.2 lb ..."
     m = _re.match(r"^/\s*([\d.\s/]+?)\s*(" + _U + r")\b\.?\s*(.*)$", name, _re.I)
     if m:
         imperial = (m.group(1).strip() + " " + m.group(2)).strip()
         name = m.group(3).strip()
-        info = (imperial + ("; " + info if info else "")) if imperial else info
     # 2) quantity embedded at the start of the name when count is empty
     if not count:
         m2 = _re.match(r"^(\d+\.?\d*)\s*(" + _U + r")?\b\.?\s*(.*)$", name, _re.I)
@@ -5033,8 +5036,18 @@ def _clean_ingredient_row(ing):
             count = m2.group(1)
             unit = unit or (m2.group(2) or "")
             name = m2.group(3).strip()
-    name = _re.sub(r"^[\s/,;.-]+", "", name).strip()
-    info = _re.sub(r"^[\s,;.-]+", "", info).strip()
+
+    def _tidy(s):
+        s = _re.sub(r"^[\s/,;.-]+", "", (s or "")).strip()           # leading junk
+        s = _re.sub(r"[\s,;]+$", "", s).strip()                        # trailing junk
+        if s.count("(") > s.count(")"):                                # G2c: balance a truncated "(or breast"
+            s = s + ")" * (s.count("(") - s.count(")"))
+        return s
+
+    name = _tidy(name)
+    info = _tidy(info)
+    if imperial:  # keep the imperial as a clean, recognisable fragment (JS drops it on scale)
+        info = (info + " " if info else "") + "(" + imperial + ")"
     ing["name"], ing["info"], ing["count"], ing["unit"] = name, info, count, unit
     return ing
 
@@ -7940,6 +7953,60 @@ def _supplier_in_region(row, region_code):
     if region_code in _WESTERN_CA and "Western_Canada" in svc:
         return True
     return False
+
+
+def _localize_markers(markers, user_loc):
+    """G1 (Pat's Rule) — for each ingredient marker, resolve a click-through
+    PROVIDER only if a named supplier actually serves the reader's region. A
+    foreign supplier never renders as the provider. Sets marker['local_provider_id']
+    (a supplier id) or None (→ origin-only). Origin text stays global (doctrine)."""
+    if not markers or not isinstance(markers, list):
+        return markers
+    country, region = None, None
+    if user_loc and user_loc != "global":
+        parts = str(user_loc).split("-", 1)
+        country = parts[0].upper()
+        if len(parts) == 2:
+            region = parts[1].upper()
+    ids = {s.get("id") for m in markers if isinstance(m, dict)
+           for s in (m.get("suppliers") or []) if isinstance(s, dict) and s.get("id")}
+    regmap = {}
+    if ids and DATABASE_URL:
+        try:
+            conn = get_db()
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT id, country, service_region FROM suppliers WHERE id = ANY(%s)", (list(ids),))
+            for r in cur.fetchall():
+                regmap[r["id"]] = ((r.get("country") or "").upper(), [str(x) for x in (r.get("service_region") or [])])
+            cur.close(); conn.close()
+        except Exception as e:
+            app.logger.warning("_localize_markers lookup failed: %s", e)
+    local_tokens = set()
+    if region:
+        local_tokens.add(region)
+    if country:
+        local_tokens |= {country, "nationwide_" + country}
+    if country == "CA":
+        local_tokens |= {"nationwide_CA", "Western_Canada"}
+
+    def _is_local(sid):
+        if not region and not country:
+            return False  # unknown reader region → never claim a local provider
+        c, sr = regmap.get(sid, ("", []))
+        if country and c == country:
+            return True
+        return bool(set(sr) & local_tokens)
+
+    for m in markers:
+        if not isinstance(m, dict):
+            continue
+        lp = None
+        for s in (m.get("suppliers") or []):
+            if isinstance(s, dict) and _is_local(s.get("id")):
+                lp = s.get("id")
+                break
+        m["local_provider_id"] = lp
+    return markers
 
 
 def _get_kitchen_recipe_suppliers_from_markers(recipe_dict, user_loc="global"):
