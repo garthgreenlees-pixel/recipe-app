@@ -1018,6 +1018,7 @@ def init_db():
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS cross_cuisine_parallels JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS flavour_context TEXT",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS lives_or_dies TEXT",
+        "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS pairing_passage TEXT",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS producer_showcase JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS quality_warnings JSONB",
         "ALTER TABLE user_kitchen_recipes ADD COLUMN IF NOT EXISTS ingredient_origin_markers JSONB",
