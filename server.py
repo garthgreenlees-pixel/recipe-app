@@ -4094,12 +4094,17 @@ def recipe_page(slug):
     try:
         ingredients = recipe.get("ingredients") or []
         ingredient_names = [ing.get("name", "") for ing in ingredients if ing.get("name")]
+        _rc = None
+        if user_loc and user_loc != "global":
+            _pp = user_loc.split("-", 1)
+            if len(_pp) == 2:
+                _rc = _pp[1]
         if ingredient_names:
             patterns = [f"%{n}%" for n in ingredient_names[:20]]
             cur.execute("""
                 SELECT DISTINCT ON (s.id, ip.name)
                     s.id, s.name, s.website, s.city, s.state_province, s.country,
-                    s.service_region,
+                    s.service_region, ps.role,
                     ip.name AS product_name,
                     LEFT(ip.description, 140) AS product_desc
                 FROM ingredient_products ip
@@ -4110,20 +4115,11 @@ def recipe_page(slug):
             """, (patterns,))
             rows = cur.fetchall()
 
-            _FORM_WORDS = {"paste", "powder", "aged", "dried", "smoked", "fermented"}
-
-            def _match_ok(ing, prod):
-                il, pl = ing.lower(), prod.lower()
-                for fw in _FORM_WORDS:
-                    if fw in pl and fw not in il:
-                        return False
-                shorter = min(len(il), len(pl))
-                return shorter > 0 and len(il) / shorter >= 0.6
-
             supplier_map = {}
             for row in rows:
                 prod_name = row['product_name'] or ''
-                if not any(_match_ok(ing, prod_name) for ing in ingredient_names):
+                # H1a — strict relevance: the product must BE one of the ingredients.
+                if not any(_core_match(prod_name, ing) for ing in ingredient_names):
                     continue
                 sid = row['id']
                 if sid not in supplier_map:
@@ -4132,13 +4128,19 @@ def recipe_page(slug):
                         'city': row['city'], 'state_province': row['state_province'],
                         'country': row['country'],
                         'service_region': list(row['service_region'] or []),
-                        'products': []
+                        'products': [], '_is_origin': False,
                     }
+                if (row.get('role') or '').upper() == 'ORIGIN':
+                    supplier_map[sid]['_is_origin'] = True
                 if prod_name:
                     supplier_map[sid]['products'].append({
                         'name': prod_name,
                         'desc': row['product_desc'] or ''
                     })
+            # H1b — Pat's Rule: keep an origin supplier (global benchmark, doctrine)
+            # or a provider that serves the reader's region; unknown region → origin-only.
+            supplier_map = {sid: s for sid, s in supplier_map.items()
+                            if s.get('_is_origin') or _supplier_in_region(s, _rc)}
             # Deduplicate products within each supplier (DB may have duplicate entries)
             for sup in supplier_map.values():
                 seen_products = set()
@@ -7940,9 +7942,11 @@ def _match_suppliers_for_ingredients(ingredient_names):
 
 
 def _supplier_in_region(row, region_code):
-    """True if supplier is T1 for the given region code (or region_code is None → show all)."""
+    """True if the supplier serves the reader's region (Pat's Rule). H1b — when the
+    reader's region is UNKNOWN we return False: no provider by default (origin-only),
+    never a foreign supplier as the local provider."""
     if not region_code:
-        return True  # global user: show all providers
+        return False  # unknown reader region → origin-only, never a default provider
     state = row.get("state_province") or ""
     svc   = row.get("service_region") or []
     _WESTERN_CA = {"BC", "AB", "SK", "MB"}
@@ -7953,6 +7957,46 @@ def _supplier_in_region(row, region_code):
     if region_code in _WESTERN_CA and "Western_Canada" in svc:
         return True
     return False
+
+
+# Shared strict relevance (H1a) — a product IS an ingredient only on whole-word
+# core match with no differing identity qualifier. Used by both supplier surfaces.
+_IDENTITY_QUALIFIERS_G = {"black", "smoked", "dried", "fermented", "pickled",
+                         "roasted", "ground", "powdered", "candied", "preserved",
+                         "toasted", "cured", "aged", "green", "wild"}
+
+
+def _core_stem(name):
+    n = (name or "").lower().strip().replace("-", " ")
+    for prefix in ("fresh as ", "freeze dried ", "fresh as "):
+        if n.startswith(prefix):
+            n = n[len(prefix):]
+            break
+    for suffix in (" chunks", " chunk", " powder", " whole", " flakes", " flake",
+                   " juice", " sauce", " extract", " cloves", " clove", " sprigs",
+                   " sprig", " leaves", " leaf", " heads", " head", " bunch",
+                   " fillets", " fillet", " thighs", " thigh", " breast"):
+        if n.endswith(suffix):
+            n = n[:-len(suffix)]
+            break
+    if n.endswith("ies") and len(n) > 4:
+        n = n[:-3] + "y"
+    elif n.endswith("es") and len(n) > 3 and not n.endswith("oes"):
+        n = n[:-2]
+    elif n.endswith("s") and len(n) > 2 and not n.endswith("ss") and not n.endswith("us"):
+        n = n[:-1]
+    return n.strip()
+
+
+def _core_match(pname, iname):
+    ps, is_ = _core_stem(pname), _core_stem(iname)
+    if not ps or not is_:
+        return False
+    pw, iw = ps.split(), is_.split()
+    if (set(pw) ^ set(iw)) & _IDENTITY_QUALIFIERS_G:
+        return False
+    short, long_ = (pw, iw) if len(pw) <= len(iw) else (iw, pw)
+    return long_[-len(short):] == short
 
 
 def _localize_markers(markers, user_loc):
@@ -8000,9 +8044,14 @@ def _localize_markers(markers, user_loc):
     for m in markers:
         if not isinstance(m, dict):
             continue
+        iname = m.get("ingredient_name") or ""
         lp = None
         for s in (m.get("suppliers") or []):
-            if isinstance(s, dict) and _is_local(s.get("id")):
+            if not (isinstance(s, dict) and _is_local(s.get("id"))):
+                continue
+            # H1a — the local provider must actually stock THIS ingredient
+            prods = s.get("products") or []
+            if any(_core_match((pr.get("name") if isinstance(pr, dict) else pr), iname) for pr in prods):
                 lp = s.get("id")
                 break
         m["local_provider_id"] = lp
@@ -8067,13 +8116,15 @@ def _get_kitchen_recipe_suppliers_from_markers(recipe_dict, user_loc="global"):
 
     def _ingredient_stem_local(product_name):
         """Strip brand prefix + form suffix + plurals to reveal core ingredient."""
-        n = (product_name or "").lower().strip()
-        for prefix in ("fresh-as ", "freeze-dried ", "fresh as "):
+        n = (product_name or "").lower().strip().replace("-", " ")
+        for prefix in ("fresh as ", "freeze dried ", "fresh as "):
             if n.startswith(prefix):
                 n = n[len(prefix):]
                 break
         for suffix in (" chunks", " chunk", " powder", " whole", " flakes", " flake",
-                       " juice", " sauce", " extract"):
+                       " juice", " sauce", " extract", " cloves", " clove", " sprigs",
+                       " sprig", " leaves", " leaf", " heads", " head", " bunch",
+                       " fillets", " fillet", " thighs", " thigh", " breast"):
             if n.endswith(suffix):
                 n = n[:-len(suffix)]
                 break
@@ -8126,15 +8177,28 @@ def _get_kitchen_recipe_suppliers_from_markers(recipe_dict, user_loc="global"):
                 stems.add(st)
         supplier_ingredient_stems[sid] = stems
 
+    # H1a — a product IS the ingredient only if their core noun(s) match as whole
+    # words AND no identity-changing qualifier differs. "garlic" ≠ "black garlic";
+    # token/substring overlap is NOT enough.
+    _IDENTITY_QUALIFIERS = {"black", "smoked", "dried", "fermented", "pickled",
+                            "roasted", "ground", "powdered", "candied", "preserved",
+                            "toasted", "cured", "aged", "green", "wild"}
+
+    def _cores_match(pstem, istem):
+        if not pstem or not istem:
+            return False
+        pw, iw = pstem.split(), istem.split()
+        if (set(pw) ^ set(iw)) & _IDENTITY_QUALIFIERS:
+            return False  # an identity qualifier on one side but not the other → different thing
+        short, long_ = (pw, iw) if len(pw) <= len(iw) else (iw, pw)
+        return long_[-len(short):] == short  # the shorter core is a whole-word tail of the longer
+
     def _product_matches_recipe(product_name, ingredient_stems):
-        """True if product_stem overlaps with any ingredient_stem (substring check)."""
+        """True only when the product IS one of this supplier's recipe ingredients."""
         pstem = _ingredient_stem_local(product_name)
         if not pstem:
             return False
-        for istem in ingredient_stems:
-            if pstem == istem or pstem in istem or istem in pstem:
-                return True
-        return False
+        return any(_cores_match(pstem, istem) for istem in ingredient_stems)
 
     try:
         conn = get_db()
@@ -8167,9 +8231,10 @@ def _get_kitchen_recipe_suppliers_from_markers(recipe_dict, user_loc="global"):
             role = row.get("role")
             pname = row.get("matched_product_name")
 
-            # Precision filter: only include products whose stem overlaps with
-            # the ingredient names this supplier is linked to in this recipe.
-            if pname and not _product_matches_recipe(
+            # H1a — a supplier renders ONLY via a product that IS the ingredient.
+            # No product, or no genuine match → the row is skipped (and if a
+            # supplier has no matching row it never enters the maps → no card).
+            if not pname or not _product_matches_recipe(
                 pname, supplier_ingredient_stems.get(sid, set())
             ):
                 continue
