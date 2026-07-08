@@ -5168,6 +5168,90 @@ def save_hero_image(recipe_uuid, image_b64):
     (image_dir / "miniature.jpg").write_bytes(image_bytes)
 
 
+# ── Starter shelf (Cycle K) ────────────────────────────────────────
+# Every new seat is born with the same 18 composed cards (12 dishes + 6 drinks),
+# copied from committed seed masters into the user's own editable kitchen rows,
+# each with its house hero. Content + heroes live in the repo (starter_shelf_seed.json
+# + static/seed/*.jpg) so seeding is fast, deterministic, and deploy-portable —
+# no runtime image generation, no dependency on any other user's rows.
+_SEED_ROOT = Path(__file__).resolve().parent
+_SEED_IMG_DIR = _SEED_ROOT / "static" / "seed"
+_STARTER_SHELF_CACHE = None
+
+def _load_starter_shelf():
+    global _STARTER_SHELF_CACHE
+    if _STARTER_SHELF_CACHE is None:
+        try:
+            with open(_SEED_ROOT / "starter_shelf_seed.json", encoding="utf-8") as f:
+                _STARTER_SHELF_CACHE = json.load(f)
+        except Exception as e:
+            app.logger.error(f"[seed] cannot load starter shelf manifest: {e}")
+            _STARTER_SHELF_CACHE = []
+    return _STARTER_SHELF_CACHE
+
+def _copy_seed_hero(seed_key, recipe_uuid):
+    """Copy a committed seed hero into this recipe's image dir. Returns True on success."""
+    src = _SEED_IMG_DIR / f"{seed_key}.jpg"
+    if not src.is_file():
+        return False
+    dest = EXTRACTED_DIR / recipe_uuid
+    dest.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(src, dest / "main.jpg")
+    shutil.copyfile(src, dest / "miniature.jpg")
+    return True
+
+def _jd(v):
+    """json.dumps for a jsonb column, preserving SQL NULL when the value is None."""
+    return None if v is None else json.dumps(v)
+
+def seed_starter_shelf(user_id, conn=None):
+    """Seed one user's kitchen with the 18-card starter shelf. Each card becomes
+    the user's own user_kitchen_recipes row (fresh uuid + slug), published
+    (is_draft FALSE) with its house hero copied in. Drinks carry a 'Drink' tag so
+    the shelf reads dishes and drinks apart. Returns the number of cards seeded."""
+    manifest = _load_starter_shelf()
+    if not manifest:
+        return 0
+    own = conn is None
+    if own:
+        conn = psycopg2.connect(DATABASE_URL_WRITE)
+        conn.autocommit = True
+    cur = conn.cursor()
+    seeded = 0
+    for e in manifest:
+        try:
+            ruuid = str(uuid.uuid4())
+            slug = make_kitchen_slug(e["title"], ruuid[:6])
+            has_img = _copy_seed_hero(e["key"], ruuid)
+            cur.execute("""
+                INSERT INTO user_kitchen_recipes
+                    (uuid, user_id, title, slug, preamble, tags, ingredients, steps,
+                     servings_text, cuisine, origin, quality_hierarchy, sensory_tests,
+                     cross_cuisine_parallels, lives_or_dies, flavour_context,
+                     beverage_pairings, has_image, is_draft, source_name,
+                     template_version, created_at, updated_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+                        FALSE,%s,'legacy',now(),now())
+                ON CONFLICT (uuid) DO NOTHING
+            """, (
+                ruuid, user_id, e["title"], slug, e.get("preamble") or "",
+                _jd(e.get("tags") or []), _jd(e.get("ingredients") or []),
+                _jd(e.get("steps") or []), e.get("servings_text") or "",
+                e.get("cuisine") or "", e.get("origin"),
+                _jd(e.get("quality_hierarchy")), _jd(e.get("sensory_tests")),
+                _jd(e.get("cross_cuisine_parallels")), e.get("lives_or_dies"),
+                e.get("flavour_context"), _jd(e.get("beverage_pairings")),
+                has_img, "Provenance starter shelf",
+            ))
+            seeded += 1
+        except Exception as ex:
+            app.logger.warning(f"[seed] card {e.get('key')} failed for user {user_id}: {ex}")
+    cur.close()
+    if own:
+        conn.close()
+    return seeded
+
+
 def load_share_tokens():
     if not SHARE_TOKENS_FILE.exists():
         return {}
@@ -15465,6 +15549,12 @@ def auth_signup():
             pass  # Never block signup over email failure
         cur.close()
         conn.close()
+        # K1 — the new seat is born with the Provenance starter shelf (18 cards).
+        # Guarded: a seeding failure must never block a signup.
+        try:
+            seed_starter_shelf(user_id)
+        except Exception as _seed_err:
+            app.logger.warning(f"[seed] starter shelf failed for new user {user_id}: {_seed_err}")
         session.permanent = True
         session["user_id"] = user_id
         next_url = _safe_next(default="/")
@@ -22727,5 +22817,26 @@ def admin_review_ingredients_reject(ingredient_id):
 
 # ─── Run ─────────────────────────────────────────────────────────────────────
 
+def _cli_seed_user(user_id, wipe=False):
+    """One-off: (optionally) wipe a single user's kitchen rows, then seed the
+    starter shelf. Runs on the machine so it has the image volume. Only ever
+    touches the given user_id — no other seat is affected."""
+    conn = psycopg2.connect(DATABASE_URL_WRITE)
+    conn.autocommit = True
+    cur = conn.cursor()
+    if wipe:
+        cur.execute("DELETE FROM user_kitchen_recipes WHERE user_id = %s", (user_id,))
+        print(f"[seed-cli] wiped {cur.rowcount} rows for user {user_id}")
+    cur.close()
+    n = seed_starter_shelf(user_id, conn=conn)
+    conn.close()
+    print(f"[seed-cli] seeded {n} starter cards for user {user_id}")
+
+
 if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "seed-user":
+        _uid = int(sys.argv[2])
+        _cli_seed_user(_uid, wipe=("--wipe" in sys.argv))
+        sys.exit(0)
     app.run(host="0.0.0.0", port=8000, debug=True)

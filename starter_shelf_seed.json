@@ -1,0 +1,1902 @@
+[
+ {
+  "key": "spaghetti-carbonara",
+  "kind": "dish",
+  "title": "Spaghetti Carbonara",
+  "cuisine": "Roman",
+  "preamble": "The most misunderstood pasta in the world. No cream. No exceptions. The guanciale renders its fat. The egg yolk emulsifies off heat. The whole thing takes four minutes and cannot be rushed.",
+  "servings_text": "4",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "cured pork cheek, not pancetta — cut into small lardons",
+    "name": "guanciale",
+    "unit": "g",
+    "count": "200"
+   },
+   {
+    "info": "or tonnarelli",
+    "name": "spaghetti",
+    "unit": "g",
+    "count": "400"
+   },
+   {
+    "info": "free-range, room temperature",
+    "name": "egg yolks",
+    "unit": "",
+    "count": "6"
+   },
+   {
+    "info": "free-range, room temperature",
+    "name": "whole egg",
+    "unit": "",
+    "count": "1"
+   },
+   {
+    "info": "finely grated — cold, straight from the fridge",
+    "name": "Pecorino Romano",
+    "unit": "g",
+    "count": "80"
+   },
+   {
+    "info": "finely grated, optional but rounds the edge of Pecorino",
+    "name": "Parmigiano Reggiano",
+    "unit": "g",
+    "count": "40"
+   },
+   {
+    "info": "freshly and coarsely ground — Sarawak or Tellicherry preferred",
+    "name": "black pepper",
+    "unit": "tsp",
+    "count": "2"
+   },
+   {
+    "info": "salted, starchy — the emulsification medium",
+    "name": "pasta water",
+    "unit": "ml",
+    "count": "120"
+   }
+  ],
+  "steps": [
+   "Bring a large pot of heavily salted water to a rolling boil. Cut guanciale into 1cm lardons.",
+   "Render guanciale in a cold pan over medium-low heat, 8–10 minutes, until crisp outside and tender inside. Remove from heat. Reserve the rendered fat in the pan.",
+   "Whisk egg yolks and whole egg with grated Pecorino and Parmigiano in a large bowl until smooth and thick — the mixture should ribbon off the whisk. Season with half the black pepper.",
+   "Cook pasta al dente (1 minute less than package directions). Ladle out 240ml of pasta water before draining.",
+   "Add 80ml hot pasta water to the guanciale pan (off heat), swirling to deglaze the fat into a glossy emulsion.",
+   "Add hot drained pasta to the guanciale pan. Toss briefly to coat. Remove from heat entirely — the surface must not exceed 70°C or the eggs will scramble.",
+   "Pour the egg and cheese mixture over the pasta, tossing constantly. Add pasta water in 30ml splashes until the sauce is glossy and clings to the pasta — not scrambled, not soupy.",
+   "Plate immediately, finish with remaining black pepper and extra Pecorino. Eat within 2 minutes."
+  ],
+  "origin": "Roman working-class tradition, possibly connected to the carbonari charcoal workers of the Apennines. The modern recipe is contested — some trace it to 1944, when American soldiers mixed rations of bacon and egg powder with Italian pasta. Others insist the technique predates the war. What is certain: it has never contained cream. The cream version is a postwar export misunderstanding that has never been corrected.",
+  "quality_hierarchy": [
+   "1. Guanciale from Lazio pig cheeks — not pancetta, not bacon. The fat structure is fundamentally different and cannot be replicated by substitution.",
+   "2. Pecorino Romano DOP — aged sheep milk cheese with a sharpness that balances the fat. Parmesan alone produces a blander result.",
+   "3. Spaghetti or rigatoni only — rigatoni ridges trap the sauce; spaghetti coats evenly. Penne is wrong. Tagliatelle is wrong.",
+   "4. Whole black peppercorns, cracked fresh at the pan before serving. Pre-ground pepper is a different ingredient.",
+   "5. Egg yolks, not whole eggs — the fat content of yolks produces the emulsification. A whole egg dilutes it."
+  ],
+  "sensory_tests": [
+   "The sauce should coat each strand in a glossy, barely translucent film — not pooled at the bottom.",
+   "A single strand lifted should pull a ribbon, not drip.",
+   "The pepper should be visible as black flecks throughout, never ground fine."
+  ],
+  "cross_cuisine_parallels": [
+   "Korean gyeranjjim (steamed egg custard) — uses the same heat-threshold technique in reverse, steaming at precise temperature to set without curdling.",
+   "French sauce hollandaise — the same fundamental challenge: emulsifying fat with egg at a temperature that thickens without scrambling.",
+   "Neapolitan pasta e uova — a simpler ancestor using whole egg, olive oil, and cheese, without the guanciale fat emulsification."
+  ],
+  "lives_or_dies": "The 30-second window when pasta meets egg off heat. Too hot: scrambled eggs. Too cold: a grainy, broken sauce. The pasta water you reserved — starchy, salted — is the only rescue tool you have. Add it by the tablespoon.",
+  "beverage_pairings": null,
+  "flavour_context": "Hot pasta emulsifies cold egg yolk and Pecorino Romano off the heat. The residual temperature of freshly drained spaghetti — around 80°C — is exactly sufficient to thicken the yolk proteins without scrambling them. The pasta must be moved constantly. The bowl must be warm. The timing window is 30 seconds."
+ },
+ {
+  "key": "tonkotsu-ramen",
+  "kind": "dish",
+  "title": "Tonkotsu Ramen",
+  "cuisine": "Hakata Japanese",
+  "preamble": "Eighteen hours of violent boiling to produce something that looks deceptively simple: a white, creamy broth that coats the bowl. The fat ring on the surface is not a flaw. It is the point.",
+  "servings_text": "4",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "split — primary source of gelatin and opacity",
+    "name": "pork trotters",
+    "unit": "kg",
+    "count": "1"
+   },
+   {
+    "info": "blanched and rinsed before use",
+    "name": "pork neck bones",
+    "unit": "g",
+    "count": "500"
+   },
+   {
+    "info": "skin-on, for chashu",
+    "name": "pork belly",
+    "unit": "g",
+    "count": "500"
+   },
+   {
+    "info": "thin, straight Hakata-style",
+    "name": "fresh ramen noodles",
+    "unit": "g",
+    "count": "400"
+   },
+   {
+    "info": "for tare",
+    "name": "soy sauce",
+    "unit": "ml",
+    "count": "120"
+   },
+   {
+    "info": "for tare",
+    "name": "mirin",
+    "unit": "ml",
+    "count": "60"
+   },
+   {
+    "info": "for tare and pork braising",
+    "name": "sake",
+    "unit": "ml",
+    "count": "60"
+   },
+   {
+    "info": "for ajitsuke tamago — soft-boiled and marinated",
+    "name": "eggs",
+    "unit": "",
+    "count": "4"
+   },
+   {
+    "info": "thinly sliced on the bias",
+    "name": "spring onions",
+    "unit": "",
+    "count": "4"
+   },
+   {
+    "info": "toasted, halved",
+    "name": "nori sheets",
+    "unit": "sheets",
+    "count": "4"
+   },
+   {
+    "info": "pickled red ginger — the Hakata-style garnish",
+    "name": "beni shoga",
+    "unit": "g",
+    "count": "40"
+   },
+   {
+    "info": "toasted",
+    "name": "sesame seeds",
+    "unit": "tbsp",
+    "count": "2"
+   },
+   {
+    "info": "freshly ground, to finish",
+    "name": "white pepper",
+    "unit": "tsp",
+    "count": "1"
+   }
+  ],
+  "steps": [
+   "Blanch bones and trotters in boiling water for 5 minutes. Drain and rinse under cold water to remove impurities.",
+   "Cover blanched bones with cold water by 5cm. Bring to a vigorous boil — for Hakata-style, the broth must actively boil (not simmer) to emulsify fat into the liquid. Maintain hard boil 6–8 hours, adding water as needed.",
+   "For chashu: roll pork belly, tie with kitchen twine. Brown all sides in a separate pan. Braise in soy/mirin/sake (3:1:1) with water for 2 hours at 160°C. Reserve braising liquid for tare.",
+   "Soft-boil eggs: 6 minutes 30 seconds from boiling, transfer to ice bath. Peel when cool. Marinate overnight in chashu braising liquid diluted 1:1 with water.",
+   "Make tare: combine soy, mirin, sake in a small pan, bring to brief simmer to cook off alcohol. Cool.",
+   "Strain finished broth. It should be thick, creamy white, and coat the back of a spoon.",
+   "Cook noodles per package (2–3 minutes), drain. Place in bowl, ladle 350ml hot broth over, add 30ml tare.",
+   "Garnish each bowl with 2 slices chashu, a halved marinated egg, spring onions, nori, beni shoga, and toasted sesame."
+  ],
+  "origin": "Hakata, Fukuoka prefecture, 1941. Miyamoto Tokio's Nankin Senyoji restaurant. The discovery was accidental: a cook left pork bones on a full boil rather than the expected simmer. The resulting milky-white broth — tonkotsu — became the defining food of Fukuoka. The violent boil that produces opacity is not a mistake to be corrected but the entire point of the technique.",
+  "quality_hierarchy": [
+   "1. Pork trotters and neck bones, split before cooking — the surface area of exposed marrow and connective tissue determines collagen yield.",
+   "2. Fresh sun-dried ramen noodles — the alkaline water (kansui) creates the characteristic yellow colour and springy texture that dried noodles cannot replicate.",
+   "3. Chashu from pork belly, braised in mirin, sake, and soy for 4 hours minimum — sliced thin and torched before serving.",
+   "4. Soft-boiled tamago marinated for 12 hours in soy and mirin — the white should be firm, the yolk jammy.",
+   "5. Tare added at the bowl, not during broth making — shoyu or shio concentrate adjusts flavour without being cooked in."
+  ],
+  "sensory_tests": [
+   "The broth should be opaque white when poured cold into a glass — not pale or translucent.",
+   "A spoon dragged through the surface should part the fat ring briefly before it closes again.",
+   "Noodles should have slight resistance at the core even after 90 seconds in boiling broth — not fully soft."
+  ],
+  "cross_cuisine_parallels": [
+   "French pot-au-feu — long bone broth, served separately from the solid elements, same philosophy of time-extracted gelatin.",
+   "Korean seolleongtang — ox bone broth, same long boil, same opacity goal, same collagen-forward approach.",
+   "Cantonese pork bone congee — same bone base, different starch vehicle, same low-and-slow extraction principle."
+  ],
+  "lives_or_dies": "The fat ring that forms across the surface when the bowl is assembled. This ring insulates the temperature and delivers flavour at the lip of every sip. A bowl served without it is technically correct and spiritually empty.",
+  "beverage_pairings": null,
+  "flavour_context": "Split pork trotters and neck bones are brought to a full rolling boil and held there for 18 hours minimum. This is not simmering — the violent agitation forces fat and collagen into emulsification. The opacity cannot be achieved at lower temperatures. The final broth should be white, creamy, and leave a coating on the inside of every vessel it touches."
+ },
+ {
+  "key": "chicken-tikka-masala",
+  "kind": "dish",
+  "title": "Chicken Tikka Masala",
+  "cuisine": "Punjabi / British",
+  "preamble": "Two-stage cooking: tandoor char first, masala simmer second. The yogurt marinade is not flavouring — it is a slow overnight protein denaturation that preserves moisture through the extreme heat of the grill.",
+  "servings_text": "4",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "skin-off, cut into 5cm pieces",
+    "name": "boneless chicken thighs",
+    "unit": "g",
+    "count": "800"
+   },
+   {
+    "info": "for marinade",
+    "name": "full-fat yogurt",
+    "unit": "g",
+    "count": "200"
+   },
+   {
+    "info": "for colour and mild heat — sub: half sweet paprika, half cayenne",
+    "name": "Kashmiri chilli powder",
+    "unit": "tbsp",
+    "count": "2"
+   },
+   {
+    "info": "divided — freshly ground blend if possible",
+    "name": "garam masala",
+    "unit": "tsp",
+    "count": "2"
+   },
+   {
+    "info": "",
+    "name": "ground cumin",
+    "unit": "tsp",
+    "count": "1"
+   },
+   {
+    "info": "",
+    "name": "ground coriander",
+    "unit": "tsp",
+    "count": "1"
+   },
+   {
+    "info": "finely grated",
+    "name": "fresh ginger",
+    "unit": "g",
+    "count": "40"
+   },
+   {
+    "info": "crushed to a fine paste",
+    "name": "garlic",
+    "unit": "cloves",
+    "count": "8"
+   },
+   {
+    "info": "or neutral oil",
+    "name": "ghee",
+    "unit": "tbsp",
+    "count": "3"
+   },
+   {
+    "info": "finely sliced",
+    "name": "white onion",
+    "unit": "large",
+    "count": "2"
+   },
+   {
+    "info": "canned or fresh, blended smooth",
+    "name": "whole plum tomatoes",
+    "unit": "g",
+    "count": "400"
+   },
+   {
+    "info": "stirred in at the end — do not boil after adding",
+    "name": "double cream",
+    "unit": "ml",
+    "count": "150"
+   },
+   {
+    "info": "crushed between palms — the defining aromatic of the masala",
+    "name": "kasuri methi (dried fenugreek leaves)",
+    "unit": "tsp",
+    "count": "2"
+   },
+   {
+    "info": "adjusted to taste",
+    "name": "salt",
+    "unit": "tsp",
+    "count": "1.5"
+   }
+  ],
+  "steps": [
+   "Combine chicken with yogurt, 1 tbsp Kashmiri chilli, 1 tsp garam masala, half the ginger, half the garlic, and 1 tsp salt. Marinate minimum 4 hours, overnight preferred.",
+   "Thread on skewers or arrange on a foil-lined baking tray. Grill or broil at maximum heat (240°C) until charred at the edges, 12–15 minutes. The char is not cosmetic — it is the flavour.",
+   "In a heavy pan, heat ghee over medium. Cook sliced onions with a pinch of salt, 20–25 minutes until deeply golden and reduced. Do not rush.",
+   "Add remaining garlic and ginger paste. Cook 2 minutes until raw smell disappears. Add remaining chilli powder, cumin, and coriander. Fry 1 minute.",
+   "Add tomatoes. Simmer uncovered 15 minutes until thick and the fat separates at the edges — this is the bhunao, the sign the masala is ready.",
+   "Blend sauce until completely smooth. Return to pan, add charred chicken, simmer together 5 minutes.",
+   "Reduce heat to very low. Stir in cream, remaining garam masala, and crushed kasuri methi. Do not boil. Season to taste.",
+   "Serve with basmati rice or roti."
+  ],
+  "origin": "Glasgow, 1970s — most authorities cite Ali Ahmed Aslam of Shish Mahal, who added tomato cream and spices to dry tandoor-cooked chicken tikka to satisfy a customer who wanted sauce. Or pre-Partition Punjab, where butter chicken (murgh makhani) at Moti Mahal restaurant in Delhi was already established by the late 1940s. Both accounts may be true simultaneously. The dish belongs to both British and Punjabi identity, and the argument has become its own story.",
+  "quality_hierarchy": [
+   "1. Chicken thighs, not breast — the fat content prevents drying under tandoor or high broiler heat.",
+   "2. Full-fat whole-milk yogurt for the marinade — low-fat splits under acid and heat.",
+   "3. Kashmiri chilli powder — the source of the orange-red colour, with heat that is present but not dominant.",
+   "4. Ghee, not oil — the flavour profile of clarified butter fat is structurally distinct and not replicable.",
+   "5. Whole spices (cardamom, cloves, cinnamon, black pepper) bloomed in hot ghee before any other addition."
+  ],
+  "sensory_tests": [
+   "The chicken surface must show carbon blistering — not brown, but black at the edges.",
+   "The masala should hold its shape on a tilted spoon without flowing immediately.",
+   "The colour: deep orange from Kashmiri chilli, not the yellow-orange that paprika produces."
+  ],
+  "cross_cuisine_parallels": [
+   "Thai red curry — coconut milk base instead of cream, same bloomed-whole-spice structure, same overnight protein prep.",
+   "Georgian chakapuli — lamb in tart fruit sauce, same yogurt-marinade logic for tenderness.",
+   "Peruvian pollo a la brasa — yogurt-marinated and charred, different aromatics, same two-stage principle."
+  ],
+  "lives_or_dies": "The char. Without black blistering from a tandoor or a very hot broiler, the tikka component is merely baked chicken. The carbon is not aesthetic — it provides the smoky bitterness that cuts through the richness of the masala and gives the dish its two-part identity.",
+  "beverage_pairings": null,
+  "flavour_context": "Two-stage cooking. Stage one: the yogurt marinade. Full-fat yogurt with Kashmiri chilli, garam masala, and lemon juice, applied overnight at 4°C. The proteins in the yogurt begin denaturing the chicken's surface — this is the moisture-retention mechanism, not flavouring alone. Stage two: the masala base. Ghee first, whole spices bloomed until the cumin seeds pop audibly, then aromatics sweated until they disappear entirely into the base."
+ },
+ {
+  "key": "beef-bourguignon",
+  "kind": "dish",
+  "title": "Beef Bourguignon",
+  "cuisine": "Burgundian French",
+  "preamble": "A peasant braise elevated by Burgundy wine and three hours of patience. The wine must be good enough to drink. The sauce is finished separately. This is what slow cooking actually means.",
+  "servings_text": "6",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "cut into 5cm cubes — cheeks give the silkiest result",
+    "name": "beef chuck or beef cheeks",
+    "unit": "kg",
+    "count": "1.5"
+   },
+   {
+    "info": "a wine you would drink — never cooking wine",
+    "name": "Burgundy or Pinot Noir",
+    "unit": "ml",
+    "count": "750"
+   },
+   {
+    "info": "thick-cut smoked bacon, blanched",
+    "name": "lardons",
+    "unit": "g",
+    "count": "200"
+   },
+   {
+    "info": "or shallots, peeled",
+    "name": "pearl onions",
+    "unit": "g",
+    "count": "250"
+   },
+   {
+    "info": "whole if small, halved if large",
+    "name": "button mushrooms",
+    "unit": "g",
+    "count": "300"
+   },
+   {
+    "info": "cut into large chunks for the braise",
+    "name": "carrots",
+    "unit": "",
+    "count": "3"
+   },
+   {
+    "info": "roughly chopped",
+    "name": "yellow onion",
+    "unit": "",
+    "count": "2"
+   },
+   {
+    "info": "crushed",
+    "name": "garlic",
+    "unit": "cloves",
+    "count": "6"
+   },
+   {
+    "info": "",
+    "name": "tomato paste",
+    "unit": "tbsp",
+    "count": "2"
+   },
+   {
+    "info": "for thickening",
+    "name": "all-purpose flour",
+    "unit": "tbsp",
+    "count": "2"
+   },
+   {
+    "info": "good quality, unsalted",
+    "name": "beef stock",
+    "unit": "ml",
+    "count": "500"
+   },
+   {
+    "info": "thyme, bay leaves, parsley stalks, tied",
+    "name": "bouquet garni",
+    "unit": "",
+    "count": "1"
+   },
+   {
+    "info": "for browning",
+    "name": "neutral oil and butter",
+    "unit": "",
+    "count": "2 tbsp each"
+   },
+   {
+    "info": "chopped, for serving",
+    "name": "flat-leaf parsley",
+    "unit": "",
+    "count": "handful"
+   }
+  ],
+  "steps": [
+   "Marinate beef in wine with carrot chunks, chopped onion, garlic, and bouquet garni for at least 4 hours. Remove beef, pat completely dry — moisture is the enemy of browning.",
+   "Strain the marinade, reserving the wine. Discard the vegetables.",
+   "Heat oven to 160°C. Brown lardons until crisp, remove. Sear beef in batches in the rendered fat until deeply mahogany, 3–4 minutes per side. Do not crowd the pan.",
+   "In the same pot, sauté chopped onion until softened. Add tomato paste, cook 2 minutes. Add flour, stir to coat. Pour in reserved wine, scraping up all the fond. Add stock, return beef and lardons. Liquid should come three-quarters up the beef.",
+   "Bring to a bare simmer. Cover tightly. Transfer to oven. Braise 2.5–3 hours until beef yields completely to a fork.",
+   "Sauté pearl onions in butter until golden; glaze with a splash of stock. Sauté mushrooms separately in butter over high heat until browned.",
+   "Remove beef. Strain braising liquid into a saucepan, skim fat. Reduce to coating consistency, about 30 minutes. Return beef, pearl onions, and mushrooms.",
+   "Rest 15 minutes before serving. Garnish with parsley. Serve over pommes purée or with crusty bread."
+  ],
+  "origin": "Burgundy, France. The technique predates Julia Child's 1961 Mastering the Art of French Cooking by centuries — Burgundy wine was surplus, beef was working stock, and a long braise solved both problems. Child's contribution was translating a peasant dish into American kitchens without condescension. The dish is French in its bones and her interpretation is still the best in English.",
+  "quality_hierarchy": [
+   "1. Beef chuck or brisket — not 'stewing steak.' Cut to 5cm cubes and dried on a rack overnight if time allows.",
+   "2. Burgundy Pinot Noir, AOC Bourgogne minimum — a cheap wine makes a cheap braise.",
+   "3. Smoked pork belly lardons — not pancetta; the smoking adds depth.",
+   "4. Pearl onions, not chopped — they caramelise whole, hold their shape, and provide texture contrast in the finished dish.",
+   "5. Bouquet garni: thyme, bay leaf, parsley stems, and leek green — tied tightly, removed before serving."
+  ],
+  "sensory_tests": [
+   "The beef should yield without falling apart when pressed with a spoon — structural integrity remains.",
+   "The sauce should leave a glossy coating on the back of a spoon that does not run.",
+   "The colour of the finished sauce: deep mahogany, not pale brown."
+  ],
+  "cross_cuisine_parallels": [
+   "Korean galbi jjim — braised short ribs with soy, sake, and ginger. The wine is replaced by fermented grain liquor, but the long-braise extraction logic is identical.",
+   "Flemish carbonade — beer-braised beef with mustard and thyme. Belgium's version of the same principle, with ale replacing wine.",
+   "Moroccan tagine — slow-braised meat with aromatics in a sealed vessel. North African spices replace French herbs; the philosophy of patience is identical."
+  ],
+  "lives_or_dies": "The sauce reduction after the braise. Strain it, discard the solids, and reduce over high heat until it coats a spoon and holds its sheen. An unfinished sauce is dilute dishwater poured over excellent beef. A properly finished sauce is the reason the dish takes three hours.",
+  "beverage_pairings": null,
+  "flavour_context": "Lard the beef, dry it thoroughly, brown it in batches in hot fat. Never crowd the pan — steam is the enemy of crust. Each batch must be fully seared before the next goes in. Deglaze with Burgundy Pinot Noir. The wine must be good enough to drink: three hours of reduction concentrates everything in it, including its faults."
+ },
+ {
+  "key": "pad-thai",
+  "kind": "dish",
+  "title": "Pad Thai",
+  "cuisine": "Central Thai",
+  "preamble": "A deliberately invented national dish, constructed by government decree in the 1930s to reduce rice consumption. What survived the politics is one of the great demonstrations of wok technique on earth.",
+  "servings_text": "2",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "3–5mm wide, soaked in room temperature water 30 minutes — not boiling",
+    "name": "flat rice noodles",
+    "unit": "g",
+    "count": "200"
+   },
+   {
+    "info": "made from fresh tamarind block, not concentrate",
+    "name": "tamarind paste (from block)",
+    "unit": "tbsp",
+    "count": "3"
+   },
+   {
+    "info": "Tiparos or Megachef",
+    "name": "fish sauce",
+    "unit": "tbsp",
+    "count": "3"
+   },
+   {
+    "info": "or light muscovado — not white sugar",
+    "name": "palm sugar",
+    "unit": "tbsp",
+    "count": "2"
+   },
+   {
+    "info": "pressed, cut into 1cm cubes",
+    "name": "firm tofu",
+    "unit": "g",
+    "count": "150"
+   },
+   {
+    "info": "shell-off, deveined — or replace with more tofu",
+    "name": "large prawns",
+    "unit": "",
+    "count": "8"
+   },
+   {
+    "info": "",
+    "name": "eggs",
+    "unit": "",
+    "count": "2"
+   },
+   {
+    "info": "fresh, not canned",
+    "name": "bean sprouts",
+    "unit": "g",
+    "count": "150"
+   },
+   {
+    "info": "or spring onions, cut into 4cm lengths",
+    "name": "garlic chives",
+    "unit": "g",
+    "count": "40"
+   },
+   {
+    "info": "essential for umami depth",
+    "name": "dried shrimp",
+    "unit": "tbsp",
+    "count": "2"
+   },
+   {
+    "info": "thinly sliced",
+    "name": "shallots",
+    "unit": "",
+    "count": "4"
+   },
+   {
+    "info": "lard gives the traditional char",
+    "name": "lard or neutral oil",
+    "unit": "tbsp",
+    "count": "3"
+   },
+   {
+    "info": "roughly crushed",
+    "name": "roasted peanuts",
+    "unit": "g",
+    "count": "50"
+   },
+   {
+    "info": "cut into wedges",
+    "name": "lime",
+    "unit": "",
+    "count": "1"
+   },
+   {
+    "info": "",
+    "name": "dried chilli flakes",
+    "unit": "to taste",
+    "count": ""
+   }
+  ],
+  "steps": [
+   "Make the sauce: dissolve palm sugar in tamarind paste, add fish sauce. The balance should be sour-first, savoury-second, sweet-third. Taste and adjust.",
+   "Heat wok to screaming hot. Add lard. Fry tofu cubes until golden on all sides, remove and reserve.",
+   "Add shallots and dried shrimp to the wok, stir fry 30 seconds. Add soaked, drained noodles. Pour sauce over and toss quickly — the noodles will stick briefly. This is normal.",
+   "When noodles begin to colour and sauce is absorbed, push to one side. Crack eggs into the empty side, scramble briefly, then fold noodles over before eggs fully set.",
+   "Add prawns, bean sprouts, garlic chives, and fried tofu. Toss over the highest heat for 30–60 seconds. The wok must smoke — this is the wok hei.",
+   "Serve immediately with crushed peanuts, lime wedges, and extra chilli. In Thailand, fish sauce, sugar, vinegar, and chilli are always provided at the table."
+  ],
+  "origin": "Bangkok, 1930s-40s. Prime Minister Plaek Phibunsongkhram's nationalist campaign to standardise Thai identity included food. Government-distributed recipes promoted this noodle dish as a symbol of Thai modernity and frugality during rice shortage. Street vendors were licensed to sell it at set prices. The result is a 'traditional' dish that was deliberately invented — which makes its global ubiquity either ironic or perfect.",
+  "quality_hierarchy": [
+   "1. Tamarind paste made from a block — commercial tamarind sauce is sweetened, diluted, and imprecise.",
+   "2. Fish sauce: Tiparos or Megachef — the fermentation quality is the foundation of the dish's umami.",
+   "3. Rice noodles soaked in cold water, not boiled — they finish cooking in the wok.",
+   "4. Dried shrimp for the base umami layer — there is no vegan substitute that achieves the same result.",
+   "5. Tofu pressed for a minimum of 30 minutes — wet tofu releases water that drops the wok temperature and prevents caramelisation."
+  ],
+  "sensory_tests": [
+   "The noodles should show pale gold caramelisation on their underside — visible char without burning.",
+   "The dish should smell of smoke and tamarind, not of oil.",
+   "Bean sprouts added in the final 10 seconds must retain audible crunch."
+  ],
+  "cross_cuisine_parallels": [
+   "Singapore char kway teow — flat rice noodles, wok hei, lard, dried shrimp. The closest structural parallel.",
+   "Vietnamese bún bò Huế — rice noodles, fermented shrimp paste, tamarind-adjacent sourness from lemongrass.",
+   "Japanese yakisoba — wheat noodles fried with Worcestershire-style sauce, same wok caramelisation technique."
+  ],
+  "lives_or_dies": "The first 45 seconds after the noodles hit the wok. Nothing moves. The char develops at the contact surface. Then the scramble. Everything before this moment is preparation. This moment is the cooking.",
+  "beverage_pairings": null,
+  "flavour_context": "Wok hei — the breath of the wok. The Maillard reaction on flat rice noodles in a 300°C+ carbon-steel wok produces a surface caramelisation that no home hob can fully replicate. The technique requires a seasoned wok, a burner capable of generating sustained extreme heat, and the discipline to hold still for 45 seconds while the noodles char. Move too soon and the wok drops temperature and the dish steams."
+ },
+ {
+  "key": "tom-yum-goong",
+  "kind": "dish",
+  "title": "Tom Yum Goong",
+  "cuisine": "Central Thai",
+  "preamble": "Hot. Sour. Salty. Umami. Four elements in simultaneous balance. If any one dominates, the soup has failed. The aromatics are bruised, infused, and then removed — they season the broth; they are not meant to be eaten.",
+  "servings_text": "4",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "shell-on — the shells go into the broth",
+    "name": "large prawns",
+    "unit": "g",
+    "count": "500"
+   },
+   {
+    "info": "bruised with back of knife, cut into 5cm pieces",
+    "name": "lemongrass stalks",
+    "unit": "",
+    "count": "3"
+   },
+   {
+    "info": "fresh, thinly sliced — do not substitute ginger",
+    "name": "galangal",
+    "unit": "g",
+    "count": "30"
+   },
+   {
+    "info": "fresh or frozen, torn",
+    "name": "kaffir lime leaves (makrut)",
+    "unit": "",
+    "count": "8"
+   },
+   {
+    "info": "bruised, adjust to heat preference",
+    "name": "Thai bird's eye chillies",
+    "unit": "",
+    "count": "8"
+   },
+   {
+    "info": "Tiparos preferred",
+    "name": "fish sauce",
+    "unit": "tbsp",
+    "count": "3"
+   },
+   {
+    "info": "added off heat only — never cook lime juice",
+    "name": "fresh lime juice",
+    "unit": "tbsp",
+    "count": "3"
+   },
+   {
+    "info": "for creamy version — omit for clear",
+    "name": "nam prik pao (Thai roasted chilli paste)",
+    "unit": "tbsp",
+    "count": "2"
+   },
+   {
+    "info": "for creamy version — added at the end",
+    "name": "full-fat coconut milk",
+    "unit": "ml",
+    "count": "200"
+   },
+   {
+    "info": "halved",
+    "name": "straw or oyster mushrooms",
+    "unit": "g",
+    "count": "200"
+   },
+   {
+    "info": "halved",
+    "name": "cherry tomatoes",
+    "unit": "",
+    "count": "8"
+   },
+   {
+    "info": "use prawn shells for the base if using water",
+    "name": "chicken stock or water",
+    "unit": "litre",
+    "count": "1"
+   },
+   {
+    "info": "to finish",
+    "name": "coriander leaves",
+    "unit": "",
+    "count": "large handful"
+   }
+  ],
+  "steps": [
+   "Peel prawns, reserving shells and heads. Sauté shells and heads in a little oil until pink and aromatic. Add stock or water, bring to boil, simmer 15 minutes, strain.",
+   "Return prawn stock to heat. Add bruised lemongrass, galangal, kaffir lime leaves, and bird's eye chillies. Simmer 5 minutes to infuse.",
+   "Add mushrooms and cherry tomatoes. Cook 2 minutes until softened.",
+   "Add peeled prawns. Cook 1–2 minutes until just pink. Do not overcook.",
+   "For creamy version: stir in nam prik pao and coconut milk, bring back to heat but do not boil.",
+   "Remove from heat. Season with fish sauce (salty) and lime juice (sour) — add in small increments, tasting constantly.",
+   "Serve in deep bowls with coriander. Provide extra lime, fish sauce, and sugar at the table."
+  ],
+  "origin": "Central Thailand. Tom means boiling, yum means mixed or seasoned. The goong (prawn) version became the global export dish, but early versions used freshwater fish or wild river prawns. During the 1997 Asian financial crisis, Thai economists named their recovery the 'Tom Yum Economy' after this dish's combination of heat, acidity, and resilience. The dish has carried its country's identity farther than any other Thai export.",
+  "quality_hierarchy": [
+   "1. Galangal — not ginger. They are different genera with entirely different aromatic profiles. Galangal is piney, camphor-forward; ginger is warm and sweet.",
+   "2. Kaffir lime leaves torn by hand, never chopped — tearing opens the oils along natural cell boundaries without releasing bitterness from the cut edge.",
+   "3. Thai bird's eye chillies, split lengthways to release their heat into the broth.",
+   "4. Fish sauce: Tiparos or Megachef — the umami backbone of the entire dish.",
+   "5. Fresh prawns with shells on — the shells add body and sweetness that peeled prawns cannot provide.",
+   "6. Straw mushrooms or oyster mushrooms, never button — button mushrooms dilute the broth."
+  ],
+  "sensory_tests": [
+   "The broth should be clear and amber-tinted, not cloudy.",
+   "A single sip should cause an involuntary inhale from the heat, then an immediate exhale from the citrus brightness.",
+   "Prawns should curl into a C-shape but not tighten into an O — the difference between cooked and overcooked."
+  ],
+  "cross_cuisine_parallels": [
+   "Vietnamese phở — broth-first construction, aromatic infusion in liquid, similar herb-forward clarity.",
+   "Filipino sinigang — tamarind sour broth with protein and vegetables. The Malay-Polynesian tradition of sour broth.",
+   "Moroccan chermoula — similar aromatics-first construction (herb/citrus/cumin), different medium."
+  ],
+  "lives_or_dies": "The first sip. The simultaneous hit of hot, sour, salty, and umami in the first mouthful. If any of the four elements dominates, the soup is unbalanced. If all four arrive together, the soup is correct.",
+  "beverage_pairings": null,
+  "flavour_context": "Aromatics-first broth construction. Galangal, lemongrass, and kaffir lime leaves are bruised — not sliced, not chopped — and added to boiling liquid. They infuse as the broth comes to temperature, then are removed before the protein is added. They flavour the broth; they are not eaten. This is the distinction between Thai and most Western soup traditions."
+ },
+ {
+  "key": "ceviche",
+  "kind": "dish",
+  "title": "Ceviche",
+  "cuisine": "Peruvian",
+  "preamble": "The oldest cooking technique without fire. Citric acid denatures fish protein the same way heat does, but slower and with different texture outcomes. The leche de tigre left behind is the heart of the dish.",
+  "servings_text": "4",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "corvina, sea bass, halibut, or snapper — sushi-grade or day-boat fresh",
+    "name": "firm white fish",
+    "unit": "g",
+    "count": "500"
+   },
+   {
+    "info": "approximately 8 limes — never bottled",
+    "name": "fresh lime juice",
+    "unit": "ml",
+    "count": "180"
+   },
+   {
+    "info": "the essential Peruvian chilli — fruity, bright heat",
+    "name": "ají amarillo paste",
+    "unit": "tbsp",
+    "count": "2"
+   },
+   {
+    "info": "very thinly sliced, rinsed under cold water 5 minutes",
+    "name": "red onion",
+    "unit": "large",
+    "count": "1"
+   },
+   {
+    "info": "grated, for leche de tigre",
+    "name": "fresh ginger",
+    "unit": "g",
+    "count": "15"
+   },
+   {
+    "info": "for leche de tigre",
+    "name": "garlic",
+    "unit": "cloves",
+    "count": "2"
+   },
+   {
+    "info": "leaves and tender stems",
+    "name": "coriander (cilantro)",
+    "unit": "",
+    "count": "large handful"
+   },
+   {
+    "info": "roughly chopped, for leche de tigre",
+    "name": "celery",
+    "unit": "stalk",
+    "count": "1"
+   },
+   {
+    "info": "for leche de tigre",
+    "name": "fish or prawn stock",
+    "unit": "ml",
+    "count": "50"
+   },
+   {
+    "info": "",
+    "name": "sea salt",
+    "unit": "to taste",
+    "count": ""
+   },
+   {
+    "info": "or cooked choclo kernels — authentic garnish",
+    "name": "cancha (toasted corn nuts)",
+    "unit": "g",
+    "count": "200"
+   },
+   {
+    "info": "boiled, sliced — traditional starch accompaniment",
+    "name": "sweet potato",
+    "unit": "",
+    "count": "1"
+   }
+  ],
+  "steps": [
+   "Make the leche de tigre: blend lime juice, ají amarillo, ginger, garlic, celery, half the coriander, and stock until smooth. Strain through a fine sieve. Season aggressively with salt — it will temper when combined with the fish.",
+   "Cut fish into 2cm cubes or bite-sized irregular pieces. Do not slice too thin or it will cure unevenly.",
+   "Combine fish and red onion slices in a non-reactive bowl. Pour leche de tigre over — fish should be well covered.",
+   "Let cure 2–3 minutes for soft-textured fish, 5–8 minutes for denser fish. Watch for the colour change from translucent to opaque — this is the cure point. Do not over-marinate.",
+   "Taste and adjust — the ceviche should be intensely sharp, bright, and hot in equal measure. Add remaining coriander leaves.",
+   "Serve immediately in chilled bowls alongside cancha corn and boiled sweet potato. The remaining leche de tigre can be served as a shot."
+  ],
+  "origin": "Peru — the Moche civilisation on Peru's northern coast used tumbo fruit and salt to cure fish 2,000 years before the Spanish arrived. The lime came with colonisation in the 16th century and sharpened the technique. Lima's current style — pure, minimal leche de tigre — is a distinct expression from Peruvian regional variants, and from Mexican ceviche, which uses tomato, coriander, and onion in a fundamentally different register.",
+  "quality_hierarchy": [
+   "1. Sashimi-grade sea bass (corvina) or the freshest fish available today — this dish has no hiding place for fish that is less than perfect.",
+   "2. Key limes, not Persian limes — higher acidity and more aromatic volatile compounds.",
+   "3. Ají amarillo, fresh or paste — the heat and golden colour that is specific to Peru.",
+   "4. Red onion, sliced hair-thin and briefly rinsed in cold water to remove the raw sharpness.",
+   "5. Fresh coriander leaves only, not stems — the stems are too assertive."
+  ],
+  "sensory_tests": [
+   "The fish surface should be opaque-white but the interior should remain translucent — not fully cooked through.",
+   "The leche de tigre should taste simultaneously of lime, fish, heat, and salt without any one element dominant.",
+   "The onion should have lost its aggression but retained its texture."
+  ],
+  "cross_cuisine_parallels": [
+   "Tahitian poisson cru — coconut milk replaces lime, same acid-free curing principle, same raw-fish ethos.",
+   "Mexican aguachile — extra-spicy, cucumber, minimal curing time; the northern Mexican interpretation.",
+   "Japanese sashimi — no acid curing at all. The raw comparison that illustrates precisely what the acid changes."
+  ],
+  "lives_or_dies": "The leche de tigre — the cloudy, acidic, spiced liquid that forms as the fish cures. This is not a byproduct. It is the heart of the dish. Peruvian restaurants serve it in a separate shot glass. It contains the flavour of everything that happened in the bowl and should be drunk.",
+  "beverage_pairings": null,
+  "flavour_context": "Chemical denaturation, not heat. Citric acid from lime juice denatures the fish's surface proteins — the same process that heat achieves, but at room temperature and with different textural outcomes. Optimal marination in the Peruvian style: 3–5 minutes. The fish continues to 'cook' in the acid. Beyond 20 minutes, the proteins over-denature and the flesh becomes rubbery."
+ },
+ {
+  "key": "shakshuka",
+  "kind": "dish",
+  "title": "Shakshuka",
+  "cuisine": "North African / Levantine",
+  "preamble": "Eggs poached in a spiced tomato base. The whites set. The yolks tremble. The debate over ownership — Tunisia, Israel, Libya, Palestine — has never been resolved. The dish does not require resolution to be excellent.",
+  "servings_text": "4",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "free-range — the centrepiece",
+    "name": "eggs",
+    "unit": "",
+    "count": "6"
+   },
+   {
+    "info": "canned, or 1kg fresh peeled",
+    "name": "whole plum tomatoes",
+    "unit": "g",
+    "count": "800"
+   },
+   {
+    "info": "deseeded, thinly sliced",
+    "name": "red bell peppers",
+    "unit": "",
+    "count": "2"
+   },
+   {
+    "info": "thinly sliced",
+    "name": "yellow onion",
+    "unit": "large",
+    "count": "1"
+   },
+   {
+    "info": "thinly sliced — not minced",
+    "name": "garlic",
+    "unit": "cloves",
+    "count": "5"
+   },
+   {
+    "info": "whole, toasted in the pan",
+    "name": "cumin seeds",
+    "unit": "tsp",
+    "count": "1.5"
+   },
+   {
+    "info": "",
+    "name": "sweet smoked paprika",
+    "unit": "tsp",
+    "count": "1.5"
+   },
+   {
+    "info": "or harissa for more heat",
+    "name": "Aleppo pepper (pul biber)",
+    "unit": "tsp",
+    "count": "1"
+   },
+   {
+    "info": "",
+    "name": "extra virgin olive oil",
+    "unit": "tbsp",
+    "count": "4"
+   },
+   {
+    "info": "crumbled — optional but classical Levantine addition",
+    "name": "feta cheese",
+    "unit": "g",
+    "count": "100"
+   },
+   {
+    "info": "roughly chopped",
+    "name": "flat-leaf parsley",
+    "unit": "",
+    "count": "handful"
+   },
+   {
+    "info": "laffa, pita, or sourdough",
+    "name": "crusty bread",
+    "unit": "to serve",
+    "count": ""
+   }
+  ],
+  "steps": [
+   "Toast cumin seeds in olive oil over medium heat until fragrant, 30 seconds. Add sliced onion with a pinch of salt, cook 8–10 minutes until softened and beginning to colour.",
+   "Add sliced peppers, cook 5 minutes until wilted. Add garlic, paprika, and Aleppo pepper, stir 1 minute.",
+   "Crush tomatoes by hand directly into the pan. Season with salt. Simmer uncovered 15 minutes until thick and the oil separates around the edges.",
+   "Make 6 wells in the sauce with the back of a spoon. Crack one egg into each well. Season the eggs.",
+   "Cover the pan, reduce heat to low, cook 5–8 minutes. Whites should be just set, yolks still runny. Do not overcook.",
+   "Remove from heat. Scatter crumbled feta and parsley. Bring the pan to the table. Serve immediately with bread."
+  ],
+  "origin": "Ottoman Empire, diffused across North Africa and the Levant over several centuries. Tunisia, Israel, Libya, and Palestine all claim it as national heritage. The name is likely Maghrebi Arabic — possibly from 'shak-shak' (to move) or from Berber 'chakchouka.' The argument is unresolved and perhaps should remain so. The dish belongs to an entire geography.",
+  "quality_hierarchy": [
+   "1. San Marzano DOP canned tomatoes in winter, ripe fresh tomatoes in summer — the difference is measurable, not subjective.",
+   "2. Harissa, Tunisian-style or rose harissa — more complex than cayenne or chilli flakes alone.",
+   "3. Eggs at room temperature — cold eggs crack the surface tension of the hot sauce.",
+   "4. Cumin seeds bloomed in oil before any other addition — the foundation of the flavour.",
+   "5. Feta or labneh at serving — the dairy cuts the acid sharpness and completes the dish."
+  ],
+  "sensory_tests": [
+   "When the lid is lifted, whites should be matt opaque; yolks should still be domed, not flat.",
+   "A gentle shake of the pan should move the yolks but not the whites.",
+   "The sauce should bubble at the edges only — not in the centre where the eggs sit."
+  ],
+  "cross_cuisine_parallels": [
+   "Turkish çılbır — poached eggs in garlic yogurt with Aleppo butter. Same egg-in-sauce architecture, different base medium.",
+   "Italian uova al purgatorio — eggs in spiced tomato, Southern Italian. Either an ancestor or a parallel evolution.",
+   "Mexican huevos rancheros — eggs on tortilla with tomato-chile salsa. The New World translation of the same impulse."
+  ],
+  "lives_or_dies": "The moment the lid comes off: egg whites should be matt and opaque, yolks still domed and liquid. A yolk that has set hard is a failure of timing. A white that is still translucent is a failure of patience. The window between them is approximately 90 seconds.",
+  "beverage_pairings": null,
+  "flavour_context": "The tomato and pepper base must reduce for 20 minutes before eggs are added — not 10, not 15. The sauce must be thick enough that egg whites sit in wells and set without sinking. A lid is placed to trap steam and cook the whites from above. The eggs are never stirred. The timing is everything."
+ },
+ {
+  "key": "gratin-de-crozets-au-beaufort-savoyard-mountain-sustenance",
+  "kind": "dish",
+  "title": "Gratin de Crozets au Beaufort — Savoyard Mountain Sustenance",
+  "cuisine": "french",
+  "preamble": "In the high valleys of Tarentaise, where Beaufort wheels age in mountain caves and buckwheat thrives in thin alpine air, this gratin represents the marriage of necessity and terroir. Crozets — those small, square pasta made from sarrasin flour — were born from the practical wisdom of Savoyard cooks who understood that buckwheat could survive where wheat could not. When bathed in cream and crowned with aged Beaufort, they transform into something that speaks to both hunger and heritage.",
+  "servings_text": "6",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "traditional buckwheat pasta squares from Savoie",
+    "name": "crozets de Savoie",
+    "unit": "g",
+    "count": "400"
+   },
+   {
+    "info": "aged 18-24 months, grated coarse",
+    "name": "Beaufort d'alpage",
+    "unit": "g",
+    "count": "180"
+   },
+   {
+    "info": "younger cheese, 8-12 months, for melting",
+    "name": "Beaufort d'été",
+    "unit": "g",
+    "count": "120"
+   },
+   {
+    "info": "minimum 35% fat content",
+    "name": "crème fraîche épaisse",
+    "unit": "ml",
+    "count": "300"
+   },
+   {
+    "info": "whole milk, preferably alpine",
+    "name": "lait entier de montagne",
+    "unit": "ml",
+    "count": "200"
+   },
+   {
+    "info": "cultured butter from Savoie",
+    "name": "beurre de baratte",
+    "unit": "g",
+    "count": "40"
+   },
+   {
+    "info": "traditional French gray shallots, minced fine",
+    "name": "échalotes grises",
+    "unit": "medium",
+    "count": "2"
+   },
+   {
+    "info": "freshly grated",
+    "name": "noix de muscade de Grenada",
+    "unit": "teaspoon",
+    "count": "1/4"
+   },
+   {
+    "info": "freshly ground",
+    "name": "poivre blanc de Penja",
+    "unit": "teaspoon",
+    "count": "1/2"
+   },
+   {
+    "info": "for pasta cooking water",
+    "name": "gros sel de Guérande",
+    "unit": "tablespoon",
+    "count": "1"
+   }
+  ],
+  "steps": [
+   "Preheat oven to 180°C. Bring 3 litres salted water to rolling boil with gros sel de Guérande. Cook crozets for 12-14 minutes until just tender with slight bite — they will finish cooking in the oven. Drain thoroughly, reserving 100ml cooking liquid.",
+   "In heavy-bottomed saucepan over medium-low heat, melt beurre de baratte. Add minced échalotes grises and cook 3-4 minutes until translucent and fragrant, stirring frequently to prevent browning. The shallots should release their moisture and become glossy.",
+   "Pour in lait entier, bring to gentle simmer, then whisk in crème fraîche épaisse. Season with freshly grated muscade and poivre blanc de Penja. Simmer 5 minutes until slightly thickened — the cream should coat the back of a wooden spoon.",
+   "Remove from heat and gradually whisk in the younger Beaufort d'été, stirring constantly until completely melted and smooth. The mixture should be velvety without any grainy texture. If too thick, thin with reserved pasta cooking liquid.",
+   "Butter a 30cm gratin dish with remaining beurre de baratte. Combine drained crozets with the Beaufort cream sauce, tossing gently to coat every piece. Transfer to prepared dish and smooth surface. Scatter coarsely grated Beaufort d'alpage evenly over top.",
+   "Bake 25-30 minutes until surface is golden brown with darker spots and edges are bubbling vigorously. The gratin should be set but still creamy within. Rest 10 minutes before serving — the residual heat will finish the cooking while the sauce settles to proper consistency."
+  ],
+  "origin": "In the high valleys of Tarentaise, where Beaufort wheels age in mountain caves and buckwheat thrives in thin alpine air, this gratin represents the marriage of necessity and terroir. Crozets — those small, square pasta made from sarrasin flour — were born from the practical wisdom of Savoyard cooks who understood that buckwheat could survive where wheat could not. When bathed in cream and crowned with aged Beaufort, they transform into something that speaks to both hunger and heritage.",
+  "quality_hierarchy": null,
+  "sensory_tests": null,
+  "cross_cuisine_parallels": null,
+  "lives_or_dies": null,
+  "beverage_pairings": null,
+  "flavour_context": null
+ },
+ {
+  "key": "yuzu-kosho-cured-hiramasa-with-freeze-dried-yuzu-snow",
+  "kind": "dish",
+  "title": "Yuzu Kosho Cured Hiramasa with Freeze-Dried Yuzu Snow",
+  "cuisine": "Japanese",
+  "preamble": "In Kyushu's citrus groves, yuzu ripens as autumn surrenders to winter, its aromatic oils most concentrated in the coldest months. This dish honors the Japanese mastery of preservation—both ancient fermentation in yuzu kosho and modern lyophilization—capturing the fruit's essence in two temporal states. The freeze-dried yuzu becomes snow that dissolves on the tongue, releasing summer's memory into winter's present.",
+  "servings_text": "4",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "sashimi grade, skin removed, pin bones extracted",
+    "name": "Hiramasa kingfish fillet",
+    "unit": "g",
+    "count": "400"
+   },
+   {
+    "info": "whole fruit freeze-dried and ground to fine powder",
+    "name": "Freeze-dried yuzu powder",
+    "unit": "g",
+    "count": "15"
+   },
+   {
+    "info": "hand-pressed, strained",
+    "name": "Fresh yuzu juice",
+    "unit": "ml",
+    "count": "30"
+   },
+   {
+    "info": "green variety from Kyushu",
+    "name": "Yuzu kosho",
+    "unit": "g",
+    "count": "8"
+   },
+   {
+    "info": "fine crystal",
+    "name": "Kanazawa sea salt",
+    "unit": "g",
+    "count": "12"
+   },
+   {
+    "info": "hon-mirin, 3-year aged",
+    "name": "Mirin",
+    "unit": "ml",
+    "count": "15"
+   },
+   {
+    "info": "mandolined to paper-thin rounds",
+    "name": "Japanese cucumber",
+    "unit": "medium",
+    "count": "1"
+   },
+   {
+    "info": "young green leaves, stems removed",
+    "name": "Shiso leaves",
+    "unit": "leaves",
+    "count": "8"
+   },
+   {
+    "info": "usukuchi shoyu",
+    "name": "White soy sauce",
+    "unit": "ml",
+    "count": "5"
+   },
+   {
+    "info": "tender leaves only",
+    "name": "Mitsuba leaves",
+    "unit": "sprigs",
+    "count": "12"
+   }
+  ],
+  "steps": [
+   "Combine 8g sea salt with 3g freeze-dried yuzu powder. Cure hiramasa fillet for 35 minutes—fish should feel firm but yield slightly to pressure, with surface moisture drawn out but not completely desiccated.",
+   "Rinse cured fish under ice-cold water for 10 seconds, pat completely dry with paper towels. Slice against the grain into 12 pieces, each 8mm thick, ensuring knife blade is cleaned between cuts to maintain clean edges.",
+   "Whisk fresh yuzu juice with mirin until homogeneous. Add 2g yuzu kosho, whisking until paste dissolves completely—mixture should be pale green and aromatic. Taste should balance citrus brightness with fermented heat.",
+   "Toss cucumber rounds with white soy sauce and remaining 1g yuzu kosho. Let stand 10 minutes until cucumbers release slight moisture but retain structural integrity and gentle spice penetration.",
+   "Arrange 3 pieces hiramasa per plate using ikebana principles—asymmetrical placement with intentional negative space. Nestle seasoned cucumber rounds between fish, creating visual rhythm without crowding.",
+   "Just before service, dust each plate with remaining freeze-dried yuzu powder using fine-mesh sieve—powder should fall like snow, some adhering to fish oils, some to plate. Garnish with shiso leaves and mitsuba, drizzle yuzu-mirin mixture around plate perimeter."
+  ],
+  "origin": "In Kyushu's citrus groves, yuzu ripens as autumn surrenders to winter, its aromatic oils most concentrated in the coldest months. This dish honors the Japanese mastery of preservation—both ancient fermentation in yuzu kosho and modern lyophilization—capturing the fruit's essence in two temporal states. The freeze-dried yuzu becomes snow that dissolves on the tongue, releasing summer's memory into winter's present.",
+  "quality_hierarchy": null,
+  "sensory_tests": null,
+  "cross_cuisine_parallels": null,
+  "lives_or_dies": null,
+  "beverage_pairings": null,
+  "flavour_context": null
+ },
+ {
+  "key": "lasagne-verdi-bolognese",
+  "kind": "dish",
+  "title": "Lasagne Verdi al Ragù alla Bolognese",
+  "cuisine": "italian",
+  "preamble": "Classic Bolognese lasagne with green spinach pasta, authentic ragù, and béchamel. The spinach provides colour and subtle flavour. Assembly follows the traditional order: ragù, pasta sheet, béchamel, Parmigiano — the béchamel is a structural element, not optional.",
+  "servings_text": "",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "",
+    "name": "00 flour",
+    "unit": "g",
+    "count": "300",
+    "group": ""
+   },
+   {
+    "info": "",
+    "name": "eggs",
+    "unit": "",
+    "count": "2",
+    "group": ""
+   },
+   {
+    "info": "squeezed absolutely dry",
+    "name": "cooked spinach",
+    "unit": "g",
+    "count": "100",
+    "group": ""
+   },
+   {
+    "info": "coarse",
+    "name": "NoneNonebeef",
+    "unit": "",
+    "count": "",
+    "group": ""
+   },
+   {
+    "info": "",
+    "name": "NoneNonepork",
+    "unit": "",
+    "count": "",
+    "group": ""
+   },
+   {
+    "info": "",
+    "name": "NoneNonepancetta",
+    "unit": "",
+    "count": "",
+    "group": ""
+   },
+   {
+    "info": "soffritto",
+    "name": "NoneNoneonion",
+    "unit": "",
+    "count": "",
+    "group": ""
+   },
+   {
+    "info": "soffritto",
+    "name": "NoneNonecarrot",
+    "unit": "",
+    "count": "",
+    "group": ""
+   },
+   {
+    "info": "soffritto",
+    "name": "NoneNonecelery",
+    "unit": "",
+    "count": "",
+    "group": ""
+   },
+   {
+    "info": "",
+    "name": "NoneNonewhite wine",
+    "unit": "",
+    "count": "",
+    "group": ""
+   },
+   {
+    "info": "",
+    "name": "NoneNonewhole milk",
+    "unit": "",
+    "count": "",
+    "group": ""
+   },
+   {
+    "info": "",
+    "name": "NoneNoneSan Marzano tomatoes",
+    "unit": "",
+    "count": "",
+    "group": ""
+   },
+   {
+    "info": "",
+    "name": "butter",
+    "unit": "g",
+    "count": "60",
+    "group": ""
+   },
+   {
+    "info": "",
+    "name": "flour",
+    "unit": "g",
+    "count": "60",
+    "group": ""
+   },
+   {
+    "info": "medium thickness",
+    "name": "whole milk",
+    "unit": "ml",
+    "count": "700",
+    "group": ""
+   },
+   {
+    "info": "applied generously to form a complete brown layer",
+    "name": "NoneNoneParmigiano",
+    "unit": "",
+    "count": "",
+    "group": ""
+   }
+  ],
+  "steps": [
+   "Verde pasta: combine 300g 00 flour, 2 eggs, 100g cooked spinach (squeezed absolutely dry) — the spinach provides colour and a subtle flavour; too much spinach makes the pasta bitter and fragile.",
+   "Ragù bolognese authenticо: combine beef (coarse), pork, pancetta, onion, carrot, celery soffritto, white wine, whole milk, San Marzano tomatoes — simmer 4 hours minimum at the lowest possible simmer.",
+   "Béchamel (besciamella): make with 60g butter, 60g flour, 700ml whole milk — medium thickness; too thin runs through the layers, too thick creates dense blocks.",
+   "Undercook the pasta sheets by 3 minutes from al dente — they finish cooking in the oven and absorb the sauce; fully cooked sheets produce a mushy lasagne.",
+   "Assembly: layer ragù, pasta sheet, béchamel, Parmigiano — never: ragù, pasta, ragù, pasta (the béchamel is a structural element, not optional).",
+   "The surface Parmigiano must be applied generously — it should form a complete brown layer, not sparse islands.",
+   "Bake 40–45 minutes at 180°C until the top is deeply browned and the edges are bubbling — a pale lasagne is under-baked.",
+   "Rest 15 minutes before cutting — allows the layers to set and portions to be served cleanly."
+  ],
+  "origin": "Emilia-Romagna, Italy (specifically Bologna). Lasagne Verdi is the green pasta variant of the classical Bolognese lasagne, combining spinach-enriched sheets with the region's canonical ragù—a slow-cooked meat sauce foundational to Northern Italian cuisine.",
+  "quality_hierarchy": [
+   {
+    "house": "tinned whole peeled tomatoes, non-DOP",
+    "reserve": "DOP San Marzano (Campania)",
+    "swap_cost": "Loss of natural sweetness and low acidity; imbalance in ragù depth",
+    "ingredient": "San Marzano tomatoes"
+   },
+   {
+    "house": "Parmigiano-Reggiano DOP (18 months)",
+    "reserve": "Parmigiano-Reggiano DOP (24+ months)",
+    "swap_cost": "Reduced umami complexity and crystalline texture; thinner browning layer",
+    "ingredient": "Parmigiano"
+   },
+   {
+    "house": "ground beef (80/20)",
+    "reserve": "Hand-cut beef chuck or brisket",
+    "swap_cost": "Pre-ground loses textural integrity during 4-hour simmer; less flavour extraction",
+    "ingredient": "beef (coarse)"
+   },
+   {
+    "house": "All-purpose flour",
+    "reserve": "Italian Type 00 (soft wheat, low protein)",
+    "swap_cost": "Slightly tougher, less silken pasta sheets; compromised delicacy",
+    "ingredient": "00 flour"
+   }
+  ],
+  "sensory_tests": [
+   {
+    "cue": "Top layer Parmigiano after baking",
+    "sense": "visual",
+    "fail_indicator": "Sparse islands or pale gold = under-baked or insufficient cheese; should be continuous deep amber-brown"
+   },
+   {
+    "cue": "Pasta sheet resistance when cutting (post-rest)",
+    "sense": "texture",
+    "fail_indicator": "Mushy, collapsing layers = pasta overcooked before assembly; clean separation with slight resistance = correct undercook"
+   },
+   {
+    "cue": "Ragù during simmer (around hour 2–3)",
+    "sense": "aroma",
+    "fail_indicator": "Sharp, acidic, or one-dimensional = insufficient time or heat too high; should be savoury, rounded, deeply meaty"
+   },
+   {
+    "cue": "Béchamel consistency during layering",
+    "sense": "texture",
+    "fail_indicator": "Runs between layers or pools at base = too thin; clumps visibly when spread = too thick"
+   }
+  ],
+  "cross_cuisine_parallels": [
+   {
+    "dish": "Lasagne à la Bolognese (classical French adaptation)",
+    "cuisine": "French",
+    "mechanism": "Adoption of Italian ragù structure with béchamel; French culinary authority legitimised the dish via Escoffier"
+   },
+   {
+    "dish": "Pastırma layered meat pie",
+    "cuisine": "Turkish",
+    "mechanism": "Slow-cooked meat layered with starch vehicle; preservation through extended cooking and fat"
+   }
+  ],
+  "lives_or_dies": "The béchamel must be structurally integrated into every layer—it is not garnish but load-bearing element; omit it and the ragù collapses the pasta into undifferentiated mush.",
+  "beverage_pairings": null,
+  "flavour_context": "Ragù's 4-hour minimum simmer breaks down collagen and myofibril proteins into gelatinous umami-rich matrix; milk added late (not standard in all ragù) softens acidity and adds body without curdling. Spinach in pasta provides mineral earthiness (chlorophyll, iron) that balances meat richness. Béchamel acts as moisture barrier and emulsifier, preventing sauce seepage while creating creamy-savoury interstice. Parmigiano's lactose and casein proteolyse during baking, forming crust that seals and concentrates flavour. Undercooking pasta by 3 minutes exploits residual starch gelatinisation in oven heat (carryover cooking ~50°C rise); fully al dente pasta will hypergelatinise and lose structural integrity."
+ },
+ {
+  "key": "chicken-paprikash",
+  "kind": "dish",
+  "title": "Chicken Paprikash with Board-Cut Spaetzle",
+  "cuisine": "hungarian",
+  "preamble": "I've been making spaetzle forever, but not like this. We had a cook at Rustic Canyon named Cal Egan, who came to us from Robert De Niro's New York City. Just a great natural cook. There was an Elizabeth Street quality to his cooking. Cal became known for making great family meals, and for one such meal, he made spaetzle. Up until that point, I had only made spaetzle by pushing the dough through a perforated hotel pan. But watching Cal slice and noodle it was new for me. It creates a more rustic spaetzle, more mishapen. It feels like a method someone's grandma uses, not a chef hack. I love learning new things from the cooks in my kitchens. I only know what I know so it's nice to feel that old curiosity bubble up. This spaetzle method takes some practice, but keep at it. You'll get faster and faster, though anything that forces you to slow down a bit and focus on one task is a good thing. Served with paprikash, this dish is a big bowl of comfort.",
+  "servings_text": "4 to 8 serve",
+  "tags": [],
+  "ingredients": [
+   {
+    "info": "about 4 pounds/1.8 kg",
+    "name": "chicken leg quarters",
+    "unit": "",
+    "count": "8",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "",
+    "name": "tablespoons sweet paprika",
+    "unit": "",
+    "count": "3",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "plus extra to taste (1 tablespoon)",
+    "name": "kosher salt",
+    "unit": "ml",
+    "count": "15",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "page 338",
+    "name": "to 3 tablespoons Schmaltz",
+    "unit": "",
+    "count": "2",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "seeded and cut into ¼-inch (1.3-cm) dice",
+    "name": "pound red bell peppers",
+    "unit": "",
+    "count": "1",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "cut into ½-inch (1.3-cm) dice",
+    "name": "ounces white onion",
+    "unit": "",
+    "count": "8",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "",
+    "name": "white wine",
+    "unit": "cups",
+    "count": "1.5",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "page 334",
+    "name": "Rachael's Chicken Stock",
+    "unit": "cups",
+    "count": "2.5",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "",
+    "name": "tablespoons sweet paprika",
+    "unit": "",
+    "count": "3",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "chopped, plus stems tied together tightly with twine",
+    "name": "tablespoons fresh dill leaves",
+    "unit": "",
+    "count": "2",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "(1 cup)",
+    "name": "heavy (double) cream",
+    "unit": "ml",
+    "count": "240",
+    "group": "chicken paprikash"
+   },
+   {
+    "info": "(3 cups)",
+    "name": "all-purpose (plain) flour",
+    "unit": "ml",
+    "count": "720",
+    "group": "spaetzle"
+   },
+   {
+    "info": "(1 tablespoon)",
+    "name": "kosher salt",
+    "unit": "ml",
+    "count": "15",
+    "group": "spaetzle"
+   },
+   {
+    "info": "",
+    "name": "large eggs",
+    "unit": "",
+    "count": "6",
+    "group": "spaetzle"
+   },
+   {
+    "info": "(1 cup)",
+    "name": "plus 2 tablespoons whole (full-fat) milk",
+    "unit": "ml",
+    "count": "240",
+    "group": "spaetzle"
+   },
+   {
+    "info": "",
+    "name": "tablespoons unsalted butter",
+    "unit": "",
+    "count": "5",
+    "group": "spaetzle"
+   },
+   {
+    "info": "page 322 (1 cup)",
+    "name": "(or more) Crème Fraîche",
+    "unit": "ml",
+    "count": "240",
+    "group": "to serve"
+   },
+   {
+    "info": "page 317 (1 cup)",
+    "name": "Ohio Peppers",
+    "unit": "ml",
+    "count": "240",
+    "group": "to serve"
+   }
+  ],
+  "steps": [
+   "On a cutting (chopping) board, separate the thighs from the drumsticks. Of course, you can buy thighs and legs separately, but I find that leg quarters are cheaper, and your pieces will be more uniform. Rinse the pieces in cold water and dry on paper towels.",
+   "In a mixing bowl or large container, evenly season the chicken with the paprika and salt. Refrigerate the chicken, covered, for at least 6 hours, or overnight. Once marinated, transfer the chicken to dry on paper towels.",
+   "Add 2 tablespoons schmaltz to your sauté pan over medium-high heat. Once the schmaltz begins to smoke, sear the chicken, making sure not to crowd the pan or else you'll end up with very sad chicken. Cook it in batches if necessary, and turn the chicken so it caramelizes on all sides. After the chicken is seared, transfer to a plate while you start the sauce in the same pan.",
+   "Scrape up any fond, the little caramelized bits that stick to the pan, as this is flavor gold. You may need to add another tablespoon of schmaltz to the pan if none is left. Add the bell peppers and onions, sautéing until you get just a bit of color.",
+   "Add the white wine and reduce by half, scraping up any fond that's still stuck to the pan. Add the chicken stock, paprika, and dill stems while also returning the chicken to the pan.",
+   "Bring the stock to a boil, then lower the heat to a simmer and braise the chicken in the sauce for about 30 minutes. Add the cream and return to a boil one last time, making sure the chicken reaches an internal temperature of 175°F (79°C). Typically, chicken is cooked to 165°F (74°C), but I prefer the texture of dark meat that's cooked a little longer.",
+   "First, let's mix up the dough. Stir to combine the flour and salt in a mixing bowl. Separately, lightly beat the eggs and whisk in the milk to incorporate nicely. Next, pour the egg mixture into the dry ingredients while whisking to combine.",
+   "Bring a large pot of salted water to a boil. Once the water is boiling, cut in the spaetzle. To do this, you'll need a small cutting (chopping) board, something at least as wide as your bench scraper. Dip the board into the boiling water to wet it. Now top the wet board with one-third of the spaetzle dough. Using your bench scraper, flatten the dough, \"wiping\" it toward the end of the board. Next, cut a ¼-inch (0.6-cm) ribbon off the end of the board. Scrape it toward the cliff and let it fall into the boiling water. Keep repeating this process until all the spaetzle are in the water. Remove from the boiling water with a spider strainer to a bowl. Toss the spaetzle with the butter so they don't stick to themselves.",
+   "Transfer the chicken and spaetzle to a large platter or bowl or individual bowls. Pulse the sauce with an immersion blender, just enough to break up the large pieces of bell peppers and onions. Adjust the seasoning with salt to taste and add the chopped dill. Smother the chicken and spaetzle with the sauce, then top with a dollop of crème fraîche and pickled Ohio peppers.",
+   "And be sure to say, \"Waiter, there is too much pepper on my paprikash. But I would be proud to partake of your pecan piliffle,\" as you serve it."
+  ],
+  "origin": "Hungarian classic braised chicken dish, traditionally served with egg noodles or dumplings; the spaetzle preparation here represents a Central European fusion, substituting the typical Hungarian egg pasta.",
+  "quality_hierarchy": {
+   "tier1": "Proper marination (6+ hours) and low-temperature dark meat cooking (175°F) for collagen breakdown and texture; fond management and sauce reduction",
+   "tier2": "Even searing without crowding; correct spaetzle dough consistency and board-cutting technique to achieve proper texture; final sauce pulse to break vegetables without over-blending",
+   "tier3": "Salt seasoning adjustments; crème fraîche and peppers as finishing garnish; dill stem infusion and fresh dill garnish balance"
+  },
+  "sensory_tests": [
+   {
+    "cue": "Paprika bloom and caramelization on chicken surface before braising",
+    "sense": "taste",
+    "fail_indicator": "Paprika tastes raw or acrid; chicken not properly caramelized on all sides before sauce addition"
+   },
+   {
+    "cue": "Spaetzle after butter toss should be discrete, tender noodles without sticking or clumping",
+    "sense": "texture",
+    "fail_indicator": "Spaetzle mushy, gummy, or fused together; indicates insufficient board-cutting control or dough hydration error"
+   },
+   {
+    "cue": "Sauce after immersion blender pulse: creamy, flecked with visible pepper and onion pieces, not homogenized",
+    "sense": "visual",
+    "fail_indicator": "Over-blended into purée or under-blended with large vegetable chunks"
+   },
+   {
+    "cue": "Dill stems infusing braising liquid and fresh dill finish; sweet paprika and cream balance",
+    "sense": "aroma",
+    "fail_indicator": "Dill absent or muted; paprika overpowers cream and meat aromas"
+   }
+  ],
+  "cross_cuisine_parallels": [
+   {
+    "dish": "Spätzle with brown butter and crispy onions",
+    "cuisine": "German",
+    "mechanism": "Egg noodle base with hand-cut technique; butter toss prevents sticking and adds richness"
+   },
+   {
+    "dish": "Paprikash (Paprikahendl)",
+    "cuisine": "Austrian",
+    "mechanism": "Braised poultry with paprika-forward spice, sour cream finish, and vegetable-infused sauce"
+   },
+   {
+    "dish": "Coq au vin with cream liaison",
+    "cuisine": "French",
+    "mechanism": "Long braise of dark poultry meat, fond deglazing, wine reduction, cream enrichment"
+   }
+  ],
+  "lives_or_dies": "Proper fond management and low-temperature dark meat braising create the sauce's body and chicken's tender texture; paprika must bloom in fat before liquid addition to avoid raw spice flavor.",
+  "beverage_pairings": null,
+  "flavour_context": "Paprika's lipophilic compounds activate during searing and bloom in fat, building depth. Marination allows salt penetration into dark meat, breaking down myofibrillar proteins for tenderness at 175°F (higher than standard 165°F). Wine reduction removes harsh alcohol while concentrating acidity to balance cream's richness. Dill stems steep in braising liquid, releasing volatile oils; fresh dill added at finish preserves bright, grassy notes. Crème fraîche and pickled peppers provide acidic counterpoint and textural contrast against the soft spaetzle and braised chicken."
+ },
+ {
+  "key": "negroni",
+  "kind": "drink",
+  "title": "Negroni",
+  "cuisine": "Italian",
+  "preamble": "Three ingredients, equal parts, stirred not shaken. The orange oil is expressed over the surface before serving. It is not a garnish. It is the first thing you taste.",
+  "servings_text": "1",
+  "tags": [
+   "Drink"
+  ],
+  "ingredients": [
+   {
+    "info": "Tanqueray, Beefeater, or Sipsmith — not overly floral",
+    "name": "London Dry gin",
+    "unit": "ml",
+    "count": "30"
+   },
+   {
+    "info": "there is no substitute",
+    "name": "Campari",
+    "unit": "ml",
+    "count": "30"
+   },
+   {
+    "info": "Carpano Antica Formula, Cocchi Storico, or Punt e Mes — refrigerate after opening",
+    "name": "sweet vermouth",
+    "unit": "ml",
+    "count": "30"
+   },
+   {
+    "info": "large format dilutes slower, preserves integrity",
+    "name": "large ice cube",
+    "unit": "",
+    "count": "1"
+   },
+   {
+    "info": "wide, from the upper half of a naval orange",
+    "name": "orange peel",
+    "unit": "strip",
+    "count": "1"
+   }
+  ],
+  "steps": [
+   "Chill a rocks glass in the freezer, or with ice water.",
+   "Combine gin, Campari, and sweet vermouth in a mixing glass. Add plenty of ice.",
+   "Stir — do not shake. 30 full rotations, approximately 45 seconds. You are diluting and chilling to around −5°C while preserving clarity.",
+   "Discard ice water from rocks glass. Add a large fresh ice cube.",
+   "Strain the Negroni over the ice.",
+   "Hold orange peel skin-side down 5cm above the drink and express it — squeeze the zest so the fine oil mist catches the light. Run the peel around the rim, then place it on the ice. Serve without a straw."
+  ],
+  "origin": "Florence, 1919. Count Camillo Negroni, a regular at Caffè Casoni, asked bartender Fosco Scarselli to strengthen his Americano by replacing soda water with gin. The lemon garnish became orange. The drink spread slowly — arriving in London cocktail culture in the 1970s, becoming a marker of taste by the 2000s, and achieving global dominance by the 2010s. It is now one of the most ordered cocktails in the world.",
+  "quality_hierarchy": [
+   "1. London Dry gin — Tanqueray, Beefeater. Not flavoured gin; not new-world botanical gin. The juniper profile is structural.",
+   "2. Campari — no substitute. Aperol produces a different, lighter drink. Campari produces a Negroni.",
+   "3. Sweet vermouth: Carpano Antica Formula or Cocchi Vermouth di Torino. Cheap vermouth makes a flat, oxidised Negroni.",
+   "4. A single large ice cube or sphere in the serving glass — functional, not decorative. Maximum surface area, minimum melt rate.",
+   "5. Orange peel expressed over the surface — not dropped in. Press the oils across the liquid and rim the glass."
+  ],
+  "sensory_tests": [
+   "The drink should be translucent ruby, not opaque.",
+   "The nose: orange peel oil and juniper, before the glass reaches the lips.",
+   "The palate sequence: citrus and gin first, Campari bitterness second, sweet vermouth finish."
+  ],
+  "cross_cuisine_parallels": [
+   "Boulevardier — Negroni with rye whiskey replacing gin. Darker, heavier, better in winter.",
+   "Mezcal Negroni — mezcal replacing gin. Smoky and structurally identical.",
+   "Sbagliato — Prosecco replacing gin. Lower alcohol, same proportions, lighter expression."
+  ],
+  "lives_or_dies": "The orange oil expression. Hold the peel skin-side down over the glass, press until the fine spray of oil catches the light, then run the peel along the rim. Done correctly, the aromatics arrive before the first sip. Done incorrectly, the garnish is just decoration.",
+  "beverage_pairings": null,
+  "flavour_context": "Build in a mixing glass, not a shaker. 20–30 rotations over large cracked ice. The goal is dilution and temperature reduction without introducing air bubbles, which cloud the drink and shorten its structural life in the glass. Only cocktails containing citrus or dairy are shaken."
+ },
+ {
+  "key": "mojito",
+  "kind": "drink",
+  "title": "Mojito",
+  "cuisine": "Cuban",
+  "preamble": "Spearmint bruised twice with lime and sugar, then left alone. The third press releases chlorophyll and makes the drink bitter. Stop at two.",
+  "servings_text": "1",
+  "tags": [
+   "Drink"
+  ],
+  "ingredients": [
+   {
+    "info": "Havana Club 3 Año, Bacardi Superior, or Banks 5 Island",
+    "name": "white rum",
+    "unit": "ml",
+    "count": "50"
+   },
+   {
+    "info": "from approximately 1.5 limes — always fresh",
+    "name": "fresh lime juice",
+    "unit": "ml",
+    "count": "25"
+   },
+   {
+    "info": "2 tsp sugar or 15ml 1:1 syrup",
+    "name": "caster sugar or simple syrup",
+    "unit": "ml",
+    "count": "15"
+   },
+   {
+    "info": "spearmint, not peppermint — the Cuban varietal yerba buena is ideal",
+    "name": "fresh spearmint",
+    "unit": "sprigs",
+    "count": "8"
+   },
+   {
+    "info": "chilled — Fever-Tree or Sanpellegrino",
+    "name": "soda water",
+    "unit": "ml",
+    "count": "60"
+   },
+   {
+    "info": "crushed, not cubed",
+    "name": "crushed ice",
+    "unit": "to fill",
+    "count": ""
+   }
+  ],
+  "steps": [
+   "Place 6 mint sprigs in a highball glass. Add sugar (or syrup) and lime juice.",
+   "Muddle lightly — 3–4 firm presses only. You want the oils from the leaves and stems, not the plant pulped. Over-muddling creates bitter chlorophyll tones.",
+   "Add rum. Fill glass with crushed ice, stir briefly with a bar spoon to combine and chill.",
+   "Top with chilled soda water. One final gentle stir.",
+   "Garnish with remaining 2 mint sprigs, slapped against your palm first. Add a lime wheel if desired. Serve with a straw."
+  ],
+  "origin": "Havana, Cuba. La Bodeguita del Medio and El Floridita both claim it. The precursor, El Draque, dates to the 1580s — Sir Francis Drake's physician used aguardiente, wild mint, lime, and sugar as a scurvy remedy for the crew. The Mojito arrived in its modern form when Bacardi Carta Blanca replaced aguardiente in the late 19th century and the drink moved from necessity to pleasure.",
+  "quality_hierarchy": [
+   "1. Cuban-style white rum: Bacardi Carta Blanca, Havana Club 3-year. Not dark rum, not spiced rum, not aged rum.",
+   "2. Fresh lime juice only. The difference between fresh and bottled lime is not subtle.",
+   "3. Spearmint (Mentha spicata), not peppermint. Peppermint is medicinal and aggressive in a cold drink.",
+   "4. Demerara syrup or raw cane sugar — white sugar is correct but lacks depth.",
+   "5. Soda water, never tonic. Tonic carries quinine bitterness that fights the mint."
+  ],
+  "sensory_tests": [
+   "The mint should be bruised but visibly whole — not macerated, not fragmented.",
+   "The drink should smell of spearmint oil, not herb tea.",
+   "The soda water should be heard as much as tasted — the carbonation is part of the architecture."
+  ],
+  "cross_cuisine_parallels": [
+   "Caipirinha — cachaça, lime, sugar, no mint. The Brazilian cousin that shows what the base tastes like without the herb.",
+   "Southside — gin, lime, mint, sugar, shaken. The Manhattan speakeasy-era variant.",
+   "Dark and Stormy — dark rum, ginger beer, lime. The Caribbean cousin with a different aromatic register."
+  ],
+  "lives_or_dies": "The bruise, not the pound. The mint releases its aromatic oils at the first moment of impact. The second the leaves are shredded rather than bruised, the drink has taken a wrong turn that cannot be corrected by more rum.",
+  "beverage_pairings": null,
+  "flavour_context": "Muddle gently. Press the mint firmly against the sugar and lime juice — once to release the oils from the leaves, once to confirm the bruise. Stop immediately. Over-muddling releases chlorophyll from broken leaf tissue, turning the drink green, bitter, and herbal in the wrong direction."
+ },
+ {
+  "key": "cha-yen",
+  "kind": "drink",
+  "title": "Cha Yen",
+  "cuisine": "Thai",
+  "preamble": "Thai iced tea — a strong Ceylon-based brew (the Cha Tra Mue blend), sweetened and layered over ice with condensed and evaporated milk into its signature amber-orange.",
+  "servings_text": "Serves 1",
+  "tags": [
+   "Drink"
+  ],
+  "ingredients": [
+   {
+    "name": "Thai tea blend (Cha Tra Mue)",
+    "count": "2",
+    "unit": "tbsp",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "water",
+    "count": "250",
+    "unit": "ml",
+    "info": "near-boiling",
+    "group": ""
+   },
+   {
+    "name": "sugar",
+    "count": "2",
+    "unit": "tbsp",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "sweetened condensed milk",
+    "count": "2",
+    "unit": "tbsp",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "evaporated milk",
+    "count": "2",
+    "unit": "tbsp",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "crushed ice",
+    "count": "",
+    "unit": "",
+    "info": "to fill",
+    "group": ""
+   }
+  ],
+  "steps": [
+   "Steep the Thai tea blend in near-boiling water for 3–5 minutes, then strain — the brew should be deep amber-orange.",
+   "Stir the sugar into the hot tea until dissolved, then chill.",
+   "Fill a tall glass with crushed ice and pour over the sweet tea.",
+   "Float condensed and evaporated milk on top; serve unstirred so the layers show, stir to a soft orange to drink."
+  ],
+  "origin": null,
+  "quality_hierarchy": null,
+  "sensory_tests": null,
+  "cross_cuisine_parallels": null,
+  "lives_or_dies": null,
+  "beverage_pairings": null,
+  "flavour_context": null
+ },
+ {
+  "key": "agua-de-jamaica",
+  "kind": "drink",
+  "title": "Agua de Jamaica",
+  "cuisine": "Mexican",
+  "preamble": "A cold hibiscus infusion — dried Jamaica calyces steeped to a deep ruby-crimson, sweetened and served over ice. The same botanical as West African bissap and Egyptian karkadeh.",
+  "servings_text": "Makes ~1 litre",
+  "tags": [
+   "Drink"
+  ],
+  "ingredients": [
+   {
+    "name": "dried hibiscus (Jamaica) calyces",
+    "count": "40",
+    "unit": "g",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "water",
+    "count": "1",
+    "unit": "litre",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "sugar",
+    "count": "",
+    "unit": "",
+    "info": "to taste",
+    "group": ""
+   },
+   {
+    "name": "ice",
+    "count": "",
+    "unit": "",
+    "info": "to serve",
+    "group": ""
+   }
+  ],
+  "steps": [
+   "Bring the water to just under a boil and steep the dried hibiscus calyces 10–15 minutes off the heat — the liquor turns deep ruby-crimson.",
+   "Strain out the calyces and sweeten to taste while still warm.",
+   "Chill, then serve over ice. No milk."
+  ],
+  "origin": null,
+  "quality_hierarchy": null,
+  "sensory_tests": null,
+  "cross_cuisine_parallels": null,
+  "lives_or_dies": null,
+  "beverage_pairings": null,
+  "flavour_context": null
+ },
+ {
+  "key": "horchata",
+  "kind": "drink",
+  "title": "Horchata",
+  "cuisine": "Mexican",
+  "preamble": "Mexican rice horchata — long-grain rice soaked with cinnamon, blended and strained to a cool, milky, cinnamon-dusted drink. Distinct from Valencian orxata de chufa.",
+  "servings_text": "Makes ~1 litre",
+  "tags": [
+   "Drink"
+  ],
+  "ingredients": [
+   {
+    "name": "long-grain white rice",
+    "count": "1",
+    "unit": "cup",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "cinnamon stick",
+    "count": "1",
+    "unit": "",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "water",
+    "count": "1",
+    "unit": "litre",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "sugar",
+    "count": "",
+    "unit": "",
+    "info": "to taste",
+    "group": ""
+   },
+   {
+    "name": "vanilla extract",
+    "count": "",
+    "unit": "",
+    "info": "optional",
+    "group": ""
+   },
+   {
+    "name": "ground cinnamon",
+    "count": "",
+    "unit": "",
+    "info": "to finish",
+    "group": ""
+   }
+  ],
+  "steps": [
+   "Soak the rice with the cinnamon stick in the water overnight (at least 6 hours).",
+   "Blend the soaked rice, cinnamon and soaking water until smooth.",
+   "Strain through a fine cloth; sweeten and add a little vanilla.",
+   "Chill and serve over ice, dusted with ground cinnamon. Dilute to taste."
+  ],
+  "origin": null,
+  "quality_hierarchy": null,
+  "sensory_tests": null,
+  "cross_cuisine_parallels": null,
+  "lives_or_dies": null,
+  "beverage_pairings": null,
+  "flavour_context": null
+ },
+ {
+  "key": "limonana",
+  "kind": "drink",
+  "title": "Limonana",
+  "cuisine": "Levantine",
+  "preamble": "A frozen lemon-mint drink from the Levant — fresh lemon and a large handful of mint blended with sugar and ice to a pale-green slush. Very cold, sweet-sour, herbal.",
+  "servings_text": "Serves 2",
+  "tags": [
+   "Drink"
+  ],
+  "ingredients": [
+   {
+    "name": "fresh lemon juice",
+    "count": "120",
+    "unit": "ml",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "fresh mint leaves",
+    "count": "",
+    "unit": "",
+    "info": "large handful",
+    "group": ""
+   },
+   {
+    "name": "sugar",
+    "count": "3",
+    "unit": "tbsp",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "water",
+    "count": "250",
+    "unit": "ml",
+    "info": "",
+    "group": ""
+   },
+   {
+    "name": "ice",
+    "count": "2",
+    "unit": "cups",
+    "info": "",
+    "group": ""
+   }
+  ],
+  "steps": [
+   "Blend the lemon juice, mint, sugar, water and ice until slushy.",
+   "Taste and balance the sweet–sour.",
+   "Serve immediately, frozen-slushy, in a tall glass — strain for a smoother drink or leave unstrained for texture."
+  ],
+  "origin": null,
+  "quality_hierarchy": null,
+  "sensory_tests": null,
+  "cross_cuisine_parallels": null,
+  "lives_or_dies": null,
+  "beverage_pairings": null,
+  "flavour_context": null
+ }
+]
