@@ -4073,7 +4073,6 @@ def recipe_page(slug):
                 region=_region,
                 format_cuisine=_format_cuisine,
                 is_owner=bool(user and user.get("id") == kitchen_recipe.get("user_id")),
-                safety_notes=_published_safety_notes(slug),
                 pairing_passage=kitchen_recipe.get("pairing_passage"),
                 needs_review=_recipe_needs_review(kitchen_recipe.get("quality_warnings")),
             )
@@ -4189,7 +4188,6 @@ def recipe_page(slug):
         region=_region,
         format_cuisine=_format_cuisine,
         is_owner=bool(_user and recipe.get("user_id") and _user.get("id") == recipe.get("user_id")),
-        safety_notes=_published_safety_notes(slug),
         pairing_passage=None,
         needs_review=False,
     )
@@ -9056,6 +9054,20 @@ def haccp_generate_for_recipe():
         return jsonify({"error": "Brief generated but could not be saved — please try again."}), 500
 
     return jsonify({"ok": True, "brief_id": brief_id})
+
+
+@app.route("/api/recipe/<slug>/safety-notes", methods=["GET"])
+def safety_notes_stored(slug):
+    """H2 — stored safety notes for a slug (instant reopen, no composition).
+    Returns exists=False when none have been composed yet, so the client knows
+    to show the 'Writing…' state and POST to generate."""
+    slug = (slug or "").strip()
+    notes = _published_safety_notes(slug) if slug else []
+    return jsonify({"ok": True, "exists": bool(notes), "notes": [{
+        "summary": n.get("summary", ""),
+        "html": str(n.get("html", "")),
+        "disclaimer": n.get("disclaimer", ""),
+    } for n in notes]})
 
 
 @app.route("/api/recipe/<slug>/safety-notes/generate", methods=["POST"])

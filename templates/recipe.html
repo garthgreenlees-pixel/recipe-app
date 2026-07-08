@@ -497,6 +497,27 @@ select.haccp-input{padding:3px 7px}
   .haccp-watermark-draft{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);font-family:var(--mono,monospace);font-size:52pt;color:rgba(176,58,46,0.09);pointer-events:none;z-index:9999;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap}
 }
 
+/* ── SAFETY NOTES DOCUMENT — H2 (revised), HACCP-brief document pattern ── */
+.sn-doc-print-btn{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;background:none;border:0.5px solid var(--divider);border-radius:2px;padding:5px 12px;color:var(--text-muted);cursor:pointer}
+.sn-doc-print-btn:hover{color:var(--text);border-color:var(--text-muted)}
+.sn-doc-body{padding:0;display:flex;flex-direction:column;min-height:200px;overflow-y:auto;max-height:calc(90vh - 100px)}
+.sn-doc-loading{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);text-align:center;padding:44px 16px;line-height:1.8}
+.sn-doc-disc{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--warm-gray,#8A8580);font-style:italic;padding:16px;border-bottom:0.5px solid var(--divider);}
+.sn-doc-disc--bottom{border-bottom:none;border-top:0.5px solid var(--divider);margin-top:auto;}
+.sn-doc-note{padding:18px 16px;border-bottom:0.5px solid var(--divider);}
+.sn-doc-sum{font-family:var(--display);font-style:italic;font-size:17px;color:var(--charcoal,#1A1916);margin-bottom:8px;}
+.sn-doc-note-body{font-size:14px;line-height:1.62;color:var(--charcoal-soft,#4A4743);}
+.sn-doc-note-body p{margin:0 0 10px;}
+/* Printable Doctrine — when the safety sheet is open, print only it. Scoped by
+   :has() so the unconditional HACCP print rule above is neutralized here. */
+@media print{
+  body:has(#sn-doc-overlay.open) #haccp-overlay{display:none!important}
+  body:has(#sn-doc-overlay.open) #sn-doc-overlay{position:static;background:none;padding:0;display:block!important;overflow:visible}
+  body:has(#sn-doc-overlay.open)>*:not(#sn-doc-overlay){display:none!important}
+  body:has(#sn-doc-overlay.open) .kn-close,body:has(#sn-doc-overlay.open) .sn-doc-print-btn{display:none!important}
+  body:has(#sn-doc-overlay.open) .sn-doc-body{max-height:none;overflow:visible}
+}
+
 /* ── COSTING MODAL ────────────────────────────────────────────────── */
 .c-overlay{position:fixed;inset:0;background:rgba(28,25,23,0.82);z-index:9000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px 0 32px}
 .c-overlay.open{display:flex}
@@ -634,15 +655,6 @@ select.haccp-input{padding:3px 7px}
 .r-supplier-footer a{color:var(--gold-deep)}
 .r6-pillar--tools .r6-pillar__num { color: var(--charcoal-soft); }
 main { padding-bottom: 60px; }
-/* ── Safety notes MODAL body (compact control in the tools row → modal).
-      NEVER a HACCP document; never labeled HACCP. Disclaimer on header + note. ── */
-.sn-disclaimer{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--warm-gray,#8A8580);font-style:italic;padding:0 0 4px;}
-.sn-note{padding-top:16px;margin-top:16px;border-top:0.5px solid var(--line,#E4DFDA);}
-.sn-note:first-of-type{padding-top:6px;margin-top:0;border-top:0;}
-.sn-sum{font-family:var(--display);font-style:italic;font-size:16px;color:var(--charcoal,#1A1916);margin-bottom:6px;}
-.sn-body{font-size:14px;line-height:1.6;color:var(--charcoal-soft,#4A4743);}
-.sn-body p{margin:0 0 8px;}
-.sn-foot{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--warm-gray,#8A8580);font-style:italic;margin-top:8px;}
 /* ── Sourced Through Provenance — producer cards (design pattern) ── */
 .r6-sourced{max-width:1100px;margin:0 auto;padding:56px var(--s4) 40px;}
 .r6-sourced__intro{max-width:640px;margin-bottom:36px;}
@@ -660,18 +672,6 @@ main { padding-bottom: 60px; }
 .r6-producer__products{font-size:14px;line-height:1.5;color:var(--charcoal-soft);margin-top:11px;max-width:560px;}
 .r6-producer__room{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf,#3F6090);text-decoration:none;}
 .r6-producer__room:hover{color:var(--charcoal);}
-/* ── Safety notes bottom section (F3) — single home, disclaimer on the header ── */
-.r6-safetysec{max-width:1100px;margin:0 auto;padding:40px var(--s4) 20px;border-top:1px solid var(--line,#E4DFDA);}
-.r6-safetysec__head{margin-bottom:18px;}
-.r6-safetysec__eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep,#9A7B3F);display:flex;align-items:center;gap:10px;}
-.r6-safetysec__eyebrow .diamond{width:7px;height:7px;background:var(--gold,#C9A84C);transform:rotate(45deg);display:inline-block;}
-.r6-safetysec__disc{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--warm-gray,#8A8580);font-style:italic;margin-top:8px;}
-.r6-safetysec__note{padding-top:16px;margin-top:16px;border-top:0.5px solid var(--line,#E4DFDA);}
-.r6-safetysec__note:first-of-type{padding-top:6px;margin-top:0;border-top:0;}
-.r6-safetysec__sum{font-family:var(--display);font-style:italic;font-size:18px;color:var(--charcoal,#1A1916);margin-bottom:8px;}
-.r6-safetysec__body{font-size:15px;line-height:1.62;color:var(--charcoal-soft,#4A4743);max-width:720px;}
-.r6-safetysec__body p{margin:0 0 10px;}
-.r6-safetysec__foot{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--warm-gray,#8A8580);font-style:italic;margin-top:10px;}
 /* ── Needs-review banner (F2b) ── */
 .r6-review{max-width:1100px;margin:0 auto var(--s2);padding:12px var(--s4);background:#FBEEE6;border:1px solid #E4B79A;color:#8A4B26;font-size:14px;display:flex;gap:10px;align-items:center;}
 .r6-review a{color:#8A4B26;text-decoration:underline;font-weight:600;}
@@ -847,8 +847,8 @@ main { padding-bottom: 60px; }
   });
   </script>
 
-  {# Safety notes are NOT an inline body panel — per the design they are a
-     compact tools-row control opening a modal (see #sn-overlay). #}
+  {# Safety notes are NOT an inline body panel — the toolbar button opens them as
+     their own printable document (see #sn-doc-overlay). #}
 
   {# ─── THE MARKET LIST (ingredients) ─── #}
   <section class="r6-pillar">
@@ -1150,28 +1150,9 @@ main { padding-bottom: 60px; }
 
   {# Tools render ONCE — the pinned bottom bar is the tools' single home. #}
 
-  {# ─── SAFETY NOTES — the bottom section is the single home (F3). Generated per
-        recipe from its own ingredients + method. NEVER labeled HACCP; the approved
-        disclaimer rides the header. ─── #}
-  {# H2 — anchor always present so the toolbar button can inject a freshly
-     generated section here when the recipe had no note yet. #}
-  <div id="r6-safety-anchor">
-  {% if safety_notes %}
-  <section class="r6-safetysec">
-    <div class="r6-safetysec__head">
-      <div class="r6-safetysec__eyebrow"><span class="diamond"></span> Safety notes</div>
-      <div class="r6-safetysec__disc">{{ safety_notes[0].disclaimer }}</div>
-    </div>
-    {% for note in safety_notes %}
-    <div class="r6-safetysec__note">
-      {% if note.summary %}<div class="r6-safetysec__sum">{{ note.summary }}</div>{% endif %}
-      <div class="r6-safetysec__body">{{ note.html }}</div>
-      <div class="r6-safetysec__foot">{{ note.disclaimer }}</div>
-    </div>
-    {% endfor %}
-  </section>
-  {% endif %}
-  </div>
+  {# H3 — the on-page safety-notes section is REMOVED. The toolbar Safety notes
+     button is the single door; it opens the note as its own printable document
+     (see #sn-doc-overlay). Stored note content is untouched — only the render. #}
 
 
 </div>
@@ -1216,31 +1197,26 @@ main { padding-bottom: 60px; }
   </div>
 </div>
 
-{# ═══ SAFETY NOTES MODAL — composed grind content (scope='safety'), read-only.
-     Same modal pattern as the other tools; disclaimer on header AND every note.
-     Never labeled HACCP. ═══ #}
-{% if safety_notes %}
-<div id="sn-overlay" class="kn-overlay" onclick="if(event.target===this)closeSafetyModal()">
-  <div class="kn-modal">
+{# ═══ SAFETY NOTES DOCUMENT — H2 (revised): same document pattern & print
+     styling as the HACCP brief. Composed on demand, stored, reopened instantly,
+     printable/shareable. Disclaimer top AND bottom. NEVER labeled HACCP. ═══ #}
+<div id="sn-doc-overlay" class="kn-overlay" onclick="if(event.target===this)closeSafetyDoc()">
+  <div class="kn-modal" style="max-width:720px">
     <div class="kn-header">
       <div>
         <span style="font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:3px">Safety notes — {{ recipe.name or recipe.title }}</span>
-        <span class="sn-disclaimer">{{ safety_notes[0].disclaimer }}</span>
+        <span class="kn-title" style="font-size:11px;text-transform:none;letter-spacing:0;color:var(--text)">A working document, not a compliance record.</span>
       </div>
-      <button class="kn-close" onclick="closeSafetyModal()">✕</button>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:12px">
+        <button class="sn-doc-print-btn" onclick="printSafetyDoc()">Print</button>
+        <button class="kn-close" onclick="closeSafetyDoc()">✕</button>
+      </div>
     </div>
-    <div class="kn-body">
-      {% for note in safety_notes %}
-      <div class="sn-note">
-        {% if note.summary %}<div class="sn-sum">{{ note.summary }}</div>{% endif %}
-        <div class="sn-body">{{ note.html }}</div>
-        <div class="sn-foot">{{ note.disclaimer }}</div>
-      </div>
-      {% endfor %}
+    <div class="sn-doc-body" id="sn-doc-body">
+      <div class="sn-doc-loading">Loading…</div>
     </div>
   </div>
 </div>
-{% endif %}
 
 <!-- ═══ MY NOTES (personal pad) MODAL ══════════════════════════════ -->
 <div id="kn-overlay" class="kn-overlay" onclick="if(event.target===this)closeNotesModal()">
@@ -1385,58 +1361,57 @@ function closePeek() {
   document.body.style.overflow = '';
 }
 
-// ── My Notes (personal pad) Modal ─────────────────────────────────
-function openSafetyModal() {
-  var el = document.getElementById('sn-overlay');
-  if (el) el.classList.add('open');
-}
-function closeSafetyModal() {
-  var el = document.getElementById('sn-overlay');
-  if (el) el.classList.remove('open');
+
+// ── H2 (revised) — Safety notes = HACCP-brief document pattern ────
+// Button opens the note as its own printable document. Composed once on demand
+// (visible "Writing the safety notes…" state), stored, reopened instantly after.
+// Disclaimer top AND bottom. Never labeled HACCP.
+function _snDocSetBody(html) { document.getElementById('sn-doc-body').innerHTML = html; }
+function _snEsc(t) { var d = document.createElement('div'); d.textContent = (t == null ? '' : String(t)); return d.innerHTML; }
+
+function renderSafetyDoc(notes) {
+  var disc = (notes[0] && notes[0].disclaimer) || 'Working notes, not a food-safety compliance document.';
+  var html = '<div class="sn-doc-disc">' + _snEsc(disc) + '</div>';
+  notes.forEach(function (n) {
+    html += '<div class="sn-doc-note">'
+      + (n.summary ? '<div class="sn-doc-sum">' + _snEsc(n.summary) + '</div>' : '')
+      + '<div class="sn-doc-note-body">' + (n.html || '') + '</div>'
+      + '</div>';
+  });
+  // Standing disclaimer repeated at the foot of the sheet.
+  html += '<div class="sn-doc-disc sn-doc-disc--bottom">' + _snEsc(disc) + '</div>';
+  _snDocSetBody(html);
 }
 
-// ── H2 — Safety notes toolbar button, two paths ──────────────────
-// Has a note → scroll to the bottom section. No note yet → generate one
-// on demand (same engine pattern as the HACCP button), with a visible
-// "Writing…" state, inject it, then scroll. Never a dead click.
-function _renderSafetySection(notes) {
-  var sec = document.createElement('section');
-  sec.className = 'r6-safetysec';
-  var head = document.createElement('div'); head.className = 'r6-safetysec__head';
-  head.innerHTML = '<div class="r6-safetysec__eyebrow"><span class="diamond"></span> Safety notes</div>';
-  var disc = document.createElement('div'); disc.className = 'r6-safetysec__disc';
-  disc.textContent = (notes[0] && notes[0].disclaimer) || '';
-  head.appendChild(disc); sec.appendChild(head);
-  notes.forEach(function (n) {
-    var note = document.createElement('div'); note.className = 'r6-safetysec__note';
-    if (n.summary) { var s = document.createElement('div'); s.className = 'r6-safetysec__sum'; s.textContent = n.summary; note.appendChild(s); }
-    var body = document.createElement('div'); body.className = 'r6-safetysec__body'; body.innerHTML = n.html || ''; note.appendChild(body);
-    var foot = document.createElement('div'); foot.className = 'r6-safetysec__foot'; foot.textContent = n.disclaimer || ''; note.appendChild(foot);
-    sec.appendChild(note);
-  });
-  return sec;
-}
 function openSafetyNotes(btn) {
-  var s = document.querySelector('.r6-safetysec');
-  if (s) { s.scrollIntoView({ behavior: 'smooth' }); return; }
-  var label = btn.querySelector('.sn-btn-label');
-  var orig = label ? label.textContent : '';
-  if (label) label.textContent = 'Writing the safety notes…';
-  btn.disabled = true; btn.style.opacity = '0.7';
-  fetch('/api/recipe/' + btn.dataset.slug + '/safety-notes/generate', { method: 'POST' })
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+  if (!IS_AUTHENTICATED) { window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname); return; }
+  var ov = document.getElementById('sn-doc-overlay');
+  // Portal to <body> so the print rule (which hides every other body child) can
+  // spare the sheet — otherwise its ancestor <main> is print-hidden with it.
+  if (ov.parentElement !== document.body) document.body.appendChild(ov);
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  _snDocSetBody('<div class="sn-doc-loading">Loading…</div>');
+  // Instant reopen: fetch the stored note first. Only compose if none exists.
+  fetch('/api/recipe/' + encodeURIComponent(RECIPE_SLUG) + '/safety-notes')
+    .then(function (r) { return r.json(); })
     .then(function (d) {
-      btn.disabled = false; btn.style.opacity = '';
-      if (label) label.textContent = orig;
-      if (!d.ok || !(d.notes && d.notes.length)) { if (label) label.textContent = 'No safety notes needed'; return; }
-      var anchor = document.getElementById('r6-safety-anchor');
-      if (anchor) { anchor.innerHTML = ''; anchor.appendChild(_renderSafetySection(d.notes)); anchor.querySelector('.r6-safetysec').scrollIntoView({ behavior: 'smooth' }); }
+      if (d.exists && d.notes && d.notes.length) { renderSafetyDoc(d.notes); return; }
+      _snDocSetBody('<div class="sn-doc-loading">Writing the safety notes…<br>Reading the ingredients and method.</div>');
+      return fetch('/api/recipe/' + encodeURIComponent(RECIPE_SLUG) + '/safety-notes/generate', { method: 'POST' })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function (g) {
+          if (g.ok && g.notes && g.notes.length) { renderSafetyDoc(g.notes); }
+          else { _snDocSetBody('<div class="sn-doc-loading">This recipe has no ingredients or method to build safety notes from yet.</div>'); }
+        });
     })
-    .catch(function () {
-      btn.disabled = false; btn.style.opacity = '';
-      if (label) label.textContent = orig || 'Safety notes';
-    });
+    .catch(function () { _snDocSetBody('<div class="sn-doc-loading">Something went wrong. Try again in a moment.</div>'); });
 }
+function closeSafetyDoc() {
+  document.getElementById('sn-doc-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function printSafetyDoc() { window.print(); }
 
 function openNotesModal() {
   document.getElementById('kn-overlay').classList.add('open');
@@ -2401,8 +2376,8 @@ document.addEventListener('keydown', e => {
   const co = document.getElementById('costing-overlay');
   const pk = document.getElementById('peek-sheet');
   const sb = document.getElementById('supplier-sheet');
-  const sn = document.getElementById('sn-overlay');
-  if (sn && sn.classList.contains('open')) { closeSafetyModal(); return; }
+  const sn = document.getElementById('sn-doc-overlay');
+  if (sn && sn.classList.contains('open')) { closeSafetyDoc(); return; }
   if (sc && sc.classList.contains('open')) { closeScaleModal(); return; }
   if (kn && kn.classList.contains('open')) { closeNotesModal(); return; }
   if (ha && ha.classList.contains('open')) { closeHaccpModal(); return; }
@@ -2417,9 +2392,9 @@ document.addEventListener('keydown', e => {
 <div class="bottom-bar">
   <a href="/kitchen" class="bottom-bar-btn">← MyKitchen</a>
   {# G3 — My notes retired; Safety notes takes its slot, targeting the bottom section. #}
-  <button class="bottom-bar-btn" data-slug="{{ recipe.slug }}" onclick="openSafetyNotes(this)">
+  <button class="bottom-bar-btn" onclick="openSafetyNotes()">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4.2" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 3.2v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="5.5" cy="7.9" r="0.7" fill="currentColor"/></svg>
-    <span class="sn-btn-label">Safety notes</span>
+    Safety notes
   </button>
   <button class="bottom-bar-btn" onclick="handleAction('costing','kitchen')">
     <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="margin-right:3px;flex-shrink:0"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 3.5v4M4 5.5h3" stroke="currentColor" stroke-width="1"/></svg>
