@@ -16026,9 +16026,9 @@ def stripe_webhook():
     try:
         if event.type == "checkout.session.completed":
             s = event.data.object
-            md = getattr(s, "metadata", None) or {}
-            user_id = md.get("provenance_user_id")
-            tier = md.get("tier", "kitchen")
+            md = getattr(s, "metadata", None)
+            user_id = getattr(md, "provenance_user_id", None) if md else None
+            tier = (getattr(md, "tier", None) if md else None) or "kitchen"
             subscription_id = getattr(s, "subscription", None)
             customer_id = getattr(s, "customer", None)
             match_path = "metadata"
