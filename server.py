@@ -15988,6 +15988,7 @@ def subscribe(tier, period="yearly"):
         mode="subscription",
         success_url="https://provenance.kitchen/auth/account?subscribed=true",
         cancel_url="https://provenance.kitchen/auth/account?cancelled=true",
+        client_reference_id=str(user["id"]),
         metadata={
             "provenance_user_id": str(user["id"]),
             "tier": tier,
@@ -16025,11 +16026,36 @@ def stripe_webhook():
     try:
         if event.type == "checkout.session.completed":
             s = event.data.object
-            user_id = s.metadata.get("provenance_user_id")
-            tier = s.metadata.get("tier", "kitchen")
+            md = getattr(s, "metadata", None) or {}
+            user_id = md.get("provenance_user_id")
+            tier = md.get("tier", "kitchen")
             subscription_id = getattr(s, "subscription", None)
             customer_id = getattr(s, "customer", None)
+            match_path = "metadata"
+
+            if not user_id:
+                user_id = getattr(s, "client_reference_id", None)
+                match_path = "client_reference_id"
+
+            if not user_id:
+                customer_details = getattr(s, "customer_details", None)
+                email = (getattr(customer_details, "email", None) if customer_details else None) \
+                    or getattr(s, "customer_email", None)
+                if email:
+                    conn = psycopg2.connect(DATABASE_URL)
+                    try:
+                        cur = conn.cursor()
+                        cur.execute("SELECT id FROM users WHERE email = %s", (email.strip().lower(),))
+                        row = cur.fetchone()
+                        cur.close()
+                    finally:
+                        conn.close()
+                    if row:
+                        user_id = row[0]
+                        match_path = "customer_email"
+
             if user_id:
+                app.logger.warning(f"[stripe_webhook] checkout.session.completed matched via {match_path} (session {s.id})")
                 update_user(
                     int(user_id),
                     subscription_tier=tier,
@@ -16037,6 +16063,9 @@ def stripe_webhook():
                     stripe_subscription_id=subscription_id,
                     stripe_customer_id=customer_id,
                 )
+            else:
+                app.logger.warning(f"[stripe_webhook] checkout.session.completed unmatched — no metadata, client_reference_id, or email on session {s.id}")
+                return "unmatched", 200
 
         elif event.type == "customer.subscription.updated":
             sub = event.data.object
@@ -16066,6 +16095,7 @@ def stripe_webhook():
             update_user_by_stripe_customer(customer_id, subscription_status="past_due")
 
     except Exception as e:
+        app.logger.exception(f"[stripe_webhook] failed handling event type {event.type}")
         sentry_sdk.capture_exception(e)
         return "Internal error", 500
 
